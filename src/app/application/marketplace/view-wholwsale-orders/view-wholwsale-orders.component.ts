@@ -78,7 +78,7 @@ export class ViewWholwsaleOrdersComponent implements OnInit {
     private finalInvoiceService: FinalinvoiceService, // Updated service
     private http: HttpClient,
     private postInvoiceService: PostinvoiceService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.fetchAllRetailOrders(this.page, this.itemsPerPage);
@@ -168,7 +168,7 @@ export class ViewWholwsaleOrdersComponent implements OnInit {
 
   onDateClear() {
     this.formattedDate = '';
-    this.fetchAllRetailOrders(); 
+    this.fetchAllRetailOrders();
   }
 
   navigateDashboard(id: number) {
@@ -176,59 +176,95 @@ export class ViewWholwsaleOrdersComponent implements OnInit {
   }
 
   downloadInvoice(id: number, tableInvoiceNo: string): void {
-  this.isLoading = true;
+    this.isLoading = true;
 
-  this.finalInvoiceService.generateAndDownloadInvoice(id, tableInvoiceNo)
-    .then(() => {
-      this.isLoading = false;
-    })
-    .catch((error) => {
-      this.isLoading = false;
-      console.error('Error generating invoice:', error);
-      this.errorMessage = 'Failed to download invoice';
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Failed to download invoice. Please try again.',
-        confirmButtonColor: '#3085d6',
+    this.finalInvoiceService.generateAndDownloadInvoice(id, tableInvoiceNo)
+      .then(() => {
+        this.isLoading = false;
+      })
+      .catch((error) => {
+        this.isLoading = false;
+        console.error('Error generating invoice:', error);
+        this.errorMessage = 'Failed to download invoice';
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to download invoice. Please try again.',
+          confirmButtonColor: '#3085d6',
+        });
       });
-    });
-}
+  }
 
-isPostInvoiceEnabled(status: string): boolean {
-  // Define the statuses that allow post-invoice download
-  const enabledStatuses = [
-    'Out For Delivery', 
-    'Delivered', 
-    'Picked up', 
-    'On the way', 
-    'Failed'
-  ];
-  
-  return enabledStatuses.includes(status);
-}
+  isPostInvoiceEnabled(status: string): boolean {
+    // Define the statuses that allow post-invoice download
+    const enabledStatuses = [
+      'Out For Delivery',
+      'Delivered',
+      'Picked up',
+      'On the way',
+      'Failed'
+    ];
 
-downloadPostInvoice(id: number, tableInvoiceNo: string): void {
-  this.isLoading = true;
+    return enabledStatuses.includes(status);
+  }
 
-  this.postInvoiceService.generateAndDownloadInvoice(id, tableInvoiceNo)
-    .then(() => {
-      // Success case - no action needed unless you want to show a success message
-    })
-    .catch((error) => {
-      console.error('Error generating invoice:', error);
-      this.errorMessage = 'Failed to download invoice';
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Failed to download invoice. Please try again.',
-        confirmButtonColor: '#3085d6',
+  downloadPostInvoice(id: number, tableInvoiceNo: string): void {
+    this.isLoading = true;
+
+    this.postInvoiceService.generateAndDownloadInvoice(id, tableInvoiceNo)
+      .then(() => {
+        // Success case - no action needed unless you want to show a success message
+      })
+      .catch((error) => {
+        console.error('Error generating invoice:', error);
+        this.errorMessage = 'Failed to download invoice';
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to download invoice. Please try again.',
+          confirmButtonColor: '#3085d6',
+        });
+      })
+      .finally(() => {
+        this.isLoading = false;
       });
-    })
-    .finally(() => {
-      this.isLoading = false;
-    });
-}
+  }
+
+  downloadQRCode(qrCodeUrl: string, invNo: string): void {
+    // Extract filename from URL or use invoice number
+    const fileName = `QR_${invNo}.png`;
+
+    // Fetch the image from the URL
+    fetch(qrCodeUrl)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.blob();
+      })
+      .then(blob => {
+        // Create a blob URL
+        const blobUrl = window.URL.createObjectURL(blob);
+
+        // Create an anchor element
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = fileName;
+
+        // Append to body, click, and remove
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // Clean up the blob URL
+        window.URL.revokeObjectURL(blobUrl);
+      })
+      .catch(error => {
+        console.error('Error downloading QR code:', error);
+        // Optional: Show user-friendly error message
+        alert('Failed to download QR code. Please try again.');
+      });
+  }
 }
 
 class RetailOrders {
@@ -240,4 +276,5 @@ class RetailOrders {
   invNo!: string;
   status!: string;
   orderdDate!: Date;
+  qrCode!: string;
 }

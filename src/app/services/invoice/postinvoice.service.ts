@@ -245,7 +245,7 @@ export class PostinvoiceService {
   // Company Info
   doc.setFontSize(12);
   doc.setFont('helvetica', 'bold');
-  doc.text('Polygon Agro Holdings (Private) Ltd', 15, 25);
+  doc.text('Polygon Holdings (Private) Ltd', 15, 25);
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(10);
   doc.text('No. 42/46, Nawam Mawatha, Colombo 02.', 15, 30);

@@ -285,13 +285,6 @@ fetchSelectedOfficerTargets(
       new Date().toLocaleString('en-US', { timeZone: 'Asia/Colombo' })
     );
   
-    :',
-      now.toLocaleString('en-GB', { timeZone: 'Asia/Colombo', hour12: false })
-    );
-    :',
-      deadline.toLocaleString('en-GB', { timeZone: 'Asia/Colombo', hour12: false })
-    );
-  
     // --- Case 1: Not completed yet ---
     if (!completeTime) {
       if (now.getTime() > deadline.getTime()) {

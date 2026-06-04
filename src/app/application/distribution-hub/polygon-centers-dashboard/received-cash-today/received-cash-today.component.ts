@@ -109,7 +109,7 @@ export class ReceivedCashTodayComponent implements OnInit {
     this.isLoading = true;
     this.distributionHubService.getRecivedCashDashbord(this.centerObj.centerId).subscribe(
       (res) => {
-        console.log(res);
+        
         // this.pickUpObj = res.pickupResult;
         this.assignPickUpOrders(res.pickupResult)
         this.assignDelivaryOrders(res.delivaryResult)

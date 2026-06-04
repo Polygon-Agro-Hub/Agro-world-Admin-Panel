@@ -55,8 +55,17 @@ export class PlatCareDashbordComponent implements OnInit {
 
   constructor(private dashbordService: PlantcareDashbordService) {}
 
+  barChartData: { registered: number; unregistered: number } = {
+    registered: 0,
+    unregistered: 0,
+  };
+
   ngOnInit(): void {
     this.fetchDashboardData();
+  }
+
+  onChartDataChanged(data: { registered: number; unregistered: number }): void {
+    this.barChartData = data;
   }
 
   fetchDashboardData(district?: string): void {
@@ -64,8 +73,8 @@ export class PlatCareDashbordComponent implements OnInit {
     this.dashbordService.getDashboardData(district).subscribe(
       (data: any) => {
         if (data && data.data) {
-          console.log("this is the data", data);
-          
+          console.log('this is the data', data);
+
           this.dashboardData = data.data;
           // Ensure percentages are numbers
           this.dashboardData.user_increase_percentage =
@@ -85,7 +94,7 @@ export class PlatCareDashbordComponent implements OnInit {
       (error) => {
         this.hasData = false;
         this.isLoading = false;
-      }
+      },
     );
   }
 
@@ -195,7 +204,7 @@ export class PlatCareDashbordComponent implements OnInit {
             firstRowTileHeight,
             borderRadius,
             borderRadius,
-            'F'
+            'F',
           );
         } else {
           pdf.setDrawColor(0, 0, 0);
@@ -207,14 +216,14 @@ export class PlatCareDashbordComponent implements OnInit {
             firstRowTileHeight,
             borderRadius,
             borderRadius,
-            'S'
+            'S',
           );
         }
 
         pdf.setTextColor(
           tileColor.text[0],
           tileColor.text[1],
-          tileColor.text[2]
+          tileColor.text[2],
         );
 
         const textWidth = (text: string) =>
@@ -276,7 +285,7 @@ export class PlatCareDashbordComponent implements OnInit {
           secondRowTileWidth,
           secondRowTileHeight,
           borderRadius,
-          borderRadius
+          borderRadius,
         );
 
         pdf.setFontSize(12);
@@ -312,8 +321,8 @@ export class PlatCareDashbordComponent implements OnInit {
             {
               label: 'Farmers',
               data: [
-                this.dashboardData.qrUsers,
-                this.dashboardData.allusers - this.dashboardData.qrUsers,
+                this.barChartData.registered,
+                this.barChartData.unregistered,
               ],
               backgroundColor: ['#90EE90', '#ADD8E6'],
             },
@@ -342,7 +351,7 @@ export class PlatCareDashbordComponent implements OnInit {
           margin,
           y,
           chartWidth,
-          thirdRowHeight
+          thirdRowHeight,
         );
 
         const donutChartCanvas = document.createElement('canvas');
@@ -357,7 +366,14 @@ export class PlatCareDashbordComponent implements OnInit {
         }
 
         const donutChartData = {
-          labels: ['Vegetables', 'Spices', 'Cereals', 'Fruits', 'Legumes', 'Mushrooms'],
+          labels: [
+            'Vegetables',
+            'Spices',
+            'Cereals',
+            'Fruits',
+            'Legumes',
+            'Mushrooms',
+          ],
           datasets: [
             {
               label: 'Crop Enrollments',
@@ -369,7 +385,14 @@ export class PlatCareDashbordComponent implements OnInit {
                 this.dashboardData.leLegumesCultivation,
                 this.dashboardData.mushCultivation,
               ],
-              backgroundColor: ['#2BA297', '#A54D00', '#3D75E6', '#E68A3D', '#648885', '#9156A0'],
+              backgroundColor: [
+                '#2BA297',
+                '#A54D00',
+                '#3D75E6',
+                '#E68A3D',
+                '#648885',
+                '#9156A0',
+              ],
             },
           ],
         };
@@ -398,7 +421,7 @@ export class PlatCareDashbordComponent implements OnInit {
             margin + chartWidth + tileGap,
             y,
             chartWidth,
-            thirdRowHeight
+            thirdRowHeight,
           );
         }
 
@@ -409,7 +432,7 @@ export class PlatCareDashbordComponent implements OnInit {
         pdf.text(
           `Report generated on ${new Date().toLocaleDateString()}, at ${new Date().toLocaleTimeString()}.`,
           margin,
-          pdf.internal.pageSize.getHeight() - margin
+          pdf.internal.pageSize.getHeight() - margin,
         );
 
         const fileName = `report_${new Date().toISOString().slice(0, 10)}.pdf`;

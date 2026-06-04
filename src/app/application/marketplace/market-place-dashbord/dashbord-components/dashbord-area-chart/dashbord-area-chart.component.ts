@@ -5,49 +5,51 @@ import { Chart } from 'chart.js/auto';
   selector: 'app-dashbord-area-chart',
   standalone: true,
   templateUrl: './dashbord-area-chart.component.html',
-  styleUrls: ['./dashbord-area-chart.component.css']
+  styleUrls: ['./dashbord-area-chart.component.css'],
 })
 export class DashbordAreaChartComponent implements AfterViewInit {
-  @Input() areaData!: AreaData
+  @Input() areaData!: AreaData;
   chart: any;
-  // isDark:boolean = 
-
+  // isDark:boolean =
 
   ngAfterViewInit() {
     this.createChart();
   }
 
   createChart() {
-    this.chart = new Chart("MyChart", {
+    this.chart = new Chart('MyChart', {
       type: 'line',
       data: {
         labels: this.areaData.months,
         datasets: [
           {
-            label: "Sales",
+            label: 'Sales',
             data: this.areaData.salesCount,
-            borderColor: "#4E97FD",
-            backgroundColor: "rgba(78, 151, 253, 0.3)",
+            borderColor: '#2C78DC',
+            backgroundColor: 'rgba(173, 213, 224, 0.3)', // ADDED OPACITY (0.3 = 30% opacity)
             fill: false,
-            tension: 0.4
+            tension: 0.4,
           },
           {
-            label: "Orders",
+            label: 'Orders',
             data: this.areaData.total,
-            borderColor: "#3DE188",
-            backgroundColor: "rgba(61, 225, 136, 0.3)",
+            borderColor: '#04D182',
+            backgroundColor: 'rgba(205, 246, 230, 0.3)', // ADDED OPACITY (0.3 = 30% opacity)
             fill: true,
-            tension: 0.4
+            tension: 0.4,
           },
           {
-            label: "Visitors",
-            data: [3000, 2000, 4000, 3000, 2000, 3000, 4000, 3000, 4000, 2000, 3000, 4000],
-            borderColor: "#FF9263",
-            backgroundColor: "rgba(255, 146, 99, 0.3)",
+            label: 'Visitors',
+            data: [
+              3000, 2000, 4000, 3000, 2000, 3000, 4000, 3000, 4000, 2000, 3000,
+              4000,
+            ],
+            borderColor: '#FF9DD2',
+            backgroundColor: 'rgba(255, 157, 210, 0.3)', // ADDED OPACITY (0.3 = 30% opacity)
             fill: true,
-            tension: 0.4
-          }
-        ]
+            tension: 0.4,
+          },
+        ],
       },
       options: {
         responsive: true,
@@ -55,36 +57,38 @@ export class DashbordAreaChartComponent implements AfterViewInit {
           legend: {
             display: true,
             labels: {
-              color: 'white'
-            }
-          }
+              color: '#888888',
+            },
+          },
+          datalabels: {
+            display: false, // ← Removes data labels from the chart
+          },
         },
         scales: {
           x: {
             ticks: {
-              color: 'white'
+              color: '#888888', // ← x-axis labels
             },
             grid: {
-              display: false
-            }
+              display: true,
+            },
           },
           y: {
             ticks: {
-              color: 'white'
+              color: '#888888', // ← y-axis labels
             },
             grid: {
-              color: 'rgba(255, 255, 255, 0.1)'
-            }
-          }
-        }
-      }
+              display: true,
+            },
+          },
+        },
+      },
     });
   }
 }
 
-
 interface AreaData {
   months: string[];
   salesCount: number[];
-  total: any[]
+  total: any[];
 }

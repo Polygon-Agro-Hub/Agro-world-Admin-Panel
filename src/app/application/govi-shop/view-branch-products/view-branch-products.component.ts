@@ -34,7 +34,7 @@ export class ViewBranchProductsComponent implements OnInit {
   branchId: number | null = null;
 
   searchQuery = '';
-  selectedCategoryId: string | null = 'all'; // Set default to 'all'
+  selectedCategoryId: string | null = null;
 
   categoryOptions: { label: string; value: string }[] = [
     { label: 'All Categories', value: 'all' },
@@ -48,31 +48,27 @@ export class ViewBranchProductsComponent implements OnInit {
     private route: ActivatedRoute,
     private location: Location,
     private productService: GovishopService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-    this.route.params.subscribe((params) => {
-      this.branchId = +params['branchId']; // or 'id' — match your route definition
-      console.log('branchId:', this.branchId);
-      console.log('Parsed branchId:', this.branchId); // Debug
-    });
-
-    // shopName and branchName are query params, not route params
-    this.route.queryParams.subscribe((queryParams) => {
-      this.shopName = queryParams['shopName'] || 'Shop';
-      this.branchName = queryParams['branchName'] || 'Branch';
-      console.log('shopName:', this.shopName);
-      console.log('branchName:', this.branchName);
-    });
-
-    // Load products after both are ready
+    // Load branchId and other params
     this.route.params.subscribe((params) => {
       this.branchId = +params['branchId'];
+      
+
       if (this.branchId) {
         this.loadProducts();
-      } else {
+      } else if (this.branchId !== null) {
         this.errorMessage = 'Invalid branch ID';
       }
+    });
+
+    // Load query params
+    this.route.queryParams.subscribe((queryParams) => {
+      this.shopName = queryParams['shopName'] || 'Agri Shop';
+      this.branchName = queryParams['branchName'] || 'Branch';
+      
+      
     });
   }
 
@@ -80,40 +76,43 @@ export class ViewBranchProductsComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
 
-    console.log('Loading products with params:', {
-      branchId: this.branchId,
-      categoryId: this.selectedCategoryId,
-      searchItem: this.searchQuery,
-    }); // Debug log
+    
+
+    // Don't make API call if branchId is null
+    if (!this.branchId) {
+      this.isLoading = false;
+      this.errorMessage = 'Branch ID is missing';
+      return;
+    }
 
     this.productService
       .getProductsByBranchId(
         this.branchId!,
-        this.selectedCategoryId === 'all'
-          ? undefined
-          : this.selectedCategoryId || undefined,
-        this.searchQuery || undefined,
+        this.selectedCategoryId === null ? undefined : this.selectedCategoryId || undefined,
       )
       .subscribe({
         next: (response) => {
-          console.log('API Response:', response); // Debug log
-
+          
           this.isLoading = false;
 
           if (response && response.success) {
             // Set products from response
             this.allProducts = response.products || [];
             this.filteredProducts = [...this.allProducts];
-
-            console.log('Products loaded:', this.allProducts.length); // Debug log
+            
 
             // Load categories from the response
             if (response.categories && response.categories.length > 0) {
               this.loadCategoriesFromResponse(response.categories);
+            } else {
+              // Ensure we still have the default option if no categories
+              this.categoryOptions = [{ label: 'All Categories', value: 'all' }];
             }
           } else {
             this.errorMessage = response?.error || 'Failed to load products';
             console.error('API returned error:', response);
+            this.allProducts = [];
+            this.filteredProducts = [];
           }
         },
         error: (error) => {
@@ -128,22 +127,23 @@ export class ViewBranchProductsComponent implements OnInit {
   }
 
   loadCategoriesFromResponse(categories: Category[]): void {
-  this.categoryOptions = [{ label: 'Categories', value: 'all' }];
-  
-  categories.forEach((category) => {
-    this.categoryOptions.push({
-      label: category.catName,
-      value: category.categoryId.toString(), // Use categoryId as value
+    this.categoryOptions = [];
+
+    categories.forEach((category) => {
+      this.categoryOptions.push({
+        label: category.catName,
+        value: category.categoryId.toString(),
+      });
     });
-  });
-}
+
+  }
 
   back(): void {
     this.location.back();
   }
 
   onSearch(): void {
-    console.log('Search triggered with query:', this.searchQuery); // Debug log
+    
     this.loadProducts(); // Reload with search filter
   }
 
@@ -153,7 +153,7 @@ export class ViewBranchProductsComponent implements OnInit {
   }
 
   onCategoryChange(): void {
-    console.log('Category changed to:', this.selectedCategoryId); // Debug log
+    
     this.loadProducts(); // Reload with category filter
   }
 }

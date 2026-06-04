@@ -34,19 +34,8 @@ export class DashbordFirstRowComponent {
     this.dashboardData;
   }
 
-  // fetchDashboardData(): void {
-  //   this.dashbordService.getDashboardData().subscribe(
-  //     (data: any) => {
-  //       if (data && data.data) {
-  //         this.dashboardData = data.data;
-  //         console.log(this.dashboardData);
-  //       } else {
-  //         console.warn('No data received from API.');
-  //       }
-  //     },
-  //     (error) => {
-  //       console.error('Error fetching dashboard data:', error);
-  //     }
-  //   );
-  // }
+  padNumber(value: number): string {
+    if (value === null || value === undefined) return '00';
+    return value < 10 ? `0${value}` : `${value}`;
+  }
 }

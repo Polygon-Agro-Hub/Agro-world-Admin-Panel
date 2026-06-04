@@ -295,6 +295,8 @@ import { ViewBranchesPerShopComponent } from './application/govi-shop/view-branc
 import { ViewBranchProductsComponent } from './application/govi-shop/view-branch-products/view-branch-products.component';
 import { EditBranchComponent } from './application/govi-shop/edit-branch/edit-branch.component';
 import { ViewDeleteShopsComponent } from './application/govi-shop/view-delete-shops/view-delete-shops.component';
+import { ViewCropVarietyComponent } from './application/plant-care-app/view-crop-variety/view-crop-variety.component';
+import { ViewCropGroupDetailsComponent } from './application/plant-care-app/view-crop-group-details/view-crop-group-details.component';
 
 export const routes: Routes = [
   {
@@ -496,6 +498,13 @@ export const routes: Routes = [
                 canActivate: [PermissionGuard],
                 data: { permission: 'Edit crop group' },
               },
+                            {
+                path: 'view-crop-group-details',
+                component: ViewCropGroupDetailsComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Edit crop group' },
+              },
+
               {
                 path: 'view-crop-group',
                 component: ViewCropGroupComponent,
@@ -623,6 +632,11 @@ export const routes: Routes = [
                 canActivate: [PermissionGuard],
                 data: { permission: 'View audit farm cluster' },
               },
+              {
+                path: 'view-a-crop-variety',
+                canActivate: [PermissionGuard],
+                component: ViewCropVarietyComponent,
+              }
             ],
           },
         ],
@@ -2191,6 +2205,10 @@ export const routes: Routes = [
               
               { path: 'view-delete-shops',
                 component: ViewDeleteShopsComponent,
+              },
+              {
+                path: 'preview-govi-shop/:id',
+                component: GoviShopPreviewShopComponent,
               }
             ],
           },

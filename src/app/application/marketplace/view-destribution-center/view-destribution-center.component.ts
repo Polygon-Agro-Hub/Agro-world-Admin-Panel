@@ -160,12 +160,12 @@ export class ViewDestributionCenterComponent implements OnInit {
   }
 
   fetchDistributionCenterById(id: number) {
-    console.log('Fetching distribution centre with ID:', id);
+    
     this.isLoading = true;
 
     this.distributionService.getDistributionCentreById(id).subscribe(
       (response: DistributionCenter) => {
-        console.log('Distribution centre details:', response);
+        
 
         this.isLoading = false;
         this.distributionCenterDetails = response;
@@ -256,8 +256,8 @@ export class ViewDestributionCenterComponent implements OnInit {
     this.isLoading = true;
     this.distributionService.getCompanies().subscribe({
       next: (response) => {
-        console.log('Raw API response:', response); // Add this line
-        console.log('Companies fetched:', response.data); // Check the data structure
+         // Add this line
+         // Check the data structure
 
         if (response.success && response.data) {
           this.companyOptions = response.data

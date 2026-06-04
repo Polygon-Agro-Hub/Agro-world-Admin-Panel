@@ -121,7 +121,7 @@
         <div class="border-t border-gray-300 dark:border-gray-600 my-10"></div>
       </div>
 
-      
+
 
       <div class="mb-6" *ngIf="
     (productObj.displaytype === 'D&AP' ||
@@ -246,126 +246,103 @@
       <div class="rounded-lg border-2 border-[#CFCFCF] px-12 py-6">
         <p class="text-lg text-black font-medium dark:text-textDark">Preview</p>
 
-        <div *ngIf="!isNoDiscount"
+        <!-- Empty state: no variety selected -->
+        <div *ngIf="!productObj || productObj.varietyId === 0 || productObj.varietyId === null"
           class="flex flex-col justify-center items-center relative my-3 bg-[#FFFFFF] px-5 py-3 h-auto rounded-xl dark:bg-tileBlack dark:text-textDark">
-          <div *ngIf="
-              productObj.displaytype === 'D&AP' ||
-              productObj.displaytype === 'AP&SP&D'
-            "
+
+          <!-- Placeholder image -->
+          <div class="mt-8 mb-2">
+            <img src="assets/images/PreviewImage.png" alt="placeholder" class="w-40 h-auto object-contain" />
+          </div>
+
+          <!-- Placeholder texts -->
+          <p class="text-xl font-[600] text-black dark:text-textDark my-2">--Product Name--</p>
+          <p class="text-[#4B5563] text-base font-[500] my-1">Min Qty</p>
+          <p class="text-[#00957D] my-1 text-base font-[500]">Price</p>
+
+          <!-- Add to Cart button (disabled look) -->
+          <button
+            class="flex flex-row justify-center items-center gap-3 shadow-xl border rounded-lg px-7 py-1 mb-10 mt-2"
+            disabled>
+            <i class="fa-solid fa-bag-shopping text-xl text-gray-300"></i>
+            <p class="text-lg text-gray-300">Add to Cart</p>
+          </button>
+        </div>
+
+        <!-- Normal state with discount -->
+        <div *ngIf="productObj && productObj.varietyId > 0 && !isNoDiscount"
+          class="flex flex-col justify-center items-center relative my-3 bg-[#FFFFFF] px-5 py-3 h-auto rounded-xl dark:bg-tileBlack dark:text-textDark">
+
+          <div *ngIf="productObj.displaytype === 'D&AP' || productObj.displaytype === 'AP&SP&D'"
             class="flex flex-col justify-center items-center absolute top-0 left-0 bg-[#00957D] rounded-tl-lg pl-2 pt-3 pr-12 pb-10"
             style="clip-path: polygon(0 0, 100% 0, 0 100%, 0 90%)">
-            <p *ngIf="productObj.discountedPrice === 0" class="text-white">
-              #%
-            </p>
-            <p *ngIf="productObj.discountedPrice !== 0" class="text-white">
-              {{ productObj.discountedPrice }}%
-            </p>
+            <p *ngIf="productObj.discountedPrice === 0" class="text-white">#%</p>
+            <p *ngIf="productObj.discountedPrice !== 0" class="text-white">{{ productObj.discountedPrice }}%</p>
             <p class="text-white">off</p>
           </div>
 
-          <!-- Image container with loading spinner -->
           <div class="relative w-full h-auto flex items-center justify-center mt-8">
-            <!-- Loading spinner -->
             <div *ngIf="isImageLoading" class="absolute inset-0 flex items-center justify-center">
               <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#00957D]"></div>
             </div>
-
-            <!-- Image -->
             <img *ngIf="productObj.varietyId > 0" [src]="selectedImage" (load)="onImageLoad()" (error)="onImageError()"
               class="w-full h-auto object-contain px-4 py-2" [class.opacity-0]="isImageLoading"
               [class.opacity-100]="!isImageLoading" />
           </div>
 
-          <p class="text-xl font-[600] text-black dark:text-textDark my-2">
-            {{ productObj.cropName }}
-          </p>
+          <p class="text-xl font-[600] text-black dark:text-textDark my-2">{{ productObj.cropName }}</p>
 
-          <p *ngIf="productObj.unitType === 'Kg' " class="text-[#4B5563] text-base font-[500] my-1">
-            {{ productObj.startValue }} Kg
-          </p>
-
-          <p *ngIf="productObj.unitType !== 'Kg' " class="text-[#4B5563] text-base font-[500] my-1">
-            {{ productObj.startValue * 1000 }} g
-          </p>
+          <p *ngIf="productObj.unitType === 'Kg'" class="text-[#4B5563] text-base font-[500] my-1">{{
+            productObj.startValue }} Kg</p>
+          <p *ngIf="productObj.unitType !== 'Kg'" class="text-[#4B5563] text-base font-[500] my-1">{{
+            productObj.startValue * 1000 }} g</p>
 
           <div>
-            <p *ngIf="
-                productObj.displaytype === 'D&AP' && productObj.salePrice !== 0
-              " class="text-[#00957D] my-1 text-base font-[500]">
+            <p *ngIf="productObj.displaytype === 'D&AP' && productObj.salePrice !== 0"
+              class="text-[#00957D] my-1 text-base font-[500]">
               Rs. {{ (productObj.normalPrice * productObj.startValue) || 0 | number:'1.2-2' }}
             </p>
-
-            <div *ngIf="
-              productObj.displaytype === 'AP&SP' ||
-              productObj.displaytype === 'AP&SP&D'
-            " class="text-[16px] text-[#00957D] my-1">
-              <p *ngIf="productObj.salePrice === 0">Rs.0.00</p>
-              <p *ngIf="productObj.salePrice !== 0">
-                Rs. {{ (productObj.salePrice * productObj.startValue) || 0 | number:'1.2-2' }}
-              </p>
+            <div *ngIf="productObj.displaytype === 'AP&SP' || productObj.displaytype === 'AP&SP&D'"
+              class="text-[16px] text-[#00957D] my-1">
+              <p *ngIf="productObj.salePrice === 0">Rs. 0.00</p>
+              <p *ngIf="productObj.salePrice !== 0">Rs. {{ (productObj.salePrice * productObj.startValue) || 0 |
+                number:'1.2-2' }}</p>
             </div>
           </div>
 
-          <p *ngIf="
-                (productObj.displaytype === 'AP&SP' ||
-                  productObj.displaytype === 'AP&SP&D') &&
-                productObj.salePrice !== 0
-              " class="text-[#787878] my-1 line-through text-[12px] ">
+          <p *ngIf="(productObj.displaytype === 'AP&SP' || productObj.displaytype === 'AP&SP&D') && productObj.salePrice !== 0"
+            class="text-[#787878] my-1 line-through text-[12px]">
             Rs. {{ (productObj.normalPrice * productObj.startValue) || 0 | number:'1.2-2' }}
           </p>
+
           <button class="flex flex-row justify-between shadow-xl border rounded-lg px-7 py-1 mb-10">
             <i class="fa-solid fa-bag-shopping text-xl text-gray-300"></i>
             <p class="text-lg text-gray-300 mx-3">Add to Cart</p>
           </button>
         </div>
 
-        <div *ngIf="isNoDiscount"
+        <!-- Normal state without discount -->
+        <div *ngIf="productObj && productObj.varietyId > 0 && isNoDiscount"
           class="flex flex-col justify-center items-center relative my-3 bg-[#FFFFFF] px-5 py-3 h-auto rounded-xl dark:bg-tileBlack dark:text-textDark">
-          <!-- Image container with loading spinner -->
+
           <div class="relative w-full h-auto flex items-center justify-center mt-8">
-            <!-- Loading spinner -->
             <div *ngIf="isImageLoading" class="absolute inset-0 flex items-center justify-center">
               <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#00957D]"></div>
             </div>
-
-            <!-- Image -->
             <img *ngIf="productObj.varietyId > 0" [src]="selectedImage" (load)="onImageLoad()" (error)="onImageError()"
               class="w-full h-auto object-contain px-4 py-2" [class.opacity-0]="isImageLoading"
               [class.opacity-100]="!isImageLoading" />
           </div>
 
-          <p class="text-xl font-[600] text-black dark:text-textDark my-2">
-            {{ productObj.cropName }}
-          </p>
+          <p class="text-xl font-[600] text-black dark:text-textDark my-2">{{ productObj.cropName }}</p>
 
-          <!-- <div>
-            <p *ngIf="
-          ( productObj.displaytype === 'D&AP' ) &&
-          productObj.salePrice !== 0
-        " class="text-[#787878] my-1">
-              Rs.{{ productObj.normalPrice }}.00
-            </p>
-
-            <p *ngIf="
-          (
-            productObj.displaytype === 'AP&SP' ||
-            productObj.displaytype === 'AP&SP&D') &&
-          productObj.salePrice !== 0
-        " class="text-[#787878] my-1 line-through">
-              Rs.{{ productObj.normalPrice }}.00
-            </p>
-          </div> -->
-
-          <p *ngIf="productObj.unitType === 'Kg' " class="text-[#4B5563] text-base font-[500] my-1">
-            {{ productObj.startValue }} Kg
-          </p>
-
-          <p *ngIf="productObj.unitType !== 'Kg' " class="text-[#4B5563] text-base font-[500] my-1">
-            {{ productObj.startValue * 1000 }} g
-          </p>
+          <p *ngIf="productObj.unitType === 'Kg'" class="text-[#4B5563] text-base font-[500] my-1">{{
+            productObj.startValue }} Kg</p>
+          <p *ngIf="productObj.unitType !== 'Kg'" class="text-[#4B5563] text-base font-[500] my-1">{{
+            productObj.startValue * 1000 }} g</p>
 
           <p class="text-[#00957D] my-1 text-base font-[500]">
-            Rs.{{ (productObj.normalPrice * productObj.startValue) || 0 | number:'1.2-2' }}
+            Rs. {{ (productObj.normalPrice * productObj.startValue) || 0 | number:'1.2-2' }}
           </p>
 
           <button class="flex flex-row justify-between shadow-xl border rounded-lg px-7 py-1 mb-10">

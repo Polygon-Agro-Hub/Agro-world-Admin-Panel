@@ -28,7 +28,7 @@ export class DashbordSecondRowComponent {
 
 interface SecondRow {
   salsesAnalize: AnalyzeReport;
-  totalSales: SalesCount;
+  totalSales: SalesDayCount;
   totUsers: UserCount;
 }
 
@@ -37,11 +37,14 @@ interface AnalyzeReport {
   precentage: number;
 }
 
-interface SalesCount {
+interface SalesDayCount {
   count: number;
+  percentage: number;
+  previousPeriodCount: number;
 }
 
 interface UserCount {
   userCount: number;
+  percentage: number;
 }
 

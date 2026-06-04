@@ -190,7 +190,7 @@ export class CenterHomeDeliveryOrdersComponent implements OnInit {
       next: (response) => {
         if (response.status && response.data) {
           this.allDeliveries = response.data;
-          console.log('allDeliveries', this.allDeliveries)
+          
 
           this.hasData = this.allDeliveries.length > 0
           this.prepareDeliveryData();
@@ -409,7 +409,7 @@ export class CenterHomeDeliveryOrdersComponent implements OnInit {
   }
 
   dateFilter() {
-    console.log('date', this.selectedDate);
+    
     this.centerFetchDeliveries()
   }
 

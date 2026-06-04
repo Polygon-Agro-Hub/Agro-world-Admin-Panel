@@ -72,7 +72,7 @@ export class GoviShopPreviewShopComponent {
 
     this.urlSegment = segments[segments.length - 3];
     this.fetchShopById(this.shopId);
-    console.log('urlSegment', this.urlSegment)
+    
   }
 
   scrollToTop(): void {
@@ -87,12 +87,12 @@ export class GoviShopPreviewShopComponent {
     this.goviShopService
       .getShopById(id)
       .subscribe((res: any) => {
-        console.log("this is data", res);
+        
 
         this.isLoading = false;
         this.officerObj = res.data;
 
-        console.log('officerObj', this.officerObj)
+        
       });
 
   }

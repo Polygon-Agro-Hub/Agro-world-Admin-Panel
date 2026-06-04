@@ -44,7 +44,7 @@ export class ViewJobHistoryFarmerClusterAuditResponseComponent implements OnInit
   ngOnInit(): void {
      this.route.queryParams.subscribe(queryParams => {
       this.jobId = queryParams['jobId'] || '';
-      console.log('jobId', this.jobId);
+      
   
       this.loadData();
     });
@@ -61,7 +61,7 @@ export class ViewJobHistoryFarmerClusterAuditResponseComponent implements OnInit
 
   this.goviLinkService.getFarmerClusterAudith(this.jobId).subscribe({
     next: (res) => {
-      console.log('API Response:', res);
+      
 
       if (!res.success) {
         console.error('API returned success: false');

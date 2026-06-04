@@ -60,13 +60,13 @@ export class GoviLinkJobsServiceRequestResponseComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    console.log('running');
+    
     
     this.route.queryParams.subscribe(queryParams => {
       this.jobId = queryParams['jobId'] || '';
       this.purpose = queryParams['purpose'] || '';
   
-      console.log('jobId', this.jobId);
+      
   
       this.fetchResponse();
     });
@@ -79,13 +79,13 @@ export class GoviLinkJobsServiceRequestResponseComponent implements OnInit {
       (response) => {
         this.isLoading = false;
         if (response.success) {
-          console.log('response', response)
+          
           this.serviceRequestResponse = response.data.auditDetails
           this.questions = response.data.advices
           this.problems = response.data.suggestions
-          console.log('serviceRequestResponse', this.serviceRequestResponse)
-          console.log('questions', this.questions)
-          console.log('problems', this.problems)
+          
+          
+          
           this.totalItems = response.data.length;
           this.hasData = this.totalItems > 0;
         } else {

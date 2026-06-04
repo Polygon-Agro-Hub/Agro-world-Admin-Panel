@@ -118,6 +118,9 @@
               *ngIf="permissionService.hasPermission('Download retail invoice') || tokenService.getUserDetails().role === '1'">
               POST-INVOICE
             </th>
+            <th class="whitespace-nowrap px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
+              QR CODE
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -212,6 +215,9 @@
                   <i class="fa-solid fa-file-lines text-2xl"></i>
                 </button>
               </div>
+            </td>
+            <td class="px-4 py-3 text-center cursor-pointer">
+               <i class="fa-solid fa-download text-2xl text-blue-500" (click)="downloadQRCode(item.qrCode, item.invNo)"></i>
             </td>
           </tr>
         </tbody>

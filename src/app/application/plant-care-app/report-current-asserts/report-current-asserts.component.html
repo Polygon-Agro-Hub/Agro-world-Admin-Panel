@@ -11,33 +11,30 @@
     </p>
     <div *ngIf="assertReport.length > 0; else noData" class="flex justify-center overflow-x-auto">
         <table class="w-full divide-y divide-gray-200">
-            <thead>
-                <tr>
-                    <th class=" py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left">Category</th>
-                    <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center">Total Price (LKR)
-                    </th>
-                    <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center">View</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let assert of assertReport">
-                    <td class=" py-3 text-start text-[#000000] dark:text-textDark">
-                        {{assert.category}}
-                    </td>
-                    <td class="px-4 py-3 text-[#000000] dark:text-textDark text-center">
-                        {{ assert.totPrice | number:'1.0-2' }}
-                    </td>
-
-                    <td class="px-4 py-3 text-center">
-                        <button class="w-5 h-5 text-blue-500 hover:text-blue-700"
-                            (click)="viewList(this.userId, assert.category)">
-                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                        </button>
-                    </td>
-
-                </tr>
-            </tbody>
-        </table>
+    <thead>
+        <tr>
+            <th class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center w-1/3">Category</th>
+            <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center w-1/3">Total Price (LKR)</th>
+            <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center w-1/3">View</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let assert of assertReport">
+            <td class="py-3 text-center text-[#000000] dark:text-textDark w-1/3">
+                {{assert.category}}
+            </td>
+            <td class="px-4 py-3 text-[#000000] dark:text-textDark text-center w-1/3">
+                {{ assert.totPrice | number:'1.0-2' }}
+            </td>
+            <td class="px-4 py-3 text-center w-1/3">
+                <button class="w-5 h-5 text-blue-500 hover:text-blue-700"
+                    (click)="viewList(this.userId, assert.category)">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>
     </div>
 
     <!-- Template for no data -->

@@ -115,7 +115,7 @@ export class ViewBranchesPerShopComponent implements OnInit {
 
   loadBranches(): void {
 
-    console.log('shopId', this.shopId)
+    
     this.isLoading = true;
 
     this.govishopService

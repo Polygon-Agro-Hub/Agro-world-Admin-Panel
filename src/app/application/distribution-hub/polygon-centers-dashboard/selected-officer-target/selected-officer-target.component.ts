@@ -129,9 +129,9 @@ fetchSelectedOfficerTargets(
   this.DestributionSrv.getSelectedOfficerTargets(officerId, search, status, completingStatus).subscribe(
     (res) => {
 
-      console.log('res', res)
+      
       this.ordersArr = res.items
-      console.log('ordersArr', this.ordersArr)
+      
 
       this.ordersArr = res.items.map((item: any) => {
         let status = '';
@@ -236,9 +236,9 @@ fetchSelectedOfficerTargets(
   const regCode = this.route.snapshot.queryParams['regCode'];
 
   // Debug — check if values are coming through
-  console.log('centerId:', centerId);
-  console.log('centerName:', centerName);
-  console.log('regCode:', regCode);
+  
+  
+  
 
   if (!centerId) {
     // Fallback if params are missing
@@ -259,7 +259,7 @@ fetchSelectedOfficerTargets(
 }
 
   getStatus(item: orders): string {
-    console.log('Setting status');
+    
   
     // Convert both into Date objects
     const scheduleDate = new Date(item.sheduleDate);
@@ -285,12 +285,10 @@ fetchSelectedOfficerTargets(
       new Date().toLocaleString('en-US', { timeZone: 'Asia/Colombo' })
     );
   
-    console.log(
-      'Now (SL):',
+    :',
       now.toLocaleString('en-GB', { timeZone: 'Asia/Colombo', hour12: false })
     );
-    console.log(
-      'Deadline (SL):',
+    :',
       deadline.toLocaleString('en-GB', { timeZone: 'Asia/Colombo', hour12: false })
     );
   

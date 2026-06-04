@@ -679,13 +679,11 @@ onCentreNameBlur() {
   fetchAllCompanies() {
     this.distributionService.getAllCompanies().subscribe(
       (res) => {
-        console.log('Raw API data:', res.data); // Check if 15 companies are here
         this.companyList = res.data;
         this.companyOptions = this.companyList.map(company => ({
           label: company.companyNameEnglish,
           value: company.id
         }));
-        console.log('Dropdown options:', this.companyOptions); // Verify all 15 appear
       },
       (error) => console.error('Error fetching companies:', error)
     );
@@ -756,8 +754,6 @@ onCentreNameBlur() {
           // Generic required field message for other fields
           const fieldName = this.formatFieldName(key);
           missingFields.push(fieldName);
-
-          console.log('missingFields', missingFields);
         }
       }
     });

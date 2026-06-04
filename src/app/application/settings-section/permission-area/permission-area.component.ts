@@ -74,7 +74,6 @@ export class PermissionAreaComponent {
   ngOnInit() {
     this.role_id = this.route.snapshot.params['id'];
     this.roleName = this.route.snapshot.queryParams['role'];
-    console.log(this.role_id);
     this.getAllPosition();
     this.getAllFeatures();
     this.getAllRoleFeatures();
@@ -101,7 +100,6 @@ export class PermissionAreaComponent {
         (response) => {
           this.isLoading = false;
           this.positionList = response.positions;
-          console.log(response);
         },
         (error) => {
           console.error('Error fetching news:', error);
@@ -171,7 +169,6 @@ export class PermissionAreaComponent {
     })
     .subscribe(
       (response) => {
-        console.log('Main response -> ', response);
         this.isLoading = false;
         
         // Check if response has features data
@@ -203,8 +200,6 @@ export class PermissionAreaComponent {
           this.filteredFeatureList = [];
           this.hasData = false; // Set to false since no data
         }
-        
-        console.log(this.FeatureList);
       },
       (error) => {
         this.isLoading = false;
@@ -236,7 +231,6 @@ export class PermissionAreaComponent {
       .subscribe(
         (response) => {
           this.RoleFeatureList = response.role_features;
-          console.log(response);
         },
         (error) => {
           console.error('Error fetching news:', error);
@@ -279,7 +273,6 @@ export class PermissionAreaComponent {
         .subscribe({
           next: (response: any) => {
             if (response.status) {
-              console.log('Give Permission successfully:', response);
               this.RoleFeatureList.push({
                 feature_id: featureId,
                 position_id: positionId,
@@ -334,7 +327,6 @@ export class PermissionAreaComponent {
           )
           .subscribe({
             next: (response: any) => {
-              console.log('Give Permission deleted successfully:', response);
 
               // Remove the deleted feature from the list
               this.RoleFeatureList = this.RoleFeatureList.filter(
@@ -368,7 +360,6 @@ export class PermissionAreaComponent {
   }
 
   onCategoryChange(event: any) {
-    console.log('Selected Category ID:', this.selectedCategory); // This will now log the string ID
     if (this.selectedCategory !== -1 && this.selectedCategory !== '') {
       const selectedCategoryObj = this.categories.find(
         (cat) => cat.id.toString() === this.selectedCategory
@@ -494,7 +485,6 @@ export class PermissionAreaComponent {
   }
 
   editCategoryOnSubmit() {
-    console.log(this.editCategoryObj);
 
     if (this.existCategoryName === this.editCategoryObj.name) {
       Swal.fire(

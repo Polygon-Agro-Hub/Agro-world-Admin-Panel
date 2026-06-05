@@ -15,16 +15,15 @@
           <p-calendar id="fromDate" [(ngModel)]="dateFilter" (onSelect)="onDateSelect()" (onClear)="onDateClear()"
             placeholder="Dispatched Date" [showIcon]="true" [showClear]="true" [showButtonBar]="true"
             dateFormat="yy-mm-dd" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2030"
-            iconDisplay="input" 
-            [style]="{ width: '16rem', height: '2rem' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+            iconDisplay="input" [style]="{ width: '16rem', height: '2rem' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
          [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
          [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
          [&_.p-datepicker-header]:dark:bg-[#2d354d] 
          [&_.p-datepicker-header]:dark:text-white
          [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
          [&_.p-button:hover]:dark:bg-[#6b7280]"
-              inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
-              [appendTo]="'body'" />
+            inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
+            [appendTo]="'body'" />
         </div>
 
         <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
@@ -115,20 +114,20 @@
               {{ order.userName === null ? '--': order.userName }}
             </td>
             <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
-              {{ order.processCreatedAt | date:'d MMM, y':'UTC' }}<br />
-              {{ order.processCreatedAt | date:'hh:mm a':'UTC' }}
-              </td>
+              {{ order.processCreatedAt | date:'d MMM, y' }}<br />
+              {{ order.processCreatedAt | date:'hh:mm a' }}
+            </td>
 
-              <td class="px-1 py-3 text-center">
-                <button class="w-5 h-5 text-blue-500 hover:text-blue-700"
-                  (click)="viewPremadePackages(order.processOrderId)">
-                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                      d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
-                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                  </svg>
-                </button>
-              </td>
+            <td class="px-1 py-3 text-center">
+              <button class="w-5 h-5 text-blue-500 hover:text-blue-700"
+                (click)="viewPremadePackages(order.processOrderId)">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+            </td>
           </tr>
           <tr *ngIf="orders.length === 0 && !isLoading">
             <td colspan="8" class="px-1 py-6 text-center text-textLight dark:text-textDark">

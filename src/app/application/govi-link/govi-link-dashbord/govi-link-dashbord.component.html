@@ -1,1 +1,17 @@
-<p>govi-link-dashbord works!</p>
+<div class="block gap-6 p-6">
+
+  <div class="mb-5 flex flex-row gap-4">
+    <app-square-component
+      *ngFor="let card of squareCards"
+      [config]="card">
+    </app-square-component>
+  </div>
+
+  <div class="mt-5 flex flex-row gap-4">
+    <app-rectangle-component
+      *ngFor="let card of rectangleCards"
+      [config]="card">
+    </app-rectangle-component>
+  </div>
+
+</div>

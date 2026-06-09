@@ -1,4 +1,4 @@
-<div class="bg-white rounded-2xl p-5 flex items-center gap-5 shadow-md min-w-80">
+<div class="bg-white dark:bg-[#061E2C] rounded-2xl p-5 flex items-center gap-5 shadow-md min-w-80">
   <div class="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0"
        [ngStyle]="{ backgroundColor: config.iconBg }">
     <i [class]="config.iconClass + ' text-2xl'"
@@ -6,7 +6,7 @@
   </div>
   <div class="flex flex-col flex-1">
     <p class="text-gray-500 text-sm mb-1">{{ config.label }}</p>
-    <p class="text-gray-900 text-3xl font-bold mb-1">{{ config.count }}</p>
+    <p class="text-gray-900 text-3xl font-bold dark:text-[#ffff] mb-1">{{ config.count }}</p>
     <p class="text-gray-300 text-xs text-right">{{ config.dateLabel }}</p>
   </div>
 </div>

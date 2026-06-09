@@ -9,7 +9,7 @@
   </div>
 
   <!-- Timely row -->
-  <div class="mt-5 flex flex-row gap-4">
+  <div class="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
     <app-rectangle-component
       *ngFor="let card of timelyCards"
       [config]="card">
@@ -17,7 +17,7 @@
   </div>
 
   <!-- Late row -->
-  <div class="mt-4 flex flex-row gap-4">
+  <div class="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
     <app-rectangle-component
       *ngFor="let card of lateCards"
       [config]="card">

@@ -1,5 +1,6 @@
 <div class="block gap-6 p-6">
 
+  <!-- Square cards row -->
   <div class="mb-5 flex flex-row gap-4">
     <app-square-component
       *ngFor="let card of squareCards"
@@ -7,9 +8,18 @@
     </app-square-component>
   </div>
 
+  <!-- Timely row -->
   <div class="mt-5 flex flex-row gap-4">
     <app-rectangle-component
-      *ngFor="let card of rectangleCards"
+      *ngFor="let card of timelyCards"
+      [config]="card">
+    </app-rectangle-component>
+  </div>
+
+  <!-- Late row -->
+  <div class="mt-4 flex flex-row gap-4">
+    <app-rectangle-component
+      *ngFor="let card of lateCards"
       [config]="card">
     </app-rectangle-component>
   </div>

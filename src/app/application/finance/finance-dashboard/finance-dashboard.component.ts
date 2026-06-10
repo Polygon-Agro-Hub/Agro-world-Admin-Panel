@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, NgClass } from '@angular/common';
 import { FinanceService } from '../../../services/finance/finance.service';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import {
   FinanceMainDashboardCounts,
   FinanceMainDashboardIncome,
@@ -25,7 +26,7 @@ interface IncomeCard {
 @Component({
   selector: 'app-finance-dashboard',
   standalone: true,
-  imports: [CommonModule, NgClass],
+  imports: [CommonModule, NgClass, LoadingSpinnerComponent],
   templateUrl: './finance-dashboard.component.html',
   styleUrl: './finance-dashboard.component.css',
 })

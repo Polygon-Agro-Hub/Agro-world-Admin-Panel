@@ -1,11 +1,9 @@
 <div class="p-6 bg-gray-100 dark:bg-[#0B1F2E] min-h-screen font-sans transition-colors duration-200">
 
-  <!-- Loading State -->
-  <div *ngIf="loading" class="flex flex-col items-center justify-center py-20 gap-3 text-gray-500 dark:text-gray-400">
-    <div class="w-9 h-9 border-4 border-gray-200 dark:border-gray-700 border-t-teal-600 rounded-full animate-spin"></div>
-    <p class="text-sm">Loading dashboard...</p>
+  <div *ngIf="loading" class="flex items-center justify-center py-20">
+    <app-loading-spinner />
   </div>
-
+ 
   <!-- Error State -->
   <div *ngIf="error && !loading" class="flex flex-col items-center gap-3 py-16 text-gray-500 dark:text-gray-400">
     <p class="text-sm">Failed to load dashboard data.</p>

@@ -346,6 +346,34 @@ export interface InvestmentOfficer {
   distrct?: any;
 }
 
+export interface FinanceMainDashboardCounts {
+  allPensionRequests: number;
+  supplierUpgrades: number;
+  allProjectRequests: number;
+  publishedProjects: number;
+}
+
+export interface FinanceMainDashboardIncome {
+  goviCareProIncome: number;
+  certificationsIncome: number;
+  collectionExpenses: number;
+  goviMartSalesIncome: number;
+  salesDashIncome: number;
+  returnedOrdersLoss: number;
+  goviShopPremiumIncome: number;
+  goviShopOrderCommission: number;
+}
+
+export interface FinanceMainDashboardData {
+  counts: FinanceMainDashboardCounts;
+  income: FinanceMainDashboardIncome;
+}
+
+export interface FinanceMainDashboardResponse {
+  status: boolean;
+  data: FinanceMainDashboardData;
+}
+
 export interface ApprovedGoviCareRequest extends GoviCareRequest {
   publishStatus: string;
 }
@@ -1085,7 +1113,7 @@ export class FinanceService {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-  
+
     const url = `${this.apiUrl}shop/reneve-govi-shop-user/${id}`;
     return this.http.put<any>(url, { status }, { headers });
   }
@@ -1097,7 +1125,15 @@ export class FinanceService {
     });
 
     const url = `${this.apiUrl}shop/reject-govi-shop-user-status/${id}`;
-    return this.http.post<any>(url, {text}, { headers });
+    return this.http.post<any>(url, { text }, { headers });
   }
+
+  getFinanceMainDashboard(): Observable<FinanceMainDashboardResponse> {
+    const url = `${this.apiUrl}finance/main-dashboard`;
+    return this.http.get<FinanceMainDashboardResponse>(url, {
+      headers: this.getHeaders(),
+    });
+  }
+
 }
 

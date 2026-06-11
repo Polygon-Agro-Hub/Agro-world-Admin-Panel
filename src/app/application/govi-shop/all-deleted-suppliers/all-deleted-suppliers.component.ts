@@ -5,6 +5,8 @@ import { Subject, takeUntil } from 'rxjs';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { GovishopService } from '../../../services/govi-shop/govishop.service';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-all-deleted-suppliers',
@@ -30,7 +32,8 @@ export class AllDeletedSuppliersComponent implements OnInit, OnDestroy {
   isReasonModalOpen = false;
   selectedReason = '';
 
-  constructor(private govishopService: GovishopService, private location: Location) {}
+  constructor(private govishopService: GovishopService, private location: Location, public permissionService: PermissionService,
+    public tokenService: TokenService,) {}
 
   ngOnInit(): void {
     this.fetchDeletedSuppliers();

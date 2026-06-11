@@ -5,6 +5,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { Router } from '@angular/router';
 import { GovishopService } from '../../../services/govi-shop/govishop.service';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-view-delete-shops',
@@ -37,7 +39,9 @@ export class ViewDeleteShopsComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private shopService: GovishopService
+    private shopService: GovishopService,
+    public permissionService: PermissionService,
+    public tokenService: TokenService,
   ) {}
 
   ngOnInit(): void {

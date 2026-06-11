@@ -6,6 +6,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { GovishopService } from '../../../services/govi-shop/govishop.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 export interface Branch {
   id: number;
@@ -102,7 +104,9 @@ export class ViewBranchesPerShopComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private govishopService: GovishopService,
-    private location: Location
+    private location: Location,
+    public permissionService: PermissionService,
+    public tokenService: TokenService,
   ) {}
 
   ngOnInit(): void {

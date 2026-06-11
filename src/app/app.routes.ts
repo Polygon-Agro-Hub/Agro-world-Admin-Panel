@@ -2146,7 +2146,7 @@ export const routes: Routes = [
               {
                 path: 'all-govi-shops',
                 canActivate: [PermissionGuard],
-                data: { permission: 'View all govi shops' },
+                data: { permission: 'View All Govi Shops' },
                 component: ViewAllShopsComponent,
                 
               },
@@ -2194,7 +2194,7 @@ export const routes: Routes = [
               {
                 path: 'all-branches',
                 canActivate: [PermissionGuard],
-                data: { permission: 'View all branches' },
+                data: { permission: 'View All Branches' },
                 component: ViewBranchesPerShopComponent,
               },
 

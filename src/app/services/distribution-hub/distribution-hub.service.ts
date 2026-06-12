@@ -4,6 +4,26 @@ import { TokenService } from '../token/services/token.service';
 import { environment } from '../../environment/environment';
 import { catchError, Observable, throwError } from 'rxjs';
 
+
+export interface DistributionDashboardData {
+  // Stat cards
+  totalHeadOfficers: number;
+  totalCentres: number;
+  totalManagers: number;
+  totalDrivers: number;
+
+  // Today
+  totalCashReceivedToday: number;
+  totalDeliveredToday: number;
+  totalPickupToday: number;
+  returnLossToday: number;
+
+  // This Month
+  totalDeliveredMonth: number;
+  totalPickupMonth: number;
+  returnLossMonth: number;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -914,6 +934,18 @@ export class DistributionHubService {
     });
     return this.http.get<any>(`${this.apiUrl}distribution/get-recived-cash-dashbord/${id}`, { headers });
   }
+
+  getDistributionDashboard(): Observable<{ success: boolean; data: DistributionDashboardData }> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
+ 
+  return this.http.get<{ success: boolean; data: DistributionDashboardData }>(
+    `${this.apiUrl}distribution/get-dashboard`,
+    { headers }
+  );
+}
 }
 
 

@@ -101,11 +101,12 @@ import Swal from 'sweetalert2';
 import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
 import { PermissionService } from '../../../services/roles-permission/permission.service';
 import { TokenService } from '../../../services/token/services/token.service';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
   selector: 'app-view-product-types',
   standalone: true,
-  imports: [CommonModule, FormsModule, LoadingSpinnerComponent],
+  imports: [CommonModule, FormsModule, LoadingSpinnerComponent, DropdownModule],
   templateUrl: './view-product-types.component.html',
   styleUrl: './view-product-types.component.css',
 })
@@ -123,6 +124,13 @@ confirmNewStatusLabel = '';
 private pendingToggleId: number | null = null;
 private pendingNewStatus: number | null = null;
 private pendingActionText = '';
+
+selectedStatus: number | null = null;
+
+statusOptions = [
+  { label: 'Active', value: 1 },
+  { label: 'Inactive', value: 0 }
+];
 
   constructor(
     private marketSrv: MarketPlaceService,
@@ -151,18 +159,24 @@ private pendingActionText = '';
   }
 
   filterProducts(): void {
-    const search = this.searchText.toLowerCase().trim();
-    if (search) {
-      this.filteredProductArr = this.productArr.filter(product =>
-        product.typeName.toLowerCase().includes(search) ||
+  const search = this.searchText.toLowerCase().trim();
+
+  this.filteredProductArr = this.productArr.filter(product => {
+    const matchesSearch = search
+      ? product.typeName.toLowerCase().includes(search) ||
         product.shortCode.toLowerCase().includes(search)
-      );
-    } else {
-      this.filteredProductArr = [...this.productArr];
-    }
-    this.productCount = this.filteredProductArr.length;
-    this.hasData = this.productCount > 0;
-  }
+      : true;
+
+    const matchesStatus = this.selectedStatus !== null && this.selectedStatus !== undefined
+      ? product.isValid === this.selectedStatus
+      : true;
+
+    return matchesSearch && matchesStatus;
+  });
+
+  this.productCount = this.filteredProductArr.length;
+  this.hasData = this.productCount > 0;
+}
 
   clearSearch(): void {
     this.searchText = '';

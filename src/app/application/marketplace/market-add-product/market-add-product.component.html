@@ -44,6 +44,18 @@
         </div>
       </div>
 
+      <div class="mb-6">
+        <label class="text-[#534E4E] dark:text-textDark">Product Type *</label>
+        <p-dropdown id="category" name="category" [(ngModel)]="productObj.productTypeId"
+          (ngModelChange)="onProductTypeChange($event)" required [options]="productTypeOptions" optionLabel="label"
+          optionValue="value" placeholder="--Select Product Type--" #categoryField="ngModel"
+          [styleClass]="'w-full border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'">
+        </p-dropdown>
+        <div *ngIf="categoryField.invalid && categoryField.touched" class="text-red-500 text-sm mt-1">
+          Product Type is required.
+        </div>
+      </div>
+
       <!-- Crop Selection -->
       <div class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">Crop *</label>

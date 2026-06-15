@@ -783,6 +783,20 @@ export class MarketPlaceService {
     return this.http.get<any>(url, { headers });
   }
 
+  updateProductTypeStatus(id: number, isValid: number): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+  });
+
+  const body = { isValid: isValid };
+
+  return this.http.patch(
+    `${this.apiUrl}market-place/update-product-type-status/${id}`,
+    body,
+    { headers }
+  );
+}
+
 }
 
 

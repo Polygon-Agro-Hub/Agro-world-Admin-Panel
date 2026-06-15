@@ -117,6 +117,13 @@ export class ViewProductTypesComponent implements OnInit {
   searchText: string = '';
   isLoading = false;
 
+  showConfirmModal = false;
+confirmProductName = '';
+confirmNewStatusLabel = '';
+private pendingToggleId: number | null = null;
+private pendingNewStatus: number | null = null;
+private pendingActionText = '';
+
   constructor(
     private marketSrv: MarketPlaceService,
     private router: Router,
@@ -127,6 +134,8 @@ export class ViewProductTypesComponent implements OnInit {
   ngOnInit(): void {
     this.fetchProductType();
   }
+
+  
 
   fetchProductType() {
     this.isLoading = true;
@@ -207,10 +216,82 @@ export class ViewProductTypesComponent implements OnInit {
   navigateEdit(id: number): void {
     this.router.navigate([`/market/action/edit-product-type/${id}`]);
   }
+
+  toggleProductTypeStatus(id: number, currentStatus: number): void {
+  const newStatus = currentStatus === 1 ? 0 : 1;
+  const product = this.productArr.find(p => p.id === id);
+
+  this.pendingToggleId = id;
+  this.pendingNewStatus = newStatus;
+  this.pendingActionText = newStatus === 1 ? 'activated' : 'deactivated';
+  this.confirmProductName = product?.typeName || 'this product type';
+  this.confirmNewStatusLabel = newStatus === 1 ? 'Active' : 'Inactive';
+  this.showConfirmModal = true;
+}
+
+onConfirmCancel(): void {
+  this.showConfirmModal = false;
+  this.pendingToggleId = null;
+  this.pendingNewStatus = null;
+}
+
+onConfirmProceed(): void {
+  this.showConfirmModal = false;
+
+  const id = this.pendingToggleId!;
+  const newStatus = this.pendingNewStatus!;
+  const actionText = this.pendingActionText;
+
+  this.isLoading = true;
+  this.marketSrv.updateProductTypeStatus(id, newStatus).subscribe({
+    next: (res) => {
+      this.isLoading = false;
+      if (res.status) {
+        Swal.fire({
+          icon: 'success',
+          title: `${actionText.charAt(0).toUpperCase() + actionText.slice(1)}!`,
+          text: res.message || `Product type ${actionText} successfully.`,
+        });
+
+        const item = this.productArr.find(p => p.id === id);
+        if (item) {
+          item.isValid = newStatus;
+          item.modifyId = res.modifyId;
+        }
+
+        const filteredItem = this.filteredProductArr.find(p => p.id === id);
+        if (filteredItem) {
+          filteredItem.isValid = newStatus;
+          filteredItem.modifyId = res.modifyId;
+        }
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: res.message || `Failed to update product type status.`,
+        });
+      }
+    },
+    error: (err) => {
+      this.isLoading = false;
+      console.error(err);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'An error occurred while updating the status.',
+      });
+    }
+  });
+
+  this.pendingToggleId = null;
+  this.pendingNewStatus = null;
+}
 }
 
 class ProductType {
   id!: number;
   typeName!: string;
   shortCode!: string;
+  isValid!: number;
+  modifyId!: string;
 }

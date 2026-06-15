@@ -6,9 +6,8 @@
 </button>
 
 <div class="flex space-x-4">
-  <button 
-   *ngIf="permissionService.hasPermission('Add product type') || tokenService.getUserDetails().role === '1'"
-  class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
+  <button *ngIf="permissionService.hasPermission('Add product type') || tokenService.getUserDetails().role === '1'"
+    class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
     (click)="navigateToAdd()">
     <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M4 12H20M12 4V20" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -35,7 +34,8 @@
             (keydown.enter)="filterProducts()" />
 
           <!-- Search button -->
-          <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2" (click)="filterProducts()">
+          <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+            (click)="filterProducts()">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
               stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -54,7 +54,7 @@
       </div>
     </div>
 
-    
+
     <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen mt-6">
       <p class="text-[#494949] my-6 dark:text-white">--No Data Available--</p>
       <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
@@ -67,6 +67,8 @@
             <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">No</th>
             <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">Short Code</th>
             <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">Type Name</th>
+            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">Status</th>
+            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">Last Modified By</th>
             <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center"></th>
           </tr>
         </thead>
@@ -81,10 +83,21 @@
             <td class="px-3 py-3 text-left text-textLight dark:text-textDark">
               {{item.typeName}}
             </td>
+            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+                <button (click)="toggleProductTypeStatus(item.id, item.isValid)"
+                  [class]="item.isValid === 1 ? 'bg-[#007AFF]' : 'bg-[#78788029]'"
+                  class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus:outline-none">
+                  <span [class]="item.isValid === 1 ? 'translate-x-6' : 'translate-x-1'"
+                    class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200"></span>
+                </button>
+            </td>
+            <td class="px-3 py-3 text-left text-textLight dark:text-textDark">
+              {{item.modifyId || '-'}}
+            </td>
             <td class="px-3 py-3 text-center">
               <div class="flex justify-center space-x-4">
                 <button class="w-6 h-6 mr-2 text-[#367bfa] hover:text-[#83aefd]" (click)="navigateEdit(item.id)"
-                *ngIf="permissionService.hasPermission('Edit product type') || tokenService.getUserDetails().role === '1'">
+                  *ngIf="permissionService.hasPermission('Edit product type') || tokenService.getUserDetails().role === '1'">
                   <svg fill="currentColor" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
                     <title>Edit</title>
                     <path
@@ -92,7 +105,7 @@
                     </path>
                   </svg>
                 </button>
-                <button class="w-6 h-6 text-[#fc3636] hover:text-[#f38f8f]" (click)="deleteProductType(item.id)"
+                <!-- <button class="w-6 h-6 text-[#fc3636] hover:text-[#f38f8f]" (click)="deleteProductType(item.id)"
                 *ngIf="permissionService.hasPermission('Delete product type') || tokenService.getUserDetails().role === '1'">
                   <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                     viewBox="0 0 24 24">
@@ -100,13 +113,36 @@
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
                   </svg>
-                </button>
+                </button> -->
               </div>
             </td>
           </tr>
         </tbody>
       </table>
       <div class="dark:bg-[#262f45]"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Custom Confirmation Modal -->
+<div *ngIf="showConfirmModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+  <div class="bg-white rounded-2xl shadow-xl p-10 max-w-md w-full mx-4 text-center">
+    <p class="text-[#292929] text-lg font-medium leading-snug mb-8">
+      Are you sure you want to change the status of<br>
+      <strong>"{{ confirmProductName }}"</strong> to
+      <strong>{{ confirmNewStatusLabel }}</strong>?
+    </p>
+    <div class="flex justify-center gap-4">
+      <button
+        (click)="onConfirmCancel()"
+        class="px-6 py-2.5 rounded-lg bg-[#74788D] text-white font-medium hover:bg-[#888fb3] transition">
+        No, Go Back
+      </button>
+      <button
+        (click)="onConfirmProceed()"
+        class="px-6 py-2.5 rounded-lg bg-[#3980C0] text-white font-medium hover:bg-[#3f92dc] transition">
+        Yes, Confirm
+      </button>
     </div>
   </div>
 </div>

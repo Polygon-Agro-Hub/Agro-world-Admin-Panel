@@ -173,17 +173,8 @@ onConfirmProceed(): void {
           text: res.message || `Product type ${actionText} successfully.`,
         });
 
-        const item = this.productArr.find(p => p.id === id);
-        if (item) {
-          item.isValid = newStatus;
-          item.modifyId = res.modifyId;
-        }
+        this.fetchProductType();
 
-        const filteredItem = this.filteredProductArr.find(p => p.id === id);
-        if (filteredItem) {
-          filteredItem.isValid = newStatus;
-          filteredItem.modifyId = res.modifyId;
-        }
       } else {
         Swal.fire({
           icon: 'error',
@@ -214,4 +205,5 @@ class ProductType {
   shortCode!: string;
   isValid!: number;
   modifyId!: string;
+  modifyUserName!: string;
 }

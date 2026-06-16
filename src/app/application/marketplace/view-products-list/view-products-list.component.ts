@@ -41,6 +41,9 @@ export class ViewProductsListComponent {
   ];
   selectedDisplayType: any = null;
 
+  productTypeOptions: { name: string; value: number }[] = [];
+  selectedProductType: any = null;
+
   categoryOption = [
     { name: 'Retail', value: 'Retail' },
     { name: 'WholeSale', value: 'WholeSale' },
@@ -54,15 +57,15 @@ export class ViewProductsListComponent {
     private http: HttpClient,
     public tokenService: TokenService,
     public permissionService: PermissionService,
-
-  ) { }
+  ) {}
 
   fetchAllProducts(
     page: number = 1,
     limit: number = this.itemsPerPage,
     search: string = this.searchVariety,
     displayType: string = this.selectedDisplayType?.value,
-    category: string = this.selectedCategoryOption?.value
+    category: string = this.selectedCategoryOption?.value,
+    productTypeId: number = this.selectedProductType?.value,
   ) {
     this.isLoading = true;
     const trimmedSearch = search.trim();
@@ -79,7 +82,15 @@ export class ViewProductsListComponent {
     const categoryValue = category || '';
 
     this.viewProductsList
-      .getProductList(page, limit, trimmedSearch, displayTypeValue, categoryValue, discountFilter)
+      .getProductList(
+        page,
+        limit,
+        trimmedSearch,
+        displayTypeValue,
+        categoryValue,
+        discountFilter,
+        productTypeId,
+      )
       .subscribe(
         (response) => {
           console.log('this is the response', response);
@@ -96,8 +107,26 @@ export class ViewProductsListComponent {
           } else {
             Swal.fire('Error', 'Failed to fetch products.', 'error');
           }
-        }
+        },
       );
+  }
+
+  loadProductTypes() {
+    this.viewProductsList.fetchProductTypes().subscribe((res) => {
+      const data = res.data || res;
+      this.productTypeOptions = data
+        .filter((pt: any) => pt.isValid === 1)
+        .map((pt: any) => ({
+          name: pt.typeName,
+          shortCode: pt.shortCode, 
+          value: pt.id,
+        }));
+    });
+  }
+
+  onProductTypeChange() {
+    this.page = 1;
+    this.fetchAllProducts();
   }
 
   onDisplayTypeChange() {
@@ -106,6 +135,7 @@ export class ViewProductsListComponent {
   }
 
   ngOnInit() {
+    this.loadProductTypes();
     this.fetchAllProducts(this.page, this.itemsPerPage);
   }
 
@@ -156,8 +186,8 @@ export class ViewProductsListComponent {
         icon: '!border-gray-200 dark:!border-gray-500',
         confirmButton: 'hover:!bg-[#3085d6] dark:hover:!bg[#3085d6]',
         cancelButton: '',
-        actions: 'gap-2'
-      }
+        actions: 'gap-2',
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         this.http
@@ -172,9 +202,10 @@ export class ViewProductsListComponent {
                   text: 'The product has been deleted.',
                   icon: 'success',
                   customClass: {
-                    popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+                    popup:
+                      'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
                     title: 'dark:text-white',
-                  }
+                  },
                 });
                 this.fetchAllProducts();
               }
@@ -187,11 +218,12 @@ export class ViewProductsListComponent {
                 text: 'There was a problem deleting the product.',
                 icon: 'error',
                 customClass: {
-                  popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+                  popup:
+                    'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
                   title: 'dark:text-white',
-                }
+                },
               });
-            }
+            },
           );
       }
     });
@@ -226,20 +258,20 @@ export class ViewProductsListComponent {
   }
 
   formatDiscountPercentage(discount: number, normalPrice: number): string {
-  if (discount <= 0 || normalPrice <= 0) {
-    return 'No';
+    if (discount <= 0 || normalPrice <= 0) {
+      return 'No';
+    }
+
+    const percentage = (discount / normalPrice) * 100;
+    const percentageValue = Number(percentage.toFixed(2));
+
+    // Check if the percentage is a whole number
+    if (percentageValue % 1 === 0) {
+      return `${percentageValue.toFixed(0)}%`; // Display as whole number
+    } else {
+      return `${percentageValue}%`; // Display with decimals
+    }
   }
-  
-  const percentage = (discount / normalPrice) * 100;
-  const percentageValue = Number(percentage.toFixed(2));
-  
-  // Check if the percentage is a whole number
-  if (percentageValue % 1 === 0) {
-    return `${percentageValue.toFixed(0)}%`; // Display as whole number
-  } else {
-    return `${percentageValue}%`; // Display with decimals
-  }
-}
 }
 
 class ProductList {
@@ -259,4 +291,6 @@ class ProductList {
   unitType!: string;
   changeby!: number;
   category!: string;
+  productTypeId!: number;
+  productTypeShortCode!: string;
 }

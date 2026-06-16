@@ -152,7 +152,6 @@ export class MainDashboardLayoutComponent implements OnInit {
     this.isLoading = true;
     this.distributionHubService.getPolygonCenterDashbordDetails(this.centerObj.centerId as number).subscribe(
       (res) => {
-        console.log(res);
         this.cashPriceObj = res.data;
         this.isLoading = false;
       }

@@ -36,7 +36,6 @@ export class EditCoupenComponent {
   ngOnInit() {
     const idParam = this.route.snapshot.paramMap.get('id');
     this.coupenId = idParam !== null ? Number(idParam) : null;
-    console.log('Coupon ID:', this.coupenId);
 
     if (this.coupenId) {
       this.fetchCoupen(this.coupenId);
@@ -55,7 +54,6 @@ export class EditCoupenComponent {
       .getCoupen(coupenId)
       .subscribe(
         (res) => {
-          console.log(res);
           if (res.status) {
             const data = res.result[0];
 
@@ -73,7 +71,6 @@ export class EditCoupenComponent {
             }
 
             this.coupenObj = data;
-            console.log('coupenObj', this.coupenObj);
           } else {
             Swal.fire({
               icon: 'error',

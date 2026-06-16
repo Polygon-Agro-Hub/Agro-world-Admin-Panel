@@ -61,10 +61,8 @@ export class DefinePackageViewComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log('Component initialized');
     this.route.queryParamMap.subscribe((params) => {
       const id = params.get('id');
-      console.log('Query parameter ID:', id);
       if (!id) {
         this.error = 'No order ID provided in URL';
         this.loading = false;
@@ -126,13 +124,11 @@ export class DefinePackageViewComponent implements OnInit {
   }
 
   fetchOrderDetails(id: string) {
-    console.log('Fetching order details for ID:', id);
     this.loading = true;
     this.error = '';
 
     this.marketplaceService.getOrderDetailsById(id).subscribe({
       next: (response) => {
-        console.log('API Response:', response);
 
         if (!response?.success || !response.data?.packages) {
           throw new Error('Invalid response structure from API');
@@ -176,7 +172,6 @@ export class DefinePackageViewComponent implements OnInit {
           normalPrice: item.normalPrice,
           discountedPrice: item.discountedPrice,
         }));
-        console.log('Fetched marketplace items:', this.marketplaceItems);
         if (callback) callback();
       },
       error: (err) => {

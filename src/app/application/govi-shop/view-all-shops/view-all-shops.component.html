@@ -260,7 +260,7 @@
           </th>
           <th
             *ngIf="
-              permissionService.hasPermission('preview govi shop') ||
+              permissionService.hasPermission('Preview govi shop') ||
               tokenService.getUserDetails().role === '1'
             "
             class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 text-center"
@@ -359,7 +359,7 @@
 
           <td
             *ngIf="
-              permissionService.hasPermission('change shop active status') ||
+              permissionService.hasPermission('Change shop active status') ||
               tokenService.getUserDetails().role === '1'
             "
             class="py-3 px-3 text-center"
@@ -452,7 +452,7 @@
 
           <td
             *ngIf="
-              permissionService.hasPermission('edit govi shop') ||
+              permissionService.hasPermission('Edit govi shop') ||
               tokenService.getUserDetails().role === '1'
             "
             class="py-3 px-3 text-center"

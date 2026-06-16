@@ -37,7 +37,6 @@ export class ViewCompaniesComponent implements OnInit {
     const currentUrl = this.router.url;
     const segments = currentUrl.split('/').filter(segment => segment.length > 0);
     this.urlSegment = segments[0]; // "steckholders"
-    console.log('First segment:', this.urlSegment);
   }
 
   fetchAllCompanys() {

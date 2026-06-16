@@ -310,4 +310,14 @@ export class GoviLinkService {
     );
   }
 
+  getDashboardData(): Observable<any> {
+  const headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${this.token}`,
+  });
+  return this.http.get<any>(`${this.apiUrl}govilink-dashbord`, {
+    headers,
+  });
+}
+
 }

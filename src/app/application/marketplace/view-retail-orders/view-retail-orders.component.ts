@@ -223,6 +223,7 @@ export class ViewRetailOrdersComponent implements OnInit {
       'Picked up',
       'On the way',
       'Failed',
+      'Ready to Pickup',
     ];
 
     return enabledStatuses.includes(status);

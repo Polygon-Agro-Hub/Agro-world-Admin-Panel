@@ -113,7 +113,8 @@ export class MarketEditProductComponent implements OnInit {
           .map((pt: any) => ({
             label: pt.typeName,
             value: pt.id,
-          }));
+          }))
+          .sort((a: any, b: any) => a.label.localeCompare(b.label)); 
 
         this.getProduct();
       })

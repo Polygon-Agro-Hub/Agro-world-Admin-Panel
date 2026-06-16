@@ -95,8 +95,6 @@ export class MarketAddProductComponent implements OnInit {
   loadProductTypes() {
     this.marketSrv.fetchProductTypes().subscribe(
       (res) => {
-        console.log('Product Types Response:', res);
-
         const data = res.data || res;
 
         this.productTypeOptions = data
@@ -104,9 +102,8 @@ export class MarketAddProductComponent implements OnInit {
           .map((pt: any) => ({
             label: pt.typeName,
             value: pt.id,
-          }));
-
-        console.log('productTypeOptions:', this.productTypeOptions);
+          }))
+          .sort((a: any, b: any) => a.label.localeCompare(b.label));
       },
       (error) => {
         console.error('Failed to load product types', error);

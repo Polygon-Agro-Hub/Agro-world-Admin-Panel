@@ -465,8 +465,10 @@ export class FinalinvoiceService {
 
         doc.setFontSize(9);
         doc.setFont('helvetica', 'bold');
+        const totalItemCount = pack.packageDetails?.reduce((sum: number, detail: any) => sum + (detail.qty || 0), 0) || 0;
+
         doc.text(
-          `${pack.name || 'N/A'} (${pack.packageDetails?.length || 0} Items)`,
+          `${pack.name || 'N/A'} (${totalItemCount} Items)`,
           15,
           yPosition
         );
@@ -606,12 +608,12 @@ export class FinalinvoiceService {
       let addTitle;
       if (invoice.orderApp === 'Marketplace') {
         addTitle = hasFamilyPacks
-          ? ` Additional Items(${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
+          ? ` Additional Items  (${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
           : ` Your Selected Items(${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
 
       } else if (invoice.orderApp === 'Dash') {
         addTitle = hasFamilyPacks
-          ? ` Additional Items (${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
+          ? ` Additional Items  (${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
           : ` Custom Items (${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
       } else {
         addTitle = hasFamilyPacks
@@ -788,10 +790,10 @@ export class FinalinvoiceService {
     }
 
     // Add service fee between Discount and Coupon Discount
-    if (invoice.orderApp !== 'Marketplace' && 
-    invoice.additionalItems && 
-    invoice.additionalItems.length > 0 && 
-    (!invoice.familyPackItems || invoice.familyPackItems.length === 0)) {
+    if (invoice.orderApp !== 'Marketplace' &&
+      invoice.additionalItems &&
+      invoice.additionalItems.length > 0 &&
+      (!invoice.familyPackItems || invoice.familyPackItems.length === 0)) {
       grandTotalBody.push(['Service Fee', 'Rs. 180.00']);
     }
 
@@ -960,7 +962,7 @@ export class FinalinvoiceService {
 
   private async getLogoUrl(): Promise<string | null> {
     try {
-      const logoPath = 'assets/images/POLYGON ORIGINAL LOGO.png';
+      const logoPath = 'assets/images/glogo.png';
       const logoBlob = (await this.http
         .get(logoPath, { responseType: 'blob' })
         .toPromise()) as Blob;

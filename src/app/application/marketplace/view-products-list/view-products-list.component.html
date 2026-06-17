@@ -35,7 +35,7 @@
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] w-full sm:w-auto"
             [options]="productTypeOptions" [(ngModel)]="selectedProductType" (onChange)="onProductTypeChange()"
-            [checkmark]="false" optionLabel="shortCode" [showClear]="true" placeholder="Type">
+            [checkmark]="false" optionLabel="name" [showClear]="true" placeholder="Type">
           </p-dropdown>
         </div>
 
@@ -78,43 +78,43 @@
       <table class="min-w-full divide-y divide-gray-200">
         <thead>
           <tr>
-            <th class="py-3 px-4 font-normal text-gray-500 text-left">No</th>
-            <th class="py-3 px-4 font-normal text-gray-500 text-left">
+            <th class="py-3 px-4 font-normal text-[#5C5C5C] text-left">No</th>
+            <th class="py-3 px-4 font-normal text-[#5C5C5C] text-left whitespace-nowrap">
               Display Name
             </th>
-            <th class="py-3 px-4 font-normal text-gray-500 text-left">
+            <th class="py-3 px-4 font-normal text-[#5C5C5C] text-left">
               Category
             </th>
-            <th class="py-3 px-4 font-normal text-gray-500 text-left">
+            <th class="py-3 px-4 font-normal text-[#5C5C5C] text-left">
               Type
             </th>
-            <th class="py-3 px-4 font-normal text-gray-500 text-left">Crop</th>
-            <th class="py-3 px-4 font-normal text-gray-500 text-left">
+            <th class="py-3 px-4 font-normal text-[#5C5C5C] text-left whitespace-nowrap">Crop</th>
+            <th class="py-3 px-4 font-normal text-[#5C5C5C] text-left whitespace-nowrap">
               Variety
             </th>
-            <th class="py-3 px-4 font-normal text-gray-500 text-center">
+            <th class="py-3 px-4 font-normal text-[#5C5C5C] text-center">
               Display
             </th>
-            <th class="py-3 px-4 font-normal text-gray-500 text-center">
+            <th class="py-3 px-4 font-normal text-[#5C5C5C] text-center">
               Discount(%)
             </th>
-            <th class="py-3 px-4 font-normal text-gray-500 text-center whitespace-nowrap">
+            <th class="py-3 px-4 font-normal text-[#5C5C5C] text-center whitespace-nowrap">
               Actual Price (Rs.)
             </th>
             <!-- <th class="py-3 px-4 font-normal text-gray-500 text-center">
               Discounted Price
             </th> -->
-            <th class="py-3 px-4 font-normal text-gray-500 text-center">
+            <th class="py-3 px-4 font-normal text-[#5C5C5C] text-center">
               Unit
             </th>
-            <th class="py-3 px-4 font-normal text-gray-500 text-center whitespace-nowrap">
+            <th class="py-3 px-4 font-normal text-[#5C5C5C] text-center whitespace-nowrap">
               Min QTY
             </th>
-            <th class="py-3 px-4 font-normal text-gray-500 text-center whitespace-nowrap"
+            <th class="py-3 px-4 font-normal text-[#5C5C5C] text-center whitespace-nowrap"
               *ngIf="showMaxQuantityColumn()">
               Max QTY
             </th>
-            <th class="py-3 px-4 font-normal text-gray-500 text-center whitespace-nowrap">
+            <th class="py-3 px-4 font-normal text-[#5C5C5C] text-center whitespace-nowrap">
               Change By
             </th>
             <th class="py-3 px-4 font-normal text-gray-500 text-center"></th>
@@ -132,25 +132,25 @@
                     };
               let i = index
             " class="border-b border-gray-200 dark:border-[#4B555A]">
-            <td class="py-3 px-4 dark:text-textDark">
+            <td class="py-3 px-4 text-[#000000] dark:text-textDark">
               {{ (page - 1) * itemsPerPage + i + 1 }}
             </td>
-            <td class="py-3 px-4 dark:text-textDark">
+            <td class="py-3 px-4 text-[#000000] dark:text-textDark whitespace-nowrap">
               {{ item.displayName }}
             </td>
-            <td class="py-3 px-4 dark:text-textDark">
+            <td class="py-3 px-4 text-[#000000] dark:text-textDark">
               {{ item.category }}
             </td>
-            <td class="px-4 py-3 text-textLight dark:text-textDark text-left">
+            <td class="px-4 py-3 text-[#000000] dark:text-textDark text-left">
               {{ item.productTypeShortCode || "-" }}
             </td>
-            <td class="px-4 py-3 text-textLight dark:text-textDark text-left">
+            <td class="px-4 py-3 text-[#000000] dark:text-textDark text-left whitespace-nowrap">
               {{ item.cropNameEnglish }}
             </td>
-            <td class="px-4 py-3 text-textLight dark:text-textDark text-left">
+            <td class="px-4 py-3 text-[#000000] dark:text-textDark text-left whitespace-nowrap">
               {{ item.varietyNameEnglish }}
             </td>
-            <td class="px-4 py-3 text-textLight dark:text-textDark text-center whitespace-nowrap">
+            <td class="px-4 py-3 text-[#797979] dark:text-textDark text-center whitespace-nowrap">
               <span *ngIf="!item.displayType">No</span>
               <span *ngIf="item.displayType === 'D&AP'">%, Actual</span>
               <span *ngIf="item.displayType === 'AP&SP'">Actual, Sale</span>
@@ -162,29 +162,29 @@
                   item.displayType !== 'AP&SP&D'
                 ">{{ item.displayType }}</span>
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
               <ng-container *ngIf="item.discount > 0; else noDiscount">
                 {{ formatDiscountPercentage(item.discount, item.normalPrice) }}
               </ng-container>
               <ng-template #noDiscount>No</ng-template>
             </td>
 
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
               {{ item.normalPrice }}
             </td>
             <!-- <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{ item.discountedPrice }}
             </td> -->
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
               {{ item.unitType }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
               {{ item.startValue }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark" *ngIf="showMaxQuantityColumn()">
+            <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark" *ngIf="showMaxQuantityColumn()">
               {{ item.maxQuantity || "-" }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
               {{ item.changeby }}
             </td>
             <td class="px-4 py-3 text-center"

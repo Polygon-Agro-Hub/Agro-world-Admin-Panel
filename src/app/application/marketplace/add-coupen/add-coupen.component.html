@@ -25,9 +25,9 @@
         <input type="text" id="code" name="code" [(ngModel)]="coupenObj.code" #codeInput="ngModel" required
           (input)="onCodeInput($event)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-        <div *ngIf="codeInput.touched && codeInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+        <!-- <div *ngIf="codeInput.touched && codeInput.errors?.['required']" class="text-red-500 text-sm mt-1">
           Code is required.
-        </div>
+        </div> -->
         <div *ngIf="checkPrecentageValueMessage === 'Coupon with this code already exists'"
           class="text-red-500 text-sm mt-1">
           {{ checkPrecentageValueMessage }}

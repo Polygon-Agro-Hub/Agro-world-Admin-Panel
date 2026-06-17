@@ -390,9 +390,7 @@
           <td
             class="py-3 px-3 text-textLight dark:text-textDark whitespace-nowrap"
           >
-            <span *ngIf="branch.updatedAt">{{
-              branch.updatedAt | date: "h:mm a, MMMM d, yyyy"
-            }}</span>
+           <span *ngIf="branch.updatedAt">{{ branch.updatedAt | date: "h:mm a, MMMM d, yyyy" }}</span>
             <span *ngIf="!branch.updatedAt">----</span>
           </td>
 

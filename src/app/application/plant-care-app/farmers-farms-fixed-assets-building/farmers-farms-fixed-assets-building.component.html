@@ -90,12 +90,12 @@
             <span class="text-black dark:text-textDark font-medium">
               <span *ngIf="ownershipDetails?.durationYears">
                 {{ ownershipDetails?.durationYears }}
-                {{ ownershipDetails?.durationYears === 1 ? 'Year' : "Year's" }}
+                {{ ownershipDetails?.durationYears === 1 ? 'Year' : "Years" }}
               </span>
               <span *ngIf="ownershipDetails?.durationYears && ownershipDetails?.durationMonths"> </span>
               <span *ngIf="ownershipDetails?.durationMonths">
                 {{ ownershipDetails?.durationMonths }}
-                {{ ownershipDetails?.durationMonths === 1 ? 'Month' : "Month's" }}
+                {{ ownershipDetails?.durationMonths === 1 ? 'Month' : "Months" }}
               </span>
             </span>
           </div>

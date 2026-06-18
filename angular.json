@@ -96,6 +96,13 @@
               "outputHashing": "all",
               "baseHref": "/",
               "deployUrl": "/"
+            },
+            "local": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "baseHref": "/admin/",
+              "deployUrl": "/admin/"
             }
           },
           "defaultConfiguration": "production"
@@ -111,6 +118,9 @@
             },
             "uat": {
               "buildTarget": "plantr_care-admin:build:uat"
+            },
+            "local": {
+              "buildTarget": "plantr_care-admin:build:local"
             }
           },
           "defaultConfiguration": "development"

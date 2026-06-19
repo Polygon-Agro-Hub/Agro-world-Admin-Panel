@@ -1149,7 +1149,7 @@ if (this.shouldShowDuplicateError()) {
     let rolePrefix: string | undefined;
 
     const rolePrefixes: { [key: string]: string } = {
-      'Distribution Centre Manager': 'DBM',
+      'Distribution Centre Manager': 'DCM',
       'Distribution Officer': 'DIO',
     };
 

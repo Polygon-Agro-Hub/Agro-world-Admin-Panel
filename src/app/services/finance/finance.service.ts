@@ -825,7 +825,6 @@ export class FinanceService {
     searchText: string = '',
 
   ): Observable<any> {
-    console.log('searchText', searchText)
 
     let url = `${this.apiUrl}finance/get-all-published-projects?page=${1}`;
 
@@ -887,7 +886,6 @@ export class FinanceService {
   }
 
   approveInvestmentStatus(id: number): Observable<any> {
-    console.log('id', id)
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.tokenService.getToken()}`,
     });
@@ -1028,8 +1026,6 @@ export class FinanceService {
     id?: number,
     status?: string
   ): Observable<any> {
-    console.log('Fetching investment users - Page:', page, 'Limit:', limit, 'Search:', search, 'ID:', id, 'Status:', status);
-
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });

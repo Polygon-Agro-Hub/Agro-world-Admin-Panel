@@ -65,7 +65,7 @@ export class DistributionHubService {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-    console.log('DELETE ITEM', id);
+
     return this.http.delete(`${this.apiUrl}distribution/delete-company/${id}`, {
       headers,
     });
@@ -210,7 +210,6 @@ export class DistributionHubService {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    console.log(company);
 
     let url = `${this.apiUrl}distribution/get-all-distribution-officers?page=${page}&limit=${limit}`;
 
@@ -250,7 +249,6 @@ export class DistributionHubService {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    console.log(company);
 
     let url = `${this.apiUrl}distribution/get-all-distribution-officers?page=${page}&limit=${limit}`;
     if (centerId) {
@@ -374,12 +372,11 @@ export class DistributionHubService {
   }
 
   getAllManagerList(companyId: any, centerId: any): Observable<any> {
-    console.log('companyId', companyId, 'centerId', centerId);
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    console.log('This is company Id', companyId);
+
     return this.http.get(
       `${this.apiUrl}distribution/get-all-distribution-manager-list/${companyId}/${centerId}`,
       {
@@ -531,7 +528,7 @@ export class DistributionHubService {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    console.log('This is company Id', companyId);
+
     return this.http.get(
       `${this.apiUrl}distribution/get-all-distribution-center-list/${companyId}`,
       {
@@ -800,16 +797,6 @@ export class DistributionHubService {
     if (searchText && searchText.trim()) {
       params = params.set('searchText', searchText.trim());
     }
-
-    console.log('API Request params:', {
-      distributedCompanyCenterId,
-      page,
-      limit,
-      status,
-      vehicleType,
-      searchText,
-      finalParams: params.toString(),
-    });
 
     return this.http.get<any>(
       `${this.apiUrl}distribution/get-distributed-drivers-and-vehicles/${distributedCompanyCenterId}`,

@@ -52,9 +52,6 @@ export class OfficerTargetService {
     selectStatus:string='',
     searchQuery: string = ''
   ): Observable<any> {
-    console.log('Officer ID:', officerId);
-    console.log('Search Query:', searchQuery);
-
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',

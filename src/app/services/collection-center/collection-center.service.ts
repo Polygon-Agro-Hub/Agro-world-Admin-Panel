@@ -65,7 +65,7 @@ resetPassword(id: number, data: any): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-    console.log('DELETE ITEM', id);
+
     return this.http.delete(
       `${this.apiUrl}auth/delete-collection-center/${id}`,
       {
@@ -75,8 +75,6 @@ resetPassword(id: number, data: any): Observable<any> {
   }
 
   createCollectionCenter(centerData: any, companies: any): Observable<any> {
-    console.log(centerData);
-
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
@@ -86,7 +84,6 @@ resetPassword(id: number, data: any): Observable<any> {
       ...centerData,
       companies,
     };
-    console.log('hiii', payload);
     return this.http.post(
       `${this.apiUrl}auth/create-collection-center`,
       payload,
@@ -94,7 +91,6 @@ resetPassword(id: number, data: any): Observable<any> {
         headers,
       }
     );
-    console.log(payload);
   }
 
   getAllComplain(
@@ -152,8 +148,6 @@ resetPassword(id: number, data: any): Observable<any> {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-
-    console.log('searchText', searchText);
 
     let url = `${this.apiUrl}auth/get-all-center-complains?page=${page}&limit=${limit}`;
 
@@ -222,7 +216,6 @@ resetPassword(id: number, data: any): Observable<any> {
     province: string = '',
     searchItem: string = ''
   ): Observable<any> {
-    console.log(page, limit, searchItem);
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -259,11 +252,10 @@ resetPassword(id: number, data: any): Observable<any> {
     companies: any,
     id: number
   ): Observable<any> {
-    console.log(centerData);
 
     const requestData = {
-      ...centerData, // Spread the centerData
-      companies: companies, // Add the companies data
+      ...centerData, 
+      companies: companies, 
     };
 
     const headers = new HttpHeaders({
@@ -334,7 +326,7 @@ resetPassword(id: number, data: any): Observable<any> {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    console.log('This is company Id', companyId);
+
     return this.http.get(
       `${this.apiUrl}auth/get-all-manager-list/${companyId}/${centerId}`,
       {
@@ -369,8 +361,6 @@ resetPassword(id: number, data: any): Observable<any> {
   }
 
   updateCompany(companyData: any, id: number): Observable<any> {
-    console.log(companyData);
-
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
@@ -398,7 +388,7 @@ resetPassword(id: number, data: any): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-    console.log('DELETE ITEM', id);
+
     return this.http.delete(`${this.apiUrl}auth/delete-company/${id}`, {
       headers,
     });
@@ -469,7 +459,6 @@ resetPassword(id: number, data: any): Observable<any> {
     province: string = '',
     searchItem: string = ''
   ): Observable<any> {
-    console.log(page, limit, district, province, searchItem);
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -594,7 +583,7 @@ resetPassword(id: number, data: any): Observable<any> {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    console.log('This is company Id', companyId);
+
     return this.http.get(
       `${this.apiUrl}auth/get-all-collection-center-list/${companyId}`,
       {

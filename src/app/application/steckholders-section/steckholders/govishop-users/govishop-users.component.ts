@@ -55,10 +55,6 @@ export class GovishopUsersComponent implements OnInit {
       this.supplierName = params['shopName'] || '';
       this.role = params['role'] || 'Manager';
       
-      console.log('Shop ID:', this.shopId);
-      console.log('Shop Name:', this.supplierName);
-      console.log('Role:', this.role);
-      
       if (this.shopId) {
         this.loadUsers();
       }
@@ -67,20 +63,11 @@ export class GovishopUsersComponent implements OnInit {
 
   loadUsers(): void {
     this.isLoading = true;
-    
-    console.log('Fetching users with params:', {
-      shopId: this.shopId,
-      search: this.searchTerm || undefined,
-      role: this.role
-    });
-    
     this.goviShopService.getUsers(
       this.searchTerm || undefined,
       this.role
     ).subscribe({
       next: (response: any) => {
-        console.log('API Response:', response);
-        
         if (response && response.success === true && Array.isArray(response.data)) {
           this.users = response.data.map((item: any) => ({
             id: item.id,
@@ -121,8 +108,7 @@ export class GovishopUsersComponent implements OnInit {
         } else {
           this.users = [];
         }
-        
-        console.log('Mapped users:', this.users);
+      
         this.isLoading = false;
       },
       error: (error) => {

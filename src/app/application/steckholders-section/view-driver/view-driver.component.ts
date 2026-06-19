@@ -119,7 +119,6 @@ export class ViewDriverComponent implements OnInit {
     this.fetchAllDrivers();
     this.getAllcompany();
     this.fetchCenterNames();
-    console.log('role', this.tokenService.getUserDetails().role);
   }
 
   fetchAllDrivers(

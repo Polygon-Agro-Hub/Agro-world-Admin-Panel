@@ -5,24 +5,18 @@
   Back
 </button>
 
-<div
-  class="fixed-width-container overflow-x-auto  scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
->
-  <div
-    class="pt-5 pr-12 pl-12 pb-10 min-h-screen min-w-[1600px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
-  >
-    <div class="flex justify-between items-center mb-8">
-      <div class="flex items-center whitespace-nowrap">
-        <h2 class="text-2xl font-normal text-[#292929] dark:text-textDark">
-          Farmer Payments
-        </h2>
-        <span
-          class="ml-2 mr-5 font-normal text-2xl text-[#292929] dark:text-white"
-        >
-          ({{ getTotalRecords() }})
-        </span>
-      </div>
-      <div class="flex items-center">
+<div class="fixed-width-container">
+  <div class="bg-white dark:bg-tileBlack shadow-lg rounded-lg relative p-8">
+    <div class="flex justify-between items-center mb-8 flex-wrap gap-4">
+  <div class="flex items-center whitespace-nowrap">
+    <h2 class="text-2xl font-normal text-[#292929] dark:text-textDark">
+      Farmer Payments
+    </h2>
+    <span class="ml-2 mr-5 font-normal text-2xl text-[#292929] dark:text-white">
+      ({{ getTotalRecords() }})
+    </span>
+  </div>
+      <div class="flex items-center flex-wrap gap-3">
         <i class="mr-6 w-6 h-6 fill-current text-[#4A4A4A]">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
             <path
@@ -35,7 +29,7 @@
         >
           Filter By
         </p>
-        <div class="mr-5">
+        <div>
           <p-dropdown
             [options]="bankOptions"
             [(ngModel)]="selectedBank"
@@ -47,7 +41,7 @@
             placeholder="Bank Name"
           ></p-dropdown>
         </div>
-        <div class="mr-5 flex items-center">
+        <div class="flex items-center">
   <p-calendar
     [(ngModel)]="selectedDate"
     (onSelect)="onDateChange($event)"
@@ -67,9 +61,7 @@
     </ng-template>
   </p-calendar>
 </div>
-        <div
-          class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
-        >
+        <div class="flex items-center rounded-full px-4 py-2 w-72 bg-[#F1F1F1] dark:bg-[#272F45]">
           <input
             type="text"
             [(ngModel)]="searchTerm"
@@ -141,9 +133,9 @@
       <span *ngIf="!isDownloading">Download</span>
       <span *ngIf="isDownloading">Downloading...</span>
     </button>
-    <div>
+    <div class="overflow-x-auto w-full">
       <table
-        class="min-w-full divide-y divide-gray-200 table-auto pr-12"
+        class="min-w-full divide-y divide-gray-200 table-auto"
         *ngIf="hasData"
       >
         <thead>

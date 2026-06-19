@@ -55,14 +55,12 @@ export class PikupOderRecordDetailsComponent implements OnInit, OnChanges {
   constructor(private pickupOrderService: DestributionService) {}
 
   ngOnInit(): void {
-    console.log('Component initialized with orderId:', this.orderId);
+    // console.log('Component initialized with orderId:', this.orderId);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     // When component becomes visible and has an orderId, load data
     if (changes['visible'] && this.visible && this.orderId) {
-      console.log('Loading details for processOrderId:', this.orderId);
-      console.log('Display order ID (invoice):', this.displayOrderId);
       this.loadPickupOrderDetails(this.orderId);
     }
 
@@ -90,8 +88,6 @@ export class PikupOderRecordDetailsComponent implements OnInit, OnChanges {
           // Set individual properties for template compatibility
           this.setIndividualProperties(response.data);
           
-          console.log('Pickup details loaded successfully:', response.data);
-          console.log('Timeline steps:', this.steps);
         } else {
           this.error = response?.message || 'Failed to load pickup details';
           console.warn('API response structure unexpected:', response);
@@ -168,8 +164,6 @@ export class PikupOderRecordDetailsComponent implements OnInit, OnChanges {
       this.pickupDetails = mockData;
       this.steps = this.buildSteps(mockData);
       this.setIndividualProperties(mockData);
-      
-      console.log('Using mock data for testing');
     }, 1000);
   }
 

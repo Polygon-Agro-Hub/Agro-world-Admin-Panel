@@ -4,13 +4,19 @@ import { CalendarModule } from 'primeng/calendar';
 import { PaymentSlipReportService } from '../../../services/reports/payment-slip-report.service';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-payment-slip-report',
   standalone: true,
-  imports: [CommonModule, CalendarModule, NgxPaginationModule, LoadingSpinnerComponent, FormsModule],
+  imports: [
+    CommonModule,
+    CalendarModule,
+    NgxPaginationModule,
+    LoadingSpinnerComponent,
+    FormsModule,
+  ],
   templateUrl: './payment-slip-report.component.html',
   styleUrl: './payment-slip-report.component.css',
 })
@@ -22,7 +28,7 @@ export class PaymentSlipReportComponent {
   page: number = 1;
   itemsPerPage: number = 10;
   isLoading = false;
-  createdDate: Date = new Date(); 
+  createdDate: Date = new Date();
   isTableVisible: boolean = true;
   hasData: boolean = true;
   searchNIC: string = '';
@@ -36,8 +42,8 @@ export class PaymentSlipReportComponent {
   constructor(
     private paymentSlipReportService: PaymentSlipReportService,
     private route: ActivatedRoute,
-    private router: Router
-  ) { }
+    private router: Router,
+  ) {}
 
   ngOnInit(): void {
     const today = new Date();
@@ -48,14 +54,13 @@ export class PaymentSlipReportComponent {
       this.lastName = params['lastName'] ? params['lastName'] : '';
       this.QRcode = params['QRcode'] ? params['QRcode'] : '';
       this.empId = params['empId'] ? params['empId'] : '';
-
     });
     this.loadPayments();
   }
 
   loadPayments(page: number = 1, limit: number = this.itemsPerPage) {
     this.isLoading = true;
-    this.payments = []; 
+    this.payments = [];
     this.total = 0;
     this.isTableVisible = false;
 
@@ -65,10 +70,15 @@ export class PaymentSlipReportComponent {
     }
 
     this.paymentSlipReportService
-      .getPaymentSlipReport(page, limit, this.officerId, formattedDate, this.searchNIC)
+      .getPaymentSlipReport(
+        page,
+        limit,
+        this.officerId,
+        formattedDate,
+        this.searchNIC,
+      )
       .subscribe(
         (response) => {
-          console.log(response);
           this.isLoading = false;
           this.payments = response.items;
           this.total = response.total;
@@ -76,15 +86,14 @@ export class PaymentSlipReportComponent {
         },
         (error) => {
           console.error('Error fetching payments:', error);
-        }
+        },
       );
-
-
   }
 
-
   navigateToFamerListReport(id: number, userId: number, QRcode: string) {
-    this.router.navigate(['/reports/farmer-list-report'], { queryParams: { id, userId, QRcode } });
+    this.router.navigate(['/reports/farmer-list-report'], {
+      queryParams: { id, userId, QRcode },
+    });
   }
 
   onPageChange(event: number) {
@@ -101,10 +110,8 @@ export class PaymentSlipReportComponent {
     }, 1000);
   }
 
-
-
   searchPlantCareUsers() {
-    this.searchNIC = this.searchNIC.trim(); 
+    this.searchNIC = this.searchNIC.trim();
     this.page = 1;
     this.loadPayments();
   }
@@ -117,27 +124,25 @@ export class PaymentSlipReportComponent {
   convertToISO(date: any): string {
     if (date instanceof Date) {
       // Create UTC date with the same year, month, and day
-      const utcDate = new Date(Date.UTC(
-        date.getFullYear(),
-        date.getMonth(),
-        date.getDate()
-      ));
+      const utcDate = new Date(
+        Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()),
+      );
       return utcDate.toISOString();
     } else if (typeof date === 'string') {
       const parsedDate = new Date(date);
       if (!isNaN(parsedDate.getTime())) {
-        const utcDate = new Date(Date.UTC(
-          parsedDate.getFullYear(),
-          parsedDate.getMonth(),
-          parsedDate.getDate()
-        ));
+        const utcDate = new Date(
+          Date.UTC(
+            parsedDate.getFullYear(),
+            parsedDate.getMonth(),
+            parsedDate.getDate(),
+          ),
+        );
         return utcDate.toISOString();
       }
     }
     return date;
   }
-
-
 }
 
 class Payment {

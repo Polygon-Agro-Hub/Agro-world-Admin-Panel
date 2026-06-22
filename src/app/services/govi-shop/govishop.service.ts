@@ -194,9 +194,6 @@ getProductsByBranchId(
   if (categoryId && categoryId !== 'all') params = params.set('categoryId', categoryId);
   if (searchItem) params = params.set('searchItem', searchItem);
 
-  console.log('API Request URL:', `${this.apiUrl}get-products/${branchId}`);
-  console.log('API Request Params:', params.toString());
-
   return this.http.get<any>(
     `${this.apiUrl}get-products/${branchId}`,
     { headers: this.getHeaders(), params }

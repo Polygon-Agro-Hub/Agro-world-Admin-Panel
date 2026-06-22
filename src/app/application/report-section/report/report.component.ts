@@ -9,17 +9,16 @@ import { TokenService } from '../../../services/token/services/token.service';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './report.component.html',
-  styleUrl: './report.component.css'
+  styleUrl: './report.component.css',
 })
 export class ReportComponent {
-  constructor(private router: Router, public tokenService: TokenService,
-      public permissionService: PermissionService) {}
+  constructor(
+    private router: Router,
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
+  ) {}
 
-
-      ngOnInit() {
-        console.log('User Role:', this.tokenService.getUserDetails().role);
-        
-      }
+  ngOnInit() {}
 
   coReport(): void {
     this.router.navigate(['/reports/collective-officer-report']);
@@ -36,7 +35,6 @@ export class ReportComponent {
   purchaseReport(): void {
     this.router.navigate(['/reports/purchase-report']);
   }
-
 
   collectionReport(): void {
     this.router.navigate(['/reports/collection-report']);

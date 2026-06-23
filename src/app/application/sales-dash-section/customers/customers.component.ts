@@ -1,3 +1,4 @@
+// customers.component.ts
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { CustomersService } from '../../../services/dash/customers.service';
@@ -7,10 +8,14 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { debounceTime, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { TokenService } from '../../../services/token/services/token.service';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { DropdownModule } from 'primeng/dropdown';
 
+// ─────────────────────────────────────────────────────────────────────────────
+//  Model
+// ─────────────────────────────────────────────────────────────────────────────
 interface Customers {
   id: number;
   cusId: string;
@@ -35,8 +40,12 @@ interface Customers {
   apartmentCity: string;
   apartmentFloorNo: string;
   title?: string;
+  rateofCus?: string; // 'VVIP' | 'VIP' | 'COR' | 'NOR' | 'VVP'
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+//  Component
+// ─────────────────────────────────────────────────────────────────────────────
 @Component({
   selector: 'app-customers',
   standalone: true,
@@ -46,24 +55,59 @@ interface Customers {
     FormsModule,
     NgxPaginationModule,
     RouterModule,
+    DropdownModule,       // ← added for rating dropdowns
   ],
   templateUrl: './customers.component.html',
   styleUrls: ['./customers.component.css'],
 })
 export class CustomersComponent implements OnInit {
-  customers: Customers[] = [];
+  // ── Table data ─────────────────────────────────────────────────────────────
+  customers: Customers[]         = [];
   filteredCustomers: Customers[] = [];
-  isLoading = true;
-  hasData: boolean = true;
-  isPopupOpen = false;
-  selectedCustomer: any = null;
+  isLoading                      = true;
+  hasData                        = true;
 
-  page: number = 1;
-  totalItems: number = 0;
-  itemsPerPage: number = 10;
-  searchText: string = '';
+  // ── Pagination / search ────────────────────────────────────────────────────
+  page: number        = 1;
+  totalItems: number  = 0;
+  itemsPerPage        = 10;
+  searchText          = '';
+
+  // ── Details popup ──────────────────────────────────────────────────────────
+  isPopupOpen      = false;
+  selectedCustomer: Customers | null = null;
+
+  // ── Copy-to-clipboard ─────────────────────────────────────────────────────
   copiedField: string | null = null;
-  copyTimeout: any = null;
+  copyTimeout: any           = null;
+
+  // ── Rating filter (header bar) ────────────────────────────────────────────
+  selectedRatingFilter = '';
+
+  // ── Update-rating popup ───────────────────────────────────────────────────
+  isRatingPopupOpen            = false;
+  selectedCustomerForRating: Customers | null = null;
+  selectedNewRating            = '';
+  isUpdatingRating             = false;
+  showRatingToast              = false;
+
+    /** Options shown in the filter dropdown (header bar) */
+  ratingFilterOptions = [
+    { label: 'X 2 Stars', value: 'VVIP', icon: 'assets/images/ratings/VIP.png' },
+    { label: 'X 1 Star',   value: 'VIP',  icon: 'assets/images/ratings/VIP.png'  },
+    { label: 'X 1 Star',   value: 'COR',  icon: 'assets/images/ratings/COR2.png' },
+    { label: 'X 1 Star',   value: 'NOR',  icon: 'assets/images/ratings/NOR.png'  },
+    { label: 'X 1 Star',   value: 'VVP',  icon: 'assets/images/ratings/vvp.png'  },
+  ];
+
+  /** Options shown inside the Update Ratings popup dropdown */
+  ratingUpdateOptions = [
+    { label: 'X 2 Stars', value: 'VVIP' },
+    { label: 'X 1 Star',   value: 'VIP'  },
+    { label: 'X 1 Star',   value: 'COR'  },
+    { label: 'X 1 Star',   value: 'NOR'  },
+    { label: 'X 1 Star',   value: 'VVP'  },
+  ];
 
   private searchSubject = new Subject<string>();
 
@@ -73,118 +117,189 @@ export class CustomersComponent implements OnInit {
     private router: Router,
     public tokenService: TokenService,
     public permissionService: PermissionService,
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.fetchAllCustomers();
   }
 
-  openPopup(customer: any) {
-    this.selectedCustomer = customer;
-    this.isPopupOpen = true;
-  }
-
-  closePopup() {
-    this.isPopupOpen = false;
-    this.selectedCustomer = null;
-  }
-
-  back(): void {
-    this.router.navigate(['/sales-dash']);
-  }
-
-  copyToClipboard(value: string | undefined, field: string) {
-    if (!value) return;
-
-    if (this.copyTimeout) {
-      clearTimeout(this.copyTimeout);
-    }
-
-    navigator.clipboard
-      .writeText(value)
-      .then(() => {
-        this.copiedField = field;
-
-        this.copyTimeout = setTimeout(() => {
-          this.copiedField = null;
-        }, 2000);
-      })
-      .catch((err) => {
-        console.error('Failed to copy:', err);
-        Swal.fire({
-          icon: 'error',
-          title: 'Oops!',
-          text: 'Failed to copy. Please try again.',
-        });
-      });
-  }
+  // ─────────────────────────────────────────────────────────────────────────
+  //  Fetch
+  // ─────────────────────────────────────────────────────────────────────────
 
   fetchAllCustomers(
-    page: number = this.page,
-    limit: number = this.itemsPerPage
+    page: number  = this.page,
+    limit: number = this.itemsPerPage,
   ) {
     this.isLoading = true;
-    this.customerService.getCustomers(page, limit, this.searchText).subscribe(
-      (response: any) => {
-        this.isLoading = false;
-        this.customers = response.items || [];
-        this.totalItems = response.total;
-        this.filteredCustomers = [...this.customers];
-        this.hasData = this.filteredCustomers.length > 0;
-      },
-      (error) => {
-        console.error('Error fetching customers', error);
-        this.isLoading = false;
-        this.customers = [];
-        this.filteredCustomers = [];
-        this.hasData = false;
-      }
-    );
-  }
-  onSearchChange(searchText: string) {
-    if (searchText.startsWith(' ')) {
-      searchText = searchText.trimStart();
-    }
 
-    this.searchSubject.next(searchText);
+    this.customerService
+      .getCustomers(page, limit, this.searchText, this.selectedRatingFilter)
+      .subscribe(
+        (response: any) => {
+          this.isLoading         = false;
+          this.customers         = response.items || [];
+          this.totalItems        = response.total;
+          this.filteredCustomers = [...this.customers];
+          this.hasData           = this.filteredCustomers.length > 0;
+        },
+        (error) => {
+          console.error('Error fetching customers', error);
+          this.isLoading         = false;
+          this.customers         = [];
+          this.filteredCustomers = [];
+          this.hasData           = false;
+        },
+      );
   }
 
-  onSearchClick() {
-  this.searchText = this.searchText.trimStart();
-  this.page = 1;
-  this.fetchAllCustomers();
-}
-
-
-  private searchInCustomer(customer: Customers, searchText: string): boolean {
-  const fullName = `${customer.firstName} ${customer.lastName}`.toLowerCase();
-  const lowerSearch = searchText.toLowerCase();
-
-  const fieldsToSearch = [
-    customer.cusId?.toLowerCase(),
-    fullName,
-    customer.phoneNumber?.toLowerCase(),
-    customer.empId?.toLowerCase()
-  ];
-
-  return fieldsToSearch.some((field) =>
-    field?.includes(lowerSearch)
-  );
-}
-
-
- offSearch() {
-  this.searchText = '';
-  this.page = 1;
-  this.fetchAllCustomers();
-}
+  // ─────────────────────────────────────────────────────────────────────────
+  //  Pagination / Search / Rating Filter
+  // ─────────────────────────────────────────────────────────────────────────
 
   onPageChange(event: number) {
     this.page = event;
     this.fetchAllCustomers();
   }
 
+  onSearchChange(searchText: string) {
+    if (searchText.startsWith(' ')) searchText = searchText.trimStart();
+    this.searchSubject.next(searchText);
+  }
+
+  onSearchClick() {
+    this.searchText = this.searchText.trimStart();
+    this.page       = 1;
+    this.fetchAllCustomers();
+  }
+
+  offSearch() {
+    this.searchText = '';
+    this.page       = 1;
+    this.fetchAllCustomers();
+  }
+
+  applyRatingFilter() {
+    this.page = 1;
+    this.fetchAllCustomers();
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  //  Customer Details Popup
+  // ─────────────────────────────────────────────────────────────────────────
+
+  openPopup(customer: Customers) {
+    this.selectedCustomer = customer;
+    this.isPopupOpen      = true;
+  }
+
+  closePopup() {
+    this.isPopupOpen      = false;
+    this.selectedCustomer = null;
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  //  Update-Rating Popup
+  // ─────────────────────────────────────────────────────────────────────────
+
+  openUpdateRatingPopup(customer: Customers) {
+    this.selectedCustomerForRating = customer;
+    this.selectedNewRating         = customer.rateofCus ?? '';
+    this.isRatingPopupOpen         = true;
+  }
+
+  closeUpdateRatingPopup() {
+    this.isRatingPopupOpen         = false;
+    this.selectedCustomerForRating = null;
+    this.selectedNewRating         = '';
+  }
+
+  submitUpdateRating() {
+    if (!this.selectedCustomerForRating || !this.selectedNewRating) return;
+
+    this.isUpdatingRating = true;
+
+    this.customerService
+      .updateDashCustomerRating(
+        this.selectedCustomerForRating.id,
+        this.selectedNewRating,
+      )
+      .subscribe(
+        () => {
+          // Update the row in-place so the table refreshes instantly
+          const target = this.filteredCustomers.find(
+            (c) => c.id === this.selectedCustomerForRating!.id,
+          );
+          if (target) target.rateofCus = this.selectedNewRating;
+
+          this.isUpdatingRating = false;
+          this.closeUpdateRatingPopup();
+
+          this.showRatingToast = true;
+          setTimeout(() => (this.showRatingToast = false), 3000);
+        },
+        (err) => {
+          console.error('Error updating rating', err);
+          this.isUpdatingRating = false;
+        },
+      );
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  //  Helpers
+  // ─────────────────────────────────────────────────────────────────────────
+
+  back() {
+    this.router.navigate(['/sales-dash']);
+  }
+
   viewOrderDetails(id: number) {
     this.router.navigate(['/sales-dash/customers-orders', id]);
+  }
+
+  /** Returns the star-icon asset path for a given rating code */
+  getRatingIcon(rating: string): string {
+    const map: Record<string, string> = {
+      VVIP: 'assets/images/ratings/VVIP.png',
+      VIP:  'assets/images/ratings/VIP.png',
+      COR:  'assets/images/ratings/COR2.png',
+      NOR:  'assets/images/ratings/NOR.png',
+      VVP:  'assets/images/ratings/vvp.png',
+    };
+    return map[rating] ?? '';
+  }
+
+  getRatingLabel(rating: string): string {
+    const map: Record<string, string> = {
+      VVIP: 'X 2 Stars',
+      VIP:  'X 1 Star',
+      COR:  'X 1 Star',
+      NOR:  'X 1 Star',
+      VVP:  'X 1 Star',
+    };
+    return map[rating] ?? rating;
+  }
+
+  copyToClipboard(value: string | undefined, field: string) {
+    if (!value) return;
+    if (this.copyTimeout) clearTimeout(this.copyTimeout);
+
+    navigator.clipboard.writeText(value).then(
+      () => {
+        this.copiedField  = field;
+        this.copyTimeout  = setTimeout(() => (this.copiedField = null), 2000);
+      },
+      (err) => {
+        console.error('Failed to copy:', err);
+        Swal.fire({ icon: 'error', title: 'Oops!', text: 'Failed to copy. Please try again.' });
+      },
+    );
+  }
+
+  private searchInCustomer(customer: Customers, searchText: string): boolean {
+    const fullName    = `${customer.firstName} ${customer.lastName}`.toLowerCase();
+    const lowerSearch = searchText.toLowerCase();
+    return [customer.cusId, fullName, customer.phoneNumber, customer.empId]
+      .some((f) => f?.toLowerCase().includes(lowerSearch));
   }
 }

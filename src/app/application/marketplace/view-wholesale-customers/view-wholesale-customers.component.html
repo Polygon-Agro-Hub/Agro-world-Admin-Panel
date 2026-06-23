@@ -10,107 +10,135 @@
 <div class="p-4">
   <div class="bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg overflow-hidden">
     <div class="p-4 md:p-5">
+
+      <!-- ── Header row ────────────────────────────────────────────────── -->
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-          Wholesale Customer ({{ totalItems === 0 ? '0': totalItems < 10 ? '0' + totalItems : totalItems }}) </h2>
+          Wholesale Customers
+          ({{ totalItems === 0 ? '0' : totalItems < 10 ? '0' + totalItems : totalItems }})
+        </h2>
 
-            <div class="w-full md:w-96 relative group">
-              <div
-                class="absolute top-[50px] left-0 bg-gray-700 text-white text-xs rounded-md py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                Search by Customer ID, Name, Phone Number
+        <div class="flex items-center gap-3">
+
+          <!-- Ratings Filter Dropdown -->
+          <p-dropdown
+            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#D1D5DB] dark:border-[#AFAFAF]"
+            [options]="ratingFilterOptions"
+            [checkmark]="true"
+            optionLabel="label"
+            optionValue="value"
+            [showClear]="!!selectedRatingFilter"
+            placeholder="Ratings"
+            [(ngModel)]="selectedRatingFilter"
+            (onChange)="applyRatingFilter()">
+            <ng-template pTemplate="selectedItem">
+              <div class="flex items-center gap-2" *ngIf="selectedRatingFilter">
+                <img [src]="getRatingIcon(selectedRatingFilter)" class="w-4 h-4 object-contain" />
+                <span class="text-sm text-textLight dark:text-textDark">{{ getRatingLabel(selectedRatingFilter) }}</span>
               </div>
-
-              <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-full">
-                <input type="text" placeholder="Search.." [(ngModel)]="searchText" name="searchText"
-       class="bg-transparent outline-none w-full dark:text-textDark text-gray-600" 
-       (keyup.enter)="onSearch()" (keyup.esc)="offSearch()" 
-       (keydown.space)="checkLeadingSpace($event)" />
-
-                <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-                  (click)="onSearch()">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
-                  </svg>
-                </button>
-
-                <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none"
-                  (click)="offSearch()">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
+            </ng-template>
+            <ng-template let-option pTemplate="item">
+              <div class="flex items-center gap-2 py-1">
+                <img [src]="option.icon" class="w-4 h-4 object-contain" />
+                <span class="text-sm">{{ option.label }}</span>
               </div>
+            </ng-template>
+          </p-dropdown>
+
+          <!-- Search Bar -->
+          <div class="w-full md:w-96 relative group">
+            <div class="absolute top-[50px] left-0 bg-gray-700 text-white text-xs rounded-md py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
+              Search by Customer ID, Name, Phone Number
             </div>
-      </div>
+            <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-full">
+              <input
+                type="text"
+                placeholder="Search.."
+                [(ngModel)]="searchText"
+                name="searchText"
+                class="bg-transparent outline-none w-full dark:text-textDark text-gray-600"
+                (keyup.enter)="onSearch()"
+                (keyup.esc)="offSearch()"
+                (keydown.space)="checkLeadingSpace($event)" />
+              <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2" (click)="onSearch()">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
+                </svg>
+              </button>
+              <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none" (click)="offSearch()">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
 
-      <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6 ">
+        </div>
+      </div>
+      <!-- ── / Header row ──────────────────────────────────────────────── -->
+
+      <!-- No Data -->
+      <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6">
         <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
         <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
       </div>
 
+      <!-- Table -->
       <div *ngIf="hasData" class="w-full overflow-x-auto">
-        <div class="min-w-[700px]">
+        <div class="min-w-[1300px]">
           <table class="w-full divide-y divide-gray-200 dark:divide-[#4B555A]">
             <thead>
               <tr>
-                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">
-                  Customer ID
-                </th>
-                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">
-                  Customer Name
-                </th>
-                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">
-                  Company Name
-                </th>
-                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">
-                  Created At
-                </th>
-                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">
-                  Contact
-                </th>
-                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">
-                  No. of Orders
-                </th>
-                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
-                  Customer Details
-                </th>
-                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center" *ngIf="permissionService.hasPermission('View wholesale customer orders') || tokenService.getUserDetails().role === '1'">
+                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">Customer ID</th>
+                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">Customer Name</th>
+                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">Company Name</th>
+                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">Created At</th>
+                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">Contact</th>
+                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">No. of Orders</th>
+                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">Customer Details</th>
+                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center"
+                  *ngIf="permissionService.hasPermission('View wholesale customer orders') || tokenService.getUserDetails().role === '1'">
                   Orders Details
+                </th>
+                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">Ratings</th>
+                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center"
+                  *ngIf="permissionService.hasPermission('Edit wholesale customer ratings') || tokenService.getUserDetails().role === '1'">
+                  Edit Ratings
                 </th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="
+              <tr
+                *ngFor="
                   let item of customerObj
-                    | paginate
-                      : {
-                          itemsPerPage: itemsPerPage,
-                          currentPage: page,
-                          totalItems: totalItems
-                        };
-                  let i = index
-                " class="border-b border-gray-200 dark:border-[#4B555A]">
-                <td class="px-3 py-3 dark:text-textDark">
-                  {{ item.cusId }}
-                </td>
-                <td class="px-3 py-3  text-left dark:text-textDark whitespace-nowrap">
+                    | paginate: { itemsPerPage: itemsPerPage, currentPage: page, totalItems: totalItems };
+                  let i = index"
+                class="border-b border-gray-200 dark:border-[#4B555A]">
+
+                <td class="px-3 py-3 dark:text-textDark">{{ item.cusId }}</td>
+
+                <td class="px-3 py-3 text-left dark:text-textDark whitespace-nowrap">
                   {{ item.firstName }} {{ item.lastName }}
                 </td>
-                <td class="px-3 py-3  text-left dark:text-textDark whitespace-nowrap">
-                  {{ item.companyName || " - " }}
+
+                <td class="px-3 py-3 text-left dark:text-textDark whitespace-nowrap">
+                  {{ item.companyName || '—' }}
                 </td>
-                <td class="px-3 py-3  text-center dark:text-textDark whitespace-nowrap">
-                  {{ item.created_at | date : "d MMM, y h:mm a" }}
+
+                <td class="px-3 py-3 text-center dark:text-textDark whitespace-nowrap">
+                  {{ item.created_at | date: 'd MMM, y h:mm a' }}
                 </td>
-                <td class="px-3 py-3  text-center dark:text-textDark whitespace-nowrap">
+
+                <td class="px-3 py-3 text-center dark:text-textDark whitespace-nowrap">
                   {{ item.phoneCode }} - {{ item.phoneNumber }}
                 </td>
-                <td class="px-3 py-3  text-center dark:text-textDark">
-                  {{ item.totalOrders === 0 ? '0' : item.totalOrders < 10 ? '0' +item.totalOrders : item.totalOrders }}
-                    </td>
+
+                <td class="px-3 py-3 text-center dark:text-textDark">
+                  {{ item.totalOrders === 0 ? '0' : item.totalOrders < 10 ? '0' + item.totalOrders : item.totalOrders }}
+                </td>
+
+                <!-- Customer Details -->
                 <td class="px-3 py-3 text-center">
                   <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd] mt-2" (click)="detailsPop(item)">
                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5">
@@ -120,45 +148,93 @@
                     </svg>
                   </button>
                 </td>
-                <td class="px-3 py-3 text-center" *ngIf="permissionService.hasPermission('View wholesale customer orders') || tokenService.getUserDetails().role === '1'">
+
+                <!-- Order Details -->
+                <td class="px-3 py-3 text-center"
+                  *ngIf="permissionService.hasPermission('View wholesale customer orders') || tokenService.getUserDetails().role === '1'">
                   <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]" (click)="viewOrderDetails(item.id)">
-                    <!-- <svg fill="currentColor" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg"
-                      class="w-5 h-5">
-                      <title>Edit</title>
-                      <path
-                        d="M7.263 19.051l-1.656 5.797c-0.030 0.102-0.048 0.22-0.048 0.342 0 0.691 0.559 1.251 1.25 1.252h0c0.126-0 0.248-0.019 0.363-0.053l-0.009 0.002 5.622-1.656c0.206-0.063 0.383-0.17 0.527-0.311l-0 0 17.568-17.394c0.229-0.227 0.371-0.541 0.371-0.889 0-0.345-0.14-0.657-0.365-0.883l-4.141-4.142c-0.227-0.226-0.539-0.366-0.885-0.366s-0.658 0.14-0.885 0.366v0l-17.394 17.394c-0.146 0.146-0.256 0.329-0.316 0.532l-0.002 0.009zM25.859 3.768l2.369 2.369-2.369 2.346-2.37-2.345zM9.578 20.049l12.144-12.144 2.361 2.336-12.307 12.184-3.141 0.924zM30 12.75c-0.69 0-1.25 0.56-1.25 1.25v14.75h-25.5v-25.5h14.75c0.69 0 1.25-0.56 1.25-1.25s-0.56-1.25-1.25-1.25v0h-16c-0.69 0-1.25 0.56-1.25 1.25v0 28c0 0.69 0.56 1.25 1.25 1.25h28c0.69-0.001 1.249-0.56 1.25-1.25v-16c-0-0.69-0.56-1.25-1.25-1.25h-0z">
-                      </path>
-                    </svg> -->
                     <i class="fa-solid fa-arrow-up-right-from-square text-xl"></i>
                   </button>
                 </td>
+
+                <!-- Ratings Column -->
+                <td class="px-3 py-3 text-center">
+                  <div class="flex justify-center items-center">
+                    <ng-container [ngSwitch]="item.rateofCus">
+                      <ng-container *ngSwitchCase="'VVIP'">
+                        <img src="assets/images/ratings/VVIP.png" class="w-10 h-5 object-contain" alt="VVIP" />
+                      </ng-container>
+                      <ng-container *ngSwitchCase="'VIP'">
+                        <img src="assets/images/ratings/VIP.png" class="w-5 h-5 object-contain" alt="VIP" />
+                      </ng-container>
+                      <ng-container *ngSwitchCase="'COR'">
+                        <img src="assets/images/ratings/COR2.png" class="w-5 h-5 object-contain" alt="COR" />
+                      </ng-container>
+                      <ng-container *ngSwitchCase="'NOR'">
+                        <img src="assets/images/ratings/NOR.png" class="w-5 h-5 object-contain" alt="NOR" />
+                      </ng-container>
+                      <ng-container *ngSwitchCase="'VVP'">
+                        <img src="assets/images/ratings/vvp.png" class="w-5 h-5 object-contain" alt="VVP" />
+                      </ng-container>
+                      <ng-container *ngSwitchDefault>
+                        <span class="text-gray-400 text-xs">—</span>
+                      </ng-container>
+                    </ng-container>
+                  </div>
+                </td>
+
+                <!-- Edit Ratings Column -->
+                <td class="px-3 py-3 text-center"
+                  *ngIf="permissionService.hasPermission('Edit wholesale customer ratings') || tokenService.getUserDetails().role === '1'">
+                  <button
+                    class="text-[#367bfa] hover:text-[#83aefd] transition-transform hover:rotate-180 duration-300"
+                    (click)="openUpdateRatingPopup(item)"
+                    title="Edit Rating">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                  </button>
+                </td>
+
               </tr>
             </tbody>
           </table>
         </div>
+
         <div class="dark:bg-[#262f45] mt-4">
-          <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
-            [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
+          <pagination-controls
+            (pageChange)="onPageChange($event)"
+            [responsive]="true"
+            [previousLabel]="'Previous'"
+            [nextLabel]="'Next'"
+            [screenReaderPaginationLabel]="'Pagination'"
+            [screenReaderPageLabel]="'page'"
             [screenReaderCurrentLabel]="'Youre on page'">
           </pagination-controls>
         </div>
       </div>
+
     </div>
   </div>
 </div>
 
-<div *ngIf="isPopupOpen" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+<!-- ───────── Customer Details Popup ───────── -->
+<div *ngIf="isPopupOpen"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
   (click)="isPopupOpen = false">
   <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-1/3 h-auto" (click)="$event.stopPropagation()">
     <h2 class="[font-size:16px] text-[#545454] mb-4">CUSTOMER INFO</h2>
+
     <div class="my-5 flex flex-col gap-4">
+
       <div class="flex flex-row items-center gap-4">
         <div class="flex flex-row items-center justify-center gap-3">
           <i class="fa-solid fa-user text-[#727272] [font-size:14px]"></i>
           <p class="[font-size:14px] text-[#727272]">Name:</p>
         </div>
         <p class="[font-size:14px] text-[#000000] dark:text-white">
-          {{cusObjDetails.title}}. {{ cusObjDetails.firstName }} {{ cusObjDetails.lastName }}
+          {{ cusObjDetails.title }}. {{ cusObjDetails.firstName }} {{ cusObjDetails.lastName }}
         </p>
       </div>
 
@@ -168,34 +244,23 @@
           <p class="[font-size:14px] text-[#727272]">Phone:</p>
         </div>
         <div class="flex items-center gap-2">
-          <p class="text-lg [font-size:14px] text-[#000000] dark:text-white cursor-pointer hover:underline" (click)="
-              copyToClipboard(
-                cusObjDetails.phoneCode + ' ' + cusObjDetails.phoneNumber,
-                'phone'
-              )
-            ">
-            {{ cusObjDetails.phoneCode + " " + cusObjDetails.phoneNumber }}
+          <p class="[font-size:14px] text-[#000000] dark:text-white cursor-pointer hover:underline"
+            (click)="copyToClipboard(cusObjDetails.phoneCode + ' ' + cusObjDetails.phoneNumber, 'phone')">
+            {{ cusObjDetails.phoneCode + ' ' + cusObjDetails.phoneNumber }}
           </p>
           <i *ngIf="!copiedPhone"
             class="fa-regular fa-copy text-[#007bff] [font-size:14px] cursor-pointer hover:text-[#000000] dark:hover:text-white"
-            (click)="
-              copyToClipboard(
-                cusObjDetails.phoneCode + ' ' + cusObjDetails.phoneNumber,
-                'phone'
-              )
-            "></i>
-          <i *ngIf="copiedPhone" class="fas fa-check text-[#007bff]  [font-size:14px]"></i>
+            (click)="copyToClipboard(cusObjDetails.phoneCode + ' ' + cusObjDetails.phoneNumber, 'phone')"></i>
+          <i *ngIf="copiedPhone" class="fas fa-check text-[#007bff] [font-size:14px]"></i>
         </div>
       </div>
 
       <div class="flex flex-row items-center gap-4">
         <div class="flex flex-row items-center justify-center gap-3">
-          <i class="fa-regular fa-envelope text-[#727272] text-lg"></i>
+          <i class="fa-regular fa-building text-[#727272] [font-size:14px]"></i>
           <p class="[font-size:14px] text-[#727272]">Company:</p>
         </div>
-        <p class="[font-size:14px] text-[#000000] dark:text-white">
-          {{ cusObjDetails.companyName }}
-        </p>
+        <p class="[font-size:14px] text-[#000000] dark:text-white">{{ cusObjDetails.companyName }}</p>
       </div>
 
       <div class="flex flex-row items-center gap-4">
@@ -217,30 +282,20 @@
 
       <div class="flex flex-row items-center gap-4">
         <div class="flex flex-row items-center justify-center gap-3">
-          <i class="fa-regular fa-envelope text-[#727272] text-lg"></i>
+          <i class="fa-solid fa-phone text-[#727272] [font-size:14px]"></i>
           <p class="[font-size:14px] text-[#727272]">C.Phone:</p>
         </div>
         <div class="flex items-center gap-2">
-          <p class="text-lg [font-size:14px] text-[#000000] dark:text-white cursor-pointer hover:underline" (click)="
-              copyToClipboard(
-                cusObjDetails.companyPhoneCode + ' ' + cusObjDetails.companyPhone,
-                'phone'
-              )
-            ">
-            {{ cusObjDetails.companyPhoneCode + " " + cusObjDetails.companyPhone }}
+          <p class="[font-size:14px] text-[#000000] dark:text-white cursor-pointer hover:underline"
+            (click)="copyToClipboard(cusObjDetails.companyPhoneCode + ' ' + cusObjDetails.companyPhone, 'phone1')">
+            {{ cusObjDetails.companyPhoneCode + ' ' + cusObjDetails.companyPhone }}
           </p>
           <i *ngIf="!copiedPhone1"
             class="fa-regular fa-copy text-[#007bff] [font-size:14px] cursor-pointer hover:text-[#000000] dark:hover:text-white"
-            (click)="
-              copyToClipboard(
-                cusObjDetails.companyPhoneCode + ' ' + cusObjDetails.companyPhone,
-                'phone1'
-              )
-            "></i>
+            (click)="copyToClipboard(cusObjDetails.companyPhoneCode + ' ' + cusObjDetails.companyPhone, 'phone1')"></i>
           <i *ngIf="copiedPhone1" class="fas fa-check text-[#007bff] [font-size:14px]"></i>
         </div>
       </div>
-
 
       <div *ngIf="cusObjDetails.buildingType === 'House'" class="flex flex-row items-center gap-4">
         <div class="flex flex-row items-center justify-center gap-3">
@@ -248,8 +303,7 @@
           <p class="[font-size:14px] text-[#727272]">Address:</p>
         </div>
         <p class="[font-size:14px] text-[#000000] dark:text-white">
-          {{ cusObjDetails.houseNo }}, {{ cusObjDetails.streetName }},
-          {{ cusObjDetails.city }}
+          {{ cusObjDetails.houseNo }}, {{ cusObjDetails.streetName }}, {{ cusObjDetails.city }}
         </p>
       </div>
 
@@ -259,11 +313,11 @@
           <p class="[font-size:14px] text-[#727272]">Address:</p>
         </div>
         <div class="flex flex-col">
-          <p class="text-lg text-[#000000] dark:text-white">
+          <p class="[font-size:14px] text-[#000000] dark:text-white">
             {{ cusObjDetails.buildingNo }}, {{ cusObjDetails.buildingName }},
             {{ cusObjDetails.unitNo }}, {{ cusObjDetails.floorNo }},
-            {{ cusObjDetails.AparthouseNo }},
-            {{ cusObjDetails.ApartstreetName }}, {{ cusObjDetails.Apartcity }}
+            {{ cusObjDetails.AparthouseNo }}, {{ cusObjDetails.ApartstreetName }},
+            {{ cusObjDetails.Apartcity }}
           </p>
         </div>
       </div>
@@ -273,22 +327,9 @@
           <i class="fa-solid fa-receipt text-[#727272] text-lg"></i>
           <p class="[font-size:14px] text-[#727272]">No of Orders:</p>
         </div>
-        <p class="[font-size:14px] text-[#000000] dark:text-white">
-          {{ cusObjDetails.totalOrders }}
-        </p>
+        <p class="[font-size:14px] text-[#000000] dark:text-white">{{ cusObjDetails.totalOrders }}</p>
       </div>
-      <!-- <div *ngIf="cusObjDetails.buildingType === 'House'" class="flex flex-row items-center gap-4">
-        <div class="flex flex-row items-center gap-4">
-          <div class="flex flex-row items-center justify-center gap-3">
-            <i class="fa-solid fa-house text-[#727272] text-lg"></i>
-            <p class="text-lg text-[#727272]">Address:</p>
-          </div>
-          <p class="text-lg text-[#000000]">
-            {{ cusObjDetails.houseNo }} {{ cusObjDetails.streetName }}
-            {{ cusObjDetails.city }}
-          </p>
-        </div>
-      </div> -->
+
     </div>
 
     <hr class="my-4 border-gray-300 dark:border-gray-600" />
@@ -300,9 +341,105 @@
           <p class="[font-size:14px] text-[#727272]">Created At:</p>
         </div>
         <p class="[font-size:14px] text-[#000000] dark:text-white">
-          {{ cusObjDetails.created_at | date : "dd/MM/yyyy hh:mm a" }}
+          {{ cusObjDetails.created_at | date: 'dd/MM/yyyy hh:mm a' }}
         </p>
       </div>
     </div>
+
+    <div class="pb-4 flex items-center justify-center">
+      <button (click)="isPopupOpen = false"
+        class="mt-4 bg-[#74788D] text-[#D3D3D3] px-4 py-2 rounded">
+        Close
+      </button>
+    </div>
   </div>
+</div>
+
+<!-- ───────── Update Ratings Popup ───────── -->
+<div *ngIf="isRatingPopupOpen"
+  class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50"
+  (click)="closeUpdateRatingPopup()">
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-[420px] max-w-[90vw] p-8"
+    (click)="$event.stopPropagation()">
+
+    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Update Ratings</h3>
+
+    <div class="mb-6">
+      <p-dropdown
+        styleClass="w-full border border-2 rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#D1D5DB] dark:border-[#AFAFAF]"
+        [options]="ratingUpdateOptions"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Select Rating"
+        [(ngModel)]="selectedNewRating">
+        <!-- Selected display -->
+        <ng-template pTemplate="selectedItem">
+          <div class="flex items-center gap-2 py-1" *ngIf="selectedNewRating">
+            <ng-container [ngSwitch]="selectedNewRating">
+              <ng-container *ngSwitchCase="'VVIP'">
+                <img src="assets/images/ratings/VVIP.png" class="w-8 h-4 object-contain" alt="VVIP" />
+              </ng-container>
+              <ng-container *ngSwitchCase="'VIP'">
+                <img src="assets/images/ratings/VIP.png" class="w-4 h-4 object-contain" alt="VIP" />
+              </ng-container>
+              <ng-container *ngSwitchCase="'COR'">
+                <img src="assets/images/ratings/COR2.png" class="w-4 h-4 object-contain" alt="COR" />
+              </ng-container>
+              <ng-container *ngSwitchCase="'NOR'">
+                <img src="assets/images/ratings/NOR.png" class="w-4 h-4 object-contain" alt="NOR" />
+              </ng-container>
+              <ng-container *ngSwitchCase="'VVP'">
+                <img src="assets/images/ratings/vvp.png" class="w-4 h-4 object-contain" alt="VVP" />
+              </ng-container>
+            </ng-container>
+            <span>{{ getRatingLabel(selectedNewRating) }}</span>
+          </div>
+        </ng-template>
+        <!-- Dropdown options -->
+        <ng-template let-option pTemplate="item">
+          <div class="flex items-center gap-2 py-1">
+            <ng-container [ngSwitch]="option.value">
+              <ng-container *ngSwitchCase="'VVIP'">
+                <img src="assets/images/ratings/VIP.png" class="w-8 h-4 object-contain" alt="VVIP" />
+              </ng-container>
+              <ng-container *ngSwitchCase="'VIP'">
+                <img src="assets/images/ratings/VIP.png" class="w-4 h-4 object-contain" alt="VIP" />
+              </ng-container>
+              <ng-container *ngSwitchCase="'COR'">
+                <img src="assets/images/ratings/COR2.png" class="w-4 h-4 object-contain" alt="COR" />
+              </ng-container>
+              <ng-container *ngSwitchCase="'NOR'">
+                <img src="assets/images/ratings/NOR.png" class="w-4 h-4 object-contain" alt="NOR" />
+              </ng-container>
+              <ng-container *ngSwitchCase="'VVP'">
+                <img src="assets/images/ratings/vvp.png" class="w-4 h-4 object-contain" alt="VVP" />
+              </ng-container>
+            </ng-container>
+            <span>{{ option.label }}</span>
+          </div>
+        </ng-template>
+      </p-dropdown>
+    </div>
+
+    <div class="flex justify-center gap-4 mt-6">
+      <button
+        (click)="closeUpdateRatingPopup()"
+        class="bg-[#74788D] text-[#D3D3D3] px-6 py-2 rounded hover:bg-[#5f6275] transition-colors">
+        Cancel
+      </button>
+      <button
+        (click)="submitUpdateRating()"
+        [disabled]="!selectedNewRating || isUpdatingRating"
+        class="bg-[#367bfa] text-white px-6 py-2 rounded hover:bg-[#2563eb] transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+        {{ isUpdatingRating ? 'Updating...' : 'Update' }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Rating Update Success Toast -->
+<div *ngIf="showRatingToast"
+  class="fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity duration-300 z-50"
+  role="alert" aria-live="polite">
+  Rating updated successfully!
 </div>

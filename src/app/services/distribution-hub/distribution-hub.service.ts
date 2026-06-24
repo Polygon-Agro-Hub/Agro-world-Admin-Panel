@@ -450,49 +450,45 @@ export class DistributionHubService {
   editDistributionOfficer(
     person: any,
     id: number,
-    selectedImage: any,
+    profileImageUrl?: string | null,
     driver?: any,
-    licFront?: any,
-    licBack?: any,
-    insFront?: any,
-    insBack?: any,
-    vehiFront?: any,
-    vehiBack?: any,
-    vehiSideA?: any,
-    vehiSideB?: any,
+    licFrontUrl?: string | null,
+    licBackUrl?: string | null,
+    insFrontUrl?: string | null,
+    insBackUrl?: string | null,
+    vehiFrontUrl?: string | null,
+    vehiBackUrl?: string | null,
+    vehiSideAUrl?: string | null,
+    vehiSideBUrl?: string | null,
   ): Observable<any> {
-    const formData = new FormData();
-
-    // Attach officer data
-    formData.append('officerData', JSON.stringify(person));
-
-    // Attach profile image if provided
-    if (selectedImage) {
-      formData.append('file', selectedImage);
-    }
-
-    // Add driver data if jobRole is Driver
-    if (person.jobRole === 'Driver' && driver) {
-      formData.append('driverData', JSON.stringify(driver));
-
-      // Attach driver-related images only if they are new files
-      if (licFront) formData.append('licFront', licFront);
-      if (licBack) formData.append('licBack', licBack);
-      if (insFront) formData.append('insFront', insFront);
-      if (insBack) formData.append('insBack', insBack);
-      if (vehiFront) formData.append('vehiFront', vehiFront);
-      if (vehiBack) formData.append('vehiBack', vehiBack);
-      if (vehiSideA) formData.append('vehiSideA', vehiSideA);
-      if (vehiSideB) formData.append('vehiSideB', vehiSideB);
-    }
-
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
     });
+
+    const body: any = {
+      officerData: person,
+    };
+
+    if (profileImageUrl) {
+      body.profileImageUrl = profileImageUrl;
+    }
+
+    if (person.jobRole === 'Driver' && driver) {
+      body.driverData = driver;
+      if (licFrontUrl) body.licFrontUrl = licFrontUrl;
+      if (licBackUrl) body.licBackUrl = licBackUrl;
+      if (insFrontUrl) body.insFrontUrl = insFrontUrl;
+      if (insBackUrl) body.insBackUrl = insBackUrl;
+      if (vehiFrontUrl) body.vehiFrontUrl = vehiFrontUrl;
+      if (vehiBackUrl) body.vehiBackUrl = vehiBackUrl;
+      if (vehiSideAUrl) body.vehiSideAUrl = vehiSideAUrl;
+      if (vehiSideBUrl) body.vehiSideBUrl = vehiSideBUrl;
+    }
 
     return this.http.put(
       `${this.apiUrl}distribution/update-distribution-officer-details/${id}`,
-      formData,
+      body,
       { headers },
     );
   }

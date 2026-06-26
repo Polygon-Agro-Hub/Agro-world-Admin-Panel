@@ -199,6 +199,7 @@ export class ViewWholwsaleOrdersComponent implements OnInit {
       'Out For Delivery',
       'Delivered',
       'Picked up',
+      'Ready to Pickup',
       'On the way',
       'Failed'
     ];

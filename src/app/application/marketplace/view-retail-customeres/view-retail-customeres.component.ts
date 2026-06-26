@@ -58,7 +58,6 @@ export class ViewRetailCustomeresComponent implements OnInit {
 
     this.marketSrv.fetchAllRetailCustomers(page, limit, searchText).subscribe(
       (res) => {
-        console.log(res);
         this.customerObj = res.items;
         this.totalItems = res.total;
         this.hasData = res.items.length === 0 ? false : true;

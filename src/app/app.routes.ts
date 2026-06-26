@@ -2146,7 +2146,7 @@ export const routes: Routes = [
               {
                 path: 'all-govi-shops',
                 canActivate: [PermissionGuard],
-                data: { permission: 'View all govi shops' },
+                data: { permission: 'View All Govi Shops' },
                 component: ViewAllShopsComponent,
                 
               },
@@ -2154,7 +2154,7 @@ export const routes: Routes = [
               {
                 path: 'all-shop-requests',
                 canActivate: [PermissionGuard],
-                data: { permission: 'View all shop requests' },
+                data: { permission: 'View All Shop Requests' },
                 component: GovishopViewShopsComponent,
               },
               {
@@ -2183,7 +2183,7 @@ export const routes: Routes = [
               {
                 path: 'deleted-suppliers',
                 canActivate: [PermissionGuard],
-                data: { permission: 'View all deleted suppliers' },
+                data: { permission: 'View All Deleted Suppliers' },
                 component: AllDeletedSuppliersComponent,
               },
               {
@@ -2194,7 +2194,7 @@ export const routes: Routes = [
               {
                 path: 'all-branches',
                 canActivate: [PermissionGuard],
-                data: { permission: 'View all branches' },
+                data: { permission: 'View All Branches' },
                 component: ViewBranchesPerShopComponent,
               },
 

@@ -175,7 +175,8 @@
                 <div>
                     <p class="text-[#627189] text-[14px] font-medium mb-1">Last Updated At</p>
                     <p class="text-[#000000] dark:text-[#ffffff] text-[16px] font-medium">
-                        {{ (branchData?.lastUpdatedAt || null) | date: 'hh:mm a, MMMM d, yyyy' }}
+                        {{ branchData?.lastUpdatedAt | date: "h:mm a, MMMM d, yyyy" }}
+                        <span *ngIf="!branchData?.lastUpdatedAt">----</span>
                     </p>
                 </div>
             </div>

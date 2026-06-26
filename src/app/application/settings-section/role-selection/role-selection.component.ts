@@ -72,8 +72,6 @@ export class RoleSelectionComponent {
   }
 
   addSection() {
-    // Add logic to save the new section
-    console.log('New section added');
     this.closeModal();
   }
   onSubmit() {
@@ -171,7 +169,6 @@ export class RoleSelectionComponent {
       (response) => {
         this.isLoading = false;
         this.rolesList = response.roles;
-        console.log(response);
       },
       (error) => {
         console.error('Error fetching rols', error);

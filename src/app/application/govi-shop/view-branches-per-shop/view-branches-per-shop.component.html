@@ -220,11 +220,19 @@
           </th>
           <!-- NEW: Products column -->
           <th
+          *ngIf="
+              permissionService.hasPermission('View products per branch') ||
+              tokenService.getUserDetails().role === '1'
+            "
             class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 text-center whitespace-nowrap"
           >
             Products
           </th>
           <th
+          *ngIf="
+              permissionService.hasPermission('Change branch active status') ||
+              tokenService.getUserDetails().role === '1'
+            "
             class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 text-center whitespace-nowrap"
           >
             Active Status
@@ -245,6 +253,10 @@
             Last Updated At
           </th>
           <th
+          *ngIf="
+              permissionService.hasPermission('Preview govi shop branch') ||
+              tokenService.getUserDetails().role === '1'
+            "
             class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 text-center"
           >
             Details
@@ -308,7 +320,10 @@
           </td>
 
           <!-- NEW: Products -->
-          <td class="py-3 px-3 text-center">
+          <td *ngIf="
+              permissionService.hasPermission('View products per branch') ||
+              tokenService.getUserDetails().role === '1'
+            " class="py-3 px-3 text-center">
             <button
               class="text-blue-500 hover:text-blue-600 flex items-center justify-center mx-auto"
               (click)="
@@ -334,7 +349,10 @@
           </td>
 
           <!-- Active Status Toggle -->
-          <td class="py-3 px-3 text-center">
+          <td *ngIf="
+              permissionService.hasPermission('Change branch active status') ||
+              tokenService.getUserDetails().role === '1'
+            " class="py-3 px-3 text-center">
             <div class="flex justify-center">
               <button
                 type="button"
@@ -372,14 +390,15 @@
           <td
             class="py-3 px-3 text-textLight dark:text-textDark whitespace-nowrap"
           >
-            <span *ngIf="branch.updatedAt">{{
-              branch.updatedAt | date: "h:mm a, MMMM d, yyyy"
-            }}</span>
+           <span *ngIf="branch.updatedAt">{{ branch.updatedAt | date: "h:mm a, MMMM d, yyyy" }}</span>
             <span *ngIf="!branch.updatedAt">----</span>
           </td>
 
           <!-- Details -->
-          <td class="py-3 px-3 text-center">
+          <td *ngIf="
+              permissionService.hasPermission('Preview govi shop branch') ||
+              tokenService.getUserDetails().role === '1'
+            " class="py-3 px-3 text-center">
             <button
               class="text-blue-500 hover:text-blue-600 flex items-center justify-center mx-auto"
               (click)="viewBranchDetails(branch.id)"
@@ -403,7 +422,10 @@
           </td>
 
           <!-- NEW: Edit -->
-          <td class="py-3 px-3 text-center">
+          <td *ngIf="
+              permissionService.hasPermission('Edit govi shop branch') ||
+              tokenService.getUserDetails().role === '1'
+            " class="py-3 px-3 text-center">
             <button
               class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd] flex items-center justify-center mx-auto"
               (click)="editBranch(branch.id)"

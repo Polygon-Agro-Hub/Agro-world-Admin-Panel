@@ -12,7 +12,10 @@ export class GoviLinkService {
   private authUrl = `${environment.API_URL}auth/`;
   private token = this.tokenService.getToken();
 
-  constructor(private http: HttpClient, private tokenService: TokenService) {}
+  constructor(
+    private http: HttpClient,
+    private tokenService: TokenService,
+  ) {}
 
   saveOfficerService(data: {
     englishName: string;
@@ -38,7 +41,7 @@ export class GoviLinkService {
       sinhalaName: string;
       srvFee?: number;
       modifyBy?: string;
-    }
+    },
   ): Observable<any> {
     const token = localStorage.getItem('AdminLoginToken');
     const headers = new HttpHeaders({
@@ -56,7 +59,7 @@ export class GoviLinkService {
       payload,
       {
         headers,
-      }
+      },
     );
   }
 
@@ -152,7 +155,7 @@ export class GoviLinkService {
       assignmentData,
       {
         headers,
-      }
+      },
     );
   }
 
@@ -225,7 +228,7 @@ export class GoviLinkService {
    */
   replyFieldOfficerComplain(
     id: string | number,
-    reply: string
+    reply: string,
   ): Observable<any> {
     const token = this.tokenService.getToken();
     const headers = new HttpHeaders({
@@ -238,7 +241,7 @@ export class GoviLinkService {
     return this.http.put<any>(
       `${this.apiUrl}reply-field-officer-complain/${id}`,
       body,
-      { headers }
+      { headers },
     );
   }
 
@@ -266,7 +269,7 @@ export class GoviLinkService {
     return this.http.put<any>(
       `${this.apiUrl}reply-driver-complain/${id}`,
       body,
-      { headers }
+      { headers },
     );
   }
 
@@ -279,7 +282,7 @@ export class GoviLinkService {
 
     return this.http.get<any>(
       `${this.apiUrl}get-field-audit-history-response/${jobId}`,
-      { headers }
+      { headers },
     );
   }
 
@@ -290,14 +293,17 @@ export class GoviLinkService {
       Authorization: `Bearer ${token}`,
     });
 
-    console.log('fetchiing')
+    console.log('fetchiing');
 
-    return this.http.get<any>(`${this.apiUrl}get-service-request-response/${jobId}`, {
-      headers
-    });
+    return this.http.get<any>(
+      `${this.apiUrl}get-service-request-response/${jobId}`,
+      {
+        headers,
+      },
+    );
   }
 
-  getFarmerClusterAudith(jobId: string){
+  getFarmerClusterAudith(jobId: string) {
     const token = this.tokenService.getToken();
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -306,8 +312,19 @@ export class GoviLinkService {
 
     return this.http.get<any>(
       `${this.apiUrl}get-field-audit-history-cluster-response/${jobId}`,
-      {headers}
+      { headers },
     );
   }
 
+  getDashboardData(): Observable<any> {
+    const token = this.tokenService.getToken();
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+
+    return this.http.get<any>(`${this.apiUrl}govilink-dashbord`, 
+      {headers},
+    );
+  }
 }

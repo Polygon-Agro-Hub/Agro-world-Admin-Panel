@@ -1750,7 +1750,6 @@ export class UpdateDistributionOfficerComponent {
   }
 
   onSubmit() {
-    console.log('called')
     if (this.personalData.jobRole === 'Driver') {
       this.licNoModel.control.markAsTouched();
       this.confirmLicNoModel.control.markAsTouched();

@@ -38,6 +38,7 @@ interface BranchDetails {
   templateUrl: './view-branch-details.component.html',
   styleUrl: './view-branch-details.component.css'
 })
+
 export class ViewBranchDetailsComponent implements OnInit {
   isLoading = false;
   branchData: BranchDetails | null = null;

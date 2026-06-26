@@ -113,7 +113,6 @@ export class ViewCustomerOrdersComponent implements OnInit {
       .subscribe({
         next: (response: ApiResponse) => {
           if (response.success) {
-            console.log('Fetched orders:', response.data.orders);
 
             this.orders = response.data.orders;
             this.totalItems = response.data.totalCount;

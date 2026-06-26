@@ -51,7 +51,6 @@ export class ViewWholesaleCustomersComponent implements OnInit {
     this.marketSrv
       .fetchAllWholesaleCustomers(page, limit, searchText)
       .subscribe((res) => {
-        console.log(res);
         this.customerObj = res.items;
         this.totalItems = res.total;
         this.isLoading = false;

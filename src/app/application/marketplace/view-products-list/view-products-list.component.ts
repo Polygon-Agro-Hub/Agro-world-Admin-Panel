@@ -283,6 +283,7 @@ class ProductList {
   method!: string;
   varietyNameEnglish!: string;
   discountedPrice: number = -1;
+  comPrice: number = -1;
   startValue!: number;
   maxQuantity!: number;
   discount!: number;

@@ -1,4 +1,4 @@
-<button (click)="back()" class="mb-10 text-textLight dark:text-textDark">
+<button (click)="back()" class="mb-6 text-textLight dark:text-textDark">
   <i class="fa-solid fa-arrow-left"></i> Back
 </button>
 <form>
@@ -21,7 +21,7 @@
     <!-- form component -->
     <div class="bg-[#FFFFFF] dark:bg-tileBlack p-5 shadow-md rounded-md w-[60%]">
       <div class="mb-6">
-        <label class="text-[#534E4E] dark:text-textDark">Category *</label>
+        <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-1">Category *</label>
         <p-dropdown id="category" name="category" [(ngModel)]="productObj.category" required [options]="categoryOptions"
           optionLabel="label" optionValue="value" placeholder="--Display type--" #categoryField="ngModel"
           [styleClass]="'w-full border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'">
@@ -34,7 +34,7 @@
 
       <!-- Display Name -->
       <div class="mb-6">
-        <label for="cropName" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
+        <label for="cropName" class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-1">
           Display Name *
         </label>
         <input type="text" id="cropName" name="cropName" [(ngModel)]="productObj.cropName" (blur)="trimDisplayName()"
@@ -48,9 +48,10 @@
       </div>
 
       <div class="mb-6">
-        <label class="text-[#534E4E] dark:text-textDark">Product Type *</label>
-        <p-dropdown id="productType" name="productType" [(ngModel)]="productObj.productTypeId" required [options]="productTypeOptions"
-          optionLabel="label" optionValue="value" placeholder="--Select Product Type--" #productTypeField="ngModel"
+        <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-1">Product Type *</label>
+        <p-dropdown id="productType" name="productType" [(ngModel)]="productObj.productTypeId" required
+          [options]="productTypeOptions" optionLabel="label" optionValue="value" placeholder="--Select Product Type--"
+          #productTypeField="ngModel"
           [styleClass]="'w-full border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'">
         </p-dropdown>
         <div *ngIf="productTypeField.invalid && (productTypeField.dirty || productTypeField.touched)"
@@ -60,7 +61,7 @@
       </div>
 
       <div class="mb-6">
-        <label for="selectId" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
+        <label for="selectId" class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-1">
           Crop *
         </label>
         <p-dropdown id="selectId" name="selectId" [(ngModel)]="productObj.selectId" (onChange)="onCropChange()"
@@ -88,7 +89,7 @@
         </select>
       </div> -->
       <div class="mb-6">
-        <label for="varietyId" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
+        <label for="varietyId" class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-1">
           Variety *
         </label>
         <p-dropdown id="varietyId" name="varietyId" [(ngModel)]="productObj.varietyId" (onChange)="selectVerityImage()"
@@ -102,21 +103,22 @@
       </div>
 
       <div class="mb-6">
-        <label class="text-[#534E4E] dark:text-textDark">Price *</label>
+        <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-1">Price *</label>
         <div class="flex items-center space-x-4 mt-3">
           <div class="flex items-center space-x-2">
             <!-- With Discount Radio Button -->
-            <input class="w-5 h-5 cursor-pointer" type="radio" id="withDiscount" name="priceType"
+            <input class="w-4 h-4 cursor-pointer" type="radio" id="withDiscount" name="priceType"
               [(ngModel)]="productObj.promo" (change)="applyDiscount()" [value]="true" />
-            <label for="withDiscount" class="block text-sm font-medium text-gray-700 dark:text-textDark cursor-pointer">
+            <label for="withDiscount"
+              class="block text-sm font-medium text-[#534E4E] dark:text-textDark cursor-pointer">
               With Discount
             </label>
           </div>
           <div class="flex items-center space-x-2">
             <!-- No Discount Radio Button -->
-            <input class="w-5 h-5 cursor-pointer" type="radio" id="noDiscount" name="priceType"
+            <input class="w-4 h-4 cursor-pointer" type="radio" id="noDiscount" name="priceType"
               [(ngModel)]="productObj.promo" (change)="compaireDiscount()" [value]="false" />
-            <label for="noDiscount" class="block text-sm font-medium text-gray-700 dark:text-textDark cursor-pointer">
+            <label for="noDiscount" class="block text-sm font-medium text-[#534E4E] dark:text-textDark cursor-pointer">
               No Discount
             </label>
           </div>
@@ -125,7 +127,7 @@
 
       <!-- Display Type -->
       <div class="mb-6" *ngIf="productObj.promo">
-        <label for="displaytype" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
+        <label for="displaytype" class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-1">
           Display Type *
         </label>
         <p-dropdown id="displaytype" name="displaytype" [(ngModel)]="productObj.displaytype"
@@ -140,7 +142,7 @@
       <!-- Discount Percentage -->
       <div class="mb-6"
         *ngIf="productObj.promo && (productObj.displaytype === 'D&AP' || productObj.displaytype === 'AP&SP&D')">
-        <label for="discountedPrice" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
+        <label for="discountedPrice" class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-1">
           Discount Percentage *
         </label>
         <input type="number" id="discountedPrice" name="discountedPrice" [(ngModel)]="productObj.discountedPrice"
@@ -155,7 +157,7 @@
       </div>
 
       <div class="mb-6">
-        <label class="text-[#534E4E] dark:text-textDark">{{
+        <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-1">{{
           isNoDiscount === true ? "Price Per kg *" : "Actual Price Per kg *"
           }}</label>
         <input type="number" id="normalPrice" name="normalPrice" [(ngModel)]="productObj.normalPrice"
@@ -164,9 +166,29 @@
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           placeholder="0.00" />
       </div>
+
+      <div class="mb-6">
+        <label for="comPrice" class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-1">
+          Competitor Price per kg *
+        </label>
+        <input type="number" id="comPrice" name="comPrice" [(ngModel)]="productObj.comPrice"
+          (keydown)="validateDecimalInput($event)" (blur)="formatPrice($event, 'comPrice')" pattern="^\d+(\.\d{1,2})?$"
+          required
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          placeholder="0.00" #comPriceField="ngModel" />
+
+        <div *ngIf="getCompetitorPriceError() && productObj.comPrice" class="text-red-500 text-sm mt-1">
+          {{ getCompetitorPriceError() }}
+        </div>
+
+        <div *ngIf="!productObj.comPrice && comPriceField.touched" class="text-red-500 text-sm mt-1">
+          Competitor Price is required.
+        </div>
+      </div>
+
       <div class="mb-6"
         *ngIf="productObj.promo && (productObj.displaytype === 'AP&SP' || productObj.displaytype === 'AP&SP&D')">
-        <label for="salePrice" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
+        <label for="salePrice" class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-1">
           Sale Price *
         </label>
         <input type="number" min="0.00" step="0.01" id="salePrice" name="salePrice" [(ngModel)]="productObj.salePrice"
@@ -188,9 +210,11 @@
       </div> -->
 
       <div class="mb-6">
-        <label class="text-[#534E4E] dark:text-textDark">Tags *</label>
-        <div class="tag-wrapper dark:bg-tileBlack p-4 rounded-md">
-          <!-- <section class="w-full">
+        <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-1">
+          Tags *
+          <span *ngIf="templateKeywords().length > 0">({{ templateKeywords().length }})</span>
+        </label>
+        <!-- <section class="w-full">
       <p-chips
         [(ngModel)]="templateKeywords"
         [addOnTab]="true"
@@ -205,7 +229,7 @@
       </p-chips>
     </section> -->
 
-          <!-- <div class="chip-input-wrapper">
+        <!-- <div class="chip-input-wrapper">
       <mat-form-field class="w-full" color="primary">
         <mat-label class="dark:text-white">Tags</mat-label>
         <mat-chip-grid #templateChipGrid class="dark:bg-gray-800">
@@ -229,28 +253,23 @@
           class="dark:bg-gray-800 dark:text-white dark:placeholder-gray-400" />
       </mat-form-field>
     </div> -->
-          <div>
-            <mat-form-field class="w-full" color="primary">
-              <mat-label class="dark:text-white">Tags</mat-label>
-              <mat-chip-grid #templateChipGrid aria-label="Enter template form keywords" [(ngModel)]="templateKeywords"
-                class="dark:bg-gray-800">
-                @for (keyword of templateKeywords(); track keyword) {
-                <mat-chip-row (removed)="removeTemplateKeyword(keyword)"
-                  class="dark:bg-gray-700 dark:text-white hover:dark:bg-gray-600">
-                  {{ keyword }}
-                  <button matChipRemove aria-label="'remove template form' + keyword">
-                    <mat-icon>cancel</mat-icon>
-                  </button>
-                </mat-chip-row>
+        <div class="chip-input-wrapper">
+          <mat-form-field class="w-full" color="primary">
+            <mat-label class="">Tags</mat-label>
+            <mat-chip-grid #templateChipGrid class="">
+              @for (keyword of templateKeywords(); track keyword) {
+              <mat-chip-row (removed)="removeTemplateKeyword(keyword)" class="">
+                {{ keyword }}
+                <button matChipRemove [attr.aria-label]="'remove ' + keyword">
+                  <mat-icon class="">cancel</mat-icon>
+                </button>
+              </mat-chip-row>
+              }
+            </mat-chip-grid>
 
-                }
-              </mat-chip-grid>
-              <input placeholder="New keyword..." [matChipInputFor]="templateChipGrid"
-                (matChipInputTokenEnd)="addTemplateKeyword($event)"
-                class="input-style dark:bg-tileBlack dark:text-textDark dark:placeholder-textDark" />
-            </mat-form-field>
-          </div>
-
+            <input matInput placeholder="New keyword..." [matChipInputFor]="templateChipGrid"
+              (matChipInputTokenEnd)="addTemplateKeyword($event)" class="" />
+          </mat-form-field>
         </div>
       </div>
     </div>
@@ -375,7 +394,7 @@
           Quantity
         </p>
         <div class="my-3">
-          <label class="text-lg text-[#534E4E] dark:text-textDark">Default Unit Type *</label>
+          <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-1">Default Unit Type *</label>
           <p-dropdown id="unitType" name="unitType" [(ngModel)]="productObj.unitType" required #unitTypeField="ngModel"
             [options]="unitTypeOptions" optionLabel="label" optionValue="value" placeholder="--Select Unit Type--"
             [styleClass]="'w-full border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'">
@@ -383,7 +402,7 @@
         </div>
 
         <div class="my-3">
-          <label class="text-lg text-[#534E4E] dark:text-textDark">Minimum Quantity *</label>
+          <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-1">Minimum Quantity *</label>
           <input type="text" id="startValue" name="startValue" [(ngModel)]="productObj.startValue"
             (keydown)="validateDecimalInput($event)" (blur)="formatPrice($event, 'startValue')"
             (input)="validateMinQuantity()" pattern="^\d+(\.\d{1,3})?$" required
@@ -399,7 +418,7 @@
         </div>
 
         <div *ngIf="productObj.category === 'WholeSale'" class="my-3">
-          <label class="text-lg text-[#534E4E] dark:text-textDark">Maximum Quantity *</label>
+          <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-1">Maximum Quantity *</label>
           <input type="text" id="maxQuantity" name="maxQuantity" [(ngModel)]="productObj.maxQuantity"
             (keydown)="validateDecimalInput($event)" (blur)="formatPrice($event, 'maxQuantity')"
             (input)="validateMaxQuantity()" pattern="^\d+(\.\d{1,2})?$" required
@@ -416,7 +435,7 @@
 
 
         <div class="my-3">
-          <label class="text-lg text-[#534E4E] dark:text-textDark">
+          <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-1">
             Increase/Decrease by *
           </label>
           <input type="text" id="changeby" name="changeby" [(ngModel)]="productObj.changeby"

@@ -130,10 +130,7 @@
         <div *ngIf="displayTypeField.invalid && displayTypeField.touched" class="text-red-500 text-sm mt-1">
           Display Type is required.
         </div>
-        <div class="border-t border-gray-300 dark:border-gray-600 my-10"></div>
       </div>
-
-
 
       <div class="mb-6" *ngIf="
     (productObj.displaytype === 'D&AP' ||
@@ -205,6 +202,31 @@
           Sale Price cannot be negative.
         </div>
       </div>
+
+      <div class="mb-6">
+  <label class="text-[#534E4E] dark:text-textDark">Competitor Price per kg *</label>
+  <input 
+    type="number" 
+    min="0" 
+    step="0.01" 
+    id="competitorPrice" 
+    name="competitorPrice" 
+    [(ngModel)]="productObj.comPrice"
+    (input)="validatePriceInput($event, 'comPrice')" 
+    (keydown)="preventInvalidChars($event)"
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" 
+    #competitorPriceField="ngModel" 
+    required 
+  />
+  <div *ngIf="competitorPriceField.invalid && competitorPriceField.touched" class="text-red-500 text-sm mt-1">
+    Competitor Price is required.
+  </div>
+  <div *ngIf="productObj.comPrice < 0" class="text-red-500 text-sm mt-1">
+    Competitor Price cannot be negative.
+  </div>
+</div>
+
+      <div class="border-t border-gray-300 dark:border-gray-600 my-10"></div>
 
       <div class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">

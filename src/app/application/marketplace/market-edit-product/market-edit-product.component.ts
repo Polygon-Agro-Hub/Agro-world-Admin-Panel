@@ -318,10 +318,6 @@ export class MarketEditProductComponent implements OnInit {
       return 'Please enter a value greater than 0.';
     }
 
-    if (comPrice <= this.productObj.salePrice) {
-      return 'Competitor price cannot be equal or lower than the Sale Price.';
-    }
-
     return '';
   }
 
@@ -359,12 +355,8 @@ export class MarketEditProductComponent implements OnInit {
       emptyFields.push('Increase/Decrease by');
 
     if (!this.productObj.comPrice || this.productObj.comPrice <= 0) {
-      emptyFields.push('Competitor Price');
-    } else if (this.productObj.comPrice <= this.productObj.salePrice) {
-      emptyFields.push(
-        'Competitor Price (cannot be equal or lower than the Sale Price)',
-      );
-    }
+  emptyFields.push('Competitor Price');
+}
 
     if (
       this.productObj.category === 'WholeSale' &&
@@ -373,24 +365,37 @@ export class MarketEditProductComponent implements OnInit {
       emptyFields.push('Maximum Quantity');
     }
 
-    if (this.productObj.promo) {
-      if (!this.productObj.displaytype) {
-        emptyFields.push('Display Type');
-      } else {
-        console.log('discount precentage->', this.productObj.discountedPrice);
+    let salePriceForComparison = 0;
 
-        if (this.productObj.displaytype === 'D&AP') {
-          if (this.productObj.discountedPrice <= 0)
-            emptyFields.push('Discount Percentage');
-        } else if (this.productObj.displaytype === 'AP&SP') {
-          if (this.productObj.salePrice <= 0) emptyFields.push('Sale Price');
-        } else if (this.productObj.displaytype === 'AP&SP&D') {
-          if (this.productObj.discountedPrice <= 0)
-            emptyFields.push('Discount Percentage');
-          if (this.productObj.salePrice <= 0) emptyFields.push('Sale Price');
-        }
-      }
-    }
+if (this.productObj.promo) {
+  if (
+    this.productObj.displaytype === 'D&AP' ||
+    this.productObj.displaytype === 'AP&SP&D'
+  ) {
+    salePriceForComparison = this.productObj.salePrice;
+  } else if (this.productObj.displaytype === 'AP&SP') {
+    salePriceForComparison = this.productObj.salePrice;
+  } else {
+    salePriceForComparison =
+      this.productObj.salePrice || this.productObj.normalPrice;
+  }
+} else {
+  salePriceForComparison = this.productObj.normalPrice;
+}
+
+if (this.productObj.comPrice <= salePriceForComparison) {
+  Swal.fire({
+    icon: 'error',
+    title: 'Invalid Competitor Price',
+    html: 'Competitor price cannot be equal or lower than the Sale Price.',
+    confirmButtonText: 'OK',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+  });
+  return;
+}
 
     if (emptyFields.length > 0) {
       Swal.fire({

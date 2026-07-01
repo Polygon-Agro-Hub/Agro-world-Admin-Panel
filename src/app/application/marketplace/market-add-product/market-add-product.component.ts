@@ -306,6 +306,9 @@ export class MarketAddProductComponent implements OnInit {
     if (!this.productObj.cropName) emptyFields.push('Display Name');
     if (!this.productObj.selectId) emptyFields.push('Crop');
     if (!this.productObj.varietyId) emptyFields.push('Variety');
+    if (!this.productObj.productTypeId || this.productObj.productTypeId === 0) {
+    emptyFields.push('Product Type');
+  }
     if (!this.productObj.normalPrice && this.productObj.normalPrice === 0)
       emptyFields.push('Price Per kg');
     if (!this.productObj.comPrice && this.productObj.comPrice === 0)
@@ -347,6 +350,10 @@ export class MarketAddProductComponent implements OnInit {
         }
       }
     }
+
+    if (this.productObj.productTypeId === 0 || !this.productObj.productTypeId) {
+    // Show validation message
+  }
 
     if (emptyFields.length > 0) {
       Swal.fire({

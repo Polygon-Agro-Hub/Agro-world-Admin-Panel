@@ -174,26 +174,7 @@
   </div>
 </div>
 
-      <div class="mb-6">
-        <label for="comPrice" class="text-[#534E4E] dark:text-textDark">
-          Competitor Price per kg *
-        </label>
-        <input type="number" id="comPrice" name="comPrice" [(ngModel)]="productObj.comPrice"
-          (keydown)="validateDecimalInput($event)" (blur)="formatPrice($event, 'comPrice')" pattern="^\d+(\.\d{1,2})?$"
-          required
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          placeholder="0.00" #comPriceField="ngModel" />
-
-        <div *ngIf="getCompetitorPriceError() && productObj.comPrice" class="text-red-500 text-sm mt-1">
-          {{ getCompetitorPriceError() }}
-        </div>
-
-        <div *ngIf="!productObj.comPrice && comPriceField.touched" class="text-red-500 text-sm mt-1">
-          Competitor Price is required.
-        </div>
-      </div>
-
-      <!-- Sale Price - Auto-calculated, read-only (when discount % also drives it) -->
+<!-- Sale Price - Auto-calculated, read-only (when discount % also drives it) -->
 <div class="mb-6" *ngIf="productObj.promo && productObj.displaytype === 'AP&SP&D'">
   <label for="salePrice" class="text-[#534E4E] dark:text-textDark">
     Sale Price *
@@ -217,6 +198,25 @@
     Sale Price is required.
   </div>
 </div>
+
+      <div class="mb-6">
+        <label for="comPrice" class="text-[#534E4E] dark:text-textDark">
+          Competitor Price per kg *
+        </label>
+        <input type="number" id="comPrice" name="comPrice" [(ngModel)]="productObj.comPrice"
+          (keydown)="validateDecimalInput($event)" (blur)="formatPrice($event, 'comPrice')" pattern="^\d+(\.\d{1,2})?$"
+          required
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          placeholder="0.00" #comPriceField="ngModel" />
+
+        <div *ngIf="getCompetitorPriceError() && productObj.comPrice" class="text-red-500 text-sm mt-1">
+          {{ getCompetitorPriceError() }}
+        </div>
+
+        <div *ngIf="!productObj.comPrice && comPriceField.touched" class="text-red-500 text-sm mt-1">
+          Competitor Price is required.
+        </div>
+      </div>
 
       <!-- <div class="mb-6" *ngIf="productObj.promo && productObj.displaytype === 'AP&SP'">
         <label class="text-[#534E4E] dark:text-textDark">Sale Price *</label>

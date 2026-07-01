@@ -14,6 +14,7 @@ import { MatInputModule } from '@angular/material/input';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { ThemeService } from '../../../services/theme.service';
 import { DropdownModule } from 'primeng/dropdown';
+import { Braket } from 'aws-sdk';
 
 @Component({
   selector: 'app-market-add-product',
@@ -290,6 +291,10 @@ export class MarketAddProductComponent implements OnInit {
       );
     }
 
+    this.productObj.comPrice = parseFloat(
+    this.productObj.comPrice.toFixed(2)
+  );
+
     this.updateTags();
 
     // Check for empty required fields - INCLUDING ALL QUANTITY SECTION FIELDS
@@ -303,6 +308,8 @@ export class MarketAddProductComponent implements OnInit {
     if (!this.productObj.varietyId) emptyFields.push('Variety');
     if (!this.productObj.normalPrice && this.productObj.normalPrice === 0)
       emptyFields.push('Price Per kg');
+    if (!this.productObj.comPrice && this.productObj.comPrice === 0)
+      emptyFields.push('Competitor Price');
 
     // QUANTITY SECTION FIELDS - All required fields
     if (!this.productObj.unitType) emptyFields.push('Default Unit Type');
@@ -377,6 +384,10 @@ export class MarketAddProductComponent implements OnInit {
       decimalIssues.push('Price Per kg must have max 2 decimal places');
     }
 
+    if (!/^\d+(\.\d{1,2})?$/.test(this.productObj.comPrice.toString())) {
+    decimalIssues.push('Competitor Price must have max 2 decimal places');
+  }
+
     if (
       this.productObj.promo &&
       this.productObj.discountedPrice &&
@@ -414,6 +425,38 @@ export class MarketAddProductComponent implements OnInit {
       });
       return;
     }
+
+    let salePriceForComparison = 0;
+  
+  if (this.productObj.promo) {
+    // If there's a discount, use the discounted/sale price
+    if (this.productObj.displaytype === 'D&AP' || this.productObj.displaytype === 'AP&SP&D') {
+      salePriceForComparison = this.productObj.salePrice;
+    } else if (this.productObj.displaytype === 'AP&SP') {
+      salePriceForComparison = this.productObj.salePrice;
+    } else {
+      // If displaytype not set but promo is true, use salePrice as fallback
+      salePriceForComparison = this.productObj.salePrice || this.productObj.normalPrice;
+    }
+  } else {
+    // If no discount, use normal price
+    salePriceForComparison = this.productObj.normalPrice;
+  }
+
+  // Check if competitor price is greater than or equal to sale price
+  if (this.productObj.comPrice <= salePriceForComparison) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Invalid Competitor Price',
+      html: 'Competitor price cannot be equal or lower than the Sale Price.',
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    });
+    return;
+  }
 
     // Validate price relationships
     if (this.productObj.promo) {
@@ -730,6 +773,12 @@ export class MarketAddProductComponent implements OnInit {
             this.productForm.controls['maxQuntity'].markAsTouched();
           }
           break;
+        case 'comPrice':
+        this.productObj.comPrice = value ? parseFloat(value) : 0;
+        if (this.productForm && this.productForm.controls['competitorPrice']) {
+          this.productForm.controls['competitorPrice'].markAsTouched();
+        }
+          break;
       }
 
       event.preventDefault();
@@ -756,6 +805,9 @@ export class MarketAddProductComponent implements OnInit {
           break;
         case 'maxQuantity':
           this.productObj.maxQuantity = parseFloat(truncatedValue);
+          break;
+        case 'comPrice':
+        this.productObj.comPrice = parseFloat(truncatedValue);
           break;
       }
     }
@@ -793,6 +845,15 @@ export class MarketAddProductComponent implements OnInit {
     }
     console.log('Unit Type changed:', this.isunitTypeKg);
   }
+
+  validateCompetitorPrice() {
+  if (this.productObj.comPrice < 0) {
+    this.productObj.comPrice = 0;
+  }
+  this.productObj.comPrice = parseFloat(
+    this.productObj.comPrice.toFixed(2)
+  );
+}
 }
 
 class Crop {
@@ -820,6 +881,7 @@ class MarketPrice {
   maxQuantity: number = 0;
   discountValue: number = 0;
   productTypeId: number = 0;
+  comPrice: number = 0;
 }
 
 class Variety {

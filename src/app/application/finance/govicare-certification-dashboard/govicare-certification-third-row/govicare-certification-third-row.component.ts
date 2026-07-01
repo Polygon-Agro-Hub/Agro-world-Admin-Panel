@@ -21,23 +21,23 @@ export class GovicareCertificationThirdRowComponent {
     public tokenService: TokenService,
   ) {}
 
-  formatDate(dateTime: string): string {
-    const date = new Date(dateTime);
-    return date.toLocaleDateString('en-GB', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric',
-    });
-  }
+  // formatDate(dateTime: string): string {
+  //   const date = new Date(dateTime);
+  //   return date.toLocaleDateString('en-GB', {
+  //     day: '2-digit',
+  //     month: 'short',
+  //     year: 'numeric',
+  //   });
+  // }
 
-  formatTime(dateTime: string): string {
-    const date = new Date(dateTime);
-    return date.toLocaleTimeString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: true,
-    });
-  }
+  // formatTime(dateTime: string): string {
+  //   const date = new Date(dateTime);
+  //   return date.toLocaleTimeString('en-US', {
+  //     hour: '2-digit',
+  //     minute: '2-digit',
+  //     hour12: true,
+  //   });
+  // }
 
   ViewAll(): void {
     this.router.navigate(['/finance/action/view-all-certificate-payments']);

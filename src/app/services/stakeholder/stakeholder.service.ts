@@ -241,8 +241,6 @@ export class StakeholderService {
       'Content-Type': 'application/json',
     });
 
-    console.log('currentPlan', currentPlan)
-
     let params = new HttpParams();
 
     // Add pagination parameters
@@ -313,7 +311,6 @@ export class StakeholderService {
   }
 
   verifyOtp(referenceId: string, otp: string): Observable<any> {
-    console.log('referenceId', referenceId, 'otp', otp)
     const apiUrl = "https://api.getshoutout.com/otpservice/verify";
 
     const headers = new HttpHeaders({
@@ -325,8 +322,6 @@ export class StakeholderService {
       referenceId: referenceId,
       code: otp,
     });
-
-    console.log('body', body)
 
     return this.http.post(apiUrl, body, { headers });
   }
@@ -349,7 +344,6 @@ export class StakeholderService {
     const supplierData = { fullName, mobileNumber, email, selectedSubscription, nic }
     const formData = new FormData();
 
-    console.log('supplierData', supplierData)
     formData.append("supplierData", JSON.stringify(supplierData));
     if (selectedFile) {
       formData.append('file', selectedFile);
@@ -571,12 +565,11 @@ export class StakeholderService {
   }
 
   getBranchesList(shopId: number): Observable<any> {
-    console.log('shopId', shopId);
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    console.log('This is shop Id', shopId);
+    
     return this.http.get(
       `${this.apiUrl}shop/get-govi-shop-branches/${shopId}`,
       {

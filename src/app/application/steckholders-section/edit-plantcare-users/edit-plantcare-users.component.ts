@@ -198,8 +198,6 @@ export class EditPlantcareUsersComponent implements OnInit {
           value: bank.name
         }));
         this.allBranches = branches;
-        console.log('Banks loaded:', this.banks);
-        console.log('Branches loaded:', this.allBranches);
 
         if (this.itemId) {
           this.loadUserData(this.itemId);
@@ -290,10 +288,8 @@ export class EditPlantcareUsersComponent implements OnInit {
                 this.userForm.get('branchName')?.setValue(data.branchName);
                 this.selectedBranchId = this.branches.find((b) => b.name === data.branchName)?.ID || null;
               }
-              console.log('Branch options after load:', this.branchOptions);
             }
           }
-          console.log('Loaded user data:', data);
           this.cdr.detectChanges();
         },
         (error) => {
@@ -327,7 +323,6 @@ export class EditPlantcareUsersComponent implements OnInit {
           label: branch.name,
           value: branch.name
         }));
-        console.log('Branches for bank', selectedBankName, ':', this.branches);
         this.userForm.get('branchName')?.setValue('');
       } else {
         this.branches = [];
@@ -559,8 +554,6 @@ export class EditPlantcareUsersComponent implements OnInit {
 
 
   onSubmitCreate() {
-    // Log form values to verify
-    console.log('userForm values before submit:', this.userForm.value);
 
     const missingFields: string[] = [];
 
@@ -763,8 +756,6 @@ export class EditPlantcareUsersComponent implements OnInit {
     });
   }
   onSubmit() {
-    // Log form values to verify
-    console.log('userForm values before submit:', this.userForm.value);
 
     const missingFields: string[] = [];
 

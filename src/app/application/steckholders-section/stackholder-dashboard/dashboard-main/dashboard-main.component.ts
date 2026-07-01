@@ -55,8 +55,6 @@ export class DashboardMainComponent implements OnInit {
     this.isLoading = true;
     this.stakeholderSrv.getAdminUserData().subscribe(
       (res) => {
-        console.log('data', res);
-
         this.firstRow = res.firstRow;
         this.secondRow = res.secondRow;
         this.thirdRow = res.thirdRow;

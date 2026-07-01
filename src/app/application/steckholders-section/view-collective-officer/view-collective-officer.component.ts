@@ -119,19 +119,13 @@ export class ViewCollectiveOfficerComponent {
     centerId: string | null = this.selectedCenterId
   ) {
     this.isLoading = true;
-    console.log('calling 3')
     this.route.queryParams.subscribe((params) => {
       this.centerId = params['id'] ? +params['id'] : null;
       this.Cname = params['Cname'] ? params['Cname'] : null;
-    
-      console.log('centerId:', this.centerId);
-      console.log('Cname:', this.Cname);
     });
 
 
     if (this.centerId === null) {
-      console.log('calling 1')
-
       this.collectionService
         .fetchAllCollectionOfficer(
           page,
@@ -159,8 +153,6 @@ export class ViewCollectiveOfficerComponent {
         );
 
     } else {
-      console.log('calling 2')
-
       this.collectionService
         .fetchAllCollectionOfficercenter(
           page,
@@ -209,9 +201,6 @@ export class ViewCollectiveOfficerComponent {
   onCenterChange() {
     if (this.selectedCenterId) {
       const numericCenterId = parseInt(this.selectedCenterId);
-      console.log(this.selectedCenterId);
-
-
       this.fetchManagerNames(numericCenterId);
 
     } else {
@@ -222,8 +211,6 @@ export class ViewCollectiveOfficerComponent {
   fetchManagerNames(centerId: number) {
     this.collectionService.getCollectionCenterManagerNames(centerId).subscribe(
       (response) => {
-        console.log('Manager names response:', response);
-
         this.collectionCenterManagerNames = response.data || response;
         this.collectionCenterManagerNames = this.collectionCenterManagerNames.map(manager => ({
           ...manager,
@@ -249,10 +236,8 @@ export class ViewCollectiveOfficerComponent {
     if (this.centerId !== null) {
       this.fetchManagerNames(this.centerId);
     }
-    console.log('role', this.tokenService.getUserDetails().role);
 
     this.urlSegment = this.router.url.split('/').filter(segment => segment.length > 0)[0];
-    console.log('First segment:', this.urlSegment);
 
     // this.route.queryParams.subscribe((params) => {
     //   this.centerId = params['id'] ? +params['id'] : null;
@@ -533,7 +518,6 @@ export class ViewCollectiveOfficerComponent {
 
   onSearch() {
     this.searchNIC = this.searchNIC?.trim() || ''
-    console.log('searchNIC', "'", this.searchNIC, "'")
     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
   }
 
@@ -573,7 +557,6 @@ export class ViewCollectiveOfficerComponent {
 
   handleClaimButtonClick(item: CollectionOfficers) {
     this.selectedOfficer = item;
-    console.log('this.selectedOfficer', this.selectedOfficer)
     this.selectOfficerId = item.id;
 
     if (item.claimStatus === 0) {

@@ -57,7 +57,6 @@ export class DestributionService {
   // }
 
   createDistributionCentre(data: any): Observable<ApiResponse> {
-    console.log('data', data);
     const url = `${this.apiUrl}distribution/create-distribution-center`;
     return this.http.post<ApiResponse>(url, data, {
       headers: this.getHeaders(),
@@ -74,15 +73,7 @@ export class DestributionService {
     centerType: string = '',
     city: string = '' // Add city parameter
   ): Observable<any> {
-    console.log('Parameters:', {
-      district,
-      province,
-      company,
-      searchItem,
-      centerType,
-      city,
-    });
-
+    
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
@@ -92,7 +83,6 @@ export class DestributionService {
 
     // Add optional params with proper encoding
     if (searchItem) {
-      console.log('has search');
       url += `&searchItem=${encodeURIComponent(searchItem)}`;
     }
 
@@ -117,7 +107,6 @@ export class DestributionService {
       url += `&city=${encodeURIComponent(city)}`;
     }
 
-    console.log('Final URL:', url);
     return this.http.get<any>(url, { headers: headers });
   }
 
@@ -158,15 +147,11 @@ export class DestributionService {
   }
 
   getDistributionCentreById(id: number): Observable<any> {
-    console.log('Request ID:', id);
-
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
 
     const url = `${this.apiUrl}distribution/get-distribution-centre/${id}`;
-
-    console.log('Final URL:', url);
     return this.http.get<any>(url, { headers: headers });
   }
 
@@ -174,7 +159,6 @@ export class DestributionService {
     id: number,
     updateData: any
   ): Observable<any> {
-    console.log('updateData', updateData);
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
@@ -274,14 +258,12 @@ export class DestributionService {
     status: string = '',
     searchText: string = ''
   ): Observable<ApiResponse> {
-    console.log('date', date)
     let url = `${this.apiUrl}distribution/get-center-out-for-dlvry-orders?id=${id}`;
     if (status) {
       url += `&status=${status}`;
     }
 
     if (date) {
-      //  let dateParam = date ? formatDate(date, 'yyyy-MM-dd', 'en-US') :
       url += `&date=${date}`;
     }
 
@@ -388,7 +370,6 @@ export class DestributionService {
     searchText?: string
   ): Observable<{ total: number; items: any[]; grandTotal: number }> {
     const headers = this.getHeaders();
-    console.log('data');
     let url = `${this.apiUrl}distribution/get-return-recieved-data`;
 
     if (receivedTime) {
@@ -439,17 +420,9 @@ getDistributedCenterPickupOrders(searchParams: {
   // Send activeTab parameter to backend
   if (searchParams.activeTab) {
     params = params.set('activeTab', searchParams.activeTab.trim());
-    
-    console.log('Sending activeTab to backend:', searchParams.activeTab);
   }
   
   const url = `${this.apiUrl}distribution/get-distributed-center-pickup-orders`;
-  
-  console.log('Service call with params:', {
-    url: url,
-    params: params.toString(),
-    activeTab: searchParams.activeTab
-  });
   
   return this.http.get<ApiResponse>(url, {
     headers: this.getHeaders(),

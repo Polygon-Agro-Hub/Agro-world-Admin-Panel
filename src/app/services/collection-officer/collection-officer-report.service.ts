@@ -39,7 +39,6 @@ export class CollectionOfficerReportService {
   ) { }
 
   getDistrictReport(district: any): Observable<IdistrictReport[]> {
-    console.log("service District:", district);
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
@@ -50,7 +49,6 @@ export class CollectionOfficerReportService {
   }
 
   getProvinceReport(province: any): Observable<IProvinceReport[]> {
-    console.log("service District:", province);
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });

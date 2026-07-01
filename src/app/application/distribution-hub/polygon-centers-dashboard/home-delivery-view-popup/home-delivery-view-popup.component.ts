@@ -78,7 +78,6 @@ export class HomeDeliveryViewPopupComponent implements OnInit, OnChanges
   constructor(private distributionService: DistributionHubService) {}
 
   ngOnInit(): void {
-    console.log('deliveryId', this.deliveryId)
     if (this.visible) {
       this.loadTrackingDetails();
     }
@@ -100,9 +99,7 @@ export class HomeDeliveryViewPopupComponent implements OnInit, OnChanges
       .subscribe({
         next: (response) => {
           this.trackingDetails = response;
-          console.log('tracking details', this.trackingDetails)
           this.steps = this.buildSteps();
-          console.log('steps', this.steps)
           this.loading = false;
         },
         error: (err) => {
@@ -134,8 +131,6 @@ export class HomeDeliveryViewPopupComponent implements OnInit, OnChanges
         type: 'pickedup',
         payload: { deliveredTime: c.deliveredTime }
       });
-
-      console.log('steps', steps)
     }
 
     if (!d) return steps;

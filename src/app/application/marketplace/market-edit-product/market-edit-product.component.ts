@@ -114,7 +114,7 @@ export class MarketEditProductComponent implements OnInit {
             label: pt.typeName,
             value: pt.id,
           }))
-          .sort((a: any, b: any) => a.label.localeCompare(b.label)); 
+          .sort((a: any, b: any) => a.label.localeCompare(b.label));
 
         this.getProduct();
       })
@@ -177,7 +177,7 @@ export class MarketEditProductComponent implements OnInit {
       if (res.maxQuantity) {
         this.productObj.maxQuantity = parseFloat(res.maxQuantity);
       }
-
+      this.productObj.comPrice = parseFloat(res.comPrice) || 0;
       this.productObj.selectId = res.cropGroupId;
       this.selectedImage = res.image;
       this.templateKeywords.update(() => res.tags || []);
@@ -311,11 +311,24 @@ export class MarketEditProductComponent implements OnInit {
   //   this.productObj.tags = this.templateKeywords().join(', ');
   // }
 
+  getCompetitorPriceError(): string {
+    const comPrice = parseFloat(this.productObj.comPrice?.toString() || '0');
+
+    if (!this.productObj.comPrice || comPrice <= 0) {
+      return 'Please enter a value greater than 0.';
+    }
+
+    if (comPrice <= this.productObj.salePrice) {
+      return 'Competitor price cannot be equal or lower than the Sale Price.';
+    }
+
+    return '';
+  }
+
   onSubmit() {
     this.updateTags();
     console.log(this.productObj.promo);
 
-    // ✅ Validate min and max quantities
     if (
       this.productObj.category === 'WholeSale' &&
       !this.validateMinMaxQuantities()
@@ -333,7 +346,6 @@ export class MarketEditProductComponent implements OnInit {
       return;
     }
 
-    // ✅ Check for empty required fields
     const emptyFields: string[] = [];
     if (!this.productObj.category) emptyFields.push('Category');
     if (!this.productObj.cropName) emptyFields.push('Display Name');
@@ -345,6 +357,14 @@ export class MarketEditProductComponent implements OnInit {
       emptyFields.push('Minimum Quantity');
     if (!this.productObj.changeby || this.productObj.changeby <= 0.0)
       emptyFields.push('Increase/Decrease by');
+
+    if (!this.productObj.comPrice || this.productObj.comPrice <= 0) {
+      emptyFields.push('Competitor Price');
+    } else if (this.productObj.comPrice <= this.productObj.salePrice) {
+      emptyFields.push(
+        'Competitor Price (cannot be equal or lower than the Sale Price)',
+      );
+    }
 
     if (
       this.productObj.category === 'WholeSale' &&
@@ -386,7 +406,6 @@ export class MarketEditProductComponent implements OnInit {
       return;
     }
 
-    // ✅ Submit to backend
     this.marketSrv.updateProduct(this.productObj, this.productId).subscribe(
       (res) => {
         if (res.status) {
@@ -658,7 +677,8 @@ export class MarketEditProductComponent implements OnInit {
         if (
           fieldName === 'normalPrice' ||
           fieldName === 'discountedPrice' ||
-          fieldName === 'salePrice'
+          fieldName === 'salePrice' ||
+          fieldName === 'comPrice'
         ) {
           formattedValue = numericValue.toFixed(2);
         }
@@ -694,6 +714,9 @@ export class MarketEditProductComponent implements OnInit {
             break;
           case 'maxQuantity':
             this.productObj.maxQuantity = parseFloat(formattedValue);
+            break;
+          case 'comPrice':
+            this.productObj.comPrice = parseFloat(formattedValue);
             break;
         }
 
@@ -788,6 +811,7 @@ class MarketPrice {
   variety?: string;
   productTypeId!: number;
   productTypeName!: string;
+  comPrice: number = 0;
 }
 
 class Variety {

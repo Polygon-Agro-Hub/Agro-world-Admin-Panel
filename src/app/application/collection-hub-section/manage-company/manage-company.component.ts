@@ -164,7 +164,6 @@ export class ManageCompanyComponent {
   ngOnInit() {
     this.fetchAllCompanys();
     this.urlSegment = this.router.url.split('/').filter(segment => segment.length > 0)[0];
-    console.log('First segment:', this.urlSegment);
   }
 
   fetchAllCompanys() {

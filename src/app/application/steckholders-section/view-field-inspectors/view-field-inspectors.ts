@@ -112,8 +112,6 @@ export class ViewFieldInspectorsComponent implements OnInit {
         this.filteredInspectors = data;
         this.hasData = this.filteredInspectors.length > 0;
         this.isLoading = false;
-
-        console.log('Loaded inspectors:', this.filteredInspectors[0].assignDistrict);
       },
       error: (err) => {
         console.error('Error fetching inspectors:', err);
@@ -133,7 +131,6 @@ export class ViewFieldInspectorsComponent implements OnInit {
   applyFilters() {
     const filters: any = {};
 
-
     if (this.searchTerm && this.searchTerm.trim()) {
       filters.search = this.searchTerm.trim();
     }
@@ -142,7 +139,6 @@ export class ViewFieldInspectorsComponent implements OnInit {
     if (this.filterDistrict) filters.district = this.filterDistrict;
     if (this.filterRole) filters.role = this.filterRole;
 
-    console.log('Sending filters to backend:', filters);
     this.loadInspectors(filters);
   }
 

@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { DropdownModule } from 'primeng/dropdown';
@@ -61,8 +60,8 @@ export class CollectionOfficerReportComponent implements OnInit {
     private collectionOfficer: CollectionService,
     private router: Router,
     public tokenService: TokenService,
-    public permissionService: PermissionService
-  ) { }
+    public permissionService: PermissionService,
+  ) {}
 
   ngOnInit(): void {
     this.fetchCenters();
@@ -73,8 +72,7 @@ export class CollectionOfficerReportComponent implements OnInit {
     this.isLoading = true;
     this.collectionOfficer.getCollectionCenter().subscribe({
       next: (response: any) => {
-
-        this.centers = response.data
+        this.centers = response.data;
 
         this.isLoading = false;
       },
@@ -91,17 +89,18 @@ export class CollectionOfficerReportComponent implements OnInit {
     // const centerName = this.selectedCenter?.name.trim() || '';
     // const trimmedSearchNIC = this.searchNIC.trim();
 
-
-
-    // console.log('Fetching with centerName:', centerName, 'searchNIC:', trimmedSearchNIC);
     this.collectionOfficer
-      .fetchAllCollectionOfficerStatus(page, limit, this.searchNIC, this.selectedCenter)
+      .fetchAllCollectionOfficerStatus(
+        page,
+        limit,
+        this.searchNIC,
+        this.selectedCenter,
+      )
       .subscribe({
         next: (response) => {
           this.ongoingCultivation = response.items || [];
           this.totalItems = response.total || 0;
           this.isLoading = false;
-          console.log('Fetched data:', this.ongoingCultivation);
         },
         error: (error) => {
           console.error('Error fetching collection officers:', error);
@@ -134,7 +133,12 @@ export class CollectionOfficerReportComponent implements OnInit {
     this.fetchAllNews(this.page, this.itemsPerPage);
   }
 
-  navigateToReport(id: number, name: string, lastName: string, empId: string): void {
+  navigateToReport(
+    id: number,
+    name: string,
+    lastName: string,
+    empId: string,
+  ): void {
     this.router.navigate([
       `/reports/collective-officer-report/view/${id}/${name}/${lastName}/${empId}`,
     ]);
@@ -145,7 +149,7 @@ export class CollectionOfficerReportComponent implements OnInit {
     firstName: string,
     lastName: string,
     QRcode: string,
-    empId: string
+    empId: string,
   ): void {
     this.router.navigate([`/reports/payment-slip-report/${id}`], {
       queryParams: { firstName, lastName, QRcode, empId },

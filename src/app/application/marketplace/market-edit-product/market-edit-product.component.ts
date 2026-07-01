@@ -182,6 +182,7 @@ export class MarketEditProductComponent implements OnInit {
       this.selectedImage = res.image;
       this.templateKeywords.update(() => res.tags || []);
       this.productObj.promo = !!res.promo;
+      this.isNoDiscount = !this.productObj.promo;   // <-- add this line
       this.onCropChange();
       this.productObj.varietyId = res.varietyId;
       this.selectVerityImage();

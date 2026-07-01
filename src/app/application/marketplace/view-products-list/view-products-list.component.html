@@ -185,14 +185,14 @@
               {{ item.unitType }}
             </td>
             <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
-              {{ item.startValue }}
-            </td>
+  {{ formatNumber(item.startValue) }}
+</td>
             <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark" *ngIf="showMaxQuantityColumn()">
-              {{ item.maxQuantity || "----" }}
-            </td>
+  {{ formatNumber(item.maxQuantity) || '----' }}
+</td>
             <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
-              {{ item.changeby }}
-            </td>
+  {{ formatNumber(item.changeby) }}
+</td>
             <td class="px-4 py-3 text-center"
               *ngIf="permissionService.hasPermission('Edit product') || tokenService.getUserDetails().role === '1'">
               <button class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd] text-center"

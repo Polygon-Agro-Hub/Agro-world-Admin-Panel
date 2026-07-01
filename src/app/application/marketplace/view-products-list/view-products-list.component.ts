@@ -272,6 +272,26 @@ export class ViewProductsListComponent {
       return `${percentageValue}%`; // Display with decimals
     }
   }
+
+  // Add this method to your ViewProductsListComponent class
+formatNumber(value: number): string {
+  if (value === undefined || value === null) {
+    return '----';
+  }
+  
+  // Convert to string and remove trailing zeros after decimal
+  const numStr = value.toString();
+  if (numStr.includes('.')) {
+    // Remove trailing zeros, but keep at least one decimal if needed
+    let formatted = numStr.replace(/\.?0+$/, '');
+    // If the number ends with a decimal point, add a zero back
+    if (formatted.endsWith('.')) {
+      formatted += '0';
+    }
+    return formatted;
+  }
+  return numStr;
+}
 }
 
 class ProductList {

@@ -793,8 +793,17 @@ export class MarketAddProductComponent implements OnInit {
     }
 
     // Rest of your existing validation for decimal places
-    if (value.includes('.') && value.split('.')[1].length > 3) {
-      const truncatedValue = parseFloat(value).toFixed(3);
+    if (value.includes('.')) {
+    const decimalPlaces = value.split('.')[1].length;
+    
+    // For price fields (normalPrice, discountedPrice, salePrice, comPrice) - limit to 2 decimals
+    const priceFields = ['normalPrice', 'discountedPrice', 'salePrice', 'comPrice'];
+    const maxDecimals = priceFields.includes(fieldName) ? 2 : 3;
+    
+    if (decimalPlaces > maxDecimals) {
+      // For price fields, truncate to 2 decimals
+      // For quantity fields, truncate to 3 decimals
+      const truncatedValue = parseFloat(value).toFixed(maxDecimals);
       input.value = truncatedValue;
 
       switch (fieldName) {
@@ -803,6 +812,12 @@ export class MarketAddProductComponent implements OnInit {
           break;
         case 'discountedPrice':
           this.productObj.discountedPrice = parseFloat(truncatedValue);
+          break;
+        case 'salePrice':
+          this.productObj.salePrice = parseFloat(truncatedValue);
+          break;
+        case 'comPrice':
+          this.productObj.comPrice = parseFloat(truncatedValue);
           break;
         case 'startValue':
           this.productObj.startValue = parseFloat(truncatedValue);
@@ -813,11 +828,9 @@ export class MarketAddProductComponent implements OnInit {
         case 'maxQuantity':
           this.productObj.maxQuantity = parseFloat(truncatedValue);
           break;
-        case 'comPrice':
-        this.productObj.comPrice = parseFloat(truncatedValue);
-          break;
       }
     }
+  }
 
     // Trigger the calculation if needed
     this.calculeSalePrice();

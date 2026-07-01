@@ -153,8 +153,8 @@
             <td class="px-4 py-3 text-[#000000] dark:text-textDark text-left whitespace-nowrap">
               {{ item.varietyNameEnglish }}
             </td>
-            <td class="px-4 py-3 text-[#797979] dark:text-textDark text-center whitespace-nowrap">
-              <span *ngIf="!item.displayType">No</span>
+            <td class="px-4 py-3 text-[#797979] dark:text-textDark text-center whitespace-nowrap italic">
+              <span *ngIf="!item.displayType">No Discount</span>
               <span *ngIf="item.displayType === 'D&AP'">%, Actual</span>
               <span *ngIf="item.displayType === 'AP&SP'">Actual, Sale</span>
               <span *ngIf="item.displayType === 'AP&SP&D'">%, Actual, Sale</span>
@@ -176,10 +176,10 @@
               {{ item.normalPrice }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{ item.discountedPrice || "-" }}
+              {{ item.discountedPrice || "----" }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{ item.comPrice || "-" }}
+              {{ item.comPrice || "----" }}
             </td>
             <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
               {{ item.unitType }}
@@ -188,7 +188,7 @@
               {{ item.startValue }}
             </td>
             <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark" *ngIf="showMaxQuantityColumn()">
-              {{ item.maxQuantity || "-" }}
+              {{ item.maxQuantity || "----" }}
             </td>
             <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
               {{ item.changeby }}

@@ -112,17 +112,16 @@ export class ViewProductsListComponent {
   }
 
   loadProductTypes() {
-    this.viewProductsList.fetchProductTypes().subscribe((res) => {
-      const data = res.data || res;
-      this.productTypeOptions = data
-        .filter((pt: any) => pt.isValid === 1)
-        .map((pt: any) => ({
-          name: `${pt.shortCode} - ${pt.typeName}`,
-          value: pt.id,
-        }))
-        .sort((a: any, b: any) => a.name.localeCompare(b.name));
-    });
-  }
+  this.viewProductsList.fetchProductTypes().subscribe((res) => {
+    const data = res.data || res;
+    this.productTypeOptions = data
+      .map((pt: any) => ({
+        name: `${pt.shortCode} - ${pt.typeName}`,
+        value: pt.id,
+      }))
+      .sort((a: any, b: any) => a.name.localeCompare(b.name));
+  });
+}
 
   onProductTypeChange() {
     this.page = 1;

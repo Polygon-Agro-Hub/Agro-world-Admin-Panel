@@ -38,7 +38,7 @@
                 <div class="w-8 text-[#000000] dark:text-[#F1F4F5] font-medium">
                   {{ typeItems.shortCode }}
                 </div>
-                <p-dropdown [options]="marketplaceItems" [(ngModel)]="typeItems.productId" optionLabel="displayName"
+                <p-dropdown [options]="filterMarketItemByTypeId(typeItems.id)" [(ngModel)]="typeItems.productId" optionLabel="displayName"
                   optionValue="id" placeholder="--Select Product--" [showClear]="false"
                   (onChange)="onProductSelected(typeItems, $event)" [style]="{'width': '100%'}"
                   styleClass="custom-dropdown" class="flex-1" filter="true">

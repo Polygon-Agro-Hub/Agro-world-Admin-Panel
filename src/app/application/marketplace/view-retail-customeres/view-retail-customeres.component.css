@@ -83,12 +83,6 @@
     padding-left: 15px !important;
 }
 
-::ng-deep .p-dropdown {
-  height: 3rem !important; /* adjust to whatever height you want, e.g. 1.75rem, 2.25rem */
-  display: flex !important;
-  align-items: center !important;
-}
-
 ::ng-deep .p-dropdown .p-dropdown-label {
   padding-top: 0.25rem !important;
   padding-bottom: 0.25rem !important;

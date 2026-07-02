@@ -39,6 +39,7 @@ interface ProductTypes {
 
 interface MarketplaceItem {
   id: number;
+  productTypeId: number;
   displayName: string;
   normalPrice: number;
   discountedPrice: number;
@@ -49,6 +50,7 @@ interface MarketplaceItem {
   startValue: string;
   unitType: string;
   varietyId: number;
+  isPreferred: boolean;
 }
 
 interface PackageItem {
@@ -130,7 +132,7 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
         this.router.navigate(['/procurement/define-packages'], {
           queryParams: { tab },
         });
-        }
+      }
       // If user clicks "No" or dismisses, the modal will automatically close
     });
   }
@@ -181,6 +183,8 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
           normalPrice: item.normalPrice,
           discountedPrice: item.discountedPrice,
           isExcluded: item.isExcluded,
+          isPreferred: item.isPreferred,
+          productTypeId: item.productTypeId,
 
         }));
         if (callback) callback();
@@ -692,6 +696,12 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
   onCancelClick() {
     this.selectCategoryId = ''; // Clear the dropdown selection
     this.closeAddNewItemPopUp(); // Close the popup
+  }
+
+  filterMarketItemByTypeId(typeId:number): MarketplaceItem[] {
+    const filteredItems = this.marketplaceItems.filter(item => item.productTypeId === typeId);
+    console.log('Filtered Items for typeId', typeId, ':', filteredItems);
+    return filteredItems;
   }
 
 

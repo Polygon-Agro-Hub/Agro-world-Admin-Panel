@@ -33,6 +33,7 @@ interface MarketplaceItem {
   displayName: string;
   normalPrice: number;
   discountedPrice: number;
+  productTypeId: number;
 }
 
 @Component({
@@ -171,6 +172,7 @@ export class DefinePackageViewComponent implements OnInit {
           displayName: item.displayName,
           normalPrice: item.normalPrice,
           discountedPrice: item.discountedPrice,
+          productTypeId: item.productTypeId,
         }));
         if (callback) callback();
       },
@@ -488,5 +490,11 @@ export class DefinePackageViewComponent implements OnInit {
     if (key === '.' && currentValue.includes('.')) {
       event.preventDefault();
     }
+  }
+
+  filterMarketItemByTypeId(typeId: number): MarketplaceItem[] {
+    const filteredItems = this.marketplaceItems.filter(item => item.productTypeId === typeId);
+    console.log('Filtered Items for typeId', typeId, ':', filteredItems);
+    return filteredItems;
   }
 }

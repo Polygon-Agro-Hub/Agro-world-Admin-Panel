@@ -227,15 +227,15 @@ export class ViewWholesaleCustomersComponent implements OnInit {
   }
 
   getRatingLabel(rating: string): string {
-    const map: Record<string, string> = {
-      VVIP: 'VVIP',
-      VIP:  'VIP',
-      COR:  'COR',
-      NOR:  'NOR',
-      VVP:  'VVP',
-    };
-    return map[rating] ?? rating;
-  }
+  const map: Record<string, string> = {
+    VVIP: 'X 2 Stars',
+    VIP:  'X 1 Star',
+    COR:  'X 1 Star',
+    NOR:  'X 1 Star',
+    VVP:  'X 1 Star',
+  };
+  return map[rating] ?? rating;
+}
 
   copyToClipboard(text: string, type: 'email' | 'phone' | 'phone1') {
     navigator.clipboard

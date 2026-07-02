@@ -8,6 +8,7 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
 import { PermissionService } from '../../../services/roles-permission/permission.service';
 import { TokenService } from '../../../services/token/services/token.service';
 import { DropdownModule } from 'primeng/dropdown';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-view-wholesale-customers',
@@ -161,35 +162,54 @@ export class ViewWholesaleCustomersComponent implements OnInit {
   }
 
   submitUpdateRating() {
-    if (!this.selectedCustomerForRating || !this.selectedNewRating) return;
+  if (!this.selectedCustomerForRating || !this.selectedNewRating) return;
 
-    this.isUpdatingRating = true;
+  this.isUpdatingRating = true;
 
-    this.marketSrv
-      .updateWholesaleCustomerRating(
-        this.selectedCustomerForRating.id,
-        this.selectedNewRating
-      )
-      .subscribe(
-        () => {
-          // Update the row in-place so the table refreshes instantly
-          const target = this.customerObj.find(
-            (c) => c.id === this.selectedCustomerForRating!.id
-          );
-          if (target) target.rateofCus = this.selectedNewRating;
+  this.marketSrv
+    .updateWholesaleCustomerRating(
+      this.selectedCustomerForRating.id,
+      this.selectedNewRating
+    )
+    .subscribe(
+      () => {
+        // Update the row in-place so the table refreshes instantly
+        const target = this.customerObj.find(
+          (c) => c.id === this.selectedCustomerForRating!.id
+        );
+        if (target) target.rateofCus = this.selectedNewRating;
 
-          this.isUpdatingRating = false;
-          this.closeUpdateRatingPopup();
+        this.isUpdatingRating = false;
+        this.closeUpdateRatingPopup();
 
-          this.showRatingToast = true;
-          setTimeout(() => (this.showRatingToast = false), 3000);
-        },
-        (err) => {
-          console.error('Error updating rating', err);
-          this.isUpdatingRating = false;
-        }
-      );
-  }
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Rating updated successfully!',
+          confirmButtonText: 'OK',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
+      },
+      (err) => {
+        console.error('Error updating rating', err);
+        this.isUpdatingRating = false;
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to update rating. Please try again.',
+          confirmButtonText: 'OK',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
+      }
+    );
+}
 
   // ─────────────────────────────────────────
   //  Helpers
@@ -207,15 +227,15 @@ export class ViewWholesaleCustomersComponent implements OnInit {
   }
 
   getRatingLabel(rating: string): string {
-    const map: Record<string, string> = {
-      VVIP: 'VVIP',
-      VIP:  'VIP',
-      COR:  'COR',
-      NOR:  'NOR',
-      VVP:  'VVP',
-    };
-    return map[rating] ?? rating;
-  }
+  const map: Record<string, string> = {
+    VVIP: 'X 2 Stars',
+    VIP:  'X 1 Star',
+    COR:  'X 1 Star',
+    NOR:  'X 1 Star',
+    VVP:  'X 1 Star',
+  };
+  return map[rating] ?? rating;
+}
 
   copyToClipboard(text: string, type: 'email' | 'phone' | 'phone1') {
     navigator.clipboard
@@ -251,6 +271,13 @@ export class ViewWholesaleCustomersComponent implements OnInit {
       return false;
     }
     return true;
+  }
+
+  preventLeadingSpace(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement;
+    if (event.key === ' ' && input.selectionStart === 0) {
+      event.preventDefault();
+    }
   }
 }
 

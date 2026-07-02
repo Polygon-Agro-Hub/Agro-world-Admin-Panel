@@ -25,7 +25,6 @@
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#D1D5DB] dark:border-[#AFAFAF]"
             [options]="ratingFilterOptions"
-            [checkmark]="true"
             optionLabel="label"
             optionValue="value"
             [showClear]="!!selectedRatingFilter"
@@ -60,7 +59,7 @@
                 class="bg-transparent outline-none w-full dark:text-textDark text-gray-600"
                 (keyup.enter)="onSearch()"
                 (keyup.esc)="offSearch()"
-                (keydown.space)="checkLeadingSpace($event)" />
+                (keydown)="preventLeadingSpace($event)" />
               <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2" (click)="onSearch()">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
@@ -189,7 +188,7 @@
                   <button
                     class="text-[#367bfa] hover:text-[#83aefd] transition-transform hover:rotate-180 duration-300"
                     (click)="openUpdateRatingPopup(item)"
-                    title="Edit Rating">
+                    >
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -297,30 +296,27 @@
         </div>
       </div>
 
-      <div *ngIf="cusObjDetails.buildingType === 'House'" class="flex flex-row items-center gap-4">
-        <div class="flex flex-row items-center justify-center gap-3">
-          <i class="fa-solid fa-location-dot text-[#727272] text-lg"></i>
-          <p class="[font-size:14px] text-[#727272]">Address:</p>
-        </div>
-        <p class="[font-size:14px] text-[#000000] dark:text-white">
-          {{ cusObjDetails.houseNo }}, {{ cusObjDetails.streetName }}, {{ cusObjDetails.city }}
-        </p>
-      </div>
+      <div *ngIf="cusObjDetails.buildingType === 'House'" class="mb-5 flex items-start text-textLight dark:text-textDark">
+  <div class="mr-5"><i class="fa-solid fa-location-dot"></i></div>
+  <span class="mr-2">Address :</span>
+  <div class="flex flex-col">
+    <span>{{ cusObjDetails.buildingType === 'House' ? 'Home' : cusObjDetails.buildingType }} :</span>
+    <span class="mt-3">{{ cusObjDetails.houseNo }}, {{ cusObjDetails.streetName }}, {{ cusObjDetails.city }}</span>
+  </div>
+</div>
 
-      <div *ngIf="cusObjDetails.buildingType === 'Apartment'" class="flex flex-row items-center gap-4">
-        <div class="flex flex-row items-center justify-center gap-3">
-          <i class="fa-solid fa-location-dot text-[#727272] text-lg"></i>
-          <p class="[font-size:14px] text-[#727272]">Address:</p>
-        </div>
-        <div class="flex flex-col">
-          <p class="[font-size:14px] text-[#000000] dark:text-white">
-            {{ cusObjDetails.buildingNo }}, {{ cusObjDetails.buildingName }},
-            {{ cusObjDetails.unitNo }}, {{ cusObjDetails.floorNo }},
-            {{ cusObjDetails.AparthouseNo }}, {{ cusObjDetails.ApartstreetName }},
-            {{ cusObjDetails.Apartcity }}
-          </p>
-        </div>
-      </div>
+      <div *ngIf="cusObjDetails.buildingType === 'Apartment'" class="mb-5 flex items-start text-textLight dark:text-textDark">
+  <div class="mr-5"><i class="fa-solid fa-location-dot"></i></div>
+  <span class="mr-2 whitespace-nowrap">Address :</span>
+  <div class="flex flex-col">
+    <span>{{ cusObjDetails.buildingType }} :</span>
+    <span class="mt-3">
+      {{ cusObjDetails.buildingNo }} - {{ cusObjDetails.buildingName }},
+      Unit {{ cusObjDetails.unitNo }}, Floor {{ cusObjDetails.floorNo }},
+      {{ cusObjDetails.AparthouseNo }}, {{ cusObjDetails.ApartstreetName }}, {{ cusObjDetails.Apartcity }}
+    </span>
+  </div>
+</div>
 
       <div class="flex flex-row items-center gap-4">
         <div class="flex flex-row items-center justify-center gap-3">
@@ -362,11 +358,11 @@
   <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-[420px] max-w-[90vw] p-8"
     (click)="$event.stopPropagation()">
 
-    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Update Ratings</h3>
+    <h3 class="text-lg font-semibold text-gray-900 dark:text-white flex justify-center mb-6">Update Ratings</h3>
 
     <div class="mb-6">
       <p-dropdown
-        styleClass="w-full border border-2 rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#D1D5DB] dark:border-[#AFAFAF]"
+        styleClass="w-full border border-1 rounded-xl bg-[#FFFFFF] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#D1D5DB] dark:border-[#AFAFAF]"
         [options]="ratingUpdateOptions"
         optionLabel="label"
         optionValue="value"
@@ -377,7 +373,7 @@
           <div class="flex items-center gap-2 py-1" *ngIf="selectedNewRating">
             <ng-container [ngSwitch]="selectedNewRating">
               <ng-container *ngSwitchCase="'VVIP'">
-                <img src="assets/images/ratings/VVIP.png" class="w-8 h-4 object-contain" alt="VVIP" />
+                <img src="assets/images/ratings/VIP.png" class="w-4 h-4 object-contain" alt="VVIP" />
               </ng-container>
               <ng-container *ngSwitchCase="'VIP'">
                 <img src="assets/images/ratings/VIP.png" class="w-4 h-4 object-contain" alt="VIP" />
@@ -400,7 +396,7 @@
           <div class="flex items-center gap-2 py-1">
             <ng-container [ngSwitch]="option.value">
               <ng-container *ngSwitchCase="'VVIP'">
-                <img src="assets/images/ratings/VIP.png" class="w-8 h-4 object-contain" alt="VVIP" />
+                <img src="assets/images/ratings/VIP.png" class="w-4 h-4 object-contain" alt="VVIP" />
               </ng-container>
               <ng-container *ngSwitchCase="'VIP'">
                 <img src="assets/images/ratings/VIP.png" class="w-4 h-4 object-contain" alt="VIP" />
@@ -424,13 +420,13 @@
     <div class="flex justify-center gap-4 mt-6">
       <button
         (click)="closeUpdateRatingPopup()"
-        class="bg-[#74788D] text-[#D3D3D3] px-6 py-2 rounded hover:bg-[#5f6275] transition-colors">
+        class="bg-[#74788D] text-[#D3D3D3] px-6 py-2 rounded-lg hover:bg-[#5f6275] transition-colors">
         Cancel
       </button>
       <button
         (click)="submitUpdateRating()"
         [disabled]="!selectedNewRating || isUpdatingRating"
-        class="bg-[#367bfa] text-white px-6 py-2 rounded hover:bg-[#2563eb] transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+        class="bg-[#3980C0] text-white px-6 py-2 rounded-lg hover:bg-[#2563eb] transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
         {{ isUpdatingRating ? 'Updating...' : 'Update' }}
       </button>
     </div>

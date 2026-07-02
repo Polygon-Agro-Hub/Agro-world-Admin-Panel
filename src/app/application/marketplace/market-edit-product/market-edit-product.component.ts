@@ -789,6 +789,69 @@ if (this.productObj.comPrice <= salePriceForComparison) {
     }
     return '';
   }
+
+  clampMinValue(event: Event, fieldName: string): void {
+  const input = event.target as HTMLInputElement;
+  const rawValue = input.value;
+
+  // Let the user clear the field to type a new value
+  if (rawValue === '') {
+    switch (fieldName) {
+      case 'discountedPrice': this.productObj.discountedPrice = 0; break;
+      case 'normalPrice': this.productObj.normalPrice = 0; break;
+      case 'salePrice': this.productObj.salePrice = 0; break;
+      case 'comPrice': this.productObj.comPrice = 0; break;
+      case 'startValue': this.productObj.startValue = 0; break;
+      case 'changeby': this.productObj.changeby = 0; break;
+      case 'maxQuantity': this.productObj.maxQuantity = 0; break;
+    }
+    return;
+  }
+
+  let value = parseFloat(rawValue);
+
+  // Only clamp if it's a real negative number, not just "in progress" typing
+  if (!isNaN(value) && value < 0) {
+    value = 0;
+    input.value = '0';
+  }
+
+  if (isNaN(value)) {
+    return; // still typing (e.g. "0.")
+  }
+
+  switch (fieldName) {
+    case 'discountedPrice':
+      this.productObj.discountedPrice = value;
+      if (value > 100) {
+        this.productObj.discountedPrice = 100;
+        input.value = '100';
+      }
+      break;
+    case 'normalPrice':
+      this.productObj.normalPrice = value;
+      break;
+    case 'salePrice':
+      this.productObj.salePrice = value;
+      break;
+    case 'comPrice':
+      this.productObj.comPrice = value;
+      break;
+    case 'startValue':
+      this.productObj.startValue = value;
+      break;
+    case 'changeby':
+      this.productObj.changeby = value;
+      break;
+    case 'maxQuantity':
+      this.productObj.maxQuantity = value;
+      break;
+  }
+
+  if (fieldName === 'normalPrice' || fieldName === 'discountedPrice') {
+    this.calculeSalePrice();
+  }
+}
 }
 
 class Crop {

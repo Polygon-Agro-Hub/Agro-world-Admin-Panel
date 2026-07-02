@@ -411,6 +411,8 @@ export class DefinePackageViewComponent implements OnInit {
         .createDefinePackageWithItems(packageData, packageItems)
         .toPromise();
 
+      this.isLoading = false;
+
       Swal.fire({
         icon: 'success',
         title: 'Success!',
@@ -421,8 +423,8 @@ export class DefinePackageViewComponent implements OnInit {
           confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
         },
       }).then((result) => {
-        this.isLoading = false;
         if (result.isConfirmed) {
+          this.isLoading = true;
           this.router.navigate(['/market/action/view-packages-list']);
         }
       });

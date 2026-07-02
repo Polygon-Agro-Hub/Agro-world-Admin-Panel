@@ -78,3 +78,18 @@
     background-color: #2d354d !important;
     color: #B1B1B1 !important;
   }
+
+::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+    padding-left: 15px !important;
+}
+
+::ng-deep .p-dropdown .p-dropdown-label {
+  padding-top: 0.25rem !important;
+  padding-bottom: 0.25rem !important;
+  line-height: 1.25rem !important;
+}
+
+::ng-deep .p-dropdown .p-dropdown-trigger {
+  width: 2rem !important;
+  height: 2rem !important;
+}

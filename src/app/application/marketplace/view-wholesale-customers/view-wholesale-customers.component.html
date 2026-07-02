@@ -25,7 +25,6 @@
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#D1D5DB] dark:border-[#AFAFAF]"
             [options]="ratingFilterOptions"
-            [checkmark]="true"
             optionLabel="label"
             optionValue="value"
             [showClear]="!!selectedRatingFilter"
@@ -359,11 +358,11 @@
   <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-[420px] max-w-[90vw] p-8"
     (click)="$event.stopPropagation()">
 
-    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Update Ratings</h3>
+    <h3 class="text-lg font-semibold text-gray-900 dark:text-white flex justify-center mb-6">Update Ratings</h3>
 
     <div class="mb-6">
       <p-dropdown
-        styleClass="w-full border border-2 rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#D1D5DB] dark:border-[#AFAFAF]"
+        styleClass="w-full border border-1 rounded-xl bg-[#FFFFFF] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#D1D5DB] dark:border-[#AFAFAF]"
         [options]="ratingUpdateOptions"
         optionLabel="label"
         optionValue="value"
@@ -374,7 +373,7 @@
           <div class="flex items-center gap-2 py-1" *ngIf="selectedNewRating">
             <ng-container [ngSwitch]="selectedNewRating">
               <ng-container *ngSwitchCase="'VVIP'">
-                <img src="assets/images/ratings/VVIP.png" class="w-8 h-4 object-contain" alt="VVIP" />
+                <img src="assets/images/ratings/VIP.png" class="w-4 h-4 object-contain" alt="VVIP" />
               </ng-container>
               <ng-container *ngSwitchCase="'VIP'">
                 <img src="assets/images/ratings/VIP.png" class="w-4 h-4 object-contain" alt="VIP" />
@@ -397,7 +396,7 @@
           <div class="flex items-center gap-2 py-1">
             <ng-container [ngSwitch]="option.value">
               <ng-container *ngSwitchCase="'VVIP'">
-                <img src="assets/images/ratings/VIP.png" class="w-8 h-4 object-contain" alt="VVIP" />
+                <img src="assets/images/ratings/VIP.png" class="w-4 h-4 object-contain" alt="VVIP" />
               </ng-container>
               <ng-container *ngSwitchCase="'VIP'">
                 <img src="assets/images/ratings/VIP.png" class="w-4 h-4 object-contain" alt="VIP" />
@@ -421,13 +420,13 @@
     <div class="flex justify-center gap-4 mt-6">
       <button
         (click)="closeUpdateRatingPopup()"
-        class="bg-[#74788D] text-[#D3D3D3] px-6 py-2 rounded hover:bg-[#5f6275] transition-colors">
+        class="bg-[#74788D] text-[#D3D3D3] px-6 py-2 rounded-lg hover:bg-[#5f6275] transition-colors">
         Cancel
       </button>
       <button
         (click)="submitUpdateRating()"
         [disabled]="!selectedNewRating || isUpdatingRating"
-        class="bg-[#367bfa] text-white px-6 py-2 rounded hover:bg-[#2563eb] transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+        class="bg-[#3980C0] text-white px-6 py-2 rounded-lg hover:bg-[#2563eb] transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
         {{ isUpdatingRating ? 'Updating...' : 'Update' }}
       </button>
     </div>

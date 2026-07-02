@@ -335,13 +335,13 @@
     <div class="flex justify-center gap-4 mt-6">
       <button
         (click)="closeUpdateRatingPopup()"
-        class="bg-[#74788D] text-[#D3D3D3] px-6 py-2 rounded hover:bg-[#5f6275] transition-colors">
+        class="bg-[#74788D] text-[#D3D3D3] px-6 py-2 rounded-lg hover:bg-[#5f6275] transition-colors">
         Cancel
       </button>
       <button
         (click)="submitUpdateRating()"
         [disabled]="!selectedNewRating || isUpdatingRating"
-        class="bg-[#367bfa] text-white px-6 py-2 rounded hover:bg-[#2563eb] transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+        class="bg-[#3980C0] text-white px-6 py-2 rounded-lg hover:bg-[#2563eb] transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
         {{ isUpdatingRating ? 'Updating...' : 'Update' }}
       </button>
     </div>

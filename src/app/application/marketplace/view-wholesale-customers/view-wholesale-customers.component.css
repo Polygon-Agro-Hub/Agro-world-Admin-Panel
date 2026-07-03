@@ -88,8 +88,3 @@
   padding-bottom: 0.25rem !important;
   line-height: 1.25rem !important;
 }
-
-::ng-deep .p-dropdown .p-dropdown-trigger {
-  width: 2rem !important;
-  height: 2rem !important;
-}

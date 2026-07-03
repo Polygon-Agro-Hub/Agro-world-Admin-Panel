@@ -89,7 +89,10 @@
   line-height: 1.25rem !important;
 }
 
-::ng-deep .p-dropdown .p-dropdown-trigger {
-  width: 2rem !important;
-  height: 2rem !important;
-}
+/* ::ng-deep .p-dropdown .p-dropdown-trigger {
+  padding-left: 0 !important;
+} */
+
+/* :host ::ng-deep .p-dropdown-clear-icon {
+  padding-left: 8px;
+} */

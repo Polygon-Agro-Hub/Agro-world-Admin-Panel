@@ -217,7 +217,7 @@ export class ViewWholesaleCustomersComponent implements OnInit {
 
   getRatingIcon(rating: string): string {
     const map: Record<string, string> = {
-      VVIP: 'assets/images/ratings/VVIP.png',
+      VVIP: 'assets/images/ratings/VIP.png',
       VIP:  'assets/images/ratings/VIP.png',
       COR:  'assets/images/ratings/COR2.png',
       NOR:  'assets/images/ratings/NOR.png',

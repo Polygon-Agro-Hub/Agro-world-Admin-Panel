@@ -97,10 +97,11 @@
                   optionLabel="displayName" optionValue="id" optionDisabled="isExcluded" [filter]="true"
                   filterBy="displayName" placeholder="--Select Product--">
                 </p-dropdown> -->
-                <p-dropdown class="p-dropdown-custom rounded-xl flex-1 text-sm" [ngClass]="{}"
-                  [(ngModel)]="item.productId" (onChange)="calculatePrice(item)"
-                  [options]="filterMarketItemByTypeId(item.productTypeId)" optionLabel="displayName" optionValue="id"
-                  [filter]="true" filterBy="displayName" placeholder="--Select Product--">
+                <p-dropdown class="p-dropdown-custom rounded-xl flex-1 text-sm"
+  [ngClass]="{'dropdown-excluded': item.isExcluded}"
+  [(ngModel)]="item.productId" (onChange)="calculatePrice(item)"
+  [options]="filterMarketItemByTypeId(item.productTypeId)" optionLabel="displayName" optionValue="id"
+  [filter]="true" filterBy="displayName" placeholder="--Select Product--">
 
                   <!-- Template for dropdown items -->
                   <ng-template pTemplate="item" let-option>

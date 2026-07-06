@@ -68,6 +68,9 @@ export class ViewWholwsaleOrdersComponent implements OnInit {
     // { label: 'Cancelled', value: 'Cancelled' },
     { label: 'Ready to Pickup', value: 'Ready to Pickup' },
     // { label: 'Failed', value: 'Failed' },
+    { label: 'Collected', value: 'Collected' },
+    { label: 'Return', value: 'Return' },
+    { label: 'Return Received', value: 'Return Received' },
   ];
 
   constructor(

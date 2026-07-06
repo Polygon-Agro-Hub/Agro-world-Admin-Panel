@@ -27,6 +27,7 @@ export class ViewProductTypesComponent implements OnInit {
   showConfirmModal = false;
 confirmProductName = '';
 confirmNewStatusLabel = '';
+isDeactivating = false; // add this
 private pendingToggleId: number | null = null;
 private pendingNewStatus: number | null = null;
 private pendingActionText = '';
@@ -146,6 +147,7 @@ statusOptions = [
   this.pendingActionText = newStatus === 1 ? 'activated' : 'deactivated';
   this.confirmProductName = product?.typeName || 'this product type';
   this.confirmNewStatusLabel = newStatus === 1 ? 'Active' : 'Inactive';
+  this.isDeactivating = newStatus === 0; // add this
   this.showConfirmModal = true;
 }
 
@@ -153,6 +155,7 @@ onConfirmCancel(): void {
   this.showConfirmModal = false;
   this.pendingToggleId = null;
   this.pendingNewStatus = null;
+  this.isDeactivating = false; // reset it here too
 }
 
 onConfirmProceed(): void {

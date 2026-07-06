@@ -131,12 +131,18 @@
 <!-- Custom Confirmation Modal -->
 <div *ngIf="showConfirmModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
   <div class="bg-white rounded-2xl shadow-xl p-10 max-w-md w-full mx-4 text-center">
-    <p class="text-[#292929] text-lg font-medium leading-snug mb-8">
+    <p class="text-[#292929] text-lg font-medium leading-snug mb-4">
       Are you sure you want to change the status of<br>
       <strong>"{{ confirmProductName }}"</strong> to
       <strong>{{ confirmNewStatusLabel }}</strong>?
     </p>
-    <div class="flex justify-center gap-4">
+
+    <p *ngIf="isDeactivating" class="text-[#A60C0C] text-sm italic leading-relaxed mb-8">
+      Note : Disabling this product type will remove all of its products from associated packages.
+      As a result, the affected packages will become undefined.
+    </p>
+
+    <div class="flex justify-center gap-4" [ngClass]="{'mt-8': !isDeactivating}">
       <button (click)="onConfirmCancel()"
         class="px-6 py-2.5 rounded-lg bg-[#74788D] text-white font-medium hover:bg-[#888fb3] transition">
         No, Go Back

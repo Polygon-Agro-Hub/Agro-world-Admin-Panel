@@ -160,7 +160,7 @@
                 <label
                     class="block text-xs font-[700] text-gray-500 dark:text-gray-300 uppercase tracking-wide mb-3">PRODUCT
                     NAME</label>
-                <p-dropdown [options]="productArr" [(ngModel)]="newProductObj" optionLabel="displayName"
+                <!-- <p-dropdown [options]="filterMarketItemsByTypeId(selectProduct.typeId)" [(ngModel)]="newProductObj" optionLabel="displayName"
                     placeholder="--Product Name--" [filter]="true" [scrollHeight]="'200px'"
                     (onChange)="onProductChange()" [showClear]="true" optionDisabled="isExcluded" appendTo="body"
                     styleClass="w-full h-[44px] border-gray-300 dark:border-gray-600 rounded-lg">
@@ -172,6 +172,39 @@
                             </span>
                         </div>
                     </ng-template>
+                </p-dropdown> -->
+
+                <p-dropdown [options]="filterMarketItemsByTypeId(selectProduct.typeId)" [(ngModel)]="newProductObj"
+                    optionLabel="displayName" placeholder="--Product Name--" [filter]="true" [scrollHeight]="'200px'"
+                    (onChange)="onProductChange()" [showClear]="true" optionDisabled="isExcluded" appendTo="body"
+                    styleClass="w-full h-[44px] border-gray-300 dark:border-gray-600 rounded-lg">
+                    <ng-template pTemplate="item" let-option>
+                    <div class="flex align-items-center gap-2" [ngClass]="{'cursor-not-allowed': option.isExcluded}">
+                      <span >
+                        <i *ngIf="option.isPreferred" class="fa-solid fa-heart text-green-600 mx-2"></i>
+                        <i *ngIf="!option.isPreferred && option.isExcluded"
+                          class="fa-solid fa-ban text-red-700 mx-2"></i>
+                        <i *ngIf="!option.isPreferred && !option.isExcluded"
+                          class="fa-solid fa-check text-blue-600 mx-2"></i>
+                        {{ option.displayName }}
+                      </span>
+                    </div>
+                  </ng-template>
+
+                  <!-- Template for selected value -->
+                  <ng-template pTemplate="selectedItem" let-option>
+                    <div class="flex align-items-center gap-2" *ngIf="option">
+                      <span>
+                        <!-- Check if option exists and has properties -->
+                        <i *ngIf="option?.isPreferred" class="fa-solid fa-heart text-green-600 mx-2"></i>
+                        <i *ngIf="!option?.isPreferred && option?.isExcluded"
+                          class="fa-solid fa-ban text-red-700 mx-2"></i>
+                        <i *ngIf="!option?.isPreferred && !option?.isExcluded"
+                          class="fa-solid fa-check text-blue-600 mx-2"></i>
+                        {{ option?.displayName }}
+                      </span>
+                    </div>
+                  </ng-template>
                 </p-dropdown>
             </div>
 

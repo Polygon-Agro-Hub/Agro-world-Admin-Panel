@@ -314,7 +314,7 @@ export class DispachPackagesComponent implements OnInit {
   }
 
   filterMarketItemsByTypeId(typeId:number): MarketPlaceItems[] {
-    return this.productArr.filter(item => item.productTypeId === typeId && !item.isExcluded);
+    return this.productArr.filter(item => item.productTypeId === typeId);
   }
 }
 
@@ -340,6 +340,7 @@ interface MarketPlaceItems {
   startValue: number
   changeby: number
   isExcluded: boolean
+  isPreferred: boolean
   price: number;
   qty: number;
   productTypeId: number;

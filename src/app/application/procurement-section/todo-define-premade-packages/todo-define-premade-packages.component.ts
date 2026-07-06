@@ -210,7 +210,8 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
         this.additionalItems = response.additionalItems;
         this.excludeItemsArr = response.excludeList;
         this.excludedItemsCount = response.excludeList.length;
-        this.categories = response.category;
+        // this.categories = response.category;
+        this.categories = response.category.filter((cat: any) => cat.isValid === 1);
         this.additionalItemsCount = response.additionalItems.length || 0;
 
         // ✅ Reset totals

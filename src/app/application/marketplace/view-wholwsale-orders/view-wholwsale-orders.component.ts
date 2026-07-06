@@ -53,7 +53,7 @@ export class ViewWholwsaleOrdersComponent implements OnInit {
   methodOptions = [
     { label: 'Delivery', value: 'delivery' },
     { label: 'Pickup', value: 'pickup' },
-    { label: 'Out For Delivery', value: 'Out For Delivery' },
+    // { label: 'Out For Delivery', value: 'Out For Delivery' },
 
   ];
 
@@ -65,9 +65,12 @@ export class ViewWholwsaleOrdersComponent implements OnInit {
     { label: 'Hold', value: 'Hold' },
     { label: 'Picked Up', value: 'Picked up' },
     { label: 'Processing', value: 'Processing' },
-    { label: 'Cancelled', value: 'Cancelled' },
+    // { label: 'Cancelled', value: 'Cancelled' },
     { label: 'Ready to Pickup', value: 'Ready to Pickup' },
-    { label: 'Failed', value: 'Failed' },
+    // { label: 'Failed', value: 'Failed' },
+    { label: 'Collected', value: 'Collected' },
+    { label: 'Return', value: 'Return' },
+    { label: 'Return Received', value: 'Return Received' },
   ];
 
   constructor(

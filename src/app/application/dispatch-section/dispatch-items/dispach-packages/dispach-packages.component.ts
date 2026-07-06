@@ -312,6 +312,10 @@ export class DispachPackagesComponent implements OnInit {
       this.cangeReplacePrice();
     }
   }
+
+  filterMarketItemsByTypeId(typeId:number): MarketPlaceItems[] {
+    return this.productArr.filter(item => item.productTypeId === typeId && !item.isExcluded);
+  }
 }
 
 interface PakageItem {
@@ -322,6 +326,7 @@ interface PakageItem {
   discountedPrice: number;
   displayName: string;
   typeName: string;
+  typeId: number;
 }
 
 interface MarketPlaceItems {
@@ -337,6 +342,7 @@ interface MarketPlaceItems {
   isExcluded: boolean
   price: number;
   qty: number;
+  productTypeId: number;
 }
 
 interface ReplaceItem {

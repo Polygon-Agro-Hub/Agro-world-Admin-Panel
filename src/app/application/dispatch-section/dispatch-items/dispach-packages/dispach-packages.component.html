@@ -176,7 +176,7 @@
 
                 <p-dropdown [options]="filterMarketItemsByTypeId(selectProduct.typeId)" [(ngModel)]="newProductObj"
                     optionLabel="displayName" placeholder="--Product Name--" [filter]="true" [scrollHeight]="'200px'"
-                    (onChange)="onProductChange()" [showClear]="true" optionDisabled="isExcluded" appendTo="body"
+                    (onChange)="onProductChange()" [showClear]="true" optionDisabled="isExcluded"
                     styleClass="w-full h-[44px] border-gray-300 dark:border-gray-600 rounded-lg">
                     <ng-template pTemplate="item" let-option>
                     <div class="flex align-items-center gap-2" [ngClass]="{'cursor-not-allowed': option.isExcluded}">

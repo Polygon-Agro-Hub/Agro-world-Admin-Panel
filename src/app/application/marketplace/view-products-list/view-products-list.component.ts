@@ -313,4 +313,5 @@ class ProductList {
   category!: string;
   productTypeId!: number;
   productTypeShortCode!: string;
+  modifyBy!: string;
 }

@@ -98,15 +98,15 @@
                   filterBy="displayName" placeholder="--Select Product--">
                 </p-dropdown> -->
                 <p-dropdown class="p-dropdown-custom rounded-xl flex-1 text-sm"
-  [ngClass]="{'dropdown-excluded': item.isExcluded}"
-  [(ngModel)]="item.productId" (onChange)="calculatePrice(item)"
-  [options]="filterMarketItemByTypeId(item.productTypeId)" optionLabel="displayName" optionValue="id"
-  [filter]="true" filterBy="displayName" placeholder="--Select Product--">
+                  [ngClass]="{'dropdown-excluded': item.isExcluded}" [(ngModel)]="item.productId"
+                  (onChange)="calculatePrice(item)" [options]="filterMarketItemByTypeId(item.productTypeId)"
+                  optionLabel="displayName" optionValue="id" [filter]="true" filterBy="displayName"
+                  placeholder="--Select Product--">
 
                   <!-- Template for dropdown items -->
                   <ng-template pTemplate="item" let-option>
                     <div class="flex align-items-center gap-2" [ngClass]="{'cursor-not-allowed': option.isExcluded}">
-                      <span >
+                      <span>
                         <i *ngIf="option.isPreferred" class="fa-solid fa-heart text-green-600 mx-2"></i>
                         <i *ngIf="!option.isPreferred && option.isExcluded"
                           class="fa-solid fa-ban text-red-700 mx-2"></i>
@@ -222,7 +222,7 @@
             <div class="w-12 text-center text-sm text-[#212121] dark:text-gray-100">
               {{ i + 1 }}
             </div>
-            <div class="flex-1 text-sm text-[#212121] dark:text-gray-100 truncate pl-4">
+            <div class="flex-1 text-sm text-[#212121] dark:text-gray-100 truncate pl-4" [title]="item.displayName">
               {{ item.displayName }}
             </div>
             <div class="w-16 text-center text-sm text-[#000000] dark:text-gray-100">

@@ -1386,7 +1386,7 @@ let addTitle;
 if (invoice.orderApp === 'Marketplace') {
   addTitle = hasFamilyPacks
     ? ` Additional Items  (${padZero(invoice.additionalItems.length)} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
-    : ` Your Selected Items(${padZero(invoice.additionalItems.length)} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
+    : ` Your Selected Items (${padZero(invoice.additionalItems.length)} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
 
 } else if (invoice.orderApp === 'Dash') {
   addTitle = hasFamilyPacks

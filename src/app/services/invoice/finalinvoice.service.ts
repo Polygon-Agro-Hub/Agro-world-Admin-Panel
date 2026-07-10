@@ -1574,10 +1574,12 @@ if (invoice.deliveryMethod !== 'Pickup' && parseNum(invoice.deliveryFee) > 0) {
       grandTotalBody.push(['Service Fee', 'Rs. 180.00']);
     }
 
-    grandTotalBody.push([
-      'Discount',
-      `Rs. ${formatNumberWithCommas(invoice.discount)}`,
-    ]);
+    if (parseNum(invoice.discount) > 0) {
+  grandTotalBody.push([
+    'Discount',
+    `Rs. ${formatNumberWithCommas(invoice.discount)}`,
+  ]);
+}
 
     // Add coupon discount only if it has a value greater than 0
     const couponValue = parseNum(invoice.billingInfo.couponValue);

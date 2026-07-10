@@ -1543,12 +1543,12 @@ export class FinalinvoiceService {
     }
 
     // Add delivery fee and discount
-    if (invoice.deliveryMethod !== 'Pickup') {
-      grandTotalBody.push([
-        'Delivery Fee',
-        `Rs. ${formatNumberWithCommas(invoice.deliveryFee)}`,
-      ]);
-    }
+if (invoice.deliveryMethod !== 'Pickup' && parseNum(invoice.deliveryFee) > 0) {
+  grandTotalBody.push([
+    'Delivery Fee',
+    `Rs. ${formatNumberWithCommas(invoice.deliveryFee)}`,
+  ]);
+}
 
     // Add service fee between Discount and Coupon Discount
     if (invoice.orderApp !== 'Marketplace' &&

@@ -1197,31 +1197,41 @@ export class FinalinvoiceService {
       yPosition += 5;
 
       doc.setFont('helvetica', 'bold');
-      const pickupLabel = 'Centre:';
-      doc.text(pickupLabel, 15, yPosition);
+const pickupLabel = 'Centre:';
+doc.text(pickupLabel, 15, yPosition);
 
-      // Calculate position for center name with small space
-      const centerName = invoice.pickupInfo.centerName || '';
-      const spaceWidth = 2; // Small space in mm
-      const centerNameX = 15 + doc.getTextWidth(pickupLabel) + spaceWidth;
+// Calculate position for center name with small space
+const centerName = invoice.pickupInfo.centerName || '';
+const spaceWidth = 2; // Small space in mm
+const centerNameX = 15 + doc.getTextWidth(pickupLabel) + spaceWidth;
 
-      doc.setFont('helvetica', 'bold');
-      doc.text(centerName, centerNameX, yPosition);
+doc.setFont('helvetica', 'bold');
+doc.text(centerName, centerNameX, yPosition);
 
-      // Format address like in your image
-      const addressLines = [
-        invoice.pickupInfo.address?.city || '',
-        invoice.pickupInfo.address?.district || '',
-        invoice.pickupInfo.address?.province || '',
-        invoice.pickupInfo.address?.country || '',
-      ].filter((line) => line); // Remove empty lines
+// Build two separate address lines: City/District, then Province/Country
+const cityDistrictLine = [
+  invoice.pickupInfo.address?.city || '',
+  invoice.pickupInfo.address?.district || '',
+].filter((part) => part).join(', ');
 
-      // Join with comma and space, similar to your image
-      const formattedAddress = addressLines.join(', ');
+const provinceCountryLine = [
+  invoice.pickupInfo.address?.province || '',
+  invoice.pickupInfo.address?.country || '',
+].filter((part) => part).join(', ');
 
-      doc.setFont('helvetica', 'normal');
-      doc.text(formattedAddress, 15, yPosition + 5);
-      yPosition += 20;
+doc.setFont('helvetica', 'normal');
+
+let addressY = yPosition + 5;
+if (cityDistrictLine) {
+  doc.text(cityDistrictLine, 15, addressY);
+  addressY += 5;
+}
+if (provinceCountryLine) {
+  doc.text(provinceCountryLine, 15, addressY);
+  addressY += 5;
+}
+
+yPosition = addressY + 10;
     }
 
     // Add extra space here between Delivery Method and Package Title

@@ -1164,6 +1164,10 @@ export class FinalinvoiceService {
     // Add small space above Invoice No
     yPosition += 3;
 
+    const padZero = (value: number): string => {
+  return value < 10 ? `0${value}` : `${value}`;
+};
+
     // Invoice Details
     const invoiceNoY = yPosition;
     doc.setFont('helvetica', 'bold');
@@ -1270,14 +1274,14 @@ export class FinalinvoiceService {
         }
 
         doc.setFontSize(9);
-        doc.setFont('helvetica', 'bold');
-        const totalItemCount = pack.packageDetails?.reduce((sum: number, detail: any) => sum + (detail.qty || 0), 0) || 0;
+doc.setFont('helvetica', 'bold');
+const totalItemCount = pack.packageDetails?.reduce((sum: number, detail: any) => sum + (detail.qty || 0), 0) || 0;
 
-        doc.text(
-          `${pack.name || 'N/A'} (${totalItemCount} Items)`,
-          15,
-          yPosition
-        );
+doc.text(
+  `${pack.name || 'N/A'} (${padZero(totalItemCount)} Items)`,
+  15,
+  yPosition
+);
         doc.text(`Rs. ${formatNumberWithCommas(pack.amount)}`, 195, yPosition, {
           align: 'right',
         });
@@ -1365,22 +1369,24 @@ export class FinalinvoiceService {
       const hasFamilyPacks =
         invoice.familyPackItems && invoice.familyPackItems.length > 0;
 
-      // MODIFIED: Determine title based on orderApp
-      let addTitle;
-      if (invoice.orderApp === 'Marketplace') {
-        addTitle = hasFamilyPacks
-          ? ` Additional Items  (${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
-          : ` Your Selected Items(${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
+        
 
-      } else if (invoice.orderApp === 'Dash') {
-        addTitle = hasFamilyPacks
-          ? ` Additional Items  (${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
-          : ` Custom Items (${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
-      } else {
-        addTitle = hasFamilyPacks
-          ? ` Custom Items (${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
-          : ` Custom Items (${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
-      }
+      // MODIFIED: Determine title based on orderApp
+let addTitle;
+if (invoice.orderApp === 'Marketplace') {
+  addTitle = hasFamilyPacks
+    ? ` Additional Items  (${padZero(invoice.additionalItems.length)} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
+    : ` Your Selected Items(${padZero(invoice.additionalItems.length)} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
+
+} else if (invoice.orderApp === 'Dash') {
+  addTitle = hasFamilyPacks
+    ? ` Additional Items  (${padZero(invoice.additionalItems.length)} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
+    : ` Custom Items (${padZero(invoice.additionalItems.length)} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
+} else {
+  addTitle = hasFamilyPacks
+    ? ` Custom Items (${padZero(invoice.additionalItems.length)} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
+    : ` Custom Items (${padZero(invoice.additionalItems.length)} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
+}
 
       doc.setFontSize(9);
       doc.setFont('helvetica', 'bold');

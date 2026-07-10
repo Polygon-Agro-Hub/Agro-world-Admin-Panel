@@ -33,6 +33,15 @@
               [appendTo]="'body'" />
           </div>
 
+          <!-- Status Dropdown -->
+          <div>
+            <p-dropdown
+              styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#D1D5DB] dark:border-[#AFAFAF]"
+              [options]="statusOptions" [checkmark]="false" optionLabel="label" optionValue="value"
+              [showClear]="!!selectStatus" placeholder="Status" [(ngModel)]="selectStatus"
+              (onChange)="applyStatusFilters()"></p-dropdown>
+          </div>
+
           <!-- Method Dropdown -->
           <div>
             <p-dropdown
@@ -42,14 +51,7 @@
               (onChange)="applyMethodFilters()"></p-dropdown>
           </div>
 
-          <!-- Status Dropdown -->
-          <div>
-            <p-dropdown
-              styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#D1D5DB] dark:border-[#AFAFAF]"
-              [options]="statusOptions" [checkmark]="false" optionLabel="label" optionValue="value"
-              [showClear]="!!selectStatus" placeholder="Status" [(ngModel)]="selectStatus"
-              (onChange)="applyStatusFilters()"></p-dropdown>
-          </div>
+          
 
           <!-- Search Bar -->
           <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96 relative group">

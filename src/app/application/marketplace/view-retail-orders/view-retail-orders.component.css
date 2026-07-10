@@ -78,3 +78,12 @@
     background-color: #2d354d !important;
     color: #B1B1B1 !important;
   }
+
+  /* If using text/title approach */
+::ng-deep .calendar-popup-small .p-datepicker-header .p-datepicker-title .p-datepicker-month {
+  margin-right: 0.1rem !important; /* Space after month */
+}
+
+::ng-deep .calendar-popup-small .p-datepicker-header .p-datepicker-title .p-datepicker-year {
+  margin-left: 0.1rem !important; /* Space before year */
+}

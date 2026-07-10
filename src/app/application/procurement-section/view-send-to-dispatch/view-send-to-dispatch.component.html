@@ -13,7 +13,7 @@
       <div class="flex items-center flex-wrap gap-4">
         <div>
           <p-calendar id="fromDate" [(ngModel)]="dateFilter" (onSelect)="onDateSelect()" (onClear)="onDateClear()"
-            placeholder="Dispatched Date" [showIcon]="true" [showClear]="true" [showButtonBar]="true"
+            placeholder="Dispatched Date" [showIcon]="true" [showClear]="true"
             dateFormat="yy-mm-dd" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2030"
             iconDisplay="input" [style]="{ width: '16rem', height: '2rem' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
          [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 

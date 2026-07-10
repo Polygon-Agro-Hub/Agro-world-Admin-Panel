@@ -27,36 +27,31 @@
           </div> -->
 
           <div>
-            <p-calendar class="flex items-center gap-2 h-8 relative" id="fromDate" [(ngModel)]="dateFilter1"
-              (onSelect)="onDateSelect()" (onClear)="onDateClear()" placeholder="Ordered Date" [showIcon]="true"
-              [showClear]="true" [showButtonBar]="true" dateFormat="yy-mm-dd" [monthNavigator]="true"
-              [yearNavigator]="true" yearRange="1900:2030" iconDisplay="input"
-              [style]="{ width: '16rem', height: '2rem' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+  <p-calendar class="flex items-center gap-2 h-8 relative" id="fromDate" [(ngModel)]="dateFilter1"
+    (onSelect)="onDateSelect()" (onClear)="onDateClear()" placeholder="Ordered Date" [showIcon]="true"
+    [showClear]="true" [showButtonBar]="false" dateFormat="yy-mm-dd" [monthNavigator]="true"
+    [yearNavigator]="true" yearRange="1900:2030" iconDisplay="input"
+    [style]="{ width: '145px', height: '2rem' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
          [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
          [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
          [&_.p-datepicker-header]:dark:bg-[#2d354d] 
-         [&_.p-datepicker-header]:dark:text-white
-         [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
-         [&_.p-button:hover]:dark:bg-[#6b7280]"
-              inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
-              [appendTo]="'body'" />
-          </div>
-
-          <div>
-            <p-calendar id="deliveryDate" [(ngModel)]="dateFilter" (onSelect)="onFilterChange()"
-              (onClear)="onDateFilterClear()" placeholder="Delivery Date" [showIcon]="true" [showClear]="true"
-              [showButtonBar]="true" dateFormat="yy-mm-dd" [monthNavigator]="true" [yearNavigator]="true"
-              yearRange="1900:2030" iconDisplay="input" 
-              [style]="{ width: '16rem', height: '2rem' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+         [&_.p-datepicker-header]:dark:text-white"
+    inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-[145px] h-8 pr-12 text-sm"
+    [appendTo]="'body'" />
+</div>
+<div>
+  <p-calendar id="deliveryDate" [(ngModel)]="dateFilter" (onSelect)="onFilterChange()"
+    (onClear)="onDateFilterClear()" placeholder="Delivery Date" [showIcon]="true" [showClear]="true"
+    [showButtonBar]="false" dateFormat="yy-mm-dd" [monthNavigator]="true" [yearNavigator]="true"
+    yearRange="1900:2030" iconDisplay="input"
+    [style]="{ width: '145px', height: '2rem' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
          [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
          [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
          [&_.p-datepicker-header]:dark:bg-[#2d354d] 
-         [&_.p-datepicker-header]:dark:text-white
-         [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
-         [&_.p-button:hover]:dark:bg-[#6b7280]"
-              inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
-              [appendTo]="'body'" />
-          </div>
+         [&_.p-datepicker-header]:dark:text-white"
+    inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-[145px] h-8 pr-12 text-sm"
+    [appendTo]="'body'" />
+</div>
 
           <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
             <input type="text" [(ngModel)]="searchTerm" (input)="trimLeadingSpaces()" (keyup.enter)="onSearch()"

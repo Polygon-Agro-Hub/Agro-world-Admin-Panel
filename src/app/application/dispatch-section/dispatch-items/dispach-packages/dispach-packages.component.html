@@ -43,10 +43,8 @@
                             ITEM
                             ({{total === 0 ? '0' : total < 10 ? '0' + total : total}})</th>
                         <th class="px-6 py-3 text-center font-medium text-[#8492A3] dark:text-gray-300 uppercase">
-                            QUANTITY
+                            QUANTITY (Kg)
                         </th>
-                        <th class="px-6 py-3 text-center font-medium text-[#8492A3] dark:text-gray-300 uppercase">
-                            UNIT</th>
                         <th class="px-6 py-3 text-left font-medium text-[#8492A3] dark:text-gray-300 uppercase">
                             UNIT PRICE
                         </th>
@@ -76,10 +74,6 @@
                         <td class="px-6 text-center py-4 whitespace-nowrap text-[#212121] dark:text-gray-300 ">
                             {{ formatQty(item.qty) }}
                         </td>
-
-                        <td class="px-6 text-center py-4 whitespace-nowrap text-sm text-[#808080] dark:text-gray-300">
-                            {{ (item.qty < 1) ? 'g' : 'kg' }} </td>
-
 
                         <td class="px-6 text-left py-4 whitespace-nowrap text-[#212121] dark:text-gray-300">
                             Rs. {{ item.discountedPrice != null ? (item.discountedPrice | number:'1.2-2') : '0.00' }}

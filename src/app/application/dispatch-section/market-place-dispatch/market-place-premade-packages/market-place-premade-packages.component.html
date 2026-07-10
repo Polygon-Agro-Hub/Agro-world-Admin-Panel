@@ -136,7 +136,7 @@
                     </td>
 
                     <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center">
-                        {{ item.packagePrice| number: '1.2-2' }} 
+                        {{ ((item.packagePrice || 0) + (item.additionalItemsPrice || 0)) | number: '1.2-2' }}
                     </td>
                     <td class="px-4 py-3 text-center">
                         <ng-container 

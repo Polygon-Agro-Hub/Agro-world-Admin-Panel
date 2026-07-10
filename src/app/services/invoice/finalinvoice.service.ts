@@ -1507,7 +1507,7 @@ if (invoice.orderApp === 'Marketplace') {
           0
         );
         grandTotalBody.push([
-          'Total for Packages',
+          'Total Price for Packages',
           `Rs. ${formatNumberWithCommas(packagesTotal.toFixed(2))}`,
         ]);
       } else {

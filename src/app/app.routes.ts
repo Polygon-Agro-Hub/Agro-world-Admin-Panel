@@ -299,6 +299,7 @@ import { ViewCropVarietyComponent } from './application/plant-care-app/view-crop
 import { ViewCropGroupDetailsComponent } from './application/plant-care-app/view-crop-group-details/view-crop-group-details.component';
 import { GoviTransFinanceComponent } from './application/finance/govi-trans-finance/govi-trans-finance/govi-trans-finance.component';
 import { ViewDriverCategoriesComponent } from './application/finance/govi-trans-finance/view-driver-categories/view-driver-categories.component';
+import { AddEditDriverCategoryComponent } from './application/finance/govi-trans-finance/add-edit-driver-category/add-edit-driver-category.component';
 
 export const routes: Routes = [
   {
@@ -838,6 +839,14 @@ export const routes: Routes = [
                 children:[
                   {path:'', component: GoviTransFinanceComponent},
                   {path: 'view-driver-categories', component: ViewDriverCategoriesComponent},
+                  {
+                    path: 'add-driver-category',
+                    component: AddEditDriverCategoryComponent,
+                  },
+                  {
+                    path: 'edit-driver-category/:id',
+                    component: AddEditDriverCategoryComponent,
+                  }
                 ]
               }
             ],

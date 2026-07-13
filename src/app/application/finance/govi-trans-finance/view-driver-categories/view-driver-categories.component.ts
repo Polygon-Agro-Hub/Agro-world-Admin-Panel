@@ -17,7 +17,7 @@ interface DriverCategory {
   standalone: true,
   imports: [CommonModule, FormsModule, LoadingSpinnerComponent],
   templateUrl: './view-driver-categories.component.html',
-  styleUrl: './view-driver-categories.component.css'
+  styleUrl: './view-driver-categories.component.css',
 })
 export class ViewDriverCategoriesComponent {
   isLoading = false;
@@ -27,24 +27,22 @@ export class ViewDriverCategoriesComponent {
     {
       id: 1,
       categoryName: 'Random Driver',
-      payoutPerOrder: 300.00,
+      payoutPerOrder: 300.0,
       lastModifiedBy: 'Hashinika',
-      lastEditOn: 'July 10, 2026'
+      lastEditOn: 'July 10, 2026',
     },
     {
       id: 2,
       categoryName: 'Regular Driver',
-      payoutPerOrder: 250.00,
+      payoutPerOrder: 250.0,
       lastModifiedBy: 'Hashinika',
-      lastEditOn: 'July 10, 2026'
-    }
+      lastEditOn: 'July 10, 2026',
+    },
   ];
 
   driverCategories: DriverCategory[] = [...this.driverCategoriesAll];
 
-  constructor(
-    private router: Router,
-  ) { }
+  constructor(private router: Router) {}
 
   back(): void {
     this.router.navigate(['/finance/action/govi-trans-finance']);
@@ -56,13 +54,21 @@ export class ViewDriverCategoriesComponent {
       this.driverCategories = [...this.driverCategoriesAll];
       return;
     }
-    this.driverCategories = this.driverCategoriesAll.filter(c =>
-      c.categoryName.toLowerCase().includes(term)
+    this.driverCategories = this.driverCategoriesAll.filter((c) =>
+      c.categoryName.toLowerCase().includes(term),
     );
   }
 
+  addNewCategory(): void {
+    this.router.navigate([
+      '/finance/action/govi-trans-finance/add-driver-category',
+    ]);
+  }
+
   editDriverCategory(id: number): void {
-    // TODO: navigate to edit route or open edit modal
-    console.log('Edit category', id);
+    this.router.navigate([
+      '/finance/action/govi-trans-finance/edit-driver-category',
+      id,
+    ]);
   }
 }

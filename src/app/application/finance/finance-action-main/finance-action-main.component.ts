@@ -85,4 +85,8 @@ export class FinanceActionMainComponent {
       '/finance/action/finance-govicapital/published-projects',
     ]);
   }
+
+  ViewGoviTransFinance(): void {
+    this.router.navigate(['/finance/action/govi-trans-finance']);
+  }
 }

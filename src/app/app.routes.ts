@@ -297,6 +297,8 @@ import { EditBranchComponent } from './application/govi-shop/edit-branch/edit-br
 import { ViewDeleteShopsComponent } from './application/govi-shop/view-delete-shops/view-delete-shops.component';
 import { ViewCropVarietyComponent } from './application/plant-care-app/view-crop-variety/view-crop-variety.component';
 import { ViewCropGroupDetailsComponent } from './application/plant-care-app/view-crop-group-details/view-crop-group-details.component';
+import { GoviTransViewTransactionsComponent } from './application/finance/govi-trans-view-transactions/govi-trans-view-transactions.component';
+import { TransactionAmountComponent } from './application/finance/transaction-amount/transaction-amount.component';
 
 export const routes: Routes = [
   {
@@ -828,7 +830,7 @@ export const routes: Routes = [
                   {
                     path: 'view-documents/:id',
                     component: GoviShopViewDocumentComponent,
-                  },
+                  }
                 ],
               },
             ],

@@ -1131,5 +1131,35 @@ export class FinanceService {
     });
   }
 
+  fetchAllTransactions(
+    page: number,
+    limit: number,
+    status: string,
+    date: string,
+    searchItem: string,
+
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    let url = `${this.apiUrl}finance/get-all-transactions?page=${page}&limit=${limit}`;
+
+    if (status) {
+      url += `&status=${status}`;
+    }
+
+    if (date) {
+      url += `&date=${date}`;
+    }
+
+    if (searchItem) {
+      url += `&searchItem=${searchItem}`;
+    }
+
+    return this.http.get<any>(url, { headers });
+  }
+
 }
 

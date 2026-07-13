@@ -60,7 +60,10 @@ export class PostinvoiceService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
 
-  constructor(private http: HttpClient, private tokenService: TokenService) { }
+  constructor(
+    private http: HttpClient,
+    private tokenService: TokenService,
+  ) {}
 
   getPostInvoiceDetails(processOrderId: number): Observable<any> {
     const headers = new HttpHeaders({
@@ -69,16 +72,17 @@ export class PostinvoiceService {
 
     return this.http.get(
       `${this.apiUrl}market-place/postinvoice/${processOrderId}`,
-      { headers }
+      { headers },
     );
   }
 
   async generateAndDownloadInvoice(
     processOrderId: number,
-    tableInvoiceNo: string
+    tableInvoiceNo: string,
   ): Promise<void> {
     try {
-      const response = await this.getPostInvoiceDetails(processOrderId).toPromise();
+      const response =
+        await this.getPostInvoiceDetails(processOrderId).toPromise();
       if (!response.success) {
         throw new Error(response.error || 'Failed to fetch invoice details');
       }
@@ -115,12 +119,12 @@ export class PostinvoiceService {
       // Calculate totals
       const familyPackTotal = familyPacks.reduce(
         (sum: number, pack: any) => sum + parseFloat(pack.amount || '0'),
-        0
+        0,
       );
 
       const additionalItemsTotal = additionalItems.reduce(
         (sum: number, item: any) => sum + parseFloat(item.amount || '0'),
-        0
+        0,
       );
 
       // Map the data to match the InvoiceData interface
@@ -144,7 +148,8 @@ export class PostinvoiceService {
           houseNo: billingDetails.houseNo || invoiceDetails.houseNo || 'N/A',
           street: billingDetails.street || invoiceDetails.streetName || 'N/A',
           city: billingDetails.city || invoiceDetails.city || 'N/A',
-          phonecode1: billingDetails.phoneCode1 || invoiceDetails.phonecode1 || 'N/A',
+          phonecode1:
+            billingDetails.phoneCode1 || invoiceDetails.phonecode1 || 'N/A',
           phone1: billingDetails.phone1 || invoiceDetails.phone1 || 'N/A',
           userEmail: invoiceDetails.userEmail || 'N/A',
           buildingNo: invoiceDetails.buildingNo || '',
@@ -153,15 +158,17 @@ export class PostinvoiceService {
           floorNo: invoiceDetails.floorNo || '',
           couponValue: billingDetails.couponValue || '0.00',
         },
-        pickupInfo: pickupCenter ? {
-          centerName: pickupCenter.centerName || 'N/A',
-          address: {
-            city: pickupCenter.city || '',
-            district: pickupCenter.district || '',
-            province: pickupCenter.province || '',
-            country: pickupCenter.country || '',
-          },
-        } : undefined,
+        pickupInfo: pickupCenter
+          ? {
+              centerName: pickupCenter.centerName || 'N/A',
+              address: {
+                city: pickupCenter.city || '',
+                district: pickupCenter.district || '',
+                province: pickupCenter.province || '',
+                country: pickupCenter.country || '',
+              },
+            }
+          : undefined,
         familyPackTotal: familyPackTotal.toFixed(2),
         additionalItemsTotal: additionalItemsTotal.toFixed(2),
       };
@@ -804,7 +811,6 @@ export class PostinvoiceService {
   //   const deliveryFeeTotal =
   //     invoice.deliveryMethod !== 'Pickup' ? parseNum(invoice.deliveryFee) : 0;
 
-
   //   const serviceFee =
   //     invoice.orderApp !== 'Marketplace' && // Only add service fee if not Marketplace
   //       invoice.additionalItems &&
@@ -818,7 +824,6 @@ export class PostinvoiceService {
   //     additionalItemsTotalAmount +
   //     deliveryFeeTotal +
   //     serviceFee;
-
 
   //   // Add final total
   //   grandTotalBody.push([
@@ -993,7 +998,7 @@ export class PostinvoiceService {
     try {
       const logoUrl = await this.getLogoUrl();
       if (logoUrl) {
-        doc.addImage(logoUrl, 'PNG', 140, 25, 40, 20);
+        doc.addImage(logoUrl, 'PNG', 140, 25, 65, 20);
       }
     } catch (error) {
       console.warn('Could not load logo:', error);
@@ -1015,16 +1020,18 @@ export class PostinvoiceService {
     doc.text('Bill To:', 15, 55);
     doc.setFont('helvetica', 'normal');
 
-    const billingName = `${invoice.billingInfo?.title ? `${invoice.billingInfo.title}.` : ''
-      }${invoice.billingInfo?.fullName || ''}`.trim();
+    const billingName = `${
+      invoice.billingInfo?.title ? `${invoice.billingInfo.title}. ` : ''
+    }${invoice.billingInfo?.fullName || ''}`.trim();
     doc.text(billingName || 'N/A', 15, 60);
 
     let yPosition = 65;
 
     // Add contact information right after the name
     if (invoice.billingInfo.phonecode1 || invoice.billingInfo.phone1) {
-      const phoneNumber = `${invoice.billingInfo.phonecode1 || ''} ${invoice.billingInfo.phone1 || ''
-        }`.trim();
+      const phoneNumber = `${invoice.billingInfo.phonecode1 || ''} ${
+        invoice.billingInfo.phone1 || ''
+      }`.trim();
       if (phoneNumber) {
         doc.text(`Mobile: ${phoneNumber}`, 15, yPosition);
         yPosition += 5;
@@ -1146,7 +1153,7 @@ export class PostinvoiceService {
     doc.text(
       invoice.deliveryMethod === 'Pickup' ? 'Instore Pickup' : 'Home Delivery',
       15,
-      yPosition + 5
+      yPosition + 5,
     );
     yPosition += 10;
 
@@ -1170,19 +1177,36 @@ export class PostinvoiceService {
       doc.text(centerName, centerNameX, yPosition);
 
       // Format address like in your image
-      const addressLines = [
+      doc.setFont('helvetica', 'normal');
+
+      const cityDistrictLine = [
         invoice.pickupInfo.address?.city || '',
         invoice.pickupInfo.address?.district || '',
+      ]
+        .filter((line) => line)
+        .join(', ');
+
+      // Line 2: Province, Country
+      const provinceCountryLine = [
         invoice.pickupInfo.address?.province || '',
         invoice.pickupInfo.address?.country || '',
-      ].filter((line) => line); // Remove empty lines
+      ]
+        .filter((line) => line)
+        .join(', ');
 
-      // Join with comma and space, similar to your image
-      const formattedAddress = addressLines.join(', ');
+      let addressY = yPosition + 5;
 
-      doc.setFont('helvetica', 'normal');
-      doc.text(formattedAddress, 15, yPosition + 5);
-      yPosition += 20;
+      if (cityDistrictLine) {
+        doc.text(cityDistrictLine, 15, addressY);
+        addressY += 5;
+      }
+
+      if (provinceCountryLine) {
+        doc.text(provinceCountryLine, 15, addressY);
+        addressY += 5;
+      }
+
+      yPosition = addressY + 10;
     }
 
     // Add extra space here between Delivery Method and Package Title
@@ -1196,7 +1220,7 @@ export class PostinvoiceService {
     doc.text(
       `Rs. ${formatNumberWithCommas(invoice.grandTotal)}`,
       140,
-      rightYStart + 5
+      rightYStart + 5,
     );
     doc.setFontSize(9);
 
@@ -1210,7 +1234,7 @@ export class PostinvoiceService {
         ? 'Debit/Credit Card'
         : 'Cash On Delivery',
       140,
-      paymentMethodValueY
+      paymentMethodValueY,
     );
 
     // Always aligns with Invoice No: / Delivery Method: on the left
@@ -1234,12 +1258,15 @@ export class PostinvoiceService {
           yPosition = 20;
         }
 
+        const packItemCount = pack.packageDetails?.length || 0;
+        const formattedPackItemCount = String(packItemCount).padStart(2, '0');
+
         doc.setFontSize(9);
         doc.setFont('helvetica', 'bold');
         doc.text(
-          `${pack.name || 'N/A'} (${pack.packageDetails?.length || 0} Items)`,
+          `${pack.name || 'N/A'} (${formattedPackItemCount} Items)`,
           15,
-          yPosition
+          yPosition,
         );
         doc.text(`Rs. ${formatNumberWithCommas(pack.amount)}`, 195, yPosition, {
           align: 'right',
@@ -1280,17 +1307,14 @@ export class PostinvoiceService {
             },
           ],
           ...(pack.packageDetails?.map((detail: any, i: number) => {
-            // Get the unit from backend data
-            const unit = detail.unit || '';
-            // Format quantity with unit (e.g., "1 kg" or "500 g")
-            const qtyWithUnit = unit ? `${detail.qty || '0'} ${unit}` : `${detail.qty || '0'}`;
+            const qtyWithUnit = `${detail.qty || '0'} Kg`;
 
             return [
               `${i + 1}.`,
-              detail.typeName || 'N/A', // Category column
-              detail.productName || 'N/A', // Item Description column
+              detail.typeName || 'N/A',
+              detail.productName || 'N/A',
               `Rs. ${formatNumberWithCommas((detail.price || 0).toFixed(2))}`,
-              qtyWithUnit, // Updated: quantity with unit
+              qtyWithUnit,
               `Rs. ${formatNumberWithCommas(((detail.qty || 0) * (detail.price || 0)).toFixed(2))}`,
             ];
           }) || []),
@@ -1351,9 +1375,9 @@ export class PostinvoiceService {
       // Calculate total amount for additional items
       const additionalItemsTotalAmount = invoice.additionalItems.reduce(
         (total, item) => {
-          return total + parseFloat(item.amount || '0');
+          return total + parseFloat(item.normalPrice || '0');
         },
-        0
+        0,
       );
 
       const hasFamilyPacks =
@@ -1385,7 +1409,7 @@ export class PostinvoiceService {
         `Rs. ${formatNumberWithCommas(additionalItemsTotalAmount.toFixed(2))}`,
         195,
         yPosition,
-        { align: 'right' }
+        { align: 'right' },
       );
       yPosition += 5;
 
@@ -1421,9 +1445,9 @@ export class PostinvoiceService {
           const unitPrice = parseFloat(it.unitPrice || '0');
           const itemDiscount = parseFloat(it.itemDiscount || '0');
           const quantity = parseFloat(
-            it.quantity === '0.00' ? '1' : it.quantity || '1'
+            it.quantity === '0.00' ? '1' : it.quantity || '1',
           );
-          const amount = parseFloat(it.amount);
+          const normalPrice = parseFloat(it.normalPrice);
           const unitPriceDisplay = unitPrice;
 
           // Get unit for additional items from backend data
@@ -1436,7 +1460,7 @@ export class PostinvoiceService {
             it.name || 'N/A',
             `Rs. ${formatNumberWithCommas(unitPriceDisplay.toFixed(2))}`,
             qtyWithUnit, // Updated: quantity with unit
-            `Rs. ${formatNumberWithCommas(amount.toFixed(2))}`,
+            `Rs. ${formatNumberWithCommas(normalPrice.toFixed(2))}`,
           ];
         }),
       ];
@@ -1499,10 +1523,10 @@ export class PostinvoiceService {
         // Calculate total for all packages
         const packagesTotal = invoice.familyPackItems.reduce(
           (total, pack) => total + parseNum(pack.amount),
-          0
+          0,
         );
         grandTotalBody.push([
-          'Total for Packages',
+          'Total Price for Packages',
           `Rs. ${formatNumberWithCommas(packagesTotal.toFixed(2))}`,
         ]);
       } else {
@@ -1519,9 +1543,9 @@ export class PostinvoiceService {
     if (invoice.additionalItems && invoice.additionalItems.length > 0) {
       const additionalItemsTotal = invoice.additionalItems.reduce(
         (total, item) => {
-          return total + parseFloat(item.amount || '0');
+          return total + parseFloat(item.normalPrice || '0');
         },
-        0
+        0,
       );
 
       const hasFamilyPacks =
@@ -1544,23 +1568,29 @@ export class PostinvoiceService {
     }
 
     // Add delivery fee and discount
-    if (invoice.deliveryMethod !== 'Pickup') {
+    const deliveryFeeValue = parseNum(invoice.deliveryFee);
+    if (invoice.deliveryMethod !== 'Pickup' && deliveryFeeValue > 0) {
       grandTotalBody.push([
         'Delivery Fee',
         `Rs. ${formatNumberWithCommas(invoice.deliveryFee)}`,
       ]);
     }
 
-    grandTotalBody.push([
-      'Discount',
-      `Rs. ${formatNumberWithCommas(invoice.discount)}`,
-    ]);
+    const discountValue = parseNum(invoice.discount);
+    if (discountValue > 0) {
+      grandTotalBody.push([
+        'Discount',
+        `Rs. ${formatNumberWithCommas(invoice.discount)}`,
+      ]);
+    }
 
     // Add service fee between Discount and Coupon Discount
-    if (invoice.orderApp !== 'Marketplace' &&
+    if (
+      invoice.orderApp !== 'Marketplace' &&
       invoice.additionalItems &&
       invoice.additionalItems.length > 0 &&
-      (!invoice.familyPackItems || invoice.familyPackItems.length === 0)) {
+      (!invoice.familyPackItems || invoice.familyPackItems.length === 0)
+    ) {
       grandTotalBody.push(['Service Fee', 'Rs. 180.00']);
     }
 
@@ -1577,24 +1607,23 @@ export class PostinvoiceService {
     const familyPackTotal =
       invoice.familyPackItems?.reduce(
         (total, pack) => total + parseNum(pack.amount),
-        0
+        0,
       ) || 0;
 
     const additionalItemsTotalAmount =
       invoice.additionalItems?.reduce(
         (total, item) => total + parseFloat(item.amount || '0'),
-        0
+        0,
       ) || 0;
 
     const deliveryFeeTotal =
       invoice.deliveryMethod !== 'Pickup' ? parseNum(invoice.deliveryFee) : 0;
 
-
     const serviceFee =
       invoice.orderApp !== 'Marketplace' && // Only add service fee if not Marketplace
-        invoice.additionalItems &&
-        invoice.additionalItems.length > 0 &&
-        (!invoice.familyPackItems || invoice.familyPackItems.length === 0)
+      invoice.additionalItems &&
+      invoice.additionalItems.length > 0 &&
+      (!invoice.familyPackItems || invoice.familyPackItems.length === 0)
         ? 180
         : 0;
 
@@ -1602,14 +1631,14 @@ export class PostinvoiceService {
       familyPackTotal +
       additionalItemsTotalAmount +
       deliveryFeeTotal +
-      serviceFee;
-
+      serviceFee -
+      couponValue;
 
     // Add final total
     grandTotalBody.push([
       {
         content: 'Grand Total',
-        styles: { fontStyle: 'bold', textColor: [0, 0, 0] }
+        styles: { fontStyle: 'bold', textColor: [0, 0, 0] },
       },
       {
         content: `Rs. ${formatNumberWithCommas(finalGrandTotal.toFixed(2))}`,
@@ -1648,7 +1677,7 @@ export class PostinvoiceService {
             data.cell.x,
             data.cell.y + data.cell.height,
             data.cell.x + data.cell.width,
-            data.cell.y + data.cell.height
+            data.cell.y + data.cell.height,
           );
         }
       },
@@ -1703,7 +1732,7 @@ export class PostinvoiceService {
       'WE WILL SEND YOU MORE OFFERS , LOWEST PRICED VEGGIES FROM US.',
       105,
       yPosition,
-      { align: 'center' }
+      { align: 'center' },
     );
 
     yPosition += 15;
@@ -1713,7 +1742,7 @@ export class PostinvoiceService {
       '- THIS IS A COMPUTER GENERATED INVOICE, THUS NO SIGNATURE REQUIRED -',
       105,
       yPosition,
-      { align: 'center' }
+      { align: 'center' },
     );
 
     // Save the PDF

@@ -623,6 +623,12 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
     if (item.qty < 0) {
       item.qty = 0;
     }
+
+    // Ensure max 2 decimal places, even from paste or spinner arrows
+    if (item.qty !== null && item.qty !== undefined) {
+      item.qty = Math.round(item.qty * 100) / 100;
+    }
+
     this.calculatePrice(item);
   }
 
@@ -699,12 +705,41 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
     this.closeAddNewItemPopUp(); // Close the popup
   }
 
-  filterMarketItemByTypeId(typeId:number): MarketplaceItem[] {
+  filterMarketItemByTypeId(typeId: number): MarketplaceItem[] {
     const filteredItems = this.marketplaceItems.filter(item => item.productTypeId === typeId);
-    console.log('Filtered Items for typeId', typeId, ':', filteredItems);
-    return filteredItems;
+
+    const preferred = filteredItems
+      .filter(item => item.isPreferred && !item.isExcluded)
+      .sort((a, b) => a.displayName.localeCompare(b.displayName));
+
+    const remaining = filteredItems
+      .filter(item => !item.isPreferred && !item.isExcluded)
+      .sort((a, b) => a.displayName.localeCompare(b.displayName));
+
+    const excluded = filteredItems
+      .filter(item => item.isExcluded)
+      .sort((a, b) => a.displayName.localeCompare(b.displayName));
+
+    return [...preferred, ...remaining, ...excluded];
   }
 
+  restrictDecimals(item: any, event: Event) {
+    const input = event.target as HTMLInputElement;
+    let value = input.value;
+
+    const regex = /^\d*\.?\d{0,2}$/;
+
+    if (!regex.test(value)) {
+      const parts = value.split('.');
+    if (parts.length > 1) {
+      value = parts[0] + '.' + parts[1].slice(0, 2);
+    }
+    
+      input.value = value;
+    }
+
+    item.qty = value === '' ? null : Number(value);
+  }
 
 }
 

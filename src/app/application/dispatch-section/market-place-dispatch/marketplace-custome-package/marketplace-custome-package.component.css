@@ -238,3 +238,36 @@
   background-color: #2d354d !important;
   color: #B1B1B1 !important;
 }
+
+::ng-deep .calendar-popup-small {
+  width: 240px !important;
+  min-width: 240px !important;
+}
+
+::ng-deep .calendar-popup-small .p-datepicker-calendar {
+  font-size: 0.85rem !important;
+  width: 100% !important;
+  border-collapse: collapse !important;
+}
+
+::ng-deep .calendar-popup-small .p-datepicker-calendar th {
+  font-size: 0.75rem !important;
+  padding: 0.15rem !important;
+  text-align: center !important;
+  font-weight: normal !important;
+}
+
+::ng-deep .calendar-popup-small .p-datepicker-calendar td {
+  padding: 0.1rem !important;
+  text-align: center !important;
+}
+
+::ng-deep .calendar-popup-small .p-datepicker-calendar td span {
+  width: 1.6rem !important;
+  height: 1.6rem !important;
+  line-height: 1.6rem !important;
+  font-size: 0.85rem !important;
+  display: inline-block !important;
+  text-align: center !important;
+  margin: 0 auto !important;
+}

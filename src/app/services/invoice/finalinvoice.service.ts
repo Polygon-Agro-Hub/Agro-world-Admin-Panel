@@ -1018,7 +1018,7 @@ export class FinalinvoiceService {
     try {
       const logoUrl = await this.getLogoUrl();
       if (logoUrl) {
-        doc.addImage(logoUrl, 'PNG', 140, 25, 40, 20);
+        doc.addImage(logoUrl, 'PNG', 140, 25, 65, 20);
       }
     } catch (error) {
       console.warn('Could not load logo:', error);
@@ -1040,7 +1040,7 @@ export class FinalinvoiceService {
     doc.text('Bill To:', 15, 55);
     doc.setFont('helvetica', 'normal');
 
-    const billingName = `${invoice.billingInfo?.title ? `${invoice.billingInfo.title}.` : ''
+    const billingName = `${invoice.billingInfo?.title ? `${invoice.billingInfo.title}. ` : ''
       }${invoice.billingInfo?.fullName || ''}`.trim();
     doc.text(billingName || 'N/A', 15, 60);
 
@@ -1164,6 +1164,10 @@ export class FinalinvoiceService {
     // Add small space above Invoice No
     yPosition += 3;
 
+    const padZero = (value: number): string => {
+  return value < 10 ? `0${value}` : `${value}`;
+};
+
     // Invoice Details
     const invoiceNoY = yPosition;
     doc.setFont('helvetica', 'bold');
@@ -1193,31 +1197,41 @@ export class FinalinvoiceService {
       yPosition += 5;
 
       doc.setFont('helvetica', 'bold');
-      const pickupLabel = 'Centre:';
-      doc.text(pickupLabel, 15, yPosition);
+const pickupLabel = 'Centre:';
+doc.text(pickupLabel, 15, yPosition);
 
-      // Calculate position for center name with small space
-      const centerName = invoice.pickupInfo.centerName || '';
-      const spaceWidth = 2; // Small space in mm
-      const centerNameX = 15 + doc.getTextWidth(pickupLabel) + spaceWidth;
+// Calculate position for center name with small space
+const centerName = invoice.pickupInfo.centerName || '';
+const spaceWidth = 2; // Small space in mm
+const centerNameX = 15 + doc.getTextWidth(pickupLabel) + spaceWidth;
 
-      doc.setFont('helvetica', 'bold');
-      doc.text(centerName, centerNameX, yPosition);
+doc.setFont('helvetica', 'bold');
+doc.text(centerName, centerNameX, yPosition);
 
-      // Format address like in your image
-      const addressLines = [
-        invoice.pickupInfo.address?.city || '',
-        invoice.pickupInfo.address?.district || '',
-        invoice.pickupInfo.address?.province || '',
-        invoice.pickupInfo.address?.country || '',
-      ].filter((line) => line); // Remove empty lines
+// Build two separate address lines: City/District, then Province/Country
+const cityDistrictLine = [
+  invoice.pickupInfo.address?.city || '',
+  invoice.pickupInfo.address?.district || '',
+].filter((part) => part).join(', ');
 
-      // Join with comma and space, similar to your image
-      const formattedAddress = addressLines.join(', ');
+const provinceCountryLine = [
+  invoice.pickupInfo.address?.province || '',
+  invoice.pickupInfo.address?.country || '',
+].filter((part) => part).join(', ');
 
-      doc.setFont('helvetica', 'normal');
-      doc.text(formattedAddress, 15, yPosition + 5);
-      yPosition += 20;
+doc.setFont('helvetica', 'normal');
+
+let addressY = yPosition + 5;
+if (cityDistrictLine) {
+  doc.text(cityDistrictLine, 15, addressY);
+  addressY += 5;
+}
+if (provinceCountryLine) {
+  doc.text(provinceCountryLine, 15, addressY);
+  addressY += 5;
+}
+
+yPosition = addressY + 10;
     }
 
     // Add extra space here between Delivery Method and Package Title
@@ -1270,14 +1284,14 @@ export class FinalinvoiceService {
         }
 
         doc.setFontSize(9);
-        doc.setFont('helvetica', 'bold');
-        const totalItemCount = pack.packageDetails?.reduce((sum: number, detail: any) => sum + (detail.qty || 0), 0) || 0;
+doc.setFont('helvetica', 'bold');
+const totalItemCount = pack.packageDetails?.reduce((sum: number, detail: any) => sum + (detail.qty || 0), 0) || 0;
 
-        doc.text(
-          `${pack.name || 'N/A'} (${totalItemCount} Items)`,
-          15,
-          yPosition
-        );
+doc.text(
+  `${pack.name || 'N/A'} (${padZero(totalItemCount)} Items)`,
+  15,
+  yPosition
+);
         doc.text(`Rs. ${formatNumberWithCommas(pack.amount)}`, 195, yPosition, {
           align: 'right',
         });
@@ -1365,22 +1379,24 @@ export class FinalinvoiceService {
       const hasFamilyPacks =
         invoice.familyPackItems && invoice.familyPackItems.length > 0;
 
-      // MODIFIED: Determine title based on orderApp
-      let addTitle;
-      if (invoice.orderApp === 'Marketplace') {
-        addTitle = hasFamilyPacks
-          ? ` Additional Items  (${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
-          : ` Your Selected Items(${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
+        
 
-      } else if (invoice.orderApp === 'Dash') {
-        addTitle = hasFamilyPacks
-          ? ` Additional Items  (${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
-          : ` Custom Items (${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
-      } else {
-        addTitle = hasFamilyPacks
-          ? ` Custom Items (${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
-          : ` Custom Items (${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
-      }
+      // MODIFIED: Determine title based on orderApp
+let addTitle;
+if (invoice.orderApp === 'Marketplace') {
+  addTitle = hasFamilyPacks
+    ? ` Additional Items  (${padZero(invoice.additionalItems.length)} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
+    : ` Your Selected Items (${padZero(invoice.additionalItems.length)} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
+
+} else if (invoice.orderApp === 'Dash') {
+  addTitle = hasFamilyPacks
+    ? ` Additional Items  (${padZero(invoice.additionalItems.length)} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
+    : ` Custom Items (${padZero(invoice.additionalItems.length)} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
+} else {
+  addTitle = hasFamilyPacks
+    ? ` Custom Items (${padZero(invoice.additionalItems.length)} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
+    : ` Custom Items (${padZero(invoice.additionalItems.length)} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
+}
 
       doc.setFontSize(9);
       doc.setFont('helvetica', 'bold');
@@ -1501,7 +1517,7 @@ export class FinalinvoiceService {
           0
         );
         grandTotalBody.push([
-          'Total for Packages',
+          'Total Price for Packages',
           `Rs. ${formatNumberWithCommas(packagesTotal.toFixed(2))}`,
         ]);
       } else {
@@ -1543,12 +1559,12 @@ export class FinalinvoiceService {
     }
 
     // Add delivery fee and discount
-    if (invoice.deliveryMethod !== 'Pickup') {
-      grandTotalBody.push([
-        'Delivery Fee',
-        `Rs. ${formatNumberWithCommas(invoice.deliveryFee)}`,
-      ]);
-    }
+if (invoice.deliveryMethod !== 'Pickup' && parseNum(invoice.deliveryFee) > 0) {
+  grandTotalBody.push([
+    'Delivery Fee',
+    `Rs. ${formatNumberWithCommas(invoice.deliveryFee)}`,
+  ]);
+}
 
     // Add service fee between Discount and Coupon Discount
     if (invoice.orderApp !== 'Marketplace' &&
@@ -1558,10 +1574,12 @@ export class FinalinvoiceService {
       grandTotalBody.push(['Service Fee', 'Rs. 180.00']);
     }
 
-    grandTotalBody.push([
-      'Discount',
-      `Rs. ${formatNumberWithCommas(invoice.discount)}`,
-    ]);
+    if (parseNum(invoice.discount) > 0) {
+  grandTotalBody.push([
+    'Discount',
+    `Rs. ${formatNumberWithCommas(invoice.discount)}`,
+  ]);
+}
 
     // Add coupon discount only if it has a value greater than 0
     const couponValue = parseNum(invoice.billingInfo.couponValue);

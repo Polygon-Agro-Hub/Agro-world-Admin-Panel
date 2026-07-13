@@ -33,6 +33,7 @@ export class DispatchAdditionalItemsComponent implements OnInit {
   isShouldAllblock:boolean = true;
   isCompleted: boolean = false;
   isCustom: string = '';
+  isAnyChecked: boolean = false;
 
 
   ngOnInit(): void {
@@ -64,6 +65,30 @@ export class DispatchAdditionalItemsComponent implements OnInit {
       }
     )
   }
+
+onBack() {
+  if (this.isCompleted) {
+      this.location.back();
+      return;
+    }
+
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.location.back();
+      }
+    });
+}
 
   onCancel() {
     if (this.isCompleted) {
@@ -166,6 +191,8 @@ export class DispatchAdditionalItemsComponent implements OnInit {
     const allPacked = this.packageArr.every(i => i.isPacked === 1);
     this.isAllPacked = allPacked;
 
+    this.isAnyChecked = this.packageArr.some(i => i.isPacked === 1);
+
     if (!allPacked) {
       this.validationFailedMessage = "Unchecked items remain. Saving now keeps the order in 'Opened' Status.";
       this.validationSuccessMessage = '';
@@ -174,6 +201,14 @@ export class DispatchAdditionalItemsComponent implements OnInit {
       this.validationFailedMessage = '';
     }
     
+  }
+
+  formatQty(qty: number): number {
+    if (qty === null || qty === undefined) {
+      return 0;
+    }
+
+    return parseFloat(qty.toString());
   }
 
 }

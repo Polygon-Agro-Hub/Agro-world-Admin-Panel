@@ -66,7 +66,7 @@ export class ViewRetailOrdersComponent implements OnInit {
     { label: 'Collected', value: 'Collected' },
     { label: 'Return', value: 'Return' },
     { label: 'Return Received', value: 'Return Received' },
-  ];
+  ].sort((a, b) => a.label.localeCompare(b.label));
 
   constructor(
     private router: Router,

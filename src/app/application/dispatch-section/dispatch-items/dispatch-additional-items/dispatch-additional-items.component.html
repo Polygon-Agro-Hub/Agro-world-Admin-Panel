@@ -1,5 +1,5 @@
 <div>
-    <button (click)="onCancel()" class=" text-textLight dark:text-textDark">
+    <button (click)="onBack()" class=" text-textLight dark:text-textDark">
         <i class="fa-solid fa-arrow-left"></i>
         Back
     </button>
@@ -18,7 +18,7 @@
                 </div>
 
                 <div class="">
-                    <h2 class="  text-[#212121] dark:text-white font-bold">{{isCustom === '1' ?  'Custom Package' : isCustom === '0' ? 'Custom Items' : 'Additional Items'}} : Rs.{{orderDetails ? (orderDetails.additionalPrice | number:'1.2-2') : '0.00'}}</h2>
+                    <h2 class="  text-[#212121] dark:text-white font-bold">{{isCustom === '1' ?  'Custom Package' : isCustom === '0' ? 'Custom Items' : 'Additional Items'}} : Rs. {{orderDetails ? (orderDetails.additionalPrice | number:'1.2-2') : '0.00'}}</h2>
                 </div>
             </div>
 
@@ -54,7 +54,7 @@
                             </td>
 
                             <td class="px-4 text-center py-2 whitespace-nowrap text-[#212121] dark:text-gray-300 ">
-                                {{ item.qty }}
+                                 {{ formatQty(item.qty) }}
                             </td>
 
                             <td
@@ -98,8 +98,9 @@
                     class="px-4 py-2 border border-gray-300 dark:border-[#74788D] rounded-md text-sm font-medium text-[#D3D3D3] bg-[#74788D] dark:text-white hover:bg-[#74788D] dark:hover:bg-[#74788D]">
                     Cancel
                 </button>
-                <button (click)="saveCheckedItems()" *ngIf="!isShouldAllblock && !isCompleted && (permissionService.hasPermission('Dispatch additional packing') || tokenService.getUserDetails().role === '1')"
-                    class="px-4 py-2 bg-[#3980C0] border border-transparent rounded-md text-sm font-medium text-[#FFFFFF] hover:bg-[#3980C0]">
+                <button (click)="saveCheckedItems()" [disabled]="!isAnyChecked" *ngIf="!isShouldAllblock && !isCompleted && (permissionService.hasPermission('Dispatch additional packing') || tokenService.getUserDetails().role === '1')"
+                    [ngClass]="isAnyChecked ? 'bg-[#3980C0] hover:bg-[#3980C0] cursor-pointer' : 'bg-[#C1C1C1] cursor-not-allowed'"
+                    class="px-4 py-2 border border-transparent rounded-md text-sm font-medium text-[#FFFFFF]">
                     Save
                 </button>
             </div>

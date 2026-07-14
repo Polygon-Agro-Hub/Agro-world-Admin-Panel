@@ -36,6 +36,11 @@ export class ViewDriverCategoriesComponent implements OnInit {
     this.loadDriverCategories();
   }
 
+  // Computed property to check if data exists
+  get hasData(): boolean {
+    return this.driverCategories.length > 0;
+  }
+
   loadDriverCategories(): void {
     this.isLoading = true;
     this.collectionOfficerService.getAllDriveCategories().subscribe(

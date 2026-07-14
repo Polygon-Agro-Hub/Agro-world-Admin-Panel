@@ -9,7 +9,7 @@ interface DriverCategory {
   id: number;
   catName: string;
   payout: number;
-  updatedBy: string;
+  userName: string;
   updatedAt: string;
 }
 

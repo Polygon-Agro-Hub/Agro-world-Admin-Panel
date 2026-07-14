@@ -7,8 +7,8 @@ import { CollectionOfficerService } from '../../../../services/collection-office
 
 interface DriverCategory {
   id: number;
-  catName: string;  // Changed from categoryName to match backend
-  payout: number;   // Changed from payoutPerOrder to match backend
+  catName: string;
+  payout: number;
   updatedBy: string;
   updatedAt: string;
 }
@@ -49,7 +49,6 @@ export class ViewDriverCategoriesComponent implements OnInit {
       (error) => {
         console.error('Error loading driver categories:', error);
         this.isLoading = false;
-        // Optional: Show error message to user
       }
     );
   }
@@ -59,7 +58,7 @@ export class ViewDriverCategoriesComponent implements OnInit {
   }
 
   onSearch(): void {
-    const term = this.searchCategory.trim().toLowerCase();
+    const term = this.searchCategory.trim();
     if (!term) {
       this.driverCategories = [...this.driverCategoriesAll];
       return;
@@ -78,6 +77,17 @@ export class ViewDriverCategoriesComponent implements OnInit {
         this.isLoading = false;
       }
     );
+  }
+
+  // Clear search method
+  clearSearch(): void {
+    this.searchCategory = '';
+    this.driverCategories = [...this.driverCategoriesAll];
+    // Optional: Focus the input after clearing
+    const input = document.querySelector('input[placeholder="Search by Category Name"]') as HTMLInputElement;
+    if (input) {
+      input.focus();
+    }
   }
 
   addNewCategory(): void {

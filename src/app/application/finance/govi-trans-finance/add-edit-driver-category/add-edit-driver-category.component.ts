@@ -113,18 +113,34 @@ export class AddEditDriverCategoryComponent implements OnInit {
   }
 
   onNameInput(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const cursorPos = input.selectionStart;
-    let value = input.value;
+  const input = event.target as HTMLInputElement;
+  const cursorPos = input.selectionStart ?? 0;
+  let value = input.value;
 
-    if (value.length > 0) {
-      value = value.charAt(0).toUpperCase() + value.slice(1);
-    }
+  const leadingSpaces = value.length - value.trimStart().length;
 
-    this.form.get('driverCategoryName')?.setValue(value);
+  // Strip leading spaces
+  value = value.trimStart();
 
-    setTimeout(() => input.setSelectionRange(cursorPos, cursorPos));
+  // Capitalize first character
+  if (value.length > 0) {
+    value = value.charAt(0).toUpperCase() + value.slice(1);
   }
+
+  this.form.get('driverCategoryName')?.setValue(value);
+
+  // Adjust cursor position for removed leading spaces
+  const newCursorPos = Math.max(cursorPos - leadingSpaces, 0);
+
+  setTimeout(() => input.setSelectionRange(newCursorPos, newCursorPos));
+}
+
+onNameKeydown(event: KeyboardEvent): void {
+  const input = event.target as HTMLInputElement;
+  if (event.key === ' ' && input.selectionStart === 0 && input.value.length === 0) {
+    event.preventDefault();
+  }
+}
 
   get isActionDisabled(): boolean {
     if (!this.form) {

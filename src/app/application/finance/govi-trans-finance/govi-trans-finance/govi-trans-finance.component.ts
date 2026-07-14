@@ -41,4 +41,9 @@ export class GoviTransFinanceComponent {
     ]);
   }
 
+  addNewCategory(): void {
+    this.router.navigate([
+      '/finance/action/govi-trans-finance/add-driver-category',
+    ]);
+  }
 }

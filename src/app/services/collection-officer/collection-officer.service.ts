@@ -136,4 +136,18 @@ export class CollectionOfficerService {
       { headers }
     );
   }
+
+  getAllDriveCategories(search: string = ''): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+  });
+
+  let url = `${this.apiUrl}auth/driver/get-all-drive-categories`;
+
+  if (search) {
+    url += `?search=${search}`;
+  }
+
+  return this.http.get<any>(url, { headers });
+}
 }

@@ -1,15 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
+import { CollectionOfficerService } from '../../../../services/collection-officer/collection-officer.service';
 
 interface DriverCategory {
   id: number;
-  categoryName: string;
-  payoutPerOrder: number;
-  lastModifiedBy: string;
-  lastEditOn: string;
+  catName: string;
+  payout: number;
+  userName: string;
+  updatedAt: string;
 }
 
 @Component({
@@ -19,44 +20,79 @@ interface DriverCategory {
   templateUrl: './view-driver-categories.component.html',
   styleUrl: './view-driver-categories.component.css',
 })
-export class ViewDriverCategoriesComponent {
+export class ViewDriverCategoriesComponent implements OnInit {
   isLoading = false;
   searchCategory = '';
 
-  driverCategoriesAll: DriverCategory[] = [
-    {
-      id: 1,
-      categoryName: 'Random Driver',
-      payoutPerOrder: 300.0,
-      lastModifiedBy: 'Hashinika',
-      lastEditOn: 'July 10, 2026',
-    },
-    {
-      id: 2,
-      categoryName: 'Regular Driver',
-      payoutPerOrder: 250.0,
-      lastModifiedBy: 'Hashinika',
-      lastEditOn: 'July 10, 2026',
-    },
-  ];
+  driverCategoriesAll: DriverCategory[] = [];
+  driverCategories: DriverCategory[] = [];
 
-  driverCategories: DriverCategory[] = [...this.driverCategoriesAll];
+  constructor(
+    private router: Router,
+    private collectionOfficerService: CollectionOfficerService
+  ) {}
 
-  constructor(private router: Router) {}
+  ngOnInit(): void {
+    this.loadDriverCategories();
+  }
+
+  // Computed property to check if data exists
+  get hasData(): boolean {
+    return this.driverCategories.length > 0;
+  }
+
+  loadDriverCategories(): void {
+    this.isLoading = true;
+    this.collectionOfficerService.getAllDriveCategories().subscribe(
+      (response) => {
+        if (response.status && response.result) {
+          this.driverCategoriesAll = response.result;
+          this.driverCategories = [...this.driverCategoriesAll];
+        }
+        this.isLoading = false;
+      },
+      (error) => {
+        console.error('Error loading driver categories:', error);
+        this.isLoading = false;
+      }
+    );
+  }
 
   back(): void {
     this.router.navigate(['/finance/action/govi-trans-finance']);
   }
 
   onSearch(): void {
-    const term = this.searchCategory.trim().toLowerCase();
+    const term = this.searchCategory.trim();
     if (!term) {
       this.driverCategories = [...this.driverCategoriesAll];
       return;
     }
-    this.driverCategories = this.driverCategoriesAll.filter((c) =>
-      c.categoryName.toLowerCase().includes(term),
+    
+    this.isLoading = true;
+    this.collectionOfficerService.getAllDriveCategories(term).subscribe(
+      (response) => {
+        if (response.status && response.result) {
+          this.driverCategories = response.result;
+        }
+        this.isLoading = false;
+      },
+      (error) => {
+        console.error('Error searching driver categories:', error);
+        this.isLoading = false;
+      }
     );
+  }
+
+  // Clear search method
+  clearSearch(): void {
+    this.searchCategory = '';
+    this.driverCategories = [...this.driverCategoriesAll];
+    // Optional: Focus the input after clearing
+    const input = document.querySelector('input[placeholder="Search by Category Name"]') as HTMLInputElement;
+    if (input) {
+      input.focus();
+    }
   }
 
   addNewCategory(): void {

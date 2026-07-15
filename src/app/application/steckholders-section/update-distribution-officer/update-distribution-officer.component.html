@@ -269,6 +269,41 @@
           </div>
         </div>
 
+        <div *ngIf="personalData.jobRole === 'Driver'">
+          
+        </div>
+
+        <div *ngIf="personalData.jobRole === 'Driver'">
+          <label
+            for="driverCatId"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >
+            Driver Category *
+          </label>
+          <p-dropdown
+            id="driverCatId"
+            [(ngModel)]="personalData.driverCatId"
+            [options]="categoryOptions"
+            optionLabel="label"
+            optionValue="value"
+            [filter]="true"
+            filterBy="label"
+            [showClear]="false"
+            placeholder="Select Category"
+            (onBlur)="onBlur('driverCatId')"
+            styleClass="w-full mt-1"
+            panelStyleClass="custom-dropdown-panel"
+            class="mt-1 block w-full p-dropdown-custom"
+          >
+          </p-dropdown>
+          <span
+            *ngIf="isFieldInvalid('driverCatId')"
+            class="text-red-600 text-sm"
+          >
+            Driver Category is a required field
+          </span>
+        </div>
+
         <div>
           <div
             *ngIf="

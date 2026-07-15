@@ -20,7 +20,8 @@
             <label class="block mb-2 text-sm font-medium text-[#534E4E] dark:text-textDark">
                 Driver Category Name *
             </label>
-            <input type="text" formControlName="driverCategoryName" (input)="onNameInput($event)"
+            <input type="text" formControlName="driverCategoryName" (input)="onNameInput($event)" 
+    (keydown)="onNameKeydown($event)"
                 placeholder="Enter driver category name" class="w-full border rounded-lg px-4 py-2.5 bg-transparent text-black dark:text-white
                border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-[#3980C0]"
                 [class.border-red-500]="

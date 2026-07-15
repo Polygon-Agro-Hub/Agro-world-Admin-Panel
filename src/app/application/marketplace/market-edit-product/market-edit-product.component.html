@@ -48,17 +48,18 @@
       </div>
 
       <div class="mb-6">
-        <label class="text-[#534E4E] dark:text-textDark">Product Type *</label>
-        <p-dropdown id="productType" name="productType" [(ngModel)]="productObj.productTypeId" required
-          [options]="productTypeOptions" optionLabel="label" optionValue="value" placeholder="--Select Product Type--"
-          #productTypeField="ngModel"
-          [styleClass]="'w-full border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'">
-        </p-dropdown>
-        <div *ngIf="productTypeField.invalid && (productTypeField.dirty || productTypeField.touched)"
-          class="text-red-500 text-sm mt-1">
-          Product Type is required.
-        </div>
-      </div>
+    <label class="text-[#534E4E] dark:text-textDark">Product Type *</label>
+    <p-dropdown id="productType" name="productType" [(ngModel)]="productObj.productTypeId" required
+      [options]="productTypeOptions" optionLabel="label" optionValue="value" placeholder="--Select Product Type--"
+      #productTypeField="ngModel"
+      [readonly]="true"
+      [styleClass]="'readonly-dropdown w-full border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'">
+    </p-dropdown>
+    <div *ngIf="productTypeField.invalid && (productTypeField.dirty || productTypeField.touched)"
+      class="text-red-500 text-sm mt-1">
+      Product Type is required.
+    </div>
+</div>
 
       <div class="mb-6">
         <label for="selectId" class="text-[#534E4E] dark:text-textDark">

@@ -848,6 +848,14 @@ export const routes: Routes = [
                   {
                     path: 'edit-driver-category/:id',
                     component: AddEditDriverCategoryComponent,
+                  },
+                  {
+                    path: 'view-transactions',
+                    component: GoviTransViewTransactionsComponent,
+                  },
+                  {
+                    path: 'view-transactions/amount/:id',
+                    component: TransactionAmountComponent,
                   }
                 ]
               }

@@ -199,7 +199,7 @@ export class GoviTransViewTransactionsComponent implements OnInit {
 
   navigateToAmount(id: number) {
     this.router.navigate([
-      `/finance/action/finance-govi-trans/transactions/amount/${id}`,
+      `/finance/action/govi-trans-finance/view-transactions/amount/${id}`,
     ]);
   }
 

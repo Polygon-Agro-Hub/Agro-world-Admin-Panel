@@ -41,4 +41,10 @@ export class GoviTransFinanceComponent {
     ]);
   }
 
+  ViewTransactions(): void {
+    this.router.navigate([
+      '/finance/action/govi-trans-finance/view-transactions'
+    ]);
+  }
+
 }

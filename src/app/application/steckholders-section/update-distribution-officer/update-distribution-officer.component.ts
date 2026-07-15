@@ -124,6 +124,7 @@ export class UpdateDistributionOfficerComponent {
   bankOptions: any[] = [];
   branchOptions: any[] = [];
   districtOptions: any[] = [];
+  categoryOptions: any[] = [];
   invalidFields: Set<string> = new Set();
   itemsPerPage: number = 10;
   selectCenterStatus: string = '';
@@ -299,6 +300,7 @@ export class UpdateDistributionOfficerComponent {
         this.personalData.languages = officerData.languages || '';
         this.personalData.companyId = officerData.companyId || '';
         this.personalData.centerId = officerData.distributedCenterId || '';
+        this.personalData.driverCatId = officerData.driverCatId || null;
         this.personalData.bankName = officerData.bankName || '';
         this.personalData.branchName = officerData.branchName || '';
         this.personalData.accHolderName = officerData.accHolderName || '';
@@ -1485,6 +1487,13 @@ export class UpdateDistributionOfficerComponent {
       }
 
       if (
+  this.personalData.jobRole === 'Driver' &&
+  !this.personalData.driverCatId
+) {
+  missingFields.push('Driver Category is Required');
+}
+
+      if (
         (this.personalData.jobRole === 'Distribution Officer' ||
           this.personalData.jobRole === 'Driver') &&
         !this.personalData.irmId
@@ -1667,15 +1676,20 @@ export class UpdateDistributionOfficerComponent {
   }
 
   getAllCompanies() {
-    this.distributionOfficerServ.getAllCompanyList().subscribe((res) => {
-      this.CompanyData = res;
+  this.distributionOfficerServ.getAllCompanyList().subscribe((res) => {
+    this.CompanyData = res.companies;
 
-      this.companyOptions = this.CompanyData.map((company) => ({
-        label: company.companyNameEnglish,
-        value: company.id,
-      }));
-    });
-  }
+    this.companyOptions = this.CompanyData.map((company) => ({
+      label: company.companyNameEnglish,
+      value: company.id,
+    }));
+
+    this.categoryOptions = res.driverCategories.map((cat: any) => ({
+      label: cat.slvCatName,
+      value: cat.id,
+    }));
+  });
+}
 
   getAllCollectionCetnter() {
     this.distributionOfficerServ
@@ -1853,6 +1867,13 @@ export class UpdateDistributionOfficerComponent {
     if (!this.personalData.jobRole) {
       missingFields.push('Job Role is Required');
     }
+
+    if (
+  this.personalData.jobRole === 'Driver' &&
+  !this.personalData.driverCatId
+) {
+  missingFields.push('Driver Category is Required');
+}
 
     if (
       this.personalData.jobRole === 'Collection Officer' &&
@@ -2625,6 +2646,7 @@ class Personal {
   empId!: any;
   centerId!: number | null;
   irmId!: number | null;
+  driverCatId!: number | null;
   empType!: string;
   firstNameEnglish!: string;
   firstNameSinhala!: string;

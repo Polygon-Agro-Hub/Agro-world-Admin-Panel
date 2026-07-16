@@ -107,10 +107,11 @@
                   <ng-template pTemplate="item" let-option>
                     <div class="flex align-items-center gap-2" [ngClass]="{'cursor-not-allowed': option.isExcluded}">
                       <span>
-                        <i *ngIf="option.isPreferred" class="fa-solid fa-heart text-green-600 mx-2"></i>
-                        <i *ngIf="!option.isPreferred && option.isExcluded"
+                        <i *ngIf="option.isDisable" class="fa-solid fa-triangle-exclamation text-orange-400 mx-2"></i>
+                        <i *ngIf="!option.isDisable && option.isPreferred" class="fa-solid fa-heart text-green-600 mx-2"></i>
+                        <i *ngIf="!option.isDisable && !option.isPreferred && option.isExcluded"
                           class="fa-solid fa-ban text-red-700 mx-2"></i>
-                        <i *ngIf="!option.isPreferred && !option.isExcluded"
+                        <i *ngIf="!option.isDisable && !option.isPreferred && !option.isExcluded"
                           class="fa-solid fa-check text-blue-600 mx-2"></i>
                         {{ option.displayName }}
                       </span>
@@ -122,10 +123,11 @@
                     <div class="flex align-items-center gap-2" *ngIf="option">
                       <span>
                         <!-- Check if option exists and has properties -->
-                        <i *ngIf="option?.isPreferred" class="fa-solid fa-heart text-green-600 mx-2"></i>
-                        <i *ngIf="!option?.isPreferred && option?.isExcluded"
+                        <i *ngIf="option?.isDisable" class="fa-solid fa-triangle-exclamation text-orange-400 mx-2"></i>
+                        <i *ngIf="!option?.isDisable && option?.isPreferred" class="fa-solid fa-heart text-green-600 mx-2"></i>
+                        <i *ngIf="!option?.isDisable && !option?.isPreferred && option?.isExcluded"
                           class="fa-solid fa-ban text-red-700 mx-2"></i>
-                        <i *ngIf="!option?.isPreferred && !option?.isExcluded"
+                        <i *ngIf="!option?.isDisable && !option?.isPreferred && !option?.isExcluded"
                           class="fa-solid fa-check text-blue-600 mx-2"></i>
                         {{ option?.displayName }}
                       </span>

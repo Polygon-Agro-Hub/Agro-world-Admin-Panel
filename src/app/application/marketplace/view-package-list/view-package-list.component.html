@@ -13,14 +13,14 @@
   Add New
 </button>
 
-<div
-  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
-  <div class="pt-5 pr-12 pl-12 pb-5 w-100 min-w-[1400px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+<div class="w-full">
+  <div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex justify-between items-center align-middle mb-8">
       <div class="flex items-center">
         <h2 class="text-2xl font-normal text-[#292929] dark:text-textDark">
           All Packages ({{
-          this.filteredPackages.length < 9 ? "0" + this.filteredPackages.length : this.filteredPackages.length }}) </h2>
+          this.filteredPackages.length < 9 ? "0" + this.filteredPackages.length : this.filteredPackages.length }})
+        </h2>
       </div>
       <div class="flex items-center gap-4 h-8">
         <div class="flex items-center gap-1 h-8 relative">
@@ -92,50 +92,30 @@
     </div>
 
     <div *ngIf="hasFilteredData">
-
-      <div *ngIf="hasData">
-        <table class="min-w-full divide-y divide-gray-200 table-auto">
+      <div *ngIf="hasData"
+        class="overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
+        <table class="min-w-[1400px] divide-y divide-gray-200 table-auto">
           <thead>
             <tr>
-              <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left">
-                No
-              </th>
-              <th class="px-6 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left">
-                Package Name
-              </th>
-              <th class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left">
-                Total Price (Rs.)
-              </th>
-              <th class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left">
-                Package Type
-              </th>
-              <th class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left">
-                Start Date
-              </th>
-              <th class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left">
-                End Date
-              </th>
-              <th class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center">
-                Status
-              </th>
-              <th class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left">
-                Last Defined
-              </th>
-              <th
-                *ngIf="permissionService.hasPermission('Define packages') || tokenService.getUserDetails().role === '1'"
-                class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center">
+              <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">No</th>
+              <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">Package Name</th>
+              <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">Total Price (Rs.)</th>
+              <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">Package Type</th>
+              <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">Start Date</th>
+              <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">End Date</th>
+              <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center whitespace-nowrap">Status</th>
+              <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">Last Defined</th>
+              <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center whitespace-nowrap"
+                *ngIf="permissionService.hasPermission('Define packages') || tokenService.getUserDetails().role === '1'">
                 Define
               </th>
-              <th
-                *ngIf="permissionService.hasPermission('View package history') || tokenService.getUserDetails().role === '1'"
-                class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center">
+              <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center whitespace-nowrap"
+                *ngIf="permissionService.hasPermission('View package history') || tokenService.getUserDetails().role === '1'">
                 History
               </th>
-              <th class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center">
-                Last Modified By
-              </th>
-              <th></th>
-              <th
+              <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center whitespace-nowrap">Last Modified By</th>
+              <th class="px-2"></th>
+              <th class="px-2"
                 *ngIf="permissionService.hasPermission('Edit packages') || tokenService.getUserDetails().role === '1'">
               </th>
               <!-- <th
@@ -148,22 +128,12 @@
               <tr *ngFor="let pkg of filteredPackages; let i = index">
                 <td class="px-4 py-4 text-[#000000] dark:text-textDark">
                   {{ i < 9 ? "0" + (i + 1) : i + 1 }} </td>
-                <td class="px-6 py-4 text-[#000000] dark:text-textDark">
-                  {{ pkg.displayName }}
-                </td>
-                <td class="py-4 text-[#000000] dark:text-textDark">
-                  {{ pkg.total | number : "1.2-2" }}
-                </td>
-                <td class="py-4 text-[#000000] dark:text-textDark">
-                  {{ pkg.packageType }}
-                </td>
-                <td class="py-4 text-[#000000] dark:text-textDark">
-                  {{ pkg.startDate | date : "mediumDate" }}
-                </td>
-                <td class="py-4 text-[#000000] dark:text-textDark">
-                  {{ pkg.endDate | date : "mediumDate" }}
-                </td>
-                <td class="py-2 text-center">
+                <td class="px-4 py-4 text-[#000000] dark:text-textDark whitespace-nowrap">{{ pkg.displayName }}</td>
+                <td class="px-4 py-4 text-[#000000] dark:text-textDark whitespace-nowrap">{{ pkg.total | number : "1.2-2" }}</td>
+                <td class="px-4 py-4 text-[#000000] dark:text-textDark whitespace-nowrap">{{ pkg.packageType }}</td>
+                <td class="px-4 py-4 text-[#000000] dark:text-textDark whitespace-nowrap">{{ pkg.startDate | date : "mediumDate" }}</td>
+                <td class="px-4 py-4 text-[#000000] dark:text-textDark whitespace-nowrap">{{ pkg.endDate | date : "mediumDate" }}</td>
+                <td class="px-4 py-2 text-center">
                   <button [ngClass]="{
                   'bg-[#BBFFC6] text-[#308233] px-4': pkg.status === 'Enabled',
                   'bg-[#FFB9B7] text-[#D16D6A] px-3': pkg.status === 'Disabled',
@@ -173,25 +143,25 @@
                     {{ pkg.status }}
                   </button>
                 </td>
-                <td class="py-4 text-[#000000] dark:text-textDark">
+                <td class="px-4 py-4 text-[#000000] dark:text-textDark whitespace-nowrap">
                   <ng-container *ngIf="pkg.defineDate !== null; else notDefined">
                     {{ pkg.defineDate | date : "mediumDate" }}
                   </ng-container>
                   <ng-template #notDefined> Not Defined Yet </ng-template>
                 </td>
 
-                <td class="py-4 text-[#000000] dark:text-textDark text-2xl text-center"
+                <td class="px-4 py-4 text-[#000000] dark:text-textDark text-2xl text-center whitespace-nowrap"
                   *ngIf="permissionService.hasPermission('Define packages') || tokenService.getUserDetails().role === '1'">
                   <i class="fa-solid fa-square-arrow-up-right cursor-pointer" (click)="viewDefinePackage(pkg.id)"></i>
                 </td>
-                <td class="py-4 text-[#000000] dark:text-textDark text-2xl text-center"
+                <td class="px-4 py-4 text-[#000000] dark:text-textDark text-2xl text-center whitespace-nowrap"
                   *ngIf="permissionService.hasPermission('View package history') || tokenService.getUserDetails().role === '1'">
                   <i class="fa-solid fa-history cursor-pointer" (click)="viewDefinePackageDate(pkg.id)"></i>
                 </td>
-                <td class="py-4 text-[#000000] dark:text-textDark text-center">
+                <td class="px-4 py-4 text-[#000000] dark:text-textDark text-center whitespace-nowrap">
                   {{ pkg.adminUser ? pkg.adminUser : "--" }}
                 </td>
-                <td class="px-1">
+                <td class="px-2">
                   <button (click)="viewPackage(pkg.id)" class="w-5 h-5 text-blue-500 hover:text-blue-700">
                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path
@@ -200,7 +170,7 @@
                     </svg>
                   </button>
                 </td>
-                <td class="px-1"
+                <td class="px-2"
                   *ngIf="permissionService.hasPermission('Edit packages') || tokenService.getUserDetails().role === '1'">
                   <button (click)="editPackage(pkg.id)" class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]">
                     <svg fill="currentColor" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">

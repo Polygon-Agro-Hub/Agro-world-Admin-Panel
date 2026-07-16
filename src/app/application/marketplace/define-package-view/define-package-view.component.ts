@@ -26,6 +26,8 @@ interface ProductTypes {
   selectedProductPrice?: number;
   quantity?: number;
   calculatedPrice?: number;
+  selectedProductIsValid?: number;   
+  selectedProductIsEnable?: number;  
 }
 
 interface MarketplaceItem {
@@ -34,6 +36,8 @@ interface MarketplaceItem {
   normalPrice: number;
   discountedPrice: number;
   productTypeId: number;
+  isValid: number;   
+  isEnable: number; 
 }
 
 @Component({
@@ -80,6 +84,7 @@ export class DefinePackageViewComponent implements OnInit {
       });
     });
   }
+
   goBack(): void {
     Swal.fire({
       icon: 'warning',
@@ -173,6 +178,8 @@ export class DefinePackageViewComponent implements OnInit {
           normalPrice: item.normalPrice,
           discountedPrice: item.discountedPrice,
           productTypeId: item.productTypeId,
+          isValid: item.isValid,
+          isEnable: item.isEnable,
         }));
         if (callback) callback();
       },
@@ -195,12 +202,16 @@ export class DefinePackageViewComponent implements OnInit {
     if (selectedProduct) {
       productType.productId = selectedProduct.id;
       productType.selectedProductPrice = selectedProduct.discountedPrice;
+      productType.selectedProductIsValid = selectedProduct.isValid;     
+      productType.selectedProductIsEnable = selectedProduct.isEnable;   
       productType.calculatedPrice = productType.quantity
         ? productType.quantity * selectedProduct.discountedPrice
         : selectedProduct.discountedPrice;
     } else {
       productType.productId = null;
       productType.selectedProductPrice = undefined;
+      productType.selectedProductIsValid = undefined;   
+      productType.selectedProductIsEnable = undefined;  
     }
 
     // Recalculate price if quantity already exists
@@ -498,5 +509,31 @@ export class DefinePackageViewComponent implements OnInit {
     const filteredItems = this.marketplaceItems.filter(item => item.productTypeId === typeId);
     console.log('Filtered Items for typeId', typeId, ':', filteredItems);
     return filteredItems;
+  }
+
+  getShortCodeTextClass(pt: ProductTypes): string {
+    return pt.selectedProductIsValid === 0
+      ? 'text-[#FF0000]'
+      : 'text-[#000000] dark:text-[#F1F4F5]';
+  }
+
+  getDropdownStatusClass(pt: ProductTypes): string {
+    if (pt.selectedProductIsValid === 0) return 'pt-dropdown-invalid';
+    if (pt.selectedProductIsEnable === 0) return 'pt-dropdown-disabled';
+    return '';
+  }
+
+  getInputStatusBorderColor(pt: ProductTypes): string {
+    if (pt.selectedProductIsValid === 0) return 'border-2 border-[#FF0000]';
+    if (pt.selectedProductIsEnable === 0) return 'border-2 border-[#FF9D00]';
+    return 'border border-[#666666]';
+  } 
+
+  hasInvalidOrDisabledProduct(): boolean {
+    return this.orderDetails.some((pkg) =>
+      pkg.productTypes.some(
+        (pt) => pt.selectedProductIsValid === 0 || pt.selectedProductIsEnable === 0
+      )
+    );
   }
 }

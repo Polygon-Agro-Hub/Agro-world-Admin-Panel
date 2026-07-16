@@ -13,9 +13,10 @@
     <button class="px-4 py-2 bg-[#74788D] text-white rounded" (click)="onCancel()">
       Cancel
     </button>
-    <button class="px-6 py-2 bg-[#3980C0] text-white rounded" (click)="onSave()">
+    <button class="px-6 py-2 bg-[#3980C0] text-white rounded disabled:opacity-50 disabled:cursor-not-allowed"
+      (click)="onSave()" [disabled]="hasInvalidOrDisabledProduct()">
       Save
-    </button>
+    </button> 
   </div>
 </div>
 <div class="min-w-[1200px] bg-white dark:bg-tileBlack shadow-lg rounded-lg">
@@ -34,23 +35,23 @@
         <div class="space-y-3">
           <form>
             <span *ngFor="let typeItems of item.productTypes">
-              <div class="flex items-center  space-x-3 border-b-2 py-4 px-5">
-                <div class="w-8 text-[#000000] dark:text-[#F1F4F5] font-medium">
+              <div class="flex items-center space-x-3 border-b-2 py-4 px-5">
+                <div class="w-8 font-medium" [ngClass]="getShortCodeTextClass(typeItems)">
                   {{ typeItems.shortCode }}
                 </div>
                 <p-dropdown [options]="filterMarketItemByTypeId(typeItems.id)" [(ngModel)]="typeItems.productId" optionLabel="displayName"
                   optionValue="id" placeholder="--Select Product--" [showClear]="false"
                   (onChange)="onProductSelected(typeItems, $event)" [style]="{'width': '100%'}"
+                  [ngClass]="getDropdownStatusClass(typeItems)"
                   styleClass="custom-dropdown" class="flex-1" filter="true">
                 </p-dropdown>
                 <input type="number" step="0.001" min="0" placeholder="--Quantity in kg--"
-                  class="rounded-xl text-sm w-40 px-4 py-4 border border-[#666666] dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 placeholder-gray-500 dark:placeholder-gray-400 placeholder:italic"
+                  class="rounded-xl text-sm w-40 px-4 py-4 border dark:border-gray-600 bg-white dark:bg-gray-800 text-[#000000] dark:text-gray-400 placeholder-gray-500 dark:placeholder-gray-400 placeholder:italic"
+                  [ngClass]="getInputStatusBorderColor(typeItems)"
                   (input)="onQuantityChanged(typeItems, $event)" (keydown)="validateQuantityInput($event)"
                   [value]="typeItems.quantity || ''" pattern="^\d*(\.\d{0,3})?$" inputmode="decimal" />
                 <div class="w-16 text-right text-[#4B5563] dark:text-gray-100">
-                  Rs.{{
-                  typeItems.calculatedPrice || "0.00" | number : "1.2-2"
-                  }}
+                    Rs.{{ typeItems.calculatedPrice || "0.00" | number : "1.2-2" }}
                 </div>
               </div>
             </span>

@@ -25,6 +25,9 @@ interface PackageList {
   defineDate: string;
   createdAt: string;
   groupStatus: any;
+  packageType: string;
+  startDate: Date | null;
+  endDate: Date | null;
 }
 
 @Component({
@@ -132,64 +135,64 @@ export class ViewPackageListComponent implements OnInit {
     this.router.navigate([`/market/action/view-package-details/${id}`]);
   }
 
-  deletePackage(id: number) {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you really want to delete this package? This action cannot be undone.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'Cancel',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold',
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.isLoading = true;
-        const token = this.tokenService.getToken();
-        const headers = new HttpHeaders({
-          Authorization: `Bearer ${token}`,
-        });
+  // deletePackage(id: number) {
+  //   Swal.fire({
+  //     title: 'Are you sure?',
+  //     text: 'Do you really want to delete this package? This action cannot be undone.',
+  //     icon: 'warning',
+  //     showCancelButton: true,
+  //     confirmButtonColor: '#3085d6',
+  //     cancelButtonColor: '#d33',
+  //     confirmButtonText: 'Yes, delete it!',
+  //     cancelButtonText: 'Cancel',
+  //     customClass: {
+  //       popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+  //       title: 'font-semibold',
+  //     },
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       this.isLoading = true;
+  //       const token = this.tokenService.getToken();
+  //       const headers = new HttpHeaders({
+  //         Authorization: `Bearer ${token}`,
+  //       });
 
-        this.http
-          .delete(`${environment.API_URL}market-place/delete-packages/${id}`, {
-            headers,
-          })
-          .subscribe({
-            next: (response) => {
-              this.isLoading = false;
-              Swal.fire({
-                title: 'Deleted', text: 'The package has been deleted.', icon: 'success',
-                customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                  title: 'font-semibold',
-                }
-              })
-              this.fetchAllPackages();
-            },
-            error: (error) => {
-              this.isLoading = false;
-              console.error('Error deleting package:', error);
-              Swal.fire(
-                {
-                  title: 'Error',
-                  text: 'There was a problem deleting the package.',
-                  icon: 'error',
-                  customClass: {
-                    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                    title: 'font-semibold',
-                  }
-                }
+  //       this.http
+  //         .delete(`${environment.API_URL}market-place/delete-packages/${id}`, {
+  //           headers,
+  //         })
+  //         .subscribe({
+  //           next: (response) => {
+  //             this.isLoading = false;
+  //             Swal.fire({
+  //               title: 'Deleted', text: 'The package has been deleted.', icon: 'success',
+  //               customClass: {
+  //                 popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+  //                 title: 'font-semibold',
+  //               }
+  //             })
+  //             this.fetchAllPackages();
+  //           },
+  //           error: (error) => {
+  //             this.isLoading = false;
+  //             console.error('Error deleting package:', error);
+  //             Swal.fire(
+  //               {
+  //                 title: 'Error',
+  //                 text: 'There was a problem deleting the package.',
+  //                 icon: 'error',
+  //                 customClass: {
+  //                   popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+  //                   title: 'font-semibold',
+  //                 }
+  //               }
 
-              );
-            },
-          });
-      }
-    });
-  }
+  //             );
+  //           },
+  //         });
+  //     }
+  //   });
+  // }
 
   get filteredPackages() {
     if (!this.selectedStatus) {

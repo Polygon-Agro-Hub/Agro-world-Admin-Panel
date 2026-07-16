@@ -106,6 +106,15 @@
               <th class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left">
                 Total Price (Rs.)
               </th>
+              <th class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left">
+                Package Type
+              </th>
+              <th class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left">
+                Start Date
+              </th>
+              <th class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left">
+                End Date
+              </th>
               <th class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center">
                 Status
               </th>
@@ -129,9 +138,9 @@
               <th
                 *ngIf="permissionService.hasPermission('Edit packages') || tokenService.getUserDetails().role === '1'">
               </th>
-              <th
+              <!-- <th
                 *ngIf="permissionService.hasPermission('Delete packages') || tokenService.getUserDetails().role === '1'">
-              </th>
+              </th> -->
             </tr>
           </thead>
           <tbody>
@@ -144,6 +153,15 @@
                 </td>
                 <td class="py-4 text-[#000000] dark:text-textDark">
                   {{ pkg.total | number : "1.2-2" }}
+                </td>
+                <td class="py-4 text-[#000000] dark:text-textDark">
+                  {{ pkg.packageType }}
+                </td>
+                <td class="py-4 text-[#000000] dark:text-textDark">
+                  {{ pkg.startDate | date : "mediumDate" }}
+                </td>
+                <td class="py-4 text-[#000000] dark:text-textDark">
+                  {{ pkg.endDate | date : "mediumDate" }}
                 </td>
                 <td class="py-2 text-center">
                   <button [ngClass]="{
@@ -192,7 +210,7 @@
                     </svg>
                   </button>
                 </td>
-                <td class="px-1"
+                <!-- <td class="px-1"
                   *ngIf="permissionService.hasPermission('Delete packages') || tokenService.getUserDetails().role === '1'">
                   <button (click)="deletePackage(pkg.id)" class="w-6 h-6 text-[#fc3636] hover:text-[#f38f8f]">
                     <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
@@ -201,7 +219,7 @@
                         d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
                     </svg>
                   </button>
-                </td>
+                </td> -->
               </tr>
             </ng-container>
           </tbody>

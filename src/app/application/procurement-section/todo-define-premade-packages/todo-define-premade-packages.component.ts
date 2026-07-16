@@ -51,6 +51,7 @@ interface MarketplaceItem {
   unitType: string;
   varietyId: number;
   isPreferred: boolean;
+  isDisable: boolean;
 }
 
 interface PackageItem {
@@ -183,6 +184,7 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
           normalPrice: item.normalPrice,
           discountedPrice: item.discountedPrice,
           isExcluded: item.isExcluded,
+          isDisable: item.isDisable,
           isPreferred: item.isPreferred,
           productTypeId: item.productTypeId,
 
@@ -229,6 +231,7 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
               product => +product.id === +item.productId
             );
             item.isExcluded = selectedProduct?.isExcluded ?? false;
+            item.isDisable = selectedProduct?.isDisable ?? true;
 
             const qty = item.qty ?? 0;
             const discountedPrice = selectedProduct?.discountedPrice ?? 0;
@@ -264,9 +267,11 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
       item.price = price * qty;
 
       item.isExcluded = selectedProduct.isExcluded;
+      item.isDisable = selectedProduct.isDisable;
     } else {
       item.price = 0;
       item.isExcluded = false; // fallback
+      item.isDisable = false;
     }
 
     this.recalculatePackageTotal();
@@ -400,11 +405,30 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
       });
     });
 
+    const hasDisbledProduct = this.orderdetailsArr.some((pkg, pkgIndex) => {
+      return pkg.items.some((item, itemIndex) => {
+        console.log('Checking disabled product:', item);
+        return item.isDisable === true;
+      });
+    });
+
     if (hasInvalidProduct) {
       this.loading = false;
       Swal.fire({
         title: 'Missing or Invalid Information',
         text: 'Product & Quantity are missing.',
+        icon: 'warning',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        }
+      });
+      return;
+    } else if (hasDisbledProduct) {
+      this.loading = false;
+      Swal.fire({
+        title: 'Disabled Product Selected',
+        text: 'Please, do not select disabled products.',
         icon: 'warning',
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
@@ -597,9 +621,14 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
       this.newItem.qty = 0;
     }
 
+    const selectedProduct = this.marketplaceItems.find(
+    product => product.id === this.newItem.productId
+  );
+
     this.newItem.productTypeId = Number(this.selectCategoryId);
     this.newItem.productName = selectedCategory.typeName;
     this.newItem.productTypeShortCode = selectedCategory.shortCode;
+    this.newItem.isDisable = selectedProduct?.isDisable ?? false;
 
     const existingItemIndex = selectedOrderDetail.items.findIndex(
       item => item.productId === this.newItem.productId &&
@@ -731,10 +760,10 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
 
     if (!regex.test(value)) {
       const parts = value.split('.');
-    if (parts.length > 1) {
-      value = parts[0] + '.' + parts[1].slice(0, 2);
-    }
-    
+      if (parts.length > 1) {
+        value = parts[0] + '.' + parts[1].slice(0, 2);
+      }
+
       input.value = value;
     }
 
@@ -767,6 +796,7 @@ class OrderItem {
   qty!: number;
   price!: number;
   isExcluded: boolean = false;
+  isDisable: boolean = false;
 }
 
 class ExcludeItems {

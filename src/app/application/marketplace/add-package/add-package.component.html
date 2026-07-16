@@ -207,7 +207,7 @@
       </div>
 
       <!-- Status -->
-      <div class="bg-[#FFFFFF] dark:bg-tileBlack rounded-lg shadow-lg px-6 sm:px-8 lg:px-12 py-3 mt-6 sm:mt-8 lg:mt-10">
+      <!-- <div class="bg-[#FFFFFF] dark:bg-tileBlack rounded-lg shadow-lg px-6 sm:px-8 lg:px-12 py-3 mt-6 sm:mt-8 lg:mt-10">
         <label class="text-sm sm:text-base text-[#000000] dark:text-textDark font-normal">Status</label>
 
         <div class="flex items-center space-x-2 my-3 sm:my-4 lg:my-5">
@@ -225,7 +225,87 @@
             Disabled
           </label>
         </div>
-      </div>
+      </div> -->
+    
+      <!-- Package Type -->
+<div class="bg-[#FFFFFF] dark:bg-tileBlack rounded-lg shadow-lg px-6 sm:px-8 lg:px-12 py-6 mt-6 sm:mt-8 lg:mt-10">
+  <label class="text-sm sm:text-base text-[#534E4E] dark:text-textDark font-medium">Package Type *</label>
+  <p-dropdown
+    styleClass="border border-2 rounded-xl items-center bg-white dark:bg-[#272F45] text-black dark:text-textDark border-[#D9D9D9] dark:border-[#4a5568] w-full mt-2"
+    panelStyleClass="bg-white dark:bg-[#2d354d] text-black dark:text-[#B1B1B1] border dark:border-[#4a5568]
+      [&_.p-dropdown-item]:dark:bg-[#2d354d]
+      [&_.p-dropdown-item]:dark:text-[#B1B1B1]
+      [&_.p-dropdown-item:hover]:dark:bg-[#3a4160]
+      [&_.p-dropdown-item:hover]:dark:text-white
+      [&_.p-dropdown-item.p-highlight]:dark:bg-[#3182ce]
+      [&_.p-dropdown-item.p-highlight]:dark:text-white"
+    [options]="packageTypeOptions"
+    optionLabel="label"
+    optionValue="value"
+    placeholder="Select Type"
+    [(ngModel)]="packageObj.packageType"
+    name="packageType"
+    (onChange)="onPackageTypeChange()"
+    (onBlur)="onPackageTypeBlur()">
+  </p-dropdown>
+
+  <!-- Start Date - shown for both types -->
+<div class="mt-5" *ngIf="packageObj.packageType">
+  <label class="text-sm sm:text-base text-[#534E4E] dark:text-textDark font-medium">Start Date *</label>
+  <p-calendar
+    id="startDate"
+    [(ngModel)]="packageObj.startDate"
+    name="startDate"
+    (onSelect)="onStartDateChange()"
+    (onBlur)="onStartDateBlur()"
+    placeholder="Select Start Date"
+    dateFormat="dd/mm/yy"
+    [showIcon]="true"
+    iconDisplay="input"
+    [minDate]="today"
+    styleClass="calendar-compact dark-calendar mt-2"
+    [style]="{ width: '100%' }"
+    panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600
+                     [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568]
+                     [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+                     [&_.p-datepicker-header]:dark:bg-[#2d354d]
+                     [&_.p-datepicker-header]:dark:text-white
+                     [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+                     [&_.p-button:hover]:dark:bg-[#6b7280]"
+    inputStyleClass="text-[16px] h-10 rounded-xl bg-white dark:bg-[#272F45] text-black dark:text-textDark border border-[#D9D9D9] dark:border-[#4a5568] placeholder:text-[#6c6c6c] dark:placeholder:text-[#8B8B8B] focus:outline-none focus:border-blue-500 dark:focus:border-blue-400 w-full"
+    [inputStyle]="{ width: '100%', padding: '0.625rem 2.5rem 0.625rem 0.75rem', fontSize: '0.875rem' }"
+    [appendTo]="'body'">
+  </p-calendar>
+</div>
+
+<!-- End Date - only for One Time Package -->
+<div class="mt-5" *ngIf="packageObj.packageType === 'One Time'">
+  <label class="text-sm sm:text-base text-[#534E4E] dark:text-textDark font-medium">End Date *</label>
+  <p-calendar
+    id="endDate"
+    [(ngModel)]="packageObj.endDate"
+    name="endDate"
+    (onBlur)="onEndDateBlur()"
+    placeholder="Select End Date"
+    dateFormat="dd/mm/yy"
+    [showIcon]="true"
+    iconDisplay="input"
+    [minDate]="packageObj.startDate || today"
+    styleClass="calendar-compact dark-calendar mt-2"
+    [style]="{ width: '100%' }"
+    panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600
+                     [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568]
+                     [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+                     [&_.p-datepicker-header]:dark:bg-[#2d354d]
+                     [&_.p-datepicker-header]:dark:text-white
+                     [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+                     [&_.p-button:hover]:dark:bg-[#6b7280]"
+    inputStyleClass="text-[16px] h-10 rounded-xl bg-white dark:bg-[#272F45] text-black dark:text-textDark border border-[#D9D9D9] dark:border-[#4a5568] placeholder:text-[#6c6c6c] dark:placeholder:text-[#8B8B8B] focus:outline-none focus:border-blue-500 dark:focus:border-blue-400 w-full"
+    [inputStyle]="{ width: '100%', padding: '0.625rem 2.5rem 0.625rem 0.75rem', fontSize: '0.875rem' }"
+    [appendTo]="'body'">
+  </p-calendar>
+</div>
+</div>
     </div>
   </div>
 </form>

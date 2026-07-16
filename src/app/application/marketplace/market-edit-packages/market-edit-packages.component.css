@@ -49,3 +49,18 @@
   gap: 0.15rem !important; /* Minimal gap between month and year */
   margin: 0 !important;
 }
+
+/* For dropdown placeholder */
+::ng-deep .p-dropdown .p-dropdown-label.p-placeholder {
+  font-style: italic !important;
+}
+
+/* For dropdown placeholder in dark mode */
+::ng-deep .p-dropdown .p-dropdown-label.p-placeholder.dark {
+  font-style: italic !important;
+}
+
+/* If you want to target the dropdown label specifically */
+::ng-deep .p-dropdown-label.p-inputtext.p-placeholder {
+  font-style: italic !important;
+}

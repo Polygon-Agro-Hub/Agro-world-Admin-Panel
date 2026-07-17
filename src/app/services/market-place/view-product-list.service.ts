@@ -62,4 +62,15 @@ export class ViewProductListService {
       headers,
     });
   }
+
+  toggleProductStatus(id: number, isEnable: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.patch<any>(
+      `${this.apiUrl}market-place/toggle-status/${id}`,
+      { isEnable },
+      { headers },
+    );
+  }
 }

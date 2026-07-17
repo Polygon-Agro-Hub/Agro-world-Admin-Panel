@@ -43,6 +43,7 @@ export class ViewProductsListComponent {
 
   productTypeOptions: { name: string; value: number }[] = [];
   selectedProductType: any = null;
+  
 
   categoryOption = [
     { name: 'Retail', value: 'Retail' },
@@ -50,6 +51,13 @@ export class ViewProductsListComponent {
   ];
   selectedCategoryOption: any = null;
   isLoading = false;
+
+  // Status toggle confirmation popup state
+  showStatusConfirm = false;
+  statusConfirmMessage = '';
+  statusConfirmWarning = '';
+  private pendingToggleItem: ProductList | null = null;
+  private pendingNewStatus: number = 0;
 
   constructor(
     private viewProductsList: ViewProductListService,
@@ -291,6 +299,67 @@ formatNumber(value: number): string {
   }
   return numStr;
 }
+
+toggleStatus(item: ProductList): void {
+    const newStatus = item.isEnable === 1 ? 0 : 1;
+    const actionText = newStatus === 1 ? 'Enabled' : 'Disabled';
+
+    this.pendingToggleItem = item;
+    this.pendingNewStatus = newStatus;
+
+    this.statusConfirmMessage = `Are you sure you want to change the status of "${item.displayName}" to ${actionText}?`;
+    this.statusConfirmWarning =
+      newStatus === 0
+        ? 'Note : Disabling this product will disable all of its associated packages. As a result, the affected packages will become undefined.'
+        : '';
+
+    this.showStatusConfirm = true;
+  }
+
+  onStatusConfirmConfirmed(): void {
+    this.showStatusConfirm = false;
+    if (!this.pendingToggleItem) return;
+
+    const item = this.pendingToggleItem;
+    const newStatus = this.pendingNewStatus;
+    const previousStatus = item.isEnable;
+
+    // optimistic UI update
+    item.isEnable = newStatus;
+
+    this.viewProductsList.toggleProductStatus(item.id, newStatus).subscribe(
+      () => {
+        Swal.fire({
+          title: 'Updated',
+          text: `Product ${newStatus === 1 ? 'enabled' : 'disabled'} successfully.`,
+          icon: 'success',
+          timer: 1200,
+          showConfirmButton: false,
+          customClass: {
+            popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+            title: 'dark:text-white',
+          },
+        });
+      },
+      (error) => {
+        // revert on failure
+        item.isEnable = previousStatus;
+        console.error('Error toggling status:', error);
+        if (error.status === 401) {
+          Swal.fire('Unauthorized', 'Please log in again.', 'error');
+        } else {
+          Swal.fire('Error', 'Failed to update status.', 'error');
+        }
+      },
+    );
+
+    this.pendingToggleItem = null;
+  }
+
+  onStatusConfirmCancelled(): void {
+    this.showStatusConfirm = false;
+    this.pendingToggleItem = null;
+  }
 }
 
 class ProductList {
@@ -314,4 +383,5 @@ class ProductList {
   productTypeId!: number;
   productTypeShortCode!: string;
   modifyBy!: string;
+  isEnable!: number;
 }

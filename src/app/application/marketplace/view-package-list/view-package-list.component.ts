@@ -49,7 +49,14 @@ export class ViewPackageListComponent implements OnInit {
     { label: 'Disabled', value: 'Disabled' },
   ];
   selectedStatus: any;
+  selectedPackageType: any;
   searchtext: string = '';
+
+  packageTypeOptions = [
+  { label: 'All', value: null },
+  { label: 'One Time', value: 'One Time' },
+  { label: 'Recurring', value: 'Recurring' },
+];
 
   isPopupVisible: boolean = false;
   popUpStatus: string = '';
@@ -195,15 +202,22 @@ export class ViewPackageListComponent implements OnInit {
   // }
 
   get filteredPackages() {
-    if (!this.selectedStatus) {
-      return this.viewPackageList;
-    }
-    return this.viewPackageList.filter(
+  let list = this.viewPackageList;
+
+  if (this.selectedStatus) {
+    list = list.filter(
       (pkg) =>
         pkg.status === this.selectedStatus ||
         pkg.groupStatus === this.selectedStatus
     );
   }
+
+  if (this.selectedPackageType) {
+    list = list.filter((pkg) => pkg.packageType === this.selectedPackageType);
+  }
+
+  return list;
+}
 
   get hasFilteredData() {
     return this.filteredPackages.length > 0;

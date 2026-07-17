@@ -5,11 +5,13 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { CalendarModule } from 'primeng/calendar';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
   selector: 'app-market-edit-packages',
   standalone: true,
-  imports: [CommonModule, FormsModule, LoadingSpinnerComponent],
+  imports: [CommonModule, FormsModule, LoadingSpinnerComponent, DropdownModule, CalendarModule],
   templateUrl: './market-edit-packages.component.html',
   styleUrl: './market-edit-packages.component.css',
 })
@@ -24,6 +26,11 @@ export class MarketEditPackagesComponent {
   selectedFile: File | null = null;
   selectedFileName!: string;
   isLoading: boolean = false;
+
+  packageTypeOptions = [
+  { label: 'One Time Package', value: 'One Time' },
+  { label: 'Recurring Package', value: 'Recurring' }
+];
 
   constructor(
     private marketSrv: MarketPlaceService,
@@ -78,6 +85,8 @@ export class MarketEditPackagesComponent {
     this.marketSrv.getPackageById(this.packageId).subscribe((res) => {
       console.log('this is response', res);
       this.packageObj = res;
+       this.packageObj.startDate = res.startDate ? new Date(res.startDate) : null as any;
+    this.packageObj.endDate = res.endDate ? new Date(res.endDate) : null as any;
       this.selectedImage = this.packageObj.imageUrl;
 
       // ✅ Sort items by typeName alphabetically
@@ -114,7 +123,10 @@ export class MarketEditPackagesComponent {
       !this.packageObj.productPrice ||
       !this.packageObj.packageFee ||
       !this.packageObj.serviceFee ||
-      !this.selectedImage
+      !this.selectedImage ||
+      !this.packageObj.packageType ||
+  !this.packageObj.startDate ||
+  (this.packageObj.packageType === 'One Time' && !this.packageObj.endDate)
     ) {
       let errorMessage = '';
 
@@ -129,6 +141,12 @@ export class MarketEditPackagesComponent {
       if (!this.packageObj.serviceFee)
         errorMessage += 'Service fee is required.<br>';
       if (!this.selectedImage) errorMessage += 'Package Image is required.<br>';
+      if (!this.packageObj.packageType)
+    errorMessage += 'Package Type is required.<br>';
+  if (this.packageObj.packageType && !this.packageObj.startDate)
+    errorMessage += 'Start Date is required.<br>';
+  if (this.packageObj.packageType === 'One Time' && !this.packageObj.endDate)
+    errorMessage += 'End Date is required.<br>';
 
       Swal.fire({
         icon: 'error',
@@ -375,6 +393,19 @@ export class MarketEditPackagesComponent {
     this.calculateApproximatedPrice();
   }
 
+  onPackageTypeChange(): void {
+  if (this.packageObj.packageType === 'Recurring') {
+    this.packageObj.endDate = null as any;
+  }
+}
+
+onStartDateChange(): void {
+  if (this.packageObj.endDate && this.packageObj.startDate &&
+      this.packageObj.endDate < this.packageObj.startDate) {
+    this.packageObj.endDate = null as any;
+  }
+}
+
 }
 
 class Package {
@@ -391,6 +422,9 @@ class Package {
   approximatedPrice!: number;
   imageUrl!: string;
   packageItems: PackageItems[] = [];
+  packageType: string = '';
+  startDate!: Date;
+  endDate!: Date;
 }
 
 class ProductType {

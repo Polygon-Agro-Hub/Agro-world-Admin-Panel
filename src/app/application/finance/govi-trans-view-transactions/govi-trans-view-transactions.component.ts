@@ -203,6 +203,12 @@ export class GoviTransViewTransactionsComponent implements OnInit {
     ]);
   }
 
+  navigateToDocument(id: number) {
+    this.router.navigate([
+    `/finance/action/govi-trans-finance/view-transactions/document/${id}`,
+    ]);
+  }
+
   onDateClear() {
     this.date = new Date();
     this.getAllTransactions();

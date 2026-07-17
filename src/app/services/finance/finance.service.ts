@@ -1175,5 +1175,25 @@ export class FinanceService {
     return this.http.get<any>(url, { headers });
   }
 
+  viewTransactionDocument(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}finance/view-transaction-document/${id}`;
+    return this.http.get<any>(url, { headers });
+  }
+
+  updateTransactionStatus(id: number, transStatus: string, rejectReason?: string): Observable<any> {
+    const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}finance/update-transaction-status/${id}`;
+    return this.http.put<any>(url, { transStatus, rejectReason }, { headers });
+  }
+
 }
 

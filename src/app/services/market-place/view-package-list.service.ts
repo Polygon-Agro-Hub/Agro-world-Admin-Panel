@@ -33,35 +33,39 @@ export class ViewPackageListService {
   // }
 
   getAllMarketplacePackages(
-    searchText: string = '',
-    date?: string
-  ): Observable<any> {
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`,
-    });
+  searchText: string = '',
+  date?: string,
+  packageType?: string
+): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+  });
 
-    let params = new HttpParams();
-    if (searchText) {
-      params = params.append('searchText', searchText);
-    }
-    if (date) {
-      params = params.append('date', date);
-      return this.http.get<any>(
-        `${this.apiUrl}market-place/get-all-package-list-date`,
-        {
-          headers,
-          params,
-        }
-      );
-    }
+  let params = new HttpParams();
+  if (searchText) {
+    params = params.append('searchText', searchText);
+  }
+  if (packageType) {
+    params = params.append('packageType', packageType);
+  }
+  if (date) {
+    params = params.append('date', date);
     return this.http.get<any>(
-      `${this.apiUrl}market-place/get-all-package-list`,
+      `${this.apiUrl}market-place/get-all-package-list-date`,
       {
         headers,
         params,
       }
     );
   }
+  return this.http.get<any>(
+    `${this.apiUrl}market-place/get-all-package-list`,
+    {
+      headers,
+      params,
+    }
+  );
+}
 
   changePackageStatus(data: any): Observable<any> {
     const headers = new HttpHeaders({

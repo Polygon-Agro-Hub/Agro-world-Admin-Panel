@@ -2,6 +2,7 @@ import { CommonModule, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FinanceService } from '../../../services/finance/finance.service';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
 interface Order {
   id: number;
@@ -14,7 +15,7 @@ interface Order {
 @Component({
   selector: 'app-transaction-amount',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, LoadingSpinnerComponent],
   templateUrl: './transaction-amount.component.html',
   styleUrl: './transaction-amount.component.css',
 })

@@ -340,6 +340,9 @@ toggleStatus(item: ProductList): void {
             title: 'dark:text-white',
           },
         });
+
+        // Refresh the current page from the server to reflect the true state
+      this.fetchAllProducts(this.page, this.itemsPerPage);
       },
       (error) => {
         // revert on failure

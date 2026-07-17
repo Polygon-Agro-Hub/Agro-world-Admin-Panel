@@ -170,7 +170,7 @@
     (click)="toggleStatus(item)"
     [disabled]="!(permissionService.hasPermission('Edit product') || tokenService.getUserDetails().role === '1')"
     class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
-    [ngClass]="item.isEnable === 1 ? 'bg-[#3980C0]' : 'bg-gray-300 dark:bg-[#4B555A]'"
+    [ngClass]="item.isEnable === 1 ? 'bg-[#007AFF]' : 'bg-gray-300 dark:bg-[#4B555A]'"
   >
     <span
       class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200"

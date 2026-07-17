@@ -1161,5 +1161,19 @@ export class FinanceService {
     return this.http.get<any>(url, { headers });
   }
 
+  fetchTransactionOrders(
+    id: number
+
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    let url = `${this.apiUrl}finance/get-all-transaction-orders/${id}`;
+
+    return this.http.get<any>(url, { headers });
+  }
+
 }
 

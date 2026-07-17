@@ -11,14 +11,14 @@
         All Orders ({{ orders.length < 10 ? "0" + orders.length : orders.length }})
       </h2>
       <p class="text-[#7A7A7A] dark:text-gray-400 mt-1">
-        Submission on {{ submittedAtLabel }}
+        Submission on {{ orders[0].submittedAt | date: " dd MMMM, YYYY" }}
       </p>
     </div>
 
     <div class="inline-block mt-4 mb-6 px-4 py-2 rounded-lg bg-[#CBE6FF] dark:bg-[#272F45]">
       <span class="text-[#292929] dark:text-textDark">Total to Receive : </span>
       <span class="font-semibold text-[#292929] dark:text-textDark">
-        Rs. {{ totalToReceive | number: "1.2-2" }}
+        Rs. {{ total | number: "1.2-2" }}
       </span>
     </div>
 
@@ -46,10 +46,10 @@
               {{ (i + 1) < 10 ? '0' + (i + 1) : (i + 1) }}
             </td>
             <td class="px-4 py-3 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
-              {{ order.orderId }}
+              {{ order.invNo }}
             </td>
             <td class="px-4 py-3 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
-              {{ order.orderValue | number: "1.2-2" }}
+              {{ order.amount | number: "1.2-2" }}
             </td>
             <td class="px-4 py-3 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
               {{ order.toReceive | number: "1.2-2" }}

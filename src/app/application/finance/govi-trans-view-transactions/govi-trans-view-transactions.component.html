@@ -10,8 +10,8 @@
   <div class="pt-5 pr-12 pl-12 pb-5 min-w-max bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex justify-between items-center mb-8 mt-4">
       <div class="flex items-center">
-        <h2 class="text-xl font-normal text-[#292929] dark:text-textDark"> View Transactions 
-            ({{ totalItems < 10 ? "0" + totalItems : totalItems }}) </h2>
+        <h2 class="text-xl font-normal text-[#292929] dark:text-textDark"> View Transactions
+          ({{ totalItems < 10 ? "0" + totalItems : totalItems }}) </h2>
       </div>
       <div class="flex items-center">
         <i class="mr-6 w-6 h-6 fill-current text-gray-500">
@@ -26,15 +26,14 @@
         <div class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="StatusOptions" optionLabel="label" optionValue="value"
-            [showClear]="!!selectedStatus" placeholder="Status" [(ngModel)]="selectedStatus"
-            (onChange)="StatusFilter()"></p-dropdown>
+            [options]="StatusOptions" optionLabel="label" optionValue="value" [showClear]="!!selectedStatus"
+            placeholder="Status" [(ngModel)]="selectedStatus" (onChange)="StatusFilter()"></p-dropdown>
         </div>
- 
+
         <div class="flex items-center gap-2 h-8 ml-2 mr-5">
-            <p-calendar id="toDate" [(ngModel)]="date" (onSelect)="dateFilter()" (onClear)="onDateClear()"
-              placeholder="Schedule Date" [showIcon]="true" [showClear]="true" [showButtonBar]="true"
-              iconDisplay="input" [style]="{ width: '16rem', height: '2rem' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+          <p-calendar id="toDate" [(ngModel)]="date" (onSelect)="dateFilter()" (onClear)="onDateClear()"
+            placeholder="Schedule Date" [showIcon]="true" [showClear]="true" [showButtonBar]="true" iconDisplay="input"
+            [style]="{ width: '16rem', height: '2rem' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
                              [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
                              [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
                              [&_.p-datepicker-header]:dark:bg-[#2d354d] 
@@ -42,12 +41,13 @@
                              [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
                              
                              [&_.p-button:hover]:dark:bg-[#6b7280]"
-              inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
-              [appendTo]="'body'" />
-          </div>
+            inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
+            [appendTo]="'body'" />
+        </div>
 
         <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
-          <input type="text" placeholder="Search by Transaction ID, Driver ID, Phone.." class="bg-transparent outline-none w-full text-textLight dark:text-textDark" [(ngModel)]="searchItem"
+          <input type="text" placeholder="Search by Transaction ID, Driver ID, Phone.."
+            class="bg-transparent outline-none w-full text-textLight dark:text-textDark" [(ngModel)]="searchItem"
             (keydown.enter)="searchPlantCareUsers()" />
           <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
             (click)="searchPlantCareUsers()">
@@ -76,20 +76,16 @@
             <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left" style="white-space: nowrap">
               Transaction ID
             </th>
-            <th 
-              class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left" style="white-space: nowrap">
+            <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left" style="white-space: nowrap">
               Driver ID
             </th>
-            <th 
-              class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left" style="white-space: nowrap">
+            <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left" style="white-space: nowrap">
               Name
             </th>
-            <th 
-              class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left" style="white-space: nowrap">
+            <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left" style="white-space: nowrap">
               Phone Number
             </th>
-            <th 
-              class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center" style="white-space: nowrap">
+            <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center" style="white-space: nowrap">
               Status
             </th>
             <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center" style="white-space: nowrap">
@@ -98,12 +94,10 @@
             <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left" style="white-space: nowrap">
               View Documents
             </th>
-            <th 
-              class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left" style="white-space: nowrap">
+            <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left" style="white-space: nowrap">
               Submitted At
             </th>
-            <th 
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left" style="white-space: nowrap">
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left" style="white-space: nowrap">
               Last Update By
             </th>
             <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left" style="white-space: nowrap">
@@ -126,25 +120,22 @@
               {{
               ((page - 1) * itemsPerPage + i + 1) < 10 ? '0' + ((page - 1) * itemsPerPage + i + 1) : ((page - 1) *
                 itemsPerPage + i + 1) }} </td>
-                
-            
+
+
             <td class="px-4 py-3 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
               {{ item.transactionId }}
             </td>
 
-            <td 
-              class="px-4 py-3 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
+            <td class="px-4 py-3 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
               {{ item.driverId }}
             </td>
 
-            <td 
-              class="px-4 py-3 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
+            <td class="px-4 py-3 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
               {{ item.name }}
             </td>
 
-            <td 
-              class="px-4 py-3 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
-              {{ item.phoneNumber }}
+            <td class="px-4 py-3 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
+              {{ item.phoneNumber != null ? '0' + item.phoneNumber : '-' }}
             </td>
 
             <td class="px-3 py-3 text-center">
@@ -163,26 +154,29 @@
               <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]" (click)="navigateToAmount(item.id)">
                 <i class="fa-solid fa-arrow-up-right-from-square text-black text-lg"></i>
               </button>
-            <td
-              class="px-2 py-3 text-center text-[#000000] dark:text-textDark">
+            <td class="px-2 py-3 text-center text-[#000000] dark:text-textDark">
               <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]">
                 <i class="fa-solid fa-arrow-up-right-from-square text-red-500 text-lg"></i>
               </button>
             </td>
-            <td 
-              class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
-              <p>{{ (item.submittedAt | date: "hh:mm a,") }}</p>
-              <p>{{ (item.submittedAt | date: " MMMM dd, YYYY") }}</p>
+            <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
+              <ng-container *ngIf="item.submittedAt; else noSubmittedDate">
+                <p>{{ item.submittedAt | date: "hh:mm a," }}</p>
+                <p>{{ item.submittedAt | date: " MMMM dd, YYYY" }}</p>
+              </ng-container>
+              <ng-template #noSubmittedDate>--</ng-template>
             </td>
 
-            <td 
-              class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
-              {{ item.updatedBy }}
+            <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
+              {{ item.updatedBy || "--" }}
             </td>
 
             <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
-              <p>{{ (item.updatedAt | date: "hh:mm a,") }}</p>
-              <p>{{ (item.updatedAt | date: " MMMM dd, YYYY") }}</p>
+              <ng-container *ngIf="item.updatedAt; else noUpdatedDate">
+                <p>{{ item.updatedAt | date: "hh:mm a," }}</p>
+                <p>{{ item.updatedAt | date: " MMMM dd, YYYY" }}</p>
+              </ng-container>
+              <ng-template #noUpdatedDate>--</ng-template>
             </td>
 
           </tr>

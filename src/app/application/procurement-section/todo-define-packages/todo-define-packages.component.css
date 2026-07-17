@@ -314,3 +314,12 @@
   gap: 0.15rem !important; /* Minimal gap between month and year */
   margin: 0 !important;
 }
+
+::ng-deep .calendar-popup-small .p-datepicker-header .p-datepicker-title .p-datepicker-year {
+  margin-left: 0.1rem !important; /* Space before year */
+}
+
+  /* If using text/title approach */
+::ng-deep .calendar-popup-small .p-datepicker-header .p-datepicker-title .p-datepicker-month {
+  margin-right: 0.1rem !important; /* Space after month */
+}

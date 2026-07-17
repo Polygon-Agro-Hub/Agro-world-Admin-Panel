@@ -48,6 +48,10 @@
   color: white;
 }
 
+:host ::ng-deep .p-dropdown .p-dropdown-label:not(.p-placeholder) {
+  color: #000000;
+}
+
 /* Dropdown Panel */
 ::ng-deep .p-dropdown-panel {
   z-index: 1000 !important;
@@ -198,4 +202,44 @@
 /* Invalid/Error State */
 :host ::ng-deep .p-dropdown.p-invalid {
   border-color: #dc2626;
+}
+
+:host ::ng-deep p-dropdown.pt-dropdown-invalid .p-dropdown {
+ border-width: 2px !important;
+  border-style: solid !important;
+  border-color: #FF0000 !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+:host ::ng-deep p-dropdown.pt-dropdown-invalid .p-dropdown.p-focus {
+  border-color: #FF0000 !important;
+  box-shadow: none !important;
+}
+
+:host ::ng-deep p-dropdown.pt-dropdown-disabled .p-dropdown {
+  border-width: 2px !important;
+  border-style: solid !important;
+  border-color: #FF9D00 !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+:host ::ng-deep p-dropdown.pt-dropdown-disabled .p-dropdown.p-focus {
+  border-color: #FF9D00 !important;
+  box-shadow: none !important;
+}
+
+:host ::ng-deep p-dropdown.pt-dropdown-invalid .p-dropdown::before,
+:host ::ng-deep p-dropdown.pt-dropdown-invalid .p-dropdown::after {
+  border-color: #FF0000 !important;
+  background-color: #FF0000 !important;
+  box-shadow: none !important;
+}
+
+:host ::ng-deep p-dropdown.pt-dropdown-disabled .p-dropdown::before,
+:host ::ng-deep p-dropdown.pt-dropdown-disabled .p-dropdown::after {
+  border-color: #FF9D00 !important;
+  background-color: #FF9D00 !important;
+  box-shadow: none !important;
 }

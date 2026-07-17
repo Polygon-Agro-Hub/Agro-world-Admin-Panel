@@ -1131,5 +1131,55 @@ export class FinanceService {
     });
   }
 
+  fetchAllTransactions(
+    page: number,
+    limit: number,
+    status: string,
+    date: string,
+    searchItem: string,
+
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    let url = `${this.apiUrl}finance/get-all-transactions?page=${page}&limit=${limit}`;
+
+    if (status) {
+      url += `&status=${status}`;
+    }
+
+    if (date) {
+      url += `&date=${date}`;
+    }
+
+    if (searchItem) {
+      url += `&searchItem=${searchItem}`;
+    }
+
+    return this.http.get<any>(url, { headers });
+  }
+
+  viewTransactionDocument(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}finance/view-transaction-document/${id}`;
+    return this.http.get<any>(url, { headers });
+  }
+
+  updateTransactionStatus(id: number, transStatus: string, rejectReason?: string): Observable<any> {
+    const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}finance/update-transaction-status/${id}`;
+    return this.http.put<any>(url, { transStatus, rejectReason }, { headers });
+  }
+
 }
 

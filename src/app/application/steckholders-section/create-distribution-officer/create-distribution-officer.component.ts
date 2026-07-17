@@ -92,6 +92,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
   managerOptions: any[] = [];
   bankOptions: any[] = [];
   branchOptions: any[] = [];
+  categoryOptions: any[] = []; 
 
   showFirstDigitError: boolean = false;
   firstDigitErrorField: 'phoneNumber01' | 'phoneNumber02' | null = null;
@@ -371,6 +372,13 @@ export class CreateDistributionOfficerComponent implements OnInit {
     }
 
     if (
+      this.personalData.jobRole === 'Driver' &&
+      !this.personalData.driverCatId
+    ) {
+      missingFields.push('Driver Category is Required');
+    }
+
+    if (
       this.personalData.jobRole === 'Distribution Officer' &&
       !this.personalData.irmId
     ) {
@@ -564,6 +572,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
       this.touchedFields.companyId = true;
       this.touchedFields.centerId = true;
       this.touchedFields.jobRole = true;
+      this.touchedFields.driverCatId = true;
       this.touchedFields.irmId = true;
       this.touchedFields.firstNameEnglish = true;
       this.touchedFields.lastNameEnglish = true;
@@ -863,6 +872,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
       this.touchedFields.companyId = true;
       this.touchedFields.centerId = true;
       this.touchedFields.jobRole = true;
+      this.touchedFields.driverCatId = true;
       this.touchedFields.firstNameEnglish = true;
       this.touchedFields.lastNameEnglish = true;
       this.touchedFields.firstNameSinhala = true;
@@ -895,6 +905,13 @@ export class CreateDistributionOfficerComponent implements OnInit {
       if (!this.personalData.jobRole) {
         missingFields.push('Job Role is Required');
       }
+
+      if (
+  this.personalData.jobRole === 'Driver' &&
+  !this.personalData.driverCatId
+) {
+  missingFields.push('Driver Category is Required');
+}
 
       if (
         (this.personalData.jobRole === 'Distribution Officer' ||
@@ -1067,20 +1084,18 @@ export class CreateDistributionOfficerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const currentRoute = this.router.url;
+  const currentRoute = this.router.url;
 
-    if (currentRoute.includes('drivers/add-driver')) {
-      this.isDriverRoute = true;
-
-      this.jobRoleOptions = [{ label: 'Driver', value: 'Driver' }];
-    }
-    this.loadBanks();
-    this.loadBranches();
-    this.getAllCompanies();
-    this.EpmloyeIdCreate();
-    // Pre-fill country with Sri Lanka
-    this.personalData.country = 'Sri Lanka';
+  if (currentRoute.includes('drivers/add-driver')) {
+    this.isDriverRoute = true;
+    this.jobRoleOptions = [{ label: 'Driver', value: 'Driver' }];
   }
+  this.loadBanks();
+  this.loadBranches();
+  this.getAllCompanies();   // this now also populates categoryOptions
+  this.EpmloyeIdCreate();
+  this.personalData.country = 'Sri Lanka';
+}
 
   loadBranches() {
     this.http.get<BranchesData>('assets/json/branches.json').subscribe(
@@ -1177,15 +1192,19 @@ export class CreateDistributionOfficerComponent implements OnInit {
   }
 
   getAllCompanies() {
-    this.distributionOfficerServ.getAllCompanyList().subscribe((res) => {
-      this.CompanyData = res;
-      // Convert to dropdown options format
-      this.companyOptions = this.CompanyData.map((company) => ({
-        label: company.companyNameEnglish,
-        value: company.id,
-      }));
-    });
-  }
+  this.distributionOfficerServ.getAllCompanyList().subscribe((res) => {
+    this.CompanyData = res.companies;
+    this.companyOptions = this.CompanyData.map((company) => ({
+      label: company.companyNameEnglish,
+      value: company.id,
+    }));
+
+    this.categoryOptions = res.driverCategories.map((cat: any) => ({
+      label: cat.slvCatName,
+      value: cat.id,
+    }));
+  });
+}
 
   getAllCollectionManagers() {
     this.distributionOfficerServ
@@ -2431,6 +2450,7 @@ class Personal {
   empId!: string;
   centerId!: number | string;
   irmId!: number | string;
+  driverCatId!: number | string;
   empType!: string;
   firstNameEnglish!: string;
   firstNameSinhala!: string;

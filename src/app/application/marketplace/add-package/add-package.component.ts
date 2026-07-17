@@ -5,11 +5,13 @@ import { CommonModule, Location } from '@angular/common';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { DropdownModule } from 'primeng/dropdown';
+import { CalendarModule } from 'primeng/calendar';
 
 @Component({
   selector: 'app-add-package',
   standalone: true,
-  imports: [FormsModule, CommonModule, LoadingSpinnerComponent],
+  imports: [FormsModule, CommonModule, LoadingSpinnerComponent,  DropdownModule, CalendarModule],
   templateUrl: './add-package.component.html',
   styleUrls: ['./add-package.component.css'],
 })
@@ -30,10 +32,20 @@ export class AddPackageComponent implements OnInit {
     packageFee: false,
     serviceFee: false,
     image: false,
-    quantities: false
+    quantities: false,
+    packageType: false,
+    startDate: false,
+    endDate: false
   };
 
   submitAttempted = false;
+
+  packageTypeOptions = [
+  { label: 'One Time Package', value: 'One Time' },
+  { label: 'Recurring Package', value: 'Recurring' }
+];
+
+today: Date = new Date();
 
   constructor(private marketSrv: MarketPlaceService, private router: Router, private location: Location) { }
 
@@ -219,6 +231,21 @@ export class AddPackageComponent implements OnInit {
     if (!this.selectedImage) {
       errorMessages.push('Package Image is required');
     }
+
+    if (!this.packageObj.packageType) {
+  errorMessages.push('Package Type is required');
+}
+if (this.packageObj.packageType && !this.packageObj.startDate) {
+  errorMessages.push('Start Date is required');
+}
+if (this.packageObj.packageType === 'One Time' && !this.packageObj.endDate) {
+  errorMessages.push('End Date is required');
+}
+if (this.packageObj.packageType === 'One Time' &&
+    this.packageObj.startDate && this.packageObj.endDate &&
+    this.packageObj.endDate < this.packageObj.startDate) {
+  errorMessages.push('End Date cannot be before Start Date');
+}
 
     // ✅ Product type validation: At least one product must be added
     if (!this.productTypeObj || this.productTypeObj.length === 0 ||
@@ -493,6 +520,49 @@ export class AddPackageComponent implements OnInit {
     }
   }
 
+  onPackageTypeBlur(): void {
+  this.fieldTouched.packageType = true;
+}
+
+onStartDateBlur(): void {
+  this.fieldTouched.startDate = true;
+}
+
+onEndDateBlur(): void {
+  this.fieldTouched.endDate = true;
+}
+
+onPackageTypeChange(): void {
+  this.fieldTouched.packageType = true;
+  if (this.packageObj.packageType === 'Recurring') {
+    this.packageObj.endDate = null as any;
+  }
+}
+
+onStartDateChange(): void {
+  if (this.packageObj.endDate && this.packageObj.startDate &&
+      this.packageObj.endDate < this.packageObj.startDate) {
+    this.packageObj.endDate = null as any;
+  }
+}
+
+get shouldShowPackageTypeError(): boolean {
+  return (this.fieldTouched.packageType || this.submitAttempted) &&
+    !this.packageObj.packageType;
+}
+
+get shouldShowStartDateError(): boolean {
+  return (this.fieldTouched.startDate || this.submitAttempted) &&
+    !!this.packageObj.packageType &&
+    !this.packageObj.startDate;
+}
+
+get shouldShowEndDateError(): boolean {
+  return (this.fieldTouched.endDate || this.submitAttempted) &&
+    this.packageObj.packageType === 'One Time' &&
+    !this.packageObj.endDate;
+}
+
 }
 
 class Package {
@@ -508,6 +578,9 @@ class Package {
   serviceFee!: number;
   approximatedPrice!: number;
   quantities: { [id: number]: number } = {};
+  packageType: string = '';   // 'OneTime' | 'Recurring'
+  startDate!: Date;
+  endDate!: Date;
 }
 
 class ProductType {

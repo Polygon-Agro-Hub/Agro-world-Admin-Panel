@@ -295,3 +295,29 @@
 .mat-icon {
   color: var(--icon-color);
 }
+
+
+/* For the dropdown container */
+.readonly-dropdown {
+    cursor: not-allowed !important;
+}
+
+/* For the dropdown label/input area */
+.readonly-dropdown .p-dropdown-label {
+    cursor: not-allowed !important;
+}
+
+/* For the dropdown trigger/chevron area */
+.readonly-dropdown .p-dropdown-trigger {
+    cursor: not-allowed !important;
+}
+
+/* For the entire dropdown wrapper */
+:host ::ng-deep .readonly-dropdown .p-dropdown {
+    cursor: not-allowed !important;
+}
+
+/* Alternative: Target all child elements */
+:host ::ng-deep .readonly-dropdown * {
+    cursor: not-allowed !important;
+}

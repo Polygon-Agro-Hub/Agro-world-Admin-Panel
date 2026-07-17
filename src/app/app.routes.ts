@@ -297,6 +297,12 @@ import { EditBranchComponent } from './application/govi-shop/edit-branch/edit-br
 import { ViewDeleteShopsComponent } from './application/govi-shop/view-delete-shops/view-delete-shops.component';
 import { ViewCropVarietyComponent } from './application/plant-care-app/view-crop-variety/view-crop-variety.component';
 import { ViewCropGroupDetailsComponent } from './application/plant-care-app/view-crop-group-details/view-crop-group-details.component';
+import { GoviTransViewTransactionsComponent } from './application/finance/govi-trans-view-transactions/govi-trans-view-transactions.component';
+import { TransactionAmountComponent } from './application/finance/transaction-amount/transaction-amount.component';
+import { GoviTransFinanceComponent } from './application/finance/govi-trans-finance/govi-trans-finance/govi-trans-finance.component';
+import { ViewDriverCategoriesComponent } from './application/finance/govi-trans-finance/view-driver-categories/view-driver-categories.component';
+import { AddEditDriverCategoryComponent } from './application/finance/govi-trans-finance/add-edit-driver-category/add-edit-driver-category.component';
+import { ViewTransactionDocumentComponent } from './application/finance/govi-trans-finance/view-transaction-document/view-transaction-document.component';
 
 export const routes: Routes = [
   {
@@ -828,9 +834,36 @@ export const routes: Routes = [
                   {
                     path: 'view-documents/:id',
                     component: GoviShopViewDocumentComponent,
-                  },
+                  }
                 ],
               },
+              {
+                path: 'govi-trans-finance',
+                children:[
+                  {path:'', component: GoviTransFinanceComponent},
+                  {path: 'view-driver-categories', component: ViewDriverCategoriesComponent},
+                  {
+                    path: 'add-driver-category',
+                    component: AddEditDriverCategoryComponent,
+                  },
+                  {
+                    path: 'edit-driver-category/:id',
+                    component: AddEditDriverCategoryComponent,
+                  },
+                  {
+                    path: 'view-transactions',
+                    component: GoviTransViewTransactionsComponent,
+                  },
+                  {
+                    path: 'view-transactions/amount/:id',
+                    component: TransactionAmountComponent,
+                  },
+                  {
+                    path: 'view-transactions/document/:id',
+                    component: ViewTransactionDocumentComponent,
+                  }
+                ]
+              }
             ],
           },
         ],

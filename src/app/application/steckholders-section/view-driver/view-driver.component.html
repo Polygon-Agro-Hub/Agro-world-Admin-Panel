@@ -133,6 +133,15 @@
 
         </i>
         <p class="text-textLight dark:text-textDark mr-6">Filter By</p>
+
+        <div class="mr-5">
+          <p-dropdown
+            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] custom-top-dropdown"
+            [options]="categoryOptions" [checkmark]="false" optionLabel="label" optionValue="value"
+            [showClear]="selectCategory != null && selectCategory !== ''" placeholder="Category" [(ngModel)]="selectCategory"
+            (onChange)="applyStatusFilters()" panelStyleClass="custom-top-dropdown"></p-dropdown>
+        </div>
+
         <div class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] custom-top-dropdown"
@@ -206,6 +215,9 @@
               Last Name
             </th>
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+              Driver Category
+            </th>
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
               Centre
             </th>
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
@@ -264,6 +276,9 @@
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.lastNameEnglish }}
+            </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ item.slvCatName || '--' }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.centerName || '--' }}

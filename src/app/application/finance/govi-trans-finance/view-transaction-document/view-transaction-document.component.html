@@ -1,0 +1,148 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<!-- Back Button -->
+<button (click)="back()" class="mb-5 text-textLight dark:text-textDark">
+    <i class="fa-solid fa-arrow-left"></i>
+    Back
+</button>
+
+<div class="w-full bg-transparent overflow-hidden">
+    <!-- Header Section -->
+    <div
+        class="flex flex-row justify-between items-center mb-5 p-7 bg-white dark:bg-tileBlack rounded-lg shadow-md gap-10 dark:text-textDark">
+        <div class="flex flex-row gap-x-10">
+            <div class="flex flex-col">
+                <span class="text-[#7E7E7E] dark:text-[#C8C8C8] font-inter font-[400] mb-1">Employee ID :</span>
+                <span class="dark:text-[#FFFFFF] font-inter font-[500]">{{ transactionDocument.empId }}</span>
+            </div>
+            <div class="flex flex-col">
+                <span class="text-[#7E7E7E] dark:text-[#C8C8C8] font-inter font-[400] mb-1">Driver Name :</span>
+                <span class="dark:text-[#FFFFFF] font-inter font-[500]">{{ transactionDocument.firstNameEnglish }} {{
+                    transactionDocument.lastNameEnglish }}</span>
+            </div>
+            <div class="flex flex-col">
+                <span class="text-[#7E7E7E] dark:text-[#C8C8C8] font-inter font-[400] mb-1">Phone Number :</span>
+                <span class="dark:text-[#FFFFFF] font-inter font-[500]">{{
+                    formatPhoneNumber(transactionDocument.phoneCode01, transactionDocument.phoneNumber01) }}</span>
+            </div>
+            <div class="flex flex-col">
+                <span class="text-[#7E7E7E] dark:text-[#C8C8C8] font-inter font-[400] mb-1">Amount</span>
+                <span class="dark:text-[#FFFFFF] font-inter font-[500]">Rs. {{ transactionDocument.transAmount |
+                    number:'1.2-2' }}</span>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex gap-4">
+            <!-- Approve Button -->
+            <button
+                *ngIf="transactionDocument.transStatus === 'To Review' || transactionDocument.transStatus === 'Rejected'"
+                (click)="openApprovePopup()"
+                class="px-8 py-2 bg-[#3980C0] text-white font-medium rounded-md transition-colors duration-200 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#3980C0]">
+                Approve
+            </button>
+
+            <!-- Reject Button -->
+            <button
+                *ngIf="transactionDocument.transStatus === 'To Review' || transactionDocument.transStatus === 'Approved'"
+                (click)="openRejectPopup()"
+                class="px-8 py-2 bg-[#C40D0D] text-white font-medium rounded-md transition-colors duration-200 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#C40D0D]">
+                Reject
+            </button>
+        </div>
+    </div>
+
+    <!-- Tab Navigation and Content -->
+    <div class="relative pt-5 pb-5 w-full bg-white dark:bg-tileBlack shadow-lg rounded-lg overflow-hidden">
+
+        <!-- Tab Navigation with Arrows -->
+        <div class="flex items-center justify-start gap-4 pb-4 px-6 border-b border-gray-200">
+            <span class="text-base font-inter font-[500] text-gray-900 dark:text-white">
+                Payment Slip
+            </span>
+        </div>
+
+        <!-- Content Display Area -->
+        <div class="p-10">
+            <div
+                [ngClass]="isPDF ? 'w-full' : 'bg-white dark:bg-gray-800 rounded-[20px] w-full max-w-4xl mx-auto p-6 flex items-center justify-center'">
+
+                <!-- Image Viewer (for images) -->
+                <div *ngIf="!isPDF" class="bg-white dark:bg-gray-700 border border-[#D9D9D9] dark:border-gray-600 
+                 rounded-[10px] w-full h-[600px] flex items-center justify-center overflow-hidden relative"
+                    [style.cursor]="isPanning ? 'grabbing' : (scale > 1 ? 'grab' : 'default')"
+                    (mousedown)="onMouseDown($event)" (mousemove)="onMouseMove($event)" (mouseup)="onMouseUp()"
+                    (mouseleave)="onMouseLeave()">
+                    <img [src]="modalImage" [style.transform]="getImageTransform()"
+                        class="max-w-full max-h-full object-contain transition-transform select-none"
+                        style="pointer-events: none;" [alt]="modalTitle" draggable="false" />
+
+                    <!-- Zoom Buttons for Images -->
+                    <div class="absolute right-4 bottom-6 flex flex-col gap-3">
+                        <button (click)="zoomOut()" class="w-[52px] h-[55px] rounded-[5px] bg-white dark:bg-gray-600 
+                     border dark:border-gray-500 shadow text-xl dark:text-textDark
+                     hover:bg-gray-100 dark:hover:bg-gray-500">
+                            −
+                        </button>
+                        <button (click)="zoomIn()" class="w-[52px] h-[55px] rounded-[5px] bg-white dark:bg-gray-600 
+                     border dark:border-gray-500 shadow text-xl dark:text-textDark
+                     hover:bg-gray-100 dark:hover:bg-gray-500">
+                            +
+                        </button>
+                    </div>
+                </div>
+
+                <!-- PDF Viewer (for PDFs) -->
+                <div *ngIf="isPDF" class="w-full bg-white dark:bg-gray-700 rounded-[10px] overflow-hidden">
+                    <iframe [src]="sanitizedUrl" class="w-full h-[700px]" frameborder="0"
+                        style="border: none;"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="isRejectPopUp" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+    <div class="bg-white dark:bg-tileBlack rounded-2xl w-full max-w-md shadow-xl p-6 sm:p-8 flex flex-col items-center">
+
+        <!-- Title -->
+        <h3 class="text-lg font-semibold text-[#000000] dark:text-textDark mb-4 text-center">
+            Please Confirm?
+        </h3>
+
+        <!-- Content -->
+        <div class="w-full text-center space-y-4">
+
+            <p class="text-[#000000] font-[400] text-center dark:text-gray-400">
+                Are you sure you want to Reject the membership?
+            </p>
+
+            <div class="w-full">
+                <!-- Textarea -->
+                <textarea
+                    class="w-full py-2 px-3 bg-white dark:bg-[#262f45] dark:border-gray-600 dark:text-white border border-gray-300 rounded-xl outline-none resize-none"
+                    [ngClass]="textAreaTouched && !text ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600'"
+                    rows="4" placeholder="Mention Reason..." name="reply" [(ngModel)]="text"
+                    (click)="onTextareaClick()"></textarea>
+
+                <div *ngIf="textAreaTouched && !text" class="text-red-500 text-left text-sm mt-1">
+                    <i class="fa-solid fa-circle-info text-xs text-red"></i> Reason is required
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="flex gap-4 w-full pt-2">
+                <button type="button" (click)="cancelDelete()"
+                    class="flex-1 px-4 py-2.5 rounded-lg bg-[#74788D] dark:bg-[#74788D] text-[#FFFFFF] dark:text-gray-300 whitespace-nowrap">
+                    No, Go Back
+                </button>
+
+                <button type="button" (click)="rejectMembership()"
+                    class="flex-1 px-4 py-2.5 rounded-lg bg-[#C40D0D] text-white transition-colors font-medium whitespace-nowrap cursor-pointer">
+                    Yes, Reject
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -302,6 +302,7 @@ import { TransactionAmountComponent } from './application/finance/transaction-am
 import { GoviTransFinanceComponent } from './application/finance/govi-trans-finance/govi-trans-finance/govi-trans-finance.component';
 import { ViewDriverCategoriesComponent } from './application/finance/govi-trans-finance/view-driver-categories/view-driver-categories.component';
 import { AddEditDriverCategoryComponent } from './application/finance/govi-trans-finance/add-edit-driver-category/add-edit-driver-category.component';
+import { ViewTransactionDocumentComponent } from './application/finance/govi-trans-finance/view-transaction-document/view-transaction-document.component';
 
 export const routes: Routes = [
   {
@@ -856,6 +857,10 @@ export const routes: Routes = [
                   {
                     path: 'view-transactions/amount/:id',
                     component: TransactionAmountComponent,
+                  },
+                  {
+                    path: 'view-transactions/document/:id',
+                    component: ViewTransactionDocumentComponent,
                   }
                 ]
               }

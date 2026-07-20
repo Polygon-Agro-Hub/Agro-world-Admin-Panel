@@ -50,7 +50,7 @@ export class GoviTransViewTransactionsComponent implements OnInit {
   searchItem: string = '';
   page: number = 1;
   itemsPerPage: number = 10;
-  isLoading = false;
+  isLoading = true;
   totalItems: number = 5;
   hasData: boolean = true;
   centerId!: number;

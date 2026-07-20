@@ -1444,7 +1444,9 @@ if (invoice.orderApp === 'Marketplace') {
             it.quantity === '0.00' ? '1' : it.quantity || '1'
           );
           const amount = parseFloat(it.normalPrice);
-          const unitPriceDisplay = parseFloat(it.normalPrice) / quantity;
+          // const unitPriceDisplay = parseFloat(it.normalPrice) / quantity;
+
+          const unitPriceDisplay = unitPrice;
 
           return [
             `${i + 1}.`,

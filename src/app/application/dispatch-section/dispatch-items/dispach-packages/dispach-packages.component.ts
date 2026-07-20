@@ -84,9 +84,30 @@ export class DispachPackagesComponent implements OnInit {
         this.isCompleted = this.isShouldAllblock;
         this.total = this.packageArr.length;
         this.hasChanges = false;
-        this.productReplaced = false;  
+        this.productReplaced = false;
+        this.updatePackingStatus();
       }
     )
+  }
+
+  updatePackingStatus(): void {
+    if (!this.packageArr || this.packageArr.length === 0) {
+      this.validationFailedMessage = '';
+      this.validationSuccessMessage = '';
+      this.isAllPacked = false;
+      return;
+    }
+
+    const allPacked = this.packageArr.every(i => i.isPacked === 1);
+    this.isAllPacked = allPacked;
+
+    if (allPacked) {
+      this.validationSuccessMessage = "All checked. Order will move to 'Completed' on save.";
+      this.validationFailedMessage = '';
+    } else {
+      this.validationFailedMessage = "Unchecked items remain. Saving now keeps the order in 'Opened' Status.";
+      this.validationSuccessMessage = '';
+    }
   }
 
   onBack() {
@@ -214,17 +235,9 @@ export class DispachPackagesComponent implements OnInit {
     const isChecked = (event.target as HTMLInputElement).checked;
     item.isPacked = isChecked ? 1 : 0;
 
-    const allPacked = this.packageArr.every(i => i.isPacked === 1);
-    this.isAllPacked = allPacked;
-    this.hasChanges = this.packageArr.some(i => i.isPacked === 1) || this.productReplaced; 
+    this.hasChanges = this.packageArr.some(i => i.isPacked === 1) || this.productReplaced;
 
-    if (!allPacked) {
-      this.validationFailedMessage = "Unchecked items remain. Saving now keeps the order in 'Opened' Status.";
-      this.validationSuccessMessage = '';
-    } else {
-      this.validationSuccessMessage = "All checked. Order will move to 'Completed' on save.";
-      this.validationFailedMessage = '';
-    }
+    this.updatePackingStatus();
   }
 
   openPopUp(item: PakageItem) {

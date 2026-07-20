@@ -588,6 +588,8 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
 
   OpenAddNewItemPopUp(id: number) {
     this.selectPackageId = id;
+    this.selectCategoryId = '';
+    this.newItem = new OrderItem();  
     this.isNewAddPopUp = true;
   }
 
@@ -642,6 +644,7 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
     }
 
     this.newItem = new OrderItem();
+    this.selectCategoryId = ''; 
 
     selectedOrderDetail.items.sort((a, b) => a.productTypeId - b.productTypeId);
     this.isNewAddPopUp = false;

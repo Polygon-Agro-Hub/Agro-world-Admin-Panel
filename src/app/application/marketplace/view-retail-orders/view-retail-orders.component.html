@@ -140,21 +140,21 @@
     <span *ngIf="item.creditPaid > 0"
       class="inline-flex flex-col items-center rounded-full min-w-36 py-1 leading-tight bg-[#FFEDCF] font-normal">
       <span class="text-[#D17A00]">Credit Balance</span>
-      <span class=" text-black">Rs. {{ item.creditPaid | number : '1.2-2' }}</span>
+      <span class="text-black">Rs. {{ item.creditPaid | number : '1.2-2' }}</span>
     </span>
 
     <!-- Cash/Card portion -->
-    <span *ngIf="item.moneyPaid > 0"
+    <span *ngIf="item.paymentMethod"
       class="inline-flex flex-col items-center rounded-full min-w-36 py-1 leading-tight"
       [ngClass]="{
         'bg-[#BBFFC6]': item.paymentMethod === 'Cash',
         'bg-[#CFE1FF]': item.paymentMethod === 'Card'
       }">
-      <span class="" [ngClass]="{
+      <span [ngClass]="{
         'text-[#308233]': item.paymentMethod === 'Cash',
         'text-[#3B82F6]': item.paymentMethod === 'Card'
       }">{{ item.paymentMethod }}</span>
-      <span class="font-normal  text-black">Rs. {{ item.moneyPaid | number : '1.2-2' }}</span>
+      <span class="font-normal text-black">Rs. {{ item.moneyPaid | number : '1.2-2' }}</span>
     </span>
   </div>
 </td>

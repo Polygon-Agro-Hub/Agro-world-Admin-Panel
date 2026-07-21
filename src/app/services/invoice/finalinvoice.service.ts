@@ -327,16 +327,13 @@ export class FinalinvoiceService {
         ];
 
         aptAddress.forEach((line) => {
-          // Split the line to separate label and value
           const colonIndex = line.indexOf(':');
           const label = line.substring(0, colonIndex + 1);
           const value = line.substring(colonIndex + 1);
 
-          // Draw label in gray color
           doc.setTextColor(146, 146, 146); // #929292 in RGB
           doc.text(label, 15, yPosition);
 
-          // Draw value in black color
           const labelWidth = doc.getTextWidth(label);
           doc.setTextColor(0, 0, 0);
           doc.text(value, 15 + labelWidth, yPosition);
@@ -356,16 +353,13 @@ export class FinalinvoiceService {
         ];
 
         houseAddress.forEach((line) => {
-          // Split the line to separate label and value
           const colonIndex = line.indexOf(':');
           const label = line.substring(0, colonIndex + 1);
           const value = line.substring(colonIndex + 1);
 
-          // Draw label in gray color
           doc.setTextColor(146, 146, 146); // #929292 in RGB
           doc.text(label, 15, yPosition);
 
-          // Draw value in black color
           const labelWidth = doc.getTextWidth(label);
           doc.setTextColor(0, 0, 0);
           doc.text(value, 15 + labelWidth, yPosition);
@@ -392,8 +386,8 @@ export class FinalinvoiceService {
     yPosition += 3;
 
     const padZero = (value: number): string => {
-  return value < 10 ? `0${value}` : `${value}`;
-};
+      return value < 10 ? `0${value}` : `${value}`;
+    };
 
     // Invoice Details
     const invoiceNoY = yPosition;
@@ -424,41 +418,41 @@ export class FinalinvoiceService {
       yPosition += 5;
 
       doc.setFont('helvetica', 'bold');
-const pickupLabel = 'Centre:';
-doc.text(pickupLabel, 15, yPosition);
+      const pickupLabel = 'Centre:';
+      doc.text(pickupLabel, 15, yPosition);
 
-// Calculate position for center name with small space
-const centerName = invoice.pickupInfo.centerName || '';
-const spaceWidth = 2; // Small space in mm
-const centerNameX = 15 + doc.getTextWidth(pickupLabel) + spaceWidth;
+      // Calculate position for center name with small space
+      const centerName = invoice.pickupInfo.centerName || '';
+      const spaceWidth = 2; // Small space in mm
+      const centerNameX = 15 + doc.getTextWidth(pickupLabel) + spaceWidth;
 
-doc.setFont('helvetica', 'bold');
-doc.text(centerName, centerNameX, yPosition);
+      doc.setFont('helvetica', 'bold');
+      doc.text(centerName, centerNameX, yPosition);
 
-// Build two separate address lines: City/District, then Province/Country
-const cityDistrictLine = [
-  invoice.pickupInfo.address?.city || '',
-  invoice.pickupInfo.address?.district || '',
-].filter((part) => part).join(', ');
+      // Build two separate address lines: City/District, then Province/Country
+      const cityDistrictLine = [
+        invoice.pickupInfo.address?.city || '',
+        invoice.pickupInfo.address?.district || '',
+      ].filter((part) => part).join(', ');
 
-const provinceCountryLine = [
-  invoice.pickupInfo.address?.province || '',
-  invoice.pickupInfo.address?.country || '',
-].filter((part) => part).join(', ');
+      const provinceCountryLine = [
+        invoice.pickupInfo.address?.province || '',
+        invoice.pickupInfo.address?.country || '',
+      ].filter((part) => part).join(', ');
 
-doc.setFont('helvetica', 'normal');
+      doc.setFont('helvetica', 'normal');
 
-let addressY = yPosition + 5;
-if (cityDistrictLine) {
-  doc.text(cityDistrictLine, 15, addressY);
-  addressY += 5;
-}
-if (provinceCountryLine) {
-  doc.text(provinceCountryLine, 15, addressY);
-  addressY += 5;
-}
+      let addressY = yPosition + 5;
+      if (cityDistrictLine) {
+        doc.text(cityDistrictLine, 15, addressY);
+        addressY += 5;
+      }
+      if (provinceCountryLine) {
+        doc.text(provinceCountryLine, 15, addressY);
+        addressY += 5;
+      }
 
-yPosition = addressY + 10;
+      yPosition = addressY + 10;
     }
 
     // Add extra space here between Delivery Method and Package Title
@@ -511,14 +505,14 @@ yPosition = addressY + 10;
         }
 
         doc.setFontSize(9);
-doc.setFont('helvetica', 'bold');
-const totalItemCount = pack.packageDetails?.reduce((sum: number, detail: any) => sum + (detail.qty || 0), 0) || 0;
+        doc.setFont('helvetica', 'bold');
+        const totalItemCount = pack.packageDetails?.reduce((sum: number, detail: any) => sum + (detail.qty || 0), 0) || 0;
 
-doc.text(
-  `${pack.name || 'N/A'} (${padZero(totalItemCount)} Items)`,
-  15,
-  yPosition
-);
+        doc.text(
+          `${pack.name || 'N/A'} (${padZero(totalItemCount)} Items)`,
+          15,
+          yPosition
+        );
         doc.text(`Rs. ${formatNumberWithCommas(pack.amount)}`, 195, yPosition, {
           align: 'right',
         });
@@ -559,19 +553,19 @@ doc.text(
           styles: {
             fontSize: 9,
             cellPadding: { top: 4, right: 6, bottom: 4, left: 6 },
-            textColor: [0, 0, 0], // Set default text color to black for all cells
+            textColor: [0, 0, 0],
           },
           headStyles: {
             fillColor: [248, 248, 248],
-            textColor: [0, 0, 0], // Explicitly set header text color to black
+            textColor: [0, 0, 0],
             fontStyle: 'bold',
           },
           bodyStyles: {
-            textColor: [0, 0, 0], // Ensure body text is black
+            textColor: [0, 0, 0],
           },
           alternateRowStyles: {
             fillColor: [255, 255, 255],
-            textColor: [0, 0, 0], // Ensure alternate rows text is black
+            textColor: [0, 0, 0],
           },
           tableLineColor: [209, 213, 219],
           tableLineWidth: 0.5,
@@ -606,24 +600,21 @@ doc.text(
       const hasFamilyPacks =
         invoice.familyPackItems && invoice.familyPackItems.length > 0;
 
-        
-
-      // MODIFIED: Determine title based on orderApp
-let addTitle;
-if (invoice.orderApp === 'Marketplace') {
-  addTitle = hasFamilyPacks
-    ? ` Additional Items  (${padZero(invoice.additionalItems.length)} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
-    : ` Your Selected Items (${padZero(invoice.additionalItems.length)} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
-
-} else if (invoice.orderApp === 'Dash') {
-  addTitle = hasFamilyPacks
-    ? ` Additional Items  (${padZero(invoice.additionalItems.length)} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
-    : ` Custom Items (${padZero(invoice.additionalItems.length)} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
-} else {
-  addTitle = hasFamilyPacks
-    ? ` Custom Items (${padZero(invoice.additionalItems.length)} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
-    : ` Custom Items (${padZero(invoice.additionalItems.length)} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
-}
+      // Determine title based on orderApp
+      let addTitle;
+      if (invoice.orderApp === 'Marketplace') {
+        addTitle = hasFamilyPacks
+          ? ` Additional Items  (${padZero(invoice.additionalItems.length)} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
+          : ` Your Selected Items (${padZero(invoice.additionalItems.length)} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
+      } else if (invoice.orderApp === 'Dash') {
+        addTitle = hasFamilyPacks
+          ? ` Additional Items  (${padZero(invoice.additionalItems.length)} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
+          : ` Custom Items (${padZero(invoice.additionalItems.length)} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
+      } else {
+        addTitle = hasFamilyPacks
+          ? ` Custom Items (${padZero(invoice.additionalItems.length)} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
+          : ` Custom Items (${padZero(invoice.additionalItems.length)} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
+      }
 
       doc.setFontSize(9);
       doc.setFont('helvetica', 'bold');
@@ -666,13 +657,10 @@ if (invoice.orderApp === 'Marketplace') {
         ],
         ...invoice.additionalItems.map((it, i) => {
           const unitPrice = parseFloat(it.unitPrice || '0');
-          const itemDiscount = parseFloat(it.itemDiscount || '0');
           const quantity = parseFloat(
             it.quantity === '0.00' ? '1' : it.quantity || '1'
           );
           const amount = parseFloat(it.normalPrice);
-          // const unitPriceDisplay = parseFloat(it.normalPrice) / quantity;
-
           const unitPriceDisplay = unitPrice;
 
           return [
@@ -693,19 +681,19 @@ if (invoice.orderApp === 'Marketplace') {
         styles: {
           fontSize: 9,
           cellPadding: { top: 4, right: 6, bottom: 4, left: 6 },
-          textColor: [0, 0, 0], // Set default text color to black for all cells
+          textColor: [0, 0, 0],
         },
         headStyles: {
           fillColor: [243, 244, 246],
-          textColor: [0, 0, 0], // Explicitly set header text color to black
+          textColor: [0, 0, 0],
           fontStyle: 'bold',
         },
         bodyStyles: {
-          textColor: [0, 0, 0], // Ensure body text is black
+          textColor: [0, 0, 0],
         },
         alternateRowStyles: {
           fillColor: [255, 255, 255],
-          textColor: [0, 0, 0], // Ensure alternate rows text is black
+          textColor: [0, 0, 0],
         },
         tableLineColor: [209, 213, 219],
         tableLineWidth: 0.5,
@@ -716,7 +704,9 @@ if (invoice.orderApp === 'Marketplace') {
       yPosition = (doc as any).lastAutoTable.finalY + 10;
     }
 
-    // Grand Total Section
+    // ═══════════════════════════════════════════════════════════════
+    // Grand Total Section (fixed & merged with payment-status rows)
+    // ═══════════════════════════════════════════════════════════════
     const estimatedTotalHeight =
       30 + (invoice.familyPackItems?.length || 0) * 5;
     if (yPosition + estimatedTotalHeight > 250) {
@@ -740,7 +730,6 @@ if (invoice.orderApp === 'Marketplace') {
     // Handle family packages - show total if multiple, single package name if only one
     if (invoice.familyPackItems && invoice.familyPackItems.length > 0) {
       if (invoice.familyPackItems.length > 1) {
-        // Calculate total for all packages
         const packagesTotal = invoice.familyPackItems.reduce(
           (total, pack) => total + parseNum(pack.amount),
           0
@@ -750,7 +739,6 @@ if (invoice.orderApp === 'Marketplace') {
           `Rs. ${formatNumberWithCommas(packagesTotal.toFixed(2))}`,
         ]);
       } else {
-        // Only one package - show its name
         const pack = invoice.familyPackItems[0];
         grandTotalBody.push([
           pack.name || 'Family Pack',
@@ -771,7 +759,6 @@ if (invoice.orderApp === 'Marketplace') {
       const hasFamilyPacks =
         invoice.familyPackItems && invoice.familyPackItems.length > 0;
 
-      // MODIFIED: Determine label based on orderApp
       let label: string;
       if (invoice.orderApp === 'Marketplace') {
         label = hasFamilyPacks ? 'Additional Items' : 'Your Selected Items';
@@ -788,27 +775,29 @@ if (invoice.orderApp === 'Marketplace') {
     }
 
     // Add delivery fee and discount
-if (invoice.deliveryMethod !== 'Pickup' && parseNum(invoice.deliveryFee) > 0) {
-  grandTotalBody.push([
-    'Delivery Fee',
-    `Rs. ${formatNumberWithCommas(invoice.deliveryFee)}`,
-  ]);
-}
+    if (invoice.deliveryMethod !== 'Pickup' && parseNum(invoice.deliveryFee) > 0) {
+      grandTotalBody.push([
+        'Delivery Fee',
+        `Rs. ${formatNumberWithCommas(invoice.deliveryFee)}`,
+      ]);
+    }
 
     // Add service fee between Discount and Coupon Discount
-    if (invoice.orderApp !== 'Marketplace' &&
+    if (
+      invoice.orderApp !== 'Marketplace' &&
       invoice.additionalItems &&
       invoice.additionalItems.length > 0 &&
-      (!invoice.familyPackItems || invoice.familyPackItems.length === 0)) {
+      (!invoice.familyPackItems || invoice.familyPackItems.length === 0)
+    ) {
       grandTotalBody.push(['Service Fee', 'Rs. 180.00']);
     }
 
     if (parseNum(invoice.discount) > 0) {
-  grandTotalBody.push([
-    'Discount',
-    `Rs. ${formatNumberWithCommas(invoice.discount)}`,
-  ]);
-}
+      grandTotalBody.push([
+        'Discount',
+        `Rs. ${formatNumberWithCommas(invoice.discount)}`,
+      ]);
+    }
 
     // Add coupon discount only if it has a value greater than 0
     const couponValue = parseNum(invoice.billingInfo.couponValue);
@@ -835,15 +824,14 @@ if (invoice.deliveryMethod !== 'Pickup' && parseNum(invoice.deliveryFee) > 0) {
     const deliveryFeeTotal =
       invoice.deliveryMethod !== 'Pickup' ? parseNum(invoice.deliveryFee) : 0;
 
-    // Update discount calculation to only include coupon if it exists
     const discountTotal =
       parseNum(invoice.discount) + (couponValue > 0 ? couponValue : 0);
 
     const serviceFee =
-      invoice.orderApp !== 'Marketplace' && // Only add service fee if not Marketplace
-        invoice.additionalItems &&
-        invoice.additionalItems.length > 0 &&
-        (!invoice.familyPackItems || invoice.familyPackItems.length === 0)
+      invoice.orderApp !== 'Marketplace' &&
+      invoice.additionalItems &&
+      invoice.additionalItems.length > 0 &&
+      (!invoice.familyPackItems || invoice.familyPackItems.length === 0)
         ? 180
         : 0;
 
@@ -854,7 +842,8 @@ if (invoice.deliveryMethod !== 'Pickup' && parseNum(invoice.deliveryFee) > 0) {
       serviceFee -
       discountTotal;
 
-    // Add final total
+    // Add final total row and remember its index — this is the row the
+    // border line under "Grand Total" should be drawn against.
     grandTotalBody.push([
       { content: 'Grand Total', styles: { fontStyle: 'bold', textColor: [0, 0, 0] } },
       {
@@ -862,67 +851,127 @@ if (invoice.deliveryMethod !== 'Pickup' && parseNum(invoice.deliveryFee) > 0) {
         styles: { fontStyle: 'bold', textColor: [0, 0, 0] },
       },
     ]);
-const grandTotalRowIndex = grandTotalBody.length; // index right after Grand Total row
+    const grandTotalActualIndex = grandTotalBody.length - 1;
 
-// NEW: Show Online Transferred Amount if Card payment and paid
-if (invoice.paymentMethod === 'Card' && invoice.isPaid === 1) {
-  grandTotalBody.push([
-    {
-      content: 'Online Transferred Amount',
-      styles: {
-        textColor: [46, 125, 46],
-        cellPadding: { top: 2, right: 2, bottom: 4, left: 2 }, // tight top padding
-      },
-    },
-    {
-      content: `Rs. ${formatNumberWithCommas(invoice.moneyPaid)}`,
-      styles: {
-        fontStyle: 'bold',
-        textColor: [46, 125, 46],
-        cellPadding: { top: 2, right: 2, bottom: 4, left: 2 },
-      },
-    },
-  ]);
-}
+    // ── Payment status rows (credit balance / online / cash pending) ──
+    const GREEN_COLOR: [number, number, number] = [22, 163, 74];
+    const ORANGE_COLOR: [number, number, number] = [217, 119, 6];
 
-const grandTotalActualIndex = grandTotalRowIndex - 1;
+    const isPaid = Number(invoice.isPaid) === 1;
+    const creditPaidNum = parseNum(invoice.creditPaid as any);
+    const hasCreditPaid =
+      invoice.creditPaid !== null &&
+      invoice.creditPaid !== undefined &&
+      creditPaidNum > 0;
+    const remainingAfterCredit = finalGrandTotal - creditPaidNum;
 
-// Create the table
-(doc as any).autoTable({
-  startY: yPosition,
-  body: grandTotalBody,
-  margin: { left: 15, right: 15 },
-  columnStyles: {
-    0: { cellWidth: 'auto', halign: 'left' },
-    1: { cellWidth: 'auto', halign: 'right' },
-  },
-  styles: {
-    fontSize: 9,
-    cellPadding: { top: 4, right: 2, bottom: 4, left: 2 },
-    lineWidth: 0,
-  },
-  bodyStyles: {
-    lineWidth: 0,
-  },
-  alternateRowStyles: {
-    fillColor: [255, 255, 255],
-  },
-  didDrawCell: (data: any) => {
-    // Draw line at the TOP of the Grand Total row (separates it from
-    // Discount/Coupon rows above), not below it
-    if (data.row.index === grandTotalActualIndex) {
-      doc.setDrawColor(0, 0, 0);
-      doc.setLineWidth(0.5);
-      doc.line(
-        data.cell.x,
-        data.cell.y,                        // top of the cell
-        data.cell.x + data.cell.width,
-        data.cell.y
-      );
+    const isPickup = invoice.deliveryMethod?.toLowerCase() === 'pickup';
+    let showDeliveryNote = false; // only true for actual Cash-on-Delivery-Pending cases, NOT for pickup
+
+    const pushPaymentRow = (
+      label: string,
+      amount: number,
+      color: [number, number, number],
+    ) => {
+      grandTotalBody.push([
+        { content: label, styles: { fontStyle: 'bold', textColor: color } },
+        {
+          content: `Rs. ${formatNumberWithCommas(amount.toFixed(2))}`,
+          styles: { fontStyle: 'bold', textColor: color },
+        },
+      ]);
+    };
+
+    if (hasCreditPaid) {
+      pushPaymentRow('Credit Balance Used', creditPaidNum, GREEN_COLOR);
+
+      if (remainingAfterCredit > 0.01) {
+        if (isPaid) {
+          pushPaymentRow('Online Transferred Amount', remainingAfterCredit, GREEN_COLOR);
+        } else if (isPickup) {
+          pushPaymentRow('Cash On Pickup (Pending)', remainingAfterCredit, ORANGE_COLOR);
+        } else {
+          pushPaymentRow('Cash On Delivery (Pending)', remainingAfterCredit, ORANGE_COLOR);
+          showDeliveryNote = true;
+        }
+      }
+    } else {
+      if (isPaid) {
+        pushPaymentRow('Online Transferred Amount', finalGrandTotal, GREEN_COLOR);
+      } else if (isPickup) {
+        pushPaymentRow('Cash On Pickup (Pending)', finalGrandTotal, ORANGE_COLOR);
+      } else {
+        pushPaymentRow('Cash On Delivery (Pending)', finalGrandTotal, ORANGE_COLOR);
+        showDeliveryNote = true;
+      }
     }
-  },
-});
-yPosition = (doc as any).lastAutoTable.finalY + 10;
+
+    // Single table render — Grand Total row + payment status rows together
+    (doc as any).autoTable({
+      startY: yPosition,
+      body: grandTotalBody,
+      margin: { left: 15, right: 15 },
+      columnStyles: {
+        0: { cellWidth: 'auto', halign: 'left' },
+        1: { cellWidth: 'auto', halign: 'right' },
+      },
+      styles: {
+        fontSize: 9,
+        cellPadding: { top: 4, right: 2, bottom: 4, left: 2 },
+        lineWidth: 0,
+      },
+      bodyStyles: {
+        lineWidth: 0,
+      },
+      alternateRowStyles: {
+        fillColor: [255, 255, 255],
+      },
+      didDrawCell: (data: any) => {
+        // Draw line at the TOP of the Grand Total row (separates it from
+        // Discount/Coupon rows above), not below it
+        if (data.row.index === grandTotalActualIndex) {
+          doc.setDrawColor(0, 0, 0);
+          doc.setLineWidth(0.5);
+          doc.line(
+            data.cell.x,
+            data.cell.y,
+            data.cell.x + data.cell.width,
+            data.cell.y
+          );
+        }
+      },
+    });
+
+    yPosition = (doc as any).lastAutoTable.finalY + 2;
+
+    if (showDeliveryNote) {
+      const noteText =
+        'The delivery charges might be different on the day of delivery. Your Grand Total might be changed then.';
+
+      const iconX = 16;
+      const iconRadius = 1.6;
+      const textX = iconX + iconRadius + 2.5; // small gap after icon
+      const iconY = yPosition - 1;
+
+      doc.setDrawColor(80, 80, 80);
+      doc.setFillColor(30, 30, 30);
+      doc.circle(iconX, iconY, iconRadius, 'F');
+
+      doc.setFontSize(6);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(255, 255, 255);
+      doc.text('i', iconX, iconY + 0.9, { align: 'center' });
+
+      doc.setFontSize(8);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(90, 90, 90);
+      doc.text(noteText, textX, yPosition);
+
+      doc.setTextColor(0, 0, 0);
+      yPosition += 6;
+    }
+
+    yPosition += 4;
 
     // UPDATED REMARKS SECTION (WITHOUT UNDERLINE)
     const estimatedRemarksHeight = 50;

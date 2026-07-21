@@ -483,7 +483,7 @@ yPosition = addressY + 10;
     doc.setFont('helvetica', 'normal');
     doc.text(
       invoice.paymentMethod === 'Card'
-        ? 'Online Transfer'
+        ? 'Debit/Credit Card'
         : 'Cash On Delivery',
       140,
       paymentMethodValueY

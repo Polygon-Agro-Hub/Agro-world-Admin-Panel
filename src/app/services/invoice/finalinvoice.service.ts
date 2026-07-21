@@ -17,7 +17,7 @@ interface InvoiceData {
   familyPackItems: any[];
   additionalItems: any[];
   buildingType: string;
-  isPaid: string;
+  isPaid: number;
   creditPaid: string;
   moneyPaid: string;
   deliveryCharge?: {
@@ -862,42 +862,67 @@ if (invoice.deliveryMethod !== 'Pickup' && parseNum(invoice.deliveryFee) > 0) {
         styles: { fontStyle: 'bold', textColor: [0, 0, 0] },
       },
     ]);
+const grandTotalRowIndex = grandTotalBody.length; // index right after Grand Total row
 
-    // Create the table
-    (doc as any).autoTable({
-      startY: yPosition,
-      body: grandTotalBody,
-      margin: { left: 15, right: 15 },
-      columnStyles: {
-        0: { cellWidth: 'auto', halign: 'left' },
-        1: { cellWidth: 'auto', halign: 'right' },
-      },
+// NEW: Show Online Transferred Amount if Card payment and paid
+if (invoice.paymentMethod === 'Card' && invoice.isPaid === 1) {
+  grandTotalBody.push([
+    {
+      content: 'Online Transferred Amount',
       styles: {
-        fontSize: 9,
-        cellPadding: { top: 4, right: 2, bottom: 4, left: 2 },
-        lineWidth: 0,
+        textColor: [46, 125, 46],
+        cellPadding: { top: 2, right: 2, bottom: 4, left: 2 }, // tight top padding
       },
-      bodyStyles: {
-        lineWidth: 0,
+    },
+    {
+      content: `Rs. ${formatNumberWithCommas(invoice.moneyPaid)}`,
+      styles: {
+        fontStyle: 'bold',
+        textColor: [46, 125, 46],
+        cellPadding: { top: 2, right: 2, bottom: 4, left: 2 },
       },
-      alternateRowStyles: {
-        fillColor: [255, 255, 255], // Same white background for alternate rows
-      },
-      didDrawCell: (data: any) => {
-        // Add border between Grand Total and Discount (second last row)
-        if (data.row.index === grandTotalBody.length - 2) {
-          doc.setDrawColor(0, 0, 0);
-          doc.setLineWidth(0.5);
-          doc.line(
-            data.cell.x,
-            data.cell.y + data.cell.height,
-            data.cell.x + data.cell.width,
-            data.cell.y + data.cell.height
-          );
-        }
-      },
-    });
-    yPosition = (doc as any).lastAutoTable.finalY + 10;
+    },
+  ]);
+}
+
+const grandTotalActualIndex = grandTotalRowIndex - 1;
+
+// Create the table
+(doc as any).autoTable({
+  startY: yPosition,
+  body: grandTotalBody,
+  margin: { left: 15, right: 15 },
+  columnStyles: {
+    0: { cellWidth: 'auto', halign: 'left' },
+    1: { cellWidth: 'auto', halign: 'right' },
+  },
+  styles: {
+    fontSize: 9,
+    cellPadding: { top: 4, right: 2, bottom: 4, left: 2 },
+    lineWidth: 0,
+  },
+  bodyStyles: {
+    lineWidth: 0,
+  },
+  alternateRowStyles: {
+    fillColor: [255, 255, 255],
+  },
+  didDrawCell: (data: any) => {
+    // Draw line at the TOP of the Grand Total row (separates it from
+    // Discount/Coupon rows above), not below it
+    if (data.row.index === grandTotalActualIndex) {
+      doc.setDrawColor(0, 0, 0);
+      doc.setLineWidth(0.5);
+      doc.line(
+        data.cell.x,
+        data.cell.y,                        // top of the cell
+        data.cell.x + data.cell.width,
+        data.cell.y
+      );
+    }
+  },
+});
+yPosition = (doc as any).lastAutoTable.finalY + 10;
 
     // UPDATED REMARKS SECTION (WITHOUT UNDERLINE)
     const estimatedRemarksHeight = 50;

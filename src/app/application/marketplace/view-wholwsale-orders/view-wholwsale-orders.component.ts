@@ -277,5 +277,8 @@ class RetailOrders {
   status!: string;
   orderdDate!: Date;
   qrCode!: string;
+  paymentMethod!: string;
+  creditPaid!: number;
+  moneyPaid!: number;
   companyName!: string;
 }

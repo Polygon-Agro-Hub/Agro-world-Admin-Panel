@@ -32,7 +32,7 @@
                              [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
                              
                              [&_.p-button:hover]:dark:bg-[#6b7280]"
-              inputStyleClass="text-[16px] h-8 rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-2 border-[#E5E5E5] dark:border-[#AFAFAF] placeholder:text-[#9CA3AF] dark:placeholder:text-[#9CA3AF] focus:outline-none focus:border-blue-500 dark:focus:border-blue-400"
+              inputStyleClass="text-[16px] h-8 rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-2 border-[#E5E5E5] dark:border-[#AFAFAF] placeholder:text-[#9CA3AF] dark:placeholder:text-[#9CA3AF] focus:outline-none focus:border-blue-500 dark:focus:border-blue-400 cursor-pointer"
               [inputStyle]="{ width: '145px', padding: '0.5rem 2.5rem 0.5rem 0.75rem', fontSize: '0.875rem' }"
               [appendTo]="'body'" />
           </div>
@@ -93,6 +93,7 @@
                 <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">ORDERED DATE</th>
                 <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">CUSTOMER NAME</th>
                 <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">METHOD</th>
+                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">PAYMENT METHOD</th>
                 <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">AMOUNT</th>
                 <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">STATUS</th>
                 <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap"
@@ -132,6 +133,31 @@
                 <td class="px-3 py-3 text-left text-[#000000] dark:text-textDark whitespace-nowrap">
                   {{ item.method }}
                 </td>
+
+                <td class="px-3 py-3 text-center">
+  <div class="flex items-center justify-left gap-2 whitespace-nowrap">
+    <!-- Credit Balance portion -->
+    <span *ngIf="item.creditPaid > 0"
+      class="inline-flex flex-col items-center rounded-full min-w-36 py-1 leading-tight bg-[#FFEDCF] font-normal">
+      <span class="text-[#D17A00]">Credit Balance</span>
+      <span class="text-black">Rs. {{ item.creditPaid | number : '1.2-2' }}</span>
+    </span>
+
+    <!-- Cash/Card portion -->
+    <span *ngIf="item.paymentMethod"
+      class="inline-flex flex-col items-center rounded-full min-w-36 py-1 leading-tight"
+      [ngClass]="{
+        'bg-[#BBFFC6]': item.paymentMethod === 'Cash',
+        'bg-[#CFE1FF]': item.paymentMethod === 'Card'
+      }">
+      <span [ngClass]="{
+        'text-[#308233]': item.paymentMethod === 'Cash',
+        'text-[#3B82F6]': item.paymentMethod === 'Card'
+      }">{{ item.paymentMethod }}</span>
+      <span class="font-normal text-black">Rs. {{ item.moneyPaid | number : '1.2-2' }}</span>
+    </span>
+  </div>
+</td>
 
                 <td class="px-3 py-3 text-center text-[#000000] dark:text-textDark whitespace-nowrap">
                   {{ item.amount | number : "1.2-2" }}

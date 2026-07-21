@@ -92,7 +92,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
   managerOptions: any[] = [];
   bankOptions: any[] = [];
   branchOptions: any[] = [];
-  categoryOptions: any[] = []; 
+  categoryOptions: any[] = [];
 
   showFirstDigitError: boolean = false;
   firstDigitErrorField: 'phoneNumber01' | 'phoneNumber02' | null = null;
@@ -321,12 +321,15 @@ export class CreateDistributionOfficerComponent implements OnInit {
       }
     }
 
-    // images කිසිවක් select කරලා නැත්නම් - empty object එක return කරනවා
     if (files.length === 0) {
       return of({});
     }
 
-    return this.imageUploadService.uploadImages(files, 'officers/images').pipe(
+    const uploads$ = files.map((file) =>
+      this.imageUploadService.uploadImage(file, 'officers/images'),
+    );
+
+    return forkJoin(uploads$).pipe(
       map((urls: string[]) => {
         const result: { [key: string]: string | null } = {};
         order.forEach((key, idx) => {
@@ -907,11 +910,11 @@ export class CreateDistributionOfficerComponent implements OnInit {
       }
 
       if (
-  this.personalData.jobRole === 'Driver' &&
-  !this.personalData.driverCatId
-) {
-  missingFields.push('Driver Category is Required');
-}
+        this.personalData.jobRole === 'Driver' &&
+        !this.personalData.driverCatId
+      ) {
+        missingFields.push('Driver Category is Required');
+      }
 
       if (
         (this.personalData.jobRole === 'Distribution Officer' ||
@@ -1084,18 +1087,18 @@ export class CreateDistributionOfficerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-  const currentRoute = this.router.url;
+    const currentRoute = this.router.url;
 
-  if (currentRoute.includes('drivers/add-driver')) {
-    this.isDriverRoute = true;
-    this.jobRoleOptions = [{ label: 'Driver', value: 'Driver' }];
+    if (currentRoute.includes('drivers/add-driver')) {
+      this.isDriverRoute = true;
+      this.jobRoleOptions = [{ label: 'Driver', value: 'Driver' }];
+    }
+    this.loadBanks();
+    this.loadBranches();
+    this.getAllCompanies(); // this now also populates categoryOptions
+    this.EpmloyeIdCreate();
+    this.personalData.country = 'Sri Lanka';
   }
-  this.loadBanks();
-  this.loadBranches();
-  this.getAllCompanies();   // this now also populates categoryOptions
-  this.EpmloyeIdCreate();
-  this.personalData.country = 'Sri Lanka';
-}
 
   loadBranches() {
     this.http.get<BranchesData>('assets/json/branches.json').subscribe(
@@ -1192,19 +1195,19 @@ export class CreateDistributionOfficerComponent implements OnInit {
   }
 
   getAllCompanies() {
-  this.distributionOfficerServ.getAllCompanyList().subscribe((res) => {
-    this.CompanyData = res.companies;
-    this.companyOptions = this.CompanyData.map((company) => ({
-      label: company.companyNameEnglish,
-      value: company.id,
-    }));
+    this.distributionOfficerServ.getAllCompanyList().subscribe((res) => {
+      this.CompanyData = res.companies;
+      this.companyOptions = this.CompanyData.map((company) => ({
+        label: company.companyNameEnglish,
+        value: company.id,
+      }));
 
-    this.categoryOptions = res.driverCategories.map((cat: any) => ({
-      label: cat.slvCatName,
-      value: cat.id,
-    }));
-  });
-}
+      this.categoryOptions = res.driverCategories.map((cat: any) => ({
+        label: cat.slvCatName,
+        value: cat.id,
+      }));
+    });
+  }
 
   getAllCollectionManagers() {
     this.distributionOfficerServ

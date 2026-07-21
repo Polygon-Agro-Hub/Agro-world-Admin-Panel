@@ -14,7 +14,7 @@ import { CommonModule, Location } from '@angular/common';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { CalendarModule } from 'primeng/calendar';
 import { ImageUploadService } from '../../../services/image-upload-service/image-upload.service';
-import { Observable, of } from 'rxjs';
+import { forkJoin, of, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 interface Bank {
@@ -1487,11 +1487,11 @@ export class UpdateDistributionOfficerComponent {
       }
 
       if (
-  this.personalData.jobRole === 'Driver' &&
-  !this.personalData.driverCatId
-) {
-  missingFields.push('Driver Category is Required');
-}
+        this.personalData.jobRole === 'Driver' &&
+        !this.personalData.driverCatId
+      ) {
+        missingFields.push('Driver Category is Required');
+      }
 
       if (
         (this.personalData.jobRole === 'Distribution Officer' ||
@@ -1676,20 +1676,20 @@ export class UpdateDistributionOfficerComponent {
   }
 
   getAllCompanies() {
-  this.distributionOfficerServ.getAllCompanyList().subscribe((res) => {
-    this.CompanyData = res.companies;
+    this.distributionOfficerServ.getAllCompanyList().subscribe((res) => {
+      this.CompanyData = res.companies;
 
-    this.companyOptions = this.CompanyData.map((company) => ({
-      label: company.companyNameEnglish,
-      value: company.id,
-    }));
+      this.companyOptions = this.CompanyData.map((company) => ({
+        label: company.companyNameEnglish,
+        value: company.id,
+      }));
 
-    this.categoryOptions = res.driverCategories.map((cat: any) => ({
-      label: cat.slvCatName,
-      value: cat.id,
-    }));
-  });
-}
+      this.categoryOptions = res.driverCategories.map((cat: any) => ({
+        label: cat.slvCatName,
+        value: cat.id,
+      }));
+    });
+  }
 
   getAllCollectionCetnter() {
     this.distributionOfficerServ
@@ -1815,17 +1815,19 @@ export class UpdateDistributionOfficerComponent {
       return of({});
     }
 
-    return this.imageUploadService
-      .uploadImages(files, 'distributionofficer/image')
-      .pipe(
-        map((urls: string[]) => {
-          const result: { [key: string]: string } = {};
-          order.forEach((key, idx) => {
-            result[key] = urls[idx];
-          });
-          return result;
-        }),
-      );
+    const uploads$ = files.map((file) =>
+      this.imageUploadService.uploadImage(file, 'distributionofficer/image'),
+    );
+
+    return forkJoin(uploads$).pipe(
+      map((urls: string[]) => {
+        const result: { [key: string]: string } = {};
+        order.forEach((key, idx) => {
+          result[key] = urls[idx];
+        });
+        return result;
+      }),
+    );
   }
 
   onSubmit() {
@@ -1869,11 +1871,11 @@ export class UpdateDistributionOfficerComponent {
     }
 
     if (
-  this.personalData.jobRole === 'Driver' &&
-  !this.personalData.driverCatId
-) {
-  missingFields.push('Driver Category is Required');
-}
+      this.personalData.jobRole === 'Driver' &&
+      !this.personalData.driverCatId
+    ) {
+      missingFields.push('Driver Category is Required');
+    }
 
     if (
       this.personalData.jobRole === 'Collection Officer' &&

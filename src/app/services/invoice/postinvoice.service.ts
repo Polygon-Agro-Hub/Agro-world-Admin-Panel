@@ -1307,7 +1307,7 @@ export class PostinvoiceService {
             },
           ],
           ...(pack.packageDetails?.map((detail: any, i: number) => {
-            const qtyWithUnit = `${detail.qty || '0'} Kg`;
+            const qtyWithUnit = `${detail.qty || '0'}\u00A0Kg`;
 
             return [
               `${i + 1}.`,
@@ -1351,7 +1351,7 @@ export class PostinvoiceService {
             1: { cellWidth: 29 }, // Category
             2: { cellWidth: 40 }, // Item Description
             3: { cellWidth: 35 }, // Unit Price
-            4: { cellWidth: 21 }, // QTY
+            4: { cellWidth: 21, overflow: 'visible' }, // QTY
             5: { cellWidth: 35 }, // Amount
           },
         });
@@ -1453,7 +1453,7 @@ export class PostinvoiceService {
           // Get unit for additional items from backend data
           const unit = it.unit || '';
           // Format quantity with unit
-          const qtyWithUnit = unit ? `${quantity} ${unit}` : `${quantity}`;
+          const qtyWithUnit = unit ? `${quantity}\u00A0${unit}` : `${quantity}`;
 
           return [
             `${i + 1}.`,
@@ -1470,6 +1470,9 @@ export class PostinvoiceService {
         head: [additionalItemsBody[0]],
         body: additionalItemsBody.slice(1),
         margin: { left: 15, right: 15 },
+         columnStyles: {
+          3: { overflow: 'visible' }, 
+        },
         styles: {
           fontSize: 9,
           cellPadding: { top: 4, right: 6, bottom: 4, left: 6 },

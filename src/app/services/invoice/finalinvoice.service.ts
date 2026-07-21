@@ -63,7 +63,10 @@ export class FinalinvoiceService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
 
-  constructor(private http: HttpClient, private tokenService: TokenService) { }
+  constructor(
+    private http: HttpClient,
+    private tokenService: TokenService,
+  ) {}
 
   getInvoiceDetails(processOrderId: number): Observable<any> {
     const headers = new HttpHeaders({
@@ -72,13 +75,13 @@ export class FinalinvoiceService {
 
     return this.http.get(
       `${this.apiUrl}market-place/invoice/${processOrderId}`,
-      { headers }
+      { headers },
     );
   }
 
   async generateAndDownloadInvoice(
     id: number,
-    tableInvoiceNo: string
+    tableInvoiceNo: string,
   ): Promise<void> {
     try {
       const response = await this.getInvoiceDetails(id).toPromise();
@@ -89,7 +92,7 @@ export class FinalinvoiceService {
         'API InvoiceNo:',
         apiInvoiceNo,
         'Table InvoiceNo:',
-        tableInvoiceNo
+        tableInvoiceNo,
       );
 
       const finalInvoiceNo = tableInvoiceNo || apiInvoiceNo || 'N/A';
@@ -145,27 +148,27 @@ export class FinalinvoiceService {
         },
         pickupInfo: response.data?.pickupCenter
           ? {
-            centerName: response.data.pickupCenter.centerName || '', // Changed from 'name' to 'centerName'
-            address: {
-              city: response.data.pickupCenter.city || '',
-              district: response.data.pickupCenter.district || '',
-              province: response.data.pickupCenter.province || '',
-              country: response.data.pickupCenter.country || '',
-            },
-          }
+              centerName: response.data.pickupCenter.centerName || '', // Changed from 'name' to 'centerName'
+              address: {
+                city: response.data.pickupCenter.city || '',
+                district: response.data.pickupCenter.district || '',
+                province: response.data.pickupCenter.province || '',
+                country: response.data.pickupCenter.country || '',
+              },
+            }
           : undefined,
         familyPackTotal:
           response.data?.items?.familyPacks
             ?.reduce(
               (sum: number, pack: any) => sum + parseFloat(pack.amount || '0'),
-              0
+              0,
             )
             .toFixed(2) || '0.00',
         additionalItemsTotal:
           response.data?.items?.additionalItems
             ?.reduce(
               (sum: number, item: any) => sum + parseFloat(item.amount || '0'),
-              0
+              0,
             )
             .toFixed(2) || '0.00',
         deliveryFee: deliveryFee,
@@ -185,6 +188,32 @@ export class FinalinvoiceService {
       });
       throw error;
     }
+  }
+
+  private detectPaymentType(
+    payType: string,
+    delevaryMethod: string,
+    credit: number | null,
+    cash: number | null,
+  ): string {
+    // Image 7: fully paid by credit balance — check this FIRST,
+    // regardless of payType (Card/Cash), since backend still sends
+    // paymentMethod as Card/Cash even when fully credit-paid.
+    if (credit !== null && cash === null) {
+      return 'Credit Balance';
+    }
+
+    if (payType === 'Card') {
+      if (credit === null && cash !== null && cash > 0) return 'Online Transfer';
+      else if (credit !== null && cash !== null) return 'Online Transfer + Credit Balance';
+    } else if (payType === 'Cash') {
+      if (credit === null && cash !== null && cash > 0 && delevaryMethod === 'Delivery') return 'Cash on Delivery';
+      else if (credit === null && cash !== null && cash > 0 && delevaryMethod === 'Pickup') return 'Cash on Pickup';
+      else if (credit !== null && cash !== null && delevaryMethod === 'Pickup') return 'Cash on Pickup + Credit Balance';
+      else if (credit !== null && cash !== null && delevaryMethod === 'Delivery') return 'Cash on Delivery + Credit Balance';
+    }
+
+    return payType === 'Card' ? 'Debit/Credit Card' : 'Cash On Delivery'; // fallback
   }
 
   private async generatePDF(invoice: InvoiceData): Promise<void> {
@@ -267,16 +296,18 @@ export class FinalinvoiceService {
     doc.text('Bill To:', 15, 55);
     doc.setFont('helvetica', 'normal');
 
-    const billingName = `${invoice.billingInfo?.title ? `${invoice.billingInfo.title}. ` : ''
-      }${invoice.billingInfo?.fullName || ''}`.trim();
+    const billingName = `${
+      invoice.billingInfo?.title ? `${invoice.billingInfo.title}. ` : ''
+    }${invoice.billingInfo?.fullName || ''}`.trim();
     doc.text(billingName || 'N/A', 15, 60);
 
     let yPosition = 65;
 
     // Add contact information right after the name
     if (invoice.billingInfo.phonecode1 || invoice.billingInfo.phone1) {
-      const phoneNumber = `${invoice.billingInfo.phonecode1 || ''} ${invoice.billingInfo.phone1 || ''
-        }`.trim();
+      const phoneNumber = `${invoice.billingInfo.phonecode1 || ''} ${
+        invoice.billingInfo.phone1 || ''
+      }`.trim();
       if (phoneNumber) {
         doc.text(`Mobile: ${phoneNumber}`, 15, yPosition);
         yPosition += 5;
@@ -406,7 +437,7 @@ export class FinalinvoiceService {
     doc.text(
       invoice.deliveryMethod === 'Pickup' ? 'Instore Pickup' : 'Home Delivery',
       15,
-      yPosition + 5
+      yPosition + 5,
     );
     yPosition += 10;
 
@@ -433,12 +464,16 @@ export class FinalinvoiceService {
       const cityDistrictLine = [
         invoice.pickupInfo.address?.city || '',
         invoice.pickupInfo.address?.district || '',
-      ].filter((part) => part).join(', ');
+      ]
+        .filter((part) => part)
+        .join(', ');
 
       const provinceCountryLine = [
         invoice.pickupInfo.address?.province || '',
         invoice.pickupInfo.address?.country || '',
-      ].filter((part) => part).join(', ');
+      ]
+        .filter((part) => part)
+        .join(', ');
 
       doc.setFont('helvetica', 'normal');
 
@@ -466,22 +501,35 @@ export class FinalinvoiceService {
     doc.text(
       `Rs. ${formatNumberWithCommas(invoice.grandTotal)}`,
       140,
-      rightYStart + 5
+      rightYStart + 5,
     );
     doc.setFontSize(9);
 
-    // Aligns with the Address title/first-line for non-Pickup, or a
-    // fixed small gap under Grand Total for Pickup (see logic above).
+    const creditForType =
+      invoice.creditPaid !== null &&
+      invoice.creditPaid !== undefined &&
+      parseNum(invoice.creditPaid as any) > 0
+        ? parseNum(invoice.creditPaid as any)
+        : null;
+    const cashForType =
+      invoice.moneyPaid !== null &&
+      invoice.moneyPaid !== undefined &&
+      parseNum(invoice.moneyPaid as any) > 0
+        ? parseNum(invoice.moneyPaid as any)
+        : null;
+
+    const paymentTypeLabel =
+      this.detectPaymentType(
+        invoice.paymentMethod,
+        invoice.deliveryMethod,
+        creditForType,
+        cashForType,
+      ) || 'N/A';
+
     doc.setFont('helvetica', 'bold');
     doc.text('Payment Method:', 140, paymentMethodLabelY);
     doc.setFont('helvetica', 'normal');
-    doc.text(
-      invoice.paymentMethod === 'Card'
-        ? 'Debit/Credit Card'
-        : 'Cash On Delivery',
-      140,
-      paymentMethodValueY
-    );
+    doc.text(paymentTypeLabel, 140, paymentMethodValueY);
 
     // Always aligns with Invoice No: / Delivery Method: on the left
     doc.setFont('helvetica', 'bold');
@@ -506,12 +554,16 @@ export class FinalinvoiceService {
 
         doc.setFontSize(9);
         doc.setFont('helvetica', 'bold');
-        const totalItemCount = pack.packageDetails?.reduce((sum: number, detail: any) => sum + (detail.qty || 0), 0) || 0;
+        const totalItemCount =
+          pack.packageDetails?.reduce(
+            (sum: number, detail: any) => sum + (detail.qty || 0),
+            0,
+          ) || 0;
 
         doc.text(
           `${pack.name || 'N/A'} (${padZero(totalItemCount)} Items)`,
           15,
-          yPosition
+          yPosition,
         );
         doc.text(`Rs. ${formatNumberWithCommas(pack.amount)}`, 195, yPosition, {
           align: 'right',
@@ -527,15 +579,27 @@ export class FinalinvoiceService {
           [
             {
               content: 'Index',
-              styles: { fillColor: [248, 248, 248], fontStyle: 'bold', textColor: [0, 0, 0] },
+              styles: {
+                fillColor: [248, 248, 248],
+                fontStyle: 'bold',
+                textColor: [0, 0, 0],
+              },
             },
             {
               content: 'Item Description',
-              styles: { fillColor: [248, 248, 248], fontStyle: 'bold', textColor: [0, 0, 0] },
+              styles: {
+                fillColor: [248, 248, 248],
+                fontStyle: 'bold',
+                textColor: [0, 0, 0],
+              },
             },
             {
               content: 'QTY',
-              styles: { fillColor: [248, 248, 248], fontStyle: 'bold', textColor: [0, 0, 0] },
+              styles: {
+                fillColor: [248, 248, 248],
+                fontStyle: 'bold',
+                textColor: [0, 0, 0],
+              },
             },
           ],
           ...(pack.packageDetails?.map((detail: any, i: number) => [
@@ -594,7 +658,7 @@ export class FinalinvoiceService {
         (total, item) => {
           return total + parseFloat(item.normalPrice || '0');
         },
-        0
+        0,
       );
 
       const hasFamilyPacks =
@@ -623,7 +687,7 @@ export class FinalinvoiceService {
         `Rs. ${formatNumberWithCommas(additionalItemsTotalAmount.toFixed(2))}`,
         195,
         yPosition,
-        { align: 'right' }
+        { align: 'right' },
       );
       yPosition += 5;
 
@@ -636,29 +700,49 @@ export class FinalinvoiceService {
         [
           {
             content: 'Index',
-            styles: { fillColor: [243, 244, 246], fontStyle: 'bold', textColor: [0, 0, 0] },
+            styles: {
+              fillColor: [243, 244, 246],
+              fontStyle: 'bold',
+              textColor: [0, 0, 0],
+            },
           },
           {
             content: 'Item Description',
-            styles: { fillColor: [243, 244, 246], fontStyle: 'bold', textColor: [0, 0, 0] },
+            styles: {
+              fillColor: [243, 244, 246],
+              fontStyle: 'bold',
+              textColor: [0, 0, 0],
+            },
           },
           {
             content: 'Unit Price (Rs.)',
-            styles: { fillColor: [243, 244, 246], fontStyle: 'bold', textColor: [0, 0, 0] },
+            styles: {
+              fillColor: [243, 244, 246],
+              fontStyle: 'bold',
+              textColor: [0, 0, 0],
+            },
           },
           {
             content: 'QTY',
-            styles: { fillColor: [243, 244, 246], fontStyle: 'bold', textColor: [0, 0, 0] },
+            styles: {
+              fillColor: [243, 244, 246],
+              fontStyle: 'bold',
+              textColor: [0, 0, 0],
+            },
           },
           {
             content: 'Amount (Rs.)',
-            styles: { fillColor: [243, 244, 246], fontStyle: 'bold', textColor: [0, 0, 0] },
+            styles: {
+              fillColor: [243, 244, 246],
+              fontStyle: 'bold',
+              textColor: [0, 0, 0],
+            },
           },
         ],
         ...invoice.additionalItems.map((it, i) => {
           const unitPrice = parseFloat(it.unitPrice || '0');
           const quantity = parseFloat(
-            it.quantity === '0.00' ? '1' : it.quantity || '1'
+            it.quantity === '0.00' ? '1' : it.quantity || '1',
           );
           const amount = parseFloat(it.normalPrice);
           const unitPriceDisplay = unitPrice;
@@ -732,7 +816,7 @@ export class FinalinvoiceService {
       if (invoice.familyPackItems.length > 1) {
         const packagesTotal = invoice.familyPackItems.reduce(
           (total, pack) => total + parseNum(pack.amount),
-          0
+          0,
         );
         grandTotalBody.push([
           'Total Price for Packages',
@@ -753,7 +837,7 @@ export class FinalinvoiceService {
         (total, item) => {
           return total + parseFloat(item.normalPrice || '0');
         },
-        0
+        0,
       );
 
       const hasFamilyPacks =
@@ -775,7 +859,10 @@ export class FinalinvoiceService {
     }
 
     // Add delivery fee and discount
-    if (invoice.deliveryMethod !== 'Pickup' && parseNum(invoice.deliveryFee) > 0) {
+    if (
+      invoice.deliveryMethod !== 'Pickup' &&
+      parseNum(invoice.deliveryFee) > 0
+    ) {
       grandTotalBody.push([
         'Delivery Fee',
         `Rs. ${formatNumberWithCommas(invoice.deliveryFee)}`,
@@ -812,13 +899,13 @@ export class FinalinvoiceService {
     const familyPackTotal =
       invoice.familyPackItems?.reduce(
         (total, pack) => total + parseNum(pack.amount),
-        0
+        0,
       ) || 0;
 
     const additionalItemsTotal =
       invoice.additionalItems?.reduce(
         (total, item) => total + parseFloat(item.normalPrice || '0'),
-        0
+        0,
       ) || 0;
 
     const deliveryFeeTotal =
@@ -845,7 +932,10 @@ export class FinalinvoiceService {
     // Add final total row and remember its index — this is the row the
     // border line under "Grand Total" should be drawn against.
     grandTotalBody.push([
-      { content: 'Grand Total', styles: { fontStyle: 'bold', textColor: [0, 0, 0] } },
+      {
+        content: 'Grand Total',
+        styles: { fontStyle: 'bold', textColor: [0, 0, 0] },
+      },
       {
         content: `Rs. ${formatNumberWithCommas(finalGrandTotal.toFixed(2))}`,
         styles: { fontStyle: 'bold', textColor: [0, 0, 0] },
@@ -887,21 +977,45 @@ export class FinalinvoiceService {
 
       if (remainingAfterCredit > 0.01) {
         if (isPaid) {
-          pushPaymentRow('Online Transferred Amount', remainingAfterCredit, GREEN_COLOR);
+          pushPaymentRow(
+            'Online Transferred Amount',
+            remainingAfterCredit,
+            GREEN_COLOR,
+          );
         } else if (isPickup) {
-          pushPaymentRow('Cash On Pickup (Pending)', remainingAfterCredit, ORANGE_COLOR);
+          pushPaymentRow(
+            'Cash On Pickup (Pending)',
+            remainingAfterCredit,
+            ORANGE_COLOR,
+          );
         } else {
-          pushPaymentRow('Cash On Delivery (Pending)', remainingAfterCredit, ORANGE_COLOR);
+          pushPaymentRow(
+            'Cash On Delivery (Pending)',
+            remainingAfterCredit,
+            ORANGE_COLOR,
+          );
           showDeliveryNote = true;
         }
       }
     } else {
       if (isPaid) {
-        pushPaymentRow('Online Transferred Amount', finalGrandTotal, GREEN_COLOR);
+        pushPaymentRow(
+          'Online Transferred Amount',
+          finalGrandTotal,
+          GREEN_COLOR,
+        );
       } else if (isPickup) {
-        pushPaymentRow('Cash On Pickup (Pending)', finalGrandTotal, ORANGE_COLOR);
+        pushPaymentRow(
+          'Cash On Pickup (Pending)',
+          finalGrandTotal,
+          ORANGE_COLOR,
+        );
       } else {
-        pushPaymentRow('Cash On Delivery (Pending)', finalGrandTotal, ORANGE_COLOR);
+        pushPaymentRow(
+          'Cash On Delivery (Pending)',
+          finalGrandTotal,
+          ORANGE_COLOR,
+        );
         showDeliveryNote = true;
       }
     }
@@ -936,7 +1050,7 @@ export class FinalinvoiceService {
             data.cell.x,
             data.cell.y,
             data.cell.x + data.cell.width,
-            data.cell.y
+            data.cell.y,
           );
         }
       },
@@ -1021,7 +1135,7 @@ export class FinalinvoiceService {
       'WE WILL SEND YOU MORE OFFERS , LOWEST PRICED VEGGIES FROM US.',
       105,
       yPosition,
-      { align: 'center' }
+      { align: 'center' },
     );
 
     yPosition += 15;
@@ -1031,7 +1145,7 @@ export class FinalinvoiceService {
       '- THIS IS A COMPUTER GENERATED INVOICE, THUS NO SIGNATURE REQUIRED -',
       105,
       yPosition,
-      { align: 'center' }
+      { align: 'center' },
     );
 
     // Save the PDF

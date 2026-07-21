@@ -187,6 +187,26 @@ export class FinalinvoiceService {
     }
   }
 
+  private detectPaymentType(
+  payType: string,
+  delevaryMethod: string,
+  credit: number | null,
+  cash: number | null
+): string {
+  if (payType === 'Card') {
+    if (credit === null && cash !== null && cash > 0) return 'Online Transfer';
+    else if (credit !== null && cash !== null) return 'Online Transfer + Credit Balance';
+  } else if (payType === 'Cash') {
+    if (credit === null && cash !== null && cash > 0 && delevaryMethod === 'Delivery') return 'Cash on Delivery';
+    else if (credit === null && cash !== null && cash > 0 && delevaryMethod === 'Pickup') return 'Cash on Pickup';
+    else if (credit !== null && cash !== null && delevaryMethod === 'Pickup') return 'Cash on Pickup + Credit Balance';
+    else if (credit !== null && cash !== null && delevaryMethod === 'Delivery') return 'Cash on Delivery + Credit Balance';
+  } else {
+    if (credit !== null && cash === null) return 'Credit Balance';
+  }
+  return 'N/A';
+}
+
   private async generatePDF(invoice: InvoiceData): Promise<void> {
     // Helper functions
     const formatNumberWithCommas = (value: string | number): string => {
@@ -479,15 +499,18 @@ yPosition = addressY + 10;
     // Aligns with the Address title/first-line for non-Pickup, or a
     // fixed small gap under Grand Total for Pickup (see logic above).
     doc.setFont('helvetica', 'bold');
-    doc.text('Payment Method:', 140, paymentMethodLabelY);
-    doc.setFont('helvetica', 'normal');
-    doc.text(
-      invoice.paymentMethod === 'Card'
-        ? 'Debit/Credit Card'
-        : 'Cash On Delivery',
-      140,
-      paymentMethodValueY
-    );
+doc.text('Payment Method:', 140, paymentMethodLabelY);
+doc.setFont('helvetica', 'normal');
+doc.text(
+  this.detectPaymentType(
+    invoice.paymentMethod,
+    invoice.deliveryMethod === 'Pickup' ? 'Pickup' : 'Delivery',
+    invoice.creditPaid ? parseFloat(invoice.creditPaid as any) : null,
+    invoice.moneyPaid ? parseFloat(invoice.moneyPaid as any) : null
+  ),
+  140,
+  paymentMethodValueY
+);
 
     // Always aligns with Invoice No: / Delivery Method: on the left
     doc.setFont('helvetica', 'bold');

@@ -17,6 +17,9 @@ interface InvoiceData {
   familyPackItems: any[];
   additionalItems: any[];
   buildingType: string;
+  isPaid: number;
+  creditPaid: string;
+  moneyPaid: string;
   deliveryCharge?: {
     id: number;
     companycenterId: number | null;
@@ -60,7 +63,10 @@ export class FinalinvoiceService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
 
-  constructor(private http: HttpClient, private tokenService: TokenService) { }
+  constructor(
+    private http: HttpClient,
+    private tokenService: TokenService,
+  ) {}
 
   getInvoiceDetails(processOrderId: number): Observable<any> {
     const headers = new HttpHeaders({
@@ -69,13 +75,13 @@ export class FinalinvoiceService {
 
     return this.http.get(
       `${this.apiUrl}market-place/invoice/${processOrderId}`,
-      { headers }
+      { headers },
     );
   }
 
   async generateAndDownloadInvoice(
     id: number,
-    tableInvoiceNo: string
+    tableInvoiceNo: string,
   ): Promise<void> {
     try {
       const response = await this.getInvoiceDetails(id).toPromise();
@@ -86,7 +92,7 @@ export class FinalinvoiceService {
         'API InvoiceNo:',
         apiInvoiceNo,
         'Table InvoiceNo:',
-        tableInvoiceNo
+        tableInvoiceNo,
       );
 
       const finalInvoiceNo = tableInvoiceNo || apiInvoiceNo || 'N/A';
@@ -120,6 +126,9 @@ export class FinalinvoiceService {
         paymentMethod: invoiceDetails.paymentMethod || 'N/A',
         grandTotal: invoiceDetails.grandTotal || '0.00',
         buildingType: invoiceDetails.buildingType || 'House',
+        isPaid: invoiceDetails.isPaid || 'N/A',
+        creditPaid: invoiceDetails.creditPaid || 'N/A',
+        moneyPaid: invoiceDetails.moneyPaid || 'N/A',
         familyPackItems: response.data?.items?.familyPacks || [],
         additionalItems: response.data?.items?.additionalItems || [],
         billingInfo: {
@@ -139,27 +148,27 @@ export class FinalinvoiceService {
         },
         pickupInfo: response.data?.pickupCenter
           ? {
-            centerName: response.data.pickupCenter.centerName || '', // Changed from 'name' to 'centerName'
-            address: {
-              city: response.data.pickupCenter.city || '',
-              district: response.data.pickupCenter.district || '',
-              province: response.data.pickupCenter.province || '',
-              country: response.data.pickupCenter.country || '',
-            },
-          }
+              centerName: response.data.pickupCenter.centerName || '', // Changed from 'name' to 'centerName'
+              address: {
+                city: response.data.pickupCenter.city || '',
+                district: response.data.pickupCenter.district || '',
+                province: response.data.pickupCenter.province || '',
+                country: response.data.pickupCenter.country || '',
+              },
+            }
           : undefined,
         familyPackTotal:
           response.data?.items?.familyPacks
             ?.reduce(
               (sum: number, pack: any) => sum + parseFloat(pack.amount || '0'),
-              0
+              0,
             )
             .toFixed(2) || '0.00',
         additionalItemsTotal:
           response.data?.items?.additionalItems
             ?.reduce(
               (sum: number, item: any) => sum + parseFloat(item.amount || '0'),
-              0
+              0,
             )
             .toFixed(2) || '0.00',
         deliveryFee: deliveryFee,
@@ -181,784 +190,31 @@ export class FinalinvoiceService {
     }
   }
 
-  // private async generatePDF(invoice: InvoiceData): Promise<void> {
-  //   // Helper functions
-  //   const formatNumberWithCommas = (value: string | number): string => {
-  //     const num = parseNum(value);
-  //     return num.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
-  //   };
-
-  //   const parseNum = (value: string | number): number => {
-  //     if (typeof value === 'number') return value;
-  //     if (!value) return 0;
-  //     const cleaned = value
-  //       .toString()
-  //       .replace(/Rs\.?\s?/, '')
-  //       .replace(/,/g, '');
-  //     const num = parseFloat(cleaned);
-  //     return isNaN(num) ? 0 : num;
-  //   };
-
-  //   const formatDate = (dateStr: string | undefined): string => {
-  //     if (!dateStr) return 'N/A';
-  //     const d = new Date(dateStr);
-  //     if (isNaN(d.getTime())) return 'N/A';
-  //     return d.toLocaleDateString('en-US', {
-  //       timeZone: 'Asia/Colombo',
-  //       dateStyle: 'medium',
-  //     });
-  //   };
-
-  //   // Create PDF document
-  //   const doc = new jsPDF({
-  //     orientation: 'portrait',
-  //     unit: 'mm',
-  //     format: 'a4',
-  //   });
-
-  //   doc.setTextColor(0, 0, 0);
-
-  //   // Set document properties
-  //   doc.setProperties({
-  //     title: `Invoice ${invoice.invoiceNumber || 'N/A'}`,
-  //     subject: 'Invoice',
-  //     author: 'Polygon Holdings',
-  //     keywords: 'invoice, receipt',
-  //     creator: 'Polygon Holdings',
-  //   });
-
-  //   // INVOICE TITLE AT THE VERY TOP
-  //   doc.setFontSize(14);
-  //   doc.setFont('helvetica', 'bold');
-  //   doc.setTextColor(62, 32, 109);
-  //   doc.text('INVOICE', 105, 15, { align: 'center' });
-
-  //   doc.setTextColor(0, 0, 0);
-
-  //   // Load and add logo
-  //   try {
-  //     const logoUrl = await this.getLogoUrl();
-  //     if (logoUrl) {
-  //       doc.addImage(logoUrl, 'PNG', 140, 25, 40, 20);
-  //     }
-  //   } catch (error) {
-  //     console.warn('Could not load logo:', error);
-  //   }
-
-  //   // Company Info
-  //   doc.setFontSize(12);
-  //   doc.setFont('helvetica', 'bold');
-  //   doc.text('Polygon Holdings (Private) Ltd', 15, 25);
-  //   doc.setFont('helvetica', 'normal');
-  //   doc.setFontSize(10);
-  //   doc.text('No. 42/46, Nawam Mawatha, Colombo 02.', 15, 30);
-  //   doc.text('Contact No: +94 770 111 999', 15, 35);
-  //   doc.text('Email Address: info@polygon.lk', 15, 40);
-
-  //   // Bill To section
-  //   doc.setFontSize(9);
-  //   doc.setFont('helvetica', 'bold');
-  //   doc.text('Bill To:', 15, 55);
-  //   doc.setFont('helvetica', 'normal');
-
-  //   const billingName = `${invoice.billingInfo?.title ? `${invoice.billingInfo.title}.` : ''
-  //     }${invoice.billingInfo?.fullName || ''}`.trim();
-  //   doc.text(billingName || 'N/A', 15, 60);
-
-  //   let yPosition = 65;
-
-  //   // Add contact information right after the name
-  //   if (invoice.billingInfo.phonecode1 || invoice.billingInfo.phone1) {
-  //     const phoneNumber = `${invoice.billingInfo.phonecode1 || ''} ${invoice.billingInfo.phone1 || ''
-  //       }`.trim();
-  //     if (phoneNumber) {
-  //       doc.text(`Mobile: ${phoneNumber}`, 15, yPosition);
-  //       yPosition += 5;
-  //     }
-  //   }
-
-  //   if (invoice.billingInfo.userEmail) {
-  //     const email = `${invoice.billingInfo.userEmail}`.trim();
-  //     if (email) {
-  //       doc.text(`Email: ${email}`, 15, yPosition);
-  //       yPosition += 5;
-  //     }
-  //   }
-
-  //   // Only show address if delivery method is not Pickup
-  //   if (invoice.deliveryMethod?.toLowerCase() !== 'pickup') {
-  //     // Add space before address
-  //     yPosition += 3;
-
-  //     // Address display - updated to match the image examples
-  //     if (invoice.buildingType === 'Apartment') {
-  //       doc.setFont('helvetica', 'bold');
-  //       doc.text('Apartment Address:', 15, yPosition);
-  //       yPosition += 5;
-  //       doc.setFont('helvetica', 'normal');
-
-  //       const aptAddress = [
-  //         `No : ${invoice.billingInfo.buildingNo || 'N/A'},`,
-  //         `Name : ${invoice.billingInfo.buildingName || 'N/A'},`,
-  //         `Flat : ${invoice.billingInfo.unitNo || 'N/A'},`,
-  //         `Floor : ${invoice.billingInfo.floorNo || 'N/A'},`,
-  //         `House No : ${invoice.billingInfo.houseNo || 'N/A'},`,
-  //         `Street Name : ${invoice.billingInfo.street || 'N/A'},`,
-  //         `City : ${invoice.billingInfo.city || 'N/A'}`,
-  //       ];
-
-  //       aptAddress.forEach((line) => {
-  //         // Split the line to separate label and value
-  //         const colonIndex = line.indexOf(':');
-  //         const label = line.substring(0, colonIndex + 1);
-  //         const value = line.substring(colonIndex + 1);
-
-  //         // Draw label in gray color
-  //         doc.setTextColor(146, 146, 146); // #929292 in RGB
-  //         doc.text(label, 15, yPosition);
-
-  //         // Draw value in black color
-  //         const labelWidth = doc.getTextWidth(label);
-  //         doc.setTextColor(0, 0, 0);
-  //         doc.text(value, 15 + labelWidth, yPosition);
-
-  //         yPosition += 5;
-  //       });
-  //     } else {
-  //       doc.setFont('helvetica', 'bold');
-  //       doc.text('House Address:', 15, yPosition);
-  //       yPosition += 5;
-  //       doc.setFont('helvetica', 'normal');
-
-  //       const houseAddress = [
-  //         `House No : ${invoice.billingInfo.houseNo || 'N/A'},`,
-  //         `Street Name : ${invoice.billingInfo.street || 'N/A'},`,
-  //         `City : ${invoice.billingInfo.city || 'N/A'}`,
-  //       ];
-
-  //       houseAddress.forEach((line) => {
-  //         // Split the line to separate label and value
-  //         const colonIndex = line.indexOf(':');
-  //         const label = line.substring(0, colonIndex + 1);
-  //         const value = line.substring(colonIndex + 1);
-
-  //         // Draw label in gray color
-  //         doc.setTextColor(146, 146, 146); // #929292 in RGB
-  //         doc.text(label, 15, yPosition);
-
-  //         // Draw value in black color
-  //         const labelWidth = doc.getTextWidth(label);
-  //         doc.setTextColor(0, 0, 0);
-  //         doc.text(value, 15 + labelWidth, yPosition);
-
-  //         yPosition += 5;
-  //       });
-  //     }
-
-  //     // Add space after address
-  //     yPosition += 5;
-  //   }
-
-  //   // Add small space above Invoice No
-  //   yPosition += 3;
-
-  //   // Invoice Details
-  //   doc.setFont('helvetica', 'bold');
-  //   doc.text('Invoice No:', 15, yPosition);
-  //   doc.setFont('helvetica', 'normal');
-  //   doc.text(invoice.invoiceNumber || 'N/A', 15, yPosition + 5);
-  //   yPosition += 10;
-
-  //   yPosition += 3;
-
-  //   doc.setFont('helvetica', 'bold');
-  //   doc.text('Delivery Method:', 15, yPosition);
-  //   doc.setFont('helvetica', 'normal');
-  //   doc.text(
-  //     invoice.deliveryMethod === 'Pickup' ? 'Instore Pickup' : 'Home Delivery',
-  //     15,
-  //     yPosition + 5
-  //   );
-  //   yPosition += 10;
-
-  //   if (
-  //     invoice.deliveryMethod?.toLowerCase() === 'pickup' &&
-  //     invoice.pickupInfo
-  //   ) {
-  //     // Add space before Pickup Center
-  //     yPosition += 5;
-
-  //     doc.setFont('helvetica', 'bold');
-  //     const pickupLabel = 'Centre:';
-  //     doc.text(pickupLabel, 15, yPosition);
-
-  //     // Calculate position for center name with small space
-  //     const centerName = invoice.pickupInfo.centerName || '';
-  //     const spaceWidth = 2; // Small space in mm
-  //     const centerNameX = 15 + doc.getTextWidth(pickupLabel) + spaceWidth;
-
-  //     doc.setFont('helvetica', 'bold');
-  //     doc.text(centerName, centerNameX, yPosition);
-
-  //     // Format address like in your image
-  //     const addressLines = [
-  //       invoice.pickupInfo.address?.city || '',
-  //       invoice.pickupInfo.address?.district || '',
-  //       invoice.pickupInfo.address?.province || '',
-  //       invoice.pickupInfo.address?.country || '',
-  //     ].filter((line) => line); // Remove empty lines
-
-  //     // Join with comma and space, similar to your image
-  //     const formattedAddress = addressLines.join(', ');
-
-  //     doc.setFont('helvetica', 'normal');
-  //     doc.text(formattedAddress, 15, yPosition + 5);
-  //     yPosition += 20;
-  //   }
-
-  //   // Add extra space here between Delivery Method and Package Title
-  //   yPosition += 10;
-
-  //   // Right side details
-  //   const rightYStart = 55;
-  //   doc.setFont('helvetica', 'bold');
-  //   doc.text('Grand Total:', 140, rightYStart);
-  //   doc.setFontSize(11);
-  //   doc.text(
-  //     `Rs. ${formatNumberWithCommas(invoice.grandTotal)}`,
-  //     140,
-  //     rightYStart + 5
-  //   );
-  //   doc.setFontSize(9);
-
-  //   doc.setFont('helvetica', 'bold');
-  //   doc.text('Payment Method:', 140, rightYStart + 15);
-  //   doc.setFont('helvetica', 'normal');
-  //   doc.text(
-  //     invoice.paymentMethod === 'Card'
-  //       ? 'Debit/Credit Card'
-  //       : 'Cash On Delivery',
-  //     140,
-  //     rightYStart + 20
-  //   );
-
-  //   doc.setFont('helvetica', 'bold');
-  //   doc.text('Ordered Date:', 140, rightYStart + 50);
-  //   doc.setFont('helvetica', 'normal');
-  //   doc.text(formatDate(invoice.invoiceDate), 140, rightYStart + 55);
-
-  //   doc.setFont('helvetica', 'bold');
-  //   doc.text('Scheduled Date:', 140, rightYStart + 65); //+10
-  //   doc.setFont('helvetica', 'normal');
-  //   doc.text(formatDate(invoice.scheduledDate), 140, rightYStart + 70); //+10
-
-  //   // Family Pack Items
-  //   yPosition = Math.max(yPosition, rightYStart + 60);
-  //   if (invoice.familyPackItems && invoice.familyPackItems.length > 0) {
-  //     for (const pack of invoice.familyPackItems) {
-  //       const estimatedPackHeight = 15 + (pack.packageDetails?.length || 0) * 8;
-
-  //       if (yPosition + estimatedPackHeight > 250) {
-  //         doc.addPage();
-  //         yPosition = 20;
-  //       }
-
-  //       doc.setFontSize(9);
-  //       doc.setFont('helvetica', 'bold');
-  //       const totalItemCount = pack.packageDetails?.reduce((sum: number, detail: any) => sum + (detail.qty || 0), 0) || 0;
-
-  //       doc.text(
-  //         `${pack.name || 'N/A'} (${totalItemCount} Items)`,
-  //         15,
-  //         yPosition
-  //       );
-  //       doc.text(`Rs. ${formatNumberWithCommas(pack.amount)}`, 195, yPosition, {
-  //         align: 'right',
-  //       });
-  //       yPosition += 5;
-
-  //       doc.setDrawColor(215, 215, 215);
-  //       doc.setLineWidth(0.5);
-  //       doc.line(15, yPosition, 195, yPosition);
-  //       yPosition += 5;
-
-  //       // const packDetailsBody = [
-  //       //   [
-  //       //     {
-  //       //       content: 'Index',
-  //       //       styles: { fillColor: [248, 248, 248], fontStyle: 'bold' },
-  //       //     },
-  //       //     {
-  //       //       content: 'Item Description',
-  //       //       styles: { fillColor: [248, 248, 248], fontStyle: 'bold' },
-  //       //     },
-  //       //     {
-  //       //       content: 'QTY',
-  //       //       styles: { fillColor: [248, 248, 248], fontStyle: 'bold' },
-  //       //     },
-  //       //   ],
-  //       //   ...(pack.packageDetails?.map((detail: any, i: number) => [
-  //       //     `${i + 1}.`,
-  //       //     detail.typeName || 'N/A',
-  //       //     detail.qty || '0',
-  //       //   ]) || []),
-  //       // ];
-
-  //       // (doc as any).autoTable({
-  //       //   startY: yPosition,
-  //       //   head: [packDetailsBody[0]],
-  //       //   body: packDetailsBody.slice(1),
-  //       //   margin: { left: 15, right: 15 },
-  //       //   styles: {
-  //       //     fontSize: 9,
-  //       //     cellPadding: { top: 4, right: 6, bottom: 4, left: 6 },
-  //       //   },
-  //       //   headStyles: {
-  //       //     fillColor: [248, 248, 248],
-  //       //     textColor: 0,
-  //       //     fontStyle: 'bold',
-  //       //   },
-  //       //   alternateRowStyles: {
-  //       //     fillColor: [255, 255, 255],
-  //       //   },
-  //       //   tableLineColor: [209, 213, 219],
-  //       //   tableLineWidth: 0.5,
-  //       //   showHorizontalLines: false,
-  //       //   showVerticalLines: false,
-  //       // });
-
-  //       const packDetailsBody = [
-  //         [
-  //           {
-  //             content: 'Index',
-  //             styles: { fillColor: [248, 248, 248], fontStyle: 'bold', textColor: [0, 0, 0] },
-  //           },
-  //           {
-  //             content: 'Item Description',
-  //             styles: { fillColor: [248, 248, 248], fontStyle: 'bold', textColor: [0, 0, 0] },
-  //           },
-  //           {
-  //             content: 'QTY',
-  //             styles: { fillColor: [248, 248, 248], fontStyle: 'bold', textColor: [0, 0, 0] },
-  //           },
-  //         ],
-  //         ...(pack.packageDetails?.map((detail: any, i: number) => [
-  //           `${i + 1}.`,
-  //           detail.typeName || 'N/A',
-  //           detail.qty || '0',
-  //         ]) || []),
-  //       ];
-
-  //       (doc as any).autoTable({
-  //         startY: yPosition,
-  //         head: [packDetailsBody[0]],
-  //         body: packDetailsBody.slice(1),
-  //         margin: { left: 15, right: 15 },
-  //         styles: {
-  //           fontSize: 9,
-  //           cellPadding: { top: 4, right: 6, bottom: 4, left: 6 },
-  //           textColor: [0, 0, 0], // Set default text color to black for all cells
-  //         },
-  //         headStyles: {
-  //           fillColor: [248, 248, 248],
-  //           textColor: [0, 0, 0], // Explicitly set header text color to black
-  //           fontStyle: 'bold',
-  //         },
-  //         bodyStyles: {
-  //           textColor: [0, 0, 0], // Ensure body text is black
-  //         },
-  //         alternateRowStyles: {
-  //           fillColor: [255, 255, 255],
-  //           textColor: [0, 0, 0], // Ensure alternate rows text is black
-  //         },
-  //         tableLineColor: [209, 213, 219],
-  //         tableLineWidth: 0.5,
-  //         showHorizontalLines: false,
-  //         showVerticalLines: false,
-  //       });
-
-  //       yPosition = (doc as any).lastAutoTable.finalY + 10;
-  //     }
-  //   }
-
-  //   // Additional Items
-  //   if (invoice.additionalItems && invoice.additionalItems.length > 0) {
-  //     yPosition += 5;
-
-  //     const estimatedAdditionalItemsHeight =
-  //       15 + invoice.additionalItems.length * 8;
-
-  //     if (yPosition + estimatedAdditionalItemsHeight > 250) {
-  //       doc.addPage();
-  //       yPosition = 20;
-  //     }
-
-  //     // Calculate total amount for additional items
-  //     const additionalItemsTotalAmount = invoice.additionalItems.reduce(
-  //       (total, item) => {
-  //         return total + parseFloat(item.normalPrice || '0');
-  //       },
-  //       0
-  //     );
-
-  //     const hasFamilyPacks =
-  //       invoice.familyPackItems && invoice.familyPackItems.length > 0;
-
-  //     // MODIFIED: Determine title based on orderApp
-  //     let addTitle;
-  //     if (invoice.orderApp === 'Marketplace') {
-  //       addTitle = hasFamilyPacks
-  //         ? ` Additional Items  (${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
-  //         : ` Your Selected Items(${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
-
-  //     } else if (invoice.orderApp === 'Dash') {
-  //       addTitle = hasFamilyPacks
-  //         ? ` Additional Items  (${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
-  //         : ` Custom Items (${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
-  //     } else {
-  //       addTitle = hasFamilyPacks
-  //         ? ` Custom Items (${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
-  //         : ` Custom Items (${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
-  //     }
-
-  //     doc.setFontSize(9);
-  //     doc.setFont('helvetica', 'bold');
-  //     doc.text(addTitle, 15, yPosition);
-  //     doc.text(
-  //       `Rs. ${formatNumberWithCommas(additionalItemsTotalAmount.toFixed(2))}`,
-  //       195,
-  //       yPosition,
-  //       { align: 'right' }
-  //     );
-  //     yPosition += 5;
-
-  //     doc.setDrawColor(215, 215, 215);
-  //     doc.setLineWidth(0.5);
-  //     doc.line(15, yPosition, 195, yPosition);
-  //     yPosition += 5;
-
-  //     const additionalItemsBody = [
-  //       [
-  //         {
-  //           content: 'Index',
-  //           styles: { fillColor: [243, 244, 246], fontStyle: 'bold', textColor: [0, 0, 0] },
-  //         },
-  //         {
-  //           content: 'Item Description',
-  //           styles: { fillColor: [243, 244, 246], fontStyle: 'bold', textColor: [0, 0, 0] },
-  //         },
-  //         {
-  //           content: 'Unit Price (Rs.)',
-  //           styles: { fillColor: [243, 244, 246], fontStyle: 'bold', textColor: [0, 0, 0] },
-  //         },
-  //         {
-  //           content: 'QTY',
-  //           styles: { fillColor: [243, 244, 246], fontStyle: 'bold', textColor: [0, 0, 0] },
-  //         },
-  //         {
-  //           content: 'Amount (Rs.)',
-  //           styles: { fillColor: [243, 244, 246], fontStyle: 'bold', textColor: [0, 0, 0] },
-  //         },
-  //       ],
-  //       ...invoice.additionalItems.map((it, i) => {
-  //         const unitPrice = parseFloat(it.unitPrice || '0');
-  //         const itemDiscount = parseFloat(it.itemDiscount || '0');
-  //         const quantity = parseFloat(
-  //           it.quantity === '0.00' ? '1' : it.quantity || '1'
-  //         );
-  //         const amount = parseFloat(it.normalPrice);
-  //         const unitPriceDisplay = parseFloat(it.normalPrice) / quantity;
-
-  //         return [
-  //           `${i + 1}.`,
-  //           it.name || 'N/A',
-  //           `Rs. ${formatNumberWithCommas(unitPriceDisplay.toFixed(2))}`,
-  //           `${quantity} ${it.unit || ''}`.trim(),
-  //           `Rs. ${formatNumberWithCommas(amount.toFixed(2))}`,
-  //         ];
-  //       }),
-  //     ];
-
-  //     (doc as any).autoTable({
-  //       startY: yPosition,
-  //       head: [additionalItemsBody[0]],
-  //       body: additionalItemsBody.slice(1),
-  //       margin: { left: 15, right: 15 },
-  //       styles: {
-  //         fontSize: 9,
-  //         cellPadding: { top: 4, right: 6, bottom: 4, left: 6 },
-  //         textColor: [0, 0, 0], // Set default text color to black for all cells
-  //       },
-  //       headStyles: {
-  //         fillColor: [243, 244, 246],
-  //         textColor: [0, 0, 0], // Explicitly set header text color to black
-  //         fontStyle: 'bold',
-  //       },
-  //       bodyStyles: {
-  //         textColor: [0, 0, 0], // Ensure body text is black
-  //       },
-  //       alternateRowStyles: {
-  //         fillColor: [255, 255, 255],
-  //         textColor: [0, 0, 0], // Ensure alternate rows text is black
-  //       },
-  //       tableLineColor: [209, 213, 219],
-  //       tableLineWidth: 0.5,
-  //       showHorizontalLines: false,
-  //       showVerticalLines: false,
-  //     });
-
-  //     yPosition = (doc as any).lastAutoTable.finalY + 10;
-  //   }
-
-  //   // Grand Total Section
-  //   const estimatedTotalHeight =
-  //     30 + (invoice.familyPackItems?.length || 0) * 5;
-  //   if (yPosition + estimatedTotalHeight > 250) {
-  //     doc.addPage();
-  //     yPosition = 20;
-  //   }
-
-  //   doc.setFontSize(9);
-  //   doc.setFont('helvetica', 'bold');
-  //   doc.text('Grand Total for all items', 15, yPosition);
-  //   yPosition += 5;
-
-  //   doc.setDrawColor(215, 215, 215);
-  //   doc.setLineWidth(0.5);
-  //   doc.line(15, yPosition, 195, yPosition);
-  //   yPosition += 5;
-
-  //   // Create grand total body with individual packages
-  //   const grandTotalBody: any[] = [];
-
-  //   // Handle family packages - show total if multiple, single package name if only one
-  //   if (invoice.familyPackItems && invoice.familyPackItems.length > 0) {
-  //     if (invoice.familyPackItems.length > 1) {
-  //       // Calculate total for all packages
-  //       const packagesTotal = invoice.familyPackItems.reduce(
-  //         (total, pack) => total + parseNum(pack.amount),
-  //         0
-  //       );
-  //       grandTotalBody.push([
-  //         'Total for Packages',
-  //         `Rs. ${formatNumberWithCommas(packagesTotal.toFixed(2))}`,
-  //       ]);
-  //     } else {
-  //       // Only one package - show its name
-  //       const pack = invoice.familyPackItems[0];
-  //       grandTotalBody.push([
-  //         pack.name || 'Family Pack',
-  //         `Rs. ${formatNumberWithCommas(pack.amount)}`,
-  //       ]);
-  //     }
-  //   }
-
-  //   // Add additional items total if they exist
-  //   if (invoice.additionalItems && invoice.additionalItems.length > 0) {
-  //     const additionalItemsTotal = invoice.additionalItems.reduce(
-  //       (total, item) => {
-  //         return total + parseFloat(item.normalPrice || '0');
-  //       },
-  //       0
-  //     );
-
-  //     const hasFamilyPacks =
-  //       invoice.familyPackItems && invoice.familyPackItems.length > 0;
-
-  //     // MODIFIED: Determine label based on orderApp
-  //     let label: string;
-  //     if (invoice.orderApp === 'Marketplace') {
-  //       label = hasFamilyPacks ? 'Additional Items' : 'Your Selected Items';
-  //     } else if (invoice.orderApp === 'Dash') {
-  //       label = hasFamilyPacks ? 'Additional Items' : 'Custom Items';
-  //     } else {
-  //       label = hasFamilyPacks ? 'Custom Items' : 'Custom Items';
-  //     }
-
-  //     grandTotalBody.push([
-  //       label,
-  //       `Rs. ${formatNumberWithCommas(additionalItemsTotal.toFixed(2))}`,
-  //     ]);
-  //   }
-
-  //   // Add delivery fee and discount
-  //   if (invoice.deliveryMethod !== 'Pickup') {
-  //     grandTotalBody.push([
-  //       'Delivery Fee',
-  //       `Rs. ${formatNumberWithCommas(invoice.deliveryFee)}`,
-  //     ]);
-  //   }
-
-  //   // Add service fee between Discount and Coupon Discount
-  //   if (invoice.orderApp !== 'Marketplace' &&
-  //     invoice.additionalItems &&
-  //     invoice.additionalItems.length > 0 &&
-  //     (!invoice.familyPackItems || invoice.familyPackItems.length === 0)) {
-  //     grandTotalBody.push(['Service Fee', 'Rs. 180.00']);
-  //   }
-
-  //   grandTotalBody.push([
-  //     'Discount',
-  //     `Rs. ${formatNumberWithCommas(invoice.discount)}`,
-  //   ]);
-
-
-
-
-  //   // Add coupon discount only if it has a value greater than 0
-  //   const couponValue = parseNum(invoice.billingInfo.couponValue);
-  //   if (couponValue > 0) {
-  //     grandTotalBody.push([
-  //       'Coupon Discount',
-  //       `Rs. ${formatNumberWithCommas(invoice.billingInfo.couponValue)}`,
-  //     ]);
-  //   }
-
-  //   // Calculate final grand total
-  //   const familyPackTotal =
-  //     invoice.familyPackItems?.reduce(
-  //       (total, pack) => total + parseNum(pack.amount),
-  //       0
-  //     ) || 0;
-
-  //   const additionalItemsTotal =
-  //     invoice.additionalItems?.reduce(
-  //       (total, item) => total + parseFloat(item.normalPrice || '0'),
-  //       0
-  //     ) || 0;
-
-  //   const deliveryFeeTotal =
-  //     invoice.deliveryMethod !== 'Pickup' ? parseNum(invoice.deliveryFee) : 0;
-
-  //   // Update discount calculation to only include coupon if it exists
-  //   const discountTotal =
-  //     parseNum(invoice.discount) + (couponValue > 0 ? couponValue : 0);
-
-  //   const serviceFee =
-  //     invoice.orderApp !== 'Marketplace' && // Only add service fee if not Marketplace
-  //       invoice.additionalItems &&
-  //       invoice.additionalItems.length > 0 &&
-  //       (!invoice.familyPackItems || invoice.familyPackItems.length === 0)
-  //       ? 180
-  //       : 0;
-
-  //   const finalGrandTotal =
-  //     familyPackTotal +
-  //     additionalItemsTotal +
-  //     deliveryFeeTotal +
-  //     serviceFee -
-  //     discountTotal;
-
-  //   // Add final total
-  //   grandTotalBody.push([
-  //     { content: 'Grand Total', styles: { fontStyle: 'bold', textColor: [0, 0, 0] } },
-  //     {
-  //       content: `Rs. ${formatNumberWithCommas(finalGrandTotal.toFixed(2))}`,
-  //       styles: { fontStyle: 'bold', textColor: [0, 0, 0] },
-  //     },
-  //   ]);
-
-  //   // Create the table
-  //   (doc as any).autoTable({
-  //     startY: yPosition,
-  //     body: grandTotalBody,
-  //     margin: { left: 15, right: 15 },
-  //     columnStyles: {
-  //       0: { cellWidth: 'auto', halign: 'left' },
-  //       1: { cellWidth: 'auto', halign: 'right' },
-  //     },
-  //     styles: {
-  //       fontSize: 9,
-  //       cellPadding: { top: 4, right: 2, bottom: 4, left: 2 },
-  //       // lineColor: [255, 255, 255],
-  //       lineWidth: 0,
-  //     },
-  //     bodyStyles: {
-  //       lineWidth: 0,
-  //     },
-  //     alternateRowStyles: {
-  //       fillColor: [255, 255, 255], // Same white background for alternate rows
-  //     },
-  //     didDrawCell: (data: any) => {
-  //       // Add border between Grand Total and Discount (second last row)
-  //       if (data.row.index === grandTotalBody.length - 2) {
-  //         doc.setDrawColor(0, 0, 0);
-  //         doc.setLineWidth(0.5);
-  //         doc.line(
-  //           data.cell.x,
-  //           data.cell.y + data.cell.height,
-  //           data.cell.x + data.cell.width,
-  //           data.cell.y + data.cell.height
-  //         );
-  //       }
-  //     },
-  //   });
-  //   yPosition = (doc as any).lastAutoTable.finalY + 10;
-
-  //   // UPDATED REMARKS SECTION (WITHOUT UNDERLINE)
-  //   const estimatedRemarksHeight = 50;
-  //   if (yPosition + estimatedRemarksHeight > 250) {
-  //     doc.addPage();
-  //     yPosition = 20;
-  //   }
-
-  //   // Remarks Title without underline
-  //   doc.setFontSize(10);
-  //   doc.setFont('helvetica', 'bold');
-  //   doc.text('Remarks:', 15, yPosition);
-  //   yPosition += 8;
-
-  //   // Remarks content
-  //   doc.setFontSize(9);
-  //   doc.setFont('helvetica', 'normal');
-  //   const remarks = [
-  //     'Kindly inspect all goods at the time of delivery to ensure accuracy and condition.',
-  //     '',
-  //     'Polygon does not accept returns under any circumstances.',
-  //     '',
-  //     'Please report any issues or discrepancies within 24 hours of delivery to ensure prompt attention.',
-  //     '',
-  //     'For any assistance, feel free to contact our customer service team.',
-  //   ];
-
-  //   remarks.forEach((remark) => {
-  //     if (remark) {
-  //       doc.text(remark, 15, yPosition);
-  //     }
-  //     yPosition += 4;
-  //   });
-
-  //   // Footer
-  //   yPosition += 20;
-  //   doc.setFontSize(12);
-  //   doc.setFont('helvetica', 'italic', 'bold');
-  //   doc.text('Thank you for shopping with us!', 105, yPosition, {
-  //     align: 'center',
-  //   });
-
-  //   yPosition += 10;
-  //   doc.setFontSize(9);
-  //   doc.setFont('helvetica', 'italic');
-  //   doc.text(
-  //     'WE WILL SEND YOU MORE OFFERS , LOWEST PRICED VEGGIES FROM US.',
-  //     105,
-  //     yPosition,
-  //     { align: 'center' }
-  //   );
-
-  //   yPosition += 15;
-  //   doc.setTextColor(128, 128, 128);
-  //   doc.setFontSize(8);
-  //   doc.text(
-  //     '- THIS IS A COMPUTER GENERATED INVOICE, THUS NO SIGNATURE REQUIRED -',
-  //     105,
-  //     yPosition,
-  //     { align: 'center' }
-  //   );
-
-  //   // Save the PDF
-  //   doc.save(`Pre_Invoice_${invoice.invoiceNumber || 'unknown'}.pdf`);
-  // }
+  private detectPaymentType(
+    payType: string,
+    delevaryMethod: string,
+    credit: number | null,
+    cash: number | null,
+  ): string {
+    // Image 7: fully paid by credit balance — check this FIRST,
+    // regardless of payType (Card/Cash), since backend still sends
+    // paymentMethod as Card/Cash even when fully credit-paid.
+    if (credit !== null && cash === null) {
+      return 'Credit Balance';
+    }
+
+    if (payType === 'Card') {
+      if (credit === null && cash !== null && cash > 0) return 'Online Transfer';
+      else if (credit !== null && cash !== null) return 'Online Transfer + Credit Balance';
+    } else if (payType === 'Cash') {
+      if (credit === null && cash !== null && cash > 0 && delevaryMethod === 'Delivery') return 'Cash on Delivery';
+      else if (credit === null && cash !== null && cash > 0 && delevaryMethod === 'Pickup') return 'Cash on Pickup';
+      else if (credit !== null && cash !== null && delevaryMethod === 'Pickup') return 'Cash on Pickup + Credit Balance';
+      else if (credit !== null && cash !== null && delevaryMethod === 'Delivery') return 'Cash on Delivery + Credit Balance';
+    }
+
+    return payType === 'Card' ? 'Debit/Credit Card' : 'Cash On Delivery'; // fallback
+  }
 
   private async generatePDF(invoice: InvoiceData): Promise<void> {
     // Helper functions
@@ -1040,16 +296,18 @@ export class FinalinvoiceService {
     doc.text('Bill To:', 15, 55);
     doc.setFont('helvetica', 'normal');
 
-    const billingName = `${invoice.billingInfo?.title ? `${invoice.billingInfo.title}. ` : ''
-      }${invoice.billingInfo?.fullName || ''}`.trim();
+    const billingName = `${
+      invoice.billingInfo?.title ? `${invoice.billingInfo.title}. ` : ''
+    }${invoice.billingInfo?.fullName || ''}`.trim();
     doc.text(billingName || 'N/A', 15, 60);
 
     let yPosition = 65;
 
     // Add contact information right after the name
     if (invoice.billingInfo.phonecode1 || invoice.billingInfo.phone1) {
-      const phoneNumber = `${invoice.billingInfo.phonecode1 || ''} ${invoice.billingInfo.phone1 || ''
-        }`.trim();
+      const phoneNumber = `${invoice.billingInfo.phonecode1 || ''} ${
+        invoice.billingInfo.phone1 || ''
+      }`.trim();
       if (phoneNumber) {
         doc.text(`Mobile: ${phoneNumber}`, 15, yPosition);
         yPosition += 5;
@@ -1100,16 +358,13 @@ export class FinalinvoiceService {
         ];
 
         aptAddress.forEach((line) => {
-          // Split the line to separate label and value
           const colonIndex = line.indexOf(':');
           const label = line.substring(0, colonIndex + 1);
           const value = line.substring(colonIndex + 1);
 
-          // Draw label in gray color
           doc.setTextColor(146, 146, 146); // #929292 in RGB
           doc.text(label, 15, yPosition);
 
-          // Draw value in black color
           const labelWidth = doc.getTextWidth(label);
           doc.setTextColor(0, 0, 0);
           doc.text(value, 15 + labelWidth, yPosition);
@@ -1129,16 +384,13 @@ export class FinalinvoiceService {
         ];
 
         houseAddress.forEach((line) => {
-          // Split the line to separate label and value
           const colonIndex = line.indexOf(':');
           const label = line.substring(0, colonIndex + 1);
           const value = line.substring(colonIndex + 1);
 
-          // Draw label in gray color
           doc.setTextColor(146, 146, 146); // #929292 in RGB
           doc.text(label, 15, yPosition);
 
-          // Draw value in black color
           const labelWidth = doc.getTextWidth(label);
           doc.setTextColor(0, 0, 0);
           doc.text(value, 15 + labelWidth, yPosition);
@@ -1165,8 +417,8 @@ export class FinalinvoiceService {
     yPosition += 3;
 
     const padZero = (value: number): string => {
-  return value < 10 ? `0${value}` : `${value}`;
-};
+      return value < 10 ? `0${value}` : `${value}`;
+    };
 
     // Invoice Details
     const invoiceNoY = yPosition;
@@ -1185,7 +437,7 @@ export class FinalinvoiceService {
     doc.text(
       invoice.deliveryMethod === 'Pickup' ? 'Instore Pickup' : 'Home Delivery',
       15,
-      yPosition + 5
+      yPosition + 5,
     );
     yPosition += 10;
 
@@ -1197,41 +449,45 @@ export class FinalinvoiceService {
       yPosition += 5;
 
       doc.setFont('helvetica', 'bold');
-const pickupLabel = 'Centre:';
-doc.text(pickupLabel, 15, yPosition);
+      const pickupLabel = 'Centre:';
+      doc.text(pickupLabel, 15, yPosition);
 
-// Calculate position for center name with small space
-const centerName = invoice.pickupInfo.centerName || '';
-const spaceWidth = 2; // Small space in mm
-const centerNameX = 15 + doc.getTextWidth(pickupLabel) + spaceWidth;
+      // Calculate position for center name with small space
+      const centerName = invoice.pickupInfo.centerName || '';
+      const spaceWidth = 2; // Small space in mm
+      const centerNameX = 15 + doc.getTextWidth(pickupLabel) + spaceWidth;
 
-doc.setFont('helvetica', 'bold');
-doc.text(centerName, centerNameX, yPosition);
+      doc.setFont('helvetica', 'bold');
+      doc.text(centerName, centerNameX, yPosition);
 
-// Build two separate address lines: City/District, then Province/Country
-const cityDistrictLine = [
-  invoice.pickupInfo.address?.city || '',
-  invoice.pickupInfo.address?.district || '',
-].filter((part) => part).join(', ');
+      // Build two separate address lines: City/District, then Province/Country
+      const cityDistrictLine = [
+        invoice.pickupInfo.address?.city || '',
+        invoice.pickupInfo.address?.district || '',
+      ]
+        .filter((part) => part)
+        .join(', ');
 
-const provinceCountryLine = [
-  invoice.pickupInfo.address?.province || '',
-  invoice.pickupInfo.address?.country || '',
-].filter((part) => part).join(', ');
+      const provinceCountryLine = [
+        invoice.pickupInfo.address?.province || '',
+        invoice.pickupInfo.address?.country || '',
+      ]
+        .filter((part) => part)
+        .join(', ');
 
-doc.setFont('helvetica', 'normal');
+      doc.setFont('helvetica', 'normal');
 
-let addressY = yPosition + 5;
-if (cityDistrictLine) {
-  doc.text(cityDistrictLine, 15, addressY);
-  addressY += 5;
-}
-if (provinceCountryLine) {
-  doc.text(provinceCountryLine, 15, addressY);
-  addressY += 5;
-}
+      let addressY = yPosition + 5;
+      if (cityDistrictLine) {
+        doc.text(cityDistrictLine, 15, addressY);
+        addressY += 5;
+      }
+      if (provinceCountryLine) {
+        doc.text(provinceCountryLine, 15, addressY);
+        addressY += 5;
+      }
 
-yPosition = addressY + 10;
+      yPosition = addressY + 10;
     }
 
     // Add extra space here between Delivery Method and Package Title
@@ -1245,22 +501,35 @@ yPosition = addressY + 10;
     doc.text(
       `Rs. ${formatNumberWithCommas(invoice.grandTotal)}`,
       140,
-      rightYStart + 5
+      rightYStart + 5,
     );
     doc.setFontSize(9);
 
-    // Aligns with the Address title/first-line for non-Pickup, or a
-    // fixed small gap under Grand Total for Pickup (see logic above).
+    const creditForType =
+      invoice.creditPaid !== null &&
+      invoice.creditPaid !== undefined &&
+      parseNum(invoice.creditPaid as any) > 0
+        ? parseNum(invoice.creditPaid as any)
+        : null;
+    const cashForType =
+      invoice.moneyPaid !== null &&
+      invoice.moneyPaid !== undefined &&
+      parseNum(invoice.moneyPaid as any) > 0
+        ? parseNum(invoice.moneyPaid as any)
+        : null;
+
+    const paymentTypeLabel =
+      this.detectPaymentType(
+        invoice.paymentMethod,
+        invoice.deliveryMethod,
+        creditForType,
+        cashForType,
+      ) || 'N/A';
+
     doc.setFont('helvetica', 'bold');
     doc.text('Payment Method:', 140, paymentMethodLabelY);
     doc.setFont('helvetica', 'normal');
-    doc.text(
-      invoice.paymentMethod === 'Card'
-        ? 'Debit/Credit Card'
-        : 'Cash On Delivery',
-      140,
-      paymentMethodValueY
-    );
+    doc.text(paymentTypeLabel, 140, paymentMethodValueY);
 
     // Always aligns with Invoice No: / Delivery Method: on the left
     doc.setFont('helvetica', 'bold');
@@ -1284,14 +553,18 @@ yPosition = addressY + 10;
         }
 
         doc.setFontSize(9);
-doc.setFont('helvetica', 'bold');
-const totalItemCount = pack.packageDetails?.reduce((sum: number, detail: any) => sum + (detail.qty || 0), 0) || 0;
+        doc.setFont('helvetica', 'bold');
+        const totalItemCount =
+          pack.packageDetails?.reduce(
+            (sum: number, detail: any) => sum + (detail.qty || 0),
+            0,
+          ) || 0;
 
-doc.text(
-  `${pack.name || 'N/A'} (${padZero(totalItemCount)} Items)`,
-  15,
-  yPosition
-);
+        doc.text(
+          `${pack.name || 'N/A'} (${padZero(totalItemCount)} Items)`,
+          15,
+          yPosition,
+        );
         doc.text(`Rs. ${formatNumberWithCommas(pack.amount)}`, 195, yPosition, {
           align: 'right',
         });
@@ -1306,15 +579,27 @@ doc.text(
           [
             {
               content: 'Index',
-              styles: { fillColor: [248, 248, 248], fontStyle: 'bold', textColor: [0, 0, 0] },
+              styles: {
+                fillColor: [248, 248, 248],
+                fontStyle: 'bold',
+                textColor: [0, 0, 0],
+              },
             },
             {
               content: 'Item Description',
-              styles: { fillColor: [248, 248, 248], fontStyle: 'bold', textColor: [0, 0, 0] },
+              styles: {
+                fillColor: [248, 248, 248],
+                fontStyle: 'bold',
+                textColor: [0, 0, 0],
+              },
             },
             {
               content: 'QTY',
-              styles: { fillColor: [248, 248, 248], fontStyle: 'bold', textColor: [0, 0, 0] },
+              styles: {
+                fillColor: [248, 248, 248],
+                fontStyle: 'bold',
+                textColor: [0, 0, 0],
+              },
             },
           ],
           ...(pack.packageDetails?.map((detail: any, i: number) => [
@@ -1332,19 +617,19 @@ doc.text(
           styles: {
             fontSize: 9,
             cellPadding: { top: 4, right: 6, bottom: 4, left: 6 },
-            textColor: [0, 0, 0], // Set default text color to black for all cells
+            textColor: [0, 0, 0],
           },
           headStyles: {
             fillColor: [248, 248, 248],
-            textColor: [0, 0, 0], // Explicitly set header text color to black
+            textColor: [0, 0, 0],
             fontStyle: 'bold',
           },
           bodyStyles: {
-            textColor: [0, 0, 0], // Ensure body text is black
+            textColor: [0, 0, 0],
           },
           alternateRowStyles: {
             fillColor: [255, 255, 255],
-            textColor: [0, 0, 0], // Ensure alternate rows text is black
+            textColor: [0, 0, 0],
           },
           tableLineColor: [209, 213, 219],
           tableLineWidth: 0.5,
@@ -1373,30 +658,27 @@ doc.text(
         (total, item) => {
           return total + parseFloat(item.normalPrice || '0');
         },
-        0
+        0,
       );
 
       const hasFamilyPacks =
         invoice.familyPackItems && invoice.familyPackItems.length > 0;
 
-        
-
-      // MODIFIED: Determine title based on orderApp
-let addTitle;
-if (invoice.orderApp === 'Marketplace') {
-  addTitle = hasFamilyPacks
-    ? ` Additional Items  (${padZero(invoice.additionalItems.length)} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
-    : ` Your Selected Items (${padZero(invoice.additionalItems.length)} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
-
-} else if (invoice.orderApp === 'Dash') {
-  addTitle = hasFamilyPacks
-    ? ` Additional Items  (${padZero(invoice.additionalItems.length)} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
-    : ` Custom Items (${padZero(invoice.additionalItems.length)} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
-} else {
-  addTitle = hasFamilyPacks
-    ? ` Custom Items (${padZero(invoice.additionalItems.length)} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
-    : ` Custom Items (${padZero(invoice.additionalItems.length)} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
-}
+      // Determine title based on orderApp
+      let addTitle;
+      if (invoice.orderApp === 'Marketplace') {
+        addTitle = hasFamilyPacks
+          ? ` Additional Items  (${padZero(invoice.additionalItems.length)} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
+          : ` Your Selected Items (${padZero(invoice.additionalItems.length)} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
+      } else if (invoice.orderApp === 'Dash') {
+        addTitle = hasFamilyPacks
+          ? ` Additional Items  (${padZero(invoice.additionalItems.length)} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
+          : ` Custom Items (${padZero(invoice.additionalItems.length)} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
+      } else {
+        addTitle = hasFamilyPacks
+          ? ` Custom Items (${padZero(invoice.additionalItems.length)} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
+          : ` Custom Items (${padZero(invoice.additionalItems.length)} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
+      }
 
       doc.setFontSize(9);
       doc.setFont('helvetica', 'bold');
@@ -1405,7 +687,7 @@ if (invoice.orderApp === 'Marketplace') {
         `Rs. ${formatNumberWithCommas(additionalItemsTotalAmount.toFixed(2))}`,
         195,
         yPosition,
-        { align: 'right' }
+        { align: 'right' },
       );
       yPosition += 5;
 
@@ -1418,34 +700,51 @@ if (invoice.orderApp === 'Marketplace') {
         [
           {
             content: 'Index',
-            styles: { fillColor: [243, 244, 246], fontStyle: 'bold', textColor: [0, 0, 0] },
+            styles: {
+              fillColor: [243, 244, 246],
+              fontStyle: 'bold',
+              textColor: [0, 0, 0],
+            },
           },
           {
             content: 'Item Description',
-            styles: { fillColor: [243, 244, 246], fontStyle: 'bold', textColor: [0, 0, 0] },
+            styles: {
+              fillColor: [243, 244, 246],
+              fontStyle: 'bold',
+              textColor: [0, 0, 0],
+            },
           },
           {
             content: 'Unit Price (Rs.)',
-            styles: { fillColor: [243, 244, 246], fontStyle: 'bold', textColor: [0, 0, 0] },
+            styles: {
+              fillColor: [243, 244, 246],
+              fontStyle: 'bold',
+              textColor: [0, 0, 0],
+            },
           },
           {
             content: 'QTY',
-            styles: { fillColor: [243, 244, 246], fontStyle: 'bold', textColor: [0, 0, 0] },
+            styles: {
+              fillColor: [243, 244, 246],
+              fontStyle: 'bold',
+              textColor: [0, 0, 0],
+            },
           },
           {
             content: 'Amount (Rs.)',
-            styles: { fillColor: [243, 244, 246], fontStyle: 'bold', textColor: [0, 0, 0] },
+            styles: {
+              fillColor: [243, 244, 246],
+              fontStyle: 'bold',
+              textColor: [0, 0, 0],
+            },
           },
         ],
         ...invoice.additionalItems.map((it, i) => {
           const unitPrice = parseFloat(it.unitPrice || '0');
-          const itemDiscount = parseFloat(it.itemDiscount || '0');
           const quantity = parseFloat(
-            it.quantity === '0.00' ? '1' : it.quantity || '1'
+            it.quantity === '0.00' ? '1' : it.quantity || '1',
           );
           const amount = parseFloat(it.normalPrice);
-          // const unitPriceDisplay = parseFloat(it.normalPrice) / quantity;
-
           const unitPriceDisplay = unitPrice;
 
           return [
@@ -1466,19 +765,19 @@ if (invoice.orderApp === 'Marketplace') {
         styles: {
           fontSize: 9,
           cellPadding: { top: 4, right: 6, bottom: 4, left: 6 },
-          textColor: [0, 0, 0], // Set default text color to black for all cells
+          textColor: [0, 0, 0],
         },
         headStyles: {
           fillColor: [243, 244, 246],
-          textColor: [0, 0, 0], // Explicitly set header text color to black
+          textColor: [0, 0, 0],
           fontStyle: 'bold',
         },
         bodyStyles: {
-          textColor: [0, 0, 0], // Ensure body text is black
+          textColor: [0, 0, 0],
         },
         alternateRowStyles: {
           fillColor: [255, 255, 255],
-          textColor: [0, 0, 0], // Ensure alternate rows text is black
+          textColor: [0, 0, 0],
         },
         tableLineColor: [209, 213, 219],
         tableLineWidth: 0.5,
@@ -1489,7 +788,9 @@ if (invoice.orderApp === 'Marketplace') {
       yPosition = (doc as any).lastAutoTable.finalY + 10;
     }
 
-    // Grand Total Section
+    // ═══════════════════════════════════════════════════════════════
+    // Grand Total Section (fixed & merged with payment-status rows)
+    // ═══════════════════════════════════════════════════════════════
     const estimatedTotalHeight =
       30 + (invoice.familyPackItems?.length || 0) * 5;
     if (yPosition + estimatedTotalHeight > 250) {
@@ -1513,17 +814,15 @@ if (invoice.orderApp === 'Marketplace') {
     // Handle family packages - show total if multiple, single package name if only one
     if (invoice.familyPackItems && invoice.familyPackItems.length > 0) {
       if (invoice.familyPackItems.length > 1) {
-        // Calculate total for all packages
         const packagesTotal = invoice.familyPackItems.reduce(
           (total, pack) => total + parseNum(pack.amount),
-          0
+          0,
         );
         grandTotalBody.push([
           'Total Price for Packages',
           `Rs. ${formatNumberWithCommas(packagesTotal.toFixed(2))}`,
         ]);
       } else {
-        // Only one package - show its name
         const pack = invoice.familyPackItems[0];
         grandTotalBody.push([
           pack.name || 'Family Pack',
@@ -1538,13 +837,12 @@ if (invoice.orderApp === 'Marketplace') {
         (total, item) => {
           return total + parseFloat(item.normalPrice || '0');
         },
-        0
+        0,
       );
 
       const hasFamilyPacks =
         invoice.familyPackItems && invoice.familyPackItems.length > 0;
 
-      // MODIFIED: Determine label based on orderApp
       let label: string;
       if (invoice.orderApp === 'Marketplace') {
         label = hasFamilyPacks ? 'Additional Items' : 'Your Selected Items';
@@ -1561,27 +859,32 @@ if (invoice.orderApp === 'Marketplace') {
     }
 
     // Add delivery fee and discount
-if (invoice.deliveryMethod !== 'Pickup' && parseNum(invoice.deliveryFee) > 0) {
-  grandTotalBody.push([
-    'Delivery Fee',
-    `Rs. ${formatNumberWithCommas(invoice.deliveryFee)}`,
-  ]);
-}
+    if (
+      invoice.deliveryMethod !== 'Pickup' &&
+      parseNum(invoice.deliveryFee) > 0
+    ) {
+      grandTotalBody.push([
+        'Delivery Fee',
+        `Rs. ${formatNumberWithCommas(invoice.deliveryFee)}`,
+      ]);
+    }
 
     // Add service fee between Discount and Coupon Discount
-    if (invoice.orderApp !== 'Marketplace' &&
+    if (
+      invoice.orderApp !== 'Marketplace' &&
       invoice.additionalItems &&
       invoice.additionalItems.length > 0 &&
-      (!invoice.familyPackItems || invoice.familyPackItems.length === 0)) {
+      (!invoice.familyPackItems || invoice.familyPackItems.length === 0)
+    ) {
       grandTotalBody.push(['Service Fee', 'Rs. 180.00']);
     }
 
     if (parseNum(invoice.discount) > 0) {
-  grandTotalBody.push([
-    'Discount',
-    `Rs. ${formatNumberWithCommas(invoice.discount)}`,
-  ]);
-}
+      grandTotalBody.push([
+        'Discount',
+        `Rs. ${formatNumberWithCommas(invoice.discount)}`,
+      ]);
+    }
 
     // Add coupon discount only if it has a value greater than 0
     const couponValue = parseNum(invoice.billingInfo.couponValue);
@@ -1596,27 +899,26 @@ if (invoice.deliveryMethod !== 'Pickup' && parseNum(invoice.deliveryFee) > 0) {
     const familyPackTotal =
       invoice.familyPackItems?.reduce(
         (total, pack) => total + parseNum(pack.amount),
-        0
+        0,
       ) || 0;
 
     const additionalItemsTotal =
       invoice.additionalItems?.reduce(
         (total, item) => total + parseFloat(item.normalPrice || '0'),
-        0
+        0,
       ) || 0;
 
     const deliveryFeeTotal =
       invoice.deliveryMethod !== 'Pickup' ? parseNum(invoice.deliveryFee) : 0;
 
-    // Update discount calculation to only include coupon if it exists
     const discountTotal =
       parseNum(invoice.discount) + (couponValue > 0 ? couponValue : 0);
 
     const serviceFee =
-      invoice.orderApp !== 'Marketplace' && // Only add service fee if not Marketplace
-        invoice.additionalItems &&
-        invoice.additionalItems.length > 0 &&
-        (!invoice.familyPackItems || invoice.familyPackItems.length === 0)
+      invoice.orderApp !== 'Marketplace' &&
+      invoice.additionalItems &&
+      invoice.additionalItems.length > 0 &&
+      (!invoice.familyPackItems || invoice.familyPackItems.length === 0)
         ? 180
         : 0;
 
@@ -1627,16 +929,98 @@ if (invoice.deliveryMethod !== 'Pickup' && parseNum(invoice.deliveryFee) > 0) {
       serviceFee -
       discountTotal;
 
-    // Add final total
+    // Add final total row and remember its index — this is the row the
+    // border line under "Grand Total" should be drawn against.
     grandTotalBody.push([
-      { content: 'Grand Total', styles: { fontStyle: 'bold', textColor: [0, 0, 0] } },
+      {
+        content: 'Grand Total',
+        styles: { fontStyle: 'bold', textColor: [0, 0, 0] },
+      },
       {
         content: `Rs. ${formatNumberWithCommas(finalGrandTotal.toFixed(2))}`,
         styles: { fontStyle: 'bold', textColor: [0, 0, 0] },
       },
     ]);
+    const grandTotalActualIndex = grandTotalBody.length - 1;
 
-    // Create the table
+    // ── Payment status rows (credit balance / online / cash pending) ──
+    const GREEN_COLOR: [number, number, number] = [22, 163, 74];
+    const ORANGE_COLOR: [number, number, number] = [217, 119, 6];
+
+    const isPaid = Number(invoice.isPaid) === 1;
+    const creditPaidNum = parseNum(invoice.creditPaid as any);
+    const hasCreditPaid =
+      invoice.creditPaid !== null &&
+      invoice.creditPaid !== undefined &&
+      creditPaidNum > 0;
+    const remainingAfterCredit = finalGrandTotal - creditPaidNum;
+
+    const isPickup = invoice.deliveryMethod?.toLowerCase() === 'pickup';
+    let showDeliveryNote = false; // only true for actual Cash-on-Delivery-Pending cases, NOT for pickup
+
+    const pushPaymentRow = (
+      label: string,
+      amount: number,
+      color: [number, number, number],
+    ) => {
+      grandTotalBody.push([
+        { content: label, styles: { fontStyle: 'bold', textColor: color } },
+        {
+          content: `Rs. ${formatNumberWithCommas(amount.toFixed(2))}`,
+          styles: { fontStyle: 'bold', textColor: color },
+        },
+      ]);
+    };
+
+    if (hasCreditPaid) {
+      pushPaymentRow('Credit Balance Used', creditPaidNum, GREEN_COLOR);
+
+      if (remainingAfterCredit > 0.01) {
+        if (isPaid) {
+          pushPaymentRow(
+            'Online Transferred Amount',
+            remainingAfterCredit,
+            GREEN_COLOR,
+          );
+        } else if (isPickup) {
+          pushPaymentRow(
+            'Cash On Pickup (Pending)',
+            remainingAfterCredit,
+            ORANGE_COLOR,
+          );
+        } else {
+          pushPaymentRow(
+            'Cash On Delivery (Pending)',
+            remainingAfterCredit,
+            ORANGE_COLOR,
+          );
+          showDeliveryNote = true;
+        }
+      }
+    } else {
+      if (isPaid) {
+        pushPaymentRow(
+          'Online Transferred Amount',
+          finalGrandTotal,
+          GREEN_COLOR,
+        );
+      } else if (isPickup) {
+        pushPaymentRow(
+          'Cash On Pickup (Pending)',
+          finalGrandTotal,
+          ORANGE_COLOR,
+        );
+      } else {
+        pushPaymentRow(
+          'Cash On Delivery (Pending)',
+          finalGrandTotal,
+          ORANGE_COLOR,
+        );
+        showDeliveryNote = true;
+      }
+    }
+
+    // Single table render — Grand Total row + payment status rows together
     (doc as any).autoTable({
       startY: yPosition,
       body: grandTotalBody,
@@ -1654,23 +1038,54 @@ if (invoice.deliveryMethod !== 'Pickup' && parseNum(invoice.deliveryFee) > 0) {
         lineWidth: 0,
       },
       alternateRowStyles: {
-        fillColor: [255, 255, 255], // Same white background for alternate rows
+        fillColor: [255, 255, 255],
       },
       didDrawCell: (data: any) => {
-        // Add border between Grand Total and Discount (second last row)
-        if (data.row.index === grandTotalBody.length - 2) {
+        // Draw line at the TOP of the Grand Total row (separates it from
+        // Discount/Coupon rows above), not below it
+        if (data.row.index === grandTotalActualIndex) {
           doc.setDrawColor(0, 0, 0);
           doc.setLineWidth(0.5);
           doc.line(
             data.cell.x,
-            data.cell.y + data.cell.height,
+            data.cell.y,
             data.cell.x + data.cell.width,
-            data.cell.y + data.cell.height
+            data.cell.y,
           );
         }
       },
     });
-    yPosition = (doc as any).lastAutoTable.finalY + 10;
+
+    yPosition = (doc as any).lastAutoTable.finalY + 2;
+
+    if (showDeliveryNote) {
+      const noteText =
+        'The delivery charges might be different on the day of delivery. Your Grand Total might be changed then.';
+
+      const iconX = 16;
+      const iconRadius = 1.6;
+      const textX = iconX + iconRadius + 2.5; // small gap after icon
+      const iconY = yPosition - 1;
+
+      doc.setDrawColor(80, 80, 80);
+      doc.setFillColor(30, 30, 30);
+      doc.circle(iconX, iconY, iconRadius, 'F');
+
+      doc.setFontSize(6);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(255, 255, 255);
+      doc.text('i', iconX, iconY + 0.9, { align: 'center' });
+
+      doc.setFontSize(8);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(90, 90, 90);
+      doc.text(noteText, textX, yPosition);
+
+      doc.setTextColor(0, 0, 0);
+      yPosition += 6;
+    }
+
+    yPosition += 4;
 
     // UPDATED REMARKS SECTION (WITHOUT UNDERLINE)
     const estimatedRemarksHeight = 50;
@@ -1720,7 +1135,7 @@ if (invoice.deliveryMethod !== 'Pickup' && parseNum(invoice.deliveryFee) > 0) {
       'WE WILL SEND YOU MORE OFFERS , LOWEST PRICED VEGGIES FROM US.',
       105,
       yPosition,
-      { align: 'center' }
+      { align: 'center' },
     );
 
     yPosition += 15;
@@ -1730,7 +1145,7 @@ if (invoice.deliveryMethod !== 'Pickup' && parseNum(invoice.deliveryFee) > 0) {
       '- THIS IS A COMPUTER GENERATED INVOICE, THUS NO SIGNATURE REQUIRED -',
       105,
       yPosition,
-      { align: 'center' }
+      { align: 'center' },
     );
 
     // Save the PDF

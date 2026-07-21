@@ -63,15 +63,16 @@
               Index
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
-              Variety
+              Preview
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
-              Image
+              Variety
             </th>
+            
           </tr>
         </thead>
         <tbody>
@@ -82,11 +83,19 @@
             <td class="py-3 text-textLight dark:text-textDark text-center">
               {{ i + 1 }}
             </td>
+            <td class="px-4 py-3 flex justify-center text-center text-textLight dark:text-textDark">
+              <div class="w-24 h-24 rounded-full flex items-center justify-center overflow-hidden"
+  [style.backgroundColor]="item.bgColor || '#f0fdf4'"
+  [style.border]="'2px solid ' + (item.bgColor || '#bbf7d0')"
+>
+  <img 
+    class="profile-pic object-contain mix-blend-multiply" 
+    [src]="item.image" 
+  />
+</div>
+            </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.varietyNameEnglish }}
-            </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              <img class="profile-pic text-center" [src]="item.image" />
             </td>
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
               <button class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd]" (click)="viewVarity(item.id)" >

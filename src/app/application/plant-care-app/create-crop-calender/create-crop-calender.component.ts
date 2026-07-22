@@ -12,7 +12,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgxColorsModule } from 'ngx-colors';
 import Swal from 'sweetalert2';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
-import { CropCalendarService, NewCropCalender, NewCropGroup, NewVarietyGroup } from '../../../services/plant-care/crop-calendar.service';
+import {
+  CropCalendarService,
+  NewCropCalender,
+  NewCropGroup,
+  NewVarietyGroup,
+} from '../../../services/plant-care/crop-calendar.service';
 import { DropdownModule } from 'primeng/dropdown';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { DropdownChangeEvent } from 'primeng/dropdown';
@@ -93,13 +98,13 @@ export class CreateCropCalenderComponent implements OnInit {
 
   cultivationMethodOptions = [
     { label: 'Open Field', value: 'Open Field' },
-    { label: 'Protected Field', value: 'Protected Field' }
+    { label: 'Protected Field', value: 'Protected Field' },
   ];
 
   natureOptions = [
     { label: 'Conventional Farming', value: 'Conventional Farming' },
     { label: 'GAP Farming', value: 'GAP Farming' },
-    { label: 'Organic Farming', value: 'Organic Farming' }
+    { label: 'Organic Farming', value: 'Organic Farming' },
   ];
 
   constructor(
@@ -107,16 +112,24 @@ export class CreateCropCalenderComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private cropCalendarService: CropCalendarService,
-    private location: Location
+    private location: Location,
   ) {
     this.cropForm = this.fb.group({
       groupId: ['', Validators.required],
       varietyId: ['', Validators.required],
       cultivationMethod: ['', Validators.required],
       natureOfCultivation: ['', Validators.required],
-      cropDuration: ['', [Validators.required, Validators.pattern('^[0-9]+$'), Validators.min(1)]],
+      cropDuration: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern('^[0-9]+$'),
+          Validators.min(1),
+          Validators.max(999),
+        ],
+      ],
       suitableAreas: ['', Validators.required],
-      specialNotes: ['', Validators.required]
+      specialNotes: ['', Validators.required],
     });
   }
 
@@ -137,7 +150,6 @@ export class CreateCropCalenderComponent implements OnInit {
       if (result.isConfirmed) {
         // this.router.navigate(['/plant-care/action']);
         this.location.back();
-
       }
     });
   }
@@ -176,7 +188,12 @@ export class CreateCropCalenderComponent implements OnInit {
     this.isLoading = true;
     this.cropCalendarService.cropGropForFilter().subscribe({
       next: (response) => {
-        this.groupList = response.items;
+        this.groupList = (response.items || []).sort(
+          (a: NewCropGroup, b: NewCropGroup) =>
+            (a.cropNameEnglish || '')
+              .toLowerCase()
+              .localeCompare((b.cropNameEnglish || '').toLowerCase()),
+        );
         this.isLoading = false;
       },
       error: () => {
@@ -192,7 +209,12 @@ export class CreateCropCalenderComponent implements OnInit {
       this.isLoading = true;
       this.cropCalendarService.getVarietiesByGroup(groupId).subscribe({
         next: (response) => {
-          this.varietyList = response.groups;
+          this.varietyList = (response.groups || []).sort(
+            (a: NewVarietyGroup, b: NewVarietyGroup) =>
+              (a.varietyNameEnglish || '')
+                .toLowerCase()
+                .localeCompare((b.varietyNameEnglish || '').toLowerCase()),
+          );
           this.isLoading = false;
         },
         error: () => {
@@ -210,23 +232,37 @@ export class CreateCropCalenderComponent implements OnInit {
 
   isFieldInvalid(field: string): boolean {
     const control = this.cropForm.get(field);
-    return control ? control.invalid && (control.dirty || control.touched) : false;
+    return control
+      ? control.invalid && (control.dirty || control.touched)
+      : false;
   }
 
-  checkDuplicateCropCalendar(formValue: any, excludeId?: number): Promise<boolean> {
+  checkDuplicateCropCalendar(
+    formValue: any,
+    excludeId?: number,
+  ): Promise<boolean> {
     return new Promise((resolve, reject) => {
       this.isLoading = true;
       const { varietyId, cultivationMethod, natureOfCultivation } = formValue;
 
       if (!cultivationMethod || !natureOfCultivation) {
         this.isLoading = false;
-        Swal.fire('Error', 'Cultivation Method and Nature of Cultivation are required for duplicate check.', 'error');
+        Swal.fire(
+          'Error',
+          'Cultivation Method and Nature of Cultivation are required for duplicate check.',
+          'error',
+        );
         reject(new Error('Missing required fields for duplicate check'));
         return;
       }
 
       this.cropCalendarService
-        .checkDuplicateCropCalendar(varietyId || '', cultivationMethod, natureOfCultivation, excludeId)
+        .checkDuplicateCropCalendar(
+          varietyId || '',
+          cultivationMethod,
+          natureOfCultivation,
+          excludeId,
+        )
         .subscribe({
           next: (response) => {
             this.isLoading = false;
@@ -290,7 +326,11 @@ export class CreateCropCalenderComponent implements OnInit {
           if (this.cropIdNew !== null) {
             this.openXlsxUploadDialog(this.cropIdNew);
           } else {
-            Swal.fire('Error', 'Unable to process XLSX upload due to missing Crop ID', 'error');
+            Swal.fire(
+              'Error',
+              'Unable to process XLSX upload due to missing Crop ID',
+              'error',
+            );
           }
         },
         error: () => {
@@ -332,7 +372,10 @@ export class CreateCropCalenderComponent implements OnInit {
     const formValue = this.cropForm.value;
 
     try {
-      const isDuplicate = await this.checkDuplicateCropCalendar(formValue, this.cropId!);
+      const isDuplicate = await this.checkDuplicateCropCalendar(
+        formValue,
+        this.cropId!,
+      );
       if (isDuplicate) {
         Swal.fire({
           icon: 'error',
@@ -361,40 +404,45 @@ export class CreateCropCalenderComponent implements OnInit {
 
       // Only append groupId and varietyId if they have values (they might be empty in edit mode)
       if (formValue.groupId) formData.append('groupId', formValue.groupId);
-      if (formValue.varietyId) formData.append('varietyId', formValue.varietyId);
+      if (formValue.varietyId)
+        formData.append('varietyId', formValue.varietyId);
 
       if (this.selectedFile) {
         formData.append('image', this.selectedFile);
       }
 
       this.isLoading = true;
-      this.cropCalendarService.updateCropCalendar(this.cropId!, formData).subscribe({
-        next: () => {
-          this.isLoading = false;
-          Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: 'Crop calendar has been updated successfully.',
-            customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              title: 'font-semibold',
-            },
-          });
-          this.router.navigate(['/plant-care/action/view-crop-calender']);
-        },
-        error: () => {
-          this.isLoading = false;
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Failed to update crop calendar.',
-            customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              title: 'font-semibold',
-            },
-          });
-        },
-      });
+      this.cropCalendarService
+        .updateCropCalendar(this.cropId!, formData)
+        .subscribe({
+          next: () => {
+            this.isLoading = false;
+            Swal.fire({
+              icon: 'success',
+              title: 'Success',
+              text: 'Crop calendar has been updated successfully.',
+              customClass: {
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+              },
+            });
+            this.router.navigate(['/plant-care/action/view-crop-calender']);
+          },
+          error: () => {
+            this.isLoading = false;
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Failed to update crop calendar.',
+              customClass: {
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+              },
+            });
+          },
+        });
     } catch (err) {
       this.isLoading = false;
       Swal.fire({
@@ -412,7 +460,8 @@ export class CreateCropCalenderComponent implements OnInit {
   private showMissingFieldsAlert(): void {
     const missingFields = this.getMissingFields();
     if (missingFields.length > 0) {
-      let errorMessage = 'Please fill in the following required fields:<br><br>';
+      let errorMessage =
+        'Please fill in the following required fields:<br><br>';
       errorMessage += missingFields.map((field) => ` ${field}`).join('<br>');
 
       Swal.fire({
@@ -445,12 +494,15 @@ export class CreateCropCalenderComponent implements OnInit {
       natureOfCultivation: 'Nature of Cultivation',
       cropDuration: 'Crop Duration',
       suitableAreas: 'Suitable Areas',
-      specialNotes: 'Special Notes'
+      specialNotes: 'Special Notes',
     };
 
     for (const controlName in controls) {
       // Skip groupId and varietyId validation in edit mode since they're not shown in the form
-      if (this.cropId !== null && (controlName === 'groupId' || controlName === 'varietyId')) {
+      if (
+        this.cropId !== null &&
+        (controlName === 'groupId' || controlName === 'varietyId')
+      ) {
         continue;
       }
 
@@ -465,7 +517,10 @@ export class CreateCropCalenderComponent implements OnInit {
     const controls = this.cropForm.controls;
     for (const controlName in controls) {
       // Skip hidden fields in edit mode
-      if (this.cropId !== null && (controlName === 'groupId' || controlName === 'varietyId')) {
+      if (
+        this.cropId !== null &&
+        (controlName === 'groupId' || controlName === 'varietyId')
+      ) {
         continue;
       }
 
@@ -508,13 +563,25 @@ export class CreateCropCalenderComponent implements OnInit {
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold',
-        confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
-        cancelButton: 'bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 text-black dark:text-white',
+        confirmButton:
+          'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+        cancelButton:
+          'bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 text-black dark:text-white',
       },
       didOpen: () => {
-        const fileInput = document.getElementById('xlsx-file-input') as HTMLInputElement;
+        const fileInput = document.getElementById(
+          'xlsx-file-input',
+        ) as HTMLInputElement;
         const fileNameDisplay = document.getElementById('selected-file-name');
+        const uploadText = document.querySelector('.upload-text');
         Swal.getConfirmButton()?.setAttribute('disabled', 'true');
+
+        const blockClick = (e: Event) => {
+          e.preventDefault();
+          e.stopPropagation();
+        };
+        uploadText?.addEventListener('click', blockClick);
+        fileNameDisplay?.addEventListener('click', blockClick);
 
         fileInput.onchange = () => {
           if (fileInput.files && fileInput.files[0]) {
@@ -526,7 +593,9 @@ export class CreateCropCalenderComponent implements OnInit {
         };
       },
       preConfirm: () => {
-        const fileInput = document.getElementById('xlsx-file-input') as HTMLInputElement;
+        const fileInput = document.getElementById(
+          'xlsx-file-input',
+        ) as HTMLInputElement;
         if (fileInput.files && fileInput.files[0]) {
           return fileInput.files[0];
         }
@@ -553,7 +622,8 @@ export class CreateCropCalenderComponent implements OnInit {
           customClass: {
             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
             title: 'font-semibold',
-            confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+            confirmButton:
+              'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
           },
         });
         this.router.navigate(['/plant-care/action/view-crop-calender']);
@@ -567,7 +637,8 @@ export class CreateCropCalenderComponent implements OnInit {
           customClass: {
             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
             title: 'font-semibold',
-            confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+            confirmButton:
+              'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
           },
         });
       },
@@ -582,7 +653,9 @@ export class CreateCropCalenderComponent implements OnInit {
         this.isLoading = false;
         if (this.cropCalender[0]) {
           const selectedAreas = this.cropCalender[0].suitableAreas
-            ? this.cropCalender[0].suitableAreas.split(', ').map((area: string) => area.trim())
+            ? this.cropCalender[0].suitableAreas
+                .split(', ')
+                .map((area: string) => area.trim())
             : [];
 
           this.cropForm.patchValue({
@@ -656,7 +729,8 @@ export class CreateCropCalenderComponent implements OnInit {
           customClass: {
             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
             title: 'font-semibold',
-            confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+            confirmButton:
+              'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
           },
         });
       },
@@ -669,7 +743,8 @@ export class CreateCropCalenderComponent implements OnInit {
           customClass: {
             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
             title: 'font-semibold',
-            confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+            confirmButton:
+              'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
           },
         });
       },
@@ -685,6 +760,14 @@ export class CreateCropCalenderComponent implements OnInit {
 
   validateCropDuration(event: Event): void {
     const input = event.target as HTMLInputElement;
+
+    if (input.value.length > 3) {
+      input.value = input.value.slice(0, 3);
+      this.cropForm
+        .get('cropDuration')
+        ?.setValue(input.value, { emitEvent: false });
+    }
+
     const value = Number(input.value);
     if (value <= 0) {
       input.value = '';
@@ -705,7 +788,10 @@ export class CreateCropCalenderComponent implements OnInit {
     const cursorPosition = target.selectionStart;
 
     // Block space if cursor is at the beginning or if the text is empty
-    if (event.key === ' ' && (cursorPosition === 0 || target.value.length === 0)) {
+    if (
+      event.key === ' ' &&
+      (cursorPosition === 0 || target.value.length === 0)
+    ) {
       event.preventDefault();
     }
   }
@@ -717,7 +803,9 @@ export class CreateCropCalenderComponent implements OnInit {
     // Remove leading spaces
     if (currentValue.startsWith(' ')) {
       const trimmedValue = currentValue.replace(/^\s+/, '');
-      this.cropForm.get(controlName)?.setValue(trimmedValue, { emitEvent: false });
+      this.cropForm
+        .get(controlName)
+        ?.setValue(trimmedValue, { emitEvent: false });
 
       // Set cursor position after the update
       setTimeout(() => {
@@ -732,10 +820,13 @@ export class CreateCropCalenderComponent implements OnInit {
 
     if (currentValue && currentValue.length > 0) {
       // Capitalize first letter and keep the rest as is
-      const capitalizedValue = currentValue.charAt(0).toUpperCase() + currentValue.slice(1);
+      const capitalizedValue =
+        currentValue.charAt(0).toUpperCase() + currentValue.slice(1);
 
       if (currentValue !== capitalizedValue) {
-        this.cropForm.get(controlName)?.setValue(capitalizedValue, { emitEvent: false });
+        this.cropForm
+          .get(controlName)
+          ?.setValue(capitalizedValue, { emitEvent: false });
       }
     }
   }
@@ -770,7 +861,9 @@ export class CreateCropCalenderComponent implements OnInit {
   }
 }
 
-export function nonZeroValidator(control: AbstractControl): ValidationErrors | null {
+export function nonZeroValidator(
+  control: AbstractControl,
+): ValidationErrors | null {
   const value = Number(control.value);
   return value > 0 ? null : { nonZero: true };
 }

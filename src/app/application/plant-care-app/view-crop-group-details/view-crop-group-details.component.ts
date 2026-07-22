@@ -61,6 +61,22 @@ export class ViewCropGroupDetailsComponent implements OnInit {
     });
   }
 
+  formatExactValue(value: any): string {
+    if (value === null || value === undefined || value === '' || value === 'N/A') {
+      return '—';
+    }
+
+    const num = parseFloat(value);
+    if (isNaN(num)) {
+      return '—';
+    }
+
+    return num.toLocaleString('en-US', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 10, 
+    });
+  }
+
   goBack(): void {
     this.location.back();
   }

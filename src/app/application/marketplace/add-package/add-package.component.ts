@@ -11,7 +11,13 @@ import { CalendarModule } from 'primeng/calendar';
 @Component({
   selector: 'app-add-package',
   standalone: true,
-  imports: [FormsModule, CommonModule, LoadingSpinnerComponent,  DropdownModule, CalendarModule],
+  imports: [
+    FormsModule,
+    CommonModule,
+    LoadingSpinnerComponent,
+    DropdownModule,
+    CalendarModule,
+  ],
   templateUrl: './add-package.component.html',
   styleUrls: ['./add-package.component.css'],
 })
@@ -35,20 +41,23 @@ export class AddPackageComponent implements OnInit {
     quantities: false,
     packageType: false,
     startDate: false,
-    endDate: false
+    endDate: false,
   };
 
   submitAttempted = false;
 
   packageTypeOptions = [
-  { label: 'One Time Package', value: 'One Time' },
-  { label: 'Recurring Package', value: 'Recurring' }
-];
+    { label: 'One Time Package', value: 'One Time' },
+    { label: 'Recurring Package', value: 'Recurring' },
+  ];
 
-today: Date = new Date();
+  today: Date = new Date();
 
-  constructor(private marketSrv: MarketPlaceService, private router: Router, private location: Location) { }
-
+  constructor(
+    private marketSrv: MarketPlaceService,
+    private router: Router,
+    private location: Location,
+  ) {}
 
   back(): void {
     Swal.fire({
@@ -61,8 +70,10 @@ today: Date = new Date();
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold',
-        confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
-        cancelButton: 'bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 text-black dark:text-white',
+        confirmButton:
+          'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+        cancelButton:
+          'bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 text-black dark:text-white',
       },
     }).then((result) => {
       if (result.isConfirmed) {
@@ -71,7 +82,6 @@ today: Date = new Date();
       }
     });
   }
-
 
   ngOnInit(): void {
     this.getProductTypes();
@@ -104,39 +114,54 @@ today: Date = new Date();
 
   // Validation getter methods
   get shouldShowDisplayNameError(): boolean {
-    return (this.fieldTouched.displayName || this.submitAttempted) &&
-      !this.packageObj.displayName?.trim();
+    return (
+      (this.fieldTouched.displayName || this.submitAttempted) &&
+      !this.packageObj.displayName?.trim()
+    );
   }
 
   get shouldShowDescriptionError(): boolean {
-    return (this.fieldTouched.description || this.submitAttempted) &&
-      !this.packageObj.description?.trim();
+    return (
+      (this.fieldTouched.description || this.submitAttempted) &&
+      !this.packageObj.description?.trim()
+    );
   }
 
   get shouldShowProductPriceError(): boolean {
-    return (this.fieldTouched.productPrice || this.submitAttempted) &&
-      (!this.packageObj.productPrice || this.packageObj.productPrice <= 0);
+    return (
+      (this.fieldTouched.productPrice || this.submitAttempted) &&
+      (!this.packageObj.productPrice || this.packageObj.productPrice <= 0)
+    );
   }
 
   get shouldShowPackageFeeError(): boolean {
-    return (this.fieldTouched.packageFee || this.submitAttempted) &&
-      (this.packageObj.packageFee < 0);
+    return (
+      (this.fieldTouched.packageFee || this.submitAttempted) &&
+      this.packageObj.packageFee < 0
+    );
   }
 
   get shouldShowServiceFeeError(): boolean {
-    return (this.fieldTouched.serviceFee || this.submitAttempted) &&
-      (this.packageObj.serviceFee < 0);
+    return (
+      (this.fieldTouched.serviceFee || this.submitAttempted) &&
+      this.packageObj.serviceFee < 0
+    );
   }
 
   get shouldShowImageError(): boolean {
-    return (this.fieldTouched.image || this.submitAttempted) &&
-      !this.selectedImage;
+    return (
+      (this.fieldTouched.image || this.submitAttempted) && !this.selectedImage
+    );
   }
 
   get shouldShowQuantityError(): boolean {
-    return (this.fieldTouched.quantities || this.submitAttempted) &&
-      this.productTypeObj.length > 0 &&
-      !Object.values(this.packageObj.quantities).some(qty => qty > 0);
+    return (
+      (this.fieldTouched.quantities || this.submitAttempted) &&
+      this.validProductTypes.length > 0 &&
+      !this.validProductTypes.some(
+        (pt) => (this.packageObj.quantities[pt.id] || 0) > 0,
+      )
+    );
   }
 
   onDisplayNameChange(event: any): void {
@@ -158,9 +183,6 @@ today: Date = new Date();
     this.packageObj.description = value;
     event.target.value = value;
   }
-
-
-
 
   preventNegative(event: any): void {
     const value = parseFloat(event.target.value);
@@ -205,7 +227,7 @@ today: Date = new Date();
     this.submitAttempted = true;
 
     // Mark all fields as touched
-    Object.keys(this.fieldTouched).forEach(key => {
+    Object.keys(this.fieldTouched).forEach((key) => {
       this.fieldTouched[key as keyof typeof this.fieldTouched] = true;
     });
 
@@ -233,24 +255,36 @@ today: Date = new Date();
     }
 
     if (!this.packageObj.packageType) {
-  errorMessages.push('Package Type is required');
-}
-if (this.packageObj.packageType && !this.packageObj.startDate) {
-  errorMessages.push('Start Date is required');
-}
-if (this.packageObj.packageType === 'One Time' && !this.packageObj.endDate) {
-  errorMessages.push('End Date is required');
-}
-if (this.packageObj.packageType === 'One Time' &&
-    this.packageObj.startDate && this.packageObj.endDate &&
-    this.packageObj.endDate < this.packageObj.startDate) {
-  errorMessages.push('End Date cannot be before Start Date');
-}
+      errorMessages.push('Package Type is required');
+    }
+    if (this.packageObj.packageType && !this.packageObj.startDate) {
+      errorMessages.push('Start Date is required');
+    }
+    if (
+      this.packageObj.packageType === 'One Time' &&
+      !this.packageObj.endDate
+    ) {
+      errorMessages.push('End Date is required');
+    }
+    if (
+      this.packageObj.packageType === 'One Time' &&
+      this.packageObj.startDate &&
+      this.packageObj.endDate &&
+      this.packageObj.endDate < this.packageObj.startDate
+    ) {
+      errorMessages.push('End Date cannot be before Start Date');
+    }
 
-    // ✅ Product type validation: At least one product must be added
-    if (!this.productTypeObj || this.productTypeObj.length === 0 ||
-      !Object.values(this.packageObj.quantities || {}).some(qty => qty > 0)) {
-      errorMessages.push('At least one product type with quantity greater than 0 is required');
+    if (
+      !this.validProductTypes ||
+      this.validProductTypes.length === 0 ||
+      !this.validProductTypes.some(
+        (pt) => (this.packageObj.quantities[pt.id] || 0) > 0,
+      )
+    ) {
+      errorMessages.push(
+        'At least one product type with quantity greater than 0 is required',
+      );
     }
 
     if (errorMessages.length > 0) {
@@ -262,7 +296,8 @@ if (this.packageObj.packageType === 'One Time' &&
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
           title: 'font-semibold',
-          confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+          confirmButton:
+            'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
         },
       });
       return;
@@ -285,7 +320,8 @@ if (this.packageObj.packageType === 'One Time' &&
           customClass: {
             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
             title: 'font-semibold',
-            confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+            confirmButton:
+              'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
           },
         });
         this.isLoading = false;
@@ -293,54 +329,66 @@ if (this.packageObj.packageType === 'One Time' &&
       }
 
       // Proceed with package creation
-      this.marketSrv.createPackage(this.packageObj, this.selectedImage).subscribe(
-        (res) => {
-          this.isLoading = false;
-          if (res.status) {
-            Swal.fire({
-              icon: 'success',
-              title: 'Package Created',
-              text: 'The package was created successfully!',
-              confirmButtonText: 'OK',
-              customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                title: 'font-semibold',
-                confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
-              },
-            }).then(() => {
-              this.packageObj = new Package();
-              if (res.packageId) this.router.navigate(['/market/action/define-package-view'], { queryParams: { id: res.packageId } });
-              else this.router.navigate(['/market/action/view-packages-list']);
-            });
-          } else {
+      this.marketSrv
+        .createPackage(this.packageObj, this.selectedImage)
+        .subscribe(
+          (res) => {
+            this.isLoading = false;
+            if (res.status) {
+              Swal.fire({
+                icon: 'success',
+                title: 'Package Created',
+                text: 'The package was created successfully!',
+                confirmButtonText: 'OK',
+                customClass: {
+                  popup:
+                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold',
+                  confirmButton:
+                    'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+                },
+              }).then(() => {
+                this.packageObj = new Package();
+                if (res.packageId)
+                  this.router.navigate(['/market/action/define-package-view'], {
+                    queryParams: { id: res.packageId },
+                  });
+                else
+                  this.router.navigate(['/market/action/view-packages-list']);
+              });
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Package Not Created',
+                text: 'The package could not be created. Please try again.',
+                confirmButtonText: 'OK',
+                customClass: {
+                  popup:
+                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold',
+                  confirmButton:
+                    'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+                },
+              });
+            }
+          },
+          (error) => {
+            this.isLoading = false;
             Swal.fire({
               icon: 'error',
-              title: 'Package Not Created',
-              text: 'The package could not be created. Please try again.',
+              title: 'An Error Occurred',
+              text: 'There was an error while creating the package. Please try again later.',
               confirmButtonText: 'OK',
               customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                 title: 'font-semibold',
-                confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+                confirmButton:
+                  'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
               },
             });
-          }
-        },
-        (error) => {
-          this.isLoading = false;
-          Swal.fire({
-            icon: 'error',
-            title: 'An Error Occurred',
-            text: 'There was an error while creating the package. Please try again later.',
-            confirmButtonText: 'OK',
-            customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              title: 'font-semibold',
-              confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
-            },
-          });
-        }
-      );
+          },
+        );
     } catch (error) {
       this.isLoading = false;
       Swal.fire({
@@ -351,7 +399,8 @@ if (this.packageObj.packageType === 'One Time' &&
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
           title: 'font-semibold',
-          confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+          confirmButton:
+            'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
         },
       });
     }
@@ -368,8 +417,10 @@ if (this.packageObj.packageType === 'One Time' &&
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold',
-        confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
-        cancelButton: 'bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 text-black dark:text-white',
+        confirmButton:
+          'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+        cancelButton:
+          'bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 text-black dark:text-white',
       },
     }).then((result) => {
       if (result.isConfirmed) {
@@ -393,7 +444,8 @@ if (this.packageObj.packageType === 'One Time' &&
           customClass: {
             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
             title: 'font-semibold',
-            confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+            confirmButton:
+              'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
           },
         });
         return;
@@ -408,7 +460,8 @@ if (this.packageObj.packageType === 'One Time' &&
           customClass: {
             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
             title: 'font-semibold',
-            confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+            confirmButton:
+              'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
           },
         });
         return;
@@ -487,7 +540,10 @@ if (this.packageObj.packageType === 'One Time' &&
     return false;
   }
 
-  validateDecimalInput(event: Event, fieldName: 'productPrice' | 'packageFee' | 'serviceFee') {
+  validateDecimalInput(
+    event: Event,
+    fieldName: 'productPrice' | 'packageFee' | 'serviceFee',
+  ) {
     const target = event.target as HTMLInputElement;
     const value = target.value;
 
@@ -521,48 +577,60 @@ if (this.packageObj.packageType === 'One Time' &&
   }
 
   onPackageTypeBlur(): void {
-  this.fieldTouched.packageType = true;
-}
-
-onStartDateBlur(): void {
-  this.fieldTouched.startDate = true;
-}
-
-onEndDateBlur(): void {
-  this.fieldTouched.endDate = true;
-}
-
-onPackageTypeChange(): void {
-  this.fieldTouched.packageType = true;
-  if (this.packageObj.packageType === 'Recurring') {
-    this.packageObj.endDate = null as any;
+    this.fieldTouched.packageType = true;
   }
-}
 
-onStartDateChange(): void {
-  if (this.packageObj.endDate && this.packageObj.startDate &&
-      this.packageObj.endDate < this.packageObj.startDate) {
-    this.packageObj.endDate = null as any;
+  onStartDateBlur(): void {
+    this.fieldTouched.startDate = true;
   }
-}
 
-get shouldShowPackageTypeError(): boolean {
-  return (this.fieldTouched.packageType || this.submitAttempted) &&
-    !this.packageObj.packageType;
-}
+  onEndDateBlur(): void {
+    this.fieldTouched.endDate = true;
+  }
 
-get shouldShowStartDateError(): boolean {
-  return (this.fieldTouched.startDate || this.submitAttempted) &&
-    !!this.packageObj.packageType &&
-    !this.packageObj.startDate;
-}
+  onPackageTypeChange(): void {
+    this.fieldTouched.packageType = true;
+    if (this.packageObj.packageType === 'Recurring') {
+      this.packageObj.endDate = null as any;
+    }
+  }
 
-get shouldShowEndDateError(): boolean {
-  return (this.fieldTouched.endDate || this.submitAttempted) &&
-    this.packageObj.packageType === 'One Time' &&
-    !this.packageObj.endDate;
-}
+  onStartDateChange(): void {
+    if (
+      this.packageObj.endDate &&
+      this.packageObj.startDate &&
+      this.packageObj.endDate < this.packageObj.startDate
+    ) {
+      this.packageObj.endDate = null as any;
+    }
+  }
 
+  get shouldShowPackageTypeError(): boolean {
+    return (
+      (this.fieldTouched.packageType || this.submitAttempted) &&
+      !this.packageObj.packageType
+    );
+  }
+
+  get shouldShowStartDateError(): boolean {
+    return (
+      (this.fieldTouched.startDate || this.submitAttempted) &&
+      !!this.packageObj.packageType &&
+      !this.packageObj.startDate
+    );
+  }
+
+  get shouldShowEndDateError(): boolean {
+    return (
+      (this.fieldTouched.endDate || this.submitAttempted) &&
+      this.packageObj.packageType === 'One Time' &&
+      !this.packageObj.endDate
+    );
+  }
+
+  get validProductTypes(): ProductType[] {
+    return this.productTypeObj.filter((item) => Number(item.isValid) !== 0);
+  }
 }
 
 class Package {
@@ -578,7 +646,7 @@ class Package {
   serviceFee!: number;
   approximatedPrice!: number;
   quantities: { [id: number]: number } = {};
-  packageType: string = '';   // 'OneTime' | 'Recurring'
+  packageType: string = ''; // 'OneTime' | 'Recurring'
   startDate!: Date;
   endDate!: Date;
 }
@@ -587,4 +655,5 @@ class ProductType {
   typeName!: string;
   shortCode!: string;
   id!: number;
+  isValid!: number;
 }

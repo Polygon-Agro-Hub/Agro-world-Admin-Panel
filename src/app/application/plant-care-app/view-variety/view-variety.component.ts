@@ -50,8 +50,8 @@ export class ViewVarietyComponent {
     private router: Router,
     private route: ActivatedRoute,
     public permissionService: PermissionService,
-    public tokenService: TokenService
-  ) { }
+    public tokenService: TokenService,
+  ) {}
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
@@ -73,7 +73,7 @@ export class ViewVarietyComponent {
         if (error.status === 401) {
           this.isLoading = false;
         }
-      }
+      },
     );
   }
 
@@ -102,7 +102,8 @@ export class ViewVarietyComponent {
                 text: 'The crop variety has been deleted.',
                 icon: 'success',
                 customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  popup:
+                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                   title: 'font-semibold',
                   confirmButton:
                     'bg-[#3085d6] hover:bg-[#3085d6] text-white font-medium px-4 py-2 rounded-md',
@@ -118,18 +119,17 @@ export class ViewVarietyComponent {
               text: 'There was an error deleting the crop variety.',
               icon: 'error',
               customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                 title: 'font-semibold',
                 confirmButton:
                   'bg-[#3085d6] hover:bg-[#3085d6] text-white font-medium px-4 py-2 rounded-md',
               },
             });
             this.isLoading = false;
-          }
+          },
         );
       }
-
-
     });
   }
 
@@ -139,7 +139,7 @@ export class ViewVarietyComponent {
     });
   }
 
-  viewVarity(id:number){
+  viewVarity(id: number) {
     this.router.navigate(['/plant-care/action/view-a-crop-variety'], {
       queryParams: { id },
     });
@@ -150,6 +150,8 @@ export class ViewVarietyComponent {
   }
 
   add(): void {
-    this.router.navigate(['/plant-care/action/create-crop-variety']);
+    this.router.navigate(['/plant-care/action/create-crop-variety'], {
+      queryParams: { cid: this.itemId },
+    });
   }
 }

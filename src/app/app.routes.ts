@@ -504,7 +504,7 @@ export const routes: Routes = [
                 canActivate: [PermissionGuard],
                 data: { permission: 'Edit crop group' },
               },
-                            {
+              {
                 path: 'view-crop-group-details',
                 component: ViewCropGroupDetailsComponent,
                 canActivate: [PermissionGuard],

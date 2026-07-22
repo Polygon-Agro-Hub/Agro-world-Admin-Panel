@@ -40,16 +40,18 @@
             Name By English *</label>
           <input type="text" id="varietyNameEnglish" formControlName="varietyNameEnglish"
             (input)="onVarietyNameInput($event, 'english')"
-            (keypress)="preventInvalidEnglishAlphanumericCharacters($event)" (paste)="validateEnglishPaste($event)"
+            (keypress)="preventInvalidEnglishAlphanumericCharacters($event)"
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
             required />
           <div *ngIf="
-      cropForm.get('varietyNameEnglish')!.invalid &&
-      (cropForm.get('varietyNameEnglish')!.dirty ||
-        cropForm.get('varietyNameEnglish')!.touched)
-    " class="text-red-500 text-sm mt-1">
+            cropForm.get('varietyNameEnglish')!.invalid &&
+            (cropForm.get('varietyNameEnglish')!.dirty ||
+            cropForm.get('varietyNameEnglish')!.touched)" class="text-red-500 text-sm mt-1">
             <div *ngIf="cropForm.get('varietyNameEnglish')!.errors?.['required']">
               English Variety name is required
+            </div>
+            <div *ngIf="cropForm.get('varietyNameEnglish')!.errors?.['maxlength']">
+              English variety name cannot exceed 50 characters
             </div>
             <!-- <div *ngIf="cropForm.get('varietyNameEnglish')!.errors?.['pattern']">
               Variety name cannot be only numbers.
@@ -62,8 +64,7 @@
             English) *</label>
           <textarea id="descriptionEnglish" formControlName="descriptionEnglish"
             (input)="onDescriptionInput($event, 'english')"
-            (keypress)="preventInvalidEnglishAlphanumericCharacters($event)" (paste)="validateEnglishPaste($event)"
-            name="descriptionEnglish" rows="3"
+            (keypress)="preventInvalidEnglishAlphanumericCharacters($event)" name="descriptionEnglish" rows="3"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
           <div *ngIf="
       cropForm.get('descriptionEnglish')!.invalid &&
@@ -86,12 +87,14 @@
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
             required />
           <div *ngIf="
-      cropForm.get('varietyNameSinhala')!.invalid &&
-      (cropForm.get('varietyNameSinhala')!.dirty ||
-        cropForm.get('varietyNameSinhala')!.touched)
-    " class="text-red-500 text-sm mt-1">
+            cropForm.get('varietyNameSinhala')!.invalid &&
+            (cropForm.get('varietyNameSinhala')!.dirty ||
+            cropForm.get('varietyNameSinhala')!.touched)" class="text-red-500 text-sm mt-1">
             <div *ngIf="cropForm.get('varietyNameSinhala')!.errors?.['required']">
               Sinhala Variety name is required
+            </div>
+            <div *ngIf="cropForm.get('varietyNameSinhala')!.errors?.['maxlength']">
+              Sinhala variety name cannot exceed 50 characters
             </div>
             <!-- <div *ngIf="cropForm.get('varietyNameSinhala')!.errors?.['pattern']">
               Variety Sinhala name cannot be only numbers.
@@ -103,8 +106,7 @@
           <label for="descriptionSinhala"
             class="block text-sm font-medium text-textLight dark:text-textDark">Description (in Sinhala) *</label>
           <textarea id="descriptionSinhala" formControlName="descriptionSinhala"
-            (input)="onDescriptionInput($event, 'sinhala')" (paste)="validateSinhalaPaste($event)"
-            name="descriptionSinhala" rows="3"
+            (input)="onDescriptionInput($event, 'sinhala')" name="descriptionSinhala" rows="3"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
           <div *ngIf="
       cropForm.get('descriptionSinhala')!.invalid &&
@@ -124,16 +126,18 @@
           <label for="varietyNameTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark">Variety Name
             By Tamil *</label>
           <input type="text" id="varietyNameTamil" formControlName="varietyNameTamil"
-            (input)="onVarietyNameInput($event, 'tamil')" (paste)="validateTamilPaste($event)"
+            (input)="onVarietyNameInput($event, 'tamil')"
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
             required />
           <div *ngIf="
-      cropForm.get('varietyNameTamil')!.invalid &&
-      (cropForm.get('varietyNameTamil')!.dirty ||
-        cropForm.get('varietyNameTamil')!.touched)
-    " class="text-red-500 text-sm mt-1">
+            cropForm.get('varietyNameTamil')!.invalid &&
+            (cropForm.get('varietyNameTamil')!.dirty ||
+            cropForm.get('varietyNameTamil')!.touched)" class="text-red-500 text-sm mt-1">
             <div *ngIf="cropForm.get('varietyNameTamil')!.errors?.['required']">
               Tamil Variety name is required
+            </div>
+            <div *ngIf="cropForm.get('varietyNameTamil')!.errors?.['maxlength']">
+              Tamil variety name cannot exceed 50 characters
             </div>
             <!-- <div *ngIf="cropForm.get('varietyNameTamil')!.errors?.['pattern']">
               Tamil Variety name cannot be only numbers.
@@ -145,8 +149,7 @@
           <label for="descriptionTamil" class="block text-sm font-medium text-textLight dark:text-textDark">Description
             (in Tamil) *</label>
           <textarea id="descriptionTamil" formControlName="descriptionTamil"
-            (input)="onDescriptionInput($event, 'tamil')" (paste)="validateTamilPaste($event)" name="descriptionTamil"
-            rows="3"
+            (input)="onDescriptionInput($event, 'tamil')" name="descriptionTamil" rows="3"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
           <div *ngIf="
       cropForm.get('descriptionTamil')!.invalid &&
@@ -254,6 +257,9 @@
         <div *ngIf="verityEngNameInput.touched && !newsItems[0].varietyNameEnglish" class="text-red-500 text-sm mt-1">
           <div>English Variety name is required</div>
         </div>
+        <div *ngIf="(newsItems[0].varietyNameEnglish?.length ?? 0) > 50" class="text-red-500 text-sm mt-1">
+          <div>English variety name cannot exceed 50 characters</div>
+        </div>
 
         <!-- Error: Pattern Validation -->
         <!-- <div *ngIf="verityEngNameInput.touched && verityEngNameInput.errors?.['pattern']"
@@ -287,10 +293,11 @@
           (input)="onEditVarietyNameInput($event, 'sinhala')"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
           #verietySinNameInput="ngModel" pattern="^(?!\d+$)[\s\S]*" required />
-        <div *ngIf="
-            verietySinNameInput.touched && !newsItems[0].varietyNameSinhala
-          " class="text-red-500 text-sm mt-1">
+        <div *ngIf="verietySinNameInput.touched && !newsItems[0].varietyNameSinhala" class="text-red-500 text-sm mt-1">
           <div>Sinhala Variety name is required</div>
+        </div>
+        <div *ngIf="(newsItems[0].varietyNameSinhala?.length ?? 0) > 50" class="text-red-500 text-sm mt-1">
+          <div>Sinhala variety name cannot exceed 50 characters</div>
         </div>
 
         <!-- Error: Pattern Validation -->
@@ -321,12 +328,15 @@
       <div>
         <label for="varietyNameTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark">Variety Name By
           Tamil *</label>
-        <input type="varietyNameTamil" id="varietyNameTamil" [(ngModel)]="newsItems[0].varietyNameTamil"
+        <input type="text" id="varietyNameTamil" [(ngModel)]="newsItems[0].varietyNameTamil"
           (input)="onEditVarietyNameInput($event, 'tamil')"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
           #cropTamilNameInput="ngModel" pattern="^(?!\d+$)[\s\S]*" required />
         <div *ngIf="cropTamilNameInput.touched && !newsItems[0].varietyNameTamil" class="text-red-500 text-sm mt-1">
           <div>Tamil Variety name is required</div>
+        </div>
+        <div *ngIf="(newsItems[0].varietyNameTamil?.length ?? 0) > 50" class="text-red-500 text-sm mt-1">
+          <div>Tamil variety name cannot exceed 50 characters</div>
         </div>
 
         <!-- Error: Pattern Validation -->

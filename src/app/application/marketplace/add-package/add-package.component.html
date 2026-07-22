@@ -9,11 +9,12 @@
   <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4 sm:gap-0">
     <p class="text-lg sm:text-xl text-[#292929] font-normal dark:text-textDark">Add Package</p>
     <div class="flex flex-row gap-2">
-      <button type="button" class="bg-[#74788D] text-sm sm:text-lg text-white px-3 py-1 rounded-lg" (click)="onCancel()">
+      <button type="button" class="bg-[#74788D] text-sm sm:text-lg text-white px-3 py-1 rounded-lg"
+        (click)="onCancel()">
         Cancel
       </button>
-      <button type="button" class="bg-[#3980C0] text-sm sm:text-lg text-white px-4 sm:px-5 py-1 rounded-lg" (click)="onSubmit()"
-        [disabled]="
+      <button type="button" class="bg-[#3980C0] text-sm sm:text-lg text-white px-4 sm:px-5 py-1 rounded-lg"
+        (click)="onSubmit()" [disabled]="
           this.packageObj.productPrice < 0.0 ||
           this.packageObj.packageFee < 0.0 ||
           this.packageObj.serviceFee < 0.0
@@ -25,16 +26,14 @@
 
   <div class="flex flex-col lg:flex-row justify-between">
     <!-- Left Panel -->
-    <div class="bg-[#FFFFFF] dark:bg-tileBlack py-10 px-6 sm:px-10 lg:px-14 shadow-md rounded-md w-full lg:w-[70%] mb-6 lg:mb-0">
+    <div
+      class="bg-[#FFFFFF] dark:bg-tileBlack py-10 px-6 sm:px-10 lg:px-14 shadow-md rounded-md w-full lg:w-[70%] mb-6 lg:mb-0">
       <div class="flex flex-row justify-between items-center mb-6">
         <!-- Display Package Name with validation -->
         <div class="w-[70%]">
           <label class="text-[#534E4E] dark:text-textDark">Display Package Name*</label>
-          <input type="text" id="name" name="name" 
-            [(ngModel)]="packageObj.displayName" 
-            (input)="onDisplayNameChange($event)"
-            (blur)="onDisplayNameBlur()"
-            placeholder="Fruit Pack"
+          <input type="text" id="name" name="name" [(ngModel)]="packageObj.displayName"
+            (input)="onDisplayNameChange($event)" (blur)="onDisplayNameBlur()" placeholder="Fruit Pack"
             class="mt-1 block w-full p-2 border border-[#D9D9D9] dark:border-gray-600 rounded-md text-black dark:text-textDark bg-tileLight dark:bg-tileBlack placeholder-gray-400 dark:placeholder-gray-500" />
           <!-- <div *ngIf="shouldShowDisplayNameError" class="text-red-500 text-sm mt-1">
             Display Package Name is required
@@ -60,11 +59,8 @@
       <!-- Description with validation -->
       <div class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">Description*</label>
-        <textarea rows="4" name="description" 
-          [(ngModel)]="packageObj.description" 
-          (input)="onDescriptionChange($event)"
-          (blur)="onDescriptionBlur()"
-          placeholder="Enter Description"
+        <textarea rows="4" name="description" [(ngModel)]="packageObj.description" (input)="onDescriptionChange($event)"
+          (blur)="onDescriptionBlur()" placeholder="Enter Description"
           class="mt-1 block w-full p-2 border border-[#D9D9D9] dark:border-gray-600 rounded-md text-black dark:text-textDark bg-tileLight dark:bg-tileBlack placeholder-gray-400 dark:placeholder-gray-500"></textarea>
         <!-- <div *ngIf="shouldShowDescriptionError" class="text-red-500 text-sm mt-1">
           Description is required
@@ -79,14 +75,11 @@
           <label class="block text-sm text-[#534E4E] font-medium mb-2 dark:text-textDark">
             Total Package Price (Rs.)*
           </label>
-          <input type="number" min="0" step="0.01" name="productPrice" 
-  [(ngModel)]="packageObj.productPrice"
-  (change)="calculateApproximatedPrice(); validateDecimalInput($event, 'productPrice')" 
-  (blur)="onProductPriceBlur(); validateDecimalInput($event, 'productPrice')"
-  (input)="preventNegative($event)"
-  (keypress)="allowDecimalNumbers($event)" 
-  placeholder="Enter Amount"
-  class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 text-black dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <input type="number" min="0" step="0.01" name="productPrice" [(ngModel)]="packageObj.productPrice"
+            (change)="calculateApproximatedPrice(); validateDecimalInput($event, 'productPrice')"
+            (blur)="onProductPriceBlur(); validateDecimalInput($event, 'productPrice')"
+            (input)="preventNegative($event)" (keypress)="allowDecimalNumbers($event)" placeholder="Enter Amount"
+            class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 text-black dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <!-- <div *ngIf="shouldShowProductPriceError" class="text-red-500 text-sm mt-1">
             Total Package Price must be greater than 0
           </div> -->
@@ -96,14 +89,11 @@
           <label class="block text-sm text-[#534E4E] font-medium mb-2 dark:text-textDark">
             Packaging Fee (Rs.)*
           </label>
-          <input type="number" min="0" step="0.01" name="packageFee" 
-  [(ngModel)]="packageObj.packageFee"
-  (change)="calculateApproximatedPrice(); validateDecimalInput($event, 'packageFee')" 
-  (blur)="onPackageFeeBlur(); validateDecimalInput($event, 'packageFee')"
-  (input)="preventNegative($event)"
-  (keypress)="allowDecimalNumbers($event)" 
-  placeholder="Enter Amount"
-  class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 text-black dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <input type="number" min="0" step="0.01" name="packageFee" [(ngModel)]="packageObj.packageFee"
+            (change)="calculateApproximatedPrice(); validateDecimalInput($event, 'packageFee')"
+            (blur)="onPackageFeeBlur(); validateDecimalInput($event, 'packageFee')" (input)="preventNegative($event)"
+            (keypress)="allowDecimalNumbers($event)" placeholder="Enter Amount"
+            class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 text-black dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <!-- <div *ngIf="shouldShowPackageFeeError" class="text-red-500 text-sm mt-1">
             Packaging Fee cannot be negative
           </div> -->
@@ -113,14 +103,11 @@
           <label class="block text-sm text-[#534E4E] font-medium mb-2 dark:text-textDark">
             Service Fee (Rs.) *
           </label>
-          <input type="number" min="0" step="0.01" name="serviceFee" 
-  [(ngModel)]="packageObj.serviceFee"
-  (change)="calculateApproximatedPrice(); validateDecimalInput($event, 'serviceFee')" 
-  (blur)="onServiceFeeBlur(); validateDecimalInput($event, 'serviceFee')"
-  (input)="preventNegative($event)"
-  (keypress)="allowDecimalNumbers($event)" 
-  placeholder="Enter Amount"
-  class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 text-black dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <input type="number" min="0" step="0.01" name="serviceFee" [(ngModel)]="packageObj.serviceFee"
+            (change)="calculateApproximatedPrice(); validateDecimalInput($event, 'serviceFee')"
+            (blur)="onServiceFeeBlur(); validateDecimalInput($event, 'serviceFee')" (input)="preventNegative($event)"
+            (keypress)="allowDecimalNumbers($event)" placeholder="Enter Amount"
+            class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 text-black dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <!-- <div *ngIf="shouldShowServiceFeeError" class="text-red-500 text-sm mt-1">
             Service Fee cannot be negative
           </div> -->
@@ -148,12 +135,11 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let item of productTypeObj" class="border-b dark:border-gray-700">
+            <tr *ngFor="let item of validProductTypes" class="border-b dark:border-gray-700">
               <td class="px-4 py-3 text-[#534E4E] dark:text-textDark">{{ item.typeName }}</td>
               <td class="px-4 py-2 text-right">
                 <input type="number" min="0" [value]="packageObj.quantities[item.id]"
-                  (input)="onInputChange(item.id, $event); preventNegative($event)"
-                  (blur)="onQuantityBlur()"
+                  (input)="onInputChange(item.id, $event); preventNegative($event)" (blur)="onQuantityBlur()"
                   (keypress)="allowOnlyNumbers($event)"
                   class="w-20 text-center border border-gray-300 dark:border-gray-600 rounded-md py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-tileBlack text-black dark:text-textDark"
                   placeholder="--" />
@@ -175,7 +161,8 @@
       <div class="rounded-lg px-6 sm:px-8 lg:px-12 py-4 sm:py-6 border border-[#CFCFCF] dark:bg-tileBlack">
         <p class="text-base sm:text-lg text-[#000000] dark:text-textDark font-normal">Preview</p>
 
-        <div class="flex flex-col justify-center items-center relative my-3 bg-[#FFFFFF] dark:bg-gray-800 px-3 sm:px-5 py-3 h-auto rounded-xl shadow-md max-w-full">
+        <div
+          class="flex flex-col justify-center items-center relative my-3 bg-[#FFFFFF] dark:bg-gray-800 px-3 sm:px-5 py-3 h-auto rounded-xl shadow-md max-w-full">
 
           <div class="w-full flex justify-center items-center mt-4 sm:mt-6 lg:mt-8">
             <img *ngIf="selectedImage; else defaultIcon" [src]="selectedImage"
@@ -196,7 +183,8 @@
               <p class="text-sm sm:text-base lg:text-lg text-gray-500 italic">--Package Name--</p>
             </ng-template>
 
-            <p class="text-base sm:text-lg text-[#00957D] font-medium" *ngIf="packageObj.approximatedPrice > 0; else noPrice">
+            <p class="text-base sm:text-lg text-[#00957D] font-medium"
+              *ngIf="packageObj.approximatedPrice > 0; else noPrice">
               Rs.{{ packageObj.approximatedPrice | number: '1.2-2' }}
             </p>
             <ng-template #noPrice>
@@ -226,86 +214,61 @@
           </label>
         </div>
       </div> -->
-    
+
       <!-- Package Type -->
-<div class="bg-[#FFFFFF] dark:bg-tileBlack rounded-lg shadow-lg px-6 sm:px-8 lg:px-12 py-6 mt-6 sm:mt-8 lg:mt-10">
-  <label class="text-sm sm:text-base text-[#534E4E] dark:text-textDark font-medium">Package Type *</label>
-  <p-dropdown
-    styleClass="border border-2 rounded-xl items-center bg-white dark:bg-[#272F45] text-black dark:text-textDark border-[#D9D9D9] dark:border-[#4a5568] w-full mt-2 h-10"
-    panelStyleClass="bg-white dark:bg-[#2d354d] text-black dark:text-[#B1B1B1] border dark:border-[#4a5568]
+      <div class="bg-[#FFFFFF] dark:bg-tileBlack rounded-lg shadow-lg px-6 sm:px-8 lg:px-12 py-6 mt-6 sm:mt-8 lg:mt-10">
+        <label class="text-sm sm:text-base text-[#534E4E] dark:text-textDark font-medium">Package Type *</label>
+        <p-dropdown
+          styleClass="border border-2 rounded-xl items-center bg-white dark:bg-[#272F45] text-black dark:text-textDark border-[#D9D9D9] dark:border-[#4a5568] w-full mt-2 h-10"
+          panelStyleClass="bg-white dark:bg-[#2d354d] text-black dark:text-[#B1B1B1] border dark:border-[#4a5568]
       [&_.p-dropdown-item]:dark:bg-[#2d354d]
       [&_.p-dropdown-item]:dark:text-[#B1B1B1]
       [&_.p-dropdown-item:hover]:dark:bg-[#3a4160]
       [&_.p-dropdown-item:hover]:dark:text-white
       [&_.p-dropdown-item.p-highlight]:dark:bg-[#3182ce]
-      [&_.p-dropdown-item.p-highlight]:dark:text-white"
-    [options]="packageTypeOptions"
-    optionLabel="label"
-    optionValue="value"
-    placeholder="Select Type"
-    [(ngModel)]="packageObj.packageType"
-    name="packageType"
-    (onChange)="onPackageTypeChange()"
-    (onBlur)="onPackageTypeBlur()">
-  </p-dropdown>
+      [&_.p-dropdown-item.p-highlight]:dark:text-white" [options]="packageTypeOptions" optionLabel="label"
+          optionValue="value" placeholder="Select Type" [(ngModel)]="packageObj.packageType" name="packageType"
+          (onChange)="onPackageTypeChange()" (onBlur)="onPackageTypeBlur()">
+        </p-dropdown>
 
-  <!-- Start Date - shown for both types -->
-<div class="mt-5" *ngIf="packageObj.packageType">
-  <label class="text-sm sm:text-base text-[#534E4E] dark:text-textDark font-medium">Start Date *</label>
-  <p-calendar
-    id="startDate"
-    [(ngModel)]="packageObj.startDate"
-    name="startDate"
-    (onSelect)="onStartDateChange()"
-    (onBlur)="onStartDateBlur()"
-    placeholder="Select Start Date"
-    dateFormat="dd/mm/yy"
-    [showIcon]="true"
-    iconDisplay="input"
-    [minDate]="today"
-    styleClass="calendar-compact dark-calendar mt-2"
-    [style]="{ width: '100%' }"
-    panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600
+        <!-- Start Date - shown for both types -->
+        <div class="mt-5" *ngIf="packageObj.packageType">
+          <label class="text-sm sm:text-base text-[#534E4E] dark:text-textDark font-medium">Start Date *</label>
+          <p-calendar id="startDate" [(ngModel)]="packageObj.startDate" name="startDate"
+            (onSelect)="onStartDateChange()" (onBlur)="onStartDateBlur()" placeholder="Select Start Date"
+            dateFormat="dd/mm/yy" [showIcon]="true" iconDisplay="input" [minDate]="today"
+            styleClass="calendar-compact dark-calendar mt-2" [style]="{ width: '100%' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600
                      [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568]
                      [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
                      [&_.p-datepicker-header]:dark:bg-[#2d354d]
                      [&_.p-datepicker-header]:dark:text-white
                      [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
                      [&_.p-button:hover]:dark:bg-[#6b7280]"
-    inputStyleClass="text-[16px] h-10 rounded-xl bg-white dark:bg-[#272F45] text-black dark:text-textDark border border-[#D9D9D9] dark:border-[#4a5568] placeholder:text-[#6c6c6c] dark:placeholder:text-[#8B8B8B] placeholder:italic focus:outline-none focus:border-blue-500 dark:focus:border-blue-400 w-full"
-    [inputStyle]="{ width: '100%', padding: '0.625rem 2.5rem 0.625rem 0.75rem', fontSize: '0.875rem', height: '40px' }"
-    [appendTo]="'body'">
-  </p-calendar>
-</div>
+            inputStyleClass="text-[16px] h-10 rounded-xl bg-white dark:bg-[#272F45] text-black dark:text-textDark border border-[#D9D9D9] dark:border-[#4a5568] placeholder:text-[#6c6c6c] dark:placeholder:text-[#8B8B8B] placeholder:italic focus:outline-none focus:border-blue-500 dark:focus:border-blue-400 w-full"
+            [inputStyle]="{ width: '100%', padding: '0.625rem 2.5rem 0.625rem 0.75rem', fontSize: '0.875rem', height: '40px' }"
+            [appendTo]="'body'">
+          </p-calendar>
+        </div>
 
-<!-- End Date - only for One Time Package -->
-<div class="mt-5" *ngIf="packageObj.packageType === 'One Time'">
-  <label class="text-sm sm:text-base text-[#534E4E] dark:text-textDark font-medium">End Date *</label>
-  <p-calendar
-    id="endDate"
-    [(ngModel)]="packageObj.endDate"
-    name="endDate"
-    (onBlur)="onEndDateBlur()"
-    placeholder="Select End Date"
-    dateFormat="dd/mm/yy"
-    [showIcon]="true"
-    iconDisplay="input"
-    [minDate]="packageObj.startDate || today"
-    styleClass="calendar-compact dark-calendar mt-2"
-    [style]="{ width: '100%' }"
-    panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600
+        <!-- End Date - only for One Time Package -->
+        <div class="mt-5" *ngIf="packageObj.packageType === 'One Time'">
+          <label class="text-sm sm:text-base text-[#534E4E] dark:text-textDark font-medium">End Date *</label>
+          <p-calendar id="endDate" [(ngModel)]="packageObj.endDate" name="endDate" (onBlur)="onEndDateBlur()"
+            placeholder="Select End Date" dateFormat="dd/mm/yy" [showIcon]="true" iconDisplay="input"
+            [minDate]="packageObj.startDate || today" styleClass="calendar-compact dark-calendar mt-2"
+            [style]="{ width: '100%' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600
                      [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568]
                      [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
                      [&_.p-datepicker-header]:dark:bg-[#2d354d]
                      [&_.p-datepicker-header]:dark:text-white
                      [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
                      [&_.p-button:hover]:dark:bg-[#6b7280]"
-    inputStyleClass="text-[16px] h-10 rounded-xl bg-white dark:bg-[#272F45] text-black dark:text-textDark border border-[#D9D9D9] dark:border-[#4a5568] placeholder:text-[#6c6c6c] dark:placeholder:text-[#8B8B8B] placeholder:italic focus:outline-none focus:border-blue-500 dark:focus:border-blue-400 w-full"
-    [inputStyle]="{ width: '100%', padding: '0.625rem 2.5rem 0.625rem 0.75rem', fontSize: '0.875rem', height: '40px' }"
-    [appendTo]="'body'">
-  </p-calendar>
-</div>
-</div>
+            inputStyleClass="text-[16px] h-10 rounded-xl bg-white dark:bg-[#272F45] text-black dark:text-textDark border border-[#D9D9D9] dark:border-[#4a5568] placeholder:text-[#6c6c6c] dark:placeholder:text-[#8B8B8B] placeholder:italic focus:outline-none focus:border-blue-500 dark:focus:border-blue-400 w-full"
+            [inputStyle]="{ width: '100%', padding: '0.625rem 2.5rem 0.625rem 0.75rem', fontSize: '0.875rem', height: '40px' }"
+            [appendTo]="'body'">
+          </p-calendar>
+        </div>
+      </div>
     </div>
   </div>
 </form>

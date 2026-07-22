@@ -15,9 +15,11 @@
       <button type="button" class="bg-[#74788D] text-white text-lg px-3 py-1 rounded-lg mx-2" (click)="onCancel()">
         Cancel
       </button>
-      <button type="button" class="bg-[#3980C0] text-white text-lg px-5 py-1 rounded-lg mx-2" (click)="onSubmit()"
-        [disabled]="packageObj.productPrice < 0.0 || packageObj.packageFee < 0.0 || packageObj.serviceFee < 0.0">
-        Save
+      <button type="button" class="bg-[#3980C0] text-white text-lg px-5 py-1 rounded-lg mx-2
+         disabled:bg-[#B0B0B0] disabled:cursor-not-allowed disabled:opacity-70
+         dark:disabled:bg-gray-600" (click)="onSubmit()"
+        [disabled]="packageObj.productPrice < 0.0 || packageObj.packageFee < 0.0 || packageObj.serviceFee < 0.0 || hasInvalidProductTypeQty()">
+        Next
       </button>
     </div>
   </div>
@@ -57,31 +59,26 @@
         <div>
           <label class="block text-sm text-[#534E4E] dark:text-textDark mb-2">Total Package Price (Rs.)*</label>
           <input type="text" [(ngModel)]="packageObj.productPrice" name="productPrice"
-    (blur)="validateDecimalInput($event)"
-    (keypress)="allowDecimalNumbers($event)"
-    (change)="calculateApproximatedPrice()"
-    class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 focus:outline-none dark:bg-gray-800 dark:text-white"
-    placeholder="Enter Amount" />
+            (blur)="validateDecimalInput($event)" (keypress)="allowDecimalNumbers($event)"
+            (change)="calculateApproximatedPrice()"
+            class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 focus:outline-none dark:bg-gray-800 dark:text-white"
+            placeholder="Enter Amount" />
         </div>
 
         <div>
           <label class="block text-sm text-[#534E4E] dark:text-textDark mb-2">Service Fee (Rs.)*</label>
-          <input type="text" [(ngModel)]="packageObj.serviceFee" name="serviceFee"
-    (blur)="validateDecimalInput($event)"
-    (keypress)="allowDecimalNumbers($event)"
-    (change)="calculateApproximatedPrice()"
-    class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 focus:outline-none dark:bg-gray-800 dark:text-white"
-    placeholder="Enter Amount" />
+          <input type="text" [(ngModel)]="packageObj.serviceFee" name="serviceFee" (blur)="validateDecimalInput($event)"
+            (keypress)="allowDecimalNumbers($event)" (change)="calculateApproximatedPrice()"
+            class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 focus:outline-none dark:bg-gray-800 dark:text-white"
+            placeholder="Enter Amount" />
         </div>
 
         <div>
           <label class="block text-sm text-[#534E4E] dark:text-textDark mb-2">Packaging Fee (Rs.)*</label>
-          <input type="text" [(ngModel)]="packageObj.packageFee" name="packageFee"
-    (blur)="validateDecimalInput($event)"
-    (keypress)="allowDecimalNumbers($event)"
-    (change)="calculateApproximatedPrice()"
-    class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 focus:outline-none dark:bg-gray-800 dark:text-white"
-    placeholder="Enter Amount" />
+          <input type="text" [(ngModel)]="packageObj.packageFee" name="packageFee" (blur)="validateDecimalInput($event)"
+            (keypress)="allowDecimalNumbers($event)" (change)="calculateApproximatedPrice()"
+            class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 focus:outline-none dark:bg-gray-800 dark:text-white"
+            placeholder="Enter Amount" />
         </div>
       </div>
       <!-- Final Price -->
@@ -109,11 +106,16 @@
           <tbody>
             <tr *ngFor="let item of packageObj.packageItems trackBy: trackByFn"
               class="hover:bg-gray-50 dark:hover:bg-gray-800">
-              <td class="px-4 py-3 text-[#534E4E] dark:text-textDark">{{ item.typeName }}</td>
+              <td class="px-4 py-3"
+                [ngClass]="isInvalidType(item.isValid) ? 'text-[#FF0000] dark:text-red-400 font-medium' : 'text-[#534E4E] dark:text-textDark'">
+                {{ item.typeName }}
+              </td>
               <td class="px-4 py-2 text-right">
                 <input type="number" min="0" [(ngModel)]="item.qty" [name]="'qty-' + item.productTypeId"
-                  (input)="preventNegative($event)" (keypress)="allowOnlyNumbers($event)"
-                  class="w-20 text-center border border-gray-300 dark:border-gray-600 rounded-md py-1 px-2 bg-white dark:bg-gray-800 text-gray-800 dark:text-white"
+                  (input)="preventNegative($event)" (keypress)="allowOnlyNumbers($event)" [ngClass]="isInvalidType(item.isValid) 
+                  ? 'text-[#FF0000] dark:text-red-400 font-medium border-[#FF0000] focus:border-[#FF0000] focus:ring-[#FF0000]' 
+                  : 'text-[#534E4E] dark:text-textDark border-gray-300 dark:border-gray-600 focus:border-blue-400'"
+                  class="w-20 text-center border rounded-md py-1 px-2 bg-white dark:bg-gray-800 text-gray-800 dark:text-white focus:outline-none"
                   placeholder="--" />
               </td>
             </tr>
@@ -162,81 +164,59 @@
           <label for="statusDisabled" class="text-sm text-gray-700 dark:text-textDark">Disabled</label>
         </div>
       </div> -->
-    
+
       <div class="bg-white dark:bg-tileBlack rounded-lg shadow-lg px-12 py-6 mt-10">
-  <label class="text-black dark:text-textDark font-normal">Package Type *</label>
-  <p-dropdown
-    styleClass="border border-2 rounded-xl items-center bg-white dark:bg-[#272F45] text-black dark:text-textDark border-[#D9D9D9] dark:border-[#4a5568] w-full mt-2 h-10"
-    panelStyleClass="bg-white dark:bg-[#2d354d] text-black dark:text-[#B1B1B1] border dark:border-[#4a5568]
+        <label class="text-black dark:text-textDark font-normal">Package Type *</label>
+        <p-dropdown
+          styleClass="border border-2 rounded-xl items-center bg-white dark:bg-[#272F45] text-black dark:text-textDark border-[#D9D9D9] dark:border-[#4a5568] w-full mt-2 h-10"
+          panelStyleClass="bg-white dark:bg-[#2d354d] text-black dark:text-[#B1B1B1] border dark:border-[#4a5568]
       [&_.p-dropdown-item]:dark:bg-[#2d354d]
       [&_.p-dropdown-item]:dark:text-[#B1B1B1]
       [&_.p-dropdown-item:hover]:dark:bg-[#3a4160]
       [&_.p-dropdown-item:hover]:dark:text-white
       [&_.p-dropdown-item.p-highlight]:dark:bg-[#3182ce]
-      [&_.p-dropdown-item.p-highlight]:dark:text-white"
-    [options]="packageTypeOptions"
-    optionLabel="label"
-    optionValue="value"
-    placeholder="Select Type"
-    [(ngModel)]="packageObj.packageType"
-    name="packageType"
-    (onChange)="onPackageTypeChange()">
-  </p-dropdown>
+      [&_.p-dropdown-item.p-highlight]:dark:text-white" [options]="packageTypeOptions" optionLabel="label"
+          optionValue="value" placeholder="Select Type" [(ngModel)]="packageObj.packageType" name="packageType"
+          (onChange)="onPackageTypeChange()">
+        </p-dropdown>
 
-  <!-- Start Date - shown for both types -->
-  <div class="mt-5" *ngIf="packageObj.packageType">
-    <label class="text-black dark:text-textDark font-normal">Start Date *</label>
-    <p-calendar
-      id="startDate"
-      [(ngModel)]="packageObj.startDate"
-      name="startDate"
-      (onSelect)="onStartDateChange()"
-      placeholder="Select Start Date"
-      dateFormat="dd/mm/yy"
-      [showIcon]="true"
-      iconDisplay="input"
-      styleClass="calendar-compact dark-calendar mt-2"
-      [style]="{ width: '100%' }"
-      panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-[#4a5568]
+        <!-- Start Date - shown for both types -->
+        <div class="mt-5" *ngIf="packageObj.packageType">
+          <label class="text-black dark:text-textDark font-normal">Start Date *</label>
+          <p-calendar id="startDate" [(ngModel)]="packageObj.startDate" name="startDate"
+            (onSelect)="onStartDateChange()" placeholder="Select Start Date" dateFormat="dd/mm/yy" [showIcon]="true"
+            iconDisplay="input" styleClass="calendar-compact dark-calendar mt-2" [style]="{ width: '100%' }"
+            panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-[#4a5568]
                        [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568]
                        [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
                        [&_.p-datepicker-header]:dark:bg-[#2d354d]
                        [&_.p-datepicker-header]:dark:text-white
                        [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
                        [&_.p-button:hover]:dark:bg-[#6b7280]"
-      inputStyleClass="border border-2 rounded-xl items-center bg-white dark:bg-[#272F45] text-black dark:text-textDark border-[#D9D9D9] dark:border-[#4a5568] w-full h-10 px-3 placeholder:italic placeholder:text-[#6c6c6c] dark:placeholder:text-[#8B8B8B] focus:outline-none focus:border-blue-500 dark:focus:border-blue-400"
-      [inputStyle]="{ width: '100%', padding: '0.625rem 2.5rem 0.625rem 0.75rem', fontSize: '0.875rem', height: '40px' }"
-      [appendTo]="'body'">
-    </p-calendar>
-  </div>
+            inputStyleClass="border border-2 rounded-xl items-center bg-white dark:bg-[#272F45] text-black dark:text-textDark border-[#D9D9D9] dark:border-[#4a5568] w-full h-10 px-3 placeholder:italic placeholder:text-[#6c6c6c] dark:placeholder:text-[#8B8B8B] focus:outline-none focus:border-blue-500 dark:focus:border-blue-400"
+            [inputStyle]="{ width: '100%', padding: '0.625rem 2.5rem 0.625rem 0.75rem', fontSize: '0.875rem', height: '40px' }"
+            [appendTo]="'body'">
+          </p-calendar>
+        </div>
 
-  <!-- End Date - only for One Time Package -->
-  <div class="mt-5" *ngIf="packageObj.packageType === 'One Time'">
-    <label class="text-black dark:text-textDark font-normal">End Date *</label>
-    <p-calendar
-      id="endDate"
-      [(ngModel)]="packageObj.endDate"
-      name="endDate"
-      placeholder="Select End Date"
-      dateFormat="dd/mm/yy"
-      [showIcon]="true"
-      iconDisplay="input"
-      [minDate]="packageObj.startDate"
-      styleClass="calendar-compact dark-calendar mt-2"
-      [style]="{ width: '100%' }"
-      panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-[#4a5568]
+        <!-- End Date - only for One Time Package -->
+        <div class="mt-5" *ngIf="packageObj.packageType === 'One Time'">
+          <label class="text-black dark:text-textDark font-normal">End Date *</label>
+          <p-calendar id="endDate" [(ngModel)]="packageObj.endDate" name="endDate" placeholder="Select End Date"
+            dateFormat="dd/mm/yy" [showIcon]="true" iconDisplay="input" [minDate]="packageObj.startDate"
+            styleClass="calendar-compact dark-calendar mt-2" [style]="{ width: '100%' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-[#4a5568]
                        [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568]
                        [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
                        [&_.p-datepicker-header]:dark:bg-[#2d354d]
                        [&_.p-datepicker-header]:dark:text-white
                        [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
                        [&_.p-button:hover]:dark:bg-[#6b7280]"
-      inputStyleClass="border border-2 rounded-xl items-center bg-white dark:bg-[#272F45] text-black dark:text-textDark border-[#D9D9D9] dark:border-[#4a5568] w-full h-10 px-3 placeholder:italic placeholder:text-[#6c6c6c] dark:placeholder:text-[#8B8B8B] focus:outline-none focus:border-blue-500 dark:focus:border-blue-400"
-      [inputStyle]="{ width: '100%', padding: '0.625rem 2.5rem 0.625rem 0.75rem', fontSize: '0.875rem', height: '40px' }"
-      [appendTo]="'body'">
-    </p-calendar>
-  </div>
-</div>
+            inputStyleClass="border border-2 rounded-xl items-center bg-white dark:bg-[#272F45] text-black dark:text-textDark border-[#D9D9D9] dark:border-[#4a5568] w-full h-10 px-3 placeholder:italic placeholder:text-[#6c6c6c] dark:placeholder:text-[#8B8B8B] focus:outline-none focus:border-blue-500 dark:focus:border-blue-400"
+            [inputStyle]="{ width: '100%', padding: '0.625rem 2.5rem 0.625rem 0.75rem', fontSize: '0.875rem', height: '40px' }"
+            [appendTo]="'body'">
+          </p-calendar>
+        </div>
+      </div>
     </div>
   </div>
 </form>

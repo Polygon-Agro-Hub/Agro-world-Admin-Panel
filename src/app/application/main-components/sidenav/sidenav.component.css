@@ -16,8 +16,19 @@
 .logo-container {
     display: flex;
     align-items: center;
+    justify-content: center; /* Add this to center horizontally */
     padding: 0.938rem 0.938rem 0 0.938rem;
     width: 100%;
+    position: relative; /* Add this for proper positioning of arrows */
+}
+
+/* Adjust the arrow icons positioning */
+.logo-container .fa-angle-right,
+.logo-container .fa-angle-left {
+    position: absolute;
+    right: 0.938rem;
+    top: 65%;
+    transform: translateY(-50%);
 }
 
 .logo-container .logo {

@@ -30,7 +30,7 @@ class CropTask {
     NgxPaginationModule,
     FormsModule,
     LoadingSpinnerComponent,
-    ViewCropTasksComponent
+    ViewCropTasksComponent,
   ],
   templateUrl: './view-crop-task.component.html',
   styleUrl: './view-crop-task.component.css',
@@ -49,7 +49,8 @@ export class ViewCropTaskComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private cropCalService: CropCalendarService,
-    public permissionService: PermissionService, public tokenService: TokenService
+    public permissionService: PermissionService,
+    public tokenService: TokenService,
   ) {}
 
   ngOnInit(): void {
@@ -71,7 +72,7 @@ export class ViewCropTaskComponent implements OnInit {
         },
         (error) => {
           this.isLoading = false;
-        }
+        },
       );
   }
 
@@ -86,37 +87,39 @@ export class ViewCropTaskComponent implements OnInit {
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'Cancel',
       customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         this.cropCalService.deleteCropTask(id, cropId, indexId).subscribe(
           (data: any) => {
-  if (data) {
-    Swal.fire({
-      title: 'Deleted!',
-      text: 'The crop task item has been deleted.',
-      icon: 'success',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold',
-      },
-    });
-    this.fetchAllCropTask();
-  }
-},
-(error) => {
-  Swal.fire({
-    title: 'Error!',
-    text: 'There was an error deleting the crop calendar.',
-    icon: 'error',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-  });
-}
+            if (data) {
+              Swal.fire({
+                title: 'Deleted!',
+                text: 'The crop task item has been deleted.',
+                icon: 'success',
+                customClass: {
+                  popup:
+                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold',
+                },
+              });
+              this.fetchAllCropTask();
+            }
+          },
+          (error) => {
+            Swal.fire({
+              title: 'Error!',
+              text: 'There was an error deleting the crop calendar.',
+              icon: 'error',
+              customClass: {
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+              },
+            });
+          },
         );
       }
     });
@@ -143,8 +146,9 @@ export class ViewCropTaskComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         const uid = null;
+        const nextIndex = (parseInt(indexId, 10) + 1).toString();
         this.router.navigate([
-          `plant-care/action/add-new-crop-task/${cropId}/${indexId}/${uid}/${uid}`,
+          `plant-care/action/add-new-crop-task/${cropId}/${nextIndex}/${uid}/${uid}`,
         ]);
       }
     });
@@ -159,10 +163,10 @@ export class ViewCropTaskComponent implements OnInit {
     this.router.navigate(['/plant-care/action/view-crop-calender']);
   }
 
-  ispopup:boolean=false;
-  selectCropId!:number;
-  togglePopup(id:number ) {
+  ispopup: boolean = false;
+  selectCropId!: number;
+  togglePopup(id: number) {
     this.ispopup = true;
-    this.selectCropId=id;
+    this.selectCropId = id;
   }
 }

@@ -175,14 +175,14 @@ ngOnInit() {
     this.taskForm.get('reqImages')?.setValue(value);
   }
 
-  capitalizeFirstLetter(event: Event) {
-    const input = event.target as HTMLInputElement;
-    const value = input.value;
-    if (value.length > 0) {
-      input.value = value.charAt(0).toUpperCase() + value.slice(1);
-      this.taskForm.get(input.name)?.setValue(input.value);
-    }
-  }
+  // capitalizeFirstLetter(event: Event) {
+  //   const input = event.target as HTMLInputElement;
+  //   const value = input.value;
+  //   if (value.length > 0) {
+  //     input.value = value.charAt(0).toUpperCase() + value.slice(1);
+  //     this.taskForm.get(input.name)?.setValue(input.value);
+  //   }
+  // }
 
  getTaskById(id: string) {
     this.taskService.getCropTaskBycropId(id).subscribe(

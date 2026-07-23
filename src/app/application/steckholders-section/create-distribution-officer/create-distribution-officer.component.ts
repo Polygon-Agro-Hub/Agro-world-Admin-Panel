@@ -1236,33 +1236,11 @@ export class CreateDistributionOfficerComponent implements OnInit {
     fileInput?.click();
   }
 
-  onFileSelected(event: any): void {
+ onFileSelected(event: any): void {
     const file: File = event.target.files[0];
     if (file) {
-      if (file.size > 5000000) {
-        Swal.fire({
-          title: 'Error',
-          text: 'File size should not exceed 5MB',
-          icon: 'error',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold text-lg',
-          },
-        });
-        return;
-      }
-
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-      if (!allowedTypes.includes(file.type)) {
-        Swal.fire({
-          title: 'Error',
-          text: 'Only JPEG, JPG and PNG files are allowed',
-          icon: 'error',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold text-lg',
-          },
-        });
+      if (!this.validateFile(file)) {
+        event.target.value = '';
         return;
       }
 
@@ -1277,6 +1255,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
       reader.readAsDataURL(file);
     }
   }
+
   EpmloyeIdCreate() {
     const currentCompanyId = this.personalData.companyId;
     const currentCenterId = this.personalData.centerId;
@@ -1654,10 +1633,10 @@ export class CreateDistributionOfficerComponent implements OnInit {
   }
 
   validateFile(file: File): boolean {
-    if (file.size > 5000000) {
+    if (file.size > 3145728) {
       Swal.fire({
         title: 'Error',
-        text: 'File size should not exceed 5MB',
+        text: 'File size should not exceed 3MB',
         icon: 'error',
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
@@ -2059,6 +2038,11 @@ export class CreateDistributionOfficerComponent implements OnInit {
     const file: File = event.target.files[0];
     if (!file) return;
 
+    if (!this.validateFile(file)) {
+      event.target.value = '';
+      return;
+    }
+
     this.licenseFrontImageFile = file;
     this.licenseFrontImageFileName = file.name;
 
@@ -2082,6 +2066,11 @@ export class CreateDistributionOfficerComponent implements OnInit {
   onLicenseBackImageSelected(event: any): void {
     const file: File = event.target.files[0];
     if (!file) return;
+
+    if (!this.validateFile(file)) {
+      event.target.value = '';
+      return;
+    }
 
     this.licenseBackImageFile = file;
     this.licenseBackImageFileName = file.name;
@@ -2108,6 +2097,11 @@ export class CreateDistributionOfficerComponent implements OnInit {
     const file: File = event.target.files[0];
     if (!file) return;
 
+    if (!this.validateFile(file)) {
+      event.target.value = '';
+      return;
+    }
+
     this.insurenceFrontImageFile = file;
     this.insurenceFrontImageFileName = file.name;
 
@@ -2131,6 +2125,11 @@ export class CreateDistributionOfficerComponent implements OnInit {
   onInsurenceBackImageSelected(event: any): void {
     const file: File = event.target.files[0];
     if (!file) return;
+
+    if (!this.validateFile(file)) {
+      event.target.value = '';
+      return;
+    }
 
     this.insurenceBackImageFile = file;
     this.insurenceBackImageFileName = file.name;
@@ -2157,6 +2156,11 @@ export class CreateDistributionOfficerComponent implements OnInit {
     const file: File = event.target.files[0];
     if (!file) return;
 
+    if (!this.validateFile(file)) {
+      event.target.value = '';
+      return;
+    }
+
     this.vehicleFrontImageFile = file;
     this.vehicleFrontImageFileName = file.name;
 
@@ -2180,6 +2184,11 @@ export class CreateDistributionOfficerComponent implements OnInit {
   onVehicleBackImageSelected(event: any): void {
     const file: File = event.target.files[0];
     if (!file) return;
+
+    if (!this.validateFile(file)) {
+      event.target.value = '';
+      return;
+    }
 
     this.vehicleBackImageFile = file;
     this.vehicleBackImageFileName = file.name;
@@ -2205,6 +2214,11 @@ export class CreateDistributionOfficerComponent implements OnInit {
     const file: File = event.target.files[0];
     if (!file) return;
 
+    if (!this.validateFile(file)) {
+      event.target.value = '';
+      return;
+    }
+
     this.vehicleSideAImageFile = file;
     this.vehicleSideAImageFileName = file.name;
 
@@ -2228,6 +2242,11 @@ export class CreateDistributionOfficerComponent implements OnInit {
   onVehicleSideBImageSelected(event: any): void {
     const file: File = event.target.files[0];
     if (!file) return;
+
+    if (!this.validateFile(file)) {
+      event.target.value = '';
+      return;
+    }
 
     this.vehicleSideBImageFile = file;
     this.vehicleSideBImageFileName = file.name;

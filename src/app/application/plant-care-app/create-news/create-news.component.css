@@ -179,3 +179,19 @@ input[type="date"]::-moz-calendar-picker-indicator {
 :host-context(.dark) ::ng-deep .p-datepicker table th {
   color: #9ca3af;
 }
+
+::ng-deep .ql-editor li {
+  list-style-type: none !important;
+}
+
+::ng-deep .ql-editor li[data-list="bullet"]::before {
+  content: '\2022' !important;
+}
+
+::ng-deep .ql-editor li[data-list="ordered"] {
+  counter-increment: list-0;
+}
+
+::ng-deep .ql-editor li[data-list="ordered"]::before {
+  content: counter(list-0, decimal) '. ' !important;
+}

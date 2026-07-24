@@ -902,4 +902,5 @@ class CollectionOfficer {
   centerRegCode!: string;
   insExpDate!: string;
   manageName!:string;
+  slvCatName!:string; 
 }

@@ -137,7 +137,10 @@
                 <td class="px-4 py-4 text-[#000000] dark:text-textDark whitespace-nowrap">{{ pkg.total | number : "1.2-2" }}</td>
                 <td class="px-4 py-4 text-[#000000] dark:text-textDark whitespace-nowrap">{{ pkg.packageType }}</td>
                 <td class="px-4 py-4 text-[#000000] dark:text-textDark whitespace-nowrap">{{ pkg.startDate | date : "mediumDate" }}</td>
-                <td class="px-4 py-4 text-[#000000] dark:text-textDark whitespace-nowrap">{{ pkg.endDate | date : "mediumDate" }}</td>
+                <td class="px-4 py-4 text-[#000000] dark:text-textDark whitespace-nowrap"
+    [ngStyle]="{'color': !pkg.endDate ? '#308233' : ''}">
+  {{ pkg.endDate ? (pkg.endDate | date : "mediumDate") : "--No Limit--" }}
+</td>
                 <td class="px-4 py-2 text-center">
                   <button [ngClass]="{
                   'bg-[#BBFFC6] text-[#308233] px-4': pkg.status === 'Enabled',

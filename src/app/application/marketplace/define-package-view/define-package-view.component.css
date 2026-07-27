@@ -49,7 +49,11 @@
 }
 
 :host ::ng-deep .p-dropdown .p-dropdown-label:not(.p-placeholder) {
-  color: #000000;
+  color: #000000 !important;
+}
+
+::ng-deep .dark .p-dropdown .p-dropdown-label:not(.p-placeholder) {
+  color: #F1F4F5 !important;
 }
 
 /* Dropdown Panel */

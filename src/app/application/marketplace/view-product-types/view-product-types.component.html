@@ -71,7 +71,7 @@
             <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">No</th>
             <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">Short Code</th>
             <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">Type Name</th>
-            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">Status</th>
+            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center" *ngIf="permissionService.hasPermission('Change product type status') || tokenService.getUserDetails().role === '1'">Status</th>
             <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">Last Modified By</th>
             <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center"></th>
           </tr>
@@ -87,7 +87,7 @@
             <td class="px-3 py-3 text-left text-textLight dark:text-textDark">
               {{item.typeName}}
             </td>
-            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+            <td *ngIf="permissionService.hasPermission('Change product type status') || tokenService.getUserDetails().role === '1'" class="px-3 py-3 text-center text-textLight dark:text-textDark">
               <button (click)="toggleProductTypeStatus(item.id, item.isValid)"
                 [class]="item.isValid === 1 ? 'bg-[#007AFF]' : 'bg-[#78788029]'"
                 class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus:outline-none">

@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { FinanceService } from '../../../../services/finance/finance.service';
 
 @Component({
   selector: 'app-govi-trans-finance',
@@ -9,13 +10,31 @@ import { Router } from '@angular/router';
   templateUrl: './govi-trans-finance.component.html',
   styleUrl: './govi-trans-finance.component.css'
 })
-export class GoviTransFinanceComponent {
+export class GoviTransFinanceComponent implements OnInit {
   popupDriverCategories = false;
   popupCODTransactions = false;
 
+  transactionsCount: number = 0;
+
   constructor(
     private router: Router,
+    private financeSrv: FinanceService,
   ) {}
+
+  ngOnInit(): void {
+    this.getTransactionsCount();
+  }
+
+  getTransactionsCount(): void {
+    this.financeSrv.fetchAllTransactions(1, 1, 'To Review', '', '').subscribe(
+      (response) => {
+        this.transactionsCount = response.total ?? 0;
+      },
+      (error) => {
+        this.transactionsCount = 0;
+      }
+    );
+  }
 
   goBack() {
     this.router.navigate(['/finance/action']);

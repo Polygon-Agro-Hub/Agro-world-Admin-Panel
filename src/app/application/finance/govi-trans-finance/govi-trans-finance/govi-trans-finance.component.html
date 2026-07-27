@@ -52,7 +52,7 @@
                         View Transactions
                         <span
                             class="flex items-center justify-center bg-[#4B4B4B] text-[#FFFFFF] text-xs font-semibold rounded-full w-6 h-6">
-                            01
+                            {{ transactionsCount < 10 ? '0' + transactionsCount : transactionsCount }}
                         </span>
                     </div>
                 </div>

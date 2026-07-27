@@ -147,12 +147,12 @@
           Discount Percentage *
         </label>
         <input type="number" id="discountedPrice" name="discountedPrice" [(ngModel)]="productObj.discountedPrice"
-  min="0" max="100"
+  min="0" max="100" step="1"
   (keydown)="validateDecimalInput($event)" (input)="clampMinValue($event, 'discountedPrice')"
   (blur)="formatPrice($event, 'discountedPrice')"
-  (change)="calculeSalePrice()" pattern="^\d+(\.\d{1,2})?$" required
+  (change)="calculeSalePrice()" pattern="^\d+$" required
   class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-  placeholder="0.00" #discountedPriceField="ngModel" />
+  placeholder="0" #discountedPriceField="ngModel" />
         <div *ngIf="discountedPriceField.invalid && (discountedPriceField.dirty || discountedPriceField.touched)"
           class="text-red-500 text-sm mt-1">
           Discount Percentage is required.

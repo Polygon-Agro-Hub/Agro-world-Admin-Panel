@@ -1,15 +1,15 @@
-<div class="bg-gray-100 min-h-screen">
+<div class="min-h-screen">
 
   <a href="javascript:void(0)" (click)="goBack()"
-     class="inline-flex items-center gap-2 text-gray-900 text-sm mb-5">
+     class="inline-flex items-center gap-2 text-textLight dark:text-textDark text-sm mb-5">
     <span>&#8592;</span>
     <span class="underline font-medium">Back</span>
   </a>
 
-  <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+  <div class="bg-white dark:bg-tileBlack rounded-lg shadow-sm overflow-hidden">
 
-    <div class="px-7 py-5 border-b border-gray-100">
-      <h2 class="text-[16px] font-medium text-gray-900 m-0">
+    <div class="px-7 py-5 border-b border-gray-100 dark:border-gray-700">
+      <h2 class="text-[16px] font-medium text-textLight dark:text-textDark m-0">
         Shortage Today ({{ shortageCount }})
       </h2>
     </div>
@@ -21,11 +21,11 @@
 
           <div #lottieContainer class="w-48 h-48 mx-auto"></div>
 
-          <h3 class="text-[30px] font-semibold text-[#00000] mb-4">Please Wait!</h3>
+          <h3 class="text-[30px] font-semibold text-textLight dark:text-textDark mb-4">Please Wait!</h3>
 
-          <p class="text-[16px] font-normal text-[#494949] max-w-lg mx-auto">
+          <p class="text-[16px] font-normal text-[#494949] dark:text-gray-400 max-w-lg mx-auto">
             --If there are any shortages, you will be able to see them by
-            <strong class="font-bold text-gray-700">{{ formattedTime }}</strong>
+            <strong class="font-bold text-textLight dark:text-textDark">{{ formattedTime }}</strong>
             on {{ formattedDate }}.--
           </p>
         </div>

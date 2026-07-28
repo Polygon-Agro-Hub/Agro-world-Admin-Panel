@@ -12,11 +12,18 @@ import { CommonModule } from '@angular/common';
   styleUrl: './procurement.component.css',
 })
 export class ProcurementComponent {
+
+  istogglePopupProductStorageView = false;
+
   constructor(
     private router: Router,
     public tokenService: TokenService,
     public permissionService: PermissionService
   ) { }
+
+  togglePopupProductStorage(): void {
+    this.istogglePopupProductStorageView = !this.istogglePopupProductStorageView;
+  }
 
   purchaseReport(): void {
     this.router.navigate(['/procurement/received-orders']);

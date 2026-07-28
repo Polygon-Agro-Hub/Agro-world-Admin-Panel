@@ -585,70 +585,64 @@ if (this.productObj.comPrice <= salePriceForComparison) {
   }
 
   validateDecimalInput(event: KeyboardEvent): boolean {
-    const input = event.target as HTMLInputElement;
-    const value = input.value;
-    const key = event.key;
-    const fieldName = input.id; // or you can pass fieldName as parameter
+  const input = event.target as HTMLInputElement;
+  const value = input.value;
+  const key = event.key;
+  const fieldName = input.id;
 
-    // Allow control keys
-    const controlKeys = [
-      'Backspace',
-      'Delete',
-      'Tab',
-      'Escape',
-      'Enter',
-      'Home',
-      'End',
-      'ArrowLeft',
-      'ArrowRight',
-      'Clear',
-      'Copy',
-      'Paste',
-    ];
-    if (controlKeys.includes(key)) {
-      return true;
-    }
-
-    // Allow numbers and decimal point
-    if (!/^[0-9.]$/.test(key)) {
-      event.preventDefault();
-      return false;
-    }
-
-    // Prevent multiple decimal points
-    if (key === '.' && value.includes('.')) {
-      event.preventDefault();
-      return false;
-    }
-
-    // Check decimal places based on field type
-    if (value.includes('.')) {
-      const decimalPart = value.split('.')[1];
-
-      // Determine max decimal places based on field
-      let maxDecimals = 2; // Default for price fields
-      if (
-        input.id === 'startValue' ||
-        input.id === 'changeby' ||
-        input.id === 'maxQuantity'
-      ) {
-        maxDecimals = 3; // 3 decimals for quantity fields
-      }
-
-      if (decimalPart && decimalPart.length >= maxDecimals && key !== '.') {
-        event.preventDefault();
-        return false;
-      }
-    }
-
-    // Prevent decimal point at the beginning
-    if (key === '.' && value === '') {
-      event.preventDefault();
-      return false;
-    }
-
+  const controlKeys = [
+    'Backspace', 'Delete', 'Tab', 'Escape', 'Enter',
+    'Home', 'End', 'ArrowLeft', 'ArrowRight', 'Clear', 'Copy', 'Paste',
+  ];
+  if (controlKeys.includes(key)) {
     return true;
   }
+
+  // discountedPrice is integer-only: no decimal point allowed at all
+  if (fieldName === 'discountedPrice') {
+    if (!/^[0-9]$/.test(key)) {
+      event.preventDefault();
+      return false;
+    }
+    return true;
+  }
+
+  // Allow numbers and decimal point for all other fields
+  if (!/^[0-9.]$/.test(key)) {
+    event.preventDefault();
+    return false;
+  }
+
+  // Prevent multiple decimal points
+  if (key === '.' && value.includes('.')) {
+    event.preventDefault();
+    return false;
+  }
+
+  // Check decimal places based on field type
+  if (value.includes('.')) {
+    const decimalPart = value.split('.')[1];
+    let maxDecimals = 2; // Default for price fields
+    if (
+      input.id === 'startValue' ||
+      input.id === 'changeby' ||
+      input.id === 'maxQuantity'
+    ) {
+      maxDecimals = 3;
+    }
+    if (decimalPart && decimalPart.length >= maxDecimals && key !== '.') {
+      event.preventDefault();
+      return false;
+    }
+  }
+
+  if (key === '.' && value === '') {
+    event.preventDefault();
+    return false;
+  }
+
+  return true;
+}
 
   validatePriceFormat(value: any, fieldName: string): boolean {
     if (value === null || value === undefined || value === '') {
@@ -670,69 +664,65 @@ if (this.productObj.comPrice <= salePriceForComparison) {
   }
 
   formatPrice(event: any, fieldName: string): void {
-    const input = event.target;
-    let value = input.value;
+  const input = event.target;
+  let value = input.value;
 
-    if (value && !isNaN(value)) {
-      const numericValue = parseFloat(value);
-      if (numericValue >= 0) {
-        // Different decimal places for different field types
-        let formattedValue;
+  if (value && !isNaN(value)) {
+    const numericValue = parseFloat(value);
+    if (numericValue >= 0) {
+      let formattedValue;
 
-        // Price fields - 2 decimal places
-        if (
-          fieldName === 'normalPrice' ||
-          fieldName === 'discountedPrice' ||
-          fieldName === 'salePrice' ||
-          fieldName === 'comPrice'
-        ) {
-          formattedValue = numericValue.toFixed(2);
-        }
-        // Quantity fields - 3 decimal places
-        else if (
-          fieldName === 'startValue' ||
-          fieldName === 'changeby' ||
-          fieldName === 'maxQuantity'
-        ) {
-          formattedValue = numericValue.toFixed(3);
-        } else {
-          formattedValue = numericValue.toFixed(2); // Default
-        }
+      if (fieldName === 'discountedPrice') {
+        // Integer only, no decimals
+        formattedValue = Math.round(numericValue).toString();
+      } else if (
+        fieldName === 'normalPrice' ||
+        fieldName === 'salePrice' ||
+        fieldName === 'comPrice'
+      ) {
+        formattedValue = numericValue.toFixed(2);
+      } else if (
+        fieldName === 'startValue' ||
+        fieldName === 'changeby' ||
+        fieldName === 'maxQuantity'
+      ) {
+        formattedValue = numericValue.toFixed(3);
+      } else {
+        formattedValue = numericValue.toFixed(2);
+      }
 
-        input.value = formattedValue;
+      input.value = formattedValue;
 
-        // Update the model based on field name
-        switch (fieldName) {
-          case 'normalPrice':
-            this.productObj.normalPrice = parseFloat(formattedValue);
-            break;
-          case 'discountedPrice':
-            this.productObj.discountedPrice = parseFloat(formattedValue);
-            break;
-          case 'salePrice':
-            this.productObj.salePrice = parseFloat(formattedValue);
-            break;
-          case 'startValue':
-            this.productObj.startValue = parseFloat(formattedValue);
-            break;
-          case 'changeby':
-            this.productObj.changeby = parseFloat(formattedValue);
-            break;
-          case 'maxQuantity':
-            this.productObj.maxQuantity = parseFloat(formattedValue);
-            break;
-          case 'comPrice':
-            this.productObj.comPrice = parseFloat(formattedValue);
-            break;
-        }
+      switch (fieldName) {
+        case 'normalPrice':
+          this.productObj.normalPrice = parseFloat(formattedValue);
+          break;
+        case 'discountedPrice':
+          this.productObj.discountedPrice = parseInt(formattedValue, 10);
+          break;
+        case 'salePrice':
+          this.productObj.salePrice = parseFloat(formattedValue);
+          break;
+        case 'startValue':
+          this.productObj.startValue = parseFloat(formattedValue);
+          break;
+        case 'changeby':
+          this.productObj.changeby = parseFloat(formattedValue);
+          break;
+        case 'maxQuantity':
+          this.productObj.maxQuantity = parseFloat(formattedValue);
+          break;
+        case 'comPrice':
+          this.productObj.comPrice = parseFloat(formattedValue);
+          break;
+      }
 
-        // Recalculate sale price if needed
-        if (fieldName === 'normalPrice' || fieldName === 'discountedPrice') {
-          this.calculeSalePrice();
-        }
+      if (fieldName === 'normalPrice' || fieldName === 'discountedPrice') {
+        this.calculeSalePrice();
       }
     }
   }
+}
 
   validateMinMaxQuantities(): boolean {
     if (
@@ -797,7 +787,9 @@ if (this.productObj.comPrice <= salePriceForComparison) {
   // Let the user clear the field to type a new value
   if (rawValue === '') {
     switch (fieldName) {
-      case 'discountedPrice': this.productObj.discountedPrice = 0; break;
+      case 'discountedPrice':
+        this.productObj.discountedPrice = 0;
+        break;
       case 'normalPrice': this.productObj.normalPrice = 0; break;
       case 'salePrice': this.productObj.salePrice = 0; break;
       case 'comPrice': this.productObj.comPrice = 0; break;

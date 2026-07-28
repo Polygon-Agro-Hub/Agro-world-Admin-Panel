@@ -31,14 +31,14 @@
 </div>
           <p-calendar id="toDate" [(ngModel)]="date" (onSelect)="dateFilter()" (onClear)="clearDateFilter()"
             placeholder="Last Defined Date" [showIcon]="true" [showClear]="false" [showButtonBar]="true"
-            iconDisplay="input" [style]="{ width: '16rem', height: '2rem' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+            iconDisplay="input" [style]="{ width: '11rem', height: '2rem' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
                    [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
                    [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
                    [&_.p-datepicker-header]:dark:bg-[#2d354d] 
                    [&_.p-datepicker-header]:dark:text-white
                    [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
                    [&_.p-button:hover]:dark:bg-[#6b7280]"
-            inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
+            inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-44 h-8 pr-10"
             [appendTo]="'body'" />
           <button *ngIf="date" (click)="clearDateFilter()"
             class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 dark:hover:text-white focus:outline-none z-10">
@@ -137,7 +137,10 @@
                 <td class="px-4 py-4 text-[#000000] dark:text-textDark whitespace-nowrap">{{ pkg.total | number : "1.2-2" }}</td>
                 <td class="px-4 py-4 text-[#000000] dark:text-textDark whitespace-nowrap">{{ pkg.packageType }}</td>
                 <td class="px-4 py-4 text-[#000000] dark:text-textDark whitespace-nowrap">{{ pkg.startDate | date : "mediumDate" }}</td>
-                <td class="px-4 py-4 text-[#000000] dark:text-textDark whitespace-nowrap">{{ pkg.endDate | date : "mediumDate" }}</td>
+                <td class="px-4 py-4 text-[#000000] dark:text-textDark whitespace-nowrap"
+    [ngStyle]="{'color': !pkg.endDate ? '#308233' : ''}">
+  {{ pkg.endDate ? (pkg.endDate | date : "mediumDate") : "--No Limit--" }}
+</td>
                 <td class="px-4 py-2 text-center">
                   <button [ngClass]="{
                   'bg-[#BBFFC6] text-[#308233] px-4': pkg.status === 'Enabled',

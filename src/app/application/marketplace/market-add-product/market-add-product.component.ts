@@ -60,6 +60,8 @@ export class MarketAddProductComponent implements OnInit {
 
   productTypeOptions: { label: string; value: number }[] = [];
 
+  private integerOnlyFields = ['discountedPrice'];
+
   // In your component.ts
   unitTypeOptions = [
     { label: 'Kg', value: 'Kg' },
@@ -740,6 +742,13 @@ export class MarketAddProductComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     let value = input.value;
 
+    if (this.integerOnlyFields.includes(fieldName) && value.includes('.')) {
+    value = value.split('.')[0];
+    input.value = value;
+    if (fieldName === 'discountedPrice') {
+      this.productObj.discountedPrice = value ? parseInt(value, 10) : 0;
+    }
+  }
     // Prevent negative numbers and invalid characters
     if (value.includes('-') || value.toLowerCase().includes('e')) {
       value = value.replace(/[-e]/g, '');
@@ -836,12 +845,22 @@ export class MarketAddProductComponent implements OnInit {
     this.calculeSalePrice();
   }
 
-  preventInvalidChars(event: KeyboardEvent) {
-    // Block '-' and 'e' characters
-    if (event.key === '-' || event.key.toLowerCase() === 'e') {
-      event.preventDefault();
-    }
+  preventInvalidChars(event: KeyboardEvent, fieldName?: string) {
+  // Block '-' and 'e' characters (existing behavior)
+  if (event.key === '-' || event.key.toLowerCase() === 'e') {
+    event.preventDefault();
+    return;
   }
+
+  // Block '.' (and ',') for integer-only fields
+  if (
+    fieldName &&
+    this.integerOnlyFields.includes(fieldName) &&
+    (event.key === '.' || event.key === ',')
+  ) {
+    event.preventDefault();
+  }
+}
 
   validateQuantityRange() {
     if (

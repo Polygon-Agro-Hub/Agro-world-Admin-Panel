@@ -22,7 +22,7 @@
           </p>
           <p>
             <span class="text-[#627189] dark:text-[#a6aebb]">{{ officerObj.jobRole }} </span>-
-              <span class="text-black dark:text-[#a6aebb]">{{ this.empHeader }}{{ officerObj.empId }}</span>
+              <span class="text-black dark:text-[#a6aebb]">{{ this.empHeader }}{{ officerObj.empId }}<span *ngIf="officerObj.jobRole === 'Driver'"> | {{officerObj.slvCatName}}</span></span>
           </p>
 
           <!-- collection officer -->

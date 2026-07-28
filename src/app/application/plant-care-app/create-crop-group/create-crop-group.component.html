@@ -414,10 +414,10 @@
             type="text"
             [(ngModel)]="cropGroup.nitrogen"
             name="nitrogen"
-            (keydown)="allowOnlyIntegers($event)"
+            (keydown)="allowDecimal2Places($event)"
             class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
             #nitrogenInput="ngModel"
-            pattern="^\d+$"
+            pattern="^\d+(\.\d{1,2})?$"
             required
           />
           <span class="text-sm text-textLight dark:text-textDark"
@@ -427,10 +427,10 @@
             type="text"
             [(ngModel)]="cropGroup.phosphorus"
             name="phosphorus"
-            (keydown)="allowOnlyIntegers($event)"
+            (keydown)="allowDecimal2Places($event)"
             class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
             #phosphorusInput="ngModel"
-            pattern="^\d+$"
+            pattern="^\d+(\.\d{1,2})?$"
             required
           />
           <span class="text-sm text-textLight dark:text-textDark"
@@ -440,10 +440,10 @@
             type="text"
             [(ngModel)]="cropGroup.potassium"
             name="potassium"
-            (keydown)="allowOnlyIntegers($event)"
+            (keydown)="allowDecimal2Places($event)"
             class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
             #potassiumInput="ngModel"
-            pattern="^\d+$"
+            pattern="^\d+(\.\d{1,2})?$"
             required
           />
         </div>
@@ -465,7 +465,7 @@
           "
           class="text-red-500 text-sm mt-1"
         >
-          Only whole numbers allowed for NPK values
+          Please enter a valid number (whole number or up to 2 decimal places) for NPK values
         </div>
       </div>
 
@@ -975,10 +975,10 @@
               type="text"
               [(ngModel)]="newsItems[0].nitrogen"
               name="nitrogen"
-              (keydown)="allowOnlyIntegers($event)"
+              (keydown)="allowDecimal2Places($event)"
               class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
               #nitrogenEditInput="ngModel"
-              pattern="^\d+$"
+              pattern="^\d+(\.\d{1,2})?$"
               required
             />
             <span class="text-sm text-textLight dark:text-textDark"
@@ -988,10 +988,10 @@
               type="text"
               [(ngModel)]="newsItems[0].phosphorus"
               name="phosphorus"
-              (keydown)="allowOnlyIntegers($event)"
+              (keydown)="allowDecimal2Places($event)"
               class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
               #phosphorusEditInput="ngModel"
-              pattern="^\d+$"
+              pattern="^\d+(\.\d{1,2})?$"
               required
             />
             <span class="text-sm text-textLight dark:text-textDark"
@@ -1001,10 +1001,10 @@
               type="text"
               [(ngModel)]="newsItems[0].potassium"
               name="potassium"
-              (keydown)="allowOnlyIntegers($event)"
+              (keydown)="allowDecimal2Places($event)"
               class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
               #potassiumEditInput="ngModel"
-              pattern="^\d+$"
+              pattern="^\d+(\.\d{1,2})?$"
               required
             />
           </div>
@@ -1032,7 +1032,7 @@
             "
             class="text-red-500 text-sm mt-1"
           >
-            Only whole numbers allowed for NPK values
+            Please enter a valid number (whole number or up to 2 decimal places) for NPK values
           </div>
         </div>
 

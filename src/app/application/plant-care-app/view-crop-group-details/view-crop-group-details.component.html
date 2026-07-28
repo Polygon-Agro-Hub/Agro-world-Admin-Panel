@@ -73,7 +73,7 @@
         </label>
         <div
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-[#000000] dark:text-textDark font-normal">
-          {{ cropGroup.costFeild || '—' }}
+          {{ cropGroup.costFeild ? (cropGroup.costFeild | number: '1.2-2') : '—' }}
         </div>
       </div>
 
@@ -84,7 +84,7 @@
         </label>
         <div
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-[#000000] dark:text-textDark font-normal">
-          {{ cropGroup.incomeFeild || '—' }}
+          {{ cropGroup.incomeFeild ? (cropGroup.incomeFeild | number: '1.2-2') : '—' }}
         </div>
       </div>
 
@@ -95,7 +95,7 @@
         </label>
         <div
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-[#000000] dark:text-textDark font-normal">
-          {{ cropGroup.seedRate || '—' }}
+          {{ formatExactValue(cropGroup.seedRate) }}
         </div>
       </div>
 
@@ -106,7 +106,7 @@
         </label>
         <div
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-[#000000] dark:text-textDark font-normal">
-          {{ cropGroup.rowSpace || '—' }}
+          {{ formatExactValue(cropGroup.rowSpace) }}
         </div>
       </div>
 
@@ -117,7 +117,7 @@
         </label>
         <div
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-[#000000] dark:text-textDark font-normal">
-          {{ cropGroup.plantSpace || '—' }}
+          {{ formatExactValue(cropGroup.plantSpace) }}
         </div>
       </div>
 
@@ -128,7 +128,7 @@
         </label>
         <div
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-[#000000] dark:text-textDark font-normal">
-          {{ cropGroup.AvgYield || '—' }}
+          {{ formatExactValue(cropGroup.AvgYield) }}
         </div>
       </div>
 

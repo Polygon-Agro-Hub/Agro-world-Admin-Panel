@@ -36,4 +36,8 @@ export class ProcurementComponent {
   definePackages(): void {
     this.router.navigate(['/procurement/define-packages']);
   }
+
+  navigatePath(path: string) {
+    this.router.navigate([path]);
+  }
 }

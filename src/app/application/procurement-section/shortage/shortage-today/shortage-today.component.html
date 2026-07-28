@@ -6,7 +6,7 @@
   </a>
 
   <!-- ===================== ASSIGN VIEW ===================== -->
-  <div *ngIf="selectedItem" class="bg-white dark:bg-tileBlack rounded-lg shadow-sm overflow-hidden">
+  <div *ngIf="selectedItem" class="bg-white dark:bg-tileBlack rounded-lg shadow-sm overflow-hidden min-h-[80vh]">
 
     <div class="flex items-center justify-between px-7 py-5 border-b border-gray-100 dark:border-gray-700">
       <div class="flex items-center gap-4">
@@ -41,13 +41,17 @@
         </div>
 
         <div class="flex flex-col gap-2">
-          <label class="text-[12px] font-normal text-textLight dark:text-textDark">Select Centre</label>
-          <select [(ngModel)]="selectedCentreId"
-                  class="w-56 h-10 p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-tileBlack text-textLight dark:text-textDark">
-            <option [ngValue]="null">--Select Centre--</option>
-            <option *ngFor="let centre of centres" [ngValue]="centre.id">{{ centre.name }}</option>
-          </select>
-        </div>
+  <label class="text-[12px] font-normal text-textLight dark:text-textDark">Select Centre</label>
+  <p-dropdown
+    [options]="centres"
+    [(ngModel)]="selectedCentreId"
+    optionLabel="name"
+    optionValue="id"
+    placeholder="--Select Centre--"
+    styleClass="w-56 h-10 shortage-centre-dropdown"
+    [panelStyleClass]="'shortage-centre-panel'">
+  </p-dropdown>
+</div>
 
         <div class="flex flex-col gap-2">
           <label class="text-[12px] font-normal text-textLight dark:text-textDark">Ceiling (%)</label>
@@ -115,7 +119,7 @@
 
   <!-- ===================== ASSIGN CONFIRMATION MODAL ===================== -->
   <div *ngIf="showConfirmModal"
-       class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+       class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 min-h-[80vh]">
     <div class="bg-white dark:bg-tileBlack rounded-3xl w-full max-w-lg p-10 text-center">
 
       <h2 class="text-2xl font-bold text-textLight dark:text-textDark mb-6">
@@ -142,7 +146,7 @@
   </div>
 
   <!-- ===================== LIST VIEW ===================== -->
-  <div *ngIf="!selectedItem" class="bg-white dark:bg-tileBlack rounded-lg shadow-sm overflow-hidden">
+  <div *ngIf="!selectedItem" class="bg-white dark:bg-tileBlack rounded-lg shadow-sm overflow-hidden min-h-[80vh]">
 
     <div class="px-7 py-5 border-b border-gray-100 dark:border-gray-700">
       <h2 class="text-[16px] font-medium text-textLight dark:text-textDark m-0">

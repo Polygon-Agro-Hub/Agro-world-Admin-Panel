@@ -2,6 +2,7 @@ import { Component, ElementRef, ViewChild, AfterViewInit, OnDestroy, OnInit } fr
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import lottie, { AnimationItem } from 'lottie-web';
+import { DropdownModule } from 'primeng/dropdown';
 
 interface ShortageItem {
   id: number;
@@ -29,7 +30,7 @@ interface AssignmentRecord {
 @Component({
   selector: 'app-shortage-today',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DropdownModule],
   templateUrl: './shortage-today.component.html',
   styleUrl: './shortage-today.component.css'
 })

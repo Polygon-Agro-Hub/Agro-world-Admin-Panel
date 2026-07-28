@@ -15,6 +15,7 @@ interface ShortageItem {
 
 interface Centre {
   id: number;
+  code: string;
   name: string;
 }
 
@@ -33,9 +34,9 @@ export class ShortageTodayComponent implements OnInit, AfterViewInit, OnDestroy 
   ];
 
   centres: Centre[] = [
-    { id: 1, name: 'Colombo Centre' },
-    { id: 2, name: 'Kandy Centre' },
-    { id: 3, name: 'Galle Centre' }
+    { id: 1, code: 'D-WPCK-01', name: 'Kollupitiya Central Distribution Centre' },
+    { id: 2, code: 'D-KDY-02', name: 'Kandy Regional Distribution Centre' },
+    { id: 3, code: 'D-GLE-03', name: 'Galle Coastal Distribution Centre' }
   ];
 
   get shortageCount(): number {
@@ -56,6 +57,9 @@ export class ShortageTodayComponent implements OnInit, AfterViewInit, OnDestroy 
   assignQty: number = 0;
   selectedCentreId: number | null = null;
   ceilingPercent: number = 0;
+
+  // Confirmation modal state
+  showConfirmModal = false;
 
   @ViewChild('lottieContainer', { static: false }) lottieContainer!: ElementRef;
   private animationItem: AnimationItem | undefined;
@@ -99,7 +103,6 @@ export class ShortageTodayComponent implements OnInit, AfterViewInit, OnDestroy 
 
   goBack(): void {
     if (this.selectedItem) {
-      // If inside the Assign view, go back to the list instead of leaving the page
       this.closeAssignView();
     } else {
       this.location.back();
@@ -121,17 +124,36 @@ export class ShortageTodayComponent implements OnInit, AfterViewInit, OnDestroy 
     return this.assignQty > 0 && this.selectedCentreId !== null;
   }
 
+  get selectedCentre(): Centre | null {
+    return this.centres.find(c => c.id === this.selectedCentreId) || null;
+  }
+
+  // Step 1: open confirmation modal instead of assigning directly
   onAssign(): void {
-    if (!this.canAssign || !this.selectedItem) {
+    if (!this.canAssign) {
+      return;
+    }
+    this.showConfirmModal = true;
+  }
+
+  cancelAssign(): void {
+    this.showConfirmModal = false;
+  }
+
+  // Step 2: actually perform the assignment
+  confirmAssign(): void {
+    if (!this.selectedItem || !this.selectedCentre) {
       return;
     }
     console.log('Assigning', {
       item: this.selectedItem.name,
       qty: this.assignQty,
-      centreId: this.selectedCentreId,
+      centre: this.selectedCentre,
       ceiling: this.ceilingPercent
     });
-    // TODO: call your API here, then close the view
+    // TODO: call your API here
+
+    this.showConfirmModal = false;
     this.closeAssignView();
   }
 

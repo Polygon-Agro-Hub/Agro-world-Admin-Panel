@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Location } from '@angular/common';
+import { Component, ElementRef, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
+import { CommonModule, Location } from '@angular/common';
+import lottie, { AnimationItem } from 'lottie-web';
 
 @Component({
   selector: 'app-shortage-today',
@@ -9,14 +9,38 @@ import { Location } from '@angular/common';
   templateUrl: './shortage-today.component.html',
   styleUrl: './shortage-today.component.css'
 })
-export class ShortageTodayComponent {
+export class ShortageTodayComponent implements AfterViewInit, OnDestroy {
   shortageCount = 0;
   shortages: any[] = [];
 
-  // Set this to whatever date/time the shortages become visible
   availableDate: Date = new Date('2026-06-23T18:00:00');
 
+  loadingOptions: any = {
+    path: '/assets/json/blue_loading.json',
+    loop: true,
+    autoplay: true
+  };
+
+  @ViewChild('lottieContainer', { static: false }) lottieContainer!: ElementRef;
+  private animationItem: AnimationItem | undefined;
+
   constructor(private location: Location) {}
+
+  ngAfterViewInit(): void {
+    if (this.shortageCount === 0 && this.lottieContainer) {
+      this.animationItem = lottie.loadAnimation({
+        container: this.lottieContainer.nativeElement,
+        renderer: 'svg',
+        loop: this.loadingOptions.loop,
+        autoplay: this.loadingOptions.autoplay,
+        path: this.loadingOptions.path
+      });
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.animationItem?.destroy();
+  }
 
   goBack(): void {
     this.location.back();

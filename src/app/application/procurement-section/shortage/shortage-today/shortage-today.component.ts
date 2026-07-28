@@ -11,12 +11,19 @@ interface ShortageItem {
   assignedQty: number;
   unit: string;
   marketPrice: number;
+  assignments: AssignmentRecord[];
 }
 
 interface Centre {
   id: number;
   code: string;
   name: string;
+}
+
+interface AssignmentRecord {
+  qty: number;
+  centreLabel: string;
+  ceiling: number;
 }
 
 @Component({
@@ -28,15 +35,15 @@ interface Centre {
 })
 export class ShortageTodayComponent implements OnInit, AfterViewInit, OnDestroy {
   shortages: ShortageItem[] = [
-    { id: 1, name: 'Garlic', image: '/assets/images/garlic.png', shortageQty: 20, assignedQty: 0, unit: 'kg', marketPrice: 100.00 },
-    { id: 2, name: 'Turmeric', image: '/assets/images/turmeric.png', shortageQty: 0.5, assignedQty: 20, unit: 'kg', marketPrice: 100.00 },
-    { id: 3, name: 'Watermelon', image: '/assets/images/watermelon.png', shortageQty: 0, assignedQty: 20, unit: 'kg', marketPrice: 100.00 }
+    { id: 1, name: 'Garlic', image: '/assets/images/garlic.png', shortageQty: 20, assignedQty: 0, unit: 'kg', marketPrice: 100.00, assignments: [] },
+    { id: 2, name: 'Turmeric', image: '/assets/images/turmeric.png', shortageQty: 0.5, assignedQty: 20, unit: 'kg', marketPrice: 100.00, assignments: [] },
+    { id: 3, name: 'Watermelon', image: '/assets/images/watermelon.png', shortageQty: 0, assignedQty: 20, unit: 'kg', marketPrice: 100.00, assignments: [] }
   ];
 
   centres: Centre[] = [
     { id: 1, code: 'D-WPCK-01', name: 'Kollupitiya Central Distribution Centre' },
-    { id: 2, code: 'D-KDY-02', name: 'Kandy Regional Distribution Centre' },
-    { id: 3, code: 'D-GLE-03', name: 'Galle Coastal Distribution Centre' }
+    { id: 2, code: 'D-WPCK-02', name: 'Kollupitiya Central Distribution Centre' },
+    { id: 3, code: 'D-WPCK-03', name: 'Kollupitiya Central Distribution Centre' }
   ];
 
   get shortageCount(): number {
@@ -111,17 +118,23 @@ export class ShortageTodayComponent implements OnInit, AfterViewInit, OnDestroy 
 
   onView(item: ShortageItem): void {
     this.selectedItem = item;
-    this.assignQty = 0;
-    this.selectedCentreId = null;
-    this.ceilingPercent = 0;
+    this.resetAssignForm();
   }
 
   closeAssignView(): void {
     this.selectedItem = null;
   }
 
+  private resetAssignForm(): void {
+    this.assignQty = 0;
+    this.selectedCentreId = null;
+    this.ceilingPercent = 0;
+  }
+
   get canAssign(): boolean {
-    return this.assignQty > 0 && this.selectedCentreId !== null;
+    return this.assignQty > 0
+      && this.assignQty <= (this.selectedItem?.shortageQty ?? 0)
+      && this.selectedCentreId !== null;
   }
 
   get selectedCentre(): Centre | null {
@@ -145,16 +158,31 @@ export class ShortageTodayComponent implements OnInit, AfterViewInit, OnDestroy 
     if (!this.selectedItem || !this.selectedCentre) {
       return;
     }
-    console.log('Assigning', {
+
+    const centre = this.selectedCentre;
+    const qty = this.assignQty;
+
+    // Add to the "Assigned" list at the bottom
+    this.selectedItem.assignments.push({
+      qty: qty,
+      centreLabel: `${centre.code} ${centre.name}`,
+      ceiling: this.ceilingPercent
+    });
+
+    // Reduce the remaining shortage quantity at the top
+    this.selectedItem.shortageQty = Math.max(0, this.selectedItem.shortageQty - qty);
+    this.selectedItem.assignedQty += qty;
+
+    console.log('Assigned', {
       item: this.selectedItem.name,
-      qty: this.assignQty,
-      centre: this.selectedCentre,
+      qty,
+      centre,
       ceiling: this.ceilingPercent
     });
     // TODO: call your API here
 
     this.showConfirmModal = false;
-    this.closeAssignView();
+    this.resetAssignForm();
   }
 
   get formattedTime(): string {

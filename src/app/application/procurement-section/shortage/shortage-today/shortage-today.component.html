@@ -9,11 +9,15 @@
 
     <div class="px-7 py-5 border-b border-gray-100 dark:border-gray-700">
       <h2 class="text-[16px] font-medium text-textLight dark:text-textDark m-0">
-        Shortage Today ({{ shortageCount }})
+        Shortage Today ({{ shortageCount.toString().padStart(2, '0') }})
       </h2>
     </div>
 
-    <div class="min-h-[500px] flex items-center justify-center">
+    <div [class.min-h-[500px]]="isWaiting || shortageCount === 0"
+         [class.flex]="isWaiting || shortageCount === 0"
+         [class.items-center]="isWaiting || shortageCount === 0"
+         [class.justify-center]="isWaiting || shortageCount === 0"
+         [class.p-6]="!isWaiting && shortageCount > 0">
 
       <!-- 1. Still waiting for the reveal time -->
       <ng-container *ngIf="isWaiting; else revealed">
@@ -37,7 +41,6 @@
             <p class="text-[16px] font-normal text-[#494949] dark:text-gray-400 mb-6">
               --No Product Shortage for Today--
             </p>
-
             <img src="/assets/images/NoData.png" alt="No product shortage"
                  class="w-16 h-16 mx-auto" />
           </div>
@@ -45,7 +48,44 @@
 
         <!-- 2b. Has shortages -->
         <ng-template #shortageList>
-          <!-- render your shortage rows/table here when shortageCount > 0 -->
+          <div class="flex flex-col gap-3">
+            <div *ngFor="let item of shortages"
+                 class="w-fit grid grid-cols-[56px_180px_100px_100px_150px_100px] items-center gap-4 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-3">
+
+              <img [src]="item.image" [alt]="item.name"
+                   class="w-14 h-14 object-cover rounded-md bg-gray-50 dark:bg-gray-800" />
+
+              <span class="text-textLight dark:text-textDark font-semibold text-base">
+                {{ item.name }}
+              </span>
+
+              <div class="bg-orange-50 dark:bg-orange-900/20 rounded-md px-3 py-2">
+                <p class="text-xs text-gray-500 dark:text-gray-400 m-0">Shortage</p>
+                <p class="text-sm font-semibold text-textLight dark:text-textDark m-0 whitespace-nowrap">
+                  {{ item.shortageQty }} {{ item.unit }}
+                </p>
+              </div>
+
+              <div class="bg-blue-50 dark:bg-blue-900/20 rounded-md px-3 py-2">
+                <p class="text-xs text-gray-500 dark:text-gray-400 m-0">Assigned</p>
+                <p class="text-sm font-semibold text-textLight dark:text-textDark m-0 whitespace-nowrap">
+                  {{ item.assignedQty }} {{ item.unit }}
+                </p>
+              </div>
+
+              <div>
+                <p class="text-sm text-gray-500 dark:text-gray-400 m-0 whitespace-nowrap">Market Price per {{ item.unit }}</p>
+                <p class="text-base font-bold text-textLight dark:text-textDark m-0">
+                  Rs. {{ item.marketPrice.toFixed(2) }}
+                </p>
+              </div>
+
+              <button (click)="onView(item)"
+                      class="bg-[#3980C0] hover:bg-[#316ba8] text-white font-medium text-sm px-6 py-2.5 rounded-md transition-colors whitespace-nowrap justify-self-end">
+                View
+              </button>
+            </div>
+          </div>
         </ng-template>
 
       </ng-template>

@@ -2,6 +2,16 @@ import { Component, ElementRef, ViewChild, AfterViewInit, OnDestroy, OnInit } fr
 import { CommonModule, Location } from '@angular/common';
 import lottie, { AnimationItem } from 'lottie-web';
 
+interface ShortageItem {
+  id: number;
+  name: string;
+  image: string;
+  shortageQty: number;
+  assignedQty: number;
+  unit: string;
+  marketPrice: number;
+}
+
 @Component({
   selector: 'app-shortage-today',
   standalone: true,
@@ -10,8 +20,39 @@ import lottie, { AnimationItem } from 'lottie-web';
   styleUrl: './shortage-today.component.css'
 })
 export class ShortageTodayComponent implements OnInit, AfterViewInit, OnDestroy {
-  shortageCount = 0;
-  shortages: any[] = [];
+  shortages: ShortageItem[] = [
+    {
+      id: 1,
+      name: 'Garlic',
+      image: '/assets/images/garlic.png',
+      shortageQty: 20,
+      assignedQty: 0,
+      unit: 'kg',
+      marketPrice: 100.00
+    },
+    {
+      id: 2,
+      name: 'Turmeric',
+      image: '/assets/images/turmeric.png',
+      shortageQty: 0.5,
+      assignedQty: 20,
+      unit: 'kg',
+      marketPrice: 100.00
+    },
+    {
+      id: 3,
+      name: 'Watermelon',
+      image: '/assets/images/watermelon.png',
+      shortageQty: 0,
+      assignedQty: 20,
+      unit: 'kg',
+      marketPrice: 100.00
+    }
+  ];
+
+  get shortageCount(): number {
+    return this.shortages.length;
+  }
 
   availableDate: Date = new Date('2026-06-23T18:00:00');
 
@@ -68,6 +109,11 @@ export class ShortageTodayComponent implements OnInit, AfterViewInit, OnDestroy 
 
   goBack(): void {
     this.location.back();
+  }
+
+  onView(item: ShortageItem): void {
+    console.log('View clicked for', item.name);
+    // navigate to detail view or open a modal here
   }
 
   get formattedTime(): string {

@@ -29,18 +29,18 @@
     </div>
 
     <div class="p-7">
-      <p class="text-base font-semibold text-textLight dark:text-textDark mb-4">To Assign</p>
+      <p class="text-[14px] font-medium text-black dark:text-textDark mb-4">To Assign</p>
 
-      <div class="inline-flex items-end gap-6 border border-gray-200 dark:border-gray-700 rounded-lg px-6 py-5">
+      <div class="inline-flex items-end gap-6 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-3">
 
         <div class="flex flex-col gap-2">
-          <label class="text-sm text-textLight dark:text-textDark">Enter Qty ({{ selectedItem.unit }})</label>
+          <label class="text-[12px] font-normal text-textLight dark:text-textDark">Enter Qty ({{ selectedItem.unit }})</label>
           <input type="number" min="0" [(ngModel)]="assignQty"
                  class="w-32 p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-tileBlack text-textLight dark:text-textDark font-semibold" />
         </div>
 
         <div class="flex flex-col gap-2">
-          <label class="text-sm text-textLight dark:text-textDark">Select Centre</label>
+          <label class="text-[12px] font-normal text-textLight dark:text-textDark">Select Centre</label>
           <select [(ngModel)]="selectedCentreId"
                   class="w-56 p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-tileBlack text-textLight dark:text-textDark">
             <option [ngValue]="null">--Select Centre--</option>
@@ -49,7 +49,7 @@
         </div>
 
         <div class="flex flex-col gap-2">
-          <label class="text-sm text-textLight dark:text-textDark">Ceiling (%)</label>
+          <label class="text-[12px] font-normal text-textLight dark:text-textDark">Ceiling (%)</label>
           <input type="number" min="0" max="100" [(ngModel)]="ceilingPercent"
                  class="w-24 p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-tileBlack text-textLight dark:text-textDark font-semibold" />
         </div>

@@ -1,1 +1,49 @@
-<p>shortage-today works!</p>
+<div class="bg-gray-100 min-h-screen">
+
+  <a href="javascript:void(0)" (click)="goBack()"
+     class="inline-flex items-center gap-2 text-gray-900 text-sm mb-5">
+    <span>&#8592;</span>
+    <span class="underline font-medium">Back</span>
+  </a>
+
+  <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+
+    <div class="px-7 py-5 border-b border-gray-100">
+      <h2 class="text-base font-medium text-gray-900 m-0">
+        Shortage Today ({{ shortageCount }})
+      </h2>
+    </div>
+
+    <div class="min-h-[500px] flex items-center justify-center">
+
+      <ng-container *ngIf="shortageCount === 0; else shortageList">
+        <div class="text-center px-5 py-14">
+
+          <svg class="w-24 h-24 mx-auto mb-6" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <g transform="rotate(15 50 50)">
+              <path d="M30 15 L70 15 L70 20 L55 45 L55 55 L70 80 L70 85 L30 85 L30 80 L45 55 L45 45 L30 20 Z"
+                    fill="none" stroke="#1e2761" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+              <line x1="24" y1="15" x2="76" y2="15" stroke="#1e2761" stroke-width="5" stroke-linecap="round"/>
+              <line x1="24" y1="85" x2="76" y2="85" stroke="#1e2761" stroke-width="5" stroke-linecap="round"/>
+              <path d="M50 58 L62 78 L38 78 Z" fill="#3d5afe"/>
+            </g>
+          </svg>
+
+          <h3 class="text-3xl font-bold text-gray-900 mb-4">Please Wait!</h3>
+
+          <p class="text-sm text-gray-500 max-w-lg mx-auto">
+            --If there are any shortages, you will be able to see them by
+            <strong class="font-bold text-gray-700">{{ formattedTime }}</strong>
+            on {{ formattedDate }}.--
+          </p>
+        </div>
+      </ng-container>
+
+      <ng-template #shortageList>
+        <!-- render your shortage rows/table here when shortageCount > 0 -->
+      </ng-template>
+
+    </div>
+  </div>
+
+</div>

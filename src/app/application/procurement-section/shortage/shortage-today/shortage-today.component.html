@@ -1,5 +1,4 @@
 <div class="min-h-screen">
-
   <a href="javascript:void(0)" (click)="goBack()"
      class="inline-flex items-center gap-2 text-textLight dark:text-textDark text-sm mb-5">
     <span>&#8592;</span>
@@ -16,13 +15,11 @@
 
     <div class="min-h-[500px] flex items-center justify-center">
 
-      <ng-container *ngIf="shortageCount === 0; else shortageList">
+      <!-- 1. Still waiting for the reveal time -->
+      <ng-container *ngIf="isWaiting; else revealed">
         <div class="text-center px-5 py-14">
-
           <div #lottieContainer class="w-48 h-48 mx-auto"></div>
-
           <h3 class="text-[30px] font-semibold text-textLight dark:text-textDark mb-4">Please Wait!</h3>
-
           <p class="text-[16px] font-normal text-[#494949] dark:text-gray-400 max-w-lg mx-auto">
             --If there are any shortages, you will be able to see them by
             <strong class="font-bold text-textLight dark:text-textDark">{{ formattedTime }}</strong>
@@ -31,11 +28,28 @@
         </div>
       </ng-container>
 
-      <ng-template #shortageList>
-        <!-- render your shortage rows/table here when shortageCount > 0 -->
+      <!-- 2. Reveal time has passed -->
+      <ng-template #revealed>
+
+        <!-- 2a. No shortages -->
+        <ng-container *ngIf="shortageCount === 0; else shortageList">
+          <div class="text-center px-5 py-14">
+            <p class="text-[16px] font-normal text-[#494949] dark:text-gray-400 mb-6">
+              --No Product Shortage for Today--
+            </p>
+
+            <img src="/assets/images/NoData.png" alt="No product shortage"
+                 class="w-16 h-16 mx-auto" />
+          </div>
+        </ng-container>
+
+        <!-- 2b. Has shortages -->
+        <ng-template #shortageList>
+          <!-- render your shortage rows/table here when shortageCount > 0 -->
+        </ng-template>
+
       </ng-template>
 
     </div>
   </div>
-
 </div>

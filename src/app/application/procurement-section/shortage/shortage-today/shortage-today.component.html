@@ -1,97 +1,158 @@
 <div class="min-h-screen">
-    <a href="javascript:void(0)" (click)="goBack()"
-        class="inline-flex items-center gap-2 text-textLight dark:text-textDark text-sm mb-5">
-        <span>&#8592;</span>
-        <span class="underline font-medium">Back</span>
-    </a>
+  <a href="javascript:void(0)" (click)="goBack()"
+     class="inline-flex items-center gap-2 text-textLight dark:text-textDark text-sm mb-5">
+    <span>&#8592;</span>
+    <span class="underline font-medium">Back</span>
+  </a>
 
-    <div class="bg-white dark:bg-tileBlack rounded-lg shadow-sm overflow-hidden">
+  <!-- ===================== ASSIGN VIEW ===================== -->
+  <div *ngIf="selectedItem" class="bg-white dark:bg-tileBlack rounded-lg shadow-sm overflow-hidden">
 
-        <div class="px-7 py-5 border-b border-gray-100 dark:border-gray-700">
-            <h2 class="text-[16px] font-medium text-textLight dark:text-textDark m-0">
-                Shortage Today ({{ shortageCount.toString().padStart(2, '0') }})
-            </h2>
+    <div class="flex items-center justify-between px-7 py-5 border-b border-gray-100 dark:border-gray-700">
+      <div class="flex items-center gap-4">
+        <img [src]="selectedItem.image" [alt]="selectedItem.name"
+             class="w-14 h-14 object-cover rounded-md bg-gray-50 dark:bg-gray-800" />
+        <div>
+          <p class="text-textLight dark:text-textDark font-semibold text-base m-0">{{ selectedItem.name }}</p>
+          <p class="text-textLight dark:text-textDark font-semibold text-base m-0">
+            {{ selectedItem.shortageQty }} {{ selectedItem.unit }}
+          </p>
         </div>
+      </div>
 
-        <div [class.min-h-[500px]]="isWaiting || shortageCount === 0" [class.flex]="isWaiting || shortageCount === 0"
-            [class.items-center]="isWaiting || shortageCount === 0"
-            [class.justify-center]="isWaiting || shortageCount === 0" [class.p-6]="!isWaiting && shortageCount > 0">
-
-            <!-- 1. Still waiting for the reveal time -->
-            <ng-container *ngIf="isWaiting; else revealed">
-                <div class="text-center px-5 py-14">
-                    <div #lottieContainer class="w-48 h-48 mx-auto"></div>
-                    <h3 class="text-[30px] font-semibold text-textLight dark:text-textDark mb-4">Please Wait!</h3>
-                    <p class="text-[16px] font-normal text-[#494949] dark:text-gray-400 max-w-lg mx-auto">
-                        --If there are any shortages, you will be able to see them by
-                        <strong class="font-bold text-textLight dark:text-textDark">{{ formattedTime }}</strong>
-                        on {{ formattedDate }}.--
-                    </p>
-                </div>
-            </ng-container>
-
-            <!-- 2. Reveal time has passed -->
-            <ng-template #revealed>
-
-                <!-- 2a. No shortages -->
-                <ng-container *ngIf="shortageCount === 0; else shortageList">
-                    <div class="text-center px-5 py-14">
-                        <p class="text-[16px] font-normal text-[#494949] dark:text-gray-400 mb-6">
-                            --No Product Shortage for Today--
-                        </p>
-                        <img src="/assets/images/NoData.png" alt="No product shortage" class="w-16 h-16 mx-auto" />
-                    </div>
-                </ng-container>
-
-                <!-- 2b. Has shortages -->
-                <ng-template #shortageList>
-                    <div class="flex flex-col gap-3">
-                        <div *ngFor="let item of shortages"
-                            class="w-fit grid grid-cols-[56px_180px_100px_100px_150px_100px] items-stretch gap-4 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-3">
-
-                            <img [src]="item.image" [alt]="item.name"
-                                class="w-14 h-14 object-cover rounded-md bg-gray-50 dark:bg-gray-800 self-center" />
-
-                            <span class="text-textLight dark:text-textDark font-semibold text-base self-center">
-                                {{ item.name }}
-                            </span>
-
-                            <div
-                                class="bg-[#FEF7EF] dark:bg-orange-900/20 rounded-md px-3 py-2 flex flex-col justify-center">
-                                <p class="text-xs text-gray-500 dark:text-gray-400 m-0">Shortage</p>
-                                <p
-                                    class="text-sm font-semibold text-textLight dark:text-textDark m-0 whitespace-nowrap">
-                                    {{ item.shortageQty }} {{ item.unit }}
-                                </p>
-                            </div>
-
-                            <div
-                                class="bg-[#E1ECFF] dark:bg-blue-900/20 rounded-md px-3 py-2 flex flex-col justify-center">
-                                <p class="text-xs text-gray-500 dark:text-gray-400 m-0">Assigned</p>
-                                <p
-                                    class="text-sm font-semibold text-textLight dark:text-textDark m-0 whitespace-nowrap">
-                                    {{ item.assignedQty }} {{ item.unit }}
-                                </p>
-                            </div>
-
-                            <div class="flex flex-col justify-center">
-                                <p class="text-sm text-gray-500 dark:text-gray-400 m-0 whitespace-nowrap">Market Price
-                                    per {{ item.unit }}</p>
-                                <p class="text-base font-bold text-textLight dark:text-textDark m-0">
-                                    Rs. {{ item.marketPrice.toFixed(2) }}
-                                </p>
-                            </div>
-
-                            <button (click)="onView(item)"
-                                class="bg-[#3980C0] hover:bg-[#316ba8] text-white font-medium text-sm rounded-md transition-colors whitespace-nowrap justify-self-end self-stretch px-6">
-                                View
-                            </button>
-                        </div>
-                    </div>
-                </ng-template>
-
-            </ng-template>
-
-        </div>
+      <div class="text-right">
+        <p class="text-sm text-gray-500 dark:text-gray-400 m-0">Market Price per {{ selectedItem.unit }}</p>
+        <p class="text-lg font-bold text-textLight dark:text-textDark m-0">
+          Rs. {{ selectedItem.marketPrice.toFixed(2) }}
+        </p>
+      </div>
     </div>
+
+    <div class="p-7">
+      <p class="text-base font-semibold text-textLight dark:text-textDark mb-4">To Assign</p>
+
+      <div class="inline-flex items-end gap-6 border border-gray-200 dark:border-gray-700 rounded-lg px-6 py-5">
+
+        <div class="flex flex-col gap-2">
+          <label class="text-sm text-textLight dark:text-textDark">Enter Qty ({{ selectedItem.unit }})</label>
+          <input type="number" min="0" [(ngModel)]="assignQty"
+                 class="w-32 p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-tileBlack text-textLight dark:text-textDark font-semibold" />
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label class="text-sm text-textLight dark:text-textDark">Select Centre</label>
+          <select [(ngModel)]="selectedCentreId"
+                  class="w-56 p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-tileBlack text-textLight dark:text-textDark">
+            <option [ngValue]="null">--Select Centre--</option>
+            <option *ngFor="let centre of centres" [ngValue]="centre.id">{{ centre.name }}</option>
+          </select>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label class="text-sm text-textLight dark:text-textDark">Ceiling (%)</label>
+          <input type="number" min="0" max="100" [(ngModel)]="ceilingPercent"
+                 class="w-24 p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-tileBlack text-textLight dark:text-textDark font-semibold" />
+        </div>
+
+        <button (click)="onAssign()" [disabled]="!canAssign"
+                class="px-8 py-2.5 rounded-md font-medium text-white transition-colors"
+                [class.bg-gray-400]="!canAssign"
+                [class.cursor-not-allowed]="!canAssign"
+                [class.bg-[#3980C0]]="canAssign"
+                [class.hover:bg-[#316ba8]]="canAssign">
+          Assign
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== LIST VIEW ===================== -->
+  <div *ngIf="!selectedItem" class="bg-white dark:bg-tileBlack rounded-lg shadow-sm overflow-hidden">
+
+    <div class="px-7 py-5 border-b border-gray-100 dark:border-gray-700">
+      <h2 class="text-[16px] font-medium text-textLight dark:text-textDark m-0">
+        Shortage Today ({{ shortageCount.toString().padStart(2, '0') }})
+      </h2>
+    </div>
+
+    <div [class.min-h-[500px]]="isWaiting || shortageCount === 0"
+         [class.flex]="isWaiting || shortageCount === 0"
+         [class.items-center]="isWaiting || shortageCount === 0"
+         [class.justify-center]="isWaiting || shortageCount === 0"
+         [class.p-6]="!isWaiting && shortageCount > 0">
+
+      <!-- 1. Still waiting for the reveal time -->
+      <ng-container *ngIf="isWaiting; else revealed">
+        <div class="text-center px-5 py-14">
+          <div #lottieContainer class="w-48 h-48 mx-auto"></div>
+          <h3 class="text-[30px] font-semibold text-textLight dark:text-textDark mb-4">Please Wait!</h3>
+          <p class="text-[16px] font-normal text-[#494949] dark:text-gray-400 max-w-lg mx-auto">
+            --If there are any shortages, you will be able to see them by
+            <strong class="font-bold text-textLight dark:text-textDark">{{ formattedTime }}</strong>
+            on {{ formattedDate }}.--
+          </p>
+        </div>
+      </ng-container>
+
+      <!-- 2. Reveal time has passed -->
+      <ng-template #revealed>
+
+        <!-- 2a. No shortages -->
+        <ng-container *ngIf="shortageCount === 0; else shortageList">
+          <div class="text-center px-5 py-14">
+            <p class="text-[16px] font-normal text-[#494949] dark:text-gray-400 mb-6">
+              --No Product Shortage for Today--
+            </p>
+            <img src="/assets/images/NoData.png" alt="No product shortage" class="w-16 h-16 mx-auto" />
+          </div>
+        </ng-container>
+
+        <!-- 2b. Has shortages -->
+        <ng-template #shortageList>
+          <div class="flex flex-col gap-3">
+            <div *ngFor="let item of shortages"
+                 class="w-fit grid grid-cols-[56px_180px_100px_100px_150px_100px] items-stretch gap-4 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-3">
+
+              <img [src]="item.image" [alt]="item.name"
+                   class="w-14 h-14 object-cover rounded-md bg-gray-50 dark:bg-gray-800 self-center" />
+
+              <span class="text-textLight dark:text-textDark font-semibold text-base self-center">
+                {{ item.name }}
+              </span>
+
+              <div class="bg-[#FEF7EF] dark:bg-orange-900/20 rounded-md px-3 py-2 flex flex-col justify-center">
+                <p class="text-xs text-gray-500 dark:text-gray-400 m-0">Shortage</p>
+                <p class="text-sm font-semibold text-textLight dark:text-textDark m-0 whitespace-nowrap">
+                  {{ item.shortageQty }} {{ item.unit }}
+                </p>
+              </div>
+
+              <div class="bg-[#E1ECFF] dark:bg-blue-900/20 rounded-md px-3 py-2 flex flex-col justify-center">
+                <p class="text-xs text-gray-500 dark:text-gray-400 m-0">Assigned</p>
+                <p class="text-sm font-semibold text-textLight dark:text-textDark m-0 whitespace-nowrap">
+                  {{ item.assignedQty }} {{ item.unit }}
+                </p>
+              </div>
+
+              <div class="flex flex-col justify-center">
+                <p class="text-sm text-gray-500 dark:text-gray-400 m-0 whitespace-nowrap">Market Price per {{ item.unit }}</p>
+                <p class="text-base font-bold text-textLight dark:text-textDark m-0">
+                  Rs. {{ item.marketPrice.toFixed(2) }}
+                </p>
+              </div>
+
+              <button (click)="onView(item)"
+                      class="bg-[#3980C0] hover:bg-[#316ba8] text-white font-medium text-sm rounded-md transition-colors whitespace-nowrap justify-self-end self-stretch px-6 flex items-center justify-center">
+                View
+              </button>
+            </div>
+          </div>
+        </ng-template>
+
+      </ng-template>
+
+    </div>
+  </div>
+
 </div>

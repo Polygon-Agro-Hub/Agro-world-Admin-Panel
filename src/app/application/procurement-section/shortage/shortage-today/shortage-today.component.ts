@@ -1,5 +1,6 @@
 import { Component, ElementRef, ViewChild, AfterViewInit, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import lottie, { AnimationItem } from 'lottie-web';
 
 interface ShortageItem {
@@ -12,42 +13,29 @@ interface ShortageItem {
   marketPrice: number;
 }
 
+interface Centre {
+  id: number;
+  name: string;
+}
+
 @Component({
   selector: 'app-shortage-today',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './shortage-today.component.html',
   styleUrl: './shortage-today.component.css'
 })
 export class ShortageTodayComponent implements OnInit, AfterViewInit, OnDestroy {
   shortages: ShortageItem[] = [
-    {
-      id: 1,
-      name: 'Garlic',
-      image: '/assets/images/garlic.png',
-      shortageQty: 20,
-      assignedQty: 0,
-      unit: 'kg',
-      marketPrice: 100.00
-    },
-    {
-      id: 2,
-      name: 'Turmeric',
-      image: '/assets/images/turmeric.png',
-      shortageQty: 0.5,
-      assignedQty: 20,
-      unit: 'kg',
-      marketPrice: 100.00
-    },
-    {
-      id: 3,
-      name: 'Watermelon',
-      image: '/assets/images/watermelon.png',
-      shortageQty: 0,
-      assignedQty: 20,
-      unit: 'kg',
-      marketPrice: 100.00
-    }
+    { id: 1, name: 'Garlic', image: '/assets/images/garlic.png', shortageQty: 20, assignedQty: 0, unit: 'kg', marketPrice: 100.00 },
+    { id: 2, name: 'Turmeric', image: '/assets/images/turmeric.png', shortageQty: 0.5, assignedQty: 20, unit: 'kg', marketPrice: 100.00 },
+    { id: 3, name: 'Watermelon', image: '/assets/images/watermelon.png', shortageQty: 0, assignedQty: 20, unit: 'kg', marketPrice: 100.00 }
+  ];
+
+  centres: Centre[] = [
+    { id: 1, name: 'Colombo Centre' },
+    { id: 2, name: 'Kandy Centre' },
+    { id: 3, name: 'Galle Centre' }
   ];
 
   get shortageCount(): number {
@@ -55,9 +43,6 @@ export class ShortageTodayComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   availableDate: Date = new Date('2026-06-23T18:00:00');
-
-  // true  -> still before availableDate, show "Please Wait"
-  // false -> availableDate has passed, show real state (empty or list)
   isWaiting = true;
 
   loadingOptions: any = {
@@ -65,6 +50,12 @@ export class ShortageTodayComponent implements OnInit, AfterViewInit, OnDestroy 
     loop: true,
     autoplay: true
   };
+
+  // Assign view state
+  selectedItem: ShortageItem | null = null;
+  assignQty: number = 0;
+  selectedCentreId: number | null = null;
+  ceilingPercent: number = 0;
 
   @ViewChild('lottieContainer', { static: false }) lottieContainer!: ElementRef;
   private animationItem: AnimationItem | undefined;
@@ -80,7 +71,6 @@ export class ShortageTodayComponent implements OnInit, AfterViewInit, OnDestroy 
       this.isWaiting = false;
     } else {
       this.isWaiting = true;
-      // Automatically flip to the real state once the wait time is reached
       this.waitTimer = setTimeout(() => {
         this.isWaiting = false;
         this.animationItem?.destroy();
@@ -108,12 +98,41 @@ export class ShortageTodayComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   goBack(): void {
-    this.location.back();
+    if (this.selectedItem) {
+      // If inside the Assign view, go back to the list instead of leaving the page
+      this.closeAssignView();
+    } else {
+      this.location.back();
+    }
   }
 
   onView(item: ShortageItem): void {
-    console.log('View clicked for', item.name);
-    // navigate to detail view or open a modal here
+    this.selectedItem = item;
+    this.assignQty = 0;
+    this.selectedCentreId = null;
+    this.ceilingPercent = 0;
+  }
+
+  closeAssignView(): void {
+    this.selectedItem = null;
+  }
+
+  get canAssign(): boolean {
+    return this.assignQty > 0 && this.selectedCentreId !== null;
+  }
+
+  onAssign(): void {
+    if (!this.canAssign || !this.selectedItem) {
+      return;
+    }
+    console.log('Assigning', {
+      item: this.selectedItem.name,
+      qty: this.assignQty,
+      centreId: this.selectedCentreId,
+      ceiling: this.ceilingPercent
+    });
+    // TODO: call your API here, then close the view
+    this.closeAssignView();
   }
 
   get formattedTime(): string {

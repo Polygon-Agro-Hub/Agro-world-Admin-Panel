@@ -305,6 +305,7 @@ import { AddEditDriverCategoryComponent } from './application/finance/govi-trans
 import { ViewTransactionDocumentComponent } from './application/finance/govi-trans-finance/view-transaction-document/view-transaction-document.component';
 import { ShortageTodayComponent } from './application/procurement-section/shortage/shortage-today/shortage-today.component';
 import { ProcurementShortageHistoryComponent } from './application/procurement-section/shortage/procurement-shortage-history/procurement-shortage-history.component';
+import { ShortageFinalizationTodayComponent } from './application/procurement-section/shortage/shortage-finalization-today/shortage-finalization-today.component';
 
 export const routes: Routes = [
   {
@@ -1508,6 +1509,10 @@ export const routes: Routes = [
           {
             path: 'view-shortage-today',
             component: ShortageTodayComponent
+          },
+          {
+            path: 'view-shortage-finalization-today',
+            component: ShortageFinalizationTodayComponent
           }
         ],
       },

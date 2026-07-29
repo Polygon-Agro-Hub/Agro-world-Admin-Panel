@@ -304,6 +304,7 @@ import { ViewDriverCategoriesComponent } from './application/finance/govi-trans-
 import { AddEditDriverCategoryComponent } from './application/finance/govi-trans-finance/add-edit-driver-category/add-edit-driver-category.component';
 import { ViewTransactionDocumentComponent } from './application/finance/govi-trans-finance/view-transaction-document/view-transaction-document.component';
 import { ShortageTodayComponent } from './application/procurement-section/shortage/shortage-today/shortage-today.component';
+import { ProcurementShortageHistoryComponent } from './application/procurement-section/shortage/procurement-shortage-history/procurement-shortage-history.component';
 
 export const routes: Routes = [
   {
@@ -1498,6 +1499,11 @@ export const routes: Routes = [
             component: ViewCentreRequirementComponent,
             canActivate: [PermissionGuard],
             data: { permission: 'Procurement centre requirement' },
+          },
+          {
+            path: 'procurement-shortage-history',
+            component: ProcurementShortageHistoryComponent,
+
           },
           {
             path: 'view-shortage-today',

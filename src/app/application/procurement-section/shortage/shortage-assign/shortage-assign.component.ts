@@ -209,6 +209,21 @@ export class ShortageAssignComponent implements OnInit {
     this.ceilingPercent = 0;
   }
 
+  onQtyInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value;
+
+    // Match up to 2 decimal places, discard anything beyond
+    const match = value.match(/^\d*(\.\d{0,2})?/);
+    const trimmed = match ? match[0] : value;
+
+    if (trimmed !== value) {
+      input.value = trimmed;
+    }
+
+    this.assignQty = trimmed === '' ? 0 : Number(trimmed);
+  }
+
   formatNumber(value: number): string {
     // Convert to string and remove trailing zeros
     return value.toString().replace(/\.?0+$/, '');

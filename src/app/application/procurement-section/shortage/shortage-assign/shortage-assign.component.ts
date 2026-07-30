@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
 import { LoadingSpinnerComponent } from "../../../../components/loading-spinner/loading-spinner.component";
+import { ProcumentsService } from '../../../../services/procuments/procuments.service'; // adjust path/name as needed
 
 interface AssignmentRecord {
   qty: number;
@@ -37,21 +38,11 @@ interface Centre {
 })
 export class ShortageAssignComponent implements OnInit {
 
-   isLoading = false;
-  // Same dummy data, duplicated here so this component is self-contained
-  shortages: ShortageItem[] = [
-    { id: 1, name: 'Garlic', image: '/assets/images/garlic.png', shortageQty: 20, assignedQty: 0, unit: 'kg', marketPrice: 100.00, assignments: [] },
-    { id: 2, name: 'Turmeric', image: '/assets/images/turmeric.png', shortageQty: 0.5, assignedQty: 20, unit: 'kg', marketPrice: 100.00, assignments: [] },
-    { id: 3, name: 'Watermelon', image: '/assets/images/watermelon.png', shortageQty: 0, assignedQty: 20, unit: 'kg', marketPrice: 100.00, assignments: [] }
-  ];
+  isLoading = false;
 
-  centres: Centre[] = [
-    { id: 1, code: 'D-WPCK-01', name: 'Kollupitiya Central Distribution Centre' },
-    { id: 2, code: 'D-WPCK-02', name: 'Kollupitiya Central Distribution Centre' },
-    { id: 3, code: 'D-WPCK-03', name: 'Kollupitiya Central Distribution Centre' }
-  ];
-
+  itemId!: number;
   selectedItem: ShortageItem | null = null;
+  centres: Centre[] = [];
 
   assignQty: number = 0;
   selectedCentreId: number | null = null;
@@ -62,16 +53,76 @@ export class ShortageAssignComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private location: Location
+    private location: Location,
+    private procumentService: ProcumentsService
   ) {}
 
   ngOnInit(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.selectedItem = this.shortages.find(s => s.id === id) ?? null;
+    this.itemId = Number(this.route.snapshot.paramMap.get('id'));
 
-    if (!this.selectedItem) {
+    if (!this.itemId) {
       this.router.navigate(['/shortage-today']);
+      return;
     }
+
+    this.loadShortageDetails();
+  }
+
+  loadShortageDetails(): void {
+    this.isLoading = true;
+
+    this.procumentService.getShortageDetailsById(this.itemId).subscribe({
+      next: (res: any) => {
+        this.centres = (res.centers || []).map((c: any) => ({
+          id: c.id,
+          code: c.regCode,
+          name: c.centerName
+        }));
+
+        this.selectedItem = {
+          id: this.itemId,
+          name: res.displayName,
+          image: res.image,
+          shortageQty: res.shortageQty,
+          assignedQty: 0,
+          unit: res.unitType || 'kg',
+          marketPrice: res.buyPrice,
+          assignments: []
+        };
+
+        this.loadAssignedDetails();
+      },
+      error: (err) => {
+        console.error('Error fetching shortage details:', err);
+        this.isLoading = false;
+        this.router.navigate(['/shortage-today']);
+      }
+    });
+  }
+
+  loadAssignedDetails(): void {
+    this.procumentService.getShortageAssignedDetails(this.itemId).subscribe({
+      next: (res: any[]) => {
+        if (this.selectedItem) {
+          this.selectedItem.assignments = (res || []).map((a: any) => {
+            const centre = this.centres.find(c => c.id === a.comCenId);
+            return {
+              qty: a.qty,
+              centreLabel: centre ? `${centre.code} ${centre.name}` : `Centre #${a.comCenId}`,
+              ceiling: a.ceilling
+            };
+          });
+
+          const totalAssigned = this.selectedItem.assignments.reduce((sum, a) => sum + a.qty, 0);
+          this.selectedItem.assignedQty = totalAssigned;
+        }
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error fetching shortage assigned details:', err);
+        this.isLoading = false;
+      }
+    });
   }
 
   goBack(): void {
@@ -106,26 +157,37 @@ export class ShortageAssignComponent implements OnInit {
 
     const centre = this.selectedCentre;
     const qty = this.assignQty;
+    const ceiling = this.ceilingPercent;
 
-    this.selectedItem.assignments.push({
+    this.isLoading = true;
+
+    this.procumentService.assignShortage(this.itemId, {
+      comCenId: centre.id,
       qty: qty,
-      centreLabel: `${centre.code} ${centre.name}`,
-      ceiling: this.ceilingPercent
+      ceilling: ceiling
+    }).subscribe({
+      next: (res: any) => {
+        if (this.selectedItem) {
+          this.selectedItem.assignments.push({
+            qty: qty,
+            centreLabel: `${centre.code} ${centre.name}`,
+            ceiling: ceiling
+          });
+
+          this.selectedItem.shortageQty = Math.max(0, this.selectedItem.shortageQty - qty);
+          this.selectedItem.assignedQty += qty;
+        }
+
+        this.showConfirmModal = false;
+        this.resetAssignForm();
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error assigning shortage:', err);
+        this.showConfirmModal = false;
+        this.isLoading = false;
+      }
     });
-
-    this.selectedItem.shortageQty = Math.max(0, this.selectedItem.shortageQty - qty);
-    this.selectedItem.assignedQty += qty;
-
-    console.log('Assigned', {
-      item: this.selectedItem.name,
-      qty,
-      centre,
-      ceiling: this.ceilingPercent
-    });
-    // TODO: call your API here
-
-    this.showConfirmModal = false;
-    this.resetAssignForm();
   }
 
   private resetAssignForm(): void {

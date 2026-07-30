@@ -498,6 +498,39 @@ getShortageDetails(): Observable<any> {
 
   return this.http.get<any>(url, { headers });
 }
+
+getShortageDetailsById(id: number | string): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
+
+  const url = `${this.apiUrl}procument/shortage-details/${id}`;
+
+  return this.http.get<any>(url, { headers });
+}
+
+assignShortage(id: number | string, data: { comCenId: number; qty: number; ceilling: number }): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
+
+  const url = `${this.apiUrl}procument/assign-shortage/${id}`;
+
+  return this.http.post<any>(url, data, { headers });
+}
+
+getShortageAssignedDetails(id: number | string): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
+
+  const url = `${this.apiUrl}procument/shortage-assigned-details/${id}`;
+
+  return this.http.get<any>(url, { headers });
+}
   
 }
 

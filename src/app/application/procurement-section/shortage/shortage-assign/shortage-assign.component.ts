@@ -195,4 +195,9 @@ export class ShortageAssignComponent implements OnInit {
     this.selectedCentreId = null;
     this.ceilingPercent = 0;
   }
+
+  formatNumber(value: number): string {
+    // Convert to string and remove trailing zeros
+    return value.toString().replace(/\.?0+$/, '');
+  }
 }

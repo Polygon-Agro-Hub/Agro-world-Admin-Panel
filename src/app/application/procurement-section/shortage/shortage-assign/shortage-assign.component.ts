@@ -3,7 +3,7 @@ import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
-import { LoadingSpinnerComponent } from "../../../../components/loading-spinner/loading-spinner.component";
+import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 import { ProcumentsService } from '../../../../services/procuments/procuments.service'; // adjust path/name as needed
 
 interface AssignmentRecord {
@@ -27,6 +27,7 @@ interface Centre {
   id: number;
   code: string;
   name: string;
+  label: string;
 }
 
 @Component({
@@ -34,10 +35,9 @@ interface Centre {
   standalone: true,
   imports: [CommonModule, FormsModule, DropdownModule, LoadingSpinnerComponent],
   templateUrl: './shortage-assign.component.html',
-  styleUrl: './shortage-assign.component.css'
+  styleUrl: './shortage-assign.component.css',
 })
 export class ShortageAssignComponent implements OnInit {
-
   isLoading = false;
 
   itemId!: number;
@@ -54,7 +54,7 @@ export class ShortageAssignComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private location: Location,
-    private procumentService: ProcumentsService
+    private procumentService: ProcumentsService,
   ) {}
 
   ngOnInit(): void {
@@ -76,7 +76,8 @@ export class ShortageAssignComponent implements OnInit {
         this.centres = (res.centers || []).map((c: any) => ({
           id: c.id,
           code: c.regCode,
-          name: c.centerName
+          name: c.centerName,
+          label: `${c.regCode} ${c.centerName}`,
         }));
 
         this.selectedItem = {
@@ -87,7 +88,7 @@ export class ShortageAssignComponent implements OnInit {
           assignedQty: 0,
           unit: res.unitType || 'kg',
           marketPrice: res.buyPrice,
-          assignments: []
+          assignments: [],
         };
 
         this.loadAssignedDetails();
@@ -96,7 +97,7 @@ export class ShortageAssignComponent implements OnInit {
         console.error('Error fetching shortage details:', err);
         this.isLoading = false;
         this.router.navigate(['/shortage-today']);
-      }
+      },
     });
   }
 
@@ -105,15 +106,20 @@ export class ShortageAssignComponent implements OnInit {
       next: (res: any[]) => {
         if (this.selectedItem) {
           this.selectedItem.assignments = (res || []).map((a: any) => {
-            const centre = this.centres.find(c => c.id === a.comCenId);
+            const centre = this.centres.find((c) => c.id === a.comCenId);
             return {
               qty: a.qty,
-              centreLabel: centre ? `${centre.code} ${centre.name}` : `Centre #${a.comCenId}`,
-              ceiling: a.ceilling
+              centreLabel: centre
+                ? `${centre.code} ${centre.name}`
+                : `Centre #${a.comCenId}`,
+              ceiling: a.ceilling,
             };
           });
 
-          const totalAssigned = this.selectedItem.assignments.reduce((sum, a) => sum + a.qty, 0);
+          const totalAssigned = this.selectedItem.assignments.reduce(
+            (sum, a) => sum + a.qty,
+            0,
+          );
           this.selectedItem.assignedQty = totalAssigned;
         }
         this.isLoading = false;
@@ -121,7 +127,7 @@ export class ShortageAssignComponent implements OnInit {
       error: (err) => {
         console.error('Error fetching shortage assigned details:', err);
         this.isLoading = false;
-      }
+      },
     });
   }
 
@@ -130,13 +136,15 @@ export class ShortageAssignComponent implements OnInit {
   }
 
   get canAssign(): boolean {
-    return this.assignQty > 0
-      && this.assignQty <= (this.selectedItem?.shortageQty ?? 0)
-      && this.selectedCentreId !== null;
+    return (
+      this.assignQty > 0 &&
+      this.assignQty <= (this.selectedItem?.shortageQty ?? 0) &&
+      this.selectedCentreId !== null
+    );
   }
 
   get selectedCentre(): Centre | null {
-    return this.centres.find(c => c.id === this.selectedCentreId) || null;
+    return this.centres.find((c) => c.id === this.selectedCentreId) || null;
   }
 
   onAssign(): void {
@@ -161,33 +169,38 @@ export class ShortageAssignComponent implements OnInit {
 
     this.isLoading = true;
 
-    this.procumentService.assignShortage(this.itemId, {
-      comCenId: centre.id,
-      qty: qty,
-      ceilling: ceiling
-    }).subscribe({
-      next: (res: any) => {
-        if (this.selectedItem) {
-          this.selectedItem.assignments.push({
-            qty: qty,
-            centreLabel: `${centre.code} ${centre.name}`,
-            ceiling: ceiling
-          });
+    this.procumentService
+      .assignShortage(this.itemId, {
+        comCenId: centre.id,
+        qty: qty,
+        ceilling: ceiling,
+      })
+      .subscribe({
+        next: (res: any) => {
+          if (this.selectedItem) {
+            this.selectedItem.assignments.push({
+              qty: qty,
+              centreLabel: `${centre.code} ${centre.name}`,
+              ceiling: ceiling,
+            });
 
-          this.selectedItem.shortageQty = Math.max(0, this.selectedItem.shortageQty - qty);
-          this.selectedItem.assignedQty += qty;
-        }
+            this.selectedItem.shortageQty = Math.max(
+              0,
+              this.selectedItem.shortageQty - qty,
+            );
+            this.selectedItem.assignedQty += qty;
+          }
 
-        this.showConfirmModal = false;
-        this.resetAssignForm();
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error('Error assigning shortage:', err);
-        this.showConfirmModal = false;
-        this.isLoading = false;
-      }
-    });
+          this.showConfirmModal = false;
+          this.resetAssignForm();
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.error('Error assigning shortage:', err);
+          this.showConfirmModal = false;
+          this.isLoading = false;
+        },
+      });
   }
 
   private resetAssignForm(): void {

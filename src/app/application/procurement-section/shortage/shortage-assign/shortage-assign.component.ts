@@ -3,6 +3,7 @@ import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
+import { LoadingSpinnerComponent } from "../../../../components/loading-spinner/loading-spinner.component";
 
 interface AssignmentRecord {
   qty: number;
@@ -30,11 +31,13 @@ interface Centre {
 @Component({
   selector: 'app-shortage-assign',
   standalone: true,
-  imports: [CommonModule, FormsModule, DropdownModule],
+  imports: [CommonModule, FormsModule, DropdownModule, LoadingSpinnerComponent],
   templateUrl: './shortage-assign.component.html',
   styleUrl: './shortage-assign.component.css'
 })
 export class ShortageAssignComponent implements OnInit {
+
+   isLoading = false;
   // Same dummy data, duplicated here so this component is self-contained
   shortages: ShortageItem[] = [
     { id: 1, name: 'Garlic', image: '/assets/images/garlic.png', shortageQty: 20, assignedQty: 0, unit: 'kg', marketPrice: 100.00, assignments: [] },

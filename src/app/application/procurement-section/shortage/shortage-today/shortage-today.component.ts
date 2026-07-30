@@ -2,6 +2,7 @@ import { Component, ElementRef, ViewChild, AfterViewInit, OnDestroy, OnInit } fr
 import { CommonModule, Location } from '@angular/common';
 import { Router } from '@angular/router';
 import lottie, { AnimationItem } from 'lottie-web';
+import { ProcumentsService } from '../../../../services/procuments/procuments.service'; // adjust path/name as needed
 
 interface AssignmentRecord {
   qty: number;
@@ -15,7 +16,6 @@ interface ShortageItem {
   image: string;
   shortageQty: number;
   assignedQty: number;
-  unit: string;
   marketPrice: number;
   assignments: AssignmentRecord[];
 }
@@ -28,14 +28,11 @@ interface ShortageItem {
   styleUrl: './shortage-today.component.css'
 })
 export class ShortageTodayComponent implements OnInit, AfterViewInit, OnDestroy {
-  shortages: ShortageItem[] = [
-    { id: 1, name: 'Garlic', image: '/assets/images/garlic.png', shortageQty: 20, assignedQty: 0, unit: 'kg', marketPrice: 100.00, assignments: [] },
-    { id: 2, name: 'Turmeric', image: '/assets/images/turmeric.png', shortageQty: 0.5, assignedQty: 20, unit: 'kg', marketPrice: 100.00, assignments: [] },
-    { id: 3, name: 'Watermelon', image: '/assets/images/watermelon.png', shortageQty: 0, assignedQty: 20, unit: 'kg', marketPrice: 100.00, assignments: [] }
-  ];
+  shortages: ShortageItem[] = [];
 
   availableDate: Date = new Date('2026-06-23T18:00:00');
   isWaiting = true;
+  isLoading = false;
 
   loadingOptions: any = {
     path: '/assets/json/blue_loading.json',
@@ -49,7 +46,8 @@ export class ShortageTodayComponent implements OnInit, AfterViewInit, OnDestroy 
 
   constructor(
     private location: Location,
-    private router: Router
+    private router: Router,
+    private procumentService: ProcumentsService
   ) {}
 
   get shortageCount(): number {
@@ -62,13 +60,39 @@ export class ShortageTodayComponent implements OnInit, AfterViewInit, OnDestroy 
 
     if (now >= target) {
       this.isWaiting = false;
+      this.fetchShortageDetails();
     } else {
       this.isWaiting = true;
       this.waitTimer = setTimeout(() => {
         this.isWaiting = false;
         this.animationItem?.destroy();
+        this.fetchShortageDetails();
       }, target - now);
     }
+  }
+
+  fetchShortageDetails(): void {
+    this.isLoading = true;
+    this.procumentService.getShortageDetails().subscribe({
+      next: (res: any) => {
+        const data = Array.isArray(res) ? res : (res?.data || []);
+        this.shortages = data.map((item: any) => ({
+          id: item.id,
+          name: item.displayName,
+          image: item.image,
+          shortageQty: item.shortageQty,
+          assignedQty: item.totalAssignedQty,
+          unit: item.unitType || 'kg',
+          marketPrice: item.buyPrice,
+          assignments: []
+        }));
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error fetching shortage details:', err);
+        this.isLoading = false;
+      }
+    });
   }
 
   ngAfterViewInit(): void {

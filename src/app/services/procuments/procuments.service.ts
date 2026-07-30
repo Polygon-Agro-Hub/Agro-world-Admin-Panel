@@ -487,6 +487,17 @@ getAllCenters(): Observable<any> {
 
   return this.http.get<any>(url, { headers });
 }
+
+getShortageDetails(): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
+
+  const url = `${this.apiUrl}procument/shortage-details`;
+
+  return this.http.get<any>(url, { headers });
+}
   
 }
 

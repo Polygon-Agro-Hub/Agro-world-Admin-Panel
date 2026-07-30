@@ -264,3 +264,17 @@ input[type="date"]:valid::before {
   align-items: center !important;
   gap: 8px !important; /* Space between month and year */
 }
+
+::ng-deep .shortage-centre-dropdown .p-dropdown-label.p-placeholder {
+  font-weight: 500;
+  font-size: 14px;
+  color: #6B7280; /* gray-500, light mode */
+}
+
+::ng-deep .dark .shortage-centre-dropdown .p-dropdown-label.p-placeholder {
+  color: #9CA3AF; /* gray-400, dark mode */
+}
+
+::ng-deep .dark .shortage-centre-dropdown .p-dropdown-label:not(.p-placeholder) {
+  color: #9CA3AF; /* gray-400, dark mode - selected value text */
+}

@@ -1,4 +1,11 @@
-import { Component, ElementRef, ViewChild, AfterViewInit, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  AfterViewInit,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { Router } from '@angular/router';
 import lottie, { AnimationItem } from 'lottie-web';
@@ -25,9 +32,11 @@ interface ShortageItem {
   standalone: true,
   imports: [CommonModule],
   templateUrl: './shortage-today.component.html',
-  styleUrl: './shortage-today.component.css'
+  styleUrl: './shortage-today.component.css',
 })
-export class ShortageTodayComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ShortageTodayComponent
+  implements OnInit, AfterViewInit, OnDestroy
+{
   shortages: ShortageItem[] = [];
 
   availableDate: Date = new Date('2026-06-23T18:00:00');
@@ -37,7 +46,7 @@ export class ShortageTodayComponent implements OnInit, AfterViewInit, OnDestroy 
   loadingOptions: any = {
     path: '/assets/json/blue_loading.json',
     loop: true,
-    autoplay: true
+    autoplay: true,
   };
 
   @ViewChild('lottieContainer', { static: false }) lottieContainer!: ElementRef;
@@ -47,7 +56,7 @@ export class ShortageTodayComponent implements OnInit, AfterViewInit, OnDestroy 
   constructor(
     private location: Location,
     private router: Router,
-    private procumentService: ProcumentsService
+    private procumentService: ProcumentsService,
   ) {}
 
   get shortageCount(): number {
@@ -75,7 +84,7 @@ export class ShortageTodayComponent implements OnInit, AfterViewInit, OnDestroy 
     this.isLoading = true;
     this.procumentService.getShortageDetails().subscribe({
       next: (res: any) => {
-        const data = Array.isArray(res) ? res : (res?.data || []);
+        const data = Array.isArray(res) ? res : res?.data || [];
         this.shortages = data.map((item: any) => ({
           id: item.id,
           name: item.displayName,
@@ -84,14 +93,14 @@ export class ShortageTodayComponent implements OnInit, AfterViewInit, OnDestroy 
           assignedQty: item.totalAssignedQty,
           unit: item.unitType || 'kg',
           marketPrice: item.buyPrice,
-          assignments: []
+          assignments: [],
         }));
         this.isLoading = false;
       },
       error: (err) => {
         console.error('Error fetching shortage details:', err);
         this.isLoading = false;
-      }
+      },
     });
   }
 
@@ -102,7 +111,7 @@ export class ShortageTodayComponent implements OnInit, AfterViewInit, OnDestroy 
         renderer: 'svg',
         loop: this.loadingOptions.loop,
         autoplay: this.loadingOptions.autoplay,
-        path: this.loadingOptions.path
+        path: this.loadingOptions.path,
       });
     }
   }
@@ -126,7 +135,7 @@ export class ShortageTodayComponent implements OnInit, AfterViewInit, OnDestroy 
     return this.availableDate.toLocaleTimeString('en-US', {
       hour: 'numeric',
       minute: '2-digit',
-      hour12: true
+      hour12: true,
     });
   }
 
@@ -141,10 +150,19 @@ export class ShortageTodayComponent implements OnInit, AfterViewInit, OnDestroy 
   private getDaySuffix(day: number): string {
     if (day > 3 && day < 21) return 'th';
     switch (day % 10) {
-      case 1: return 'st';
-      case 2: return 'nd';
-      case 3: return 'rd';
-      default: return 'th';
+      case 1:
+        return 'st';
+      case 2:
+        return 'nd';
+      case 3:
+        return 'rd';
+      default:
+        return 'th';
     }
+  }
+
+  formatNumber(value: number): string {
+    // Convert to string and remove trailing zeros
+    return value.toString().replace(/\.?0+$/, '');
   }
 }

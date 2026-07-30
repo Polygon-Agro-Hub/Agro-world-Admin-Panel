@@ -1,6 +1,6 @@
 <div class="min-h-max">
   <a href="javascript:void(0)" (click)="goBack()"
-     class="inline-flex items-center gap-2 text-textLight dark:text-textDark text-sm mb-5">
+    class="inline-flex items-center gap-2 text-textLight dark:text-textDark text-sm mb-5">
     <span>&#8592;</span>
     <span class="underline font-medium">Back</span>
   </a>
@@ -13,11 +13,9 @@
       </h2>
     </div>
 
-    <div [class.min-h-[500px]]="isWaiting || shortageCount === 0"
-         [class.flex]="isWaiting || shortageCount === 0"
-         [class.items-center]="isWaiting || shortageCount === 0"
-         [class.justify-center]="isWaiting || shortageCount === 0"
-         [class.p-6]="!isWaiting && shortageCount > 0">
+    <div [class.min-h-[500px]]="isWaiting || shortageCount === 0" [class.flex]="isWaiting || shortageCount === 0"
+      [class.items-center]="isWaiting || shortageCount === 0" [class.justify-center]="isWaiting || shortageCount === 0"
+      [class.p-6]="!isWaiting && shortageCount > 0">
 
       <!-- 1. Still waiting for the reveal time -->
       <ng-container *ngIf="isWaiting; else revealed">
@@ -49,10 +47,10 @@
         <ng-template #shortageList>
           <div class="flex flex-col gap-3">
             <div *ngFor="let item of shortages"
-                 class="w-fit grid grid-cols-[56px_180px_100px_100px_150px_100px] items-stretch gap-4 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-3">
+              class="w-fit grid grid-cols-[56px_180px_100px_100px_150px_100px] items-stretch gap-4 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-3">
 
               <img [src]="item.image" [alt]="item.name"
-                   class="w-14 h-14 object-cover rounded-md bg-gray-50 dark:bg-gray-800 self-center" />
+                class="w-14 h-14 object-cover rounded-md bg-gray-50 dark:bg-gray-800 self-center" />
 
               <span class="text-textLight dark:text-textDark font-semibold text-base self-center">
                 {{ item.name }}
@@ -61,14 +59,14 @@
               <div class="bg-[#FEF7EF] dark:bg-orange-900/20 rounded-md px-3 py-2 flex flex-col justify-center">
                 <p class="text-xs text-gray-500 dark:text-gray-400 m-0">Shortage</p>
                 <p class="text-sm font-semibold text-textLight dark:text-textDark m-0 whitespace-nowrap">
-                  {{ item.shortageQty }} kg
+                  {{ formatNumber(item.shortageQty) }} kg
                 </p>
               </div>
 
               <div class="bg-[#E1ECFF] dark:bg-blue-900/20 rounded-md px-3 py-2 flex flex-col justify-center">
                 <p class="text-xs text-gray-500 dark:text-gray-400 m-0">Assigned</p>
                 <p class="text-sm font-semibold text-textLight dark:text-textDark m-0 whitespace-nowrap">
-                  {{ item.assignedQty }} kg
+                  {{ formatNumber(item.assignedQty) }} kg
                 </p>
               </div>
 
@@ -80,7 +78,7 @@
               </div>
 
               <button (click)="onView(item)"
-                      class="bg-[#3980C0] hover:bg-[#316ba8] text-white font-medium text-sm rounded-md transition-colors whitespace-nowrap justify-self-end self-stretch px-6 flex items-center justify-center">
+                class="bg-[#3980C0] hover:bg-[#316ba8] text-white font-medium text-sm rounded-md transition-colors whitespace-nowrap justify-self-end self-stretch px-6 flex items-center justify-center">
                 View
               </button>
             </div>

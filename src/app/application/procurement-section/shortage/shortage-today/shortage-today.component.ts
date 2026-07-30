@@ -1,25 +1,17 @@
-import { Component, ElementRef, ViewChild, AfterViewInit, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  AfterViewInit,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import lottie, { AnimationItem } from 'lottie-web';
-import { DropdownModule } from 'primeng/dropdown';
-
-interface ShortageItem {
-  id: number;
-  name: string;
-  image: string;
-  shortageQty: number;
-  assignedQty: number;
-  unit: string;
-  marketPrice: number;
-  assignments: AssignmentRecord[];
-}
-
-interface Centre {
-  id: number;
-  code: string;
-  name: string;
-}
+import { ProcumentsService } from '../../../../services/procuments/procuments.service';
+import { LoadingSpinnerComponent } from "../../../../components/loading-spinner/loading-spinner.component"; // adjust path/name as needed
+ // adjust path/name as needed
 
 interface AssignmentRecord {
   qty: number;
@@ -27,53 +19,51 @@ interface AssignmentRecord {
   ceiling: number;
 }
 
+interface ShortageItem {
+  id: number;
+  name: string;
+  image: string;
+  shortageQty: number;
+  assignedQty: number;
+  marketPrice: number;
+  assignments: AssignmentRecord[];
+}
+
 @Component({
   selector: 'app-shortage-today',
   standalone: true,
-  imports: [CommonModule, FormsModule, DropdownModule],
+  imports: [CommonModule, LoadingSpinnerComponent],
   templateUrl: './shortage-today.component.html',
-  styleUrl: './shortage-today.component.css'
+  styleUrl: './shortage-today.component.css',
 })
-export class ShortageTodayComponent implements OnInit, AfterViewInit, OnDestroy {
-  shortages: ShortageItem[] = [
-    { id: 1, name: 'Garlic', image: '/assets/images/garlic.png', shortageQty: 20, assignedQty: 0, unit: 'kg', marketPrice: 100.00, assignments: [] },
-    { id: 2, name: 'Turmeric', image: '/assets/images/turmeric.png', shortageQty: 0.5, assignedQty: 20, unit: 'kg', marketPrice: 100.00, assignments: [] },
-    { id: 3, name: 'Watermelon', image: '/assets/images/watermelon.png', shortageQty: 0, assignedQty: 20, unit: 'kg', marketPrice: 100.00, assignments: [] }
-  ];
-
-  centres: Centre[] = [
-    { id: 1, code: 'D-WPCK-01', name: 'Kollupitiya Central Distribution Centre' },
-    { id: 2, code: 'D-WPCK-02', name: 'Kollupitiya Central Distribution Centre' },
-    { id: 3, code: 'D-WPCK-03', name: 'Kollupitiya Central Distribution Centre' }
-  ];
-
-  get shortageCount(): number {
-    return this.shortages.length;
-  }
+export class ShortageTodayComponent
+  implements OnInit, AfterViewInit, OnDestroy
+{
+  shortages: ShortageItem[] = [];
 
   availableDate: Date = new Date('2026-06-23T18:00:00');
   isWaiting = true;
+  isLoading = false;
 
   loadingOptions: any = {
     path: '/assets/json/blue_loading.json',
     loop: true,
-    autoplay: true
+    autoplay: true,
   };
-
-  // Assign view state
-  selectedItem: ShortageItem | null = null;
-  assignQty: number = 0;
-  selectedCentreId: number | null = null;
-  ceilingPercent: number = 0;
-
-  // Confirmation modal state
-  showConfirmModal = false;
 
   @ViewChild('lottieContainer', { static: false }) lottieContainer!: ElementRef;
   private animationItem: AnimationItem | undefined;
   private waitTimer: any;
 
-  constructor(private location: Location) {}
+  constructor(
+    private location: Location,
+    private router: Router,
+    private procumentService: ProcumentsService,
+  ) {}
+
+  get shortageCount(): number {
+    return this.shortages.length;
+  }
 
   ngOnInit(): void {
     const now = new Date().getTime();
@@ -81,13 +71,39 @@ export class ShortageTodayComponent implements OnInit, AfterViewInit, OnDestroy 
 
     if (now >= target) {
       this.isWaiting = false;
+      this.fetchShortageDetails();
     } else {
       this.isWaiting = true;
       this.waitTimer = setTimeout(() => {
         this.isWaiting = false;
         this.animationItem?.destroy();
+        this.fetchShortageDetails();
       }, target - now);
     }
+  }
+
+  fetchShortageDetails(): void {
+    this.isLoading = true;
+    this.procumentService.getShortageDetails().subscribe({
+      next: (res: any) => {
+        const data = Array.isArray(res) ? res : res?.data || [];
+        this.shortages = data.map((item: any) => ({
+          id: item.id,
+          name: item.displayName,
+          image: item.image,
+          shortageQty: item.shortageQty,
+          assignedQty: item.totalAssignedQty,
+          unit: item.unitType || 'kg',
+          marketPrice: item.buyPrice,
+          assignments: [],
+        }));
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error fetching shortage details:', err);
+        this.isLoading = false;
+      },
+    });
   }
 
   ngAfterViewInit(): void {
@@ -97,7 +113,7 @@ export class ShortageTodayComponent implements OnInit, AfterViewInit, OnDestroy 
         renderer: 'svg',
         loop: this.loadingOptions.loop,
         autoplay: this.loadingOptions.autoplay,
-        path: this.loadingOptions.path
+        path: this.loadingOptions.path,
       });
     }
   }
@@ -110,87 +126,18 @@ export class ShortageTodayComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   goBack(): void {
-    if (this.selectedItem) {
-      this.closeAssignView();
-    } else {
-      this.location.back();
-    }
+    this.location.back();
   }
 
   onView(item: ShortageItem): void {
-    this.selectedItem = item;
-    this.resetAssignForm();
-  }
-
-  closeAssignView(): void {
-    this.selectedItem = null;
-  }
-
-  private resetAssignForm(): void {
-    this.assignQty = 0;
-    this.selectedCentreId = null;
-    this.ceilingPercent = 0;
-  }
-
-  get canAssign(): boolean {
-    return this.assignQty > 0
-      && this.assignQty <= (this.selectedItem?.shortageQty ?? 0)
-      && this.selectedCentreId !== null;
-  }
-
-  get selectedCentre(): Centre | null {
-    return this.centres.find(c => c.id === this.selectedCentreId) || null;
-  }
-
-  // Step 1: open confirmation modal instead of assigning directly
-  onAssign(): void {
-    if (!this.canAssign) {
-      return;
-    }
-    this.showConfirmModal = true;
-  }
-
-  cancelAssign(): void {
-    this.showConfirmModal = false;
-  }
-
-  // Step 2: actually perform the assignment
-  confirmAssign(): void {
-    if (!this.selectedItem || !this.selectedCentre) {
-      return;
-    }
-
-    const centre = this.selectedCentre;
-    const qty = this.assignQty;
-
-    // Add to the "Assigned" list at the bottom
-    this.selectedItem.assignments.push({
-      qty: qty,
-      centreLabel: `${centre.code} ${centre.name}`,
-      ceiling: this.ceilingPercent
-    });
-
-    // Reduce the remaining shortage quantity at the top
-    this.selectedItem.shortageQty = Math.max(0, this.selectedItem.shortageQty - qty);
-    this.selectedItem.assignedQty += qty;
-
-    console.log('Assigned', {
-      item: this.selectedItem.name,
-      qty,
-      centre,
-      ceiling: this.ceilingPercent
-    });
-    // TODO: call your API here
-
-    this.showConfirmModal = false;
-    this.resetAssignForm();
+    this.router.navigate(['procurement/shortage-assign', item.id]);
   }
 
   get formattedTime(): string {
     return this.availableDate.toLocaleTimeString('en-US', {
       hour: 'numeric',
       minute: '2-digit',
-      hour12: true
+      hour12: true,
     });
   }
 
@@ -205,10 +152,19 @@ export class ShortageTodayComponent implements OnInit, AfterViewInit, OnDestroy 
   private getDaySuffix(day: number): string {
     if (day > 3 && day < 21) return 'th';
     switch (day % 10) {
-      case 1: return 'st';
-      case 2: return 'nd';
-      case 3: return 'rd';
-      default: return 'th';
+      case 1:
+        return 'st';
+      case 2:
+        return 'nd';
+      case 3:
+        return 'rd';
+      default:
+        return 'th';
     }
+  }
+
+  formatNumber(value: number): string {
+    // Convert to string and remove trailing zeros
+    return value.toString().replace(/\.?0+$/, '');
   }
 }

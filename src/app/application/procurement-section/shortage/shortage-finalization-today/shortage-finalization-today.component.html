@@ -6,6 +6,12 @@
     Back
 </button>
 
+<!-- Error banner -->
+<div *ngIf="errorMessage"
+    class="mb-4 px-4 py-3 rounded-lg bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300">
+    {{ errorMessage }}
+</div>
+
 <!-- Container -->
 <div
     class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
@@ -171,13 +177,15 @@
         <div class="flex justify-center gap-4">
             <button
                 class="bg-[#74788D] hover:bg-[#5a5f70] text-white font-medium py-2.5 px-8 rounded-lg transition-colors"
+                [disabled]="isFinalizing"
                 (click)="onCancelFinalize()">
                 No, Go Back
             </button>
             <button
-                class="bg-[#3980C0] hover:bg-[#2f6ba3] text-white font-medium py-2.5 px-8 rounded-lg transition-colors"
+                class="bg-[#3980C0] hover:bg-[#2f6ba3] text-white font-medium py-2.5 px-8 rounded-lg transition-colors disabled:opacity-60"
+                [disabled]="isFinalizing"
                 (click)="onConfirmFinalize()">
-                Yes, Finalize
+                {{ isFinalizing ? 'Finalizing...' : 'Yes, Finalize' }}
             </button>
         </div>
     </div>

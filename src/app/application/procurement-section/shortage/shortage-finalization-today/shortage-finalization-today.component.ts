@@ -1,23 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { DialogModule } from 'primeng/dialog';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
-
-interface DistributionCenter {
-  label: string;
-  value: string;
-  fullName: string;
-}
+import {
+  ProcumentsService,
+  DistributionCenterDto,
+} from '../../../../services/procuments/procuments.service';
 
 interface ShortageItem {
-  id: number;
+  id: number; // shortageAssignedId
   itemName: string;
   imageUrl: string;
   shortageKg: number;
-  distributionCenters: DistributionCenter[];
-  selectedDC: DistributionCenter | null;
+  distributionCenters: DistributionCenterDto[];
+  selectedDC: DistributionCenterDto | null;
   marketPricePerKg: number;
   ceilingPercent: number;
   assignedBy: string;
@@ -37,84 +35,84 @@ interface ShortageItem {
   templateUrl: './shortage-finalization-today.component.html',
   styleUrl: './shortage-finalization-today.component.css',
 })
-export class ShortageFinalizationTodayComponent {
+export class ShortageFinalizationTodayComponent implements OnInit {
   isLoading = false;
+  isFinalizing = false;
+  errorMessage = '';
 
-  distributionCenterOptions: DistributionCenter[] = [
-    {
-      label: 'D-WPCK-01 Kollupitiya Centra..',
-      value: 'D-WPCK-01',
-      fullName: 'Kollupitiya Central Distribution Centre',
-    },
-    {
-      label: 'D-WPCK-02 Kollupitiya Centra..',
-      value: 'D-WPCK-02',
-      fullName: 'Kollupitiya Central Distribution Centre 2',
-    },
-    {
-      label: 'D-WPCK-03 Nugegoda Centra..',
-      value: 'D-WPCK-03',
-      fullName: 'Nugegoda Central Distribution Centre',
-    },
-  ];
-
-  shortageItems: ShortageItem[] = [
-    {
-      id: 1,
-      itemName: 'Garlic',
-      imageUrl:
-        'https://pub-79ee03a4a23e4dbbb70c7d799d3cb786.r2.dev/marketplacepackages/image/c3fe76e9-4d89-4327-ac62-4dbec33f7c36.png',
-      shortageKg: 5,
-      distributionCenters: this.distributionCenterOptions,
-      selectedDC: this.distributionCenterOptions[0],
-      marketPricePerKg: 100.0,
-      ceilingPercent: 5,
-      assignedBy: 'Kelum',
-      finalized: false,
-    },
-    {
-      id: 2,
-      itemName: 'Garlic',
-      imageUrl:
-        'https://pub-79ee03a4a23e4dbbb70c7d799d3cb786.r2.dev/marketplacepackages/image/c3fe76e9-4d89-4327-ac62-4dbec33f7c36.png',
-      shortageKg: 10,
-      distributionCenters: this.distributionCenterOptions,
-      selectedDC: this.distributionCenterOptions[1],
-      marketPricePerKg: 100.0,
-      ceilingPercent: 2,
-      assignedBy: 'DCH',
-      finalized: false,
-    },
-    {
-      id: 3,
-      itemName: 'Watermelon',
-      imageUrl:
-        'https://pub-79ee03a4a23e4dbbb70c7d799d3cb786.r2.dev/marketplacepackages/image/c3fe76e9-4d89-4327-ac62-4dbec33f7c36.png',
-      shortageKg: 20,
-      distributionCenters: this.distributionCenterOptions,
-      selectedDC: this.distributionCenterOptions[0],
-      marketPricePerKg: 100.0,
-      ceilingPercent: 101,
-      assignedBy: 'Kelum',
-      finalized: false,
-    },
-    {
-      id: 4,
-      itemName: 'Yellow Lemon Premium',
-      imageUrl:
-        'https://pub-79ee03a4a23e4dbbb70c7d799d3cb786.r2.dev/marketplacepackages/image/c3fe76e9-4d89-4327-ac62-4dbec33f7c36.png',
-      shortageKg: 0.5,
-      distributionCenters: this.distributionCenterOptions,
-      selectedDC: this.distributionCenterOptions[0],
-      marketPricePerKg: 100.0,
-      ceilingPercent: 2,
-      assignedBy: 'Kelum',
-      finalized: true,
-    },
-  ];
+  shortageItems: ShortageItem[] = [];
 
   showConfirmModal = false;
   itemPendingFinalize: ShortageItem | null = null;
+
+  constructor(private shortageService: ProcumentsService) {}
+
+  ngOnInit(): void {
+    this.loadAllData();
+  }
+
+  loadAllData(): void {
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    this.shortageService.getShortageToFinalizeList().subscribe({
+      next: (toFinalizeRes) => {
+        const toFinalizeItems = this.mapToShortageItems(
+          toFinalizeRes?.data || [],
+          false
+        );
+
+        this.shortageService.getShortageFinalizedList().subscribe({
+          next: (finalizedRes) => {
+            const finalizedItems = this.mapToShortageItems(
+              finalizedRes?.data || [],
+              true
+            );
+            this.shortageItems = [...toFinalizeItems, ...finalizedItems];
+            this.isLoading = false;
+          },
+          error: (err) => {
+            console.error('Error fetching finalized list:', err);
+            this.errorMessage = 'Failed to load finalized items.';
+            this.isLoading = false;
+          },
+        });
+      },
+      error: (err) => {
+        console.error('Error fetching to-finalize list:', err);
+        this.errorMessage = 'Failed to load shortage data.';
+        this.isLoading = false;
+      },
+    });
+  }
+
+  private mapToShortageItems(data: any[], finalized: boolean): ShortageItem[] {
+    return data.map((item) => {
+      const distributionCenters: DistributionCenterDto[] =
+        item.distributionCenters || [];
+
+      // The backend already returns the item's assigned comCenId even for
+      // "to finalize" rows (selectedDC itself is null there) — resolve it
+      // against the options list so the dropdown shows the right value.
+      const preselectedDC =
+        item.selectedDC ||
+        distributionCenters.find((dc) => dc.comCenId === item.comCenId) ||
+        null;
+
+      return {
+        id: item.shortageAssignedId,
+        itemName: item.itemName,
+        imageUrl: item.imageUrl,
+        shortageKg: item.shortageKg,
+        distributionCenters,
+        selectedDC: preselectedDC,
+        marketPricePerKg: Number(item.marketPricePerKg) || 0,
+        ceilingPercent: Number(item.ceilingPercent) || 0,
+        assignedBy: item.assignedBy,
+        finalized,
+      };
+    });
+  }
 
   get toFinalizeList(): ShortageItem[] {
     return this.shortageItems.filter((item) => !item.finalized);
@@ -125,7 +123,7 @@ export class ShortageFinalizationTodayComponent {
   }
 
   formatCurrency(value: number): string {
-    return `Rs. ${value.toFixed(2)}`;
+    return `Rs. ${Number(value ?? 0).toFixed(2)}`;
   }
 
   onCeilingInput(event: Event, item: ShortageItem) {
@@ -144,6 +142,11 @@ export class ShortageFinalizationTodayComponent {
   }
 
   onFinalizeClick(item: ShortageItem) {
+    if (!item.selectedDC) {
+      this.errorMessage = 'Please select a distribution centre before finalizing.';
+      return;
+    }
+    this.errorMessage = '';
     this.itemPendingFinalize = item;
     this.showConfirmModal = true;
   }
@@ -154,11 +157,36 @@ export class ShortageFinalizationTodayComponent {
   }
 
   onConfirmFinalize() {
-    if (this.itemPendingFinalize) {
-      this.itemPendingFinalize.finalized = true;
+    const item = this.itemPendingFinalize;
+    const selectedDC = item?.selectedDC;
+
+    if (!item || !selectedDC) {
+      return;
     }
-    this.itemPendingFinalize = null;
-    this.showConfirmModal = false;
+
+    this.isFinalizing = true;
+
+    this.shortageService
+      .finalizeShortageAssigned(
+        item.id,
+        selectedDC.comCenId,
+        item.ceilingPercent
+      )
+      .subscribe({
+        next: () => {
+          this.isFinalizing = false;
+          this.itemPendingFinalize = null;
+          this.showConfirmModal = false;
+          // Re-fetch so the finalized card reflects the confirmed server state
+          this.loadAllData();
+        },
+        error: (err) => {
+          console.error('Error finalizing shortage assignment:', err);
+          this.errorMessage = 'Failed to finalize. Please try again.';
+          this.isFinalizing = false;
+          this.showConfirmModal = false;
+        },
+      });
   }
 
   goBack() {

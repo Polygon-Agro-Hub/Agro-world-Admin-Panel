@@ -33,6 +33,35 @@ interface ProductType {
   shortCode: string;
 }
 
+export interface DistributionCenterDto {
+  comCenId: number;
+  value: string;
+  label: string;
+  fullName: string;
+}
+ 
+export interface ShortageFinalizeItemDto {
+  shortageAssignedId: number;
+  shortageKg: number;
+  ceilingPercent: number;
+  status: string;
+  comCenId: number | null;
+  marketPricePerKg: number;
+  mpItemId: number;
+  itemName: string;
+  imageUrl: string | null;
+  assignedBy: string;
+  distributionCenters?: DistributionCenterDto[];
+  selectedDC?: DistributionCenterDto | null;
+}
+ 
+export interface FinalizeShortagePayload {
+  shortageAssignedId: number;
+  comCenId: number;
+  ceilingPercent: number;
+}
+
+
 @Injectable({
   providedIn: 'root',
 })
@@ -487,6 +516,62 @@ getAllCenters(): Observable<any> {
 
   return this.http.get<any>(url, { headers });
 }
+
+// ---------------------------------------------------------------------
+  // Shortage Finalization
+  // ---------------------------------------------------------------------
+
+  getShortageDistributionCenters(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}procument/shortage/distribution-centers`;
+
+    return this.http.get<any>(url, { headers });
+  }
+
+  getShortageToFinalizeList(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}procument/shortage/to-finalize`;
+
+    return this.http.get<any>(url, { headers });
+  }
+
+  getShortageFinalizedList(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}procument/shortage/finalized`;
+
+    return this.http.get<any>(url, { headers });
+  }
+
+  finalizeShortageAssigned(
+    shortageAssignedId: number,
+    comCenId: number,
+    ceilingPercent: number
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}procument/shortage/finalize`;
+
+    return this.http.put<any>(
+      url,
+      { shortageAssignedId, comCenId, ceilingPercent },
+      { headers }
+    );
+  }
 
 getShortageDetails(): Observable<any> {
   const headers = new HttpHeaders({

@@ -38,7 +38,7 @@
           <label class="text-[12px] font-normal text-textLight dark:text-textDark">Enter Qty ({{ selectedItem.unit
             }})</label>
           <input type="number" min="0" [max]="selectedItem.shortageQty" [(ngModel)]="assignQty"
-            class="w-32 h-10 p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-tileBlack text-textLight dark:text-textDark font-semibold" />
+            class="w-32 h-10 p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-tileBlack text-textLight dark:text-textDark font-semibold text-center" />
         </div>
 
         <div class="flex flex-col gap-2">
@@ -50,15 +50,14 @@
         </div>
 
         <div class="flex flex-col gap-2">
-          <label class="text-[12px] font-normal text-textLight dark:text-textDark">Ceiling (%)</label>
+          <label class="text-[12px] font-normal text-textLight dark:text-textDark text-center">Ceiling (%)</label>
           <input type="number" min="0" max="100" [(ngModel)]="ceilingPercent"
-            class="w-24 h-10 p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-tileBlack text-textLight dark:text-textDark font-semibold" />
+            class="h-10 p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-tileBlack text-textLight dark:text-textDark font-semibold text-center" />
         </div>
 
         <div class="flex flex-col gap-2">
-          <label class="text-[12px] font-normal invisible select-none">Assign</label>
           <button (click)="onAssign()" [disabled]="!canAssign"
-            class="h-10 px-8 rounded-md font-medium text-white transition-colors" [class.bg-gray-400]="!canAssign"
+            class="h-16 px-8 rounded-md font-medium text-white transition-colors flex items-center justify-center" [class.bg-gray-400]="!canAssign"
             [class.cursor-not-allowed]="!canAssign" [class.bg-[#3980C0]]="canAssign"
             [class.hover:bg-[#316ba8]]="canAssign">
             Assign

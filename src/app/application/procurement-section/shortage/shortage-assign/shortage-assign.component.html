@@ -57,7 +57,7 @@
 
         <div class="flex flex-col gap-2">
           <button (click)="onAssign()" [disabled]="!canAssign"
-            class="h-16 px-8 rounded-md font-medium text-white transition-colors flex items-center justify-center" [class.bg-gray-400]="!canAssign"
+            class="h-16 px-8 rounded-md font-medium text-white transition-colors flex items-center justify-center" [class.bg-[#C1C1C1]]="!canAssign"
             [class.cursor-not-allowed]="!canAssign" [class.bg-[#3980C0]]="canAssign"
             [class.hover:bg-[#316ba8]]="canAssign">
             Assign

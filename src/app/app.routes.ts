@@ -304,6 +304,7 @@ import { ViewDriverCategoriesComponent } from './application/finance/govi-trans-
 import { AddEditDriverCategoryComponent } from './application/finance/govi-trans-finance/add-edit-driver-category/add-edit-driver-category.component';
 import { ViewTransactionDocumentComponent } from './application/finance/govi-trans-finance/view-transaction-document/view-transaction-document.component';
 import { ShortageTodayComponent } from './application/procurement-section/shortage/shortage-today/shortage-today.component';
+import { ShortageAssignComponent } from './application/procurement-section/shortage/shortage-assign/shortage-assign.component';
 import { ProcurementShortageHistoryComponent } from './application/procurement-section/shortage/procurement-shortage-history/procurement-shortage-history.component';
 import { ShortageFinalizationTodayComponent } from './application/procurement-section/shortage/shortage-finalization-today/shortage-finalization-today.component';
 
@@ -1509,6 +1510,9 @@ export const routes: Routes = [
           {
             path: 'view-shortage-today',
             component: ShortageTodayComponent
+          },
+          { path: 'shortage-assign/:id', 
+            component: ShortageAssignComponent 
           },
           {
             path: 'view-shortage-finalization-today',

@@ -306,6 +306,9 @@ import { ViewTransactionDocumentComponent } from './application/finance/govi-tra
 import { ShortageTodayComponent } from './application/procurement-section/shortage/shortage-today/shortage-today.component';
 import { ProcurementShortageHistoryComponent } from './application/procurement-section/shortage/procurement-shortage-history/procurement-shortage-history.component';
 import { ShortageFinalizationTodayComponent } from './application/procurement-section/shortage/shortage-finalization-today/shortage-finalization-today.component';
+import { DistributionFinanceComponent } from './application/finance/distribution-finance-acion/distribution-finance/distribution-finance.component';
+import { ViewSubmissionsComponent } from './application/finance/distribution-finance-acion/view-submissions/view-submissions.component';
+import { ViewSubmissionDocumentComponent } from './application/finance/distribution-finance-acion/view-submission-document/view-submission-document.component';
 
 export const routes: Routes = [
   {
@@ -866,7 +869,24 @@ export const routes: Routes = [
                     component: ViewTransactionDocumentComponent,
                   }
                 ]
-              }
+              },
+              {
+                path: 'distribution-finance',
+                children: [
+                  {
+                    path: '',
+                    component: DistributionFinanceComponent,
+                  },
+                  {
+                    path: 'view-submissions',
+                    component: ViewSubmissionsComponent,
+                  },
+                  {
+                    path: 'view-submissions-document/:id',
+                    component: ViewSubmissionDocumentComponent,
+                  },
+                ],
+              },
             ],
           },
         ],

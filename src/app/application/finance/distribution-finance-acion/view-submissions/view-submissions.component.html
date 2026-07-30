@@ -94,16 +94,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="
-              let item of filteredSubmissions
-                | paginate
-                  : {
-                      itemsPerPage: itemsPerPage,
-                      currentPage: page,
-                      totalItems: totalItems,
-                    };
-              let i = index
-            ">
+          <tr *ngFor="let item of submissions; let i = index">
             <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
               {{ ((page - 1) * itemsPerPage + i + 1) < 10 ? '0' + ((page - 1) * itemsPerPage + i + 1) : ((page - 1) *
                 itemsPerPage + i + 1) }} </td>
@@ -146,7 +137,10 @@
               </span>
             </td>
 
-
+            <td class="px-4 py-3 text-center whitespace-nowrap text-[#000000] dark:text-textDark">
+              <p>{{ item.purchasedAt | date: "hh:mm a," }}</p>
+              <p>{{ item.purchasedAt | date: "d MMM, y" }}</p>
+            </td>
 
             <td class="px-2 py-3 text-center text-[#000000] dark:text-textDark">
               <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]" (click)="navigateToInvoice(item.id)">
@@ -178,9 +172,9 @@
     </div>
 
     <div *ngIf="hasData" class="dark:bg-[#262f45]">
-      <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
-        [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
-        [screenReaderCurrentLabel]="'Youre on page'">
+      <pagination-controls id="submissions-pagination" (pageChange)="onPageChange($event)" [responsive]="true"
+        [previousLabel]="'Previous'" [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'"
+        [screenReaderPageLabel]="'page'" [screenReaderCurrentLabel]="'Youre on page'">
       </pagination-controls>
     </div>
   </div>

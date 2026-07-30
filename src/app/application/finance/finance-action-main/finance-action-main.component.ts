@@ -89,4 +89,8 @@ export class FinanceActionMainComponent {
   ViewGoviTransFinance(): void {
     this.router.navigate(['/finance/action/govi-trans-finance']);
   }
+
+  ViewDistributionFinance(): void {
+    this.router.navigate(['/finance/action/distribution-finance']);
+  }
 }

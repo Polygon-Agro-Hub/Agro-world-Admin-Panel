@@ -178,6 +178,6 @@ export class ProcurementShortageHistoryComponent implements OnInit {
   }
 
   back(): void {
-    this.router.navigate(['finance/action/govicare-finance']);
+    this.router.navigate(['/procurement']);
   }
 }

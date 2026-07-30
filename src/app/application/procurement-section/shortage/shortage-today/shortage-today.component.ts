@@ -9,7 +9,9 @@ import {
 import { CommonModule, Location } from '@angular/common';
 import { Router } from '@angular/router';
 import lottie, { AnimationItem } from 'lottie-web';
-import { ProcumentsService } from '../../../../services/procuments/procuments.service'; // adjust path/name as needed
+import { ProcumentsService } from '../../../../services/procuments/procuments.service';
+import { LoadingSpinnerComponent } from "../../../../components/loading-spinner/loading-spinner.component"; // adjust path/name as needed
+ // adjust path/name as needed
 
 interface AssignmentRecord {
   qty: number;
@@ -30,7 +32,7 @@ interface ShortageItem {
 @Component({
   selector: 'app-shortage-today',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, LoadingSpinnerComponent],
   templateUrl: './shortage-today.component.html',
   styleUrl: './shortage-today.component.css',
 })

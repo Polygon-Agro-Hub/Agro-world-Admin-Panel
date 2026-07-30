@@ -177,23 +177,8 @@ export class ShortageAssignComponent implements OnInit {
       })
       .subscribe({
         next: (res: any) => {
-          if (this.selectedItem) {
-            this.selectedItem.assignments.push({
-              qty: qty,
-              centreLabel: `${centre.code} ${centre.name}`,
-              ceiling: ceiling,
-            });
-
-            this.selectedItem.shortageQty = Math.max(
-              0,
-              this.selectedItem.shortageQty - qty,
-            );
-            this.selectedItem.assignedQty += qty;
-          }
-
           this.showConfirmModal = false;
-          this.resetAssignForm();
-          this.isLoading = false;
+          window.location.reload();
         },
         error: (err) => {
           console.error('Error assigning shortage:', err);

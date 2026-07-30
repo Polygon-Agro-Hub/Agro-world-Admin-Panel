@@ -616,6 +616,21 @@ getShortageAssignedDetails(id: number | string): Observable<any> {
 
   return this.http.get<any>(url, { headers });
 }
+
+getAllShortageAssignedDetails(date?: string): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
+
+  let url = `${this.apiUrl}procument/get-all-shortage-details`;
+
+  if (date) {
+    url += `?date=${date}`;
+  }
+
+  return this.http.get<any>(url, { headers });
+}
   
 }
 

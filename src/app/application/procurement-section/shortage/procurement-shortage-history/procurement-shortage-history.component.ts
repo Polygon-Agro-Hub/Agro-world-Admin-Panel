@@ -4,9 +4,12 @@ import { CalendarModule } from 'primeng/calendar';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
+import { ProcumentsService } from '../../../../services/procuments/procuments.service'; // adjust path/name as needed
 
 interface ShortageItem {
   id: number;
+   shortageId: number;
+   assignedQty: number;
   itemName: string;
   imageUrl: string;
   shortageQty: number;
@@ -45,97 +48,95 @@ export class ProcurementShortageHistoryComponent implements OnInit {
     'yellow lemon premium': 'assets/items/yellow-lemon.png',
   };
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private procurementService: ProcumentsService,
+  ) {}
 
   ngOnInit(): void {
     this.selectedDate = new Date();
     this.loadShortageHistory();
   }
 
-  /**
-   * TEMPORARY: static mock data for frontend-only development.
-   * Replace this with a real API call once the backend endpoint is ready —
-   * just swap the body of this method for an HTTP subscribe, keeping
-   * splitByAssignment() and hasData assignment the same.
-   */
   loadShortageHistory(): void {
     this.isLoading = true;
 
-    setTimeout(() => {
-      const mockData: ShortageItem[] = [
-        {
-          id: 1,
-          itemName: 'Garlic',
-          imageUrl: this.getItemImage('Garlic'),
-          shortageQty: 20,
-          unit: 'kg',
-          marketPricePerKg: 100,
-          isAssigned: false,
-          createdAt: this.formatDateForApi(this.selectedDate || new Date()),
-        },
-        {
-          id: 2,
-          itemName: 'Turmeric',
-          imageUrl: this.getItemImage('Turmeric'),
-          shortageQty: 0.5,
-          unit: 'kg',
-          marketPricePerKg: 100,
-          isAssigned: false,
-          createdAt: this.formatDateForApi(this.selectedDate || new Date()),
-        },
-        {
-          id: 3,
-          itemName: 'Watermelon',
-          imageUrl: this.getItemImage('Watermelon'),
-          shortageQty: 20,
-          unit: 'kg',
-          marketPricePerKg: 100,
-          isAssigned: false,
-          createdAt: this.formatDateForApi(this.selectedDate || new Date()),
-        },
-        {
-          id: 4,
-          itemName: 'Yellow Lemon Premium',
-          imageUrl: this.getItemImage('Yellow Lemon Premium'),
-          shortageQty: 0.5,
-          unit: 'kg',
-          marketPricePerKg: 100,
-          isAssigned: true,
-          assignedCentre: 'D-WPCK-01 Kollupitiya Central ..',
-          ceilingPercentage: 2,
-          firstAssignedBy: 'Kelum',
-          finalizedBy: 'Thilini',
-          createdAt: this.formatDateForApi(this.selectedDate || new Date()),
-        },
-        {
-          id: 5,
-          itemName: 'Yellow Lemon Premium',
-          imageUrl: this.getItemImage('Yellow Lemon Premium'),
-          shortageQty: 0.5,
-          unit: 'kg',
-          marketPricePerKg: 100,
-          isAssigned: true,
-          assignedCentre: 'D-WPCK-02 Kollupitiya Central ..',
-          ceilingPercentage: 2,
-          firstAssignedBy: 'Kelum',
-          finalizedBy: '',
-          createdAt: this.formatDateForApi(this.selectedDate || new Date()),
-        },
-      ];
+    const dateParam = this.selectedDate
+      ? this.formatDateForApi(this.selectedDate)
+      : undefined;
 
-      this.shortageItems = mockData;
-      this.splitByAssignment();
-      this.hasData = this.shortageItems.length > 0;
-      this.isLoading = false;
-    }, 300);
+    this.procurementService.getAllShortageAssignedDetails(dateParam).subscribe({
+      next: (response: any[]) => {
+        this.shortageItems = (response || []).map((row) => this.mapRowToShortageItem(row));
+        this.splitByAssignment();
+        this.hasData = this.shortageItems.length > 0;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error loading shortage history:', err);
+        this.shortageItems = [];
+        this.notAssignedItems = [];
+        this.assignedItems = [];
+        this.hasData = false;
+        this.isLoading = false;
+      },
+    });
+  }
+
+  /**
+   * Maps a raw DAO row (one row per shortage, or per shortage+assignment
+   * combination) into the ShortageItem shape the template expects.
+   */
+  private mapRowToShortageItem(row: any): ShortageItem {
+    const isAssigned = row.id != null; // sa.id is null when a shortage has no assignment row
+
+    const centreParts = [row.regCode, row.centerName].filter(Boolean);
+
+    return {
+    id: isAssigned ? row.id : row.shortageId,
+    shortageId: row.shortageId,
+    assignedQty: Number(row.assignedQty) || 0,
+    itemName: row.displayName || '',
+    imageUrl: row.image || this.getItemImage(row.displayName),
+    shortageQty: Number(row.shortageQty) || 0, // backend already returns the REMAINING qty
+    unit: row.unit || 'kg',
+    marketPricePerKg: row.buyPrice,
+    isAssigned,
+    assignedCentre: isAssigned ? centreParts.join(' ') : undefined,
+    ceilingPercentage: isAssigned ? row.ceilling : undefined,
+    firstAssignedBy: isAssigned ? row.assignedByName : undefined,
+    finalizedBy: isAssigned ? row.finalizedByName : undefined,
+    createdAt: row.shortageCreatedAt,
+  };
   }
 
   private splitByAssignment(): void {
-    this.notAssignedItems = this.shortageItems.filter(
-      (item) => !item.isAssigned,
-    );
-    this.assignedItems = this.shortageItems.filter((item) => item.isAssigned);
+  // Assigned table: unchanged — every real assignment record still shows here.
+  this.assignedItems = this.shortageItems.filter((item) => item.isAssigned);
+
+  // Not-assigned table: one entry per shortage that STILL has qty left
+  // to assign, even if it already has partial assignment(s). A shortage
+  // with multiple assignments produces multiple rows in shortageItems,
+  // so dedupe by shortageId.
+  const seen = new Set<number>();
+  this.notAssignedItems = [];
+
+  for (const item of this.shortageItems) {
+    if (item.shortageQty <= 0) continue; // fully covered — nothing outstanding
+    if (seen.has(item.shortageId)) continue;
+    seen.add(item.shortageId);
+
+    this.notAssignedItems.push({
+      ...item,
+      id: item.shortageId,
+      isAssigned: false,
+      assignedCentre: undefined,
+      ceilingPercentage: undefined,
+      firstAssignedBy: undefined,
+      finalizedBy: undefined,
+    });
   }
+}
 
   onDateChange(event: any): void {
     this.selectedDate = event;

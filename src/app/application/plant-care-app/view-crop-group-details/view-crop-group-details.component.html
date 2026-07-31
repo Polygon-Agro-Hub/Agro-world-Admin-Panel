@@ -142,21 +142,21 @@
             <span class="text-sm text-[#534E4E] dark:text-textDark font-medium">Nitrogen</span>
             <div
               class="w-2/3 px-3 py-2 flex justify-center border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-[#000000] dark:text-textDark font-normal">
-              {{ cropGroup.nitrogen || '—' }}
+              {{ formatExactValue(cropGroup.nitrogen) || '—' }}
             </div>
           </div>
           <div class="flex justify-center items-center gap-2 w-full">
             <span class="text-sm text-[#534E4E] dark:text-textDark font-medium">Phosphorus</span>
             <div
               class="w-2/3 px-3 py-2 flex justify-center border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-[#000000] dark:text-textDark font-normal">
-              {{ cropGroup.phosphorus || '—' }}
+              {{ formatExactValue(cropGroup.phosphorus) || '—' }}
             </div>
           </div>
           <div class="flex justify-end items-center gap-2 w-full">
             <span class="text-sm text-[#534E4E] dark:text-textDark font-medium">Potassium</span>
             <div
               class="w-2/3 px-3 py-2 flex justify-center border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-[#000000] dark:text-textDark font-normal">
-              {{ cropGroup.potassium || '—' }}
+              {{ formatExactValue(cropGroup.potassium) || '—' }}
             </div>
           </div>
 

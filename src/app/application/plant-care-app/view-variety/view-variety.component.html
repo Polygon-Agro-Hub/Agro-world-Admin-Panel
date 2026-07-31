@@ -53,14 +53,14 @@
 
     <div *ngIf="hasData" class="overflow-x-auto">
       <table
-        class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto"
+        class="w-[75%] divide-y divide-gray-200 dark:divide-[#4B555A] table-auto"
       >
         <thead>
           <tr>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
-              Index
+              No
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
@@ -72,7 +72,6 @@
             >
               Variety
             </th>
-            
           </tr>
         </thead>
         <tbody>
@@ -83,21 +82,43 @@
             <td class="py-3 text-textLight dark:text-textDark text-center">
               {{ i + 1 }}
             </td>
-            <td class="px-4 py-3 flex justify-center text-center text-textLight dark:text-textDark">
-              <div class="w-24 h-24 rounded-full flex items-center justify-center overflow-hidden"
-  [style.backgroundColor]="item.bgColor || '#f0fdf4'"
-  [style.border]="'2px solid ' + (item.bgColor || '#bbf7d0')"
->
-  <img 
-    class="profile-pic object-contain mix-blend-multiply" 
-    [src]="item.image" 
-  />
-</div>
+            <td class="px-4 py-3 text-center">
+              <div class="flex justify-center">
+                <div
+                  class="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center"
+                  [style.backgroundColor]="item.bgColor"
+                >
+                  <img
+                    *ngIf="item.image"
+                    [src]="item.image"
+                    alt="{{ item.varietyNameEnglish }}"
+                    class="w-full h-full object-cover"
+                    (error)="(item.image)"
+                  />
+                  <div
+                    *ngIf="!item.image"
+                    class="text-xs text-textLight dark:text-textDark"
+                  >
+                    No Image
+                  </div>
+                </div>
+              </div>
             </td>
+            <!-- <td class="px-4 py-3 flex justify-center text-center text-textLight dark:text-textDark">
+              <div class="w-24 h-24 rounded-full flex items-center justify-center overflow-hidden"
+                [style.backgroundColor]="item.bgColor || '#f0fdf4'"
+                [style.border]="'2px solid ' + (item.bgColor || '#bbf7d0')"
+              >
+              <img 
+                class="profile-pic object-contain mix-blend-multiply" 
+                [src]="item.image" 
+              />
+            </div>
+            </td> -->
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.varietyNameEnglish }}
             </td>
-            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <button class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd]" (click)="viewVarity(item.id)" >
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path

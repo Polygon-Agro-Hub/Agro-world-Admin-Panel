@@ -1,0 +1,207 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+
+<div class="fixed-width-container">
+  <div class="bg-white dark:bg-tileBlack shadow-lg rounded-lg relative p-8">
+    <div class="flex items-center mb-8 flex-wrap gap-6">
+      <div class="flex items-center whitespace-nowrap">
+        <h2 class="text-2xl font-normal text-[#292929] dark:text-textDark">
+          Shortage History
+        </h2>
+        <span
+          class="ml-2 mr-5 font-normal text-2xl text-[#292929] dark:text-white"
+        >
+          ({{ getTotalRecords() }})
+        </span>
+      </div>
+      <div class="flex items-center flex-wrap gap-5">
+        <i class="ml-5 w-5 h-5 fill-current text-[#4A4A4A]">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+            <path
+              d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z"
+            />
+          </svg>
+        </i>
+        <p
+          class="text-[14px] text-[#4A4A4A] dark:text-textDark whitespace-nowrap flex-shrink-0 mr-5"
+        >
+          Filter By
+        </p>
+        <div class="flex items-center">
+          <p-calendar
+            [(ngModel)]="selectedDate"
+            (onSelect)="onDateChange($event)"
+            (onClear)="clearDate()"
+            [showIcon]="true"
+            [showButtonBar]="false"
+            dateFormat="dd/mm/yy"
+            placeholder="Select Date"
+            [readonlyInput]="true"
+            [showClear]="true"
+            [style]="{ width: '12rem', height: '2rem' }"
+            inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#FFFFFF] dark:bg-[#272F45]"
+            panelStyleClass="custom-calendar-panel"
+          >
+            <ng-template pTemplate="clearicon">
+              <i class="pi pi-times"></i>
+            </ng-template>
+          </p-calendar>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="hasData">
+      <!-- Not Assigned Section -->
+      <div class="mb-10" *ngIf="notAssignedItems.length > 0">
+        <h3 class="text-lg font-medium text-[#292929] dark:text-textDark mb-4">
+          Not Assigned ({{ getNotAssignedCount() }})
+        </h3>
+
+        <div class="flex flex-col gap-3">
+          <div
+            *ngFor="let item of notAssignedItems"
+            class="flex items-center border border-[#C3C3D2] dark:border-[#3A3F55] rounded-lg px-4 py-3 max-w-xl"
+          >
+            <img
+              [src]="item.imageUrl"
+              [alt]="item.itemName"
+              class="w-16 h-16 rounded-md object-cover mr-4 flex-shrink-0"
+            />
+            <span
+              class="font-medium text-[#000000] dark:text-textDark w-40 flex-shrink-0"
+            >
+              {{ item.itemName }}
+            </span>
+
+            <div class="mr-8">
+              <div
+                class="bg-[#FBEFE4] dark:bg-[#3A3F55] text-[#FEF7EF] dark:text-textDark rounded px-3 py-1"
+              >
+                <p class="text-xs text-[#000000] dark:text-textDark mb-1">
+                  Shortage
+                </p>
+                <p
+                  class="text-sm font-medium text-[#000000] dark:text-textDark"
+                >
+                  {{ item.shortageQty }} {{ item.unit }}
+                </p>
+              </div>
+            </div>
+
+            <div>
+              <p class="text-xs text-[#000000] dark:text-textDark mb-1">
+                Market Price per kg
+              </p>
+              <p class="font-semibold text-[#292929] dark:text-textDark">
+                Rs. {{ formatCurrency(item.marketPricePerKg) }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Assigned Section -->
+      <div *ngIf="assignedItems.length > 0">
+        <h3 class="text-lg font-medium text-[#292929] dark:text-textDark mb-4">
+          Assigned ({{ getAssignedCount() }})
+        </h3>
+
+        <div class="flex flex-col gap-3">
+          <div
+            *ngFor="let item of assignedItems"
+            class="flex items-center border border-[#C3C3D2] dark:border-[#3A3F55] rounded-lg px-4 py-3 flex-wrap gap-y-2"
+          >
+            <img
+              [src]="item.imageUrl"
+              [alt]="item.itemName"
+              class="w-16 h-16 rounded-md object-cover mr-4 flex-shrink-0"
+            />
+            <span
+              class="font-medium text-[#000000] dark:text-textDark w-40 flex-shrink-0"
+            >
+              {{ item.itemName }}
+            </span>
+
+            <div class="mr-8">
+              <div
+                class="bg-[#FBEFE4] dark:bg-[#3A3F55] text-[#FEF7EF] dark:text-textDark rounded px-3 py-1"
+              >
+                <p class="text-xs text-[#000000] dark:text-textDark mb-1">
+                  Shortage
+                </p>
+                <p
+                  class="text-sm font-medium text-[#000000] dark:text-textDark"
+                >
+                  {{ item.assignedQty }} {{ item.unit }}
+                </p>
+              </div>
+            </div>
+
+            <div class="mr-8 min-w-[180px]">
+              <p class="text-xs text-[#000000] dark:text-textDark mb-1">
+                Assigned Centre
+              </p>
+              <p class="font-medium text-[#292929] dark:text-textDark truncate">
+                {{ item.assignedCentre || "----" }}
+              </p>
+            </div>
+
+            <div class="mr-8">
+              <p class="text-xs text-[#000000] dark:text-textDark mb-1">
+                Market Price per kg
+              </p>
+              <p class="font-semibold text-[#292929] dark:text-textDark">
+                Rs. {{ formatCurrency(item.marketPricePerKg) }}
+              </p>
+            </div>
+
+            <div class="mr-8 text-center">
+              <p class="text-xs text-[#000000] dark:text-textDark mb-1">
+                Ceiling (%)
+              </p>
+              <p class="font-semibold text-[#292929] dark:text-textDark">
+                {{ item.ceilingPercentage ?? "----" }}
+              </p>
+            </div>
+
+            <div class="mr-8">
+              <p class="text-xs text-[#000000] dark:text-textDark mb-1">
+                1st Assigned By
+              </p>
+              <p class="font-semibold text-[#292929] dark:text-textDark">
+                {{ item.firstAssignedBy || "----" }}
+              </p>
+            </div>
+
+            <div>
+              <p class="text-xs text-[#000000] dark:text-textDark mb-1">
+                Finalized By
+              </p>
+              <p class="font-semibold text-[#292929] dark:text-textDark">
+                {{ item.finalizedBy || "----" }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      *ngIf="!hasData && !isLoading"
+      class="flex flex-col justify-center items-center py-20"
+    >
+      <p class="text-[#494949] dark:text-textDark mb-4">
+        -- No Data Available --
+      </p>
+      <img
+        src="assets/images/NoData.png"
+        alt="No Data"
+        class="w-20 h-20 mb-4"
+      />
+    </div>
+  </div>
+</div>

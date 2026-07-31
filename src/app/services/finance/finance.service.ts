@@ -1195,5 +1195,58 @@ export class FinanceService {
     return this.http.put<any>(url, { transStatus, rejectReason }, { headers });
   }
 
+  getAllShortageSubmissions(
+    page: number,
+    limit: number,
+    status: string,
+    purchasedAt: string,
+    searchItem: string
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    let url = `${this.apiUrl}finance/get-all-shortage-submission?page=${page}&limit=${limit}`;
+
+    if (status) {
+      url += `&status=${status}`;
+    }
+
+    if (purchasedAt) {
+      url += `&purchasedAt=${purchasedAt}`;
+    }
+
+    if (searchItem) {
+      url += `&searchItem=${searchItem}`;
+    }
+
+    return this.http.get<any>(url, { headers });
+  }
+
+  viewShortageSubmissionDocument(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.get<any>(
+      `${this.apiUrl}finance/view-submission-document/${id}`,
+      { headers }
+    );
+  }
+
+  updateShortageSubmissionTransactionStatus(id: number, reqStatus: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.put<any>(
+      `${this.apiUrl}finance/update-submission-status/${id}`,
+      { reqStatus },
+      { headers }
+    );
+  }
 }
 

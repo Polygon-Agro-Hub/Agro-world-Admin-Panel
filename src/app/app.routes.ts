@@ -303,6 +303,13 @@ import { GoviTransFinanceComponent } from './application/finance/govi-trans-fina
 import { ViewDriverCategoriesComponent } from './application/finance/govi-trans-finance/view-driver-categories/view-driver-categories.component';
 import { AddEditDriverCategoryComponent } from './application/finance/govi-trans-finance/add-edit-driver-category/add-edit-driver-category.component';
 import { ViewTransactionDocumentComponent } from './application/finance/govi-trans-finance/view-transaction-document/view-transaction-document.component';
+import { ShortageTodayComponent } from './application/procurement-section/shortage/shortage-today/shortage-today.component';
+import { ShortageAssignComponent } from './application/procurement-section/shortage/shortage-assign/shortage-assign.component';
+import { ProcurementShortageHistoryComponent } from './application/procurement-section/shortage/procurement-shortage-history/procurement-shortage-history.component';
+import { ShortageFinalizationTodayComponent } from './application/procurement-section/shortage/shortage-finalization-today/shortage-finalization-today.component';
+import { DistributionFinanceComponent } from './application/finance/distribution-finance-acion/distribution-finance/distribution-finance.component';
+import { ViewSubmissionsComponent } from './application/finance/distribution-finance-acion/view-submissions/view-submissions.component';
+import { ViewSubmissionDocumentComponent } from './application/finance/distribution-finance-acion/view-submission-document/view-submission-document.component';
 
 export const routes: Routes = [
   {
@@ -863,7 +870,24 @@ export const routes: Routes = [
                     component: ViewTransactionDocumentComponent,
                   }
                 ]
-              }
+              },
+              {
+                path: 'distribution-finance',
+                children: [
+                  {
+                    path: '',
+                    component: DistributionFinanceComponent,
+                  },
+                  {
+                    path: 'view-submissions',
+                    component: ViewSubmissionsComponent,
+                  },
+                  {
+                    path: 'view-submissions-document/:id',
+                    component: ViewSubmissionDocumentComponent,
+                  },
+                ],
+              },
             ],
           },
         ],
@@ -1498,6 +1522,22 @@ export const routes: Routes = [
             canActivate: [PermissionGuard],
             data: { permission: 'Procurement centre requirement' },
           },
+          {
+            path: 'procurement-shortage-history',
+            component: ProcurementShortageHistoryComponent,
+
+          },
+          {
+            path: 'view-shortage-today',
+            component: ShortageTodayComponent
+          },
+          { path: 'shortage-assign/:id', 
+            component: ShortageAssignComponent 
+          },
+          {
+            path: 'view-shortage-finalization-today',
+            component: ShortageFinalizationTodayComponent
+          }
         ],
       },
 

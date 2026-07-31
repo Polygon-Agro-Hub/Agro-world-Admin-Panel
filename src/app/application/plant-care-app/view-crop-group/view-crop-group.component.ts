@@ -115,20 +115,25 @@ export class ViewCropGroupComponent {
       this.page = params['page'] ? +params['page'] : 1;
 
       this.initializeCategories();
-      this.fetchAllCropGroups(this.page, this.itemsPerPage, this.searchTerm, this.selectedCategory);
+      this.fetchAllCropGroups(
+        this.page,
+        this.itemsPerPage,
+        this.searchTerm,
+        this.selectedCategory,
+      );
     });
   }
 
   initializeCategories() {
     // Start with default options
     this.categoryOptions = [
-      { label: 'Vegetables', value: 'Vegetables' },
+      { label: 'Cereals', value: 'Cereals' },
       { label: 'Fruits', value: 'Fruit' },
       // { label: 'Grains', value: 'Grain' },
-      { label: 'Cereals', value: 'Cereals' },
-      { label: 'Spices', value: 'Spices' },
-      { label: 'Mushrooms', value: 'Mushrooms' },
       { label: 'Legumes', value: 'Legumes' },
+      { label: 'Mushrooms', value: 'Mushrooms' },
+      { label: 'Spices', value: 'Spices' },
+      { label: 'Vegetables', value: 'Vegetables' },
     ];
 
     // Fetch additional categories from backend
@@ -192,7 +197,7 @@ export class ViewCropGroupComponent {
 
   onCategoryChange() {
     this.page = 1;
-    this.updateUrlParams(); 
+    this.updateUrlParams();
     this.fetchAllCropGroups(
       this.page,
       this.itemsPerPage,
@@ -216,16 +221,16 @@ export class ViewCropGroupComponent {
   }
 
   clearSearch(): void {
-  this.searchTerm = '';
-  this.page = 1;
-  this.updateUrlParams();
-  this.fetchAllCropGroups(
-    this.page,
-    this.itemsPerPage,
-    this.searchTerm,
-    this.selectedCategory,
-  );
-}
+    this.searchTerm = '';
+    this.page = 1;
+    this.updateUrlParams();
+    this.fetchAllCropGroups(
+      this.page,
+      this.itemsPerPage,
+      this.searchTerm,
+      this.selectedCategory,
+    );
+  }
 
   onPageChange(event: number) {
     this.page = event;
@@ -366,7 +371,7 @@ export class ViewCropGroupComponent {
         page: this.page !== 1 ? this.page : null,
       },
       queryParamsHandling: 'merge',
-      replaceUrl: true, 
+      replaceUrl: true,
     });
   }
 }

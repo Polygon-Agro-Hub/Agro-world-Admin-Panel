@@ -103,31 +103,31 @@ export class ViewPlantcareUsersComponent implements OnInit {
   ];
 
   districtFilter = [
+    { status: 'Ampara', value: 'Ampara' },
+    { status: 'Anuradhapura', value: 'Anuradhapura' },
+    { status: 'Badulla', value: 'Badulla' },
+    { status: 'Batticaloa', value: 'Batticaloa' },
     { status: 'Colombo', value: 'Colombo' },
-    { status: 'Kalutara', value: 'Kalutara' },
-    { status: 'Gampaha', value: 'Gampaha' },
-    { status: 'Kandy', value: 'Kandy' },
-    { status: 'Matale', value: 'Matale' },
-    { status: 'Nuwara Eliya', value: 'Nuwara Eliya' },
     { status: 'Galle', value: 'Galle' },
-    { status: 'Matara', value: 'Matara' },
+    { status: 'Gampaha', value: 'Gampaha' },
     { status: 'Hambantota', value: 'Hambantota' },
     { status: 'Jaffna', value: 'Jaffna' },
-    { status: 'Mannar', value: 'Mannar' },
-    { status: 'Vavuniya', value: 'Vavuniya' },
-    { status: 'Kilinochchi', value: 'Kilinochchi' },
-    { status: 'Mullaitivu', value: 'Mullaitivu' },
-    { status: 'Batticaloa', value: 'Batticaloa' },
-    { status: 'Ampara', value: 'Ampara' },
-    { status: 'Trincomalee', value: 'Trincomalee' },
-    { status: 'Badulla', value: 'Badulla' },
-    { status: 'Moneragala', value: 'Moneragala' },
-    { status: 'Kurunegala', value: 'Kurunegala' },
-    { status: 'Puttalam', value: 'Puttalam' },
-    { status: 'Anuradhapura', value: 'Anuradhapura' },
-    { status: 'Polonnaruwa', value: 'Polonnaruwa' },
-    { status: 'Rathnapura', value: 'Rathnapura' },
+    { status: 'Kalutara', value: 'Kalutara' },
+    { status: 'Kandy', value: 'Kandy' },
     { status: 'Kegalle', value: 'Kegalle' },
+    { status: 'Kilinochchi', value: 'Kilinochchi' },
+    { status: 'Kurunegala', value: 'Kurunegala' },
+    { status: 'Mannar', value: 'Mannar' },
+    { status: 'Matale', value: 'Matale' },
+    { status: 'Matara', value: 'Matara' },
+    { status: 'Moneragala', value: 'Moneragala' },
+    { status: 'Mullaitivu', value: 'Mullaitivu' },
+    { status: 'Nuwara Eliya', value: 'Nuwara Eliya' },
+    { status: 'Polonnaruwa', value: 'Polonnaruwa' },
+    { status: 'Puttalam', value: 'Puttalam' },
+    { status: 'Rathnapura', value: 'Rathnapura' },
+    { status: 'Trincomalee', value: 'Trincomalee' },
+    { status: 'Vavuniya', value: 'Vavuniya' },
   ];
 
   constructor(
@@ -424,7 +424,7 @@ export class ViewPlantcareUsersComponent implements OnInit {
   XLSX.utils.book_append_sheet(wb, ws, 'Template');
 
   // Write to XLSX file
-  XLSX.writeFile(wb, 'bulk_onboarding_template.xlsx');
+  XLSX.writeFile(wb, 'Bulk_Onboarding_Template.xlsx');
 
   this.isLoading = false;
 }

@@ -5,17 +5,17 @@
 </button>
 
 <div class="flex space-x-4">
-  <button *ngIf="permissionService.hasPermission('Download delivery charges') || tokenService.getUserDetails().role === '1'"
+  <button
+    *ngIf="permissionService.hasPermission('Download delivery charges') || tokenService.getUserDetails().role === '1'"
     class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
-    (click)="downloadTemplate()"
-  >
+    (click)="downloadTemplate()">
     <i class="fa-solid fa-download pr-4"></i>
     Download
   </button>
 
-  <button *ngIf="permissionService.hasPermission('Upload delivery charges') || tokenService.getUserDetails().role === '1'"
-  class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
-    (click)="upload()">
+  <button
+    *ngIf="permissionService.hasPermission('Upload delivery charges') || tokenService.getUserDetails().role === '1'"
+    class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center" (click)="upload()">
     <i class="fa-solid fa-arrow-up-from-bracket pr-4"></i>
     Upload
   </button>
@@ -23,7 +23,7 @@
 
 <div
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
-  <div class="pt-5 pr-40 pl-12 pb-5 w-[900px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+  <div class="pt-8 pr-10 pl-12 pb-5 w-[75%] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
@@ -66,29 +66,20 @@
     <div *ngIf="errorMessage" class="text-red-500 mb-4">{{ errorMessage }}</div>
 
     <div class="w-full py-4">
-      <table class="min-w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto">
-        <!-- Conditionally render table headers -->
+      <table class="min-w-full w-[75%] divide-y divide-gray-200 dark:divide-[#4B555A] table-fixed">
         <thead *ngIf="deliveryCharges.length > 0 || isLoading">
           <tr>
-            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
-              No
-            </th>
-            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
-              Province
-            </th>
-            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
-              District
-            </th>
-            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
-              City Name
-            </th>
-            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
-              Charge (Rs.)
-            </th>
-            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
-              Last modified by
-            </th>
-            <th *ngIf="permissionService.hasPermission('Edit delivery charges') || tokenService.getUserDetails().role === '1'" class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center"></th>
+            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left w-[8%]">No</th>
+            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left w-[15%]">Province</th>
+            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left w-[15%]">District</th>
+            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left w-[15%]">City Name</th>
+            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap w-[15%]">
+              Charge (Rs.)</th>
+            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap w-[22%]">Last
+              modified by</th>
+            <th
+              *ngIf="permissionService.hasPermission('Edit delivery charges') || tokenService.getUserDetails().role === '1'"
+              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center w-[10%]"></th>
           </tr>
         </thead>
         <tbody>
@@ -111,7 +102,9 @@
             <td class="px-3 py-3 text-left text-textLight dark:text-textDark">
               {{ data.userName }}
             </td>
-            <td *ngIf="permissionService.hasPermission('Edit delivery charges') || tokenService.getUserDetails().role === '1'" class="px-3 py-3 text-center">
+            <td
+              *ngIf="permissionService.hasPermission('Edit delivery charges') || tokenService.getUserDetails().role === '1'"
+              class="px-3 py-3 text-center">
               <div class="flex justify-center space-x-4">
                 <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]" (click)="openEditModal(data)">
                   <svg fill="currentColor" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
@@ -145,8 +138,8 @@
         </h3>
 
         <form #editForm="ngForm" (ngSubmit)="updateDeliveryCharge()">
-          <div class="mb-4 flex">
-            <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 w-48">
+          <div class="mb-4 flex items-center">
+            <label class="flex-shrink-0 text-sm font-medium text-gray-700 dark:text-gray-300 w-48">
               City Name
             </label>
             <input type="text" [(ngModel)]="editData.city" name="city"
@@ -154,14 +147,13 @@
               readonly />
           </div>
 
-          <div class="mb-6 flex">
-            <label
-              class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 w-48 whitespace-nowrap">
+          <div class="mb-6 flex items-center">
+            <label class="flex-shrink-0 text-sm font-medium text-gray-700 dark:text-gray-300 w-48">
               Delivery Charge (Rs.)
             </label>
             <input type="number" [(ngModel)]="editData.charge" name="charge" step="0.01" min="0"
               (input)="onChargeInput($event)"
-              class="w-full px-3 py-2 border ml-2 border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               required />
           </div>
 

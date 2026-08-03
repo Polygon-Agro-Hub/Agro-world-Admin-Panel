@@ -60,7 +60,7 @@
         </div>
 
         <div class="md:col-span-2 my-3">
-          <label for="specialNotes" class="block text-sm font-medium text-textLight dark:text-textDark">Description (in
+          <label for="specialNotes" class="block text-sm font-medium text-gray-700 dark:text-textDark">Description (in
             English) *</label>
           <textarea id="descriptionEnglish" formControlName="descriptionEnglish"
             (input)="onDescriptionInput($event, 'english')"
@@ -104,7 +104,7 @@
 
         <div class="md:col-span-2 my-3">
           <label for="descriptionSinhala"
-            class="block text-sm font-medium text-textLight dark:text-textDark">Description (in Sinhala) *</label>
+            class="block text-sm font-medium text-gray-700 dark:text-textDark">Description (in Sinhala) *</label>
           <textarea id="descriptionSinhala" formControlName="descriptionSinhala"
             (input)="onDescriptionInput($event, 'sinhala')" name="descriptionSinhala" rows="3"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
@@ -146,7 +146,7 @@
         </div>
 
         <div class="md:col-span-2 my-3">
-          <label for="descriptionTamil" class="block text-sm font-medium text-textLight dark:text-textDark">Description
+          <label for="descriptionTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark">Description
             (in Tamil) *</label>
           <textarea id="descriptionTamil" formControlName="descriptionTamil"
             (input)="onDescriptionInput($event, 'tamil')" name="descriptionTamil" rows="3"
@@ -168,7 +168,7 @@
         <input type="file" id="imageUpload" accept="image/*" class="hidden" (change)="onFileSelected($event)" />
 
         <!-- Button -->
-        <button class="flex items-center text-textLight dark:text-textDark" (click)="triggerFileInput($event)">
+        <button class="flex items-center text-gray-700 dark:text-textDark" (click)="triggerFileInput($event)">
           Add Image *
           <span
             class="flex justify-center items-center w-6 h-6 ml-2 border border-[#4A90E2] rounded text-blue-500 font-bold">
@@ -188,7 +188,7 @@
 
         <!-- Add Background Color -->
         <div class="flex items-center space-x-4">
-          <label for="bgColor" class="block text-sm font-medium text-textLight dark:text-textDark pt-2">Color *</label>
+          <label for="bgColor" class="block text-sm font-medium text-gray-700 dark:text-textDark pt-2">Color *</label>
           <ngx-colors ngx-colors-trigger formControlName="bgColor" (colorChange)="onColorChange($event)"
             style="display: inline-block; margin: 5px">
           </ngx-colors>

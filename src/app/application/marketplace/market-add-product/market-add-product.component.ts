@@ -467,39 +467,59 @@ export class MarketAddProductComponent implements OnInit {
     return;
   }
 
-    // Validate price relationships
-    if (this.productObj.promo) {
-      if (this.productObj.salePrice <= 0) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Invalid Value',
-          text: 'Sale Price must be greater than 0, check the discount you applied',
-          confirmButtonText: 'OK',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold',
-          },
-        });
-        return;
-      }
+    // In your onSubmit() method, replace this section:
 
-      if (
-        this.productObj.displaytype === 'AP&SP' &&
-        this.productObj.salePrice >= this.productObj.normalPrice
-      ) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Invalid Value',
-          text: 'Sale Price must be less than Actual Price',
-          confirmButtonText: 'OK',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold',
-          },
-        });
-        return;
-      }
+// Validate price relationships
+if (this.productObj.promo) {
+  // First validate discount percentage range
+  if (this.productObj.displaytype === 'D&AP' || this.productObj.displaytype === 'AP&SP&D') {
+    if (this.productObj.discountedPrice < 1 || this.productObj.discountedPrice > 99) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Invalid Discount Percentage',
+        text: 'Discount percentage must be between 1% and 99%.',
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        },
+      });
+      return;
     }
+  }
+
+  // Then validate sale price
+  if (this.productObj.salePrice <= 0) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Invalid Value',
+      text: 'Sale Price must be greater than 0, check the discount you applied',
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    });
+    return;
+  }
+
+  if (
+    this.productObj.displaytype === 'AP&SP' &&
+    this.productObj.salePrice >= this.productObj.normalPrice
+  ) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Invalid Value',
+      text: 'Sale Price must be less than Actual Price',
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    });
+    return;
+  }
+}
 
     // Additional validations
     if (this.productObj.startValue <= 0) {

@@ -282,3 +282,17 @@ input[type="date"]:valid::before {
 ::ng-deep .shortage-centre-dropdown {
   width: 100% !important;
 }
+
+::ng-deep .shortage-centre-dropdown .p-dropdown-label {
+  padding: 0.5rem;
+  color: inherit;
+  font-weight: inherit;
+  font-size: inherit;
+}
+
+/* Placeholder should look identical to a selected value — same weight/size/color */
+::ng-deep .shortage-centre-dropdown .p-dropdown-label.p-placeholder {
+  color: inherit;
+  font-weight: inherit;
+  font-size: inherit;
+}

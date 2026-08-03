@@ -47,9 +47,10 @@
         <div class="flex flex-col justify-center">
           <label class="text-[12px] font-normal text-textLight dark:text-textDark mb-1">Select Centre</label>
           <p-dropdown [options]="centres" [(ngModel)]="selectedCentreId" optionLabel="label" optionValue="id"
-            placeholder="--Select Centre--" styleClass="w-full h-10 shortage-centre-dropdown"
-            [panelStyleClass]="'shortage-centre-panel'">
-          </p-dropdown>
+  placeholder="--Select Centre--"
+  styleClass="w-full h-10 shortage-centre-dropdown text-sm font-semibold text-textLight dark:text-textDark"
+  [panelStyleClass]="'shortage-centre-panel'">
+</p-dropdown>
         </div>
 
         <div class="flex flex-col justify-center">

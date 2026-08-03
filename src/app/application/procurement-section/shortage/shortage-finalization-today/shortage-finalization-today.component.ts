@@ -196,4 +196,10 @@ export class ShortageFinalizationTodayComponent implements OnInit {
   formatQty(value: number): string {
   return (Number(value) || 0).toFixed(2);
 }
+
+getCentreNameOnly(dc: DistributionCenterDto | null | undefined): string {
+  if (!dc?.fullName) return '';
+  // Strips a leading reg code like "REG001 - " or "REG001-" or "REG001: "
+  return dc.fullName.replace(/^\s*[A-Za-z0-9-]+\s*[-:]\s*/, '').trim();
+}
 }

@@ -170,11 +170,11 @@
         </h3>
 
         <p class="text-[#292929] dark:text-textDark text-base leading-relaxed mb-6" *ngIf="itemPendingFinalize">
-            Are you sure you want to assign {{ itemPendingFinalize.shortageKg | number:'1.0-2' }} kg of {{ itemPendingFinalize.itemName
-            }}
-            to {{ itemPendingFinalize.selectedDC?.value }}
-            ({{ itemPendingFinalize.selectedDC?.fullName }})?
-        </p>
+    Are you sure you want to assign {{ itemPendingFinalize.shortageKg | number:'1.0-2' }} kg of {{ itemPendingFinalize.itemName
+    }}
+    to {{ itemPendingFinalize.selectedDC?.value }}
+    ({{ getCentreNameOnly(itemPendingFinalize.selectedDC) }})?
+</p>
 
         <div class="flex justify-center gap-4">
             <button

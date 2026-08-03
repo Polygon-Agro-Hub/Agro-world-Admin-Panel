@@ -262,7 +262,7 @@ export class CreateCropGroupComponent {
     }
 
     if (!this.cropGroup.incomeFeild) {
-      errors.push('Please fill the Cost per acre field');
+      errors.push('Please fill the Income per acre field');
     }
 
     if (!this.cropGroup.seedRate) {

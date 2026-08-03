@@ -65,7 +65,12 @@ export class ViewVarietyComponent {
     this.cropCalendarService.getVarietiesByGroup(id).subscribe(
       (data) => {
         this.isLoading = false;
-        this.newCropGroup = data.groups;
+
+        this.newCropGroup = data.groups.sort(
+          (a: NewCropGroup, b: NewCropGroup) =>
+            a.varietyNameEnglish.localeCompare(b.varietyNameEnglish),
+        );
+
         this.hasData = this.newCropGroup.length > 0;
         this.total = this.newCropGroup.length;
       },

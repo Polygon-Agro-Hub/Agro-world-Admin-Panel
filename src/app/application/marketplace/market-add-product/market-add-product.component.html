@@ -138,20 +138,20 @@
     productObj.promo
   ">
         <label class="text-[#534E4E] dark:text-textDark">Discount Percentage *</label>
-        <input type="number" min="0" max="100" step="1" id="discountedPrice" name="discountedPrice"
-  (change)="calculeSalePrice()" (input)="validatePriceInput($event, 'discountedPrice')"
-  (keydown)="preventInvalidChars($event, 'discountedPrice')"
-  [(ngModel)]="productObj.discountedPrice"
-  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-  #discountField="ngModel" required />
-        <div *ngIf="discountField.invalid && discountField.touched" class="text-red-500 text-sm mt-1">
+        <input type="number" min="1" max="99" step="1" id="discountedPrice" name="discountedPrice"
+          (change)="calculeSalePrice()" (input)="validatePriceInput($event, 'discountedPrice')"
+          (keydown)="preventInvalidChars($event, 'discountedPrice')" [(ngModel)]="productObj.discountedPrice"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          #discountField="ngModel" required />
+        <div *ngIf="discountField.errors?.['required'] && discountField.touched" class="text-red-500 text-sm mt-1">
           Discount Percentage is required.
         </div>
-        <div *ngIf="productObj.discountedPrice < 0" class="text-red-500 text-sm mt-1">
-          Discount Percentage cannot be negative.
+        <div *ngIf="discountField.touched && productObj.discountedPrice !== null && productObj.discountedPrice < 1"
+          class="text-red-500 text-sm mt-1">
+          Discount Percentage must be at least 1%.
         </div>
-        <div *ngIf="productObj.discountedPrice > 100" class="text-red-500 text-sm mt-1">
-          Discount Percentage cannot exceed 100%.
+        <div *ngIf="productObj.discountedPrice > 99" class="text-red-500 text-sm mt-1">
+          Discount Percentage cannot exceed 99%.
         </div>
       </div>
 
@@ -172,10 +172,10 @@
           isNoDiscount === true ? "Price Per kg *" : "Actual Price Per kg *"
           }}</label>
         <input type="number" min="0" step="0.01" id="normalPrice" name="normalPrice" (change)="calculeSalePrice()"
-    (input)="validatePriceInput($event, 'normalPrice')" (keydown)="preventInvalidChars($event)"
-    [(ngModel)]="productObj.normalPrice"
-    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-    #normalPriceField="ngModel" required />
+          (input)="validatePriceInput($event, 'normalPrice')" (keydown)="preventInvalidChars($event)"
+          [(ngModel)]="productObj.normalPrice"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          #normalPriceField="ngModel" required />
         <div *ngIf="normalPriceField.invalid && normalPriceField.touched" class="text-red-500 text-sm mt-1">
           Price Per kg is required.
         </div>
@@ -193,9 +193,9 @@
       <div class="mb-6" *ngIf="productObj.promo && productObj.displaytype === 'AP&SP'">
         <label class="text-[#534E4E] dark:text-textDark">Sale Price *</label>
         <input type="number" min="0" step="0.01" id="salePrice" name="salePrice" [(ngModel)]="productObj.salePrice"
-    (change)="calculeSalePrice()" (input)="validatePriceInput($event, 'salePrice')"
-    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-    #salePriceField="ngModel" required />
+          (change)="calculeSalePrice()" (input)="validatePriceInput($event, 'salePrice')"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          #salePriceField="ngModel" required />
         <div *ngIf="salePriceField.invalid && salePriceField.touched" class="text-red-500 text-sm mt-1">
           Sale Price is required.
         </div>
@@ -205,27 +205,19 @@
       </div>
 
       <div class="mb-6">
-  <label class="text-[#534E4E] dark:text-textDark">Competitor Price per kg *</label>
-  <input 
-    type="number" 
-    min="0" 
-    step="0.01" 
-    id="competitorPrice" 
-    name="competitorPrice" 
-    [(ngModel)]="productObj.comPrice"
-    (input)="validatePriceInput($event, 'comPrice')" 
-    (keydown)="preventInvalidChars($event)"
-    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" 
-    #competitorPriceField="ngModel" 
-    required 
-  />
-  <div *ngIf="competitorPriceField.invalid && competitorPriceField.touched" class="text-red-500 text-sm mt-1">
-    Competitor Price is required.
-  </div>
-  <div *ngIf="productObj.comPrice < 0" class="text-red-500 text-sm mt-1">
-    Competitor Price cannot be negative.
-  </div>
-</div>
+        <label class="text-[#534E4E] dark:text-textDark">Competitor Price per kg *</label>
+        <input type="number" min="0" step="0.01" id="competitorPrice" name="competitorPrice"
+          [(ngModel)]="productObj.comPrice" (input)="validatePriceInput($event, 'comPrice')"
+          (keydown)="preventInvalidChars($event)"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          #competitorPriceField="ngModel" required />
+        <div *ngIf="competitorPriceField.invalid && competitorPriceField.touched" class="text-red-500 text-sm mt-1">
+          Competitor Price is required.
+        </div>
+        <div *ngIf="productObj.comPrice < 0" class="text-red-500 text-sm mt-1">
+          Competitor Price cannot be negative.
+        </div>
+      </div>
 
       <div class="border-t border-gray-300 dark:border-gray-600 my-10"></div>
 

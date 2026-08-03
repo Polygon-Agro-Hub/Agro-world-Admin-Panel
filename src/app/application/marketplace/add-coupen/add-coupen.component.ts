@@ -256,7 +256,7 @@ export class AddCoupenComponent {
     const input = event.target as HTMLInputElement;
     let value = input.value;
 
-    const regex = /^\d+(\.\d{0,2})?$/;
+    const regex = field === 'percentage' ? /^\d+$/ : /^\d+(\.\d{0,2})?$/;
 
     if (value === '') {
       this.coupenObj[field] = null!;
@@ -306,10 +306,9 @@ export class AddCoupenComponent {
   }
 
   preventNegative(e: KeyboardEvent) {
-    if (e.key === '-' || e.key === ',') {
+    if (e.key === '-' || e.key === ',' || e.key === '.') {
       e.preventDefault();
     }
-
 
     if (e.ctrlKey && e.key === 'v') {
       setTimeout(() => {

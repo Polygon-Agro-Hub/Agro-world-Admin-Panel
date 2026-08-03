@@ -364,17 +364,16 @@ export class UserBulkUploadComponent {
 
   // Helper method to handle existing users
   private handleExistingUsers(existingUsers: any[]): void {
-    // Convert to UserErrorEntry format
     const errorEntries: UserErrorEntry[] = existingUsers.map((user: any, index: number) => {
       let status = '';
-      if (user.phoneNumber && user.NICnumber) {
+      if (user.phoneExists && user.nicExists) {
         status = 'Phone number & NIC already exists';
-      } else if (user.phoneNumber) {
+      } else if (user.phoneExists) {
         status = 'Phone number already exists';
-      } else if (user.NICnumber) {
+      } else if (user.nicExists) {
         status = 'NIC already exists';
       }
-      
+
       return {
         line: index + 3,
         phone: user.phoneNumber || '',

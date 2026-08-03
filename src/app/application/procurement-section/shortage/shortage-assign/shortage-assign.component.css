@@ -278,3 +278,7 @@ input[type="date"]:valid::before {
 ::ng-deep .dark .shortage-centre-dropdown .p-dropdown-label:not(.p-placeholder) {
   color: #9CA3AF; /* gray-400, dark mode - selected value text */
 }
+
+::ng-deep .shortage-centre-dropdown {
+  width: 100% !important;
+}

@@ -32,36 +32,37 @@
     <div class="p-7" *ngIf="selectedItem.shortageQty > 0">
       <p class="text-[14px] font-medium text-black dark:text-textDark mb-4">To Assign</p>
 
-      <div class="inline-flex items-end gap-6 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-3">
+      <div
+        class="w-fit grid grid-cols-[100px_260px_100px_120px] items-stretch gap-4 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-3">
 
-        <div class="flex flex-col gap-2">
-          <label class="text-[12px] font-normal text-textLight dark:text-textDark">Enter Qty ({{ selectedItem.unit
-            }})</label>
+        <div class="flex flex-col justify-center">
+          <label class="text-[12px] font-normal text-textLight dark:text-textDark mb-1">
+            Enter Qty ({{ selectedItem.unit }})
+          </label>
           <input type="number" min="0" step="0.01" [max]="selectedItem.shortageQty" [(ngModel)]="assignQty"
-  (input)="onQtyInput($event)"
-  class="w-32 h-10 p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-tileBlack text-textLight dark:text-textDark font-semibold text-center" />
+            (input)="onQtyInput($event)"
+            class="w-full h-10 p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-tileBlack text-textLight dark:text-textDark font-semibold text-center" />
         </div>
 
-        <div class="flex flex-col gap-2">
-          <label class="text-[12px] font-normal text-textLight dark:text-textDark">Select Centre</label>
+        <div class="flex flex-col justify-center">
+          <label class="text-[12px] font-normal text-textLight dark:text-textDark mb-1">Select Centre</label>
           <p-dropdown [options]="centres" [(ngModel)]="selectedCentreId" optionLabel="label" optionValue="id"
-            placeholder="--Select Centre--" styleClass="w-56 h-10 shortage-centre-dropdown"
+            placeholder="--Select Centre--" styleClass="w-full h-10 shortage-centre-dropdown"
             [panelStyleClass]="'shortage-centre-panel'">
           </p-dropdown>
         </div>
 
-        <div class="flex flex-col gap-2">
-          <label class="text-[12px] font-normal text-textLight dark:text-textDark text-center">Ceiling (%)</label>
-          <input type="number" min="0" max="100" step="1" [(ngModel)]="ceilingPercent"
-  (input)="onCeilingInput($event)"
-  (keydown)="blockDecimalKey($event)"
-  class="h-10 p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-tileBlack text-textLight dark:text-textDark font-semibold text-center" />
+        <div class="flex flex-col justify-center">
+          <label class="text-[12px] font-normal text-textLight dark:text-textDark mb-1 text-center">Ceiling (%)</label>
+          <input type="number" min="0" max="100" step="1" [(ngModel)]="ceilingPercent" (input)="onCeilingInput($event)"
+            (keydown)="blockDecimalKey($event)"
+            class="w-full h-10 p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-tileBlack text-textLight dark:text-textDark font-semibold text-center" />
         </div>
 
-        <div class="flex flex-col gap-2">
+        <div class="flex flex-col justify-center">
           <button (click)="onAssign()" [disabled]="!canAssign"
-            class="h-16 px-8 rounded-md font-medium text-white transition-colors flex items-center justify-center" [class.bg-[#C1C1C1]]="!canAssign"
-            [class.cursor-not-allowed]="!canAssign" [class.bg-[#3980C0]]="canAssign"
+            class="w-full h-full rounded-md font-medium text-white transition-colors flex items-center justify-center"
+            [class.bg-[#C1C1C1]]="!canAssign" [class.cursor-not-allowed]="!canAssign" [class.bg-[#3980C0]]="canAssign"
             [class.hover:bg-[#316ba8]]="canAssign">
             Assign
           </button>
@@ -102,7 +103,8 @@
 
           <div class="flex flex-col justify-center">
             <div class="mt-1 flex items-center justify-center">
-              <span class="border-2  border-[#3980C0] text-[#3980C0] font-medium text-sm px-6 py-3.5 rounded-md whitespace-nowrap">
+              <span
+                class="border-2  border-[#3980C0] text-[#3980C0] font-medium text-sm px-6 py-3.5 rounded-md whitespace-nowrap">
                 Assigned
               </span>
             </div>

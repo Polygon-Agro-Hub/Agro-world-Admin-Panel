@@ -192,4 +192,8 @@ export class ShortageFinalizationTodayComponent implements OnInit {
   goBack() {
     window.history.back();
   }
+
+  formatQty(value: number): string {
+  return (Number(value) || 0).toFixed(2);
+}
 }

@@ -40,7 +40,7 @@ export class DistributionFinanceComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/finance/action/distribution-finance']);
+    this.router.navigate(['/finance/action']);
   }
 
   togglePopupShortagePurchases() {

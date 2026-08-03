@@ -9,14 +9,14 @@
   <div class="bg-white dark:bg-tileBlack shadow-lg rounded-lg relative p-8">
     <div class="flex items-center mb-8 flex-wrap gap-6">
       <div class="flex items-center whitespace-nowrap">
-        <h2 class="text-2xl font-normal text-[#292929] dark:text-textDark">
-          Shortage History
+        <h2 class="text-[20px] font-normal text-[#292929] dark:text-textDark">
+          Shortage History  ({{ getTotalRecords() }})
         </h2>
-        <span
+        <!-- <span
           class="ml-2 mr-5 font-normal text-2xl text-[#292929] dark:text-white"
         >
           ({{ getTotalRecords() }})
-        </span>
+        </span> -->
       </div>
       <div class="flex items-center flex-wrap gap-5">
         <i class="ml-5 w-5 h-5 fill-current text-[#4A4A4A]">
@@ -42,6 +42,7 @@
             placeholder="Select Date"
             [readonlyInput]="true"
             [showClear]="true"
+            [maxDate]="maxSelectableDate"
             [style]="{ width: '12rem', height: '2rem' }"
             inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#FFFFFF] dark:bg-[#272F45]"
             panelStyleClass="custom-calendar-panel"

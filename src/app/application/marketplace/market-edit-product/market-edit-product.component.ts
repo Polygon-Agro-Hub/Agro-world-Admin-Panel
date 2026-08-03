@@ -171,6 +171,23 @@ export class MarketEditProductComponent implements OnInit {
       this.productObj = res;
       this.productObj.productTypeId = res.productTypeId;
 
+      // Ensure the assigned Product Type shows even if it's currently disabled
+      const existsInOptions = this.productTypeOptions.some(
+        (pt) => pt.value === res.productTypeId
+      );
+
+      if (!existsInOptions && res.productTypeId) {
+        this.productTypeOptions = [
+          ...this.productTypeOptions,
+          {
+            label: res.productTypeName
+              ? `${res.productTypeName}`
+              : 'Unknown Product Type',
+            value: res.productTypeId,
+          },
+        ].sort((a, b) => a.label.localeCompare(b.label));
+      }
+
       // Ensure quantity fields retain their original decimal places
       this.productObj.startValue = parseFloat(res.startValue);
       this.productObj.changeby = parseFloat(res.changeby);
@@ -182,15 +199,14 @@ export class MarketEditProductComponent implements OnInit {
       this.selectedImage = res.image;
       this.templateKeywords.update(() => res.tags || []);
       this.productObj.promo = !!res.promo;
-      this.isNoDiscount = !this.productObj.promo;   // <-- add this line
+      this.isNoDiscount = !this.productObj.promo;
       this.onCropChange();
       this.productObj.varietyId = res.varietyId;
       this.selectVerityImage();
       this.calculeSalePrice();
-
-      console.log('Start value from DB:', this.productObj.startValue); // Should show 1.5, not 1.500
     });
   }
+
   getAllCropVerity() {
     this.marketSrv.getCropVerity().subscribe(
       (res) => {
@@ -341,6 +357,30 @@ export class MarketEditProductComponent implements OnInit {
         confirmButtonText: 'OK',
       });
       return;
+    }
+
+    if (
+      this.productObj.promo &&
+      (this.productObj.displaytype === 'D&AP' ||
+        this.productObj.displaytype === 'AP&SP&D')
+    ) {
+      if (
+        !this.productObj.discountedPrice ||
+        this.productObj.discountedPrice < 1 ||
+        this.productObj.discountedPrice > 99
+      ) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Validation Error',
+          text: 'Discount Percentage must be between 1% and 99%.',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+          },
+          confirmButtonText: 'OK',
+      });
+        return;
+      }
     }
 
     const emptyFields: string[] = [];
@@ -815,9 +855,9 @@ if (this.productObj.comPrice <= salePriceForComparison) {
   switch (fieldName) {
     case 'discountedPrice':
       this.productObj.discountedPrice = value;
-      if (value > 100) {
-        this.productObj.discountedPrice = 100;
-        input.value = '100';
+      if (value > 99) {
+        this.productObj.discountedPrice = 99;
+        input.value = '99';
       }
       break;
     case 'normalPrice':

@@ -20,7 +20,7 @@
             *</label>
           <p-dropdown [options]="groupList" formControlName="groupId" optionLabel="cropNameEnglish" optionValue="id"
             [filter]="true" filterPlaceholder="Search crop..." placeholder="Select a crop" [showClear]="true"
-            class="w-full mt-2 text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+            class="w-full mt-2 text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack crop-group-dropdown" />
 
           <div *ngIf="
               cropForm.get('groupId')!.invalid &&

@@ -65,7 +65,7 @@
           <textarea id="descriptionEnglish" formControlName="descriptionEnglish"
             (input)="onDescriptionInput($event, 'english')"
             (keypress)="preventInvalidEnglishAlphanumericCharacters($event)" name="descriptionEnglish" rows="3"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-[#000000] dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
           <div *ngIf="
       cropForm.get('descriptionEnglish')!.invalid &&
       (cropForm.get('descriptionEnglish')!.dirty ||
@@ -107,7 +107,7 @@
             class="block text-sm font-medium text-gray-700 dark:text-textDark">Description (in Sinhala) *</label>
           <textarea id="descriptionSinhala" formControlName="descriptionSinhala"
             (input)="onDescriptionInput($event, 'sinhala')" name="descriptionSinhala" rows="3"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-[#000000] dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
           <div *ngIf="
       cropForm.get('descriptionSinhala')!.invalid &&
       (cropForm.get('descriptionSinhala')!.dirty ||
@@ -150,7 +150,7 @@
             (in Tamil) *</label>
           <textarea id="descriptionTamil" formControlName="descriptionTamil"
             (input)="onDescriptionInput($event, 'tamil')" name="descriptionTamil" rows="3"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-[#000000] dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
           <div *ngIf="
       cropForm.get('descriptionTamil')!.invalid &&
       (cropForm.get('descriptionTamil')!.dirty ||

@@ -119,3 +119,7 @@
   height: 1.5rem !important;
   line-height: 1.5rem !important;
 }
+
+::ng-deep .p-dropdown .p-dropdown-label.p-placeholder {
+    color: #4A4A4A !important;
+}

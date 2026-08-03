@@ -59,11 +59,13 @@
                     </div>
 
                     <!-- Distribution Center Dropdown -->
-                    <div class="w-64 shrink-0">
-                        <p-dropdown [options]="item.distributionCenters" [(ngModel)]="item.selectedDC"
-                            optionLabel="label" placeholder="Select Distribution Centre" styleClass="w-full">
-                        </p-dropdown>
-                    </div>
+<div class="w-52 shrink-0 mr-3">
+    <p-dropdown [options]="item.distributionCenters" [(ngModel)]="item.selectedDC"
+        optionLabel="label" placeholder="Select Distribution Centre"
+        styleClass="w-full h-10 shortage-centre-dropdown text-sm font-semibold text-textLight dark:text-textDark"
+        [panelStyleClass]="'shortage-centre-panel'">
+    </p-dropdown>
+</div>
 
                     <!-- Market Price -->
                     <div class="w-32 shrink-0">

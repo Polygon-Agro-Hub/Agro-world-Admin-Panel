@@ -528,3 +528,44 @@
 ::ng-deep .dark .p-multiselect .p-multiselect-label:not(.p-placeholder) {
     color: white;
 }
+/* Force black text on ALL multiselect dropdowns, light and dark mode */
+
+/* Closed/collapsed field label + placeholder */
+::ng-deep .p-multiselect .p-multiselect-label,
+::ng-deep .p-multiselect .p-multiselect-label.p-placeholder,
+::ng-deep .p-multiselect .p-multiselect-label:not(.p-placeholder),
+::ng-deep .dark .p-multiselect .p-multiselect-label,
+::ng-deep .dark .p-multiselect .p-multiselect-label.p-placeholder,
+::ng-deep .dark .p-multiselect .p-multiselect-label:not(.p-placeholder) {
+    color: #000000 !important;
+}
+
+/* Dropdown trigger icon (arrow) */
+::ng-deep .p-multiselect .p-multiselect-trigger-icon,
+::ng-deep .dark .p-multiselect .p-multiselect-trigger-icon {
+    color: #000000 !important;
+}
+
+/* Panel list items (unselected) */
+::ng-deep .p-multiselect-item,
+::ng-deep .dark .p-multiselect-item {
+    color: #000000 !important;
+}
+
+/* Panel list items (selected/highlighted) */
+::ng-deep .p-multiselect-item.p-highlight,
+::ng-deep .dark .p-multiselect-item.p-highlight {
+    color: #000000 !important;
+}
+
+/* Filter input text inside panel */
+::ng-deep .p-multiselect-filter,
+::ng-deep .dark .p-multiselect-filter {
+    color: #000000 !important;
+}
+
+/* Header/select-all label inside panel, if present */
+::ng-deep .p-multiselect-header,
+::ng-deep .dark .p-multiselect-header {
+    color: #000000 !important;
+}

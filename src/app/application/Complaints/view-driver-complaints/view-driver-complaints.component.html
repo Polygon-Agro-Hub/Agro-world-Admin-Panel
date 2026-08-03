@@ -211,9 +211,8 @@
 
                             <div *ngIf="item.reply != null">
                                 <button class="w-5 h-5 text-blue-500 hover:text-blue-700"
-                                    (click)="fetchComplain(item.id, item.language === 'Sinhala' ? item.officerNameSinhala : item.language === 'Tamil' ? item.officerNameTamil : item.officerName, item.language)">
-                                    <img src="assets/icons/viewreply.png" alt="View Reply"
-                                        class="w-6 h-6 inline-block" />
+                                (click)="fetchComplain(item, item.language === 'Sinhala' ? item.officerNameSinhala : item.language === 'Tamil' ? item.officerNameTamil : item.officerName, item.language)">
+                                <img src="assets/icons/viewreply.png" alt="View Reply" class="w-6 h-6 inline-block" />
                                 </button>
                             </div>
                         </td>

@@ -1,0 +1,5 @@
+<div class="socket-status" [class.connected]="isConnected" [class.disconnected]="!isConnected">
+      <span class="status-dot"></span>
+      <span class="status-text">{{ statusText }}</span>
+      <span *ngIf="socketId" class="socket-id">ID: {{ socketId }}</span>
+    </div>

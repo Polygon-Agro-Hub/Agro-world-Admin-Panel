@@ -1,6 +1,6 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, ViewChild, ElementRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { MarketPlaceService } from '../../../services/market-place/market-place.service';
@@ -30,6 +30,13 @@ import { DropdownModule } from 'primeng/dropdown';
   styleUrl: './market-edit-product.component.css',
 })
 export class MarketEditProductComponent implements OnInit {
+  // References to the editable Sale Price and Competitor Price inputs so we
+  // can force a 2-decimal display right after data loads (Angular's number
+  // input strips trailing zeros unless we intervene, same as formatPrice()
+  // does on blur).
+  @ViewChild('comPriceInput') comPriceInputRef?: ElementRef<HTMLInputElement>;
+  @ViewChild('salePriceInput') salePriceInputRef?: ElementRef<HTMLInputElement>;
+
   readonly templateKeywords = signal<string[]>([]);
   announcer = inject(LiveAnnouncer);
   productObj: MarketPrice = new MarketPrice();
@@ -90,13 +97,6 @@ export class MarketEditProductComponent implements OnInit {
     });
   }
 
-  // ngOnInit(): void {
-  //   this.productId = this.route.snapshot.params['id'];
-  //   this.getAllCropVerity();
-  //   this.calculeSalePrice();
-  //   this.getProduct();
-  // }
-
   ngOnInit(): void {
     this.productId = this.route.snapshot.params['id'];
 
@@ -138,31 +138,6 @@ export class MarketEditProductComponent implements OnInit {
       event.preventDefault();
     }
   }
-
-  // getProduct() {
-  //   this.marketSrv.getProductById(this.productId).subscribe((res) => {
-  //     console.log('product:', res);
-  //     this.storedDisplayType = res.displaytype;
-  //     this.productObj = res;
-  //     console.log('this is product', this.productObj);
-  //     this.storedDisplayType;
-  //     this.productObj.selectId = res.cropGroupId;
-  //     this.selectedImage = res.image;
-  //     this.onCropChange();
-  //     // this.productObj.varietyId = res.cropId;
-  //     console.log('this is variety ID', this.productObj.varietyId);
-  //     this.templateKeywords.update(() => res.tags || []);
-  //     this.calculeSalePrice();
-  //     if (res.promo) {
-  //       this.productObj.promo = true;
-  //     } else {
-  //       this.productObj.promo = false;
-  //     }
-  //     console.log("--------------verityes------------------");
-  //     console.log(this.selectedVarieties);
-
-  //   });
-  // }
 
   getProduct() {
     this.marketSrv.getProductById(this.productId).subscribe((res) => {
@@ -211,6 +186,25 @@ export class MarketEditProductComponent implements OnInit {
       this.productObj.varietyId = res.varietyId;
       this.selectVerityImage();
       this.calculeSalePrice();
+
+      // 🔧 FIX: Sale Price and Competitor Price should always display two
+      // decimal places. Angular's number input strips trailing zeros on
+      // render, so we force the DOM value after the view updates. A
+      // setTimeout(0) pushes this to the next tick, after Angular has
+      // finished writing the initial ngModel value into the input.
+      setTimeout(() => {
+        if (this.comPriceInputRef?.nativeElement) {
+          this.comPriceInputRef.nativeElement.value =
+            this.productObj.comPrice.toFixed(2);
+        }
+        if (
+          this.salePriceInputRef?.nativeElement &&
+          this.productObj.displaytype === 'AP&SP'
+        ) {
+          this.salePriceInputRef.nativeElement.value =
+            this.productObj.salePrice.toFixed(2);
+        }
+      });
     });
   }
 
@@ -225,24 +219,6 @@ export class MarketEditProductComponent implements OnInit {
       },
     );
   }
-
-  // onCropChange() {
-  //   console.log("oncropCange", this.productObj.selectId);
-
-  //   const sample = this.cropsObj.filter(
-  //     (crop) => crop.cropId === +this.productObj.selectId
-  //   );
-
-  //   console.log('Filtered crops:', sample);
-
-  //   if (sample.length > 0) {
-  //     this.selectedVarieties = sample[0].variety;
-  //     console.log('Selected crop varieties:', this.selectedVarieties);
-  //     this.isVerityVisible = true;
-  //   } else {
-  //     console.log('No crop found with selectId:', this.productObj.selectId);
-  //   }
-  // }
 
   onCropChange() {
     console.log('onCropChange selectId:', this.productObj.selectId);
@@ -263,22 +239,6 @@ export class MarketEditProductComponent implements OnInit {
     this.selectVerityImage();
   }
 
-  // selectVerityImage() {
-  //   if (!this.productObj.varietyId) {
-  //     this.selectedImage = null;
-  //     return;
-  //   }
-
-  //   // Find the selected variety object
-  //   const selectedVariety = this.selectedVarieties.find(
-  //     (v) => v.id === Number(this.productObj.varietyId)
-  //   );
-
-  //   // Map image if found
-  //   this.selectedImage = selectedVariety ? selectedVariety.image : null;
-  //   console.log("Selected Image:", this.selectedImage);
-  // }
-
   selectVerityImage() {
     if (!this.productObj.varietyId) {
       this.selectedImage = null;
@@ -292,15 +252,6 @@ export class MarketEditProductComponent implements OnInit {
     this.selectedImage = selectedVariety ? selectedVariety.image : null;
     console.log('Selected Image:', this.selectedImage);
   }
-
-  // calculeSalePrice() {
-  //   this.productObj.discount =
-  //     (this.productObj.normalPrice * this.productObj.discountedPrice) / 100;
-  //   this.productObj.salePrice =
-  //     this.productObj.normalPrice -
-  //     (this.productObj.normalPrice * this.productObj.discountedPrice) / 100;
-  //   console.log(this.productObj.salePrice);
-  // }
 
   onCancel() {
     console.log('pob', this.productObj);
@@ -330,10 +281,6 @@ export class MarketEditProductComponent implements OnInit {
   navigatePath(path: string) {
     this.router.navigate([path]);
   }
-
-  // private updateTags() {
-  //   this.productObj.tags = this.templateKeywords().join(', ');
-  // }
 
   getCompetitorPriceError(): string {
     const comPrice = parseFloat(this.productObj.comPrice?.toString() || '0');
@@ -599,13 +546,6 @@ if (this.productObj.comPrice <= salePriceForComparison) {
         this.productObj.normalPrice - this.productObj.discount;
     }
   }
-
-  // changeType() {
-  //   this.productObj.normalPrice = 0;
-  //   this.productObj.salePrice = 0;
-  //   this.productObj.discountedPrice = 0;
-  //   this.productObj.discountedPrice = 0;
-  // }
 
   validateChangeBy() {
     if (this.productObj.changeby < 0) {

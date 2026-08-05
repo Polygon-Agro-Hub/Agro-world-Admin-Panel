@@ -312,4 +312,59 @@ export class PlantcareUsersService {
     let url = `${this.apiUrl}auth/delete-farm-staff/${id}`;
     return this.http.delete<any>(url, { headers });
   }
+
+  getAllBlockWords(page: number = 1, limit: number = 18, search: string = ''): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`
+  });
+
+  let url = `${this.apiUrl}auth/block-words?page=${page}&limit=${limit}`;
+  if (search) {
+    url += `&search=${encodeURIComponent(search)}`;
+  }
+
+  return this.http.get<any>(url, { headers });
+}
+
+// Add a new block word
+addBlockWord(word: string): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json'
+  });
+
+  return this.http.post<any>(
+    `${this.apiUrl}auth/block-words`,
+    { word },
+    { headers }
+  );
+}
+
+// Delete a block word
+deleteBlockWord(id: number): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`
+  });
+
+  return this.http.delete<any>(
+    `${this.apiUrl}auth/block-words/${id}`,
+    { headers }
+  );
+}
+
+// Delete multiple block words
+deleteMultipleBlockWords(ids: number[]): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json'
+  });
+
+  return this.http.delete<any>(
+    `${this.apiUrl}auth/block-words`,
+    { 
+      headers,
+      body: { ids }
+    }
+  );
+}
 }

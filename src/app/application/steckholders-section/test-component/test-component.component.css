@@ -1,0 +1,33 @@
+   .socket-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .connected {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+    .disconnected {
+      background: #ffebee;
+      color: #c62828;
+    }
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .connected .status-dot {
+      background: #4caf50;
+    }
+    .disconnected .status-dot {
+      background: #f44336;
+    }
+    .socket-id {
+      font-size: 12px;
+      opacity: 0.7;
+    }

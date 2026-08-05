@@ -310,6 +310,7 @@ import { ShortageFinalizationTodayComponent } from './application/procurement-se
 import { DistributionFinanceComponent } from './application/finance/distribution-finance-acion/distribution-finance/distribution-finance.component';
 import { ViewSubmissionsComponent } from './application/finance/distribution-finance-acion/view-submissions/view-submissions.component';
 import { ViewSubmissionDocumentComponent } from './application/finance/distribution-finance-acion/view-submission-document/view-submission-document.component';
+import { TestComponentComponent } from './application/steckholders-section/test-component/test-component.component';
 
 export const routes: Routes = [
   {
@@ -319,6 +320,7 @@ export const routes: Routes = [
   },
 
   { path: 'login', component: LoginComponent },
+  { path: 'test', component: TestComponentComponent },
 
   { path: 'status-451', component: Status451Component },
   { path: 'forgot-password', component: ForgotPasswordComponent },

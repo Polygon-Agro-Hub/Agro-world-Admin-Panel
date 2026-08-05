@@ -437,53 +437,64 @@ export class FinalinvoiceService {
       yPosition + 5,
     );
     yPosition += 10;
-
+ 
     if (
       invoice.deliveryMethod?.toLowerCase() === 'pickup' &&
       invoice.pickupInfo
     ) {
       // Add space before Pickup Center
       yPosition += 5;
-
+ 
       doc.setFont('helvetica', 'bold');
-      const pickupLabel = 'Centre:';
+      const pickupLabel = 'Centre :';
       doc.text(pickupLabel, 15, yPosition);
-
+ 
       // Calculate position for center name with small space
       const centerName = invoice.pickupInfo.centerName || '';
       const spaceWidth = 2; // Small space in mm
       const centerNameX = 15 + doc.getTextWidth(pickupLabel) + spaceWidth;
-
+ 
       doc.setFont('helvetica', 'bold');
       doc.text(centerName, centerNameX, yPosition);
-
-      // Build two separate address lines: City/District, then Province/Country
-      const cityDistrictLine = [
-        invoice.pickupInfo.address?.city || '',
-        invoice.pickupInfo.address?.district || '',
-      ]
-        .filter((part) => part)
-        .join(', ');
-
-      const provinceCountryLine = [
-        invoice.pickupInfo.address?.province || '',
-        invoice.pickupInfo.address?.country || '',
-      ]
-        .filter((part) => part)
-        .join(', ');
-
-      doc.setFont('helvetica', 'normal');
-
+ 
       let addressY = yPosition + 5;
-      if (cityDistrictLine) {
-        doc.text(cityDistrictLine, 15, addressY);
-        addressY += 5;
-      }
-      if (provinceCountryLine) {
-        doc.text(provinceCountryLine, 15, addressY);
-        addressY += 5;
-      }
 
+      const addressLines: Array<{ label: string; value: string }> = [];
+ 
+      if (invoice.pickupInfo.address?.city) {
+        addressLines.push({
+          label: 'City :',
+          value: invoice.pickupInfo.address.city,
+        });
+      }
+      if (invoice.pickupInfo.address?.district) {
+        addressLines.push({
+          label: 'District :',
+          value: invoice.pickupInfo.address.district,
+        });
+      }
+      if (invoice.pickupInfo.address?.province) {
+        addressLines.push({
+          label: 'Province :',
+          value: invoice.pickupInfo.address.province,
+        });
+      }
+ 
+      addressLines.forEach(({ label, value }) => {
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(146, 146, 146); // #929292
+        doc.text(label, 15, addressY);
+ 
+        const labelWidth = doc.getTextWidth(label);
+        doc.setTextColor(0, 0, 0);
+        doc.text(value, 15 + labelWidth + spaceWidth, addressY);
+ 
+        addressY += 5;
+      });
+ 
+      // Reset to black for anything rendered after this block
+      doc.setTextColor(0, 0, 0);
+ 
       yPosition = addressY + 10;
     }
 
@@ -1127,13 +1138,37 @@ export class FinalinvoiceService {
     yPosition += 15;
     doc.setTextColor(128, 128, 128);
     doc.setFontSize(8);
+    doc.setFont('helvetica', 'italic');
     doc.text(
       '- THIS IS A COMPUTER GENERATED INVOICE, THUS NO SIGNATURE REQUIRED -',
       105,
       yPosition,
       { align: 'center' },
     );
-
+ 
+    yPosition += 5;
+ 
+    const now = new Date();
+    const generatedTime = now.toLocaleTimeString('en-US', {
+      timeZone: 'Asia/Colombo',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    });
+    const generatedDate = now.toLocaleDateString('en-US', {
+      timeZone: 'Asia/Colombo',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+ 
+    doc.text(
+      `- GENERATED AT : ${generatedTime}, ${generatedDate} -`,
+      105,
+      yPosition,
+      { align: 'center' },
+    );
+    
     // Save the PDF
     doc.save(`Pre_Invoice_${invoice.invoiceNumber || 'unknown'}.pdf`);
   }

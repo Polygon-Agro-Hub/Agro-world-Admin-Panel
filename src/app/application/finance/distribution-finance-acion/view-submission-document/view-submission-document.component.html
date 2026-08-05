@@ -43,7 +43,7 @@
         <div class="flex gap-4">
             <!-- Approve Button -->
             <button *ngIf="transactionDocument.reqStatus === 'Pending'" (click)="openApprovePopup()"
-                class="px-8 py-2 bg-[#3980C0] text-white font-medium rounded-md transition-colors duration-200 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#3980C0]">
+                class="px-8 py-2 bg-[#3980C0] text-white font-medium rounded-md transition-colors duration-200 shadow-md disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#3980C0]">
                 Finalize
             </button>
         </div>
@@ -55,7 +55,7 @@
         <!-- Tab Navigation with Arrows -->
         <div class="flex items-center justify-start gap-4 pb-4 px-6 border-b border-gray-200">
             <span class="text-base font-inter font-[500] text-gray-900 dark:text-white">
-                Payment Slip
+                Invoice
             </span>
         </div>
 

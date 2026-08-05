@@ -61,17 +61,9 @@ export class ViewSubmissionsComponent implements OnInit {
     private router: Router,
     private location: Location,
     private financeService: FinanceService,
-    private paginationService: PaginationService,
   ) {}
 
   ngOnInit(): void {
-    this.paginationService.register({
-      id: this.paginationId,
-      itemsPerPage: this.itemsPerPage,
-      currentPage: this.page,
-      totalItems: this.totalItems,
-    });
-
     this.fetchSubmissions();
   }
 
@@ -94,11 +86,6 @@ export class ViewSubmissionsComponent implements OnInit {
             this.mapToSubmission(item),
           );
           this.totalItems = res.total || 0;
-
-          this.paginationService.setCurrentPage(this.paginationId, this.page);
-          this.paginationService['instances'][this.paginationId].totalItems =
-            this.totalItems;
-
           this.isLoading = false;
         },
         error: (err) => {

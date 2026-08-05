@@ -195,6 +195,13 @@ export class MarketEditProductComponent implements OnInit {
         this.productObj.maxQuantity = parseFloat(res.maxQuantity);
       }
       this.productObj.comPrice = parseFloat(res.comPrice) || 0;
+
+      // 🔧 FIX: force discountedPrice to a plain integer so it doesn't
+      // render as "10.00" when the API returns it as a decimal/string
+      this.productObj.discountedPrice = res.discountedPrice
+        ? parseInt(res.discountedPrice, 10)
+        : 0;
+
       this.productObj.selectId = res.cropGroupId;
       this.selectedImage = res.image;
       this.templateKeywords.update(() => res.tags || []);

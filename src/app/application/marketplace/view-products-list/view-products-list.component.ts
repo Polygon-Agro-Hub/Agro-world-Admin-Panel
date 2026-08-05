@@ -387,4 +387,5 @@ class ProductList {
   productTypeShortCode!: string;
   modifyBy!: string;
   isEnable!: number;
+  productTypeIsValid!: number;
 }

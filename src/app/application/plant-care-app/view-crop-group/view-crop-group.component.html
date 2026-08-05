@@ -186,7 +186,9 @@
               Variety Names
             </th>
 
-            <th class="px-4 py-3 font-normal"></th>
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">
+              Add Variety
+            </th>
             <th class="px-4 py-3 font-normal"></th>
             <th class="px-4 py-3 font-normal"></th>
             <th class="px-4 py-3 font-normal"></th>
@@ -278,7 +280,7 @@
               </div>
               <div *ngIf="item.varietyList.length === 0">No Varieties Yet</div>
             </td>
-            <td class="py-3 px-2 dark:text-textDark text-center">
+            <td class="py-4 px-2 dark:text-textDark flex justify-center text-center">
               <button
                 *ngIf="
                   permissionService.hasPermission('Add varieties') ||
@@ -291,7 +293,7 @@
               </button>
             </td>
 
-              <td class="py-3 px-2 dark:text-textDark text-center">
+              <td class="py-4 px-2 dark:text-textDark text-center">
               <button
                 *ngIf="
                   permissionService.hasPermission(
@@ -319,7 +321,7 @@
 
           
 
-            <td class="py-3 px-2 dark:text-textDark text-center">
+            <td class="py-4 px-2 dark:text-textDark text-center">
               <button
                 *ngIf="
                   permissionService.hasPermission('Edit crop group') ||
@@ -341,7 +343,7 @@
               </button>
             </td>
 
-            <td class="py-3 px-2 dark:text-textDark text-center">
+            <td class="py-4 px-2 dark:text-textDark text-center">
               <button
                 *ngIf="
                   permissionService.hasPermission('Delete crop group') ||

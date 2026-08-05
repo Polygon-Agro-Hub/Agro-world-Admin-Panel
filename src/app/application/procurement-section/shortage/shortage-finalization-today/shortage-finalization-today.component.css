@@ -226,3 +226,34 @@ input[type="date"]:valid::before {
   align-items: center !important;
   gap: 8px !important; /* Space between month and year */
 }
+
+::ng-deep .shortage-centre-dropdown {
+  border-radius: 0.375rem;
+  border: 1px solid #d1d5db;
+  background-color: #f9fafb;
+  display: flex;
+  align-items: center;
+  width: 100% !important;
+}
+
+:host-context(.dark) ::ng-deep .shortage-centre-dropdown {
+  background-color: var(--tileBlack, #1f1f1f);
+  border-color: #4b5563;
+}
+
+::ng-deep .shortage-centre-dropdown .p-dropdown-label {
+  padding: 0.5rem;
+  color: inherit;
+  font-weight: inherit;
+  font-size: inherit;
+}
+
+::ng-deep .shortage-centre-dropdown .p-dropdown-label.p-placeholder {
+  color: inherit;
+  font-weight: inherit;
+  font-size: inherit;
+}
+
+::ng-deep .shortage-centre-panel .p-dropdown-items .p-dropdown-item {
+  padding: 0.5rem 0.75rem;
+}

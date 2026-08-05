@@ -15,11 +15,11 @@
 <!-- Container -->
 <div
     class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
-    <div class="pt-5 pr-8 pl-8 pb-5 min-w-max bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+    <div class="pt-5 pr-8 pl-8 pb-5 min-w-max min-h-[80vh] bg-tileLight dark:bg-tileBlack rounded-lg">
 
         <!-- Header -->
         <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-normal text-[#292929] dark:text-textDark whitespace-nowrap">
+            <h2 class="text-[16px] font-normal text-[#292929] dark:text-textDark whitespace-nowrap">
                 Shortage Today Finalization ({{ shortageItems.length | number:'2.0' }})
             </h2>
         </div>
@@ -33,7 +33,7 @@
 
         <!-- To Finalize Section -->
         <div *ngIf="toFinalizeList.length > 0" class="mb-8">
-            <h3 class="text-lg font-medium text-[#292929] dark:text-textDark mb-3">
+            <h3 class="text-[16px] font-medium text-[#292929] dark:text-textDark mb-3">
                 To Finalize ({{ toFinalizeList.length | number:'2.0' }})
             </h3>
 
@@ -51,19 +51,21 @@
                     <!-- Shortage Badge -->
                     <div class="w-28 shrink-0">
                         <div
-                            class="inline-block min-w-[75px] text-center bg-[#FEF7EF] dark:bg-[#4A3B2A] px-4 py-2 rounded-lg">
-                            <div class="text-xs text-[#000000] dark:text-textDark mb-1">Shortage</div>
-                            <div class="text-[#000000] dark:text-textDark text-base font-bold text-left">{{ item.shortageKg }} kg
-                            </div>
-                        </div>
+    class="inline-block min-w-[75px] text-left bg-[#FEF7EF] dark:bg-[#4A3B2A] px-4 py-2 rounded-lg">
+    <div class="text-xs text-[#000000] dark:text-textDark mb-1">Shortage</div>
+    <div class="text-[#000000] dark:text-textDark text-base font-bold text-left">{{ item.shortageKg | number:'1.0-2' }} kg
+    </div>
+</div>
                     </div>
 
                     <!-- Distribution Center Dropdown -->
-                    <div class="w-64 shrink-0">
-                        <p-dropdown [options]="item.distributionCenters" [(ngModel)]="item.selectedDC"
-                            optionLabel="label" placeholder="Select Distribution Centre" styleClass="w-full">
-                        </p-dropdown>
-                    </div>
+<div class="w-52 shrink-0 mr-3">
+    <p-dropdown [options]="item.distributionCenters" [(ngModel)]="item.selectedDC"
+        optionLabel="label" placeholder="Select Distribution Centre"
+        styleClass="w-full h-10 shortage-centre-dropdown text-sm font-semibold text-textLight dark:text-textDark"
+        [panelStyleClass]="'shortage-centre-panel'">
+    </p-dropdown>
+</div>
 
                     <!-- Market Price -->
                     <div class="w-32 shrink-0">
@@ -168,11 +170,11 @@
         </h3>
 
         <p class="text-[#292929] dark:text-textDark text-base leading-relaxed mb-6" *ngIf="itemPendingFinalize">
-            Are you sure you want to assign {{ itemPendingFinalize.shortageKg }} kg of {{ itemPendingFinalize.itemName
-            }}
-            to {{ itemPendingFinalize.selectedDC?.value }}
-            ({{ itemPendingFinalize.selectedDC?.fullName }})?
-        </p>
+    Are you sure you want to assign {{ itemPendingFinalize.shortageKg | number:'1.0-2' }} kg of {{ itemPendingFinalize.itemName
+    }}
+    to {{ itemPendingFinalize.selectedDC?.value }}
+    ({{ getCentreNameOnly(itemPendingFinalize.selectedDC) }})?
+</p>
 
         <div class="flex justify-center gap-4">
             <button

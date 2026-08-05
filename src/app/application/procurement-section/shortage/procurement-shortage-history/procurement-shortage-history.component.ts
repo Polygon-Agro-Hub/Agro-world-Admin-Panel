@@ -39,6 +39,7 @@ export class ProcurementShortageHistoryComponent implements OnInit {
   assignedItems: ShortageItem[] = [];
 
   selectedDate: Date | null = new Date();
+  maxSelectableDate!: Date;
 
   // Fallback images for known items — update the paths to match your assets folder
   private readonly itemImageMap: { [key: string]: string } = {
@@ -54,7 +55,17 @@ export class ProcurementShortageHistoryComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.selectedDate = new Date();
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    yesterday.setHours(0, 0, 0, 0);
+
+    const maxDate = new Date();
+    maxDate.setDate(maxDate.getDate() - 1);
+    maxDate.setHours(23, 59, 59, 999);
+    this.maxSelectableDate = maxDate;
+
+    this.selectedDate = yesterday;
+
     this.loadShortageHistory();
   }
 

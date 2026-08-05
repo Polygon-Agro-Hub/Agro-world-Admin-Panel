@@ -125,23 +125,22 @@
           >Select Parent Category *</label
         >
         <p-dropdown
-          id="parentCategory"
-          [(ngModel)]="cropGroup.parentCategory"
-          [options]="categories"
-          placeholder="Select Category"
-          [filter]="true"
-          showClear="true"
-          [ngClass]="{
-            'border-red-500':
-              !cropGroup.parentCategory && parentCategoryInput?.touched,
-          }"
-          class="w-full mt-2 text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack rounded-md py-2 shadow-sm"
-          #parentCategoryInput="ngModel"
-          panelStyleClass="custom-dropdown-panel"
-          styleClass="w-full"
-          class="block w-full p-dropdown-custom"
-        >
-        </p-dropdown>
+  id="parentCategory"
+  [(ngModel)]="cropGroup.parentCategory"
+  [options]="categories"
+  placeholder="Select Category"
+  [filter]="true"
+  showClear="true"
+  [ngClass]="{
+    'border-red-500':
+      !cropGroup.parentCategory && parentCategoryInput?.touched,
+  }"
+  class="block w-full mt-2 text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack rounded-md py-2 shadow-sm p-dropdown-custom parent-category-dropdown"
+  #parentCategoryInput="ngModel"
+  panelStyleClass="custom-dropdown-panel"
+  styleClass="w-full"
+>
+</p-dropdown>
 
         <!-- Validation Error -->
         <div

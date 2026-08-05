@@ -98,7 +98,7 @@
               <th class="py-3 px-4 font-normal text-[#5C5C5C] text-left whitespace-nowrap">
                 Status
               </th>
-              <th class="py-3 px-4 font-normal text-[#5C5C5C] text-center">
+              <th class="py-3 px-4 font-normal text-[#5C5C5C] text-left">
                 Display
               </th>
               <th class="py-3 px-4 font-normal text-[#5C5C5C] text-center">
@@ -172,7 +172,7 @@
                     [ngClass]="item.isEnable === 1 ? 'translate-x-6' : 'translate-x-1'"></span>
                 </button>
               </td>
-              <td class="px-4 py-3 text-[#797979] dark:text-textDark text-center whitespace-nowrap italic">
+              <td class="px-4 py-3 text-[#797979] dark:text-textDark text-left whitespace-nowrap italic">
                 <span *ngIf="!item.displayType">No Discount</span>
                 <span *ngIf="item.displayType === 'D&AP'">%, Actual</span>
                 <span *ngIf="item.displayType === 'AP&SP'">Actual, Sale</span>
@@ -194,10 +194,10 @@
               <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
                 {{ item.normalPrice }}
               </td>
-              <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
                 {{ item.discountedPrice || "----" }}
               </td>
-              <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
                 {{ item.comPrice || "----" }}
               </td>
               <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">

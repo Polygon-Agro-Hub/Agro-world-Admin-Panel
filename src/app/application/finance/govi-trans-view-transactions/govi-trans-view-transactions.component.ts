@@ -198,9 +198,13 @@ export class GoviTransViewTransactionsComponent implements OnInit {
   }
 
   navigateToAmount(id: number) {
-    this.router.navigate([
-      `/finance/action/govi-trans-finance/view-transactions/amount/${id}`,
+    const urlTree = this.router.createUrlTree([
+      `/finance/action/govi-trans-finance/view-transactions/amount/${id}`
     ]);
+
+    const relativeUrl = this.router.serializeUrl(urlTree);
+    const fullUrl = this.location.prepareExternalUrl(relativeUrl);
+    window.open(fullUrl, '_blank');
   }
 
   navigateToDocument(id: number) {

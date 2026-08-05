@@ -397,7 +397,7 @@ export class PostinvoiceService {
 
     yPosition += 3;
 
-    const deliveryMethodY = yPosition;
+   const deliveryMethodY = yPosition;
     doc.setFont('helvetica', 'bold');
     doc.text('Delivery Method:', 15, yPosition);
     doc.setFont('helvetica', 'normal');
@@ -416,7 +416,7 @@ export class PostinvoiceService {
       yPosition += 5;
 
       doc.setFont('helvetica', 'bold');
-      const pickupLabel = 'Centre:';
+      const pickupLabel = 'Centre :';
       doc.text(pickupLabel, 15, yPosition);
 
       // Calculate position for center name with small space
@@ -427,35 +427,43 @@ export class PostinvoiceService {
       doc.setFont('helvetica', 'bold');
       doc.text(centerName, centerNameX, yPosition);
 
-      // Format address like in your image
-      doc.setFont('helvetica', 'normal');
-
-      const cityDistrictLine = [
-        invoice.pickupInfo.address?.city || '',
-        invoice.pickupInfo.address?.district || '',
-      ]
-        .filter((line) => line)
-        .join(', ');
-
-      // Line 2: Province, Country
-      const provinceCountryLine = [
-        invoice.pickupInfo.address?.province || '',
-        invoice.pickupInfo.address?.country || '',
-      ]
-        .filter((line) => line)
-        .join(', ');
-
       let addressY = yPosition + 5;
 
-      if (cityDistrictLine) {
-        doc.text(cityDistrictLine, 15, addressY);
-        addressY += 5;
+      const addressLines: Array<{ label: string; value: string }> = [];
+
+      if (invoice.pickupInfo.address?.city) {
+        addressLines.push({
+          label: 'City :',
+          value: invoice.pickupInfo.address.city,
+        });
+      }
+      if (invoice.pickupInfo.address?.district) {
+        addressLines.push({
+          label: 'District :',
+          value: invoice.pickupInfo.address.district,
+        });
+      }
+      if (invoice.pickupInfo.address?.province) {
+        addressLines.push({
+          label: 'Province :',
+          value: invoice.pickupInfo.address.province,
+        });
       }
 
-      if (provinceCountryLine) {
-        doc.text(provinceCountryLine, 15, addressY);
+      addressLines.forEach(({ label, value }) => {
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(146, 146, 146); // #929292
+        doc.text(label, 15, addressY);
+
+        const labelWidth = doc.getTextWidth(label);
+        doc.setTextColor(0, 0, 0);
+        doc.text(value, 15 + labelWidth + spaceWidth, addressY);
+
         addressY += 5;
-      }
+      });
+
+      // Reset to black for anything rendered after this block
+      doc.setTextColor(0, 0, 0);
 
       yPosition = addressY + 10;
     }
@@ -475,26 +483,15 @@ export class PostinvoiceService {
     );
     doc.setFontSize(9);
 
-    const creditForType =
-      invoice.creditPaid !== null &&
-      invoice.creditPaid !== undefined &&
-      parseNum(invoice.creditPaid as any) > 0
-        ? parseNum(invoice.creditPaid as any)
-        : null;
-    const cashForType =
-      invoice.moneyPaid !== null &&
-      invoice.moneyPaid !== undefined &&
-      parseNum(invoice.moneyPaid as any) > 0
-        ? parseNum(invoice.moneyPaid as any)
-        : null;
-
+    const creditPaidAmount = parseNum(String(invoice.creditPaid ?? ""));
+    const grandTotalAmount = parseNum(invoice.grandTotal);
     const paymentTypeLabel =
       this.detectPaymentType(
         invoice.paymentMethod,
         invoice.deliveryMethod,
-        creditForType,
-        cashForType,
-      ) || 'N/A';
+        creditPaidAmount,
+        grandTotalAmount,
+      ) || "N/A";
 
     doc.setFont('helvetica', 'bold');
     doc.text('Payment Method:', 140, paymentMethodLabelY);
@@ -1114,8 +1111,32 @@ export class PostinvoiceService {
     yPosition += 15;
     doc.setTextColor(128, 128, 128);
     doc.setFontSize(8);
+    doc.setFont('helvetica', 'italic');
     doc.text(
       '- THIS IS A COMPUTER GENERATED INVOICE, THUS NO SIGNATURE REQUIRED -',
+      105,
+      yPosition,
+      { align: 'center' },
+    );
+
+    yPosition += 5;
+
+    const now = new Date();
+    const generatedTime = now.toLocaleTimeString('en-US', {
+      timeZone: 'Asia/Colombo',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    });
+    const generatedDate = now.toLocaleDateString('en-US', {
+      timeZone: 'Asia/Colombo',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+
+    doc.text(
+      `- GENERATED AT : ${generatedTime}, ${generatedDate} -`,
       105,
       yPosition,
       { align: 'center' },
@@ -1127,7 +1148,7 @@ export class PostinvoiceService {
 
   private async getLogoUrl(): Promise<string | null> {
     try {
-      const logoPath = 'assets/images/glogo.png';
+      const logoPath = 'assets/images/POLYGON_LOGO_NEW.png';
       const logoBlob = (await this.http
         .get(logoPath, { responseType: 'blob' })
         .toPromise()) as Blob;
@@ -1137,45 +1158,43 @@ export class PostinvoiceService {
         reader.onload = async () => {
           const originalDataUrl = reader.result as string;
 
-          // Create an image element to check dimensions
           const img = new Image();
           img.src = originalDataUrl;
+          await img.decode();
 
-          await img.decode(); // Wait for image to load
+          const targetWidth = 780;
+          const targetHeight = 240;
 
-          // Create canvas to resize if needed
-          const canvas = document.createElement('canvas');
-          const maxWidth = 200; // Maximum width in pixels
-          const maxHeight = 100; // Maximum height in pixels
-
-          // Calculate new dimensions maintaining aspect ratio
           let width = img.width;
           let height = img.height;
 
-          if (width > maxWidth) {
-            height = (maxWidth / width) * height;
-            width = maxWidth;
-          }
+          const needsResize = width > targetWidth || height > targetHeight;
 
-          if (height > maxHeight) {
-            width = (maxHeight / height) * width;
-            height = maxHeight;
-          }
+          if (needsResize) {
+            const widthRatio = targetWidth / width;
+            const heightRatio = targetHeight / height;
+            const scale = Math.min(widthRatio, heightRatio);
 
-          // Only resize if necessary
-          if (width !== img.width || height !== img.height) {
+            width = Math.round(width * scale);
+            height = Math.round(height * scale);
+
+            const canvas = document.createElement('canvas');
             canvas.width = width;
             canvas.height = height;
             const ctx = canvas.getContext('2d');
-            ctx?.drawImage(img, 0, 0, width, height);
 
-            // Convert to PNG with reduced quality (0.9 maintains good quality)
-            const optimizedDataUrl = canvas.toDataURL('image/png', 0.9);
-            resolve(optimizedDataUrl);
-          } else {
-            // Use original if no resizing needed
-            resolve(originalDataUrl);
+            if (ctx) {
+              ctx.imageSmoothingEnabled = true;
+              ctx.imageSmoothingQuality = 'high';
+              ctx.drawImage(img, 0, 0, width, height);
+ 
+              const optimizedDataUrl = canvas.toDataURL('image/png');
+              resolve(optimizedDataUrl);
+              return;
+            }
           }
+
+          resolve(originalDataUrl);
         };
         reader.onerror = reject;
         reader.readAsDataURL(logoBlob);
@@ -1188,24 +1207,24 @@ export class PostinvoiceService {
 
   private detectPaymentType(
     payType: string,
-    delevaryMethod: string,
-    credit: number | null,
-    cash: number | null,
+    deliveryMethod: string,
+    creditPaid: number,
+    grandTotal: number,
   ): string {
-    if (credit !== null && cash === null) {
-      return 'Credit Balance';
+    const isPickup = deliveryMethod?.toLowerCase().includes("pickup");
+    const hasCredit = creditPaid > 0;
+    const fullyCoveredByCredit = hasCredit && creditPaid >= grandTotal - 0.01;
+
+    if (fullyCoveredByCredit) {
+      return "Credit Balance";
     }
 
-    if (payType === 'Card') {
-      if (credit === null && cash !== null && cash > 0) return 'Online Transfer';
-      else if (credit !== null && cash !== null) return 'Online Transfer + Credit Balance';
-    } else if (payType === 'Cash') {
-      if (credit === null && cash !== null && cash > 0 && delevaryMethod === 'Delivery') return 'Cash on Delivery';
-      else if (credit === null && cash !== null && cash > 0 && delevaryMethod === 'Pickup') return 'Cash on Pickup';
-      else if (credit !== null && cash !== null && delevaryMethod === 'Pickup') return 'Cash on Pickup + Credit Balance';
-      else if (credit !== null && cash !== null && delevaryMethod === 'Delivery') return 'Cash on Delivery + Credit Balance';
+    if (payType === "Card") {
+      return hasCredit ? "Online Transfer + Credit Balance" : "Online Transfer";
     }
 
-    return payType === 'Card' ? 'Debit/Credit Card' : 'Cash On Delivery'; // fallback
+  // Cash
+    const base = isPickup ? "Cash on Pickup" : "Cash on Delivery";
+    return hasCredit ? `${base} + Credit Balance` : base;
   }
 }

@@ -31,15 +31,26 @@
 
         <div class="flex items-center gap-2 h-8 mr-5">
           <p-calendar id="purchasedDate" [(ngModel)]="date" (onSelect)="dateFilter()" (onClear)="onDateClear()"
+            placeholder="Purchased Date" [showIcon]="true" [showClear]="true" iconDisplay="input"
+            [style]="{ width: '16rem', height: '2rem' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+                [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+                [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+                [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+                [&_.p-datepicker-header]:dark:text-white
+                [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+                [&_.p-button:hover]:dark:bg-[#6b7280]"
+            inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
+            [appendTo]="'body'" />
+          <!-- <p-calendar id="purchasedDate" [(ngModel)]="date" (onSelect)="dateFilter()" (onClear)="onDateClear()"
             placeholder="Purchased Date" [showIcon]="true" [showClear]="true" [showButtonBar]="true" iconDisplay="input"
             [style]="{ width: '11rem', height: '2rem' }"
             panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600"
             inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-44 h-8 pr-8"
-            [appendTo]="'body'" />
+            [appendTo]="'body'" /> -->
         </div>
 
         <div class="flex items-center rounded-full px-4 py-2 w-72 bg-[#F1F1F1] dark:bg-[#272F45]">
-          <input type="text" placeholder="Search.."
+          <input type="text" placeholder="Search By Product Name"
             class="bg-transparent outline-none w-full text-textLight dark:text-textDark" [(ngModel)]="searchItem"
             (keydown.enter)="searchSubmissions()" />
           <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
@@ -94,14 +105,23 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let item of submissions; let i = index">
+          <tr *ngFor="
+            let item of submissions
+              | paginate
+                : {
+                    itemsPerPage: itemsPerPage,
+                    currentPage: page,
+                    totalItems: totalItems
+                  };
+            let i = index
+          ">
             <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
               {{ ((page - 1) * itemsPerPage + i + 1) < 10 ? '0' + ((page - 1) * itemsPerPage + i + 1) : ((page - 1) *
                 itemsPerPage + i + 1) }} </td>
 
             <td class="px-4 py-3 text-left">
               <img [src]="item.imageUrl" [alt]="item.product"
-                class="w-8 h-8 rounded object-cover bg-gray-100 dark:bg-gray-700" />
+                class="w-10 h-10" rounded-full/>
             </td>
 
             <td class="px-4 py-3 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
@@ -172,9 +192,9 @@
     </div>
 
     <div *ngIf="hasData" class="dark:bg-[#262f45]">
-      <pagination-controls id="submissions-pagination" (pageChange)="onPageChange($event)" [responsive]="true"
-        [previousLabel]="'Previous'" [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'"
-        [screenReaderPageLabel]="'page'" [screenReaderCurrentLabel]="'Youre on page'">
+      <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
+        [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
+        [screenReaderCurrentLabel]="'Youre on page'">
       </pagination-controls>
     </div>
   </div>

@@ -588,8 +588,10 @@ export class PostinvoiceService {
           margin: { left: 15, right: 15 },
           styles: {
             fontSize: 9,
-            cellPadding: { top: 4, right: 6, bottom: 4, left: 6 },
+            cellPadding: { top: 3, right: 4, bottom: 3, left: 4 },
             textColor: [0, 0, 0],
+            overflow: 'linebreak',
+            valign: 'middle',
           },
           headStyles: {
             fillColor: [248, 248, 248],
@@ -608,12 +610,12 @@ export class PostinvoiceService {
           showHorizontalLines: false,
           showVerticalLines: false,
           columnStyles: {
-            0: { cellWidth: 20 }, // Index
-            1: { cellWidth: 29 }, // Category
-            2: { cellWidth: 40 }, // Item Description
-            3: { cellWidth: 35 }, // Unit Price
-            4: { cellWidth: 21, overflow: 'visible' }, // QTY
-            5: { cellWidth: 35 }, // Amount
+            0: { cellWidth: 16, halign: 'left' }, // Index
+            1: { cellWidth: 36, overflow: 'linebreak' }, // Category
+            2: { cellWidth: 42, overflow: 'linebreak' }, // Item Description
+            3: { cellWidth: 31, halign: 'left' }, // Unit Price
+            4: { cellWidth: 20, overflow: 'visible', halign: 'left' }, // QTY
+            5: { cellWidth: 35, halign: 'left' }, // Amount
           },
         });
 

@@ -916,6 +916,7 @@ export class PostinvoiceService {
     const ORANGE_COLOR: [number, number, number] = [217, 119, 6];
 
     const isPaid = Number(invoice.isPaid) === 1;
+    const isCardPayment = invoice.paymentMethod === 'Card'; // <-- new check
     const creditPaidNum = parseNum(invoice.creditPaid as any);
     const hasCreditPaid =
       invoice.creditPaid !== null &&
@@ -924,7 +925,8 @@ export class PostinvoiceService {
     const remainingAfterCredit = finalGrandTotal - creditPaidNum;
 
     const isPickup = invoice.deliveryMethod?.toLowerCase() === 'pickup';
-    let showDeliveryNote = false; 
+    const cashLabel = isPickup ? 'Cash On Pickup' : 'Cash On Delivery';
+    let showDeliveryNote = false;
 
     const pushPaymentRow = (
       label: string,
@@ -945,42 +947,50 @@ export class PostinvoiceService {
 
       if (remainingAfterCredit > 0.01) {
         if (isPaid) {
-          pushPaymentRow(
+          if (isCardPayment) {
+            pushPaymentRow(
             'Online Transferred Amount',
             remainingAfterCredit,
             GREEN_COLOR,
           );
-        } else if (isPickup) {
-          pushPaymentRow(
-            'Cash On Pickup (Pending)',
-            remainingAfterCredit,
-            ORANGE_COLOR,
-          );
         } else {
-          pushPaymentRow(
-            'Cash On Delivery (Pending)',
-            remainingAfterCredit,
-            ORANGE_COLOR,
-          );
-          showDeliveryNote = true;
+          pushPaymentRow(cashLabel, remainingAfterCredit, ORANGE_COLOR);
         }
-      }
-    } else {
-      if (isPaid) {
-        pushPaymentRow(
-          'Online Transferred Amount',
-          finalGrandTotal,
-          GREEN_COLOR,
-        );
       } else if (isPickup) {
         pushPaymentRow(
-          'Cash On Pickup (Pending)',
+          'Cash On Pickup',
+          remainingAfterCredit,
+          ORANGE_COLOR,
+        );
+      } else {
+        pushPaymentRow(
+          'Cash On Delivery',
+          remainingAfterCredit,
+          ORANGE_COLOR,
+        );
+      showDeliveryNote = true;
+    }
+  }
+    } else {
+      if (isPaid) {
+        if (isCardPayment) {
+          pushPaymentRow(
+            'Online Transferred Amount',
+            finalGrandTotal,
+            GREEN_COLOR,
+          );
+        } else {
+          pushPaymentRow(cashLabel, finalGrandTotal, ORANGE_COLOR);
+        } 
+      } else if (isPickup) {
+        pushPaymentRow(
+          'Cash On Pickup',
           finalGrandTotal,
           ORANGE_COLOR,
         );
       } else {
         pushPaymentRow(
-          'Cash On Delivery (Pending)',
+          'Cash On Delivery',
           finalGrandTotal,
           ORANGE_COLOR,
         );

@@ -940,11 +940,11 @@ export class FinalinvoiceService {
     ]);
     const grandTotalActualIndex = grandTotalBody.length - 1;
 
-    // ── Payment status rows (credit balance / online / cash pending) ──
     const GREEN_COLOR: [number, number, number] = [22, 163, 74];
     const ORANGE_COLOR: [number, number, number] = [217, 119, 6];
 
     const isPaid = Number(invoice.isPaid) === 1;
+    const isCardPayment = invoice.paymentMethod === 'Card';
     const creditPaidNum = parseNum(invoice.creditPaid as any);
     const hasCreditPaid =
       invoice.creditPaid !== null &&
@@ -953,7 +953,8 @@ export class FinalinvoiceService {
     const remainingAfterCredit = finalGrandTotal - creditPaidNum;
 
     const isPickup = invoice.deliveryMethod?.toLowerCase() === 'pickup';
-    let showDeliveryNote = false; // only true for actual Cash-on-Delivery-Pending cases, NOT for pickup
+    const cashLabel = isPickup ? 'Cash On Pickup' : 'Cash On Delivery'; 
+    let showDeliveryNote = false; 
 
     const pushPaymentRow = (
       label: string,
@@ -974,11 +975,15 @@ export class FinalinvoiceService {
 
       if (remainingAfterCredit > 0.01) {
         if (isPaid) {
-          pushPaymentRow(
-            'Online Transferred Amount',
-            remainingAfterCredit,
-            GREEN_COLOR,
-          );
+          if (isCardPayment) {
+            pushPaymentRow(
+              'Online Transferred Amount',
+              remainingAfterCredit,
+              GREEN_COLOR,
+            );
+          } else {
+            pushPaymentRow(cashLabel, remainingAfterCredit, ORANGE_COLOR);
+          }
         } else if (isPickup) {
           pushPaymentRow(
             'Cash On Pickup (Pending)',
@@ -996,11 +1001,15 @@ export class FinalinvoiceService {
       }
     } else {
       if (isPaid) {
-        pushPaymentRow(
-          'Online Transferred Amount',
-          finalGrandTotal,
-          GREEN_COLOR,
-        );
+        if (isCardPayment) {
+          pushPaymentRow(
+            'Online Transferred Amount',
+            finalGrandTotal,
+            GREEN_COLOR,
+          );
+        } else {
+          pushPaymentRow(cashLabel, finalGrandTotal, ORANGE_COLOR);
+        }
       } else if (isPickup) {
         pushPaymentRow(
           'Cash On Pickup (Pending)',

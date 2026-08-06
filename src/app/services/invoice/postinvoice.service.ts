@@ -588,8 +588,10 @@ export class PostinvoiceService {
           margin: { left: 15, right: 15 },
           styles: {
             fontSize: 9,
-            cellPadding: { top: 4, right: 6, bottom: 4, left: 6 },
+            cellPadding: { top: 3, right: 4, bottom: 3, left: 4 },
             textColor: [0, 0, 0],
+            overflow: 'linebreak',
+            valign: 'middle',
           },
           headStyles: {
             fillColor: [248, 248, 248],
@@ -608,12 +610,12 @@ export class PostinvoiceService {
           showHorizontalLines: false,
           showVerticalLines: false,
           columnStyles: {
-            0: { cellWidth: 20 }, // Index
-            1: { cellWidth: 29 }, // Category
-            2: { cellWidth: 40 }, // Item Description
-            3: { cellWidth: 35 }, // Unit Price
-            4: { cellWidth: 21, overflow: 'visible' }, // QTY
-            5: { cellWidth: 35 }, // Amount
+            0: { cellWidth: 16, halign: 'left' }, // Index
+            1: { cellWidth: 36, overflow: 'linebreak' }, // Category
+            2: { cellWidth: 42, overflow: 'linebreak' }, // Item Description
+            3: { cellWidth: 31, halign: 'left' }, // Unit Price
+            4: { cellWidth: 20, overflow: 'visible', halign: 'left' }, // QTY
+            5: { cellWidth: 35, halign: 'left' }, // Amount
           },
         });
 
@@ -916,6 +918,7 @@ export class PostinvoiceService {
     const ORANGE_COLOR: [number, number, number] = [217, 119, 6];
 
     const isPaid = Number(invoice.isPaid) === 1;
+    const isCardPayment = invoice.paymentMethod === 'Card'; // <-- new check
     const creditPaidNum = parseNum(invoice.creditPaid as any);
     const hasCreditPaid =
       invoice.creditPaid !== null &&
@@ -924,7 +927,8 @@ export class PostinvoiceService {
     const remainingAfterCredit = finalGrandTotal - creditPaidNum;
 
     const isPickup = invoice.deliveryMethod?.toLowerCase() === 'pickup';
-    let showDeliveryNote = false; 
+    const cashLabel = isPickup ? 'Cash On Pickup' : 'Cash On Delivery';
+    let showDeliveryNote = false;
 
     const pushPaymentRow = (
       label: string,
@@ -945,42 +949,50 @@ export class PostinvoiceService {
 
       if (remainingAfterCredit > 0.01) {
         if (isPaid) {
-          pushPaymentRow(
+          if (isCardPayment) {
+            pushPaymentRow(
             'Online Transferred Amount',
             remainingAfterCredit,
             GREEN_COLOR,
           );
-        } else if (isPickup) {
-          pushPaymentRow(
-            'Cash On Pickup (Pending)',
-            remainingAfterCredit,
-            ORANGE_COLOR,
-          );
         } else {
-          pushPaymentRow(
-            'Cash On Delivery (Pending)',
-            remainingAfterCredit,
-            ORANGE_COLOR,
-          );
-          showDeliveryNote = true;
+          pushPaymentRow(cashLabel, remainingAfterCredit, ORANGE_COLOR);
         }
-      }
-    } else {
-      if (isPaid) {
-        pushPaymentRow(
-          'Online Transferred Amount',
-          finalGrandTotal,
-          GREEN_COLOR,
-        );
       } else if (isPickup) {
         pushPaymentRow(
-          'Cash On Pickup (Pending)',
+          'Cash On Pickup',
+          remainingAfterCredit,
+          ORANGE_COLOR,
+        );
+      } else {
+        pushPaymentRow(
+          'Cash On Delivery',
+          remainingAfterCredit,
+          ORANGE_COLOR,
+        );
+      showDeliveryNote = true;
+    }
+  }
+    } else {
+      if (isPaid) {
+        if (isCardPayment) {
+          pushPaymentRow(
+            'Online Transferred Amount',
+            finalGrandTotal,
+            GREEN_COLOR,
+          );
+        } else {
+          pushPaymentRow(cashLabel, finalGrandTotal, ORANGE_COLOR);
+        } 
+      } else if (isPickup) {
+        pushPaymentRow(
+          'Cash On Pickup',
           finalGrandTotal,
           ORANGE_COLOR,
         );
       } else {
         pushPaymentRow(
-          'Cash On Delivery (Pending)',
+          'Cash On Delivery',
           finalGrandTotal,
           ORANGE_COLOR,
         );

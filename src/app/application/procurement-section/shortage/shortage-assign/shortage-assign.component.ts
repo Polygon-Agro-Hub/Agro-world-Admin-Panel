@@ -5,6 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 import { ProcumentsService } from '../../../../services/procuments/procuments.service'; // adjust path/name as needed
+import { PermissionService } from '../../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../../services/token/services/token.service';
 
 interface AssignmentRecord {
   qty: number;
@@ -55,7 +57,9 @@ export class ShortageAssignComponent implements OnInit {
     private router: Router,
     private location: Location,
     private procumentService: ProcumentsService,
-  ) {}
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
+  ) { }
 
   ngOnInit(): void {
     this.itemId = Number(this.route.snapshot.paramMap.get('id'));

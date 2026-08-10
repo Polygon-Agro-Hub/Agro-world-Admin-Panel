@@ -8,6 +8,8 @@ import {
   ProcumentsService,
   DistributionCenterDto,
 } from '../../../../services/procuments/procuments.service';
+import { TokenService } from '../../../../services/token/services/token.service';
+import { PermissionService } from '../../../../services/roles-permission/permission.service';
 
 interface ShortageItem {
   id: number; // shortageAssignedId
@@ -45,7 +47,11 @@ export class ShortageFinalizationTodayComponent implements OnInit {
   showConfirmModal = false;
   itemPendingFinalize: ShortageItem | null = null;
 
-  constructor(private shortageService: ProcumentsService) {}
+  constructor(
+    private shortageService: ProcumentsService,
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
+  ) { }
 
   ngOnInit(): void {
     this.loadAllData();
@@ -171,7 +177,7 @@ export class ShortageFinalizationTodayComponent implements OnInit {
       this.errorMessage = 'Ceiling (%) must be between 1 and 99.';
       return;
     }
-    
+
     this.errorMessage = '';
     this.itemPendingFinalize = item;
     this.showConfirmModal = true;
@@ -220,12 +226,12 @@ export class ShortageFinalizationTodayComponent implements OnInit {
   }
 
   formatQty(value: number): string {
-  return (Number(value) || 0).toFixed(2);
-}
+    return (Number(value) || 0).toFixed(2);
+  }
 
-getCentreNameOnly(dc: DistributionCenterDto | null | undefined): string {
-  if (!dc?.fullName) return '';
-  // Strips a leading reg code like "REG001 - " or "REG001-" or "REG001: "
-  return dc.fullName.replace(/^\s*[A-Za-z0-9-]+\s*[-:]\s*/, '').trim();
-}
+  getCentreNameOnly(dc: DistributionCenterDto | null | undefined): string {
+    if (!dc?.fullName) return '';
+    // Strips a leading reg code like "REG001 - " or "REG001-" or "REG001: "
+    return dc.fullName.replace(/^\s*[A-Za-z0-9-]+\s*[-:]\s*/, '').trim();
+  }
 }

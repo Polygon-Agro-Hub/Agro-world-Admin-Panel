@@ -7,6 +7,8 @@ import { CalendarModule } from 'primeng/calendar';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 import { FinanceService } from '../../../../services/finance/finance.service';
 import { Router } from '@angular/router';
+import { PermissionService } from '../../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../../services/token/services/token.service';
 
 interface Submission {
   id: number;
@@ -61,7 +63,9 @@ export class ViewSubmissionsComponent implements OnInit {
     private router: Router,
     private location: Location,
     private financeService: FinanceService,
-  ) {}
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
+  ) { }
 
   ngOnInit(): void {
     this.fetchSubmissions();

@@ -78,7 +78,9 @@
                 </p>
               </div>
 
-              <button (click)="onView(item)"
+              <button 
+                *ngIf="permissionService.hasPermission('View today shortage') || tokenService.getUserDetails().role === '1'"
+                (click)="onView(item)"
                 class="bg-[#3980C0] hover:bg-[#316ba8] text-white font-medium text-sm rounded-md transition-colors whitespace-nowrap justify-self-end self-stretch px-6 flex items-center justify-center">
                 View
               </button>

@@ -51,21 +51,22 @@
                     <!-- Shortage Badge -->
                     <div class="w-28 shrink-0">
                         <div
-    class="inline-block min-w-[75px] text-left bg-[#FEF7EF] dark:bg-[#4A3B2A] px-4 py-2 rounded-lg">
-    <div class="text-xs text-[#000000] dark:text-textDark mb-1">Shortage</div>
-    <div class="text-[#000000] dark:text-textDark text-base font-bold text-left">{{ item.shortageKg | number:'1.0-2' }} kg
-    </div>
-</div>
+                            class="inline-block min-w-[75px] text-left bg-[#FEF7EF] dark:bg-[#4A3B2A] px-4 py-2 rounded-lg">
+                            <div class="text-xs text-[#000000] dark:text-textDark mb-1">Shortage</div>
+                            <div class="text-[#000000] dark:text-textDark text-base font-bold text-left">{{
+                                item.shortageKg | number:'1.0-2' }} kg
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Distribution Center Dropdown -->
-<div class="w-52 shrink-0 mr-3">
-    <p-dropdown [options]="item.distributionCenters" [(ngModel)]="item.selectedDC"
-        optionLabel="label" placeholder="Select Distribution Centre"
-        styleClass="w-full h-10 shortage-centre-dropdown text-sm font-semibold text-textLight dark:text-textDark"
-        [panelStyleClass]="'shortage-centre-panel'">
-    </p-dropdown>
-</div>
+                    <div class="w-52 shrink-0 mr-3">
+                        <p-dropdown [options]="item.distributionCenters" [(ngModel)]="item.selectedDC"
+                            optionLabel="label" placeholder="Select Distribution Centre"
+                            styleClass="w-full h-10 shortage-centre-dropdown text-sm font-semibold text-textLight dark:text-textDark"
+                            [panelStyleClass]="'shortage-centre-panel'">
+                        </p-dropdown>
+                    </div>
 
                     <!-- Market Price -->
                     <div class="w-32 shrink-0">
@@ -77,9 +78,8 @@
                     <!-- Ceiling % -->
                     <div class="w-24 shrink-0">
                         <div class="text-xs text-[#000000] dark:text-textDark mb-1">Ceiling (%)</div>
-                            <input type="number" min="1" max="99" step="1" [(ngModel)]="item.ceilingPercent"
-                            (input)="onCeilingInput($event, item)"
-                            (keydown)="blockCeilingKey($event)"
+                        <input type="number" min="1" max="99" step="1" [(ngModel)]="item.ceilingPercent"
+                            (input)="onCeilingInput($event, item)" (keydown)="blockCeilingKey($event)"
                             (blur)="onCeilingBlur(item)"
                             class="inline-block w-20 text-center font-bold text-base border border-[#E9E9E9] bg-[#F8F9F9] dark:border-gray-600 rounded-lg px-4 py-2 text-[#000000] dark:text-textDark outline-none" />
                     </div>
@@ -91,7 +91,8 @@
                     </div>
 
                     <!-- Finalize Button -->
-                    <div class="shrink-0">
+                    <div *ngIf="permissionService.hasPermission('Finalize today shortage') || tokenService.getUserDetails().role === '1'"
+                        class="shrink-0">
                         <button class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded"
                             (click)="onFinalizeClick(item)">
                             Finalize
@@ -121,7 +122,8 @@
                         <div
                             class="inline-block min-w-[75px] text-center bg-[#FEF7EF] dark:bg-[#4A3B2A] px-4 py-2 rounded-lg">
                             <div class="text-xs text-[#000000] dark:text-textDark mb-1">Shortage</div>
-                            <div class="text-[#000000] dark:text-textDark text-base font-bold">{{ item.shortageKg | number:'1.0-2' }} kg                            </div>
+                            <div class="text-[#000000] dark:text-textDark text-base font-bold">{{ item.shortageKg |
+                                number:'1.0-2' }} kg </div>
                         </div>
                     </div>
 
@@ -172,23 +174,22 @@
         </h3>
 
         <p class="text-[#292929] dark:text-textDark text-base leading-relaxed mb-6" *ngIf="itemPendingFinalize">
-    Are you sure you want to assign {{ itemPendingFinalize.shortageKg | number:'1.0-2' }} kg of {{ itemPendingFinalize.itemName
-    }}
-    to {{ itemPendingFinalize.selectedDC?.value }}
-    ({{ getCentreNameOnly(itemPendingFinalize.selectedDC) }})?
-</p>
+            Are you sure you want to assign {{ itemPendingFinalize.shortageKg | number:'1.0-2' }} kg of {{
+            itemPendingFinalize.itemName
+            }}
+            to {{ itemPendingFinalize.selectedDC?.value }}
+            ({{ getCentreNameOnly(itemPendingFinalize.selectedDC) }})?
+        </p>
 
         <div class="flex justify-center gap-4">
             <button
                 class="bg-[#74788D] hover:bg-[#5a5f70] text-white font-medium py-2.5 px-8 rounded-lg transition-colors"
-                [disabled]="isFinalizing"
-                (click)="onCancelFinalize()">
+                [disabled]="isFinalizing" (click)="onCancelFinalize()">
                 No, Go Back
             </button>
             <button
                 class="bg-[#3980C0] hover:bg-[#2f6ba3] text-white font-medium py-2.5 px-8 rounded-lg transition-colors disabled:opacity-60"
-                [disabled]="isFinalizing"
-                (click)="onConfirmFinalize()">
+                [disabled]="isFinalizing" (click)="onConfirmFinalize()">
                 {{ isFinalizing ? 'Finalizing...' : 'Yes, Finalize' }}
             </button>
         </div>

@@ -96,7 +96,9 @@
               Status</th>
             <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center" style="white-space: nowrap">
               Purchased At</th>
-            <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center" style="white-space: nowrap">
+            <th 
+              *ngIf="permissionService.hasPermission('View shortage purchase invoice') || tokenService.getUserDetails().role === '1'"
+              class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center" style="white-space: nowrap">
               View Invoice</th>
             <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left" style="white-space: nowrap">
               Finalized By</th>
@@ -162,7 +164,9 @@
               <p>{{ item.purchasedAt | date: "d MMM, y" }}</p>
             </td>
 
-            <td class="px-2 py-3 text-center text-[#000000] dark:text-textDark">
+            <td 
+              *ngIf="permissionService.hasPermission('View shortage purchase invoice') || tokenService.getUserDetails().role === '1'"
+              class="px-2 py-3 text-center text-[#000000] dark:text-textDark">
               <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]" (click)="navigateToInvoice(item.id)">
                 <i class="fa-solid fa-arrow-up-right-from-square text-red-500 text-lg"></i>
               </button>

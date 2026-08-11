@@ -7,6 +7,8 @@ import { CalendarModule } from 'primeng/calendar';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 import { FinanceService } from '../../../../services/finance/finance.service';
 import { Router } from '@angular/router';
+import { PermissionService } from '../../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../../services/token/services/token.service';
 
 interface Submission {
   id: number;
@@ -61,17 +63,11 @@ export class ViewSubmissionsComponent implements OnInit {
     private router: Router,
     private location: Location,
     private financeService: FinanceService,
-    private paginationService: PaginationService,
-  ) {}
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
+  ) { }
 
   ngOnInit(): void {
-    this.paginationService.register({
-      id: this.paginationId,
-      itemsPerPage: this.itemsPerPage,
-      currentPage: this.page,
-      totalItems: this.totalItems,
-    });
-
     this.fetchSubmissions();
   }
 
@@ -94,11 +90,6 @@ export class ViewSubmissionsComponent implements OnInit {
             this.mapToSubmission(item),
           );
           this.totalItems = res.total || 0;
-
-          this.paginationService.setCurrentPage(this.paginationId, this.page);
-          this.paginationService['instances'][this.paginationId].totalItems =
-            this.totalItems;
-
           this.isLoading = false;
         },
         error: (err) => {

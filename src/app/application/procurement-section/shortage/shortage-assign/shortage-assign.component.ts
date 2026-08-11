@@ -5,6 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 import { ProcumentsService } from '../../../../services/procuments/procuments.service'; // adjust path/name as needed
+import { PermissionService } from '../../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../../services/token/services/token.service';
 
 interface AssignmentRecord {
   qty: number;
@@ -55,7 +57,9 @@ export class ShortageAssignComponent implements OnInit {
     private router: Router,
     private location: Location,
     private procumentService: ProcumentsService,
-  ) {}
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
+  ) { }
 
   ngOnInit(): void {
     this.itemId = Number(this.route.snapshot.paramMap.get('id'));
@@ -139,7 +143,9 @@ export class ShortageAssignComponent implements OnInit {
     return (
       this.assignQty > 0 &&
       this.assignQty <= (this.selectedItem?.shortageQty ?? 0) &&
-      this.selectedCentreId !== null
+      this.selectedCentreId !== null &&
+      this.ceilingPercent >= 1 &&
+      this.ceilingPercent <= 99
     );
   }
 
@@ -210,31 +216,34 @@ export class ShortageAssignComponent implements OnInit {
   }
 
   blockDecimalKey(event: KeyboardEvent): void {
-  if (event.key === '.' || event.key === ',') {
-    event.preventDefault();
-  }
-}
-
-onCeilingInput(event: Event): void {
-  const input = event.target as HTMLInputElement;
-  let value = input.value;
-
-  // Strip anything that isn't a digit
-  let digitsOnly = value.replace(/\D/g, '');
-
-  // Clamp to max 100
-  let num = digitsOnly === '' ? 0 : Number(digitsOnly);
-  if (num > 100) {
-    num = 100;
-    digitsOnly = '100';
+    if (['.', ',', 'e', 'E', '+', '-'].includes(event.key)) {
+      event.preventDefault();
+    }
   }
 
-  if (digitsOnly !== value) {
-    input.value = digitsOnly;
-  }
+  onCeilingInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value;
 
-  this.ceilingPercent = num;
-}
+    let digitsOnly = value.replace(/\D/g, '');
+
+    digitsOnly = digitsOnly.replace(/^0+/, '');
+
+    digitsOnly = digitsOnly.slice(0, 2);
+
+    let num = digitsOnly === '' ? 0 : Number(digitsOnly);
+
+    if (num > 99) {
+      num = 99;
+      digitsOnly = '99';
+    }
+
+    if (digitsOnly !== value) {
+      input.value = digitsOnly;
+    }
+
+    this.ceilingPercent = num;
+  }
 
   formatNumber(value: number): string {
     // Convert to string and remove trailing zeros

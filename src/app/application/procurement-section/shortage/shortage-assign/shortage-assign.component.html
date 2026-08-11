@@ -1,11 +1,10 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
 <div class="min-h-max">
-  <a href="javascript:void(0)" (click)="goBack()"
-    class="inline-flex items-center gap-2 text-textLight dark:text-textDark text-sm mb-5">
-    <span>&#8592;</span>
-    <span class="underline font-medium">Back</span>
-  </a>
+  <button class="mb-5 text-textLight dark:text-textDark" (click)="goBack()">
+    <i class="fa-solid fa-arrow-left"></i>
+    Back
+  </button>
 
   <div *ngIf="selectedItem" class="bg-white dark:bg-tileBlack rounded-lg shadow-sm overflow-hidden min-h-[80vh]">
 
@@ -55,12 +54,14 @@
 
         <div class="flex flex-col justify-center">
           <label class="text-[12px] font-normal text-textLight dark:text-textDark mb-1 text-center">Ceiling (%)</label>
-          <input type="number" min="0" max="100" step="1" [(ngModel)]="ceilingPercent" (input)="onCeilingInput($event)"
+          <input type="number" min="1" max="99" step="1" [(ngModel)]="ceilingPercent" (input)="onCeilingInput($event)"
             (keydown)="blockDecimalKey($event)"
             class="w-full h-10 p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-tileBlack text-textLight dark:text-textDark font-semibold text-center" />
         </div>
 
-        <div class="flex flex-col justify-center">
+        <div 
+           *ngIf="permissionService.hasPermission('Assign today shortage') || tokenService.getUserDetails().role === '1'"
+           class="flex flex-col justify-center">
           <button (click)="onAssign()" [disabled]="!canAssign"
             class="w-full h-full rounded-md font-medium text-white transition-colors flex items-center justify-center"
             [class.bg-[#C1C1C1]]="!canAssign" [class.cursor-not-allowed]="!canAssign" [class.bg-[#3980C0]]="canAssign"

@@ -8,6 +8,8 @@ import {
   ProcumentsService,
   DistributionCenterDto,
 } from '../../../../services/procuments/procuments.service';
+import { TokenService } from '../../../../services/token/services/token.service';
+import { PermissionService } from '../../../../services/roles-permission/permission.service';
 
 interface ShortageItem {
   id: number; // shortageAssignedId
@@ -45,7 +47,11 @@ export class ShortageFinalizationTodayComponent implements OnInit {
   showConfirmModal = false;
   itemPendingFinalize: ShortageItem | null = null;
 
-  constructor(private shortageService: ProcumentsService) {}
+  constructor(
+    private shortageService: ProcumentsService,
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
+  ) { }
 
   ngOnInit(): void {
     this.loadAllData();
@@ -91,9 +97,6 @@ export class ShortageFinalizationTodayComponent implements OnInit {
       const distributionCenters: DistributionCenterDto[] =
         item.distributionCenters || [];
 
-      // The backend already returns the item's assigned comCenId even for
-      // "to finalize" rows (selectedDC itself is null there) — resolve it
-      // against the options list so the dropdown shows the right value.
       const preselectedDC =
         item.selectedDC ||
         distributionCenters.find((dc) => dc.comCenId === item.comCenId) ||
@@ -108,7 +111,7 @@ export class ShortageFinalizationTodayComponent implements OnInit {
         selectedDC: preselectedDC,
         marketPricePerKg: Number(item.marketPricePerKg) || 0,
         ceilingPercent: Number(item.ceilingPercent) || 0,
-        assignedBy: item.assignedBy,
+        assignedBy: item.assignedBy || item.assignOfficerBy || null,
         finalized,
       };
     });
@@ -128,17 +131,40 @@ export class ShortageFinalizationTodayComponent implements OnInit {
 
   onCeilingInput(event: Event, item: ShortageItem) {
     const inputEl = event.target as HTMLInputElement;
-    let sanitized = inputEl.value.replace(/[^0-9.]/g, '');
+    let value = inputEl.value;
 
-    const firstDotIndex = sanitized.indexOf('.');
-    if (firstDotIndex !== -1) {
-      sanitized =
-        sanitized.slice(0, firstDotIndex + 1) +
-        sanitized.slice(firstDotIndex + 1).replace(/\./g, '');
+    let digitsOnly = value.replace(/\D/g, '');
+
+    digitsOnly = digitsOnly.replace(/^0+/, '');
+
+    digitsOnly = digitsOnly.slice(0, 2);
+
+    let num = digitsOnly === '' ? 0 : Number(digitsOnly);
+
+    if (num > 99) {
+      num = 99;
+      digitsOnly = '99';
     }
 
-    inputEl.value = sanitized;
-    item.ceilingPercent = sanitized === '' ? 0 : Number(sanitized);
+    if (digitsOnly !== value) {
+      inputEl.value = digitsOnly;
+    }
+
+    item.ceilingPercent = num;
+  }
+
+  blockCeilingKey(event: KeyboardEvent) {
+    if (['.', ',', 'e', 'E', '+', '-'].includes(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  onCeilingBlur(item: ShortageItem) {
+    if (!item.ceilingPercent || item.ceilingPercent < 1) {
+      item.ceilingPercent = 1;
+    } else if (item.ceilingPercent > 99) {
+      item.ceilingPercent = 99;
+    }
   }
 
   onFinalizeClick(item: ShortageItem) {
@@ -146,6 +172,12 @@ export class ShortageFinalizationTodayComponent implements OnInit {
       this.errorMessage = 'Please select a distribution centre before finalizing.';
       return;
     }
+
+    if (!item.ceilingPercent || item.ceilingPercent < 1 || item.ceilingPercent > 99) {
+      this.errorMessage = 'Ceiling (%) must be between 1 and 99.';
+      return;
+    }
+
     this.errorMessage = '';
     this.itemPendingFinalize = item;
     this.showConfirmModal = true;
@@ -194,12 +226,12 @@ export class ShortageFinalizationTodayComponent implements OnInit {
   }
 
   formatQty(value: number): string {
-  return (Number(value) || 0).toFixed(2);
-}
+    return (Number(value) || 0).toFixed(2);
+  }
 
-getCentreNameOnly(dc: DistributionCenterDto | null | undefined): string {
-  if (!dc?.fullName) return '';
-  // Strips a leading reg code like "REG001 - " or "REG001-" or "REG001: "
-  return dc.fullName.replace(/^\s*[A-Za-z0-9-]+\s*[-:]\s*/, '').trim();
-}
+  getCentreNameOnly(dc: DistributionCenterDto | null | undefined): string {
+    if (!dc?.fullName) return '';
+    // Strips a leading reg code like "REG001 - " or "REG001-" or "REG001: "
+    return dc.fullName.replace(/^\s*[A-Za-z0-9-]+\s*[-:]\s*/, '').trim();
+  }
 }

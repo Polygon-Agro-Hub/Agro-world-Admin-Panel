@@ -1,11 +1,10 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
 <div class="min-h-max">
-  <a href="javascript:void(0)" (click)="goBack()"
-    class="inline-flex items-center gap-2 text-textLight dark:text-textDark text-sm mb-5">
-    <span>&#8592;</span>
-    <span class="underline font-medium">Back</span>
-  </a>
+  <button class="mb-5 text-textLight dark:text-textDark" (click)="goBack()">
+    <i class="fa-solid fa-arrow-left"></i>
+    Back
+  </button>
 
   <div class="bg-white dark:bg-tileBlack rounded-lg shadow-sm overflow-hidden min-h-[80vh]">
 
@@ -79,7 +78,9 @@
                 </p>
               </div>
 
-              <button (click)="onView(item)"
+              <button 
+                *ngIf="permissionService.hasPermission('View today shortage') || tokenService.getUserDetails().role === '1'"
+                (click)="onView(item)"
                 class="bg-[#3980C0] hover:bg-[#316ba8] text-white font-medium text-sm rounded-md transition-colors whitespace-nowrap justify-self-end self-stretch px-6 flex items-center justify-center">
                 View
               </button>

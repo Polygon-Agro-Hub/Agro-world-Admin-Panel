@@ -30,16 +30,13 @@
      optionValue="value" [showClear]="true" placeholder="Type" />
 </div>
           <p-calendar id="toDate" [(ngModel)]="date" (onSelect)="dateFilter()" (onClear)="clearDateFilter()"
-            placeholder="Last Defined Date" [showIcon]="true" [showClear]="false" [showButtonBar]="true"
-            iconDisplay="input" [style]="{ width: '11rem', height: '2rem' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
-                   [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
-                   [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
-                   [&_.p-datepicker-header]:dark:bg-[#2d354d] 
-                   [&_.p-datepicker-header]:dark:text-white
-                   [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
-                   [&_.p-button:hover]:dark:bg-[#6b7280]"
-            inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-44 h-8 pr-10"
-            [appendTo]="'body'" />
+            placeholder="Last Defined Date" [showIcon]="true" [showClear]="false" [showButtonBar]="false"
+            iconDisplay="input"   styleClass="calendar-compact dark-calendar"
+              [style]="{ width: '170px' }" styleClass="calendar-compact dark-calendar"
+              [inputStyle]="{ width: '170px', padding: '0.5rem 1.5rem 0.5rem 0.75rem', fontSize: '0.875rem' }"
+              inputStyleClass="text-[16px] h-9 rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-2 border-[#E5E5E5] dark:border-[#AFAFAF] placeholder:text-[#9CA3AF] dark:placeholder:text-[#9CA3AF] focus:outline-none focus:border-blue-500 dark:focus:border-blue-400"
+              panelStyleClass="dark:bg-gray-800 dark:border dark:border-gray-700 dark:text-white"
+             />
           <button *ngIf="date" (click)="clearDateFilter()"
             class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 dark:hover:text-white focus:outline-none z-10">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-5" fill="none" viewBox="0 0 24 24"

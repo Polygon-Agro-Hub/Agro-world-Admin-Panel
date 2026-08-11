@@ -35,17 +35,13 @@
         <!-- Action Buttons -->
         <div class="flex gap-4">
             <!-- Approve Button -->
-            <button
-                *ngIf="transactionDocument.transStatus === 'To Review' || transactionDocument.transStatus === 'Rejected'"
-                (click)="openApprovePopup()"
+            <button *ngIf="transactionDocument.transStatus === 'To Review'" (click)="openApprovePopup()"
                 class="px-8 py-2 bg-[#3980C0] text-white font-medium rounded-md transition-colors duration-200 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#3980C0]">
                 Approve
             </button>
 
             <!-- Reject Button -->
-            <button
-                *ngIf="transactionDocument.transStatus === 'To Review' || transactionDocument.transStatus === 'Approved'"
-                (click)="openRejectPopup()"
+            <button *ngIf="transactionDocument.transStatus === 'To Review'" (click)="openRejectPopup()"
                 class="px-8 py-2 bg-[#C40D0D] text-white font-medium rounded-md transition-colors duration-200 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#C40D0D]">
                 Reject
             </button>

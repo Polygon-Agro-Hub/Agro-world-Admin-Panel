@@ -11,7 +11,9 @@ import { Router } from '@angular/router';
 import lottie, { AnimationItem } from 'lottie-web';
 import { ProcumentsService } from '../../../../services/procuments/procuments.service';
 import { LoadingSpinnerComponent } from "../../../../components/loading-spinner/loading-spinner.component"; // adjust path/name as needed
- // adjust path/name as needed
+import { TokenService } from '../../../../services/token/services/token.service';
+import { PermissionService } from '../../../../services/roles-permission/permission.service';
+// adjust path/name as needed
 
 interface AssignmentRecord {
   qty: number;
@@ -37,8 +39,7 @@ interface ShortageItem {
   styleUrl: './shortage-today.component.css',
 })
 export class ShortageTodayComponent
-  implements OnInit, AfterViewInit, OnDestroy
-{
+  implements OnInit, AfterViewInit, OnDestroy {
   shortages: ShortageItem[] = [];
 
   availableDate: Date = new Date('2026-06-23T18:00:00');
@@ -59,7 +60,9 @@ export class ShortageTodayComponent
     private location: Location,
     private router: Router,
     private procumentService: ProcumentsService,
-  ) {}
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
+  ) { }
 
   get shortageCount(): number {
     return this.shortages.length;

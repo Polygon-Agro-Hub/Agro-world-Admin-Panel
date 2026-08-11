@@ -6,6 +6,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 import { FinanceService } from '../../../../services/finance/finance.service';
+import { PermissionService } from '../../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../../services/token/services/token.service';
 
 @Component({
   selector: 'app-view-submission-document',
@@ -44,6 +46,8 @@ export class ViewSubmissionDocumentComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private financeService: FinanceService,
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
   ) {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {

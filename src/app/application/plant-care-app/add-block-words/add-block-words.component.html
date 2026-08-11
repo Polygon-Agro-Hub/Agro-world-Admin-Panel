@@ -3,7 +3,7 @@
   <!-- Back -->
   <button
     (click)="back()"
-    class="text-textLight dark:text-textDark mb-6 flex items-center gap-2 underline"
+    class="text-textLight dark:text-textDark mb-6 flex items-center gap-2 underline hover:opacity-80 transition-opacity"
   >
     <i class="fa-solid fa-arrow-left"></i>
     Back
@@ -22,16 +22,17 @@
         (keyup.enter)="addBlockWord()"
         placeholder="Enter a word to block.."
         class="flex-grow px-4 py-2.5 border border-[#8E8E8E] rounded-md text-sm bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        [disabled]="isLoading"
       />
       <button
         (click)="addBlockWord()"
-        [disabled]="!newBlockWord.trim()"
+        [disabled]="!newBlockWord.trim() || isLoading"
         class="px-6 py-2.5 rounded-md text-sm font-medium transition-colors"
-        [ngClass]="newBlockWord.trim()
+        [ngClass]="newBlockWord.trim() && !isLoading
           ? 'bg-blue-700 text-white hover:bg-blue-800'
           : 'bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed'"
       >
-        Add Word
+        {{ isLoading ? 'Adding...' : 'Add Word' }}
       </button>
     </div>
   </div>
@@ -40,7 +41,7 @@
   <div class="bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg p-6">
     <div class="flex items-center justify-between mb-4">
       <h3 class="text-base font-semibold text-textLight dark:text-textDark">
-        All Block Words ({{ blockWords.length }})
+        All Block Words ({{ totalItems }})
       </h3>
     </div>
 
@@ -53,6 +54,7 @@
           (ngModelChange)="onSearchChange()"
           placeholder="Search Block Words.."
           class="w-full pl-4 pr-10 py-2 border border-[#8E8E8E] rounded-md text-sm bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          [disabled]="isLoading"
         />
         <i class="fa-solid fa-magnifying-glass absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
       </div>
@@ -61,7 +63,7 @@
       <div class="relative">
         <button
           (click)="toggleSortMenu()"
-          class="flex items-center gap-2 px-4 py-2 border border-[#8E8E8E] rounded-md text-sm text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          class="flex items-center gap-2 px-4 py-2 border border-[#8E8E8E] rounded-md text-sm text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
         >
           Sort : {{ sortOrder === 'asc' ? 'A - Z' : 'Z - A' }}
           <i class="fa-solid fa-chevron-down text-xs"></i>
@@ -73,13 +75,13 @@
         >
           <button
             (click)="setSortOrder('asc')"
-            class="block w-full text-left px-4 py-2 text-sm text-textLight dark:text-textDark hover:bg-gray-50 dark:hover:bg-gray-700"
+            class="block w-full text-left px-4 py-2 text-sm text-textLight dark:text-textDark hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
           >
             A - Z
           </button>
           <button
             (click)="setSortOrder('desc')"
-            class="block w-full text-left px-4 py-2 text-sm text-textLight dark:text-textDark hover:bg-gray-50 dark:hover:bg-gray-700"
+            class="block w-full text-left px-4 py-2 text-sm text-textLight dark:text-textDark hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
           >
             Z - A
           </button>
@@ -87,62 +89,78 @@
       </div>
     </div>
 
+    <!-- Loading state -->
+    <div *ngIf="isLoading" class="flex justify-center items-center py-8">
+      <i class="fa-solid fa-spinner fa-spin text-2xl text-blue-500"></i>
+      <span class="ml-3 text-textLight dark:text-textDark">Loading...</span>
+    </div>
+
     <!-- Word grid -->
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+    <div *ngIf="!isLoading" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
       <div
         *ngFor="let word of pagedWords"
-        class="flex items-center justify-between gap-2 px-4 py-2.5 border border-[#8E8E8E] rounded-md"
+        class="flex items-center justify-between gap-2 px-4 py-2.5 border border-[#8E8E8E] rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors group"
       >
-        <span class="text-sm text-textLight dark:text-textDark truncate">{{ word }}</span>
+        <span class="text-sm text-textLight dark:text-textDark truncate flex-grow">{{ word.word }}</span>
         <button
           type="button"
-          (click)="removeBlockWord(word)"
-          class="flex-shrink-0 text-[#1B3358] dark:text-[#7CA9D8] hover:opacity-80"
+          (click)="removeBlockWord(word.id, word.word)"
+          class="flex-shrink-0 text-[#1B3358] dark:text-[#7CA9D8] hover:opacity-80 transition-opacity"
           title="Remove word"
+          [disabled]="isLoading"
         >
           <i class="fa-solid fa-circle-xmark text-lg"></i>
         </button>
       </div>
 
       <div *ngIf="pagedWords.length === 0" class="col-span-full text-center text-sm text-gray-400 py-8">
-        No block words found.
+        <i class="fa-solid fa-inbox text-2xl mb-2 block"></i>
+        {{ searchTerm ? 'No block words found matching your search.' : 'No block words added yet.' }}
       </div>
     </div>
 
     <!-- Pagination -->
     <div
-      class="border-t border-[#8E8E8E] mt-6 pt-4 flex justify-end items-center gap-2"
+      class="border-t border-[#8E8E8E] mt-6 pt-4 flex flex-wrap justify-between items-center gap-4"
       *ngIf="totalPages > 1"
     >
-      <button
-        type="button"
-        (click)="prevPage()"
-        [disabled]="currentPage === 1"
-        class="w-8 h-8 flex items-center justify-center rounded-md border border-[#8E8E8E] text-textLight dark:text-textDark disabled:opacity-40"
-      >
-        <i class="fa-solid fa-chevron-left text-xs"></i>
-      </button>
+      <span class="text-sm text-textLight dark:text-textDark">
+        Showing {{ (currentPage - 1) * itemsPerPage + 1 }} - 
+        {{ Math.min(currentPage * itemsPerPage, totalItems) }} of {{ totalItems }}
+      </span>
 
-      <button
-        type="button"
-        *ngFor="let page of pageNumbers"
-        (click)="goToPage(page)"
-        class="w-8 h-8 flex items-center justify-center rounded-md text-sm font-medium"
-        [ngClass]="page === currentPage
-          ? 'bg-blue-700 text-white'
-          : 'border border-[#8E8E8E] text-textLight dark:text-textDark hover:bg-gray-50 dark:hover:bg-gray-700'"
-      >
-        {{ page }}
-      </button>
+      <div class="flex items-center gap-2">
+        <button
+          type="button"
+          (click)="prevPage()"
+          [disabled]="currentPage === 1 || isLoading"
+          class="w-8 h-8 flex items-center justify-center rounded-md border border-[#8E8E8E] text-textLight dark:text-textDark disabled:opacity-40 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+        >
+          <i class="fa-solid fa-chevron-left text-xs"></i>
+        </button>
 
-      <button
-        type="button"
-        (click)="nextPage()"
-        [disabled]="currentPage === totalPages"
-        class="w-8 h-8 flex items-center justify-center rounded-md border border-[#8E8E8E] text-textLight dark:text-textDark disabled:opacity-40"
-      >
-        <i class="fa-solid fa-chevron-right text-xs"></i>
-      </button>
+        <button
+          type="button"
+          *ngFor="let page of pageNumbers.slice(0, 5)"
+          (click)="goToPage(page)"
+          class="w-8 h-8 flex items-center justify-center rounded-md text-sm font-medium transition-colors"
+          [ngClass]="page === currentPage
+            ? 'bg-blue-700 text-white'
+            : 'border border-[#8E8E8E] text-textLight dark:text-textDark hover:bg-gray-50 dark:hover:bg-gray-700'"
+          [disabled]="isLoading"
+        >
+          {{ page }}
+        </button>
+
+        <button
+          type="button"
+          (click)="nextPage()"
+          [disabled]="currentPage === totalPages || isLoading"
+          class="w-8 h-8 flex items-center justify-center rounded-md border border-[#8E8E8E] text-textLight dark:text-textDark disabled:opacity-40 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+        >
+          <i class="fa-solid fa-chevron-right text-xs"></i>
+        </button>
+      </div>
     </div>
   </div>
 

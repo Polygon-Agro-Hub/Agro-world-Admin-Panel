@@ -156,8 +156,13 @@ editType() {
       return;
     }
 
+    const updateData = {
+        typeName: this.productObj.typeName,
+        shortCode: this.productObj.shortCode
+    };
+
     // Proceed with update
-    this.marketSrv.editProductType(this.productObj, this.productTypeId).subscribe({
+    this.marketSrv.editProductType(updateData, this.productTypeId).subscribe({
       next: (res) => {
         if (res.status) {
           Swal.fire({

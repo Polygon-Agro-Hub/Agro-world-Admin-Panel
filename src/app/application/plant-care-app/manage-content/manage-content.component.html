@@ -20,7 +20,8 @@
         class="flex-1 overflow-y-auto py-4 scrollbar-thin  scrollbar-thumb-[#FACD07]  scrollbar-track-gray-200 dark:scrollbar-thumb-[#FACD07] dark:scrollbar-track-gray-900">
         <!-- Image section -->
         <div class="flex justify-center my-4">
-          <img [src]="selectedNewsItem?.image" alt="Market Price Image" class="w-2/3 h-auto rounded-lg shadow-lg" />
+          <img [src]="selectedNewsItem?.image" alt="Market Price Image" 
+  class="w-2/3 h-auto rounded-lg drop-shadow-lg" />
         </div>
 
         <!-- English news section -->
@@ -34,7 +35,7 @@
               {{ selectedNewsItem?.titleEnglish }}
             </h3>
             <div [innerHTML]="safeHtmlDescriptionEnglish"
-              class="text-textLight dark:text-textDark text-left ml-2 break-words whitespace-pre-line"></div>
+              class="ql-editor !p-0 news-content text-textLight dark:text-textDark ml-2 break-words"></div>
           </div>
         </div>
 
@@ -49,7 +50,7 @@
               {{ selectedNewsItem?.titleSinhala }}
             </h3>
             <div [innerHTML]="safeHtmlDescriptionSinhala"
-              class="text-textLight dark:text-textDark text-left ml-2 break-words whitespace-pre-line"></div>
+              class="ql-editor !p-0 news-content text-textLight dark:text-textDark ml-2 break-words"></div>
           </div>
         </div>
 
@@ -64,7 +65,7 @@
               {{ selectedNewsItem?.titleTamil }}
             </h3>
             <div [innerHTML]="safeHtmlDescriptionTamil"
-              class="text-textLight dark:text-textDark text-left ml-2 break-words whitespace-pre-line"></div>
+              class="ql-editor !p-0 news-content text-textLight dark:text-textDark ml-2 break-words"></div>
           </div>
         </div>
       </div>

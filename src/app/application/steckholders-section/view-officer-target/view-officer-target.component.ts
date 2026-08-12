@@ -57,11 +57,7 @@ export class ViewOfficerTargetComponent {
     ).subscribe(
       (res) => {
         this.isLoading = false;
-        console.log(res);
-
         this.selectedOfficerDataArr = res.items;
-        console.log(res.items.length);
-
         this.hasData = res.items.length > 0;
       },
       (error) => {

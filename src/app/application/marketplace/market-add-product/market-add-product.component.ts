@@ -14,6 +14,7 @@ import { MatInputModule } from '@angular/material/input';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { ThemeService } from '../../../services/theme.service';
 import { DropdownModule } from 'primeng/dropdown';
+import { Braket } from 'aws-sdk';
 
 @Component({
   selector: 'app-market-add-product',
@@ -58,6 +59,8 @@ export class MarketAddProductComponent implements OnInit {
   ];
 
   productTypeOptions: { label: string; value: number }[] = [];
+
+  private integerOnlyFields = ['discountedPrice'];
 
   // In your component.ts
   unitTypeOptions = [
@@ -290,6 +293,10 @@ export class MarketAddProductComponent implements OnInit {
       );
     }
 
+    this.productObj.comPrice = parseFloat(
+    this.productObj.comPrice.toFixed(2)
+  );
+
     this.updateTags();
 
     // Check for empty required fields - INCLUDING ALL QUANTITY SECTION FIELDS
@@ -301,8 +308,13 @@ export class MarketAddProductComponent implements OnInit {
     if (!this.productObj.cropName) emptyFields.push('Display Name');
     if (!this.productObj.selectId) emptyFields.push('Crop');
     if (!this.productObj.varietyId) emptyFields.push('Variety');
+    if (!this.productObj.productTypeId || this.productObj.productTypeId === 0) {
+    emptyFields.push('Product Type');
+  }
     if (!this.productObj.normalPrice && this.productObj.normalPrice === 0)
       emptyFields.push('Price Per kg');
+    if (!this.productObj.comPrice && this.productObj.comPrice === 0)
+      emptyFields.push('Competitor Price');
 
     // QUANTITY SECTION FIELDS - All required fields
     if (!this.productObj.unitType) emptyFields.push('Default Unit Type');
@@ -341,6 +353,10 @@ export class MarketAddProductComponent implements OnInit {
       }
     }
 
+    if (this.productObj.productTypeId === 0 || !this.productObj.productTypeId) {
+    // Show validation message
+  }
+
     if (emptyFields.length > 0) {
       Swal.fire({
         icon: 'warning',
@@ -376,6 +392,10 @@ export class MarketAddProductComponent implements OnInit {
     if (!/^\d+(\.\d{1,2})?$/.test(this.productObj.normalPrice.toString())) {
       decimalIssues.push('Price Per kg must have max 2 decimal places');
     }
+
+    if (!/^\d+(\.\d{1,2})?$/.test(this.productObj.comPrice.toString())) {
+    decimalIssues.push('Competitor Price must have max 2 decimal places');
+  }
 
     if (
       this.productObj.promo &&
@@ -415,39 +435,91 @@ export class MarketAddProductComponent implements OnInit {
       return;
     }
 
-    // Validate price relationships
-    if (this.productObj.promo) {
-      if (this.productObj.salePrice <= 0) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Invalid Value',
-          text: 'Sale Price must be greater than 0, check the discount you applied',
-          confirmButtonText: 'OK',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold',
-          },
-        });
-        return;
-      }
-
-      if (
-        this.productObj.displaytype === 'AP&SP' &&
-        this.productObj.salePrice >= this.productObj.normalPrice
-      ) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Invalid Value',
-          text: 'Sale Price must be less than Actual Price',
-          confirmButtonText: 'OK',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold',
-          },
-        });
-        return;
-      }
+    let salePriceForComparison = 0;
+  
+  if (this.productObj.promo) {
+    // If there's a discount, use the discounted/sale price
+    if (this.productObj.displaytype === 'D&AP' || this.productObj.displaytype === 'AP&SP&D') {
+      salePriceForComparison = this.productObj.salePrice;
+    } else if (this.productObj.displaytype === 'AP&SP') {
+      salePriceForComparison = this.productObj.salePrice;
+    } else {
+      // If displaytype not set but promo is true, use salePrice as fallback
+      salePriceForComparison = this.productObj.salePrice || this.productObj.normalPrice;
     }
+  } else {
+    // If no discount, use normal price
+    salePriceForComparison = this.productObj.normalPrice;
+  }
+
+  // Check if competitor price is greater than or equal to sale price
+  if (this.productObj.comPrice <= salePriceForComparison) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Invalid Competitor Price',
+      html: 'Competitor price cannot be equal or lower than the Sale Price.',
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    });
+    return;
+  }
+
+    // In your onSubmit() method, replace this section:
+
+// Validate price relationships
+if (this.productObj.promo) {
+  // First validate discount percentage range
+  if (this.productObj.displaytype === 'D&AP' || this.productObj.displaytype === 'AP&SP&D') {
+    if (this.productObj.discountedPrice < 1 || this.productObj.discountedPrice > 99) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Invalid Discount Percentage',
+        text: 'Discount percentage must be between 1% and 99%.',
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        },
+      });
+      return;
+    }
+  }
+
+  // Then validate sale price
+  if (this.productObj.salePrice <= 0) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Invalid Value',
+      text: 'Sale Price must be greater than 0, check the discount you applied',
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    });
+    return;
+  }
+
+  if (
+    this.productObj.displaytype === 'AP&SP' &&
+    this.productObj.salePrice >= this.productObj.normalPrice
+  ) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Invalid Value',
+      text: 'Sale Price must be less than Actual Price',
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    });
+    return;
+  }
+}
 
     // Additional validations
     if (this.productObj.startValue <= 0) {
@@ -690,6 +762,13 @@ export class MarketAddProductComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     let value = input.value;
 
+    if (this.integerOnlyFields.includes(fieldName) && value.includes('.')) {
+    value = value.split('.')[0];
+    input.value = value;
+    if (fieldName === 'discountedPrice') {
+      this.productObj.discountedPrice = value ? parseInt(value, 10) : 0;
+    }
+  }
     // Prevent negative numbers and invalid characters
     if (value.includes('-') || value.toLowerCase().includes('e')) {
       value = value.replace(/[-e]/g, '');
@@ -730,6 +809,12 @@ export class MarketAddProductComponent implements OnInit {
             this.productForm.controls['maxQuntity'].markAsTouched();
           }
           break;
+        case 'comPrice':
+        this.productObj.comPrice = value ? parseFloat(value) : 0;
+        if (this.productForm && this.productForm.controls['competitorPrice']) {
+          this.productForm.controls['competitorPrice'].markAsTouched();
+        }
+          break;
       }
 
       event.preventDefault();
@@ -737,8 +822,17 @@ export class MarketAddProductComponent implements OnInit {
     }
 
     // Rest of your existing validation for decimal places
-    if (value.includes('.') && value.split('.')[1].length > 3) {
-      const truncatedValue = parseFloat(value).toFixed(3);
+    if (value.includes('.')) {
+    const decimalPlaces = value.split('.')[1].length;
+    
+    // For price fields (normalPrice, discountedPrice, salePrice, comPrice) - limit to 2 decimals
+    const priceFields = ['normalPrice', 'discountedPrice', 'salePrice', 'comPrice'];
+    const maxDecimals = priceFields.includes(fieldName) ? 2 : 3;
+    
+    if (decimalPlaces > maxDecimals) {
+      // For price fields, truncate to 2 decimals
+      // For quantity fields, truncate to 3 decimals
+      const truncatedValue = parseFloat(value).toFixed(maxDecimals);
       input.value = truncatedValue;
 
       switch (fieldName) {
@@ -747,6 +841,12 @@ export class MarketAddProductComponent implements OnInit {
           break;
         case 'discountedPrice':
           this.productObj.discountedPrice = parseFloat(truncatedValue);
+          break;
+        case 'salePrice':
+          this.productObj.salePrice = parseFloat(truncatedValue);
+          break;
+        case 'comPrice':
+          this.productObj.comPrice = parseFloat(truncatedValue);
           break;
         case 'startValue':
           this.productObj.startValue = parseFloat(truncatedValue);
@@ -759,17 +859,28 @@ export class MarketAddProductComponent implements OnInit {
           break;
       }
     }
+  }
 
     // Trigger the calculation if needed
     this.calculeSalePrice();
   }
 
-  preventInvalidChars(event: KeyboardEvent) {
-    // Block '-' and 'e' characters
-    if (event.key === '-' || event.key.toLowerCase() === 'e') {
-      event.preventDefault();
-    }
+  preventInvalidChars(event: KeyboardEvent, fieldName?: string) {
+  // Block '-' and 'e' characters (existing behavior)
+  if (event.key === '-' || event.key.toLowerCase() === 'e') {
+    event.preventDefault();
+    return;
   }
+
+  // Block '.' (and ',') for integer-only fields
+  if (
+    fieldName &&
+    this.integerOnlyFields.includes(fieldName) &&
+    (event.key === '.' || event.key === ',')
+  ) {
+    event.preventDefault();
+  }
+}
 
   validateQuantityRange() {
     if (
@@ -793,6 +904,15 @@ export class MarketAddProductComponent implements OnInit {
     }
     console.log('Unit Type changed:', this.isunitTypeKg);
   }
+
+  validateCompetitorPrice() {
+  if (this.productObj.comPrice < 0) {
+    this.productObj.comPrice = 0;
+  }
+  this.productObj.comPrice = parseFloat(
+    this.productObj.comPrice.toFixed(2)
+  );
+}
 }
 
 class Crop {
@@ -820,6 +940,7 @@ class MarketPrice {
   maxQuantity: number = 0;
   discountValue: number = 0;
   productTypeId: number = 0;
+  comPrice: number = 0;
 }
 
 class Variety {

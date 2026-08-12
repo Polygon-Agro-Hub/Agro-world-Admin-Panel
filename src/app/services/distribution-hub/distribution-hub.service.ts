@@ -4,7 +4,6 @@ import { TokenService } from '../token/services/token.service';
 import { environment } from '../../environment/environment';
 import { catchError, Observable, throwError } from 'rxjs';
 
-
 export interface DistributionDashboardData {
   // Stat cards
   totalHeadOfficers: number;
@@ -30,7 +29,7 @@ export interface DistributionDashboardData {
 export class DistributionHubService {
   resetPassword(
     itemId: number,
-    arg1: { currentPassword: string; newPassword: string }
+    arg1: { currentPassword: string; newPassword: string },
   ) {
     throw new Error('Method not implemented.');
   }
@@ -45,7 +44,10 @@ export class DistributionHubService {
   }
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
-  constructor(private http: HttpClient, private tokenService: TokenService) { }
+  constructor(
+    private http: HttpClient,
+    private tokenService: TokenService,
+  ) {}
 
   getAllCompanyDetails(search: string = ''): Observable<any> {
     const headers = new HttpHeaders({
@@ -65,7 +67,7 @@ export class DistributionHubService {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-    console.log('DELETE ITEM', id);
+
     return this.http.delete(`${this.apiUrl}distribution/delete-company/${id}`, {
       headers,
     });
@@ -75,7 +77,7 @@ export class DistributionHubService {
     companyId: number,
     page: number,
     limit: number,
-    searchText: string
+    searchText: string,
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -122,7 +124,7 @@ export class DistributionHubService {
             error: errorMessage,
             duplicateFields: error.error?.duplicateFields || [],
           }));
-        })
+        }),
       );
   }
 
@@ -145,7 +147,7 @@ export class DistributionHubService {
       `${this.apiUrl}distribution/get-all-centers-by-company/${companyId}`,
       {
         headers,
-      }
+      },
     );
   }
 
@@ -167,7 +169,7 @@ export class DistributionHubService {
 
     return this.http.get(
       `${this.apiUrl}distribution/get-distribution-head/${id}`,
-      { headers }
+      { headers },
     );
   }
 
@@ -180,7 +182,7 @@ export class DistributionHubService {
     return this.http.put(
       `${this.apiUrl}distribution/update-collection-officer/${id}`,
       updateData,
-      { headers }
+      { headers },
     );
   }
 
@@ -193,7 +195,7 @@ export class DistributionHubService {
       `${this.apiUrl}distribution/get-all-distribution-center-by-company/${companyId}`,
       {
         headers,
-      }
+      },
     );
   }
 
@@ -204,13 +206,12 @@ export class DistributionHubService {
     status: string = '',
     searchNIC: string = '',
     company: string,
-    role: string
+    role: string,
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    console.log(company);
 
     let url = `${this.apiUrl}distribution/get-all-distribution-officers?page=${page}&limit=${limit}`;
 
@@ -244,13 +245,12 @@ export class DistributionHubService {
     searchNIC: string = '',
     company: string,
     role: string,
-    centerId: any = ''
+    centerId: any = '',
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    console.log(company);
 
     let url = `${this.apiUrl}distribution/get-all-distribution-officers?page=${page}&limit=${limit}`;
     if (centerId) {
@@ -330,61 +330,57 @@ export class DistributionHubService {
 
   createDistributionOfficer(
     person: any,
-    selectedImage: any,
+    profileImageUrl?: string | null,
     driver?: any,
-    licFront?: any,
-    licBack?: any,
-    insFront?: any,
-    insBack?: any,
-    vehiFront?: any,
-    vehiBack?: any,
-    vehiSideA?: any,
-    vehiSideB?: any
+    licFrontUrl?: string | null,
+    licBackUrl?: string | null,
+    insFrontUrl?: string | null,
+    insBackUrl?: string | null,
+    vehiFrontUrl?: string | null,
+    vehiBackUrl?: string | null,
+    vehiSideAUrl?: string | null,
+    vehiSideBUrl?: string | null,
   ): Observable<any> {
-    const formData = new FormData();
-
-    // Add driver data if jobRole is Driver
-    if (person.jobRole === 'Driver' && driver) {
-      formData.append('driverData', JSON.stringify(driver));
-      if (licFront) formData.append('licFront', licFront);
-      if (licBack) formData.append('licBack', licBack);
-      if (insFront) formData.append('insFront', insFront);
-      if (insBack) formData.append('insBack', insBack);
-      if (vehiFront) formData.append('vehiFront', vehiFront);
-      if (vehiBack) formData.append('vehiBack', vehiBack);
-      if (vehiSideA) formData.append('vehiSideA', vehiSideA);
-      if (vehiSideB) formData.append('vehiSideB', vehiSideB);
-    }
-
-    formData.append('officerData', JSON.stringify(person));
-
-    if (selectedImage) {
-      formData.append('file', selectedImage);
-    }
-
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`,
-    });
-
-    return this.http.post(
-      `${this.apiUrl}distribution/create-distribution-officer`,
-      formData,
-      { headers }
-    );
-  }
-
-  getAllManagerList(companyId: any, centerId: any): Observable<any> {
-    console.log('companyId', companyId, 'centerId', centerId);
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    console.log('This is company Id', companyId);
+
+    const body: any = {
+      officerData: person,
+      profileImageUrl: profileImageUrl || null,
+    };
+
+    if (person.jobRole === 'Driver' && driver) {
+      body.driverData = driver;
+      body.licFrontUrl = licFrontUrl || null;
+      body.licBackUrl = licBackUrl || null;
+      body.insFrontUrl = insFrontUrl || null;
+      body.insBackUrl = insBackUrl || null;
+      body.vehiFrontUrl = vehiFrontUrl || null;
+      body.vehiBackUrl = vehiBackUrl || null;
+      body.vehiSideAUrl = vehiSideAUrl || null;
+      body.vehiSideBUrl = vehiSideBUrl || null;
+    }
+
+    return this.http.post(
+      `${this.apiUrl}distribution/create-distribution-officer`,
+      body,
+      { headers },
+    );
+  }
+
+  getAllManagerList(companyId: any, centerId: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
     return this.http.get(
       `${this.apiUrl}distribution/get-all-distribution-manager-list/${companyId}/${centerId}`,
       {
         headers,
-      }
+      },
     );
   }
 
@@ -407,7 +403,7 @@ export class DistributionHubService {
       `${this.apiUrl}distribution/get-all-assigning-cities/${province}/${district}`,
       {
         headers,
-      }
+      },
     );
   }
 
@@ -421,7 +417,7 @@ export class DistributionHubService {
       data,
       {
         headers,
-      }
+      },
     );
   }
 
@@ -435,7 +431,7 @@ export class DistributionHubService {
       data,
       {
         headers,
-      }
+      },
     );
   }
 
@@ -447,57 +443,53 @@ export class DistributionHubService {
       `${this.apiUrl}distribution/officer-details-monthly/${id}`,
       {
         headers,
-      }
+      },
     );
   }
 
   editDistributionOfficer(
     person: any,
     id: number,
-    selectedImage: any,
+    profileImageUrl?: string | null,
     driver?: any,
-    licFront?: any,
-    licBack?: any,
-    insFront?: any,
-    insBack?: any,
-    vehiFront?: any,
-    vehiBack?: any,
-    vehiSideA?: any,
-    vehiSideB?: any
+    licFrontUrl?: string | null,
+    licBackUrl?: string | null,
+    insFrontUrl?: string | null,
+    insBackUrl?: string | null,
+    vehiFrontUrl?: string | null,
+    vehiBackUrl?: string | null,
+    vehiSideAUrl?: string | null,
+    vehiSideBUrl?: string | null,
   ): Observable<any> {
-    const formData = new FormData();
-
-    // Attach officer data
-    formData.append('officerData', JSON.stringify(person));
-
-    // Attach profile image if provided
-    if (selectedImage) {
-      formData.append('file', selectedImage);
-    }
-
-    // Add driver data if jobRole is Driver
-    if (person.jobRole === 'Driver' && driver) {
-      formData.append('driverData', JSON.stringify(driver));
-
-      // Attach driver-related images only if they are new files
-      if (licFront) formData.append('licFront', licFront);
-      if (licBack) formData.append('licBack', licBack);
-      if (insFront) formData.append('insFront', insFront);
-      if (insBack) formData.append('insBack', insBack);
-      if (vehiFront) formData.append('vehiFront', vehiFront);
-      if (vehiBack) formData.append('vehiBack', vehiBack);
-      if (vehiSideA) formData.append('vehiSideA', vehiSideA);
-      if (vehiSideB) formData.append('vehiSideB', vehiSideB);
-    }
-
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
     });
+
+    const body: any = {
+      officerData: person,
+    };
+
+    if (profileImageUrl) {
+      body.profileImageUrl = profileImageUrl;
+    }
+
+    if (person.jobRole === 'Driver' && driver) {
+      body.driverData = driver;
+      if (licFrontUrl) body.licFrontUrl = licFrontUrl;
+      if (licBackUrl) body.licBackUrl = licBackUrl;
+      if (insFrontUrl) body.insFrontUrl = insFrontUrl;
+      if (insBackUrl) body.insBackUrl = insBackUrl;
+      if (vehiFrontUrl) body.vehiFrontUrl = vehiFrontUrl;
+      if (vehiBackUrl) body.vehiBackUrl = vehiBackUrl;
+      if (vehiSideAUrl) body.vehiSideAUrl = vehiSideAUrl;
+      if (vehiSideBUrl) body.vehiSideBUrl = vehiSideBUrl;
+    }
 
     return this.http.put(
       `${this.apiUrl}distribution/update-distribution-officer-details/${id}`,
-      formData,
-      { headers }
+      body,
+      { headers },
     );
   }
 
@@ -510,7 +502,7 @@ export class DistributionHubService {
       data,
       {
         headers,
-      }
+      },
     );
   }
 
@@ -522,7 +514,7 @@ export class DistributionHubService {
       `${this.apiUrl}distribution/get-officer-details/${id}`,
       {
         headers,
-      }
+      },
     );
   }
 
@@ -531,12 +523,12 @@ export class DistributionHubService {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    console.log('This is company Id', companyId);
+
     return this.http.get(
       `${this.apiUrl}distribution/get-all-distribution-center-list/${companyId}`,
       {
         headers,
-      }
+      },
     );
   }
 
@@ -549,7 +541,7 @@ export class DistributionHubService {
 
     return this.http.get<any>(
       `${this.apiUrl}distribution/get-all-return-reasons`,
-      { headers }
+      { headers },
     );
   }
 
@@ -562,7 +554,7 @@ export class DistributionHubService {
 
     return this.http.get<any>(
       `${this.apiUrl}distribution/get-return-reason/${id}`,
-      { headers }
+      { headers },
     );
   }
 
@@ -580,7 +572,7 @@ export class DistributionHubService {
     return this.http.post<any>(
       `${this.apiUrl}distribution/create-return-reason`,
       reasonData,
-      { headers }
+      { headers },
     );
   }
 
@@ -593,13 +585,13 @@ export class DistributionHubService {
 
     return this.http.delete<any>(
       `${this.apiUrl}distribution/delete-return-reason/${id}`,
-      { headers }
+      { headers },
     );
   }
 
   // Update indexes after reordering
   updateReturnReasonIndexes(
-    reasons: { id: number; indexNo: number }[]
+    reasons: { id: number; indexNo: number }[],
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -609,7 +601,7 @@ export class DistributionHubService {
     return this.http.post<any>(
       `${this.apiUrl}distribution/update-return-reason-indexes`,
       { reasons },
-      { headers }
+      { headers },
     );
   }
 
@@ -622,7 +614,7 @@ export class DistributionHubService {
 
     return this.http.get<any>(
       `${this.apiUrl}distribution/get-next-return-reason-index`,
-      { headers }
+      { headers },
     );
   }
 
@@ -634,7 +626,7 @@ export class DistributionHubService {
 
     return this.http.get<any>(
       `${this.apiUrl}distribution/get-all-hold-reasons`,
-      { headers }
+      { headers },
     );
   }
 
@@ -646,7 +638,7 @@ export class DistributionHubService {
 
     return this.http.get<any>(
       `${this.apiUrl}distribution/get-hold-reason/${id}`,
-      { headers }
+      { headers },
     );
   }
 
@@ -663,7 +655,7 @@ export class DistributionHubService {
     return this.http.post<any>(
       `${this.apiUrl}distribution/create-hold-reason`,
       reasonData,
-      { headers }
+      { headers },
     );
   }
 
@@ -675,12 +667,12 @@ export class DistributionHubService {
 
     return this.http.delete<any>(
       `${this.apiUrl}distribution/delete-hold-reason/${id}`,
-      { headers }
+      { headers },
     );
   }
 
   updateHoldReasonIndexes(
-    reasons: { id: number; indexNo: number }[]
+    reasons: { id: number; indexNo: number }[],
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -690,7 +682,7 @@ export class DistributionHubService {
     return this.http.post<any>(
       `${this.apiUrl}distribution/update-hold-reason-indexes`,
       { reasons },
-      { headers }
+      { headers },
     );
   }
 
@@ -702,7 +694,7 @@ export class DistributionHubService {
 
     return this.http.get<any>(
       `${this.apiUrl}distribution/get-next-hold-reason-index`,
-      { headers }
+      { headers },
     );
   }
 
@@ -734,7 +726,7 @@ export class DistributionHubService {
       {
         headers,
         params,
-      }
+      },
     );
   }
 
@@ -745,7 +737,7 @@ export class DistributionHubService {
     });
     return this.http.get<any>(
       `${this.apiUrl}distribution/get-distributed-vehicles?page=1&limit=1000`,
-      { headers }
+      { headers },
     );
   }
 
@@ -756,7 +748,7 @@ export class DistributionHubService {
     });
     return this.http.get<any>(
       `${this.apiUrl}distribution/get-distributed-vehicles?page=1&limit=1000`,
-      { headers }
+      { headers },
     );
   }
 
@@ -768,7 +760,7 @@ export class DistributionHubService {
     });
     return this.http.get<any>(
       `${this.apiUrl}distribution/get-today-delivery-tracking/${id}`,
-      { headers }
+      { headers },
     );
   }
 
@@ -778,7 +770,7 @@ export class DistributionHubService {
     limit: number = 10,
     status?: string,
     vehicleType?: string,
-    searchText?: string
+    searchText?: string,
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -801,22 +793,12 @@ export class DistributionHubService {
       params = params.set('searchText', searchText.trim());
     }
 
-    console.log('API Request params:', {
-      distributedCompanyCenterId,
-      page,
-      limit,
-      status,
-      vehicleType,
-      searchText,
-      finalParams: params.toString(),
-    });
-
     return this.http.get<any>(
       `${this.apiUrl}distribution/get-distributed-drivers-and-vehicles/${distributedCompanyCenterId}`,
       {
         headers,
         params,
-      }
+      },
     );
   }
 
@@ -826,40 +808,39 @@ export class DistributionHubService {
     status: string = '',
     searchText: string = '',
     date: string | Date | null = '',
-    timeSlot: string = ''
+    timeSlot: string = '',
   ): Observable<any> {
-  
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-  
+
     let url = `${this.apiUrl}distribution/get-center-home-delivery-orders?activeTab=${activeTab}&centerId=${centerId}`;
-  
+
     if (status) {
       url += `&status=${status}`;
     }
-  
+
     if (searchText) {
       url += `&searchText=${searchText}`;
     }
-  
+
     if (date) {
       const formattedDate =
         date instanceof Date
           ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
           : date;
-    
+
       url += `&date=${formattedDate}`;
     }
-  
+
     if (timeSlot) {
       url += `&timeSlot=${timeSlot}`;
     }
-  
+
     return this.http.get(url, { headers });
   }
-  
+
   getPolygonCenterDashbordDetails(id: number): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -867,14 +848,14 @@ export class DistributionHubService {
     });
     return this.http.get<any>(
       `${this.apiUrl}distribution/polygon-center-dashbord-details/${id}`,
-      { headers }
+      { headers },
     );
   }
 
   getPickupCashRevenue(
     id: string,
     search?: string,
-    filterDate?: string
+    filterDate?: string,
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -891,14 +872,14 @@ export class DistributionHubService {
 
     return this.http.get<any>(
       `${this.apiUrl}distribution/get-pikup-cash-revenue/${id}`,
-      { headers, params }
+      { headers, params },
     );
   }
 
   getDriverCashRevenue(
     id: string,
     search?: string,
-    filterDate?: string
+    filterDate?: string,
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -915,7 +896,7 @@ export class DistributionHubService {
 
     return this.http.get<any>(
       `${this.apiUrl}distribution/get-driver-cash-revenue/${id}`,
-      { headers, params }
+      { headers, params },
     );
   }
 
@@ -924,7 +905,10 @@ export class DistributionHubService {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    return this.http.get<any>(`${this.apiUrl}distribution/get-home-delivery-tracking/${id}`, { headers });
+    return this.http.get<any>(
+      `${this.apiUrl}distribution/get-home-delivery-tracking/${id}`,
+      { headers },
+    );
   }
 
   getRecivedCashDashbord(id: number | null): Observable<any> {
@@ -932,20 +916,24 @@ export class DistributionHubService {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    return this.http.get<any>(`${this.apiUrl}distribution/get-recived-cash-dashbord/${id}`, { headers });
+    return this.http.get<any>(
+      `${this.apiUrl}distribution/get-recived-cash-dashbord/${id}`,
+      { headers },
+    );
   }
 
-  getDistributionDashboard(): Observable<{ success: boolean; data: DistributionDashboardData }> {
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${this.token}`,
-    'Content-Type': 'application/json',
-  });
- 
-  return this.http.get<{ success: boolean; data: DistributionDashboardData }>(
-    `${this.apiUrl}distribution/get-dashboard`,
-    { headers }
-  );
-}
-}
+  getDistributionDashboard(): Observable<{
+    success: boolean;
+    data: DistributionDashboardData;
+  }> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
 
-
+    return this.http.get<{ success: boolean; data: DistributionDashboardData }>(
+      `${this.apiUrl}distribution/get-dashboard`,
+      { headers },
+    );
+  }
+}

@@ -1,6 +1,6 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-<div class="fixed-width-container" style="min-width: 1200px">
+<div class="fixed-width-container w-full">
   <button class="mb-5 text-textLight dark:text-textDark" onclick="history.back()"
     class="mb-5 text-textLight dark:text-textDark">
     <i class="fa-solid fa-arrow-left"></i>
@@ -16,206 +16,258 @@
     </svg>
     Add New
   </button>
-  <div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg  ">
-    <div class="flex justify-between items-center mb-8">
-      <div class="flex items-center">
-        <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-          All Products ({{ this.totalItems }})
-        </h2>
+
+  <div
+    class="py-5 w-full bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+    <div class="px-12 min-w-max">
+
+      <div class="flex justify-left items-center mb-8">
+        <div class="flex items-center">
+          <h2 class="text-2xl font-normal text-textLight dark:text-textDark whitespace-nowrap">
+            All Products ({{ this.totalItems }})
+          </h2>
+        </div>
+        <div class="flex items-center mx-5">
+          <div class="mr-5">
+            <p-dropdown
+              styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+              [options]="categoryOption" [(ngModel)]="selectedCategoryOption" (onChange)="onDisplayTypeChange()"
+              [checkmark]="false" optionLabel="name" [showClear]="true" placeholder="Category"></p-dropdown>
+          </div>
+
+          <div class="mr-5">
+            <p-dropdown
+              styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] w-full sm:w-auto"
+              [options]="productTypeOptions" [(ngModel)]="selectedProductType" (onChange)="onProductTypeChange()"
+              [checkmark]="false" optionLabel="name" [showClear]="true" placeholder="Type">
+            </p-dropdown>
+          </div>
+
+          <div class="mr-5">
+            <p-dropdown
+              styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] w-full sm:w-auto"
+              [options]="displayOptions" [(ngModel)]="selectedDisplayType" (onChange)="onDisplayTypeChange()"
+              [checkmark]="false" optionLabel="name" [showClear]="true" placeholder="Display"></p-dropdown>
+          </div>
+
+          <div class="flex items-center rounded-full px-4 py-2 w-full sm:w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
+            <input type="text" placeholder="Search by Display Name, Crop / Variety"
+              class="bg-transparent outline-none w-full text-textLight dark:text-textDark" [(ngModel)]="searchVariety"
+              (keydown.enter)="searchProduct()" />
+            <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+              (click)="searchProduct()">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
+              </svg>
+            </button>
+            <button type="button" (click)="clearSearch()" class="text-gray-500 hover:text-gray-700 focus:outline-none">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
       </div>
-      <div class="flex items-center">
-        <div class="mr-5">
-          <p-dropdown
-            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="categoryOption" [(ngModel)]="selectedCategoryOption" (onChange)="onDisplayTypeChange()"
-            [checkmark]="false" optionLabel="name" [showClear]="true" placeholder="Category"></p-dropdown>
-        </div>
 
-        <div class="mr-5">
-          <p-dropdown
-            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] w-full sm:w-auto"
-            [options]="productTypeOptions" [(ngModel)]="selectedProductType" (onChange)="onProductTypeChange()"
-            [checkmark]="false" optionLabel="name" [showClear]="true" placeholder="Type">
-          </p-dropdown>
-        </div>
+      <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6">
+        <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
+        <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+      </div>
 
-        <div class="mr-5">
-          <p-dropdown
-            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] w-full sm:w-auto"
-            [options]="displayOptions" [(ngModel)]="selectedDisplayType" (onChange)="onDisplayTypeChange()"
-            [checkmark]="false" optionLabel="name" [showClear]="true" placeholder="Display"></p-dropdown>
-        </div>
+      <div *ngIf="hasData">
+        <table class="w-full divide-y divide-gray-200">
+          <thead>
+            <tr>
+              <th class="py-3 px-4 font-normal text-[#5C5C5C] text-left">No</th>
+              <th class="py-3 px-4 font-normal text-[#5C5C5C] text-left whitespace-nowrap">
+                Display Name
+              </th>
+              <th class="py-3 px-4 font-normal text-[#5C5C5C] text-left">
+                Category
+              </th>
+              <th class="py-3 px-4 font-normal text-[#5C5C5C] text-left">
+                Type
+              </th>
+              <th class="py-3 px-4 font-normal text-[#5C5C5C] text-left whitespace-nowrap">Crop</th>
+              <th class="py-3 px-4 font-normal text-[#5C5C5C] text-left whitespace-nowrap">
+                Variety
+              </th>
+              <th class="py-3 px-4 font-normal text-[#5C5C5C] text-left whitespace-nowrap">
+                Status
+              </th>
+              <th class="py-3 px-4 font-normal text-[#5C5C5C] text-left">
+                Display
+              </th>
+              <th class="py-3 px-4 font-normal text-[#5C5C5C] text-center">
+                Discount(%)
+              </th>
+              <th class="py-3 px-4 font-normal text-[#5C5C5C] text-center whitespace-nowrap">
+                Actual Price (Rs.)
+              </th>
+              <th class="py-3 px-4 font-normal text-[#5C5C5C] text-center whitespace-nowrap">
+                Sale Price (Rs.)
+              </th>
+              <th class="py-3 px-4 font-normal text-[#5C5C5C] text-center whitespace-nowrap">
+                Competitor Price (Rs.)
+              </th>
+              <th class="py-3 px-4 font-normal text-[#5C5C5C] text-center">
+                Unit
+              </th>
+              <th class="py-3 px-4 font-normal text-[#5C5C5C] text-center whitespace-nowrap">
+                Min QTY
+              </th>
+              <th class="py-3 px-4 font-normal text-[#5C5C5C] text-center whitespace-nowrap"
+                *ngIf="showMaxQuantityColumn()">
+                Max QTY
+              </th>
+              <th class="py-3 px-4 font-normal text-[#5C5C5C] text-center whitespace-nowrap">
+                Change By
+              </th>
+              <th class="py-3 px-4 font-normal text-[#5C5C5C] text-center whitespace-nowrap">
+                Last Modified By
+              </th>
+              <th class="py-3 px-4 font-normal text-gray-500 text-center"></th>
+              <!-- <th class="py-3 px-4 font-normal text-gray-500 text-center"></th> -->
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="
+                let item of viewProductList
+                  | paginate
+                    : {
+                        itemsPerPage: itemsPerPage,
+                        currentPage: page,
+                        totalItems: totalItems
+                      };
+                let i = index
+              " class="border-b border-gray-200 dark:border-[#4B555A]">
+              <td class="py-3 px-4 text-[#000000] dark:text-textDark">
+                {{ (page - 1) * itemsPerPage + i + 1 }}
+              </td>
+              <td class="py-3 px-4 text-[#000000] dark:text-textDark whitespace-nowrap">
+                {{ item.displayName }}
+              </td>
+              <td class="py-3 px-4 text-[#000000] dark:text-textDark">
+                {{ item.category }}
+              </td>
+              <td class="px-4 py-3 text-[#000000] dark:text-textDark text-left" [ngClass]="{ 'text-[#FF383C]': item.productTypeIsValid === 0 }">
+                {{ item.productTypeShortCode || "-" }}
+              </td>
+              <td class="px-4 py-3 text-[#000000] dark:text-textDark text-left whitespace-nowrap">
+                {{ item.cropNameEnglish }}
+              </td>
+              <td class="px-4 py-3 text-[#000000] dark:text-textDark text-left whitespace-nowrap">
+                {{ item.varietyNameEnglish }}
+              </td>
+              <td class="px-4 py-3 text-center">
+                <button type="button" role="switch" [attr.aria-checked]="item.isEnable === 1"
+                  (click)="toggleStatus(item)"
+                  [disabled]="!(permissionService.hasPermission('Change product enable status') || tokenService.getUserDetails().role === '1')"
+                  class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+                  [ngClass]="item.isEnable === 1 ? 'bg-[#007AFF]' : 'bg-gray-300 dark:bg-[#4B555A]'">
+                  <span class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200"
+                    [ngClass]="item.isEnable === 1 ? 'translate-x-6' : 'translate-x-1'"></span>
+                </button>
+              </td>
+              <td class="px-4 py-3 text-[#797979] dark:text-textDark text-left whitespace-nowrap italic">
+                <span *ngIf="!item.displayType">No Discount</span>
+                <span *ngIf="item.displayType === 'D&AP'">%, Actual</span>
+                <span *ngIf="item.displayType === 'AP&SP'">Actual, Sale</span>
+                <span *ngIf="item.displayType === 'AP&SP&D'">%, Actual, Sale</span>
+                <span *ngIf="
+                    item.displayType &&
+                    item.displayType !== 'D&AP' &&
+                    item.displayType !== 'AP&SP' &&
+                    item.displayType !== 'AP&SP&D'
+                  ">{{ item.displayType }}</span>
+              </td>
+              <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
+                <ng-container *ngIf="item.discount > 0; else noDiscount">
+                  {{ formatDiscountPercentage(item.discount, item.normalPrice) }}
+                </ng-container>
+                <ng-template #noDiscount>No</ng-template>
+              </td>
 
-        <div class="flex items-center rounded-full px-4 py-2 w-full sm:w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
-          <input type="text" placeholder="Search by Display Name, Crop / Variety"
-            class="bg-transparent outline-none w-full text-textLight dark:text-textDark" [(ngModel)]="searchVariety"
-            (keydown.enter)="searchProduct()" />
-          <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-            (click)="searchProduct()">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
-            </svg>
-          </button>
-          <button type="button" (click)="clearSearch()" class="text-gray-500 hover:text-gray-700 focus:outline-none">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+              <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
+                {{ item.normalPrice }}
+              </td>
+              <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
+                {{ item.discountedPrice || "----" }}
+              </td>
+              <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
+                {{ item.comPrice || "----" }}
+              </td>
+              <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
+                {{ item.unitType }}
+              </td>
+              <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
+                {{ formatNumber(item.startValue) }}
+              </td>
+              <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark" *ngIf="showMaxQuantityColumn()">
+                {{ formatNumber(item.maxQuantity) || '----' }}
+              </td>
+              <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
+                {{ formatNumber(item.changeby) }}
+              </td>
+              <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
+                {{ item.modifyBy || '----' }}
+              </td>
+              <td class="py-3 px-4 text-center"
+                *ngIf="permissionService.hasPermission('Edit product') || tokenService.getUserDetails().role === '1'">
+                <button class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd] text-center"
+                  (click)="editProduct(item.id)">
+                  <svg fill="currentColor" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M7.263 19.051l-1.656 5.797c-0.030 0.102-0.048 0.22-0.048 0.342 0 0.691 0.559 1.251 1.25 1.252h0c0.126-0 0.248-0.019 0.363-0.053l-0.009 0.002 5.622-1.656c0.206-0.063 0.383-0.17 0.527-0.311l-0 0 17.568-17.394c0.229-0.227 0.371-0.541 0.371-0.889 0-0.345-0.14-0.657-0.365-0.883l-4.141-4.142c-0.227-0.226-0.539-0.366-0.885-0.366s-0.658 0.14-0.885 0.366v0l-17.394 17.394c-0.146 0.146-0.256 0.329-0.316 0.532l-0.002 0.009zM25.859 3.768l2.369 2.369-2.369 2.346-2.37-2.345zM9.578 20.049l12.144-12.144 2.361 2.336-12.307 12.184-3.141 0.924zM30 12.75c-0.69 0-1.25 0.56-1.25 1.25v14.75h-25.5v-25.5h14.75c0.69 0 1.25-0.56 1.25-1.25s-0.56-1.25-1.25-1.25v0h-16c-0.69 0-1.25 0.56-1.25 1.25v0 28c0 0.69 0.56 1.25 1.25 1.25h28c0.69-0.001 1.249-0.56 1.25-1.25v-16c-0-0.69-0.56-1.25-1.25-1.25h-0z">
+                    </path>
+                  </svg>
+                </button>
+              </td>
+              <!-- <td class="px-4 py-3 text-center"
+                *ngIf="permissionService.hasPermission('Delete product') || tokenService.getUserDetails().role === '1'">
+                <button class="w-6 h-6 ml-3 text-[#fc3636] hover:text-[#f38f8f]" (click)="deleteProduct(item.id)">
+                  <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                    viewBox="0 0 24 24">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
+                  </svg>
+                </button>
+              </td> -->
+            </tr>
+          </tbody>
+        </table>
+        <div class="dark:bg-[#262f45]">
+          <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
+            [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
+            [screenReaderCurrentLabel]="'Youre on page'">
+          </pagination-controls>
         </div>
       </div>
+
     </div>
+  </div>
+  <div *ngIf="showStatusConfirm" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+    <div class="bg-white dark:bg-[#363636] rounded-2xl shadow-xl w-full max-w-md mx-4 px-8 py-6">
+      <p class="text-lg text-center text-gray-900 dark:text-textDark">
+        {{ statusConfirmMessage }}
+      </p>
 
-    <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6">
-      <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
-      <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
-    </div>
+      <p *ngIf="statusConfirmWarning" class="italic text-sm text-center text-red-600 dark:text-red-400 mt-3">
+        {{ statusConfirmWarning }}
+      </p>
 
-    <div *ngIf="hasData"
-      class="overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
-      <table class="min-w-full divide-y divide-gray-200">
-        <thead>
-          <tr>
-            <th class="py-3 px-4 font-normal text-[#5C5C5C] text-left">No</th>
-            <th class="py-3 px-4 font-normal text-[#5C5C5C] text-left whitespace-nowrap">
-              Display Name
-            </th>
-            <th class="py-3 px-4 font-normal text-[#5C5C5C] text-left">
-              Category
-            </th>
-            <th class="py-3 px-4 font-normal text-[#5C5C5C] text-left">
-              Type
-            </th>
-            <th class="py-3 px-4 font-normal text-[#5C5C5C] text-left whitespace-nowrap">Crop</th>
-            <th class="py-3 px-4 font-normal text-[#5C5C5C] text-left whitespace-nowrap">
-              Variety
-            </th>
-            <th class="py-3 px-4 font-normal text-[#5C5C5C] text-center">
-              Display
-            </th>
-            <th class="py-3 px-4 font-normal text-[#5C5C5C] text-center">
-              Discount(%)
-            </th>
-            <th class="py-3 px-4 font-normal text-[#5C5C5C] text-center whitespace-nowrap">
-              Actual Price (Rs.)
-            </th>
-            <!-- <th class="py-3 px-4 font-normal text-gray-500 text-center">
-              Discounted Price
-            </th> -->
-            <th class="py-3 px-4 font-normal text-[#5C5C5C] text-center">
-              Unit
-            </th>
-            <th class="py-3 px-4 font-normal text-[#5C5C5C] text-center whitespace-nowrap">
-              Min QTY
-            </th>
-            <th class="py-3 px-4 font-normal text-[#5C5C5C] text-center whitespace-nowrap"
-              *ngIf="showMaxQuantityColumn()">
-              Max QTY
-            </th>
-            <th class="py-3 px-4 font-normal text-[#5C5C5C] text-center whitespace-nowrap">
-              Change By
-            </th>
-            <th class="py-3 px-4 font-normal text-gray-500 text-center"></th>
-            <th class="py-3 px-4 font-normal text-gray-500 text-center"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="
-              let item of viewProductList
-                | paginate
-                  : {
-                      itemsPerPage: itemsPerPage,
-                      currentPage: page,
-                      totalItems: totalItems
-                    };
-              let i = index
-            " class="border-b border-gray-200 dark:border-[#4B555A]">
-            <td class="py-3 px-4 text-[#000000] dark:text-textDark">
-              {{ (page - 1) * itemsPerPage + i + 1 }}
-            </td>
-            <td class="py-3 px-4 text-[#000000] dark:text-textDark whitespace-nowrap">
-              {{ item.displayName }}
-            </td>
-            <td class="py-3 px-4 text-[#000000] dark:text-textDark">
-              {{ item.category }}
-            </td>
-            <td class="px-4 py-3 text-[#000000] dark:text-textDark text-left">
-              {{ item.productTypeShortCode || "-" }}
-            </td>
-            <td class="px-4 py-3 text-[#000000] dark:text-textDark text-left whitespace-nowrap">
-              {{ item.cropNameEnglish }}
-            </td>
-            <td class="px-4 py-3 text-[#000000] dark:text-textDark text-left whitespace-nowrap">
-              {{ item.varietyNameEnglish }}
-            </td>
-            <td class="px-4 py-3 text-[#797979] dark:text-textDark text-center whitespace-nowrap">
-              <span *ngIf="!item.displayType">No</span>
-              <span *ngIf="item.displayType === 'D&AP'">%, Actual</span>
-              <span *ngIf="item.displayType === 'AP&SP'">Actual, Sale</span>
-              <span *ngIf="item.displayType === 'AP&SP&D'">%, Actual, Sale</span>
-              <span *ngIf="
-                  item.displayType &&
-                  item.displayType !== 'D&AP' &&
-                  item.displayType !== 'AP&SP' &&
-                  item.displayType !== 'AP&SP&D'
-                ">{{ item.displayType }}</span>
-            </td>
-            <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
-              <ng-container *ngIf="item.discount > 0; else noDiscount">
-                {{ formatDiscountPercentage(item.discount, item.normalPrice) }}
-              </ng-container>
-              <ng-template #noDiscount>No</ng-template>
-            </td>
-
-            <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
-              {{ item.normalPrice }}
-            </td>
-            <!-- <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              {{ item.discountedPrice }}
-            </td> -->
-            <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
-              {{ item.unitType }}
-            </td>
-            <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
-              {{ item.startValue }}
-            </td>
-            <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark" *ngIf="showMaxQuantityColumn()">
-              {{ item.maxQuantity || "-" }}
-            </td>
-            <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
-              {{ item.changeby }}
-            </td>
-            <td class="px-4 py-3 text-center"
-              *ngIf="permissionService.hasPermission('Edit product') || tokenService.getUserDetails().role === '1'">
-              <button class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd] text-center"
-                (click)="editProduct(item.id)">
-                <svg fill="currentColor" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M7.263 19.051l-1.656 5.797c-0.030 0.102-0.048 0.22-0.048 0.342 0 0.691 0.559 1.251 1.25 1.252h0c0.126-0 0.248-0.019 0.363-0.053l-0.009 0.002 5.622-1.656c0.206-0.063 0.383-0.17 0.527-0.311l-0 0 17.568-17.394c0.229-0.227 0.371-0.541 0.371-0.889 0-0.345-0.14-0.657-0.365-0.883l-4.141-4.142c-0.227-0.226-0.539-0.366-0.885-0.366s-0.658 0.14-0.885 0.366v0l-17.394 17.394c-0.146 0.146-0.256 0.329-0.316 0.532l-0.002 0.009zM25.859 3.768l2.369 2.369-2.369 2.346-2.37-2.345zM9.578 20.049l12.144-12.144 2.361 2.336-12.307 12.184-3.141 0.924zM30 12.75c-0.69 0-1.25 0.56-1.25 1.25v14.75h-25.5v-25.5h14.75c0.69 0 1.25-0.56 1.25-1.25s-0.56-1.25-1.25-1.25v0h-16c-0.69 0-1.25 0.56-1.25 1.25v0 28c0 0.69 0.56 1.25 1.25 1.25h28c0.69-0.001 1.249-0.56 1.25-1.25v-16c-0-0.69-0.56-1.25-1.25-1.25h-0z">
-                  </path>
-                </svg>
-              </button>
-            </td>
-            <td class="px-4 py-3 text-center"
-              *ngIf="permissionService.hasPermission('Delete product') || tokenService.getUserDetails().role === '1'">
-              <button class="w-6 h-6 ml-3 text-[#fc3636] hover:text-[#f38f8f]" (click)="deleteProduct(item.id)">
-                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                  viewBox="0 0 24 24">
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
-                </svg>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="dark:bg-[#262f45]">
-        <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
-          [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
-          [screenReaderCurrentLabel]="'Youre on page'">
-        </pagination-controls>
+      <div class="flex justify-center gap-3 mt-6">
+        <button type="button" (click)="onStatusConfirmCancelled()"
+          class="px-5 py-2 rounded-lg bg-gray-500 hover:bg-gray-600 text-white font-medium">
+          No, Go Back
+        </button>
+        <button type="button" (click)="onStatusConfirmConfirmed()"
+          class="px-5 py-2 rounded-lg bg-[#3980C0] hover:bg-[#3273ad] text-white font-medium">
+          Yes, Confirm
+        </button>
       </div>
     </div>
   </div>

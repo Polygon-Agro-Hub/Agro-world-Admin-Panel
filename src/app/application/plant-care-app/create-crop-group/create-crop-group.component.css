@@ -157,3 +157,11 @@
 ::ng-deep .p-dropdown-custom .p-dropdown .p-dropdown-label {
   background-color: transparent !important;
 }
+
+::ng-deep .parent-category-dropdown .p-dropdown-label.p-placeholder {
+  color: #374151 !important;
+}
+
+::ng-deep .parent-category-dropdown .p-dropdown-label {
+  color: #374151 !important;
+}

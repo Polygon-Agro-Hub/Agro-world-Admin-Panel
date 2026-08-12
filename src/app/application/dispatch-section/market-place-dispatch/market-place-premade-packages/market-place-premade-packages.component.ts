@@ -139,6 +139,7 @@ interface PremadePackages {
   packPackageItems: number;
   totalAdditionalItems: number;
   packedAdditionalItems: number;
+  additionalItemsPrice: number;
   packingStatus: string;
   additionalItemsStatus: string;
   packageStatus: string,

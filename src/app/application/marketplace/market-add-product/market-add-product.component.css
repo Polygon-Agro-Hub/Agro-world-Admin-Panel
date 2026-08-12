@@ -295,3 +295,126 @@
 .mat-icon {
   color: var(--icon-color);
 }
+
+/* Add this to your existing CSS */
+
+/* Fix for dropdown placeholder text */
+::ng-deep .p-dropdown .p-dropdown-label.p-placeholder {
+  font-size: 1rem !important;
+  font-weight: 400 !important;
+  color: #7A7A7A !important; /* gray-500 for light mode */
+  font-family: inherit !important;
+}
+
+::ng-deep .dark .p-dropdown .p-dropdown-label.p-placeholder {
+  color: #9CA3AF !important; /* gray-400 for dark mode */
+}
+
+/* Fix for dropdown selected value text */
+::ng-deep .p-dropdown .p-dropdown-label {
+  font-size: 1rem !important;
+  font-weight: 400 !important;
+  color: #534E4E !important; /* gray-800 for light mode */
+  font-family: inherit !important;
+}
+
+::ng-deep .dark .p-dropdown .p-dropdown-label {
+  color: #F9FAFB !important; /* gray-50 for dark mode */
+}
+
+/* Fix for dropdown options */
+::ng-deep .p-dropdown-item {
+  font-size: 1rem !important;
+  font-weight: 400 !important;
+  color: #1F2937 !important;
+  font-family: inherit !important;
+  padding: 0.5rem 0.75rem !important;
+}
+
+::ng-deep .dark .p-dropdown-item {
+  color: #F9FAFB !important;
+}
+
+/* Fix for dropdown panel background and text */
+::ng-deep .p-dropdown-panel {
+  font-family: inherit !important;
+}
+
+/* Ensure consistent font in dropdown filter input */
+::ng-deep .p-dropdown-filter {
+  font-size: 1rem !important;
+  font-weight: 400 !important;
+  font-family: inherit !important;
+  color: #1F2937 !important;
+}
+
+::ng-deep .dark .p-dropdown-filter {
+  color: #F9FAFB !important;
+  background-color: #4B5563 !important;
+}
+
+/* Fix for dropdown trigger icon alignment */
+::ng-deep .p-dropdown-trigger {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Ensure dropdown height matches input fields */
+::ng-deep .p-dropdown {
+  height: 42px !important;
+  min-height: 42px !important;
+}
+
+::ng-deep .p-dropdown .p-dropdown-label {
+  display: flex !important;
+  align-items: center !important;
+  height: 100% !important;
+  padding: 0.5rem 0.75rem !important;
+}
+
+/* Fix for dropdown placeholder in dark mode */
+::ng-deep .dark .p-dropdown .p-dropdown-label.p-placeholder {
+  color: #9CA3AF !important;
+  opacity: 1 !important;
+}
+
+/* Fix for dropdown empty message */
+::ng-deep .p-dropdown-empty-message {
+  font-size: 1rem !important;
+  font-weight: 400 !important;
+  color: #6B7280 !important;
+  font-family: inherit !important;
+}
+
+::ng-deep .dark .p-dropdown-empty-message {
+  color: #9CA3AF !important;
+}
+
+/* Ensure consistent font family for all dropdown elements */
+::ng-deep .p-dropdown,
+::ng-deep .p-dropdown *,
+::ng-deep .p-dropdown-panel,
+::ng-deep .p-dropdown-panel * {
+  font-family: inherit !important;
+}
+
+/* Fix for selected item highlight */
+::ng-deep .p-dropdown-item.p-highlight {
+  background-color: #DBEAFE !important;
+  color: #1E40AF !important;
+}
+
+::ng-deep .dark .p-dropdown-item.p-highlight {
+  background-color: #1E40AF !important;
+  color: #FFFFFF !important;
+}
+
+/* Fix for dropdown hover state */
+::ng-deep .p-dropdown-item:hover {
+  background-color: #F3F4F6 !important;
+}
+
+::ng-deep .dark .p-dropdown-item:hover {
+  background-color: #4B5563 !important;
+}

@@ -58,16 +58,12 @@ export class SalesAgentsService {
 
   createSalesAgent(person: any, selectedImage: any): Observable<any> {
     const formData = new FormData();
-    formData.append("officerData", JSON.stringify(person)); // Attach officer data as a string
-    console.log(formData);
+    formData.append("officerData", JSON.stringify(person)); 
 
     if (selectedImage) {
-      formData.append('file', selectedImage); // Attach the file (ensure the key matches the expected field name on the backend)
+      formData.append('file', selectedImage); 
     }
     
-
-
-    // No need to set Content-Type headers manually; Angular will handle it for FormData
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });

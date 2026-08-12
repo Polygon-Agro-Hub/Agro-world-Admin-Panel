@@ -136,4 +136,42 @@ export class CollectionOfficerService {
       { headers }
     );
   }
+
+  getAllDriveCategories(search: string = ''): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+  });
+
+  let url = `${this.apiUrl}auth/driver/get-all-drive-categories`;
+
+  if (search) {
+    url += `?search=${search}`;
+  }
+
+  return this.http.get<any>(url, { headers });
+}
+
+getDriveCategoryById(id: number): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+  });
+
+  return this.http.get<any>(`${this.apiUrl}auth/driver/get-drive-category/${id}`, { headers });
+}
+
+addDriveCategory(data: any): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+  });
+
+  return this.http.post<any>(`${this.apiUrl}auth/driver/add-drive-category`, data, { headers });
+}
+
+updateDriveCategory(id: number, data: any): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+  });
+
+  return this.http.put<any>(`${this.apiUrl}auth/driver/update-drive-category/${id}`, data, { headers });
+}
 }

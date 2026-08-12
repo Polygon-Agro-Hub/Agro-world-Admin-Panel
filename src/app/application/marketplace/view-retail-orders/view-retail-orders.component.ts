@@ -63,7 +63,10 @@ export class ViewRetailOrdersComponent implements OnInit {
     { label: 'On the Way', value: 'On the way' },
     { label: 'Processing', value: 'Processing' },
     { label: 'Ready to Pickup', value: 'Ready to Pickup' },
-  ];
+    { label: 'Collected', value: 'Collected' },
+    { label: 'Return', value: 'Return' },
+    { label: 'Return Received', value: 'Return Received' },
+  ].sort((a, b) => a.label.localeCompare(b.label));
 
   constructor(
     private router: Router,
@@ -276,4 +279,7 @@ class RetailOrders {
   status!: string;
   orderdDate!: Date;
   qrCode!: string;
+  paymentMethod!: string;
+  creditPaid!: number;
+  moneyPaid!: number;
 }

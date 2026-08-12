@@ -145,14 +145,9 @@ export class ViewDriverComplaintsComponent {
   }
 
 
-  fetchComplain(id: any, farmerName: string, language: string) {
-    this.isLoading = true;
-    this.distributedComplainSrv.getDistributionComplainById(id).subscribe((res) => {
-
-      this.complain = res;
-      this.isLoading = false;
-      this.showReplyPopUp(farmerName, language);
-    });
+  fetchComplain(item: any, farmerName: string, language: string) {
+    this.complain = item;
+    this.showReplyPopUp(farmerName, language);
   }
 
   showReplyPopUp(fname: string, language: string) {

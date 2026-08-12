@@ -49,7 +49,7 @@
 }
 
 ::ng-deep .p-dropdown-panel {
-    z-index: 99999 !important;
+    z-index: 50 !important;
     background-color: white !important;
     border: 1px solid #d1d5db !important;
     border-radius: 0.5rem !important;

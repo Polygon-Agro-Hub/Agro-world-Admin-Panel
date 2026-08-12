@@ -108,7 +108,6 @@ export class CollectionOfficerProvinceReportComponent implements OnInit, OnDestr
 
   fetchAllProvinceReportDetails(district: string) {
     this.isLoading = true;
-    console.log('first district', district)
     // this.loadingChart = true;
     // this.loadingTable = true;
 
@@ -121,7 +120,6 @@ export class CollectionOfficerProvinceReportComponent implements OnInit, OnDestr
           qtyC: Number(item.qtyC) || 0,
         }));
         this.hasData = this.reportDetails.length > 0;
-        console.log('reportDetails', this.reportDetails)
         // this.loadingTable = false;
         // this.loadingChart = false;
         this.updateChart();
@@ -132,7 +130,6 @@ export class CollectionOfficerProvinceReportComponent implements OnInit, OnDestr
 
   applyFilters() {
     if (this.selectedProvince) {
-      console.log('selectedProvince', this.selectedProvince)
       this.fetchAllProvinceReportDetails(this.selectedProvince.name);
     }
   }

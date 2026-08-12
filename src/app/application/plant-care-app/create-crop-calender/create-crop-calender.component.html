@@ -104,6 +104,7 @@
               <div *ngIf="cropForm.get('cropDuration')?.errors?.['required']">Crop duration is required</div>
               <div *ngIf="cropForm.get('cropDuration')?.errors?.['pattern']">Enter valid day</div>
               <div *ngIf="cropForm.get('cropDuration')?.errors?.['min']">Crop duration must be greater than 0</div>
+              <div *ngIf="cropForm.get('cropDuration')?.errors?.['max']">Crop duration cannot exceed 999 days</div>
             </div>
           </div>
 

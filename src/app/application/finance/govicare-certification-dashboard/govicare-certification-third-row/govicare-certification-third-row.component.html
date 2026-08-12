@@ -81,8 +81,7 @@
           <td
             class="font-normal text-[#000000] px-6 py-4 text-left dark:text-[#C8C8C8]"
           >
-            {{ payment.dateTime | date:'dd MMM yyyy' }}
-            {{ payment.dateTime | date:'hh:mm a' }}
+            {{ payment.dateTime | date: "h:mm a, MMMM d, yyyy" }}
           </td>
         </tr>
         <tr *ngIf="recentPayments.length === 0">

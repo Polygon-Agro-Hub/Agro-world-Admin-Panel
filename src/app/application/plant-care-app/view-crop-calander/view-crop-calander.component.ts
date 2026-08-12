@@ -54,8 +54,7 @@ export class ViewCropCalanderComponent implements OnInit {
     { name: 'Spices', value: 'Spices' },
     { name: 'Mushrooms', value: 'Mushrooms' },
     { name: 'Legumes', value: 'Legumes' },
-
-  ];
+  ].sort((a, b) => a.name.localeCompare(b.name));
 
   constructor(
     private cropCalendarService: CropCalendarService,

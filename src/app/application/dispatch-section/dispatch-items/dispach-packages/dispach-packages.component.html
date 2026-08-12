@@ -1,4 +1,4 @@
-<button (click)="onCancel()" class="text-textLight dark:text-textDark">
+<button (click)="onBack()" class="text-textLight dark:text-textDark">
     <i class="fa-solid fa-arrow-left"></i>
     Back
 </button>
@@ -43,10 +43,8 @@
                             ITEM
                             ({{total === 0 ? '0' : total < 10 ? '0' + total : total}})</th>
                         <th class="px-6 py-3 text-center font-medium text-[#8492A3] dark:text-gray-300 uppercase">
-                            QUANTITY
+                            QUANTITY (Kg)
                         </th>
-                        <th class="px-6 py-3 text-center font-medium text-[#8492A3] dark:text-gray-300 uppercase">
-                            UNIT</th>
                         <th class="px-6 py-3 text-left font-medium text-[#8492A3] dark:text-gray-300 uppercase">
                             UNIT PRICE
                         </th>
@@ -74,12 +72,8 @@
                         </td>
 
                         <td class="px-6 text-center py-4 whitespace-nowrap text-[#212121] dark:text-gray-300 ">
-                            {{ item.qty }}
+                            {{ formatQty(item.qty) }}
                         </td>
-
-                        <td class="px-6 text-center py-4 whitespace-nowrap text-sm text-[#808080] dark:text-gray-300">
-                            {{ (item.qty < 1) ? 'g' : 'kg' }} </td>
-
 
                         <td class="px-6 text-left py-4 whitespace-nowrap text-[#212121] dark:text-gray-300">
                             Rs. {{ item.discountedPrice != null ? (item.discountedPrice | number:'1.2-2') : '0.00' }}
@@ -115,9 +109,10 @@
                 class="px-4 py-2 border border-gray-300 dark:border-[#74788D] rounded-md text-sm font-medium text-[#D3D3D3] bg-[#74788D] dark:text-white hover:bg-[#74788D] dark:hover:bg-[#74788D]">
                 Cancel
             </button>
-            <button (click)="saveCheckedItems()"
+            <button (click)="saveCheckedItems()" [disabled]="!hasChanges"
                 *ngIf="!isShouldAllblock && !isCompleted && (permissionService.hasPermission('Dispatch package item packing') || tokenService.getUserDetails().role === '1')"
-                class="px-4 py-2 bg-[#3980C0] border border-transparent rounded-md text-sm font-medium text-[#FFFFFF] hover:bg-[#3980C0]">
+                [ngClass]="hasChanges ? 'bg-[#3980C0] hover:bg-[#3980C0] cursor-pointer' : 'bg-[#C1C1C1] cursor-not-allowed'"
+                class="px-4 py-2 border border-transparent rounded-md text-sm font-medium text-[#FFFFFF]">
                 Save
             </button>
         </div>
@@ -160,7 +155,7 @@
                 <label
                     class="block text-xs font-[700] text-gray-500 dark:text-gray-300 uppercase tracking-wide mb-3">PRODUCT
                     NAME</label>
-                <p-dropdown [options]="productArr" [(ngModel)]="newProductObj" optionLabel="displayName"
+                <!-- <p-dropdown [options]="filterMarketItemsByTypeId(selectProduct.typeId)" [(ngModel)]="newProductObj" optionLabel="displayName"
                     placeholder="--Product Name--" [filter]="true" [scrollHeight]="'200px'"
                     (onChange)="onProductChange()" [showClear]="true" optionDisabled="isExcluded" appendTo="body"
                     styleClass="w-full h-[44px] border-gray-300 dark:border-gray-600 rounded-lg">
@@ -169,6 +164,39 @@
                             <span [class.text-gray-400]="product.isExcluded" [class.text-gray-700]="!product.isExcluded"
                                 [class.dark:text-white]="!product.isExcluded">
                                 {{ product.displayName }}
+                            </span>
+                        </div>
+                    </ng-template>
+                </p-dropdown> -->
+
+                <p-dropdown [options]="filterMarketItemsByTypeId(selectProduct.typeId)" [(ngModel)]="newProductObj"
+                    optionLabel="displayName" placeholder="--Product Name--" [filter]="true" [scrollHeight]="'200px'"
+                    (onChange)="onProductChange()" [showClear]="true" optionDisabled="isExcluded"
+                    styleClass="w-full h-[44px] border-gray-300 dark:border-gray-600 rounded-lg">
+                    <ng-template pTemplate="item" let-option>
+                        <div class="flex align-items-center gap-2"
+                            [ngClass]="{'cursor-not-allowed': option.isExcluded}">
+                            <span>
+                                <i *ngIf="option.isPreferred" class="fa-solid fa-heart text-green-600 mx-2"></i>
+                                <i *ngIf="!option.isPreferred && option.isExcluded"
+                                    class="fa-solid fa-ban text-red-700 mx-2"></i>
+                                <i *ngIf="!option.isPreferred && !option.isExcluded"
+                                    class="fa-solid fa-check text-blue-600 mx-2"></i>
+                                {{ option.displayName }}
+                            </span>
+                        </div>
+                    </ng-template>
+
+                    <!-- Template for selected value -->
+                    <ng-template pTemplate="selectedItem" let-option>
+                        <div class="flex align-items-center gap-2 pr-6 truncate" *ngIf="option">
+                            <span class="truncate">
+                                <i *ngIf="option?.isPreferred" class="fa-solid fa-heart text-green-600 mx-2"></i>
+                                <i *ngIf="!option?.isPreferred && option?.isExcluded"
+                                    class="fa-solid fa-ban text-red-700 mx-2"></i>
+                                <i *ngIf="!option?.isPreferred && !option?.isExcluded"
+                                    class="fa-solid fa-check text-blue-600 mx-2"></i>
+                                {{ option?.displayName }}
                             </span>
                         </div>
                     </ng-template>
@@ -184,7 +212,8 @@
                 <input type="number" placeholder="--Qty in kg--"
                     class="w-full border border-gray-300 dark:border-gray-600 text-center rounded-lg py-2.5 px-3 text-gray-700 dark:text-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-italic"
                     [ngModel]="newProductObj?.qty" (ngModelChange)="updateQuantity($event)" min="0.001" step="0.001"
-                    [disabled]="!newProductObj" />
+                    [disabled]="!newProductObj" (keydown)="preventNegativeInput($event)"
+                    (paste)="preventNegativePaste($event)" (input)="restrictDecimals($event)" />
             </div>
 
             <!-- Unit Price -->
@@ -228,11 +257,11 @@
             <button (click)="replaceProduct()"
                 [disabled]="newProductObj === null || isInvalidPriceRange || newProductObj.qty <= 0 || newProductObj.qty === null"
                 class="px-8 py-2.5 rounded-lg font-medium transition-colors"
-                [class.bg-gray-300]="newProductObj === null || isInvalidPriceRange || newProductObj.qty === 0 || newProductObj.qty === null"
-                [class.text-gray-500]="newProductObj === null || isInvalidPriceRange || newProductObj.qty === 0 || newProductObj.qty === null"
+                [class.bg-[#C1C1C1]]="newProductObj === null || isInvalidPriceRange || newProductObj.qty === 0 || newProductObj.qty === null"
+                [class.text-[#FFFFFF]]="newProductObj === null || isInvalidPriceRange || newProductObj.qty === 0 || newProductObj.qty === null"
                 [class.cursor-not-allowed]="newProductObj === null || isInvalidPriceRange || newProductObj.qty === 0 || newProductObj.qty === null"
-                [class.bg-blue-600]="newProductObj !== null && !isInvalidPriceRange && newProductObj.qty > 0 && newProductObj.qty !== null"
-                [class.hover:bg-blue-700]="newProductObj !== null && !isInvalidPriceRange && newProductObj.qty > 0 && newProductObj.qty !== null"
+                [class.bg-[#3980C0]]="newProductObj !== null && !isInvalidPriceRange && newProductObj.qty > 0 && newProductObj.qty !== null"
+                [class.hover:bg-[#2a6aa5]]="newProductObj !== null && !isInvalidPriceRange && newProductObj.qty > 0 && newProductObj.qty !== null"
                 [class.text-white]="newProductObj !== null && !isInvalidPriceRange">
                 Update
             </button>

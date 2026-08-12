@@ -33,6 +33,7 @@ export class DispatchAdditionalItemsComponent implements OnInit {
   isShouldAllblock:boolean = true;
   isCompleted: boolean = false;
   isCustom: string = '';
+  isAnyChecked: boolean = false;
 
 
   ngOnInit(): void {
@@ -60,10 +61,59 @@ export class DispatchAdditionalItemsComponent implements OnInit {
         this.orderDetails = res.orderDetails
         this.isShouldAllblock = res.packageData.every((i:any) => i.isPacked === 1);
         this.isCompleted = this.isShouldAllblock;
-        this.isLoading = false
+        this.isLoading = false;
+        this.updatePackingStatus();
       }
     )
   }
+
+  updatePackingStatus(): void {
+    if (!this.packageArr || this.packageArr.length === 0) {
+      this.validationFailedMessage = '';
+      this.validationSuccessMessage = '';
+      this.isAllPacked = false;
+      this.isAnyChecked = false;
+      return;
+    }
+
+    const allPacked = this.packageArr.every(i => i.isPacked === 1);
+    const anyChecked = this.packageArr.some(i => i.isPacked === 1);
+
+    this.isAllPacked = allPacked;
+    this.isAnyChecked = anyChecked;
+
+    if (allPacked) {
+      this.validationSuccessMessage = "All checked. Order will move to 'Completed' on save.";
+      this.validationFailedMessage = '';
+    } else {
+      this.validationFailedMessage = "Unchecked items remain. Saving now keeps the order in 'Opened' Status.";
+      this.validationSuccessMessage = '';
+    }
+  }
+
+onBack() {
+  if (this.isCompleted) {
+      this.location.back();
+      return;
+    }
+
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.location.back();
+      }
+    });
+}
 
   onCancel() {
     if (this.isCompleted) {
@@ -163,17 +213,15 @@ export class DispatchAdditionalItemsComponent implements OnInit {
     const isChecked = (event.target as HTMLInputElement).checked;
     item.isPacked = isChecked ? 1 : 0;
 
-    const allPacked = this.packageArr.every(i => i.isPacked === 1);
-    this.isAllPacked = allPacked;
+    this.updatePackingStatus();
+  }
 
-    if (!allPacked) {
-      this.validationFailedMessage = "Unchecked items remain. Saving now keeps the order in 'Opened' Status.";
-      this.validationSuccessMessage = '';
-    } else {
-      this.validationSuccessMessage = "All checked. Order will move to 'Completed' on save.";
-      this.validationFailedMessage = '';
+  formatQty(qty: number): number {
+    if (qty === null || qty === undefined) {
+      return 0;
     }
-    
+
+    return parseFloat(qty.toString());
   }
 
 }

@@ -1,8 +1,7 @@
-
 import { Component } from '@angular/core';
 import { CropCalendarService } from '../../../services/plant-care/crop-calendar.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -105,24 +104,36 @@ export class ViewCropGroupComponent {
     private http: HttpClient,
     private router: Router,
     public permissionService: PermissionService,
-    public tokenService: TokenService
-  ) { }
+    public tokenService: TokenService,
+    private route: ActivatedRoute,
+  ) {}
 
   ngOnInit() {
-    this.initializeCategories();
-    this.fetchAllCropGroups();
+    this.route.queryParams.subscribe((params) => {
+      this.searchTerm = params['search'] || '';
+      this.selectedCategory = params['category'] || '';
+      this.page = params['page'] ? +params['page'] : 1;
+
+      this.initializeCategories();
+      this.fetchAllCropGroups(
+        this.page,
+        this.itemsPerPage,
+        this.searchTerm,
+        this.selectedCategory,
+      );
+    });
   }
 
   initializeCategories() {
     // Start with default options
     this.categoryOptions = [
-      { label: 'Vegetables', value: 'Vegetables' },
+      { label: 'Cereals', value: 'Cereals' },
       { label: 'Fruits', value: 'Fruit' },
       // { label: 'Grains', value: 'Grain' },
-      { label: 'Cereals', value: 'Cereals' },
-      { label: 'Spices', value: 'Spices' },
-      { label: 'Mushrooms', value: 'Mushrooms' },
       { label: 'Legumes', value: 'Legumes' },
+      { label: 'Mushrooms', value: 'Mushrooms' },
+      { label: 'Spices', value: 'Spices' },
+      { label: 'Vegetables', value: 'Vegetables' },
     ];
 
     // Fetch additional categories from backend
@@ -157,7 +168,7 @@ export class ViewCropGroupComponent {
     page: number = 1,
     limit: number = this.itemsPerPage,
     searchTerm: string = this.searchTerm,
-    category: string = this.selectedCategory || ''
+    category: string = this.selectedCategory || '',
   ) {
     this.page = page;
     this.isLoading = true;
@@ -167,7 +178,13 @@ export class ViewCropGroupComponent {
       .subscribe({
         next: (data) => {
           this.isLoading = false;
-          this.newCropGroup = data.items;
+
+          this.newCropGroup = (data.items || []).sort((a, b) =>
+            (a.cropNameEnglish || '')
+              .toLowerCase()
+              .localeCompare((b.cropNameEnglish || '').toLowerCase()),
+          );
+
           this.hasData = this.newCropGroup.length > 0;
           this.totalItems = data.total;
         },
@@ -180,17 +197,18 @@ export class ViewCropGroupComponent {
 
   onCategoryChange() {
     this.page = 1;
+    this.updateUrlParams();
     this.fetchAllCropGroups(
       this.page,
       this.itemsPerPage,
       this.searchTerm,
-      this.selectedCategory
+      this.selectedCategory,
     );
   }
 
   onSearch() {
-    // Reset to first page when search term changes
     this.page = 1;
+    this.updateUrlParams();
     this.fetchAllCropGroups();
   }
 
@@ -198,18 +216,34 @@ export class ViewCropGroupComponent {
     this.searchTerm = '';
     this.selectedCategory = '';
     this.page = 1;
+    this.updateUrlParams();
     this.fetchAllCropGroups();
+  }
+
+  clearSearch(): void {
+    this.searchTerm = '';
+    this.page = 1;
+    this.updateUrlParams();
+    this.fetchAllCropGroups(
+      this.page,
+      this.itemsPerPage,
+      this.searchTerm,
+      this.selectedCategory,
+    );
   }
 
   onPageChange(event: number) {
     this.page = event;
+    this.updateUrlParams();
     this.fetchAllCropGroups(this.page);
   }
 
-
   preventLeadingSpace(event: KeyboardEvent, fieldName: string): void {
     const input = event.target as HTMLInputElement;
-    if (event.key === ' ' && (input.selectionStart === 0 || !input.value.trim())) {
+    if (
+      event.key === ' ' &&
+      (input.selectionStart === 0 || !input.value.trim())
+    ) {
       event.preventDefault();
     }
   }
@@ -236,8 +270,8 @@ export class ViewCropGroupComponent {
         icon: '!border-gray-200 dark:!border-gray-500',
         confirmButton: 'hover:!bg-[#3085d6] dark:hover:!bg[#3085d6]',
         cancelButton: '',
-        actions: 'gap-2'
-      }
+        actions: 'gap-2',
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         this.isLoading = true;
@@ -248,9 +282,10 @@ export class ViewCropGroupComponent {
               text: 'Crop group has been deleted successfully.',
               icon: 'success',
               customClass: {
-                popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+                popup:
+                  'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
                 title: 'dark:text-white',
-              }
+              },
             });
             this.isLoading = false;
             this.fetchAllCropGroups();
@@ -261,9 +296,10 @@ export class ViewCropGroupComponent {
               text: 'There was a problem deleting the crop group item.',
               icon: 'error',
               customClass: {
-                popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+                popup:
+                  'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
                 title: 'dark:text-white',
-              }
+              },
             });
             this.isLoading = false;
           },
@@ -284,7 +320,7 @@ export class ViewCropGroupComponent {
     });
   }
 
-    aboutVariety(id: number) {
+  aboutVariety(id: number) {
     this.router.navigate(['/plant-care/action/view-crop-group-details'], {
       queryParams: { id },
     });
@@ -305,24 +341,37 @@ export class ViewCropGroupComponent {
   }
 
   // In your TypeScript component
-formatNumberWithCommas(value: any): string {
-  if (value === null || value === undefined || value === 'N/A') {
-    return 'N/A';
+  formatNumberWithCommas(value: any): string {
+    if (value === null || value === undefined || value === 'N/A') {
+      return 'N/A';
+    }
+
+    // Convert to string and remove any existing commas
+    const numStr = value.toString().replace(/,/g, '');
+
+    // Check if it's a valid number
+    const num = parseFloat(numStr);
+    if (isNaN(num)) {
+      return 'N/A';
+    }
+
+    // Format with commas and 2 decimal places
+    return num.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
   }
-  
-  // Convert to string and remove any existing commas
-  const numStr = value.toString().replace(/,/g, '');
-  
-  // Check if it's a valid number
-  const num = parseFloat(numStr);
-  if (isNaN(num)) {
-    return 'N/A';
+
+  updateUrlParams(): void {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        search: this.searchTerm || null,
+        category: this.selectedCategory || null,
+        page: this.page !== 1 ? this.page : null,
+      },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
   }
-  
-  // Format with commas and 2 decimal places
-  return num.toLocaleString('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  });
-}
 }

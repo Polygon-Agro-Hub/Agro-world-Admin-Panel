@@ -53,22 +53,23 @@ export class ViewWholwsaleOrdersComponent implements OnInit {
   methodOptions = [
     { label: 'Delivery', value: 'delivery' },
     { label: 'Pickup', value: 'pickup' },
-    { label: 'Out For Delivery', value: 'Out For Delivery' },
+    // { label: 'Out For Delivery', value: 'Out For Delivery' },
 
   ];
 
   statusOptions = [
-    { label: 'Delivered', value: 'Delivered' },
-    { label: 'On the Way', value: 'On the way' },
-    { label: 'Assigned', value: 'Ordered' },
-    { label: 'Out For Delivery', value: 'Out For Delivery' },
-    { label: 'Hold', value: 'Hold' },
-    { label: 'Picked Up', value: 'Picked up' },
-    { label: 'Processing', value: 'Processing' },
-    { label: 'Cancelled', value: 'Cancelled' },
-    { label: 'Ready to Pickup', value: 'Ready to Pickup' },
-    { label: 'Failed', value: 'Failed' },
-  ];
+  { label: 'Delivered', value: 'Delivered' },
+  { label: 'On the Way', value: 'On the way' },
+  { label: 'Assigned', value: 'Ordered' },
+  { label: 'Out For Delivery', value: 'Out For Delivery' },
+  { label: 'Hold', value: 'Hold' },
+  { label: 'Picked Up', value: 'Picked up' },
+  { label: 'Processing', value: 'Processing' },
+  { label: 'Ready to Pickup', value: 'Ready to Pickup' },
+  { label: 'Collected', value: 'Collected' },
+  { label: 'Return', value: 'Return' },
+  { label: 'Return Received', value: 'Return Received' },
+].sort((a, b) => a.label.localeCompare(b.label));
 
   constructor(
     private router: Router,
@@ -199,6 +200,7 @@ export class ViewWholwsaleOrdersComponent implements OnInit {
       'Out For Delivery',
       'Delivered',
       'Picked up',
+      'Ready to Pickup',
       'On the way',
       'Failed'
     ];
@@ -275,4 +277,8 @@ class RetailOrders {
   status!: string;
   orderdDate!: Date;
   qrCode!: string;
+  paymentMethod!: string;
+  creditPaid!: number;
+  moneyPaid!: number;
+  companyName!: string;
 }

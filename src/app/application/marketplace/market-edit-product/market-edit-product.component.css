@@ -1,132 +1,3 @@
-/* ---------- Mat Chip Grid and Chip Row Dark Mode ---------- */
-.dark-mode mat-chip-grid {
-  background-color: #061E2C !important;
-  border-radius: 4px;
-  color: #C4C4C4;
-}
-
-.dark-mode mat-chip-row {
-  background-color: #14557C !important;
-  color: #C4C4C4 !important;
-}
-
-.dark-mode mat-chip-row .mat-chip-remove {
-  color: #C4C4C4 !important;
-  opacity: 0.8;
-}
-
-.dark-mode mat-chip-row .mat-chip-remove:hover {
-  opacity: 1;
-}
-/* ---------- General Dark Mode Styles ---------- */
-.dark-mode .mat-mdc-form-field {
-  --mdc-filled-text-field-container-color: #061E2C; /* Input background */
-  --mdc-filled-text-field-input-text-color: #C4C4C4; /* Input text */
-  --mdc-filled-text-field-label-text-color: #C4C4C4; /* Label */
-  --mdc-filled-text-field-caret-color: #C4C4C4; /* Cursor */
-  --mdc-filled-text-field-focus-label-text-color: #C4C4C4; /* Focused label */
-  --mdc-filled-text-field-active-indicator-color: #14557C; /* Underline */
-  --mdc-filled-text-field-focus-active-indicator-color: #C4C4C4; /* Focused underline */
-}
-
-.dark-mode .mat-form-field-label {
-  color: #C4C4C4 !important;
-}
-
-.dark-mode .mat-form-field-underline {
-  background-color: #14557C !important;
-}
-
-.dark-mode .mat-form-field-ripple {
-  background-color: #C4C4C4 !important;
-}
-
-.dark-mode .mat-input-element {
-  caret-color: #C4C4C4;
-  color: #C4C4C4;
-}
-
-.dark-mode .mat-form-field-appearance-legacy .mat-form-field-label {
-  color: #C4C4C4;
-}
-
-.dark-mode .mat-form-field-appearance-legacy .mat-form-field-underline {
-  background-color: #14557C;
-}
-
-.dark-mode .mat-form-field-appearance-legacy .mat-form-field-ripple {
-  background-color: #C4C4C4;
-}
-
-/* ---------- Chip Styles ---------- */
-.chip-style {
-  background-color: #E0E0E0;
-  color: #333;
-  margin-right: 4px;
-}
-
-/* Dark variant for chips */
-.dark-mode .chip-style {
-  background-color: #14557C !important;
-  color: #C4C4C4 !important;
-}
-
-.dark-mode .chip-style .mat-chip-remove {
-  color: #C4C4C4 !important;
-  opacity: 0.8;
-}
-
-.dark-mode .chip-style .mat-chip-remove:hover {
-  opacity: 1;
-}
-
-/* ---------- Input Styles ---------- */
-.input-style {
-  padding: 8px;
-  border: none;
-  border-radius: 4px;
-  outline: none;
-}
-
-/* Light mode input */
-.input-style::placeholder {
-  color: #888;
-  opacity: 0.7;
-}
-::ng-deep .custom-chip .p-chips-token {
-  background-color: #e0e0e0;
-  color: #333;
-  border-radius: 16px;
-  padding: 4px 10px;
-  margin-right: 4px;
-}
-
-:host-context(.dark) ::ng-deep .custom-chip .p-chips-token {
-  background-color: #3a3a3a;
-  color: #ffffff;
-}
-
-/* Dark mode input */
-.dark-mode .input-style {
-  background-color: #061E2C !important;
-  color: #C4C4C4 !important;
-}
-
-.dark-mode .input-style::placeholder {
-  color: #C4C4C4;
-  opacity: 0.7;
-}
-
-/* ---------- Mat Chip Grid Background ---------- */
-.dark-mode mat-chip-grid {
-  background-color: #061E2C !important;
-  border-radius: 4px;
-}
-
-.dark-mode .tag-wrapper {
-  background-color: #061E2C; /* or your preferred dark tile color */
-  color: #C4C4C4;
-}
 
 :host ::ng-deep .p-dropdown {
     width: 100%;
@@ -276,13 +147,11 @@
     color: white;
 }
 
-
-
 :host {
   --form-field-bg: rgb(255 255 255);
   --label-text: rgb(97 97 97);
   --input-text: rgb(0 0 0);
-  --input-bg: rgb(255 255 255);  /* Added back - needed for input background */
+  --input-bg: rgb(255 255 255 0.5);  /* Added back - needed for input background */
   --placeholder-text: rgb(156 163 175);
   --chip-bg: rgb(229 235 231);
   --chip-hover-bg: rgb(209 213 219);  /* Added - needed for hover state */
@@ -425,4 +294,30 @@
 
 .mat-icon {
   color: var(--icon-color);
+}
+
+
+/* For the dropdown container */
+.readonly-dropdown {
+    cursor: not-allowed !important;
+}
+
+/* For the dropdown label/input area */
+.readonly-dropdown .p-dropdown-label {
+    cursor: not-allowed !important;
+}
+
+/* For the dropdown trigger/chevron area */
+.readonly-dropdown .p-dropdown-trigger {
+    cursor: not-allowed !important;
+}
+
+/* For the entire dropdown wrapper */
+:host ::ng-deep .readonly-dropdown .p-dropdown {
+    cursor: not-allowed !important;
+}
+
+/* Alternative: Target all child elements */
+:host ::ng-deep .readonly-dropdown * {
+    cursor: not-allowed !important;
 }

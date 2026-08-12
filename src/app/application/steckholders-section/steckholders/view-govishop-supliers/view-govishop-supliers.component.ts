@@ -82,13 +82,6 @@ export class ViewGovishopSupliersComponent implements OnInit {
     // Separate currentPlan and planStatus based on selected filter
     let currentPlan: string | undefined;
     
-    console.log('Fetching suppliers with params:', {
-      search: this.searchTerm || undefined,
-      currentPlan: this.selectedPlan,
-      page: this.page,
-      limit: this.itemsPerPage
-    });
-    
     this.goviShopService.getAllGoviShopUsers(
       this.searchTerm || undefined,
       this.selectedPlan,
@@ -96,16 +89,10 @@ export class ViewGovishopSupliersComponent implements OnInit {
       this.itemsPerPage
     ).subscribe({
       next: (response) => {
-
-        console.log('Raw API Response:', response);
         this.suppliers = response.data.shopUsers; 
         this.totalItems = response.data.pagination.total
         this.totalSuppliers = this.suppliers.length || 0;
-
-        console.log('totalSuppliers', this.totalSuppliers)
         this.hasData = this.suppliers.length > 0;
-        console.log('suppliers', this.suppliers);
-        
         this.isLoading = false;
       },
       error: (error) => {

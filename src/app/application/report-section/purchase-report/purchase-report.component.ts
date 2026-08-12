@@ -85,7 +85,7 @@ export class PurchaseReportComponent {
     private router: Router,
     public tokenService: TokenService,
     public permissionService: PermissionService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
   ) {
     // Initialize maxDate to today
     this.maxDate = new Date();
@@ -106,11 +106,14 @@ export class PurchaseReportComponent {
   preventLeadingSpace(event: KeyboardEvent): void {
     const input = event.target as HTMLInputElement;
     const cursorPosition = input.selectionStart;
-    
+
     // Prevent space if:
     // 1. Search is completely empty, OR
     // 2. Cursor is at position 0 and pressing space
-    if (event.key === ' ' && (this.search.length === 0 || cursorPosition === 0)) {
+    if (
+      event.key === ' ' &&
+      (this.search.length === 0 || cursorPosition === 0)
+    ) {
       event.preventDefault();
     }
   }
@@ -123,7 +126,7 @@ export class PurchaseReportComponent {
 
   submitGo() {
     this.hasDate = true;
-    this.fetchAllPurchaseReport()
+    this.fetchAllPurchaseReport();
   }
 
   fetchAllPurchaseReport(page: number = 1, limit: number = this.itemsPerPage) {
@@ -135,12 +138,12 @@ export class PurchaseReportComponent {
 
     this.isLoading = true;
     const centerId = this.selectedCenter?.id || '';
-    
-    const formattedFromDate = this.fromDate 
-      ? this.datePipe.transform(this.fromDate, 'yyyy-MM-dd') 
+
+    const formattedFromDate = this.fromDate
+      ? this.datePipe.transform(this.fromDate, 'yyyy-MM-dd')
       : '';
-    const formattedToDate = this.toDate 
-      ? this.datePipe.transform(this.toDate, 'yyyy-MM-dd') 
+    const formattedToDate = this.toDate
+      ? this.datePipe.transform(this.toDate, 'yyyy-MM-dd')
       : '';
 
     this.collectionoOfficer
@@ -150,19 +153,19 @@ export class PurchaseReportComponent {
         centerId,
         formattedFromDate,
         formattedToDate,
-        this.search
+        this.search,
       )
       .subscribe(
         (response) => {
           this.purchaseReport = response.items;
 
-          this.hasData = this.purchaseReport.length > 0
+          this.hasData = this.purchaseReport.length > 0;
           this.totalItems = response.total;
           this.grandTotal = response.grandTotal;
           this.purchaseReport.forEach((head) => {
             head.createdAtFormatted = this.datePipe.transform(
               head.createdAt,
-              "yyyy/MM/dd 'at' hh.mm a"
+              "yyyy/MM/dd 'at' hh.mm a",
             );
           });
           this.isLoading = false;
@@ -173,7 +176,7 @@ export class PurchaseReportComponent {
             // Handle unauthorized access
           }
           this.isLoading = false;
-        }
+        },
       );
   }
 
@@ -242,7 +245,7 @@ export class PurchaseReportComponent {
       },
       (error) => {
         Swal.fire('Error!', 'There was an error fetching centers.', 'error');
-      }
+      },
     );
   }
 
@@ -256,12 +259,18 @@ export class PurchaseReportComponent {
     }
 
     if (this.fromDate) {
-      const formattedFromDate = this.datePipe.transform(this.fromDate, 'yyyy-MM-dd');
+      const formattedFromDate = this.datePipe.transform(
+        this.fromDate,
+        'yyyy-MM-dd',
+      );
       queryParams.push(`startDate=${formattedFromDate}`);
     }
 
     if (this.toDate) {
-      const formattedToDate = this.datePipe.transform(this.toDate, 'yyyy-MM-dd');
+      const formattedToDate = this.datePipe.transform(
+        this.toDate,
+        'yyyy-MM-dd',
+      );
       queryParams.push(`endDate=${formattedToDate}`);
     }
 
@@ -269,7 +278,8 @@ export class PurchaseReportComponent {
       queryParams.push(`search=${this.search}`);
     }
 
-    const queryString = queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
+    const queryString =
+      queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
 
     const apiUrl = `${environment.API_URL}auth/download-purchase-report${queryString}`;
 
@@ -317,14 +327,14 @@ export class PurchaseReportComponent {
     const now = new Date();
     const generatedDate = this.datePipe.transform(now, 'yyyy-MM-dd');
     const generatedTime = this.datePipe.transform(now, 'hh.mm a');
-    
+
     let fileName = 'Purchase Report';
-    
+
     // Add center code if selected
     if (this.selectedCenter) {
       fileName += ` of ${this.selectedCenter.regCode}`;
     }
-    
+
     // Add date range
     if (this.fromDate && this.toDate) {
       const fromDateFormatted = this.formatDateForFilename(this.fromDate);
@@ -334,10 +344,10 @@ export class PurchaseReportComponent {
       const fromDateFormatted = this.formatDateForFilename(this.fromDate);
       fileName += ` on ${fromDateFormatted}`;
     }
-    
+
     // Add generated timestamp
     fileName += ` Generated at ${generatedDate} ${generatedTime}`;
-    
+
     return fileName + '.xlsx';
   }
 
@@ -345,18 +355,22 @@ export class PurchaseReportComponent {
   private formatDateForFilename(date: Date): string {
     const day = date.getDate();
     const month = this.datePipe.transform(date, 'MMMM');
-    
+
     // Add ordinal suffix to day
     const getOrdinalSuffix = (day: number): string => {
       if (day > 3 && day < 21) return 'th';
       switch (day % 10) {
-        case 1: return 'st';
-        case 2: return 'nd';
-        case 3: return 'rd';
-        default: return 'th';
+        case 1:
+          return 'st';
+        case 2:
+          return 'nd';
+        case 3:
+          return 'rd';
+        default:
+          return 'th';
       }
     };
-    
+
     return `${day}${getOrdinalSuffix(day)} ${month}`;
   }
 
@@ -371,13 +385,11 @@ export class PurchaseReportComponent {
     if (this.fromDate && this.toDate && this.toDate < this.fromDate) {
       this.toDate = null;
     }
-    
+
     // Additional validation to ensure toDate doesn't exceed maxDate
     if (this.toDate && this.toDate > this.maxDate) {
       this.toDate = this.maxDate;
     }
-    
-    console.log('From date selected:', this.fromDate);
   }
 
   onToDateSelect() {
@@ -393,10 +405,10 @@ export class PurchaseReportComponent {
         title: 'Date Adjusted',
         text: 'The "To" date cannot be in the future. It has been set to today.',
         timer: 2000,
-        showConfirmButton: false
+        showConfirmButton: false,
       });
     }
-    
+
     // Also validate that toDate is not before fromDate
     if (this.fromDate && this.toDate && this.toDate < this.fromDate) {
       this.toDate = this.fromDate;
@@ -405,7 +417,7 @@ export class PurchaseReportComponent {
         title: 'Date Adjusted',
         text: 'The "To" date cannot be before the "From" date. It has been adjusted.',
         timer: 2000,
-        showConfirmButton: false
+        showConfirmButton: false,
       });
     }
   }

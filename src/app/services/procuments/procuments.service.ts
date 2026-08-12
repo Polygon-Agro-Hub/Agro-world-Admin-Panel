@@ -33,6 +33,35 @@ interface ProductType {
   shortCode: string;
 }
 
+export interface DistributionCenterDto {
+  comCenId: number;
+  value: string;
+  label: string;
+  fullName: string;
+}
+ 
+export interface ShortageFinalizeItemDto {
+  shortageAssignedId: number;
+  shortageKg: number;
+  ceilingPercent: number;
+  status: string;
+  comCenId: number | null;
+  marketPricePerKg: number;
+  mpItemId: number;
+  itemName: string;
+  imageUrl: string | null;
+  assignedBy: string;
+  distributionCenters?: DistributionCenterDto[];
+  selectedDC?: DistributionCenterDto | null;
+}
+ 
+export interface FinalizeShortagePayload {
+  shortageAssignedId: number;
+  comCenId: number;
+  ceilingPercent: number;
+}
+
+
 @Injectable({
   providedIn: 'root',
 })
@@ -484,6 +513,121 @@ getAllCenters(): Observable<any> {
   });
 
   const url = `${this.apiUrl}procument/get-all-distribution-centers`;
+
+  return this.http.get<any>(url, { headers });
+}
+
+// ---------------------------------------------------------------------
+  // Shortage Finalization
+  // ---------------------------------------------------------------------
+
+  getShortageDistributionCenters(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}procument/shortage/distribution-centers`;
+
+    return this.http.get<any>(url, { headers });
+  }
+
+  getShortageToFinalizeList(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}procument/shortage/to-finalize`;
+
+    return this.http.get<any>(url, { headers });
+  }
+
+  getShortageFinalizedList(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}procument/shortage/finalized`;
+
+    return this.http.get<any>(url, { headers });
+  }
+
+  finalizeShortageAssigned(
+    shortageAssignedId: number,
+    comCenId: number,
+    ceilingPercent: number
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}procument/shortage/finalize`;
+
+    return this.http.put<any>(
+      url,
+      { shortageAssignedId, comCenId, ceilingPercent },
+      { headers }
+    );
+  }
+
+getShortageDetails(): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
+
+  const url = `${this.apiUrl}procument/shortage-details`;
+
+  return this.http.get<any>(url, { headers });
+}
+
+getShortageDetailsById(id: number | string): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
+
+  const url = `${this.apiUrl}procument/shortage-details/${id}`;
+
+  return this.http.get<any>(url, { headers });
+}
+
+assignShortage(id: number | string, data: { comCenId: number; qty: number; ceilling: number }): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
+
+  const url = `${this.apiUrl}procument/assign-shortage/${id}`;
+
+  return this.http.post<any>(url, data, { headers });
+}
+
+getShortageAssignedDetails(id: number | string): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
+
+  const url = `${this.apiUrl}procument/shortage-assigned-details/${id}`;
+
+  return this.http.get<any>(url, { headers });
+}
+
+getAllShortageAssignedDetails(date?: string): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
+
+  let url = `${this.apiUrl}procument/get-all-shortage-details`;
+
+  if (date) {
+    url += `?date=${date}`;
+  }
 
   return this.http.get<any>(url, { headers });
 }

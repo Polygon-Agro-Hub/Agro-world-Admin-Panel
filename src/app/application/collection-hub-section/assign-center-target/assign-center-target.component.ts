@@ -214,18 +214,47 @@ checkDateSelection() {
   }
 
   allowOnlyDigits(event: KeyboardEvent): void {
-    const charCode = event.key.charCodeAt(0);
+  const key = event.key;
+  const input = event.target as HTMLInputElement;
 
-    if (charCode < 48 || charCode > 57) {
+  // Allow navigation/editing keys (Backspace, Delete, Tab, arrows, etc.)
+  if (key.length > 1) {
+    return;
+  }
+
+  // Allow a single decimal point
+  if (key === '.') {
+    if (input.value.includes('.')) {
+      event.preventDefault(); // already has one, block a second
+    }
+    return;
+  }
+
+  // Only allow digits 0-9
+  if (!/^[0-9]$/.test(key)) {
+    event.preventDefault();
+    return;
+  }
+
+  // Limit to 3 digits after the decimal point
+  const dotIndex = input.value.indexOf('.');
+  if (dotIndex !== -1) {
+    const cursorPos = input.selectionStart ?? input.value.length;
+    const decimalPart = input.value.slice(dotIndex + 1);
+
+    // Only block if the cursor is positioned after the dot (typing a decimal digit)
+    if (cursorPos > dotIndex && decimalPart.length >= 3) {
       event.preventDefault();
     }
   }
+}
   
   removeLeadingZeros(item: any): void {
-    if (item.targetB) {
-      item.targetB = item.targetB.replace(/^0+/, ''); 
-    }
+  if (item.targetB) {
+    // Only strip zeros that are followed by another digit (not by "." or end of string)
+    item.targetB = item.targetB.replace(/^0+(?=\d)/, '');
   }
+}
 
   validateForm() {
 

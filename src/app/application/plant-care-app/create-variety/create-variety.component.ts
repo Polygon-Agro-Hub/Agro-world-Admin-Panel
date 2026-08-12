@@ -76,7 +76,7 @@ export class CreateVarietyComponent implements OnInit {
     private route: ActivatedRoute,
     private cropCalendarService: CropCalendarService,
     private tokenService: TokenService,
-    private location: Location
+    private location: Location,
   ) {
     this.cropForm = this.fb.group({
       groupId: ['', [Validators.required]],
@@ -85,6 +85,7 @@ export class CreateVarietyComponent implements OnInit {
         [
           Validators.required,
           Validators.minLength(2),
+          Validators.maxLength(50),
           Validators.pattern(/^(?!\d+$)[\s\S]*/),
         ],
       ],
@@ -93,6 +94,7 @@ export class CreateVarietyComponent implements OnInit {
         [
           Validators.required,
           Validators.minLength(2),
+          Validators.maxLength(50),
           Validators.pattern(/^(?!\d+$)[\s\S]*/),
         ],
       ],
@@ -101,6 +103,7 @@ export class CreateVarietyComponent implements OnInit {
         [
           Validators.required,
           Validators.minLength(2),
+          Validators.maxLength(50),
           Validators.pattern(/^(?!\d+$)[\s\S]*/),
         ],
       ],
@@ -307,7 +310,7 @@ export class CreateVarietyComponent implements OnInit {
 
   onSubmit() {
     // Mark all form controls as touched to trigger validation
-    Object.keys(this.cropForm.controls).forEach(key => {
+    Object.keys(this.cropForm.controls).forEach((key) => {
       this.cropForm.get(key)?.markAsTouched();
     });
 
@@ -324,30 +327,48 @@ export class CreateVarietyComponent implements OnInit {
         errorMessages.push('English variety name is required');
       } else if (this.cropForm.get('varietyNameEnglish')?.hasError('pattern')) {
         errorMessages.push('English variety name cannot be only numbers');
+      } else if (
+        this.cropForm.get('varietyNameEnglish')?.hasError('maxlength')
+      ) {
+        errorMessages.push('English variety name cannot exceed 50 characters');
       }
 
       if (this.cropForm.get('varietyNameSinhala')?.hasError('required')) {
         errorMessages.push('Sinhala variety name is required');
       } else if (this.cropForm.get('varietyNameSinhala')?.hasError('pattern')) {
         errorMessages.push('Sinhala variety name cannot be only numbers');
+      } else if (
+        this.cropForm.get('varietyNameSinhala')?.hasError('maxlength')
+      ) {
+        errorMessages.push('Sinhala variety name cannot exceed 50 characters');
       }
 
       if (this.cropForm.get('varietyNameTamil')?.hasError('required')) {
         errorMessages.push('Tamil variety name is required');
       } else if (this.cropForm.get('varietyNameTamil')?.hasError('pattern')) {
         errorMessages.push('Tamil variety name cannot be only numbers');
+      } else if (this.cropForm.get('varietyNameTamil')?.hasError('maxlength')) {
+        errorMessages.push('Tamil variety name cannot exceed 50 characters');
       }
 
       if (this.cropForm.get('descriptionEnglish')?.hasError('required')) {
         errorMessages.push('English description is required');
-      } else if (this.cropForm.get('descriptionEnglish')?.hasError('minlength')) {
-        errorMessages.push('English description must be at least 10 characters');
+      } else if (
+        this.cropForm.get('descriptionEnglish')?.hasError('minlength')
+      ) {
+        errorMessages.push(
+          'English description must be at least 10 characters',
+        );
       }
 
       if (this.cropForm.get('descriptionSinhala')?.hasError('required')) {
         errorMessages.push('Sinhala description is required');
-      } else if (this.cropForm.get('descriptionSinhala')?.hasError('minlength')) {
-        errorMessages.push('Sinhala description must be at least 10 characters');
+      } else if (
+        this.cropForm.get('descriptionSinhala')?.hasError('minlength')
+      ) {
+        errorMessages.push(
+          'Sinhala description must be at least 10 characters',
+        );
       }
 
       if (this.cropForm.get('descriptionTamil')?.hasError('required')) {
@@ -370,7 +391,7 @@ export class CreateVarietyComponent implements OnInit {
         html: `<div style="text-align: left;">
         <p>Please fix the following issues:</p>
         <ul>
-          ${errorMessages.map(msg => `<li>${msg}</li>`).join('')}
+          ${errorMessages.map((msg) => `<li>${msg}</li>`).join('')}
         </ul>
       </div>`,
         icon: 'warning',
@@ -405,7 +426,8 @@ export class CreateVarietyComponent implements OnInit {
             icon: 'success',
             confirmButtonText: 'OK',
             customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold',
             },
           }).then(() => {
@@ -421,8 +443,8 @@ export class CreateVarietyComponent implements OnInit {
         Swal.fire(
           'Error',
           error.error?.message ||
-          'An error occurred while creating the crop variety.',
-          'error'
+            'An error occurred while creating the crop variety.',
+          'error',
         );
       },
     });
@@ -450,7 +472,6 @@ export class CreateVarietyComponent implements OnInit {
     });
   }
 
-
   // Add these methods to your component class
 
   // Prevent invalid English characters (allow letters, numbers, spaces, and common punctuation)
@@ -458,11 +479,22 @@ export class CreateVarietyComponent implements OnInit {
     const char = event.key;
 
     // Allow control keys (backspace, delete, tab, escape, enter, etc.)
-    if (event.ctrlKey || event.altKey || event.metaKey ||
-      char === 'Backspace' || char === 'Delete' || char === 'Tab' ||
-      char === 'Escape' || char === 'Enter' || char === 'ArrowLeft' ||
-      char === 'ArrowRight' || char === 'ArrowUp' || char === 'ArrowDown' ||
-      char === 'Home' || char === 'End') {
+    if (
+      event.ctrlKey ||
+      event.altKey ||
+      event.metaKey ||
+      char === 'Backspace' ||
+      char === 'Delete' ||
+      char === 'Tab' ||
+      char === 'Escape' ||
+      char === 'Enter' ||
+      char === 'ArrowLeft' ||
+      char === 'ArrowRight' ||
+      char === 'ArrowUp' ||
+      char === 'ArrowDown' ||
+      char === 'Home' ||
+      char === 'End'
+    ) {
       return;
     }
 
@@ -481,7 +513,8 @@ export class CreateVarietyComponent implements OnInit {
     const englishAlphanumericRegex = /[a-zA-Z0-9\s.,!?()-]/g;
 
     // Filter out invalid characters, keeping only valid ones
-    const filteredText = pastedText.match(englishAlphanumericRegex)?.join('') || '';
+    const filteredText =
+      pastedText.match(englishAlphanumericRegex)?.join('') || '';
 
     // Insert the filtered text at cursor position
     const target = event.target as HTMLInputElement | HTMLTextAreaElement;
@@ -489,7 +522,10 @@ export class CreateVarietyComponent implements OnInit {
     const end = target.selectionEnd || 0;
     const currentValue = target.value;
 
-    target.value = currentValue.substring(0, start) + filteredText + currentValue.substring(end);
+    target.value =
+      currentValue.substring(0, start) +
+      filteredText +
+      currentValue.substring(end);
 
     // Set cursor position after inserted text
     const newPosition = start + filteredText.length;
@@ -504,11 +540,22 @@ export class CreateVarietyComponent implements OnInit {
     const char = event.key;
 
     // Allow control keys
-    if (event.ctrlKey || event.altKey || event.metaKey ||
-      char === 'Backspace' || char === 'Delete' || char === 'Tab' ||
-      char === 'Escape' || char === 'Enter' || char === 'ArrowLeft' ||
-      char === 'ArrowRight' || char === 'ArrowUp' || char === 'ArrowDown' ||
-      char === 'Home' || char === 'End') {
+    if (
+      event.ctrlKey ||
+      event.altKey ||
+      event.metaKey ||
+      char === 'Backspace' ||
+      char === 'Delete' ||
+      char === 'Tab' ||
+      char === 'Escape' ||
+      char === 'Enter' ||
+      char === 'ArrowLeft' ||
+      char === 'ArrowRight' ||
+      char === 'ArrowUp' ||
+      char === 'ArrowDown' ||
+      char === 'Home' ||
+      char === 'End'
+    ) {
       return;
     }
 
@@ -527,7 +574,8 @@ export class CreateVarietyComponent implements OnInit {
     const sinhalaAlphanumericRegex = /[\u0D80-\u0DFF0-9\s.,!?()-]/g;
 
     // Filter out invalid characters, keeping only valid ones
-    const filteredText = pastedText.match(sinhalaAlphanumericRegex)?.join('') || '';
+    const filteredText =
+      pastedText.match(sinhalaAlphanumericRegex)?.join('') || '';
 
     // Insert the filtered text at cursor position
     const target = event.target as HTMLInputElement | HTMLTextAreaElement;
@@ -535,7 +583,10 @@ export class CreateVarietyComponent implements OnInit {
     const end = target.selectionEnd || 0;
     const currentValue = target.value;
 
-    target.value = currentValue.substring(0, start) + filteredText + currentValue.substring(end);
+    target.value =
+      currentValue.substring(0, start) +
+      filteredText +
+      currentValue.substring(end);
 
     // Set cursor position after inserted text
     const newPosition = start + filteredText.length;
@@ -550,11 +601,22 @@ export class CreateVarietyComponent implements OnInit {
     const char = event.key;
 
     // Allow control keys
-    if (event.ctrlKey || event.altKey || event.metaKey ||
-      char === 'Backspace' || char === 'Delete' || char === 'Tab' ||
-      char === 'Escape' || char === 'Enter' || char === 'ArrowLeft' ||
-      char === 'ArrowRight' || char === 'ArrowUp' || char === 'ArrowDown' ||
-      char === 'Home' || char === 'End') {
+    if (
+      event.ctrlKey ||
+      event.altKey ||
+      event.metaKey ||
+      char === 'Backspace' ||
+      char === 'Delete' ||
+      char === 'Tab' ||
+      char === 'Escape' ||
+      char === 'Enter' ||
+      char === 'ArrowLeft' ||
+      char === 'ArrowRight' ||
+      char === 'ArrowUp' ||
+      char === 'ArrowDown' ||
+      char === 'Home' ||
+      char === 'End'
+    ) {
       return;
     }
 
@@ -573,7 +635,8 @@ export class CreateVarietyComponent implements OnInit {
     const tamilAlphanumericRegex = /[\u0B80-\u0BFF0-9\s.,!?()-]/g;
 
     // Filter out invalid characters, keeping only valid ones
-    const filteredText = pastedText.match(tamilAlphanumericRegex)?.join('') || '';
+    const filteredText =
+      pastedText.match(tamilAlphanumericRegex)?.join('') || '';
 
     // Insert the filtered text at cursor position
     const target = event.target as HTMLInputElement | HTMLTextAreaElement;
@@ -581,7 +644,10 @@ export class CreateVarietyComponent implements OnInit {
     const end = target.selectionEnd || 0;
     const currentValue = target.value;
 
-    target.value = currentValue.substring(0, start) + filteredText + currentValue.substring(end);
+    target.value =
+      currentValue.substring(0, start) +
+      filteredText +
+      currentValue.substring(end);
 
     // Set cursor position after inserted text
     const newPosition = start + filteredText.length;
@@ -590,8 +656,6 @@ export class CreateVarietyComponent implements OnInit {
     // Trigger input event for Angular form validation
     target.dispatchEvent(new Event('input', { bubbles: true }));
   }
-
-
 
   triggerFileInput(event: Event): void {
     event.preventDefault();
@@ -610,7 +674,7 @@ export class CreateVarietyComponent implements OnInit {
       Swal.fire(
         'Error',
         'No authentication token found. Please login again.',
-        'error'
+        'error',
       ).then(() => {
         this.router.navigate(['/login']);
       });
@@ -634,7 +698,7 @@ export class CreateVarietyComponent implements OnInit {
           Swal.fire(
             'Error',
             'Failed to load crop groups. Please try again later.',
-            'error'
+            'error',
           );
         },
       });
@@ -675,7 +739,7 @@ export class CreateVarietyComponent implements OnInit {
       .put(
         `${environment.API_URL}crop-calendar/update-crop-variety/${this.itemId}`,
         formData,
-        { headers }
+        { headers },
       )
       .subscribe(
         (res: any) => {
@@ -685,12 +749,12 @@ export class CreateVarietyComponent implements OnInit {
             title: 'Success',
             text: 'Variety updated successfully!',
             customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold',
             },
           });
           this.location.back();
-          
         },
         () => {
           this.isLoading = false;
@@ -699,14 +763,14 @@ export class CreateVarietyComponent implements OnInit {
             title: 'Unsuccessful',
             text: 'Error updating news',
             customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold',
             },
           });
-        }
+        },
       );
   }
-
 
   back(): void {
     Swal.fire({
@@ -752,23 +816,28 @@ export class CreateVarietyComponent implements OnInit {
     let errorMessages = [];
     const newsItem = this.newsItems[0];
 
-    // Check each field for errors
     if (!newsItem.varietyNameEnglish) {
       errorMessages.push('English variety name is required');
     } else if (/^\d+$/.test(newsItem.varietyNameEnglish)) {
       errorMessages.push('English variety name cannot be only numbers');
+    } else if (newsItem.varietyNameEnglish.length > 50) {
+      errorMessages.push('English variety name cannot exceed 50 characters');
     }
 
     if (!newsItem.varietyNameSinhala) {
       errorMessages.push('Sinhala variety name is required');
     } else if (/^\d+$/.test(newsItem.varietyNameSinhala)) {
       errorMessages.push('Sinhala variety name cannot be only numbers');
+    } else if (newsItem.varietyNameSinhala.length > 50) {
+      errorMessages.push('Sinhala variety name cannot exceed 50 characters');
     }
 
     if (!newsItem.varietyNameTamil) {
       errorMessages.push('Tamil variety name is required');
     } else if (/^\d+$/.test(newsItem.varietyNameTamil)) {
       errorMessages.push('Tamil variety name cannot be only numbers');
+    } else if (newsItem.varietyNameTamil.length > 50) {
+      errorMessages.push('Tamil variety name cannot exceed 50 characters');
     }
 
     if (!newsItem.descriptionEnglish) {
@@ -798,11 +867,11 @@ export class CreateVarietyComponent implements OnInit {
       Swal.fire({
         title: 'Validation Errors',
         html: `<div style="text-align: left;">
-        <p>Please fix the following issues:</p>
-        <ul>
-          ${errorMessages.map(msg => `<li>${msg}</li>`).join('')}
-        </ul>
-      </div>`,
+      <p>Please fix the following issues:</p>
+      <ul>
+        ${errorMessages.map((msg) => `<li>${msg}</li>`).join('')}
+      </ul>
+    </div>`,
         icon: 'warning',
         confirmButtonText: 'OK',
         customClass: {
@@ -810,11 +879,9 @@ export class CreateVarietyComponent implements OnInit {
           title: 'font-semibold',
         },
       });
-
       return false;
     }
 
     return true;
   }
-
 }

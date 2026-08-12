@@ -43,6 +43,7 @@ export class ViewProductsListComponent {
 
   productTypeOptions: { name: string; value: number }[] = [];
   selectedProductType: any = null;
+  
 
   categoryOption = [
     { name: 'Retail', value: 'Retail' },
@@ -50,6 +51,13 @@ export class ViewProductsListComponent {
   ];
   selectedCategoryOption: any = null;
   isLoading = false;
+
+  // Status toggle confirmation popup state
+  showStatusConfirm = false;
+  statusConfirmMessage = '';
+  statusConfirmWarning = '';
+  private pendingToggleItem: ProductList | null = null;
+  private pendingNewStatus: number = 0;
 
   constructor(
     private viewProductsList: ViewProductListService,
@@ -112,17 +120,16 @@ export class ViewProductsListComponent {
   }
 
   loadProductTypes() {
-    this.viewProductsList.fetchProductTypes().subscribe((res) => {
-      const data = res.data || res;
-      this.productTypeOptions = data
-        .filter((pt: any) => pt.isValid === 1)
-        .map((pt: any) => ({
-          name: `${pt.shortCode} - ${pt.typeName}`,
-          value: pt.id,
-        }))
-        .sort((a: any, b: any) => a.name.localeCompare(b.name));
-    });
-  }
+  this.viewProductsList.fetchProductTypes().subscribe((res) => {
+    const data = res.data || res;
+    this.productTypeOptions = data
+      .map((pt: any) => ({
+        name: `${pt.shortCode} - ${pt.typeName}`,
+        value: pt.id,
+      }))
+      .sort((a: any, b: any) => a.name.localeCompare(b.name));
+  });
+}
 
   onProductTypeChange() {
     this.page = 1;
@@ -272,6 +279,90 @@ export class ViewProductsListComponent {
       return `${percentageValue}%`; // Display with decimals
     }
   }
+
+  // Add this method to your ViewProductsListComponent class
+formatNumber(value: number): string {
+  if (value === undefined || value === null) {
+    return '----';
+  }
+  
+  // Convert to string and remove trailing zeros after decimal
+  const numStr = value.toString();
+  if (numStr.includes('.')) {
+    // Remove trailing zeros, but keep at least one decimal if needed
+    let formatted = numStr.replace(/\.?0+$/, '');
+    // If the number ends with a decimal point, add a zero back
+    if (formatted.endsWith('.')) {
+      formatted += '0';
+    }
+    return formatted;
+  }
+  return numStr;
+}
+
+toggleStatus(item: ProductList): void {
+    const newStatus = item.isEnable === 1 ? 0 : 1;
+    const actionText = newStatus === 1 ? 'Enabled' : 'Disabled';
+
+    this.pendingToggleItem = item;
+    this.pendingNewStatus = newStatus;
+
+    this.statusConfirmMessage = `Are you sure you want to change the status of "${item.displayName}" to ${actionText}?`;
+    this.statusConfirmWarning =
+      newStatus === 0
+        ? 'Note : Disabling this product will disable all of its associated packages. As a result, the affected packages will become undefined.'
+        : '';
+
+    this.showStatusConfirm = true;
+  }
+
+  onStatusConfirmConfirmed(): void {
+    this.showStatusConfirm = false;
+    if (!this.pendingToggleItem) return;
+
+    const item = this.pendingToggleItem;
+    const newStatus = this.pendingNewStatus;
+    const previousStatus = item.isEnable;
+
+    // optimistic UI update
+    item.isEnable = newStatus;
+
+    this.viewProductsList.toggleProductStatus(item.id, newStatus).subscribe(
+      () => {
+        Swal.fire({
+          title: 'Updated',
+          text: `Product ${newStatus === 1 ? 'enabled' : 'disabled'} successfully.`,
+          icon: 'success',
+          timer: 1200,
+          showConfirmButton: false,
+          customClass: {
+            popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+            title: 'dark:text-white',
+          },
+        });
+
+        // Refresh the current page from the server to reflect the true state
+      this.fetchAllProducts(this.page, this.itemsPerPage);
+      },
+      (error) => {
+        // revert on failure
+        item.isEnable = previousStatus;
+        console.error('Error toggling status:', error);
+        if (error.status === 401) {
+          Swal.fire('Unauthorized', 'Please log in again.', 'error');
+        } else {
+          Swal.fire('Error', 'Failed to update status.', 'error');
+        }
+      },
+    );
+
+    this.pendingToggleItem = null;
+  }
+
+  onStatusConfirmCancelled(): void {
+    this.showStatusConfirm = false;
+    this.pendingToggleItem = null;
+  }
 }
 
 class ProductList {
@@ -283,6 +374,7 @@ class ProductList {
   method!: string;
   varietyNameEnglish!: string;
   discountedPrice: number = -1;
+  comPrice: number = -1;
   startValue!: number;
   maxQuantity!: number;
   discount!: number;
@@ -293,4 +385,7 @@ class ProductList {
   category!: string;
   productTypeId!: number;
   productTypeShortCode!: string;
+  modifyBy!: string;
+  isEnable!: number;
+  productTypeIsValid!: number;
 }

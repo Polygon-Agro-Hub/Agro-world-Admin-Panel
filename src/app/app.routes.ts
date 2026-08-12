@@ -297,6 +297,20 @@ import { EditBranchComponent } from './application/govi-shop/edit-branch/edit-br
 import { ViewDeleteShopsComponent } from './application/govi-shop/view-delete-shops/view-delete-shops.component';
 import { ViewCropVarietyComponent } from './application/plant-care-app/view-crop-variety/view-crop-variety.component';
 import { ViewCropGroupDetailsComponent } from './application/plant-care-app/view-crop-group-details/view-crop-group-details.component';
+import { GoviTransViewTransactionsComponent } from './application/finance/govi-trans-view-transactions/govi-trans-view-transactions.component';
+import { TransactionAmountComponent } from './application/finance/transaction-amount/transaction-amount.component';
+import { GoviTransFinanceComponent } from './application/finance/govi-trans-finance/govi-trans-finance/govi-trans-finance.component';
+import { ViewDriverCategoriesComponent } from './application/finance/govi-trans-finance/view-driver-categories/view-driver-categories.component';
+import { AddEditDriverCategoryComponent } from './application/finance/govi-trans-finance/add-edit-driver-category/add-edit-driver-category.component';
+import { ViewTransactionDocumentComponent } from './application/finance/govi-trans-finance/view-transaction-document/view-transaction-document.component';
+import { ShortageTodayComponent } from './application/procurement-section/shortage/shortage-today/shortage-today.component';
+import { ShortageAssignComponent } from './application/procurement-section/shortage/shortage-assign/shortage-assign.component';
+import { ProcurementShortageHistoryComponent } from './application/procurement-section/shortage/procurement-shortage-history/procurement-shortage-history.component';
+import { ShortageFinalizationTodayComponent } from './application/procurement-section/shortage/shortage-finalization-today/shortage-finalization-today.component';
+import { DistributionFinanceComponent } from './application/finance/distribution-finance-acion/distribution-finance/distribution-finance.component';
+import { ViewSubmissionsComponent } from './application/finance/distribution-finance-acion/view-submissions/view-submissions.component';
+import { ViewSubmissionDocumentComponent } from './application/finance/distribution-finance-acion/view-submission-document/view-submission-document.component';
+import { TestComponentComponent } from './application/steckholders-section/test-component/test-component.component';
 
 export const routes: Routes = [
   {
@@ -306,6 +320,7 @@ export const routes: Routes = [
   },
 
   { path: 'login', component: LoginComponent },
+  { path: 'test', component: TestComponentComponent },
 
   { path: 'status-451', component: Status451Component },
   { path: 'forgot-password', component: ForgotPasswordComponent },
@@ -498,7 +513,7 @@ export const routes: Routes = [
                 canActivate: [PermissionGuard],
                 data: { permission: 'Edit crop group' },
               },
-                            {
+              {
                 path: 'view-crop-group-details',
                 component: ViewCropGroupDetailsComponent,
                 canActivate: [PermissionGuard],
@@ -828,6 +843,50 @@ export const routes: Routes = [
                   {
                     path: 'view-documents/:id',
                     component: GoviShopViewDocumentComponent,
+                  }
+                ],
+              },
+              {
+                path: 'govi-trans-finance',
+                children:[
+                  {path:'', component: GoviTransFinanceComponent},
+                  {path: 'view-driver-categories', component: ViewDriverCategoriesComponent},
+                  {
+                    path: 'add-driver-category',
+                    component: AddEditDriverCategoryComponent,
+                  },
+                  {
+                    path: 'edit-driver-category/:id',
+                    component: AddEditDriverCategoryComponent,
+                  },
+                  {
+                    path: 'view-transactions',
+                    component: GoviTransViewTransactionsComponent,
+                  },
+                  {
+                    path: 'view-transactions/amount/:id',
+                    component: TransactionAmountComponent,
+                  },
+                  {
+                    path: 'view-transactions/document/:id',
+                    component: ViewTransactionDocumentComponent,
+                  }
+                ]
+              },
+              {
+                path: 'distribution-finance',
+                children: [
+                  {
+                    path: '',
+                    component: DistributionFinanceComponent,
+                  },
+                  {
+                    path: 'view-submissions',
+                    component: ViewSubmissionsComponent,
+                  },
+                  {
+                    path: 'view-submissions-document/:id',
+                    component: ViewSubmissionDocumentComponent,
                   },
                 ],
               },
@@ -1465,6 +1524,22 @@ export const routes: Routes = [
             canActivate: [PermissionGuard],
             data: { permission: 'Procurement centre requirement' },
           },
+          {
+            path: 'procurement-shortage-history',
+            component: ProcurementShortageHistoryComponent,
+
+          },
+          {
+            path: 'view-shortage-today',
+            component: ShortageTodayComponent
+          },
+          { path: 'shortage-assign/:id', 
+            component: ShortageAssignComponent 
+          },
+          {
+            path: 'view-shortage-finalization-today',
+            component: ShortageFinalizationTodayComponent
+          }
         ],
       },
 

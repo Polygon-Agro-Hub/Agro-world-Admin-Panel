@@ -1,5 +1,3 @@
-
-
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MarketPlaceService } from '../../../services/market-place/market-place.service';
@@ -26,6 +24,8 @@ interface ProductTypes {
   selectedProductPrice?: number;
   quantity?: number;
   calculatedPrice?: number;
+  selectedProductIsValid?: number;
+  selectedProductIsEnable?: number;
 }
 
 interface MarketplaceItem {
@@ -33,6 +33,9 @@ interface MarketplaceItem {
   displayName: string;
   normalPrice: number;
   discountedPrice: number;
+  productTypeId: number;
+  isValid: number;
+  isEnable: number;
 }
 
 @Component({
@@ -57,8 +60,8 @@ export class DefinePackageViewComponent implements OnInit {
   constructor(
     private marketplaceService: MarketPlaceService,
     private router: Router,
-    private route: ActivatedRoute
-  ) { }
+    private route: ActivatedRoute,
+  ) {}
 
   ngOnInit() {
     this.route.queryParamMap.subscribe((params) => {
@@ -79,6 +82,7 @@ export class DefinePackageViewComponent implements OnInit {
       });
     });
   }
+
   goBack(): void {
     Swal.fire({
       icon: 'warning',
@@ -90,8 +94,10 @@ export class DefinePackageViewComponent implements OnInit {
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold',
-        confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
-        cancelButton: 'bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 text-black dark:text-white',
+        confirmButton:
+          'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+        cancelButton:
+          'bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 text-black dark:text-white',
       },
     }).then((result) => {
       if (result.isConfirmed) {
@@ -112,8 +118,10 @@ export class DefinePackageViewComponent implements OnInit {
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold',
-        confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
-        cancelButton: 'bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 text-black dark:text-white',
+        confirmButton:
+          'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+        cancelButton:
+          'bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 text-black dark:text-white',
       },
     }).then((result) => {
       if (result.isConfirmed) {
@@ -129,7 +137,6 @@ export class DefinePackageViewComponent implements OnInit {
 
     this.marketplaceService.getOrderDetailsById(id).subscribe({
       next: (response) => {
-
         if (!response?.success || !response.data?.packages) {
           throw new Error('Invalid response structure from API');
         }
@@ -171,6 +178,9 @@ export class DefinePackageViewComponent implements OnInit {
           displayName: item.displayName,
           normalPrice: item.normalPrice,
           discountedPrice: item.discountedPrice,
+          productTypeId: item.productTypeId,
+          isValid: item.isValid,
+          isEnable: item.isEnable,
         }));
         if (callback) callback();
       },
@@ -187,29 +197,33 @@ export class DefinePackageViewComponent implements OnInit {
     const selectedProductId = event.value;
 
     const selectedProduct = this.marketplaceItems.find(
-      (item) => item.id === selectedProductId
+      (item) => item.id === selectedProductId,
     );
 
     if (selectedProduct) {
       productType.productId = selectedProduct.id;
       productType.selectedProductPrice = selectedProduct.discountedPrice;
+      productType.selectedProductIsValid = selectedProduct.isValid;
+      productType.selectedProductIsEnable = selectedProduct.isEnable;
       productType.calculatedPrice = productType.quantity
         ? productType.quantity * selectedProduct.discountedPrice
         : selectedProduct.discountedPrice;
     } else {
       productType.productId = null;
       productType.selectedProductPrice = undefined;
+      productType.selectedProductIsValid = undefined;
+      productType.selectedProductIsEnable = undefined;
     }
 
     // Recalculate price if quantity already exists
     if (productType.quantity !== undefined) {
-      productType.calculatedPrice = (productType.quantity || 0) * (productType.selectedProductPrice || 0);
+      productType.calculatedPrice =
+        (productType.quantity || 0) * (productType.selectedProductPrice || 0);
     } else {
       productType.calculatedPrice = undefined;
     }
     this.calculateTotalPrice();
   }
-
 
   preventNegative(event: KeyboardEvent) {
     if (event.key === '-' || event.key === 'Subtract') {
@@ -261,7 +275,8 @@ export class DefinePackageViewComponent implements OnInit {
       //   return;
       // }
       productType.quantity = quantity;
-      productType.calculatedPrice = quantity * (productType.selectedProductPrice || 0);
+      productType.calculatedPrice =
+        quantity * (productType.selectedProductPrice || 0);
     }
     this.calculateTotalPrice();
   }
@@ -272,7 +287,7 @@ export class DefinePackageViewComponent implements OnInit {
       const allowedLimit = this.totalPrice * 1.08;
       const currentTotal = this.orderDetails.reduce(
         (sum: number, pkg: OrderDetailItem) => sum + this.getPackageTotal(pkg),
-        0
+        0,
       );
       this.isWithinLimit = currentTotal <= allowedLimit;
     } else {
@@ -287,7 +302,7 @@ export class DefinePackageViewComponent implements OnInit {
     }
     return this.orderDetails.reduce(
       (sum, pkg) => sum + (pkg.productPrice || 0),
-      0
+      0,
     );
   }
 
@@ -304,7 +319,7 @@ export class DefinePackageViewComponent implements OnInit {
     }
     return this.orderDetails.reduce(
       (sum, pkg) => sum + this.getPackageTotal(pkg),
-      0
+      0,
     );
   }
 
@@ -316,8 +331,8 @@ export class DefinePackageViewComponent implements OnInit {
           pt.productId !== undefined &&
           pt.quantity !== undefined &&
           pt.quantity > 0 &&
-          pt.selectedProductPrice !== undefined
-      )
+          pt.selectedProductPrice !== undefined,
+      ),
     );
   }
 
@@ -332,7 +347,8 @@ export class DefinePackageViewComponent implements OnInit {
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
           title: 'font-semibold',
-          confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+          confirmButton:
+            'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
         },
       });
       return;
@@ -346,7 +362,8 @@ export class DefinePackageViewComponent implements OnInit {
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
           title: 'font-semibold',
-          confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+          confirmButton:
+            'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
         },
       });
       return;
@@ -360,7 +377,8 @@ export class DefinePackageViewComponent implements OnInit {
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
           title: 'font-semibold',
-          confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+          confirmButton:
+            'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
         },
       });
       return;
@@ -379,14 +397,14 @@ export class DefinePackageViewComponent implements OnInit {
             pt.productId !== undefined &&
             pt.quantity !== undefined &&
             pt.quantity > 0 &&
-            pt.selectedProductPrice !== undefined
+            pt.selectedProductPrice !== undefined,
         )
         .map((pt) => ({
           productType: String(pt.id),
           productId: pt.productId as number,
           qty: pt.quantity as number,
-          price: pt.selectedProductPrice as number,
-        }))
+          price: pt.calculatedPrice as number,
+        })),
     );
 
     if (packageItems.length === 0) {
@@ -397,7 +415,8 @@ export class DefinePackageViewComponent implements OnInit {
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
           title: 'font-semibold',
-          confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+          confirmButton:
+            'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
         },
       });
       return;
@@ -409,6 +428,8 @@ export class DefinePackageViewComponent implements OnInit {
         .createDefinePackageWithItems(packageData, packageItems)
         .toPromise();
 
+      this.isLoading = false;
+
       Swal.fire({
         icon: 'success',
         title: 'Success!',
@@ -416,11 +437,12 @@ export class DefinePackageViewComponent implements OnInit {
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
           title: 'font-semibold',
-          confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+          confirmButton:
+            'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
         },
       }).then((result) => {
-        this.isLoading = false;
         if (result.isConfirmed) {
+          this.isLoading = true;
           this.router.navigate(['/market/action/view-packages-list']);
         }
       });
@@ -434,7 +456,8 @@ export class DefinePackageViewComponent implements OnInit {
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
           title: 'font-semibold',
-          confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+          confirmButton:
+            'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
         },
       });
     }
@@ -456,9 +479,21 @@ export class DefinePackageViewComponent implements OnInit {
 
     // Allow: backspace, delete, tab, escape, enter, arrows (up/down/left/right)
     if (
-      ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', '.', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(key) ||
+      [
+        'Backspace',
+        'Delete',
+        'Tab',
+        'Escape',
+        'Enter',
+        '.',
+        'ArrowLeft',
+        'ArrowRight',
+        'ArrowUp',
+        'ArrowDown',
+      ].includes(key) ||
       // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
-      (event.ctrlKey === true && ['a', 'c', 'v', 'x'].includes(key.toLowerCase()))
+      (event.ctrlKey === true &&
+        ['a', 'c', 'v', 'x'].includes(key.toLowerCase()))
     ) {
       return; // let it happen, don't do anything
     }
@@ -488,5 +523,40 @@ export class DefinePackageViewComponent implements OnInit {
     if (key === '.' && currentValue.includes('.')) {
       event.preventDefault();
     }
+  }
+
+  filterMarketItemByTypeId(typeId: number): MarketplaceItem[] {
+    const filteredItems = this.marketplaceItems.filter(
+      (item) => item.productTypeId === typeId,
+    );
+    console.log('Filtered Items for typeId', typeId, ':', filteredItems);
+    return filteredItems;
+  }
+
+  getShortCodeTextClass(pt: ProductTypes): string {
+    return pt.selectedProductIsValid === 0
+      ? 'text-[#FF0000]'
+      : 'text-[#000000] dark:text-[#F1F4F5]';
+  }
+
+  getDropdownStatusClass(pt: ProductTypes): string {
+    if (pt.selectedProductIsValid === 0) return 'pt-dropdown-invalid';
+    if (pt.selectedProductIsEnable === 0) return 'pt-dropdown-disabled';
+    return '';
+  }
+
+  getInputStatusBorderColor(pt: ProductTypes): string {
+    if (pt.selectedProductIsValid === 0) return 'border-2 border-[#FF0000]';
+    if (pt.selectedProductIsEnable === 0) return 'border-2 border-[#FF9D00]';
+    return 'border border-[#666666] dark:border-gray-600';
+  }
+
+  hasInvalidOrDisabledProduct(): boolean {
+    return this.orderDetails.some((pkg) =>
+      pkg.productTypes.some(
+        (pt) =>
+          pt.selectedProductIsValid === 0 || pt.selectedProductIsEnable === 0,
+      ),
+    );
   }
 }

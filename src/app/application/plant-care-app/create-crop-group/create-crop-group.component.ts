@@ -163,13 +163,27 @@ export class CreateCropGroupComponent {
               this.selectedFileName = 'Existing Image';
             }
 
-            this.newsItems[0].seedRate = this.newsItems[0].seedRate ?? '';
-            this.newsItems[0].rowSpace = this.newsItems[0].rowSpace ?? '';
-            this.newsItems[0].plantSpace = this.newsItems[0].plantSpace ?? '';
-            this.newsItems[0].AvgYield = this.newsItems[0].AvgYield ?? '';
-            this.newsItems[0].nitrogen = this.newsItems[0].nitrogen ?? '';
-            this.newsItems[0].phosphorus = this.newsItems[0].phosphorus ?? '';
-            this.newsItems[0].potassium = this.newsItems[0].potassium ?? '';
+            this.newsItems[0].seedRate = this.formatExactValue(
+              this.newsItems[0].seedRate,
+            );
+            this.newsItems[0].rowSpace = this.formatExactValue(
+              this.newsItems[0].rowSpace,
+            );
+            this.newsItems[0].plantSpace = this.formatExactValue(
+              this.newsItems[0].plantSpace,
+            );
+            this.newsItems[0].AvgYield = this.formatExactValue(
+              this.newsItems[0].AvgYield,
+            );
+            this.newsItems[0].nitrogen = this.formatExactValue(
+              this.newsItems[0].nitrogen,
+            );
+            this.newsItems[0].phosphorus = this.formatExactValue(
+              this.newsItems[0].phosphorus,
+            );
+            this.newsItems[0].potassium = this.formatExactValue(
+              this.newsItems[0].potassium,
+            );
             this.isLoading = false;
           },
           error: (error) => {
@@ -248,7 +262,7 @@ export class CreateCropGroupComponent {
     }
 
     if (!this.cropGroup.incomeFeild) {
-      errors.push('Please fill the Cost per acre field');
+      errors.push('Please fill the Income per acre field');
     }
 
     if (!this.cropGroup.seedRate) {
@@ -276,9 +290,6 @@ export class CreateCropGroupComponent {
     }
 
     const onlyNumbersPattern = /^[0-9]+$/;
-
-
-
 
     if (!this.selectedFile) {
       errors.push('Please select an image file');
@@ -771,5 +782,57 @@ export class CreateCropGroupComponent {
 
     if (allowedKeys.includes(char)) return;
     if (!/^\d$/.test(char)) event.preventDefault();
+  }
+
+  allowDecimal2Places(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement;
+    const char = event.key;
+    const allowedKeys = [
+      'Backspace',
+      'Delete',
+      'Tab',
+      'Escape',
+      'Enter',
+      'ArrowLeft',
+      'ArrowRight',
+    ];
+
+    if (allowedKeys.includes(char)) return;
+
+    if (char === ' ' && input.selectionStart === 0) {
+      event.preventDefault();
+      return;
+    }
+
+    if (char === '.') {
+      if (input.value.includes('.')) {
+        event.preventDefault();
+        return;
+      }
+      return;
+    }
+
+    if (input.value.includes('.')) {
+      const dotIndex = input.value.indexOf('.');
+      const selStart = input.selectionStart || 0;
+      const decimalPart = input.value.split('.')[1];
+      if (selStart > dotIndex && decimalPart.length >= 2) {
+        event.preventDefault();
+        return;
+      }
+    }
+
+    if (!/^\d$/.test(char)) event.preventDefault();
+  }
+
+  formatExactValue(value: any): string {
+    if (value === null || value === undefined || value === '') {
+      return '';
+    }
+    const num = parseFloat(value);
+    if (isNaN(num)) {
+      return '';
+    }
+    return num.toString();
   }
 }

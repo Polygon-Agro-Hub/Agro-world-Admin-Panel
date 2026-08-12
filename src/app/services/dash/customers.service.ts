@@ -13,17 +13,32 @@ export class CustomersService {
 
   constructor(private http:HttpClient, private tokenService:TokenService) { }
 
-  getCustomers(page: number = 1, limit: number = 10,searchText:string = ''):Observable<any>{
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`
-    });
-
-    let url = `${this.apiUrl}dash/get-all-customers?page=${page}&limit=${limit}`
-
-    if(searchText){
-      url+=`&searchText=${searchText}`
-    }
-    return this.http.get<any>(url, { headers: headers } );
+   getCustomers(
+    page: number        = 1,
+    limit: number       = 10,
+    searchText: string  = '',
+    ratingFilter: string = '',
+  ): Observable<any> {
+    const headers = new HttpHeaders({ Authorization: `Bearer ${this.token}` });
+ 
+    let url = `${this.apiUrl}dash/get-all-customers?page=${page}&limit=${limit}`;
+ 
+    if (searchText)   url += `&searchText=${searchText}`;
+    if (ratingFilter) url += `&ratingFilter=${ratingFilter}`;
+ 
+    return this.http.get<any>(url, { headers });
+  }
+ 
+  updateDashCustomerRating(id: number, rateofCus: string): Observable<any> {
+    const headers = new HttpHeaders({ Authorization: `Bearer ${this.token}` });
+    const url     = `${this.apiUrl}dash/update-dash-customer-rating/${id}`;
+ 
+    return this.http.patch<any>(url, { rateofCus }, { headers }).pipe(
+      catchError((error) => {
+        console.error('Error updating dash customer rating:', error);
+        return throwError(error);
+      }),
+    );
   }
 
 

@@ -431,4 +431,9 @@ export class ViewGoviLinkJobsComponent implements OnInit {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-GB'); // DD/MM/YYYY format
   }
+
+  getDisplayStatus(status: string): string {
+  if (status === 'Assigned') return 'Pending';
+  return status || '--';
+}
 }

@@ -154,19 +154,51 @@ export class DefinePackageViewComponent implements OnInit {
             selectedProductPrice: undefined,
             quantity: undefined,
             calculatedPrice: undefined,
+            selectedProductIsValid: undefined,
+            selectedProductIsEnable: undefined,
           })),
         }));
+
         this.packagePrice = response.data.packages[0].productPrice || 0;
+
+        this.applyInitialProductTypeStatus();
 
         this.calculateTotalPrice();
         this.loading = false;
       },
+      
       error: (err) => {
         console.error('Error fetching order details:', err);
         this.error =
           err.error?.message || err.message || 'Failed to load order details';
         this.loading = false;
       },
+    });
+  }
+
+  private applyInitialProductTypeStatus(): void {
+    this.orderDetails.forEach((pkg) => {
+      pkg.productTypes.forEach((pt) => {
+        const optionsForType = this.filterMarketItemByTypeId(pt.id);
+
+        if (optionsForType.length > 0) {
+          const hasValidOption = optionsForType.some(
+            (item) => item.isValid !== 0,
+          );
+  
+          const hasEnabledOption = optionsForType.some(
+            (item) => item.isEnable !== 0,
+          );
+
+          if (!hasValidOption) {
+            pt.selectedProductIsValid = 0;
+          }
+
+          if (!hasEnabledOption) {
+            pt.selectedProductIsEnable = 0;
+          }
+        } 
+      });
     });
   }
 

@@ -543,6 +543,20 @@ export class CreateNewsComponent {
       return;
     }
 
+    if (!this.isPublishAfterExpireValidEditNews) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Dates',
+        text: 'Publish Date cannot be later than Expiry Date.',
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+      return;
+    }
+
     const missingFields: string[] = [];
 
     // Validation for required fields
@@ -602,11 +616,11 @@ export class CreateNewsComponent {
       missingFields.push('Expire Date is Required');
     }
 
-    if (!this.isPublishAfterExpireValidEditNews) {
-      missingFields.push(
-        'Publish and Expire Dates - Publish date must be before expire date',
-      );
-    }
+    // if (!this.isPublishAfterExpireValidEditNews) {
+    //   missingFields.push(
+    //     'Publish and Expire Dates - Publish date must be before expire date',
+    //   );
+    // }
 
     // Display validation errors if any
     if (missingFields.length > 0) {
@@ -939,8 +953,8 @@ export class CreateNewsComponent {
           });
           Swal.fire({
             icon: 'error',
-            title: 'Missing or Invalid Information',
-            html: 'Expiry date cannot be in the past. Please select a valid date.',
+            title: 'Invalid Data Inputs',
+            html: 'Expire date cannot be same as the start date.',
             confirmButtonText: 'OK',
             customClass: {
               popup:
@@ -960,8 +974,8 @@ export class CreateNewsComponent {
         });
         Swal.fire({
           icon: 'error',
-          title: 'Missing or Invalid Information',
-          html: 'Expiry date cannot be in the past. Please select a valid date.',
+          title: 'Invalid Data Inputs',
+          html: 'Expire date cannot be same as the start date.',
           confirmButtonText: 'OK',
           customClass: {
             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
@@ -991,8 +1005,8 @@ export class CreateNewsComponent {
           });
           Swal.fire({
             icon: 'error',
-            title: 'Missing or Invalid Information',
-            html: 'Expire date should be later than Publish date',
+            title: 'Invalid Data Inputs',
+            html: 'Expire date cannot be same as the start date.',
             confirmButtonText: 'OK',
             customClass: {
               popup:
@@ -1012,7 +1026,7 @@ export class CreateNewsComponent {
         });
         Swal.fire({
           icon: 'error',
-          title: 'Missing or Invalid Information',
+          title: 'Invalid Data Inputs',
           html: 'Expire date should be later than Today',
           confirmButtonText: 'OK',
           customClass: {

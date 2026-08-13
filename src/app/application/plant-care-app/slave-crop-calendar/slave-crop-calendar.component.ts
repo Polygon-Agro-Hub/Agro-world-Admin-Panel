@@ -87,8 +87,6 @@ export class SlaveCropCalendarComponent implements OnInit {
       this.userId = params['userId'] ? +params['userId'] : null;
       this.ongCultivationId = params['ongCultivationId'] === 'null' ? null : params['ongCultivationId'];
 
-      console.log('This is the cultivation Id : ', this.cultivationId);
-      console.log('This is the user Id : ', this.userId);
 
       if (this.cultivationId && this.userId) {
         this.fetchAllNews(this.cultivationId, this.userId);
@@ -142,7 +140,6 @@ export class SlaveCropCalendarComponent implements OnInit {
     this.isLoading = true;
     this.ongoingCultivationService.getOngoingCultivationById(cultivationId, userId).subscribe(
       (data: { userFirstName: string; userLastName: string; farmName:string; cultivations: NewsItem[] }) => {
-        console.log('Fetched data:', data);
         this.newsItems = data.cultivations || [];
         this.hasData = this.newsItems.length > 0;
         this.userName = `${data.userFirstName || ''} ${data.userLastName || ''} - ${data.farmName}`.trim() || 'Unknown User';

@@ -44,15 +44,6 @@ export class FixedAssetCategoryComponent {
 
     this.fullName = `${this.firstName} ${this.lastName}`;
     
-    // Log the extracted values for debugging
-    console.log('Extracted parameters:', {
-      userId: this.userId,
-      farmId: this.farmId,
-      firstName: this.firstName,
-      lastName: this.lastName,
-      farmName: this.farmName,
-      fullName: this.fullName
-    });
   }
 
 buildingCategory(userId: number, farmId: number) {

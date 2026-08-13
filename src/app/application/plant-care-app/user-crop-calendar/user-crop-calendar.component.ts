@@ -90,7 +90,7 @@ imageLoadErrors: boolean[] = [];
           : params['ongCultivationId'];
     });
 
-    console.log('onCulscropID', this.onCulscropID, 'cropName', this.cropName); // Updated log
+
     this.getchUserTaskList(this.cropCalendarId, this.userId);
   }
 
@@ -106,7 +106,6 @@ imageLoadErrors: boolean[] = [];
       .getUserTasks(cropId, userId, page, limit)
       .subscribe(
         (data) => {
-          console.log('User Task List Data:', data);
 
           this.isLoading = false;
           this.taskList = data.items;
@@ -297,7 +296,6 @@ imageLoadErrors: boolean[] = [];
         title: 'font-semibold text-lg',
       },
     }).then((result) => {
-      console.log('this.onCulscropID', this.onCulscropID);
       let ongCultivationId = this.ongCultivationId;
       if (result.isConfirmed) {
         this.router.navigate(

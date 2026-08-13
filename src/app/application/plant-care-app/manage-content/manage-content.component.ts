@@ -108,8 +108,6 @@ export class ManageContentComponent implements OnInit {
       ? this.formatLocalDate(dateObj)
       : undefined;
 
-    console.log("createdDateFilter", this.createdDateFilter);
-    console.log('Formatted Date:', formattedDate);
 
     this.newsService
       .fetchAllNews(

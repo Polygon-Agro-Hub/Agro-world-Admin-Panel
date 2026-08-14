@@ -15,6 +15,8 @@ import { TokenService } from '../../../../services/token/services/token.service'
 export class DistributionFinanceComponent implements OnInit {
   popupShortagePurchases = false;
   popupCODTransactions = false;
+  popupCOPTransactions = false;
+  popupViewTransactions = false;
 
   shortageSubmissionsCount = 0;
 
@@ -51,6 +53,15 @@ export class DistributionFinanceComponent implements OnInit {
     this.popupShortagePurchases = !this.popupShortagePurchases;
     if (this.popupShortagePurchases) {
       this.popupCODTransactions = false;
+      this.popupViewTransactions = false;
+    }
+  }
+
+  togglePopupViewTransactions() {
+    this.popupViewTransactions = !this.popupViewTransactions;
+    if (this.popupViewTransactions) {
+      this.popupShortagePurchases = false;
+      this.popupCODTransactions = false;
     }
   }
 
@@ -58,12 +69,19 @@ export class DistributionFinanceComponent implements OnInit {
     this.popupCODTransactions = !this.popupCODTransactions;
     if (this.popupCODTransactions) {
       this.popupShortagePurchases = false;
+      this.popupViewTransactions = false;
     }
   }
 
   ViewSubmissions(): void {
     this.router.navigate([
       '/finance/action/distribution-finance/view-submissions',
+    ]);
+  }
+
+  ViewTransactions(): void {
+    this.router.navigate([
+      '/finance/action/distribution-finance/view-transactions',
     ]);
   }
 }

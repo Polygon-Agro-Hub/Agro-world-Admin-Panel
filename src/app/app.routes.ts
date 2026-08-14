@@ -312,6 +312,7 @@ import { ViewSubmissionsComponent } from './application/finance/distribution-fin
 import { ViewTransactionsComponent } from './application/finance/distribution-finance-acion/view-transactions/view-transactions.component';
 import { ViewSubmissionDocumentComponent } from './application/finance/distribution-finance-acion/view-submission-document/view-submission-document.component';
 import { TestComponentComponent } from './application/steckholders-section/test-component/test-component.component';
+import { ViewTransactionAllOrdersComponent } from './application/finance/distribution-finance-acion/view-transaction-all-orders/view-transaction-all-orders.component';
 
 export const routes: Routes = [
   {
@@ -892,6 +893,10 @@ export const routes: Routes = [
                   {
                     path: 'view-submissions-document/:id',
                     component: ViewSubmissionDocumentComponent,
+                  },
+                  {
+                    path: 'view-transactions-all-orders/:id',
+                    component: ViewTransactionAllOrdersComponent,
                   },
                 ],
               },

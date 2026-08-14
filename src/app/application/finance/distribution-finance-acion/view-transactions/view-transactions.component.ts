@@ -14,6 +14,7 @@ interface COPTransaction {
   id: number;
   transactionId: string;
   slip: string;
+  officerId: number;
   transactionStatus: 'Pending' | 'Completed';
   purchasedAt: string;
   empId: string;
@@ -158,4 +159,8 @@ export class ViewTransactionsComponent implements OnInit {
     if (status === 'Completed') return 'Finalized';
     return status;
   }
+
+  viewAllOrders(officerId: number): void {
+  this.router.navigate(['/finance/action/distribution-finance/view-transactions-all-orders', officerId]);
+}
 }

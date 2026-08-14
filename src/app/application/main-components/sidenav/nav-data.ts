@@ -163,7 +163,7 @@ export const navbarData = [
   {
     RouterLink: 'market',
     icon: 'fa-solid fa-shop',
-    label: 'GoViMart',
+    label: 'Polygon MP',
     expanded: false,
     Permission: 'GoviMart Tab',
     children: [

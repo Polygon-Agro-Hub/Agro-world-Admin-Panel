@@ -257,11 +257,11 @@ export class CreateCropGroupComponent {
       errors.push('Please select a Parent Category');
     }
 
-    if (!this.cropGroup.costFeild) {
+    if (!this.cropGroup.costFeild || parseFloat(this.cropGroup.costFeild) <= 0) {
       errors.push('Please fill the Cost per acre field');
     }
 
-    if (!this.cropGroup.incomeFeild) {
+    if (!this.cropGroup.incomeFeild || parseFloat(this.cropGroup.incomeFeild) <= 0) {
       errors.push('Please fill the Income per acre field');
     }
 
@@ -468,11 +468,11 @@ export class CreateCropGroupComponent {
       errors.push('Please select a Parent Category');
     }
 
-    if (!this.newsItems[0].costFeild) {
+    if (!this.newsItems[0].costFeild || parseFloat(this.newsItems[0].costFeild) <= 0) {
       errors.push('Please fill the Cost per acre field');
     }
 
-    if (!this.newsItems[0].incomeFeild) {
+    if (!this.newsItems[0].incomeFeild || parseFloat(this.newsItems[0].incomeFeild) <= 0) {
       errors.push('Please fill the Income per acre field');
     }
 

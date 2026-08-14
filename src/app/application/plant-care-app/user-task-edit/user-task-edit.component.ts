@@ -50,6 +50,7 @@ export class UserTaskEditComponent {
   hasImageLink: boolean = false;
   formSubmitted: boolean = false;
   hasVideoLink: boolean = false;
+  minDate: Date = new Date(new Date().setHours(0, 0, 0, 0));
 
   
 

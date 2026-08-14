@@ -73,7 +73,6 @@ export class OngoingCultivationComponent {
       .fetchAllOngoingCultivations(page, limit, this.searchNIC)
       .subscribe({
         next: (response) => {
-          console.log('response', response);
           this.ongoingCultivation = response.items || [];
           // Check if array has items
           this.hasData = this.ongoingCultivation && this.ongoingCultivation.length > 0;

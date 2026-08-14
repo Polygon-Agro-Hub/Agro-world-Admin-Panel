@@ -144,12 +144,6 @@ export class ViewTransactionsComponent implements OnInit {
     this.loadTransactions();
   }
 
-  viewDocument(slipUrl: string): void {
-    if (slipUrl) {
-      window.open(slipUrl, '_blank');
-    }
-  }
-
   goBack(): void {
     this.router.navigate(['/finance/action/distribution-finance']);
   }
@@ -160,7 +154,17 @@ export class ViewTransactionsComponent implements OnInit {
     return status;
   }
 
-  viewAllOrders(officerId: number): void {
-  this.router.navigate(['/finance/action/distribution-finance/view-transactions-all-orders', officerId]);
-}
+  viewAllOrders(id: number): void {
+    this.router.navigate([
+      '/finance/action/distribution-finance/view-transactions-all-orders',
+      id,
+    ]);
+  }
+
+  viewDocument(id: number): void {
+    this.router.navigate([
+      '/finance/action/distribution-finance/view-cop-transactions-document',
+      id,
+    ]);
+  }
 }

@@ -2,10 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
+import { FinanceService } from '../../../../services/finance/finance.service';
 
 interface OrderItem {
   orderId: string;
+  invNo: string;
   handOverPrice: number;
+  officerId: number;
+  subbmittedAt: string;
+  totalHandOverPrice: number;
 }
 
 @Component({
@@ -19,8 +24,8 @@ export class ViewTransactionAllOrdersComponent implements OnInit {
   isLoading = false;
   hasData = true;
 
-  officerId: string | null = null;
-  submissionDate: string = '2026-07-01';
+  id: string | null = null;
+  submissionDate: string = '';
   totalToReceive: number = 0;
 
   orders: OrderItem[] = [];
@@ -28,30 +33,45 @@ export class ViewTransactionAllOrdersComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
+    private financeService: FinanceService,
   ) {}
 
   ngOnInit(): void {
-    this.officerId = this.route.snapshot.paramMap.get('id');
-    this.loadDummyData();
+    this.id = this.route.snapshot.paramMap.get('id');
+    this.loadOrders();
   }
 
-  loadDummyData(): void {
-    // Dummy data — replace with financeService API call
-    this.orders = [
-      { orderId: '2606010001', handOverPrice: 4000.0 },
-      { orderId: '2606010002', handOverPrice: 3000.0 },
-      { orderId: '2606010003', handOverPrice: 2000.0 },
-      { orderId: '2606010004', handOverPrice: 1000.0 },
-    ];
+  loadOrders(): void {
+    if (!this.id) {
+      this.hasData = false;
+      return;
+    }
 
-    this.totalToReceive = this.orders.reduce(
-      (sum, item) => sum + item.handOverPrice,
-      0,
-    );
-    this.hasData = this.orders.length > 0;
+    this.isLoading = true;
+
+    this.financeService
+      .getPickupHandOverSummary(Number(this.id))
+      .subscribe({
+        next: (res) => {
+          this.orders = res.result || [];
+          this.totalToReceive =
+            this.orders.length > 0 ? this.orders[0].totalHandOverPrice : 0;
+          this.submissionDate =
+            this.orders.length > 0 ? this.orders[0].subbmittedAt : '';
+          this.hasData = this.orders.length > 0;
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.error('Error fetching pickup hand over summary', err);
+          this.orders = [];
+          this.totalToReceive = 0;
+          this.hasData = false;
+          this.isLoading = false;
+        },
+      });
   }
 
   goBack(): void {
-    this.router.navigate(['/finance/action/distribution-finance']);
+    this.router.navigate(['/finance/action/distribution-finance/view-transactions']);
   }
 }

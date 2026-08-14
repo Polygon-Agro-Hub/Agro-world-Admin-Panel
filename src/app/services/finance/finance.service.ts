@@ -1277,5 +1277,16 @@ export class FinanceService {
 
     return this.http.get<any>(url, { headers });
   }
+
+  getPickupHandOverSummary(id: number): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
+  return this.http.get<any>(
+    `${this.apiUrl}finance/pickup-handover-summary/${id}`,
+    { headers }
+  );
+}
 }
 

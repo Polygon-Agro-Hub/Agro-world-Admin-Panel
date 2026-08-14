@@ -1248,5 +1248,34 @@ export class FinanceService {
       { headers }
     );
   }
+
+  getAllCOPTransactions(
+    page: number,
+    limit: number,
+    status: string,
+    purchasedAt: string,
+    searchItem: string
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    let url = `${this.apiUrl}finance/get-all-cop-transactions?page=${page}&limit=${limit}`;
+
+    if (status) {
+      url += `&status=${status}`;
+    }
+
+    if (purchasedAt) {
+      url += `&purchasedAt=${purchasedAt}`;
+    }
+
+    if (searchItem) {
+      url += `&searchItem=${searchItem}`;
+    }
+
+    return this.http.get<any>(url, { headers });
+  }
 }
 

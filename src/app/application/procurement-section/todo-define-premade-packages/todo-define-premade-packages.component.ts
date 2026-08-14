@@ -226,6 +226,11 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
           // ✅ Sum package's productPrice for totalPackagePrice
           this.totalPackagePrice += order.productPrice ?? 0;
 
+          // Sort items A→Z by product type short code
+          order.items.sort((a, b) =>
+            (a.productTypeShortCode || '').localeCompare(b.productTypeShortCode || '')
+          );
+
           order.items.forEach(item => {
             const selectedProduct = this.marketplaceItems.find(
               product => +product.id === +item.productId

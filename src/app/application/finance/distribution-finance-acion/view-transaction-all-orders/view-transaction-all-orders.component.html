@@ -8,18 +8,18 @@
 <div class="max-w-4xl">
     <div class="pt-5 pr-12 pl-12 pb-5 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
         <div class="mb-6 mt-4">
-            <h2 class="text-xl font-normal text-[#292929] dark:text-textDark">
-                All Orders ({{ orders.length < 10 ? "0" + orders.length : orders.length }}) </h2>
-                    <p class="text-sm text-[#5C5C5C] dark:text-textDark mt-1">
-                        Submission on {{ submissionDate | date: "d MMM, y" }}
-                    </p>
+            <p class="text-[20px] font-medium text-[#292929] dark:text-textDark">
+                All Orders ({{ orders.length < 10 ? "0" + orders.length : orders.length }}) </p>
+            <p class="text-[16px] text-[#292929] font-normal dark:text-textDark mt-1">
+                Submission on {{ submissionDate | date: "d MMM, y" }}
+            </p>
         </div>
 
         <div class="mb-6">
             <span
-                class="inline-block px-4 py-2 rounded-lg bg-[#DCEBFF] dark:bg-[#272F45] text-[#292929] dark:text-textDark">
+                class="inline-block text-[20px] px-4 py-2 rounded-lg bg-[#CBE6FF] dark:bg-[#272F45] text-[#292929] dark:text-textDark font-light">
                 Total to Receive :
-                <span class="font-bold">Rs. {{ totalToReceive | number: '1.2-2' }}</span>
+                <span class="font-semibold">Rs. {{ totalToReceive | number: '1.2-2' }}</span>
             </span>
         </div>
 
@@ -28,24 +28,24 @@
             <table class="max-w-7xl divide-y divide-gray-200 table-auto" *ngIf="hasData">
                 <thead>
                     <tr>
-                        <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"
+                        <th class="px-4 py-3 text-[16px] font-normal text-[#5C5C5C] dark:text-textDark text-left"
                             style="white-space: nowrap">No</th>
-                        <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"
+                        <th class="px-4 py-3 text-[16px] font-normal text-[#5C5C5C] dark:text-textDark text-left"
                             style="white-space: nowrap">Order ID</th>
-                        <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"
+                        <th class="px-4 py-3 text-[16px] font-normal text-[#5C5C5C] dark:text-textDark text-left"
                             style="white-space: nowrap">Received Value (Rs.)</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let item of orders; let i = index">
-                        <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
+                        <td class="text-[20px] font-normal px-4 py-3 text-left text-[#000000] dark:text-textDark">
                             {{ (i + 1) < 10 ? '0' + (i + 1) : (i + 1) }} </td>
 
-                        <td class="px-4 py-3 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
+                        <td class="text-[20px] font-normal px-4 py-3 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
                             {{ item.invNo }}
                         </td>
 
-                        <td class="px-4 py-3 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
+                        <td class="text-[20px] font-normal px-4 py-3 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
                             {{ item.handOverPrice | number: '1.2-2' }}
                         </td>
                     </tr>

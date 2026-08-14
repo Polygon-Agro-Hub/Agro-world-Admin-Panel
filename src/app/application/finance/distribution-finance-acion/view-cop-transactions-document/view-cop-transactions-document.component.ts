@@ -2,7 +2,7 @@ import { CommonModule, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 import { FinanceService } from '../../../../services/finance/finance.service';
@@ -36,6 +36,7 @@ export class ViewCopTransactionsDocumentComponent implements OnInit {
     private location: Location,
     private sanitizer: DomSanitizer,
     private route: ActivatedRoute,
+    private router: Router,
     private financeService: FinanceService,
   ) {
     const id = this.route.snapshot.paramMap.get('id');
@@ -211,6 +212,10 @@ export class ViewCopTransactionsDocumentComponent implements OnInit {
               confirmButton: 'px-6 py-2 rounded-md',
               cancelButton: 'px-6 py-2 rounded-md',
             },
+          }).then(() => {
+            this.router.navigate([
+              '/finance/action/distribution-finance/view-transactions',
+            ]);
           });
         }
       },

@@ -1248,5 +1248,30 @@ export class FinanceService {
       { headers }
     );
   }
+
+   viewCopTransactionDocument(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.get<any>(
+      `${this.apiUrl}finance/view-cop-transaction-document/${id}`,
+      { headers }
+    );
+  }
+
+  updateCopTransactionStatus(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.put<any>(
+      `${this.apiUrl}finance/update-cop-transaction-status/${id}`,
+      {},
+      { headers }
+    );
+  }
 }
 

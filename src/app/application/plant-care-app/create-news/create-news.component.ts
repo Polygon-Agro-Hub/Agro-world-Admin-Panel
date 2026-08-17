@@ -81,6 +81,7 @@ export class CreateNewsComponent {
   originalExpireDate: Date | null = null;
   originalPublishDateEdit: Date | null = null;
   originalExpireDateEdit: Date | null = null;
+  minSelectableDate: Date = new Date(new Date().setHours(0, 0, 0, 0));
 
   todayDate: Date = new Date();
 

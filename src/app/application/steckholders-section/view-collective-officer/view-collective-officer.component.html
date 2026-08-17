@@ -23,7 +23,6 @@
 
     <div class="flex flex-col items-center justify-center">
       <div class="flex align-middle justify-start items-center gap-x-12">
-        <!-- <label class="block text-gray-700 pl-20 dark:text-gray-200 mb-2 ">Select Centre</label> -->
         <div class="flex flex-col">
           <p-dropdown [options]="centerNames" optionLabel="fullCenterName" optionValue="id" placeholder="Select Collection Centre"
             [(ngModel)]="selectedCenterId" #selectedCenterIdInput="ngModel" (onChange)="onCenterChange()"
@@ -39,10 +38,8 @@
         </div>
       </div>
 
-      <!-- Conditionally show/hide the Select Manager section -->
       <div *ngIf="selectedOfficer?.jobRole === 'Collection Officer'"
         class="flex mt-4 align-middle justify-start items-center gap-x-12">
-        <!-- <label class="block text-gray-700 pl-16 dark:text-gray-200 mb-2">Select Manager</label> -->
         <div class="flex flex-col">
           <p-dropdown [options]="collectionCenterManagerNames" optionLabel="displayLabel" optionValue="id"
             placeholder="Select a Manager" [(ngModel)]="selectedIrmId" #selectedIrmIdInput="ngModel"
@@ -79,7 +76,6 @@
 <div *ngIf="showDisclaimView" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
   <div class="bg-white dark:bg-[#272F45] shadow-lg rounded-lg p-6 w-1/2">
     <div>
-      <!-- Icon -->
       <div class="mb-4 flex justify-center">
         <i class="fa-solid fa-triangle-exclamation dark:text-white"></i>
       </div>
@@ -97,12 +93,8 @@
             "{{ selectedOfficer?.centerName }}"?</span>
         </p>
 
-        <!-- <p class="text-red-500 mb-6 italic">
-          Please note that the officer will no longer be under your monitoring.
-        </p> -->
       </div>
 
-      <!-- Buttons -->
       <div class="flex justify-center gap-4">
         <button class="bg-[#E8E8E8] border-[1px] border-[#6B7D8C] px-10 py-0.35 rounded-lg shadow-md"
           (click)="confirmDisclaim()">
@@ -161,14 +153,6 @@
             (onChange)="applyStatusFilters()" panelStyleClass="custom-top-dropdown"></p-dropdown>
         </div>
 
-        <!-- <div class="mr-5">
-          <p-dropdown
-            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] custom-top-dropdown"
-            [options]="centerStatusOptions" [checkmark]="false" optionLabel="label" optionValue="value"
-            [showClear]="selectCenterStatus != null && selectCenterStatus !== ''" placeholder="Centre Status"
-            [(ngModel)]="selectCenterStatus" (onChange)="applyCenterStatusFilters()"
-            panelStyleClass="custom-top-dropdown"></p-dropdown>
-        </div> -->
 
         <div class="mr-5">
           <p-dropdown
@@ -178,18 +162,6 @@
             panelStyleClass="custom-top-dropdown"></p-dropdown>
         </div>
 
-        <!-- <div class="mr-5">
-    <p-dropdown
-      styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-      [options]="companyArr"
-      [checkmark]="true"
-      optionLabel="companyNameEnglish"
-      [showClear]="statusFilter != null && statusFilter !== ''"
-      placeholder="Company"
-      [(ngModel)]="statusFilter"
-      (onChange)="applyFilters()"
-    ></p-dropdown>
-  </div> -->
 
         <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
           <input type="text" placeholder="Search by EMP ID, NIC" [(ngModel)]="searchNIC"
@@ -228,7 +200,6 @@
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
               No
             </th>
-            <!-- <th class="py-3 font-normal text-gray-500 text-left"></th> -->
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
               EMP ID
             </th>
@@ -297,10 +268,6 @@
                     };
               let i = index
             ">
-            <!-- <td class="py-3">
-            <img class="profile-pic w-14 h-14 bg-white rounded-full" [src]="'data:image/jpeg;base64,' + item.image"
-              alt="Profile Picture" width="50" height="50" />
-          </td> -->
             <td class="px-2 py-3 text-left text-textLight dark:text-textDark">
               {{ (page - 1) * itemsPerPage + i + 1 }}
             </td>
@@ -385,18 +352,7 @@
               {{ getModifiedBy(item) }}
             </td>
 
-            <!-- <td class="px-4 py-3 text-center">
-              <button class="w-5 h-5 text-blue-500 hover:text-blue-700" (click)="viewCollectiveOfficerProfile(item.id)">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-              </button>
-            </td> -->
 
-            <!-- ( urlSegment === 'collection-hub' && permissionService.hasPermission('View Company Head Portals') )||
-              ( urlSegment === 'steckholders' && permissionService.hasPermission('Stakeholder view collection Head Portals') )|| -->
 
             <td *ngIf="((urlSegment === 'steckholders' && permissionService.hasPermission('View individual collection officer')) ||
              (urlSegment === 'collection-hub' && permissionService.hasPermission('View Polygon Centre Officer Profile')) ||

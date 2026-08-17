@@ -132,20 +132,21 @@ export class DefinePackageViewComponent implements OnInit {
   }
 
   fetchOrderDetails(id: string) {
-    this.loading = true;
-    this.error = '';
+  this.loading = true;
+  this.error = '';
 
-    this.marketplaceService.getOrderDetailsById(id).subscribe({
-      next: (response) => {
-        if (!response?.success || !response.data?.packages) {
-          throw new Error('Invalid response structure from API');
-        }
+  this.marketplaceService.getOrderDetailsById(id).subscribe({
+    next: (response) => {
+      if (!response?.success || !response.data?.packages) {
+        throw new Error('Invalid response structure from API');
+      }
 
-        this.orderDetails = response.data.packages.map((pkg: any) => ({
-          packageId: pkg.packageId,
-          displayName: pkg.displayName,
-          productPrice: pkg.productPrice ? parseFloat(pkg.productPrice) : null,
-          productTypes: pkg.productTypes.map((pt: any) => ({
+      this.orderDetails = response.data.packages.map((pkg: any) => ({
+        packageId: pkg.packageId,
+        displayName: pkg.displayName,
+        productPrice: pkg.productPrice ? parseFloat(pkg.productPrice) : null,
+        productTypes: pkg.productTypes
+          .map((pt: any) => ({
             id: pt.id,
             typeName: pt.typeName,
             shortCode: pt.shortCode,
@@ -156,25 +157,28 @@ export class DefinePackageViewComponent implements OnInit {
             calculatedPrice: undefined,
             selectedProductIsValid: undefined,
             selectedProductIsEnable: undefined,
-          })),
-        }));
+          }))
+          .sort((a: ProductTypes, b: ProductTypes) =>
+            (a.shortCode || '').localeCompare(b.shortCode || ''),
+          ),
+      }));
 
-        this.packagePrice = response.data.packages[0].productPrice || 0;
+      this.packagePrice = response.data.packages[0].productPrice || 0;
 
-        this.applyInitialProductTypeStatus();
+      this.applyInitialProductTypeStatus();
 
-        this.calculateTotalPrice();
-        this.loading = false;
-      },
-      
-      error: (err) => {
-        console.error('Error fetching order details:', err);
-        this.error =
-          err.error?.message || err.message || 'Failed to load order details';
-        this.loading = false;
-      },
-    });
-  }
+      this.calculateTotalPrice();
+      this.loading = false;
+    },
+
+    error: (err) => {
+      console.error('Error fetching order details:', err);
+      this.error =
+        err.error?.message || err.message || 'Failed to load order details';
+      this.loading = false;
+    },
+  });
+}
 
   private applyInitialProductTypeStatus(): void {
     this.orderDetails.forEach((pkg) => {

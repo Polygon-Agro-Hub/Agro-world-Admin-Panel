@@ -336,7 +336,8 @@
         <div>
           <label for="nic" class="block text-sm font-medium text-gray-700 dark:text-textDark">NIC Number *</label>
           <input id="nic" name="nic" [(ngModel)]="personalData.nic" #nicInput="ngModel"
-            (keydown)="preventLeadingSpace($event, 'nic')"
+            (keydown)="preventLeadingSpace($event, 'nic'); validateNICInput($event)"
+            (input)="formatNIC()"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             (blur)="onBlur('nic')" />
           <span *ngIf="touchedFields.nic && !isValidNIC(personalData.nic) && personalData.nic"

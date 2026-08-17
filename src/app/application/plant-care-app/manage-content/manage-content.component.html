@@ -20,8 +20,8 @@
         class="flex-1 overflow-y-auto py-4 scrollbar-thin  scrollbar-thumb-[#FACD07]  scrollbar-track-gray-200 dark:scrollbar-thumb-[#FACD07] dark:scrollbar-track-gray-900">
         <!-- Image section -->
         <div class="flex justify-center my-4">
-          <img [src]="selectedNewsItem?.image" alt="Market Price Image" 
-  class="w-2/3 h-auto rounded-lg drop-shadow-lg" />
+          <img [src]="selectedNewsItem?.image" alt="Market Price Image"
+            class="w-2/3 h-auto rounded-lg drop-shadow-lg" />
         </div>
 
         <!-- English news section -->
@@ -40,17 +40,21 @@
         </div>
 
         <!-- Sinhala news section -->
-        <div class="mb-8">
+        <div class="mb-8 sinhala-news">
           <div class="text-md text-textLight dark:text-textDark ml-2">
             News in Sinhala
           </div>
+
           <hr class="border-t-2 border-gray-300 my-4 ml-2 w-[98%]" />
+
           <div class="text-sm mt-2">
-            <h3 class="text-md font-bold mb-2 text-center text-textLight dark:text-textDark ml-2">
+            <h3 class="sinhala-title text-md mb-2 text-center text-textLight dark:text-textDark ml-2">
               {{ selectedNewsItem?.titleSinhala }}
             </h3>
+
             <div [innerHTML]="safeHtmlDescriptionSinhala"
-              class="ql-editor !p-0 news-content text-textLight dark:text-textDark ml-2 break-words"></div>
+              class="ql-editor !p-0 news-content sinhala-description text-textLight dark:text-textDark ml-2 break-words">
+            </div>
           </div>
         </div>
 

@@ -827,34 +827,41 @@ export class CollectiveofficersEditComponent {
     }
   }
 
-  EpmloyeIdCreate() {
-    let rolePrefix: string | undefined;
+  EpmloyeIdCreate(): Promise<void> {
+    return new Promise((resolve) => {
+      const rolePrefixes: { [key: string]: string } = {
+        'Collection Centre Head': 'CCH',
+        'Collection Centre Manager': 'CCM',
+        'Customer Officer': 'CUO',
+        'Collection Officer': 'COO',
+      };
 
-    const rolePrefixes: { [key: string]: string } = {
-      'Collection Centre Head': 'CCH',
-      'Collection Centre Manager': 'CCM',
-      'Customer Officer': 'CUO',
-      'Collection Officer': 'COO',
-    };
+      const rolePrefix = rolePrefixes[this.personalData.jobRole];
 
-    rolePrefix = rolePrefixes[this.personalData.jobRole];
-
-    if (this.personalData.jobRole === this.initiateJobRole) {
-      this.lastID = this.initiateId;
-    } else {
-      if (!rolePrefix) {
+      if (this.personalData.jobRole === this.initiateJobRole) {
+        this.lastID = this.initiateId;
+        this.personalData.empId = rolePrefix + this.initiateId;
+        resolve();
         return;
       }
 
-      this.getLastID(rolePrefix).then((lastID) => {
-        this.personalData.empId = rolePrefix + lastID;
-      });
-    }
+      if (!rolePrefix) {
+        resolve();
+        return;
+      }
+
+      this.getLastID(rolePrefix)
+        .then((lastID) => {
+          this.personalData.empId = lastID;
+          resolve();
+        })
+        .catch(() => resolve());
+    });
   }
 
   getLastID(role: string): Promise<string> {
     return new Promise((resolve) => {
-      this.collectionCenterSrv.getForCreateId(role).subscribe((res) => {
+      this.collectionCenterSrv.getLastEmpId(role).subscribe((res) => {
         this.lastID = res.result.empId;
         const lastId = res.result.empId;
         resolve(lastId);
@@ -1110,7 +1117,7 @@ export class CollectiveofficersEditComponent {
     this.isLanguageRequired = this.selectedLanguages.length === 0;
   }
 
-  onSubmit() {
+  async onSubmit() {
 
 
     const missingFields: string[] = [];
@@ -1254,6 +1261,10 @@ export class CollectiveofficersEditComponent {
       return;
     }
 
+    this.isLoading = true;
+    await this.EpmloyeIdCreate();
+    this.isLoading = false;
+
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you want to update the collection officer?',
@@ -1279,8 +1290,6 @@ export class CollectiveofficersEditComponent {
           phoneNumber02: this.personalData.contact2,
           phoneCode02: this.personalData.contact2Code || this.personalData.contact1Code || '+94',
         };
-
-
 
         this.collectionOfficerService
           .editCollectiveOfficer(payload, this.itemId, this.selectedImage)
@@ -1316,6 +1325,8 @@ export class CollectiveofficersEditComponent {
                       return 'Mobile Number 1 already exists.';
                     case 'PhoneNumber02':
                       return 'Mobile Number 2 already exists.';
+                    case 'EmpId':
+                      return 'Employee ID conflict occurred. Please try again.';
                     default:
                       return 'Validation error: ' + err;
                   }
@@ -1323,16 +1334,16 @@ export class CollectiveofficersEditComponent {
               }
 
               if (messages.length > 0) {
-                errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following Duplicate field issues:</p><ul class="list-disc pl-5">';
+                let dupErrorMessage = '<div class="text-left"><p class="mb-2">Please fix the following Duplicate field issues:</p><ul class="list-disc pl-5">';
                 messages.forEach(m => {
-                  errorMessage += `<li>${m}</li>`;
+                  dupErrorMessage += `<li>${m}</li>`;
                 });
-                errorMessage += '</ul></div>';
+                dupErrorMessage += '</ul></div>';
 
                 Swal.fire({
                   icon: 'error',
                   title: 'Duplicate Information',
-                  html: errorMessage,
+                  html: dupErrorMessage,
                   confirmButtonText: 'OK',
                   customClass: {
                     popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
@@ -1343,6 +1354,17 @@ export class CollectiveofficersEditComponent {
                 });
                 return;
               }
+
+              Swal.fire({
+                icon: 'error',
+                title: 'Update Failed',
+                text: error.error?.message || errorMessage,
+                confirmButtonText: 'OK',
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold text-lg',
+                },
+              });
             }
           );
       }
@@ -1404,6 +1426,68 @@ export class CollectiveofficersEditComponent {
       label: district.name,
       value: district.name
     }));
+  }
+
+  validateNICInput(event: KeyboardEvent) {
+    const allowedKeys = [
+      'Backspace',
+      'Delete',
+      'ArrowLeft',
+      'ArrowRight',
+      'Tab',
+      'Home',
+      'End',
+    ];
+
+    if (allowedKeys.includes(event.key)) {
+      return;
+    }
+
+    const key = event.key.toUpperCase();
+    const nicInputPattern = /^[0-9V]$/;
+
+    if (!nicInputPattern.test(key)) {
+      event.preventDefault();
+      return;
+    }
+
+    const input = event.target as HTMLInputElement;
+    const currentValue = input.value;
+
+    if (key === 'V') {
+      const isAllDigitsSoFar = /^\d{9}$/.test(currentValue);
+      if (!isAllDigitsSoFar) {
+        event.preventDefault();
+      }
+      return;
+    }
+
+    if (currentValue.includes('V')) {
+      event.preventDefault();
+      return;
+    }
+
+    if (currentValue.length >= 12) {
+      event.preventDefault();
+    }
+  }
+
+  formatNIC() {
+    if (this.personalData.nic) {
+      this.personalData.nic = this.personalData.nic
+        .toUpperCase()
+        .replace(/\s/g, '');
+
+      if (this.personalData.nic.endsWith('v')) {
+        this.personalData.nic = this.personalData.nic.slice(0, -1) + 'V';
+      }
+
+      if (this.personalData.nic.includes('V')) {
+        this.personalData.nic = this.personalData.nic.slice(0, 10);
+      } else {
+        this.personalData.nic = this.personalData.nic.slice(0, 12);
+      }
+    }
   }
 
   resetPassword() {

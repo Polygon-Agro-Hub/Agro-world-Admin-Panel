@@ -169,7 +169,7 @@
           (keydown)="allowOnlyNumbers($event)"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
           #costperacreInput="ngModel"
-          pattern="^\d+(\.\d{1,2})?$"
+          pattern="^(?!0*\.?0*$)\d+(\.\d{1,2})?$"
           required
         />
 
@@ -185,7 +185,7 @@
             *ngIf="costperacreInput.errors?.['pattern']"
             class="text-red-500 text-sm mt-1"
           >
-            Please enter a valid amount (e.g., 1000 or 1000.50)
+            Please enter a valid amount.
           </div>
         </div>
       </div>
@@ -205,7 +205,7 @@
           (keydown)="allowOnlyNumbers($event)"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
           #incomeperacreInput="ngModel"
-          pattern="^\d+(\.\d{1,2})?$"
+          pattern="^(?!0*\.?0*$)\d+(\.\d{1,2})?$"
           required
         />
 
@@ -221,7 +221,7 @@
             *ngIf="incomeperacreInput.errors?.['pattern']"
             class="text-red-500 text-sm mt-1"
           >
-            Please enter a valid amount (e.g., 2000 or 2000.75)
+            Please enter a valid amount.
           </div>
         </div>
       </div>
@@ -729,7 +729,7 @@
             (keydown)="allowOnlyNumbers($event)"
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
             #costperacreInputEdit="ngModel"
-            pattern="^\d+(\.\d{1,2})?$"
+            pattern="^(?!0*\.?0*$)\d+(\.\d{1,2})?$"
             required
           />
 
@@ -745,7 +745,7 @@
               *ngIf="costperacreInputEdit.errors?.['pattern']"
               class="text-red-500 text-sm mt-1"
             >
-              Please enter a valid amount (e.g., 1000 or 1000.50)
+              Please enter a valid amount.
             </div>
           </div>
         </div>
@@ -766,7 +766,7 @@
             (keydown)="allowOnlyNumbers($event)"
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
             #incomeperacreInputEdit="ngModel"
-            pattern="^\d+(\.\d{1,2})?$"
+            pattern="^(?!0*\.?0*$)\d+(\.\d{1,2})?$"
             required
           />
 
@@ -782,7 +782,7 @@
               *ngIf="incomeperacreInputEdit.errors?.['pattern']"
               class="text-red-500 text-sm mt-1"
             >
-              Please enter a valid amount (e.g., 2000 or 2000.75)
+              Please enter a valid amount.
             </div>
           </div>
         </div>

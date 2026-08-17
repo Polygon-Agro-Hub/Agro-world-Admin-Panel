@@ -38,7 +38,7 @@ export class ViewGovishopSupliersComponent implements OnInit {
   isLoading = false;
   searchTerm = '';
   selectedPlan: string = '';
-  totalSuppliers!: number;
+  totalSuppliers: number = 0;
   expiredCount = 0;
   activeCount = 0;
 
@@ -89,14 +89,18 @@ export class ViewGovishopSupliersComponent implements OnInit {
       this.itemsPerPage
     ).subscribe({
       next: (response) => {
-        this.suppliers = response.data.shopUsers; 
-        this.totalItems = response.data.pagination.total
-        this.totalSuppliers = this.suppliers.length || 0;
+        this.suppliers = response.data.shopUsers || [];
+        this.totalItems = response.data.pagination?.total || 0;
+        this.totalSuppliers = this.totalItems;
         this.hasData = this.suppliers.length > 0;
         this.isLoading = false;
       },
       error: (error) => {
         console.error('Error loading suppliers:', error);
+        this.suppliers = [];
+        this.totalItems = 0;
+        this.totalSuppliers = 0;
+        this.hasData = false;
         this.isLoading = false;
       }
     });

@@ -245,10 +245,10 @@
           </label>
 
           <!-- Input Row: Country code + Phone input -->
-          <div class="mt-1 flex items-start">
+              <div class="mt-1 flex phone-field-row">
             <p-dropdown [(ngModel)]="personalData.phoneCode1" [options]="countries" optionLabel="dialCode"
                 optionValue="dialCode"
-                styleClass="border border-gray-300 mr-2 rounded-l-md bg-white dark:bg-tileBlack text-gray-800 dark:text-textDark custom-dropdown"
+                styleClass="border border-gray-300 mr-2 rounded-l-md bg-white dark:bg-tileBlack text-gray-800 dark:text-textDark custom-dropdown country-code-dropdown"
                 [style]="{ width: '120px' }"
                 [ngClass]="{ 'border-red-500': touchedFields.phoneNumber1 && !isValidPhoneNumber(personalData.phoneNumber1) }">
                 <!-- Dropdown items -->
@@ -272,7 +272,7 @@
               id="phoneNumber1"
               name="text"
               [(ngModel)]="personalData.phoneNumber1"
-              class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack h-auto"
+              class="block w-full rounded-l-md flex-1 min-w-0 p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack phone-number-input"
               placeholder="Enter your mobile number"
               (blur)="onBlur('phoneNumber1')"
               #phoneNumber1Input="ngModel"
@@ -317,10 +317,10 @@
           </label>
 
           <!-- Input row (code + number) -->
-          <div class="mt-1 flex items-start">
+              <div class="mt-1 flex phone-field-row">
             <p-dropdown [(ngModel)]="personalData.phoneCode2" [options]="countries" optionLabel="dialCode"
                 optionValue="dialCode"
-                styleClass="border border-gray-300 mr-2 rounded-l-md bg-white dark:bg-tileBlack text-gray-800 dark:text-textDark custom-dropdown"
+                styleClass="border border-gray-300 mr-2 rounded-l-md bg-white dark:bg-tileBlack text-gray-800 dark:text-textDark custom-dropdown country-code-dropdown"
                 [style]="{ width: '120px' }"
                 [ngClass]="{ 'border-red-500': personalData.phoneNumber2 && !isValidPhoneNumber(personalData.phoneNumber2) }">
                 <!-- Dropdown items -->
@@ -345,7 +345,7 @@
               name="phoneNumber2"
               type="text"
               [(ngModel)]="personalData.phoneNumber2"
-              class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+              class="block w-full rounded-l-md flex-1 min-w-0 p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack phone-number-input"
               placeholder="Enter your mobile number"
               (blur)="onBlur('phoneNumber2')"
               #phoneNumber2Input="ngModel"

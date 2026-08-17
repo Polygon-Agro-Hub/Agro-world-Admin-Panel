@@ -281,6 +281,16 @@ resetPassword(id: number, data: any): Observable<any> {
     });
   }
 
+  getLastEmpId(role: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.get(`${this.apiUrl}auth/check-last-emp-id/${role}`, {
+      headers,
+    });
+  }
+
   getCollectionReportByOfficerId(
     fromDate: string,
     toDate: string,

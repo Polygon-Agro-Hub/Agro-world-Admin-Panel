@@ -280,13 +280,13 @@
               </div>
               <div *ngIf="item.varietyList.length === 0">No Varieties Yet</div>
             </td>
-            <td class="py-4 px-2 dark:text-textDark flex justify-center text-center">
+            <td class="py-4 px-2 dark:text-textDark text-center">
               <button
                 *ngIf="
                   permissionService.hasPermission('Add varieties') ||
                   tokenService.getUserDetails().role === '1'
                 "
-                class="flex w-6 h-6 mb-1.5 text-blue-500 hover:text-blue-700 align-middle items-center justify-center"
+                class="flex w-full h-6 text-blue-500 hover:text-blue-700 items-center justify-center"
                 (click)="addVarietie(item.id)"
               >
                 <i class="fa-regular fa-square-plus text-2xl"></i>
@@ -300,7 +300,7 @@
                     'View varieties of each group'
                   ) || tokenService.getUserDetails().role === '1'
                 "
-                class="w-6 h-6 text-blue-500 hover:text-blue-700"
+                class="w-6 h-6 text-blue-500 hover:text-blue-700 flex items-center justify-center"
                 (click)="aboutVariety(item.id)"
               >
                 <svg
@@ -327,7 +327,7 @@
                   permissionService.hasPermission('Edit crop group') ||
                   tokenService.getUserDetails().role === '1'
                 "
-                class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
+                class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd] flex items-center justify-center"
                 (click)="editCropGroup(item.id)"
               >
                 <svg
@@ -349,7 +349,7 @@
                   permissionService.hasPermission('Delete crop group') ||
                   tokenService.getUserDetails().role === '1'
                 "
-                class="w-6 h-6 text-[#fc3636] hover:text-[#f38f8f]"
+                class="w-6 h-6 text-[#fc3636] hover:text-[#f38f8f] flex items-center justify-center"
                 (click)="deleteCropCalender(item.id)"
               >
                 <svg

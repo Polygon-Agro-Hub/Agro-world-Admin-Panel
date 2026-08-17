@@ -135,12 +135,12 @@ export const navbarData = [
     label: 'Procurement',
     Permission: 'Procurement Tab',
   },
-  {
-    RouterLink: '/dispatch',
-    icon: 'fa-solid fa-truck-fast',
-    label: 'Dispatch',
-    Permission: 'Dispatch Tab',
-  },
+  // {
+  //   RouterLink: '/dispatch',
+  //   icon: 'fa-solid fa-truck-fast',
+  //   label: 'Dispatch',
+  //   Permission: 'Dispatch Tab',
+  // },
   {
     RouterLink: 'call-centers',
     icon: 'fa-solid fa-headset',
@@ -163,7 +163,7 @@ export const navbarData = [
   {
     RouterLink: 'market',
     icon: 'fa-solid fa-shop',
-    label: 'GoViMart',
+    label: 'Polygon MP',
     expanded: false,
     Permission: 'GoviMart Tab',
     children: [

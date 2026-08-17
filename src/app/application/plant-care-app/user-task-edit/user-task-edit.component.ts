@@ -50,6 +50,7 @@ export class UserTaskEditComponent {
   hasImageLink: boolean = false;
   formSubmitted: boolean = false;
   hasVideoLink: boolean = false;
+  minDate: Date = new Date(new Date().setHours(0, 0, 0, 0));
 
   
 
@@ -342,11 +343,20 @@ updateTask() {
   });
 }
 
+  // formatDate(date: any): string {
+  //   if (!date) return '';
+  //   const d = new Date(date);
+  //   return d.toISOString().split('T')[0];
+  // }
+
   formatDate(date: any): string {
-    if (!date) return '';
-    const d = new Date(date);
-    return d.toISOString().split('T')[0];
-  }
+  if (!date) return '';
+  const d = new Date(date);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
 
 onKeyDown(event: KeyboardEvent, fieldValue: string): void {
   // Block space at the very beginning

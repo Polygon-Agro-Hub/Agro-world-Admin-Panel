@@ -122,9 +122,9 @@ export class AddCertificateDetailsComponent implements OnInit {
         '',
         [
           Validators.required,
-          Validators.min(0.01), // Changed from 0 to 0.01
-          Validators.max(100),
-          Validators.pattern(/^\d*\.?\d*$/),
+          Validators.min(1), // Changed from 0 to 0.01
+          Validators.max(99),
+          Validators.pattern(/^\d+$/),
         ],
       ],
       scope: ['', Validators.required],
@@ -827,6 +827,50 @@ export class AddCertificateDetailsComponent implements OnInit {
         behavior: 'smooth',
         block: 'center',
       });
+    }
+  }
+
+  allowCommissionInput(event: KeyboardEvent): void {
+    const charCode = event.key;
+    const input = event.target as HTMLInputElement;
+    const currentValue = input.value;
+
+    if (['Backspace', 'Delete', 'Tab', 'Escape', 'Enter'].includes(charCode)) {
+      return;
+    }
+
+    if (
+      event.ctrlKey &&
+      ['a', 'c', 'v', 'x'].includes(charCode.toLowerCase())
+    ) {
+      return;
+    }
+
+    if (charCode === '-' || charCode === '.') {
+      event.preventDefault();
+      return;
+    }
+
+    if (charCode < '0' || charCode > '9') {
+      event.preventDefault();
+      return;
+    } 
+
+    const selectionStart = input.selectionStart ?? currentValue.length;
+    const selectionEnd = input.selectionEnd ?? currentValue.length;
+    const proposedValue =
+      currentValue.substring(0, selectionStart) +
+      charCode +
+      currentValue.substring(selectionEnd);
+
+    if (proposedValue.length > 2) {
+      event.preventDefault();
+      return;
+    }
+
+    const numericValue = parseInt(proposedValue, 10);
+    if (!isNaN(numericValue) && numericValue > 99) {
+      event.preventDefault();
     }
   }
 }

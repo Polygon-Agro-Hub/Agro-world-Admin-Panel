@@ -472,7 +472,7 @@
           type="text"
           formControlName="commission"
           (input)="trimLeadingSpaces($event, 'commission')"
-          (keypress)="allowDecimalInput($event)"
+          (keypress)="allowCommissionInput($event)"
           class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [ngClass]="{
             'border-red-500':
@@ -483,20 +483,19 @@
         />
 
         <!-- Negative value error -->
-        <!-- Negative value error -->
         <div
           *ngIf="certificateForm.get('commission')?.errors?.['min'] && (certificateForm.get('commission')?.touched || certificateForm.get('commission')?.dirty)"
           class="text-red-500 text-sm mt-1"
         >
-          Commission must be greater than 0%
+          Commission must be at least 1%
         </div>
 
-        <!-- Above 100 error -->
+        <!-- Above 99 error -->
         <div
           *ngIf="certificateForm.get('commission')?.errors?.['max'] && (certificateForm.get('commission')?.touched || certificateForm.get('commission')?.dirty)"
           class="text-red-500 text-sm mt-1"
         >
-          Enter a valid commission between 0 and 100
+          Enter a valid commission between 1 and 99
         </div>
 
         <!-- Required error -->
@@ -507,12 +506,12 @@
           Commission is required
         </div>
 
-        <!-- Decimal format error -->
+        <!-- Integer format error -->
         <div
           *ngIf="certificateForm.get('commission')?.errors?.['pattern'] && (certificateForm.get('commission')?.touched || certificateForm.get('commission')?.dirty)"
           class="text-red-500 text-sm mt-1"
         >
-          Please enter a valid decimal number (e.g., 12.5)
+          Please enter a whole number (e.g., 15)
         </div>
       </div>
 

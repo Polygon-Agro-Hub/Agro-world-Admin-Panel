@@ -171,63 +171,62 @@ export class ViewPublicForumComponent implements OnInit {
   }
 
   deletePost(id: number) {
-    this.activeDeleteMenu = null;
+  this.activeDeleteMenu = null;
 
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you really want to delete this post? This action cannot be undone.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'Cancel',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold text-lg',
-        htmlContainer: 'text-left',
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.publicForumSrv.deletePublicForumPost(id).subscribe(
-          (res: any) => {
-            if (res) {
-             Swal.fire({
-  title: 'Deleted!',
-  text: 'The post has been deleted.',
-  icon: 'success',
-  customClass: {
-    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-    title: 'font-semibold text-lg',
-    htmlContainer: 'text-left',
-  },
-});
-              this.isPopupVisible = false;
-              this.fetchPostAllReply(this.postId);
-              this.loadPosts();
-              this.getCount();
-              this.isLoading = false;
-            }
-          },
-          (error) => {
-            Swal.fire(
-              'Error!',
-              'There was an error deleting the post.',
-              'error'
-            );
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'Do you really want to delete this post? This action cannot be undone.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, delete it!',
+    cancelButtonText: 'Cancel',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold text-lg',
+      htmlContainer: 'text-left',
+    },
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.isLoading = true;
+      this.publicForumSrv.deletePublicForumPost(id).subscribe(
+        (res: any) => {
+          if (res && res.status) {
+            Swal.fire({
+              title: 'Deleted!',
+              text: 'The post has been deleted.',
+              icon: 'success',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold text-lg',
+                htmlContainer: 'text-left',
+              },
+            });
+
+            // Optimistically remove the post from local state right away
+            this.post = this.post.filter((p: any) => p.id !== id);
+            this.hasData = this.post.length > 0;
             this.isPopupVisible = false;
-            this.fetchPostAllReply(this.postId);
+
+            // Then resync with server for counts etc.
             this.loadPosts();
             this.getCount();
+          } else {
             this.isLoading = false;
+            Swal.fire('Error!', 'There was an error deleting the post.', 'error');
           }
-        );
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        // Handle cancel button click - reload the page
-        location.reload();
-      }
-    });
-  }
+        },
+        (error) => {
+          this.isLoading = false;
+          Swal.fire('Error!', 'There was an error deleting the post.', 'error');
+        }
+      );
+    } else if (result.dismiss === Swal.DismissReason.cancel) {
+      location.reload();
+    }
+  });
+}
 
   deleteReply(id: number) {
 

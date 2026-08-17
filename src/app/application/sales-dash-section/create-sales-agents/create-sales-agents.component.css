@@ -145,3 +145,17 @@
 ::ng-deep .dark .p-dropdown .p-dropdown-label:not(.p-placeholder) {
     color: white;
 }
+
+.phone-field-row {
+    align-items: stretch;
+}
+
+.phone-number-input {
+    height: 42px;
+}
+
+:host ::ng-deep .country-code-dropdown.p-dropdown {
+    height: 42px;
+    display: flex;
+    align-items: center;
+}

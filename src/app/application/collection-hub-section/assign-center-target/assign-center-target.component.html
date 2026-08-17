@@ -83,6 +83,13 @@
 
 
   <div *ngIf="hasData" class="w-full py-7 bg-tileLight dark:bg-tileBlack rounded-lg ">
+
+            <div class="flex items-center gap-2 mt-8 mr-5 px-4 py-3 rounded-lg bg-[#EDF5FC] text-sm font-[400] text-[#000000] dark:text-gray-800">
+            <i class="fa-solid fa-circle-info text-[#415CFF]"></i>
+            <p>Collections for deliveries scheduled on {{ scheduledDeliveryDate }} must be completed on {{ mustCompleteDate }}. These collections will appear in the system on {{ systemAppearDate }} at 7:00 PM.</p>
+        </div>
+
+
     <div class="overflow-x-auto mt-8 mr-5 border-gray-100 border-[2px] rounded-lg">
       <table class="w-full divide-y-2 overflow-hidden">
         <thead class="dark:bg-[#272F45] text-gray-700 dark:text-gray-300">
@@ -108,104 +115,189 @@
             </td>
 
             <!-- Grade A Column -->
-            <td class="px-6 py-4 text-gray-900 dark:text-gray-300">
-              <input [(ngModel)]="item.targetA" type="number" name="targetA" min="0"
-                class="border-[#3980C0] dark:bg-[#272F45] border-[2px] border-dotted rounded-lg w-20 px-2 py-1 mr-4"
-                [disabled]="!isNew && !item.editingA" (input)="validateForm()" (keypress)="allowOnlyDigits($event)"
-                (input)="removeLeadingZeros(item)" />
-              <button *ngIf="!isNew && !item.editingA && isDateValid"
-                (click)="(item.editingA = true) && pressEditIcon(item,'A')">
-                <i class="fa-solid fa-pen-to-square text-[#3980C0] text-xl"></i>
-              </button>
-              <!-- <button
-                *ngIf="!isNew && item.editingA && isDateValid"
-                class="bg-[#3980C0] px-3 py-2 text-white rounded-lg"
-                (click)="saveGrade('A', item, item.targetA, item.idA)"
-              >
-                Save
-              </button> -->
+<td class="px-6 py-4 text-gray-900 dark:text-gray-300">
+  <input
+    type="number"
+    [(ngModel)]="item.targetA"
+    step="any"
+    name="targetA"
+    min="0"
+    (change)="checkNegativeValue(item, 'A')"
+    (input)="restrictDecimal($event, item, 'A')"
+    (input)="validateForm()"
+    class="border-[#3980C0] dark:bg-[#272F45] border-[2px] border-dotted rounded-lg w-20 px-2 py-1 mr-4"
+    [ngClass]="isGradeInvalid(item, 'A') ? 'border-[#FF0000]' : 'border-[#3980C0]'"
+    [disabled]="!item.isNew && !item.editingA"
+  />
 
-              <button *ngIf="!isNew && item.editingA && isDateValid" class="px-3 py-2 text-white rounded-lg" [ngClass]="{
-                                    'bg-[#415CFF]': item.preValueA !== item.targetA,
-                                    'bg-[#6B7D8C]': item.preValueA === item.targetA || item.targetA <= 0 || item.targetA < item.preValueA
-                                  }"
-                (click)="item.preValueA !== item.targetA && item.targetA >= 0 && saveGrade('A', item, item.targetA, item.idA)">
-                Save
-              </button>
-            </td>
+  <button
+    *ngIf="!item.isNew && !item.editingA && isDateValid"
+    (click)="(item.editingA = true) && pressEditIcon(item,'A')"
+  >
+    <i class="fa-solid fa-pen-to-square text-[#3980C0] text-xl"></i>
+  </button>
 
-            <!-- Grade B Column -->
-            <td class="px-6 py-4 text-gray-900 dark:text-gray-300">
-              <input [(ngModel)]="item.targetB" type="text" name="targetB"
-                class="border-[#3980C0] dark:bg-[#272F45] border-[2px] border-dotted rounded-lg w-20 px-2 py-1 mr-4"
-                [disabled]="!isNew && !item.editingB" (keypress)="allowOnlyDigits($event)"
-                (input)="removeLeadingZeros(item)" (input)="validateForm()" />
-              <button *ngIf="!isNew && !item.editingB && isDateValid"
-                (click)="(item.editingB = true) && pressEditIcon(item,'B')">
-                <i class="fa-solid fa-pen-to-square text-[#3980C0] text-xl"></i>
-              </button>
+  <button
+    *ngIf="!item.isNew && item.editingA && isDateValid"
+    class="px-3 py-2 text-white rounded-lg"
+    [ngClass]="{
+      'bg-[#3980C0]':
+        item.preValueA !== item.targetA &&
+        item.targetA >= 0 &&
+        item.targetA >= item.preValueA &&
+        !isQtyExceeded(item),
 
-              <button *ngIf="!isNew && item.editingB && isDateValid" [ngClass]="{
-                'bg-[#415CFF]': item.preValueB !== item.targetB,
-                'bg-[#6B7D8C]': item.preValueB === item.targetB || item.targetB <= 0 || item.targetB < item.preValueB
-              }" class="px-3 py-2 text-white rounded-lg"
-                (click)="item.preValueB !== item.targetB && item.targetB >= 0 && saveGrade('B', item, item.targetB, item.idB)">
-                Save
-              </button>
-              <!-- <button
-                *ngIf="!isNew && item.editingB && isDateValid"
-                class="bg-[#3980C0] px-3 py-2 text-white rounded-lg"
-                (click)="saveGrade('B', item, item.targetB, item.idB)"
-              >
-                Save
-              </button> -->
-            </td>
+      'bg-[#6B7D8C]':
+        item.preValueA === item.targetA ||
+        item.targetA < 0 ||
+        item.targetA < item.preValueA ||
+        isQtyExceeded(item)
+    }"
+    [disabled]="
+      item.preValueA === item.targetA ||
+      item.targetA < 0 ||
+      item.targetA < item.preValueA ||
+      isQtyExceeded(item)
+    "
+    (click)="saveGrade('A', item, item.targetA, item.idA)"
+  >
+    Save
+  </button>
+
+  <div
+    *ngIf="(item.isNew || item.editingA || item.editingB || item.editingC) && isQtyExceeded(item)"
+    class="flex items-center gap-1 mt-1 text-xs text-red-600 dark:text-red-400"
+  >
+    <i class="fa-solid fa-triangle-exclamation text-[#FF0000]"></i>
+
+    <span class="text-[#FF0000] font-[400]">
+      Only {{ item.remaining }} {{ item.unitType.toLowerCase() }} remains to assign;
+      you cannot assign more.
+    </span>
+  </div>
+</td>
+
+          <!-- Grade B Column -->
+<td class="px-6 py-4 text-gray-900 dark:text-gray-300">
+  <input
+    type="number"
+    [(ngModel)]="item.targetB"
+    step="any"
+    name="targetB"
+    min="0"
+    (change)="checkNegativeValue(item, 'B')"
+    (input)="restrictDecimal($event, item, 'B')"
+    (input)="validateForm()"
+    class="border-[#3980C0] dark:bg-[#272F45] border-[2px] border-dotted rounded-lg w-20 px-2 py-1 mr-4"
+    [ngClass]="isGradeInvalid(item, 'B') ? 'border-[#FF0000]' : 'border-[#3980C0]'"
+    [disabled]="!item.isNew && !item.editingB"
+  />
+
+  <button
+    *ngIf="!item.isNew && !item.editingB && isDateValid"
+    (click)="(item.editingB = true) && pressEditIcon(item,'B')"
+  >
+    <i class="fa-solid fa-pen-to-square text-[#3980C0] text-xl"></i>
+  </button>
+
+  <button
+    *ngIf="!item.isNew && item.editingB && isDateValid"
+    [ngClass]="{
+      'bg-[#3980C0]':
+        item.preValueB !== item.targetB &&
+        item.targetB >= 0 &&
+        item.targetB >= item.preValueB &&
+        !isQtyExceeded(item),
+
+      'bg-[#6B7D8C]':
+        item.preValueB === item.targetB ||
+        item.targetB < 0 ||
+        item.targetB < item.preValueB ||
+        isQtyExceeded(item)
+    }"
+    class="px-3 py-2 text-white rounded-lg"
+    [disabled]="
+      item.preValueB === item.targetB ||
+      item.targetB < 0 ||
+      item.targetB < item.preValueB ||
+      isQtyExceeded(item)
+    "
+    (click)="saveGrade('B', item, item.targetB, item.idB)"
+  >
+    Save
+  </button>
+
+</td>
 
             <!-- Grade C Column -->
-            <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">
-              <input [(ngModel)]="item.targetC" type="number" name="targetC" min="0"
-                class="border-[#3980C0] dark:bg-[#272F45] border-[2px] border-dotted rounded-lg w-16 px-2 py-1 mr-4"
-                [disabled]="!isNew && !item.editingC" (input)="validateForm()" (keypress)="allowOnlyDigits($event)"
-                (input)="removeLeadingZeros(item)" />
-              <button *ngIf="!isNew && !item.editingC && isDateValid"
-                (click)="(item.editingC = true) && pressEditIcon(item,'C')">
-                <i class="fa-solid fa-pen-to-square text-[#3980C0] text-xl"></i>
-              </button>
+<td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">
+  <input
+    type="number"
+    [(ngModel)]="item.targetC"
+    step="any"
+    name="targetC"
+    min="0"
+    (change)="checkNegativeValue(item, 'C')"
+    (input)="restrictDecimal($event, item, 'C')"
+    (input)="validateForm()"
+    class="border-[#3980C0] dark:bg-[#272F45] border-[2px] border-dotted rounded-lg w-16 px-2 py-1 mr-4"
+    [ngClass]="isGradeInvalid(item, 'C') ? 'border-[#FF0000]' : 'border-[#3980C0]'"
+    [disabled]="!item.isNew && !item.editingC"
+  />
 
-              <button *ngIf="!isNew && item.editingC && isDateValid" [ngClass]="{
-                'bg-[#415CFF]': item.preValueC !== item.targetC,
-                'bg-[#6B7D8C]': (item.preValueC === item.targetC) || item.targetC <= 0 || item.targetC < item.preValueC
-              }" class="px-3 py-2 text-white rounded-lg"
-                (click)="item.preValueC !== item.targetC && item.targetC >= 0 && saveGrade('C', item, item.targetC, item.idC)">
-                Save
-              </button>
-              <!-- <button
-                *ngIf="!isNew && item.editingC && isDateValid"
-                class="bg-[#3980C0] px-3 py-2 text-white rounded-lg"
-                (click)="saveGrade('C', item, item.targetC, item.idC)"
-              >
-                Save
-              </button> -->
-            </td>
+  <button
+    *ngIf="!item.isNew && !item.editingC && isDateValid"
+    (click)="(item.editingC = true) && pressEditIcon(item,'C')"
+  >
+    <i class="fa-solid fa-pen-to-square text-[#3980C0] text-xl"></i>
+  </button>
+
+  <button
+    *ngIf="!item.isNew && item.editingC && isDateValid"
+    [ngClass]="{
+      'bg-[#3980C0]':
+        item.preValueC !== item.targetC &&
+        item.targetC >= 0 &&
+        item.targetC >= item.preValueC &&
+        !isQtyExceeded(item),
+
+      'bg-[#6B7D8C]':
+        item.preValueC === item.targetC ||
+        item.targetC < 0 ||
+        item.targetC < item.preValueC ||
+        isQtyExceeded(item)
+    }"
+    class="px-3 py-2 text-white rounded-lg"
+    [disabled]="
+      item.preValueC === item.targetC ||
+      item.targetC < 0 ||
+      item.targetC < item.preValueC ||
+      isQtyExceeded(item)
+    "
+    (click)="saveGrade('C', item, item.targetC, item.idC)"
+  >
+    Save
+  </button>
+
+
+</td>
           </tr>
         </tbody>
       </table>
 
     </div>
 
-    <div *ngIf="isNew && isDateValid" class="flex flex-row justify-center items-center my-7 gap-8">
-      <button
-        class="bg-[#FFFFFF] dark:bg-[#74788D] text-[#6B7D8C] dark:text-[#D3D3D3] border-[2px] border-[#95A1AC] rounded-lg px-5 py-2"
+    <div *ngIf="hasNewItems && isDateValid && !isSelectedDatePast" class="flex flex-row justify-center items-center my-7 gap-8">
+    <button class="w-32 bg-[#FFFFFF] text-[#6B7D8C] border-[1px] border-[#95A1AC]  rounded-lg px-7 py-2"
         (click)="onCancel()">
         Cancel
-      </button>
-      <button (click)="onSubmit()" class="rounded-lg px-7 py-2" [ngClass]="
-          isFormValid
-            ? 'bg-[#3980C0] text-[#FFFFFF]'
-            : 'bg-[#95A1AC] text-[#6B7D8C] dark:bg-[#74788D] dark:text-[#384957]'
-        ">
+    </button>
+    <button class="w-32 rounded-lg px-7 py-2 "
+        [ngClass]="isFormValid ? 'bg-[hsl(231,100%,63%)] text-[#FFFFFF] shadow-md' : 'bg-[#95A1AC] text-[#6B7D8C]'"
+        [disabled]="!isFormValid"
+        (click)="onSubmit()">
         Save
-      </button>
-    </div>
+    </button>
+</div>
   </div>
 </div>

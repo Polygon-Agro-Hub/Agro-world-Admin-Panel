@@ -249,7 +249,7 @@ export class PostinvoiceService {
     try {
       const logoUrl = await this.getLogoUrl();
       if (logoUrl) {
-        doc.addImage(logoUrl, 'PNG', 140, 25, 65, 20);
+        doc.addImage(logoUrl, 'PNG', 140, 20, 56, 25);
       }
     } catch (error) {
       console.warn('Could not load logo:', error);

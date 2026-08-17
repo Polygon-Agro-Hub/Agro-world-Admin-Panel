@@ -1,0 +1,66 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<button class="mb-5 text-textLight dark:text-textDark" (click)="goBack()">
+    <i class="fa-solid fa-arrow-left"></i>
+    Back
+</button>
+
+<div class="max-w-2xl">
+    <div class="pt-5 pr-12 pl-12 pb-5 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+        <div class="mb-6 mt-4">
+            <p class="text-[20px] font-medium text-[#292929] dark:text-textDark">
+                All Orders ({{ orders.length < 10 ? "0" + orders.length : orders.length }}) </p>
+                    <p class="text-[16px] text-[#292929] font-normal dark:text-textDark mt-1">
+                        Submission on {{ submissionDate | date: "d MMM, y" }}
+                    </p>
+        </div>
+
+        <div class="mb-6">
+            <span
+                class="inline-block text-[20px] px-4 py-2 rounded-lg bg-[#CBE6FF] dark:bg-[#272F45] text-[#292929] dark:text-textDark font-light">
+                Total to Receive :
+                <span class="font-semibold">Rs. {{ totalToReceive | number: '1.2-2' }}</span>
+            </span>
+        </div>
+
+        <div
+            class="overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
+            <table class="max-w-7xl table-auto" *ngIf="hasData">
+                <thead>
+                    <tr class="border-b border-[#A4A4A4] dark:border-gray-600">
+                        <th class="px-4 py-3 text-[16px] font-normal text-[#5C5C5C] dark:text-textDark text-left"
+                            style="white-space: nowrap">No</th>
+                        <th class="px-4 py-3 text-[16px] font-normal text-[#5C5C5C] dark:text-textDark text-left"
+                            style="white-space: nowrap">Order ID</th>
+                        <th class="px-4 py-3 text-[16px] font-normal text-[#5C5C5C] dark:text-textDark text-left"
+                            style="white-space: nowrap">Received Value (Rs.)</th>
+                    </tr>
+                </thead>
+                <tbody
+                    class="divide-y divide-[#A4A4A4] dark:divide-gray-600 border-b border-[#A4A4A4] dark:border-gray-600">
+                    <tr *ngFor="let item of orders; let i = index">
+                        <td class="text-[20px] font-normal px-4 py-3 text-left text-[#000000] dark:text-textDark">
+                            {{ (i + 1) < 10 ? '0' + (i + 1) : (i + 1) }} </td>
+
+                        <td
+                            class="text-[20px] font-normal px-4 py-3 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
+                            {{ item.invNo }}
+                        </td>
+
+                        <td
+                            class="text-[20px] font-normal px-4 py-3 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
+                            {{ item.handOverPrice | number: '1.2-2' }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6">
+            <p class="text-[#494949] my-6 dark:text-textDark">
+                --No Data Available--
+            </p>
+            <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+        </div>
+    </div>
+</div>

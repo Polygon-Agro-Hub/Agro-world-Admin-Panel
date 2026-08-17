@@ -1248,5 +1248,70 @@ export class FinanceService {
       { headers }
     );
   }
+
+   viewCopTransactionDocument(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.get<any>(
+      `${this.apiUrl}finance/view-cop-transaction-document/${id}`,
+      { headers }
+    );
+  }
+
+  updateCopTransactionStatus(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.put<any>(
+      `${this.apiUrl}finance/update-cop-transaction-status/${id}`,
+      {},
+      { headers }
+    );
+  }
+
+  getAllCOPTransactions(
+    page: number,
+    limit: number,
+    status: string,
+    purchasedAt: string,
+    searchItem: string
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    let url = `${this.apiUrl}finance/get-all-cop-transactions?page=${page}&limit=${limit}`;
+
+    if (status) {
+      url += `&status=${status}`;
+    }
+
+    if (purchasedAt) {
+      url += `&purchasedAt=${purchasedAt}`;
+    }
+
+    if (searchItem) {
+      url += `&searchItem=${searchItem}`;
+    }
+
+    return this.http.get<any>(url, { headers });
+  }
+
+  getPickupHandOverSummary(id: number): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
+  return this.http.get<any>(
+    `${this.apiUrl}finance/pickup-handover-summary/${id}`,
+    { headers }
+  );
+}
 }
 

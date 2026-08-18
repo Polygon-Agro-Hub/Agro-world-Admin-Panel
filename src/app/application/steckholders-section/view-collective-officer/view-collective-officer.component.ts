@@ -238,14 +238,6 @@ export class ViewCollectiveOfficerComponent {
     }
 
     this.urlSegment = this.router.url.split('/').filter(segment => segment.length > 0)[0];
-
-    // this.route.queryParams.subscribe((params) => {
-    //   this.centerId = params['id'] ? +params['id'] : null;
-    // });
-
-    // if(this.centerId != null){
-    //   console.log(this.centerId);
-    // }
   }
 
   onPageChange(event: number) {

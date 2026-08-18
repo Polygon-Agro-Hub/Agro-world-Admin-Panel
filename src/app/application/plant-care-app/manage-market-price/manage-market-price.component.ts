@@ -131,7 +131,7 @@ export class ManageMarketPriceComponent implements OnInit {
         if (Array.isArray(data) && data.length > 0) {
           this.marketPriceItems = data; // Directly assign the array
         } 
-        console.log(this.marketPriceItems);
+        
       },
       (error) => {
         console.error('Error fetching market price:', error);

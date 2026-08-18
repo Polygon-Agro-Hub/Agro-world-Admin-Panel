@@ -73,7 +73,7 @@ export class PlatCareDashbordComponent implements OnInit {
     this.dashbordService.getDashboardData(district).subscribe(
       (data: any) => {
         if (data && data.data) {
-          console.log('this is the data', data);
+          
 
           this.dashboardData = data.data;
           // Ensure percentages are numbers

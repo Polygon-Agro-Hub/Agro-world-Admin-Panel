@@ -83,6 +83,12 @@ export class CreateNewsComponent {
   originalExpireDateEdit: Date | null = null;
   minSelectableDate: Date = new Date(new Date().setHours(0, 0, 0, 0));
 
+  minPublishDateEdit: Date | null = null;
+maxPublishDateEdit: Date | null = null;
+minExpireDateEdit: Date | null = null;
+fetchedPublishDate: Date | null = null;
+fetchedExpireDate: Date | null = null;
+
   todayDate: Date = new Date();
 
   quillConfig = {
@@ -490,30 +496,62 @@ export class CreateNewsComponent {
   }
 
   getNewsById(id: any) {
-    this.isLoading = true;
-    this.newsService.getNewsById(id).subscribe(
-      (data) => {
-        data.forEach((newsItem: any) => {
-          if (newsItem.publishDate) {
-            newsItem.publishDate = this.formatDate(newsItem.publishDate);
-            this.originalPublishDateEdit = new Date(newsItem.publishDate);
-          }
-          if (newsItem.expireDate) {
-            newsItem.expireDate = this.formatDate(newsItem.expireDate);
-            this.originalExpireDateEdit = new Date(newsItem.expireDate);
-          }
-        });
-        this.newsItems = data;
-        this.currentPublishDate = this.newsItems[0].publishDate;
-        this.currentExpireDate = this.newsItems[0].expireDate;
-        this.originalNewsSnapshot = this.buildSnapshot();
-        this.isLoading = false;
-      },
-      (error) => {
-        this.isLoading = false;
-      },
-    );
+  this.isLoading = true;
+  this.newsService.getNewsById(id).subscribe(
+    (data) => {
+      data.forEach((newsItem: any) => {
+        if (newsItem.publishDate) {
+          newsItem.publishDate = this.formatDate(newsItem.publishDate);
+          this.originalPublishDateEdit = new Date(newsItem.publishDate);
+        }
+        if (newsItem.expireDate) {
+          newsItem.expireDate = this.formatDate(newsItem.expireDate);
+          this.originalExpireDateEdit = new Date(newsItem.expireDate);
+        }
+      });
+      this.newsItems = data;
+      this.currentPublishDate = this.newsItems[0].publishDate;
+      this.currentExpireDate = this.newsItems[0].expireDate;
+
+      // Snapshot of the fetched dates — used as fixed reference points
+      this.fetchedPublishDate = this.originalPublishDateEdit
+        ? new Date(this.originalPublishDateEdit)
+        : null;
+      this.fetchedExpireDate = this.originalExpireDateEdit
+        ? new Date(this.originalExpireDateEdit)
+        : null;
+
+      // Publish Date: can't go before the fetched date, can't reach/pass Expire Date
+      this.minPublishDateEdit = this.fetchedPublishDate
+        ? new Date(this.fetchedPublishDate)
+        : null;
+      this.updateMaxPublishDateEdit();
+
+      // Expire Date: today is blocked, only tomorrow onward is selectable
+      const tomorrow = new Date();
+      tomorrow.setHours(0, 0, 0, 0);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      this.minExpireDateEdit = tomorrow;
+
+      this.originalNewsSnapshot = this.buildSnapshot();
+      this.isLoading = false;
+    },
+    (error) => {
+      this.isLoading = false;
+    },
+  );
+}
+
+private updateMaxPublishDateEdit(): void {
+  if (this.originalExpireDateEdit) {
+    const maxPublish = new Date(this.originalExpireDateEdit);
+    maxPublish.setDate(maxPublish.getDate() - 1);
+    maxPublish.setHours(0, 0, 0, 0);
+    this.maxPublishDateEdit = maxPublish;
+  } else {
+    this.maxPublishDateEdit = null;
   }
+}
 
   private buildSnapshot(): string {
     if (!this.newsItems[0]) return '';
@@ -877,10 +915,11 @@ export class CreateNewsComponent {
   }
 
   onExpireDateChangeEdit(date: Date | null) {
-    this.originalExpireDateEdit = date;
-    console.log('expireDateEdit', this.originalExpireDateEdit);
-    this.checkExpireDateEdit();
-  }
+  this.originalExpireDateEdit = date;
+  console.log('expireDateEdit', this.originalExpireDateEdit);
+  this.checkExpireDateEdit();
+  this.updateMaxPublishDateEdit();
+}
 
   formatDateForBackend(date: Date | null): string {
     if (!date) return '';

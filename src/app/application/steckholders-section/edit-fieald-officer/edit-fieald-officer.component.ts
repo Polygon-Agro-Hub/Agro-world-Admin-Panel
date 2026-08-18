@@ -444,13 +444,13 @@ getFileName(value: string): string {
       }));
 
       // Debug log to verify managers are loaded
-      console.log('Loaded managers:', this.managerOptions);
-      console.log('Selected irmId:', this.personalData.irmId);
+      
+      
       
       // Check if the selected manager exists in the options
       if (this.personalData.irmId) {
         const selectedManager = this.managerOptions.find(option => option.value == this.personalData.irmId);
-        console.log('Found selected manager:', selectedManager);
+        
       }
     });
 }
@@ -743,7 +743,7 @@ getFileName(value: string): string {
   }
 
   nextFormCreate(page: 'pageOne' | 'pageTwo' | 'pageThree') {
-    console.log('personalData', this.personalData);
+    
     if (page === 'pageTwo') {
       // Mark page one fields as touched to show validation messages
       this.markPageOneFieldsAsTouched();
@@ -871,7 +871,7 @@ getFileName(value: string): string {
   }
 
   nextFormCreate2(page: 'pageOne' | 'pageTwo' | 'pageThree') {
-    console.log('personalData', this.personalData);
+    
 
     if (page === 'pageThree') {
       // Mark page two fields as touched to show validation messages
@@ -1132,7 +1132,7 @@ getFileName(value: string): string {
   this.stakeHolderSrv.getFiealdOfficerById(id).subscribe(
     (response: any) => {
       this.isLoading = false;
-      console.log('Full API Response:', response); // Debug log
+       // Debug log
       
       if (response && response.officerData) {
         // Try different possible response structures
@@ -1143,8 +1143,8 @@ getFileName(value: string): string {
           
           // Small delay to ensure dropdown is properly initialized
           setTimeout(() => {
-            console.log('Final personalData:', this.personalData);
-            console.log('Final managerOptions:', this.managerOptions);
+            
+            
           }, 500);
         } else {
           this.showErrorAndRedirect('Field officer data not found in response');
@@ -1275,8 +1275,8 @@ populateFormData(officerData: any): void {
   }, 100);
 
   // Debug log to verify data
-  console.log('Populated Chief Field Officer ID:', this.personalData.irmId);
-  console.log('Full populated data:', this.personalData);
+  
+  
 }
 
   // Add method to load existing images
@@ -1784,7 +1784,7 @@ populateFormData(officerData: any): void {
         status: "Not Approved"
       };
 
-      console.log('Sending update data:', officerData);
+      
 
       // Call the update service method
       this.stakeHolderSrv.editFieldOfficer(

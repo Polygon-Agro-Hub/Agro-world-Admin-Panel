@@ -371,7 +371,7 @@ export class CreateAdminUserComponent implements OnInit {
   // Updated updateAdmin method
   updateAdmin(itemId: number | null) {
     // Log form values to verify
-    console.log('userForm values before update:', this.userForm.value);
+    
 
     const missingFields: string[] = [];
 
@@ -491,7 +491,7 @@ export class CreateAdminUserComponent implements OnInit {
   // Updated createAdmin method
   createAdmin() {
     // Log form values to verify
-    console.log('userForm values before create:', this.userForm.value);
+    
 
     const missingFields: string[] = [];
 

@@ -866,7 +866,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
     setTimeout(() => {
       this.scrollToTop();
     }, 100);
-    console.log('pdatra', this.personalData);
+    
     if (page === 'pageTwo') {
       this.validateLanguages();
       const missingFields: string[] = [];
@@ -1994,8 +1994,8 @@ export class CreateDistributionOfficerComponent implements OnInit {
   }
 
   changeCenter(event: any) {
-    console.log('Center changed:', this.personalData.centerId);
-    console.log('Center MAnager:', this.personalData.irmId);
+    
+    
     this.personalData.irmId = '';
     // this.centerOptions = [];
     this.getAllCollectionManagers();

@@ -45,7 +45,7 @@
                   [ngClass]="getDropdownStatusClass(typeItems)" styleClass="custom-dropdown" class="flex-1"
                   filter="true">
                 </p-dropdown>
-                <input type="number" step="0.001" min="0" placeholder="--Quantity in kg--"
+                <input type="number" step="1" min="0" placeholder="--Quantity in kg--"
                   class="rounded-xl text-sm w-40 px-4 py-4 bg-white dark:bg-gray-800 text-[#000000] dark:text-[#F1F4F5] placeholder-gray-500 dark:placeholder-gray-400 placeholder:italic focus:outline-none focus:ring-0"
                   [ngClass]="getInputStatusBorderColor(typeItems)" (input)="onQuantityChanged(typeItems, $event)"
                   (keydown)="validateQuantityInput($event)" [value]="typeItems.quantity || ''"

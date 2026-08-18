@@ -896,14 +896,7 @@ export class EditSalesAgentComponent implements OnInit {
       return; // Allow these special keys
     }
 
-    // Block lowercase 'v' explicitly
-    if (event.key === 'v') {
-      event.preventDefault();
-      return;
-    }
-
-    // Allow only numbers or uppercase V
-    const nicInputPattern = /^[0-9V]$/;
+    const nicInputPattern = /^[0-9Vv]$/;
     if (!nicInputPattern.test(event.key)) {
       event.preventDefault();
       return;
@@ -912,8 +905,7 @@ export class EditSalesAgentComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     const currentValue = input.value;
 
-  // Block typing 'V' unless it's exactly the 10th character (9 digits + V)
-    if (event.key === 'V') {
+    if (event.key.toLowerCase() === 'v') {
       const isAllDigitsSoFar = /^\d{9}$/.test(currentValue);
       if (!isAllDigitsSoFar) {
         event.preventDefault();

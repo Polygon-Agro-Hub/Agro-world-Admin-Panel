@@ -58,7 +58,7 @@ export class ViewFarmerStaffComponent implements OnInit {
     this.searchText = this.searchText.trim()
     this.plantcareService.getAllFarmerStaff(this.farmerId, this.selectedRole, this.searchText).subscribe(
       (res) => {
-        console.log(res);
+        
         // Map API response to Staff objects
         this.staffArr = res.result.map((item: any) => {
           const staff = new Staff();

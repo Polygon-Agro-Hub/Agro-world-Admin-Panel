@@ -74,7 +74,7 @@ export class UserBulkUploadComponent {
 
   onFileSelected(event: any): void {
     const file = event.target.files[0];
-    console.log('file', file)
+    
     this.validateFile(file);
   }
 
@@ -101,7 +101,7 @@ export class UserBulkUploadComponent {
 
     if (fileExtension && allowedExtensions.includes(`.${fileExtension}`)) {
       this.selectedFile = file;
-      console.log('selectedFile', this.selectedFile)
+      
       this.errorMessage = '';
     } else {
       this.errorMessage =
@@ -122,7 +122,7 @@ export class UserBulkUploadComponent {
 
   onUpload(): void {
     if (!this.selectedFile) {
-      console.log('no')
+      
       Swal.fire({
         icon: 'warning',
         title: 'Warning',
@@ -136,7 +136,7 @@ export class UserBulkUploadComponent {
       return;
     }
 
-    console.log('yes')
+    
 
     this.isLoading = true;
     this.errorMessage = '';
@@ -146,7 +146,7 @@ export class UserBulkUploadComponent {
     reader.onload = (e: any) => {
       try {
         const data = e.target.result;
-        console.log('data', data)
+        
         const workbook = XLSX.read(data, { type: 'array' });
         const firstSheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[firstSheetName];
@@ -168,8 +168,8 @@ export class UserBulkUploadComponent {
           );
         });
 
-        console.log('Original rows:', jsonData.length);
-        console.log('Filtered rows:', filteredData.length);
+        
+        
 
         const phoneNumbers = new Map();
         const nicNumbers = new Map();
@@ -205,7 +205,7 @@ export class UserBulkUploadComponent {
           nicNumberOccurrences.get(nicNumber)!.push(i);
         }
 
-        console.log('i', i)
+        
 
         const duplicateIndices = new Set<number>();
 
@@ -233,7 +233,7 @@ export class UserBulkUploadComponent {
         });
 
         if (duplicates.length > 0) {
-          console.log('duplicates', duplicates)
+          
           this.isLoading = false;
           this.handleDuplicateEntries(duplicates)
           return;
@@ -247,7 +247,7 @@ export class UserBulkUploadComponent {
             this.isLoading = false;
             
             // Log the response for debugging
-            console.log('Backend Response:', response);
+            
             
             // FIRST: Check for duplicate entries in Excel (internal duplication)
             if (response.duplicateData && response.duplicateData.length > 0) {
@@ -318,7 +318,7 @@ export class UserBulkUploadComponent {
   // Helper method to handle duplicate entries
   private handleDuplicateEntries(duplicateData: any[]): void {
     // Check what format the backend is returning
-    console.log('Duplicate Data Structure:', duplicateData);
+    
 
 
     
@@ -687,7 +687,7 @@ export class UserBulkUploadComponent {
 
   private downloadDuplicationExcel(entries: DuplicationEntry[], fileName: string): void {
 
-    console.log('entries', entries)
+    
     try {
       const dataForExcel = entries.map(entry => ({
         'FIRST NAME': entry.firstName,

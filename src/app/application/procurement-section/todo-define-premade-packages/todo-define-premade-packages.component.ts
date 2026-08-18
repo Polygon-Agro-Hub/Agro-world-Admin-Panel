@@ -412,7 +412,7 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
 
     const hasDisbledProduct = this.orderdetailsArr.some((pkg, pkgIndex) => {
       return pkg.items.some((item, itemIndex) => {
-        console.log('Checking disabled product:', item);
+        
         return item.isDisable === true;
       });
     });

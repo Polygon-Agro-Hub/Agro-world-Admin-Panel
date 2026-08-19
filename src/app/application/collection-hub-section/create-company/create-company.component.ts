@@ -705,16 +705,13 @@ export class CreateCompanyComponent implements OnInit {
         this.companyData.bankName = selectedBank.name;
       }
 
-      const currentBranch = this.branches.find(
-        (branch) => branch.ID === this.selectedBranchId
-      );
-      if (!currentBranch) {
-        this.selectedBranchId = null;
-        this.companyData.branchName = '';
-      }
+      this.selectedBranchId = null;
+      this.companyData.branchName = '';
     } else {
       this.branches = [];
       this.companyData.bankName = '';
+      this.selectedBranchId = null;
+      this.companyData.branchName = '';
     }
   }
 

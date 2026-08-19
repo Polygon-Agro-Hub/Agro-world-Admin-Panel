@@ -27,6 +27,7 @@ export class ViewCropVarietyComponent implements OnInit {
   itemId: number | null = null;
   CropPassId: number | null = null;
   isLoading: boolean = false;
+  imageLoading: boolean = true;
   selectedImage: string = '';
   selectedFileName: string = '';
 
@@ -59,6 +60,7 @@ export class ViewCropVarietyComponent implements OnInit {
 
   getCropVarietyById(itemId: number): void {
     this.isLoading = true;
+    this.imageLoading = true;
     this.cropCalendarService.getCropVarietyById(itemId).subscribe({
       next: (response: any) => {
         const data = response.groups[0];   // ← first record from API
@@ -84,8 +86,17 @@ export class ViewCropVarietyComponent implements OnInit {
       },
       error: () => {
         this.isLoading = false;
+        this.imageLoading = false;
       },
     });
+  }
+
+  onImageLoad(): void {
+    this.imageLoading = false;
+  }
+
+  onImageError(): void {
+    this.imageLoading = false;
   }
 
   goBack(): void {

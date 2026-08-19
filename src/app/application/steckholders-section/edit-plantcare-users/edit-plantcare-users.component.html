@@ -172,9 +172,10 @@
           </div>
         </div>
 
-        <div class="border-t border-gray-200 my-10"></div>
+        <ng-container *ngIf="showBankDetails">
+          <div class="border-t border-gray-200 my-10"></div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
             <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Holder's Name *</label>
             <input formControlName="accHolderName" id="accHolderName" (input)="onAccountHolderNameInput($event)"
@@ -236,7 +237,8 @@
               Branch name is required
             </div>
           </div>
-        </div>
+          </div>
+        </ng-container>
       </div>
 
       <div class="flex justify-end mt-6">
@@ -565,9 +567,8 @@
               readonly />
           </div>
 
-
-
-          <div>
+          <ng-container *ngIf="showBankDetails">
+            <div>
             <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account
               Holder's Name *</label>
             <input formControlName="accHolderName" id="accHolderName"
@@ -582,7 +583,7 @@
             </div>
           </div>
 
-          <div>
+            <div>
             <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
               Account Number *
             </label>
@@ -603,9 +604,9 @@
             </div>
           </div>
 
-          <!-- Bank Name Dropdown -->
-          <!-- Bank Name Field (converted from dropdown) -->
-          <div>
+            <!-- Bank Name Dropdown -->
+            <!-- Bank Name Field (converted from dropdown) -->
+            <div>
             <label for="bankName" class="block text-sm font-medium text-gray-700 dark:text-textDark">
               Bank Name *
             </label>
@@ -623,7 +624,7 @@
             </div>
           </div>
 
-          <div>
+            <div>
             <label for="branchName" class="block text-sm font-medium text-gray-700 dark:text-textDark">
               Branch Name *
             </label>
@@ -640,7 +641,8 @@
               Branch name is required
             </div>
 
-          </div>
+            </div>
+          </ng-container>
         </div>
       </div>
     </form>

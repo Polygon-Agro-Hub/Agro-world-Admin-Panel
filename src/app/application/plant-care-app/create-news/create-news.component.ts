@@ -528,6 +528,8 @@ fetchedExpireDate: Date | null = null;
         : null;
       this.updateMaxPublishDateEdit();
 
+      this.updateMinExpireDateEdit();
+
       // Expire Date: today is blocked, only tomorrow onward is selectable
       const tomorrow = new Date();
       tomorrow.setHours(0, 0, 0, 0);
@@ -541,6 +543,22 @@ fetchedExpireDate: Date | null = null;
       this.isLoading = false;
     },
   );
+}
+
+private updateMinExpireDateEdit(): void {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  if (this.originalPublishDateEdit) {
+    const dayAfterPublish = new Date(this.originalPublishDateEdit);
+    dayAfterPublish.setDate(dayAfterPublish.getDate() + 1);
+    dayAfterPublish.setHours(0, 0, 0, 0);
+
+    // whichever is later: today, or the day right after Publish Date
+    this.minExpireDateEdit = dayAfterPublish > today ? dayAfterPublish : today;
+  } else {
+    this.minExpireDateEdit = today;
+  }
 }
 
 private updateMaxPublishDateEdit(): void {
@@ -932,6 +950,7 @@ private updateMaxPublishDateEdit(): void {
     console.log('publishDateEdit', this.originalPublishDateEdit);
     this.checkPublishDateEdit();
     this.checkPublishExpireDateEdit();
+    this.updateMinExpireDateEdit();
   }
 
   onExpireDateChangeEdit(date: Date | null) {
@@ -985,29 +1004,28 @@ private updateMaxPublishDateEdit(): void {
   }
 
   checkPublishDateEdit() {
-    console.log('checkPublishDateEdit called');
-    console.log('today', this.todayDate);
-    if (this.originalPublishDateEdit) {
-      this.todayDate.setHours(0, 0, 0, 0);
-      if (this.originalPublishDateEdit < this.todayDate) {
-        setTimeout(() => {
-          this.originalPublishDateEdit = null;
-        });
-        Swal.fire({
-          icon: 'error',
-          title: 'Missing or Invalid Information',
-          html: 'Publish date should be later than Today',
-          confirmButtonText: 'OK',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold text-lg',
-            htmlContainer: 'text-left',
-          },
-        });
-        console.log('original publish date edit', this.originalPublishDateEdit);
-      }
+  console.log('checkPublishDateEdit called');
+  console.log('today', this.todayDate);
+  if (this.originalPublishDateEdit) {
+    this.todayDate.setHours(0, 0, 0, 0);
+    if (this.originalPublishDateEdit < this.todayDate) {
+      setTimeout(() => {
+        this.originalPublishDateEdit = null;
+      });
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Information',
+        html: 'Publish date must be on or after today',
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+          htmlContainer: 'text-left',
+        },
+      });
     }
   }
+}
 
   checkPublishDateEditNews() {
     if (this.newsItems[0].publishDate < this.today) {

@@ -219,3 +219,28 @@
 ::ng-deep .p-datepicker .p-datepicker-title .p-datepicker-year {
   margin-left: 2px !important;
 }
+
+/* collection-officer-report-view.component.css (or wherever this template's stylesheet is) */
+
+::ng-deep .p-datepicker {
+  font-size: 0.75rem !important;
+  width: 270px !important;
+}
+
+::ng-deep .p-datepicker table td {
+  padding: 0.15rem !important;
+}
+
+::ng-deep .p-datepicker table td > span {
+  width: 1.8rem !important;
+  height: 1.8rem !important;
+  line-height: 1.8rem !important;
+}
+
+::ng-deep .p-datepicker .p-datepicker-header {
+  padding: 0.4rem !important;
+}
+
+::ng-deep .p-datepicker .p-datepicker-header .p-datepicker-title {
+  font-size: 0.8rem !important;
+}

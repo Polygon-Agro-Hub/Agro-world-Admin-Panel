@@ -82,6 +82,7 @@ export class CreateNewsComponent {
   originalPublishDateEdit: Date | null = null;
   originalExpireDateEdit: Date | null = null;
   minSelectableDate: Date = new Date(new Date().setHours(0, 0, 0, 0));
+  minExpireDate: Date = this.minSelectableDate;
 
   minPublishDateEdit: Date | null = null;
 maxPublishDateEdit: Date | null = null;
@@ -899,7 +900,26 @@ private updateMaxPublishDateEdit(): void {
     console.log('publishDate', this.originalPublishDate);
     this.checkPublishDate();
     this.checkPublishExpireDate();
+    this.updateMinExpireDate();
   }
+
+  private updateMinExpireDate(): void {
+  if (this.originalPublishDate) {
+    const nextDay = new Date(this.originalPublishDate);
+    nextDay.setDate(nextDay.getDate() + 1);
+    nextDay.setHours(0, 0, 0, 0);
+    this.minExpireDate = nextDay;
+  } else {
+    this.minExpireDate = this.minSelectableDate;
+  }
+
+  // If an already-selected expire date is now invalid (<= new publish date), clear it
+  if (this.originalExpireDate && this.originalExpireDate < this.minExpireDate) {
+    setTimeout(() => {
+      this.originalExpireDate = null;
+    });
+  }
+}
 
   onExpireDateChange(date: Date | null) {
     this.originalExpireDate = date;

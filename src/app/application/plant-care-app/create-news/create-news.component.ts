@@ -1008,7 +1008,7 @@ private updateMaxPublishDateEdit(): void {
           Swal.fire({
             icon: 'error',
             title: 'Invalid Data Inputs',
-            html: 'Expiry date must be on or after the publish date.',
+            html: 'Expiry date must be after the publish date.',
             confirmButtonText: 'OK',
               customClass: {
               popup:

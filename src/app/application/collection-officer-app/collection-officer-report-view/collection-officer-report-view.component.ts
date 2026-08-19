@@ -202,6 +202,7 @@ export class CollectionOfficerReportViewComponent implements OnInit, OnDestroy {
         },
       },
       datalabels: {
+        display:false,
         color: '#fff',
         font: { size: 11, weight: 600 },
         formatter: (value: number) => (value > 0 ? value : ''), // ✅ hides the 0

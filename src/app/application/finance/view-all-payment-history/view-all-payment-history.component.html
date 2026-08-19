@@ -53,23 +53,24 @@
 
         <div class="flex items-center gap-2 relative">
           <p-calendar
-            id="issuedDate"
-            [(ngModel)]="selectedIssuedDate"
-            (onSelect)="onIssuedDateChange()"
-            (onClear)="onIssuedDateChange()"
-            placeholder="Issued Date"
-            [showIcon]="false"
-            [showClear]="false"
-            [showButtonBar]="false"
-            [style]="{ width: '145px' }"
-            [inputStyle]="{
-              width: '145px',
-              padding: '0.5rem 2.5rem 0.5rem 0.75rem',
-              fontSize: '0.875rem',
-            }"
-            panelStyleClass="dark:bg-gray-800 dark:border dark:border-gray-700 dark:text-white"
-            inputStyleClass="text-[16px] h-10 rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-2 border-[#E5E5E5] dark:border-[#AFAFAF] placeholder:text-[#9CA3AF] dark:placeholder:text-[#9CA3AF] focus:outline-none focus:border-blue-500 dark:focus:border-blue-400"
-          />
+  id="issuedDate"
+  [(ngModel)]="selectedIssuedDate"
+  (onSelect)="onIssuedDateChange()"
+  (onClear)="onIssuedDateChange()"
+  placeholder="Issued Date"
+  [showIcon]="false"
+  [showClear]="false"
+  [showButtonBar]="false"
+  appendTo="body"
+  [style]="{ width: '145px' }"
+  [inputStyle]="{
+    width: '145px',
+    padding: '0.5rem 2.5rem 0.5rem 0.75rem',
+    fontSize: '0.875rem',
+  }"
+  panelStyleClass="dark:bg-gray-800 dark:border dark:border-gray-700 dark:text-white"
+  inputStyleClass="text-[16px] h-10 rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-2 border-[#E5E5E5] dark:border-[#AFAFAF] placeholder:text-[#9CA3AF] dark:placeholder:text-[#9CA3AF] focus:outline-none focus:border-blue-500 dark:focus:border-blue-400"
+/>
 
           <button
             *ngIf="selectedIssuedDate"

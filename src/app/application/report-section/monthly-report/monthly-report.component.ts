@@ -297,14 +297,15 @@ formatDateForFileName(date: any): string {
         // If response contains both dailyReports and totalCount
         if (response.dailyReports) {
           this.dailyReports = response.dailyReports;
-          this.finalTotalFarmers = response.totalCount || 0; // Use actual count from API
+          // this.finalTotalFarmers = response.totalCount || 0;
         } else {
           this.dailyReports = response;
           // Calculate based on your needs
-          this.finalTotalFarmers = this.dailyReports.length; // Count of daily reports
+          // this.finalTotalFarmers = this.dailyReports.length; 
         }
         
         this.calculateTotalWeight();
+        this.calculateTotalFarmers();
         this.go = this.dailyReports && this.dailyReports.length > 0;
         const now = new Date();
         this.generatedTime = now.toLocaleTimeString();

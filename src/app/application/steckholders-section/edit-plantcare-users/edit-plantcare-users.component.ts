@@ -24,6 +24,7 @@ interface PlantCareUser {
   accHolderName: string;
   bankName: string;
   branchName: string;
+  farmerQr: string | null;
 }
 
 interface Branch {
@@ -65,6 +66,7 @@ export class EditPlantcareUsersComponent implements OnInit {
   imagePreview: string = '';
   selectedImage: File | null = null;
   isLoading = false;
+  showBankDetails = false;
   selectedBankId: number | null = null;
   itemId: number | null = null;
   branches: Branch[] = [];
@@ -269,6 +271,7 @@ export class EditPlantcareUsersComponent implements OnInit {
       .subscribe(
         (data) => {
           this.isLoading = false;
+          this.showBankDetails = data.farmerQr !== null;
           this.userForm.patchValue(data);
           this.imagePreview = data.profileImage;
 
@@ -800,24 +803,26 @@ export class EditPlantcareUsersComponent implements OnInit {
       missingFields.push('Language is Required');
     }
 
-    if (this.userForm.get('accHolderName')?.invalid) {
-      missingFields.push("Account Holder's Name is Required");
-    }
-
-    if (this.userForm.get('accNumber')?.invalid) {
-      if (this.userForm.get('accNumber')?.errors?.['required']) {
-        missingFields.push('Account Number is Required');
-      } else if (this.userForm.get('accNumber')?.errors?.['pattern']) {
-        missingFields.push('Account Number - Must contain only numbers');
+    if (this.showBankDetails) {
+      if (this.userForm.get('accHolderName')?.invalid) {
+        missingFields.push("Account Holder's Name is Required");
       }
-    }
 
-    if (this.userForm.get('bankName')?.invalid) {
-      missingFields.push('Bank Name is Required');
-    }
+      if (this.userForm.get('accNumber')?.invalid) {
+        if (this.userForm.get('accNumber')?.errors?.['required']) {
+          missingFields.push('Account Number is Required');
+        } else if (this.userForm.get('accNumber')?.errors?.['pattern']) {
+          missingFields.push('Account Number - Must contain only numbers');
+        }
+      }
 
-    if (this.userForm.get('branchName')?.invalid) {
-      missingFields.push('Branch Name is Required');
+      if (this.userForm.get('bankName')?.invalid) {
+        missingFields.push('Bank Name is Required');
+      }
+
+      if (this.userForm.get('branchName')?.invalid) {
+        missingFields.push('Branch Name is Required');
+      }
     }
 
     // Validate image if selected

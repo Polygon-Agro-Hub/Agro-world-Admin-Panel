@@ -13,6 +13,7 @@ import { ViewChild, ElementRef } from '@angular/core';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 interface IProvinceReport {
   cropName: string;
@@ -135,99 +136,102 @@ export class CollectionOfficerProvinceReportComponent implements OnInit, OnDestr
   }
 
   updateChart() {
-    if (this.provinceChart) {
-      this.provinceChart.destroy();
-      this.provinceChart = null!;
-    }
-  
-    const { textColor, gridColor, titleColor } = this.getChartThemeColors();
-  
-    const labels = this.reportDetails.map(crop => crop.cropName);
-    const gradeAData = this.reportDetails.map(crop => crop.qtyA || 0);
-    const gradeBData = this.reportDetails.map(crop => crop.qtyB || 0);
-    const gradeCData = this.reportDetails.map(crop => crop.qtyC || 0);
-  
-    this.isLoading = false;
-    // ✅ Defer canvas lookup until after Angular finishes DOM update
-    setTimeout(() => {
-      const canvas = document.getElementById('provinceBarChart') as HTMLCanvasElement;
-      if (!canvas) return;
-  
-      this.provinceChart = new Chart(canvas, {
-        type: 'bar',
-        data: {
-          labels: labels,
-          datasets: [
-            {
-              label: 'Grade A',
-              data: gradeAData,
-              backgroundColor: '#FF9263',
-            },
-            {
-              label: 'Grade B',
-              data: gradeBData,
-              backgroundColor: '#5F75E9',
-            },
-            {
-              label: 'Grade C',
-              data: gradeCData,
-              backgroundColor: '#3DE188',
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          indexAxis: 'y',
-          plugins: {
-            title: {
-              display: true,
-              text: `${this.selectedProvince.name} - Crop Weights`,
-              color: titleColor,
-              padding: { top: 10, bottom: 30 },
-              font: { size: 18, weight: 600 }
-            },
-            legend: {
-              position: 'bottom',
-              labels: {
-                padding: 30,
-                color: textColor,
-                font: { size: 14, weight: 400 }
-              }
+  if (this.provinceChart) {
+    this.provinceChart.destroy();
+    this.provinceChart = null!;
+  }
+
+  const { textColor, gridColor, titleColor } = this.getChartThemeColors();
+
+  const labels = this.reportDetails.map(crop => crop.cropName);
+  const gradeAData = this.reportDetails.map(crop => crop.qtyA || 0);
+  const gradeBData = this.reportDetails.map(crop => crop.qtyB || 0);
+  const gradeCData = this.reportDetails.map(crop => crop.qtyC || 0);
+
+  this.isLoading = false;
+  // ✅ Defer canvas lookup until after Angular finishes DOM update
+  setTimeout(() => {
+    const canvas = document.getElementById('provinceBarChart') as HTMLCanvasElement;
+    if (!canvas) return;
+
+    this.provinceChart = new Chart(canvas, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Grade A',
+            data: gradeAData,
+            backgroundColor: '#FF9263',
+          },
+          {
+            label: 'Grade B',
+            data: gradeBData,
+            backgroundColor: '#5F75E9',
+          },
+          {
+            label: 'Grade C',
+            data: gradeCData,
+            backgroundColor: '#3DE188',
+          }
+        ]
+      },
+      plugins: [ChartDataLabels],
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        indexAxis: 'y',
+        plugins: {
+          title: {
+            display: true,
+            text: `${this.selectedProvince.name} - Crop Weights`,
+            color: titleColor,
+            padding: { top: 10, bottom: 30 },
+            font: { size: 18, weight: 600 }
+          },
+          legend: {
+            position: 'bottom',
+            labels: {
+              padding: 30,
+              color: textColor,
+              font: { size: 14, weight: 400 }
             }
           },
-          scales: {
-            x: {
-              stacked: true,
-              ticks: { color: textColor },
-              grid: { color: gridColor },
-              title: {
-                display: true,
-                text: 'Total Weight (Kg)',
-                color: textColor,
-                font: { size: 12 },
-                padding: 20
-              }
-            },
-            y: {
-              stacked: true,
-              ticks: { color: textColor },
-              grid: { color: gridColor },
-              title: {
-                display: true,
-                text: 'Crop Variety',
-                color: textColor,
-                font: { size: 12, weight: 500 },
-                padding: 20
-              }
+          datalabels: {
+            display: false, // ✅ hides bar labels for this chart specifically
+          },
+        },
+        scales: {
+          x: {
+            stacked: true,
+            ticks: { color: textColor },
+            grid: { color: gridColor },
+            title: {
+              display: true,
+              text: 'Total Weight (Kg)',
+              color: textColor,
+              font: { size: 12 },
+              padding: 20
+            }
+          },
+          y: {
+            stacked: true,
+            ticks: { color: textColor },
+            grid: { color: gridColor },
+            title: {
+              display: true,
+              text: 'Crop Variety',
+              color: textColor,
+              font: { size: 12, weight: 500 },
+              padding: 20
             }
           }
         }
-      });
-  
-      
-    }, 0);
-  }
+      }
+    });
+
+  }, 0);
+}
 
 async exportToPDF(): Promise<void> {
   this.isDownloading = true;

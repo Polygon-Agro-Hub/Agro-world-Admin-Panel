@@ -175,7 +175,6 @@ export class IndividualFarmersAuditsComponent implements OnInit {
 
   // Handle assign status click
   onAssignStatusClick(audit: FieldAudit): void {
-    console.log('audit', audit)
     // Special condition: If audit is completed and assigned, show warning popup
     if (audit.status === 'Completed' && audit.officerFirstName) {
       this.selectedAudit = audit;
@@ -207,7 +206,6 @@ export class IndividualFarmersAuditsComponent implements OnInit {
 
     // Set initial schedule date from audit if available
     if (audit.sheduleDate) {
-      console.log('schedule date', audit.sheduleDate)
       this.selectedScheduleDate = new Date(audit.sheduleDate);
     } else {
       this.selectedScheduleDate = new Date(); // Default to today
@@ -329,7 +327,6 @@ export class IndividualFarmersAuditsComponent implements OnInit {
 
   // Handle schedule date changes
   onScheduleDateChange(): void {
-    console.log(this.checkDate(this.selectedScheduleDate));
 
     if (this.checkDate(this.selectedScheduleDate)) {
       Swal.fire({

@@ -132,17 +132,20 @@ export class AddCoupenComponent {
     if (!this.coupenObj.type) missingFields.push('Type is Required');
 
 
-    if (this.coupenObj.type === 'Percentage') {
-      if (this.coupenObj.percentage === null || isNaN(this.coupenObj.percentage)) {
-        missingFields.push('Discount Percentage is Required');
-        this.checkPrecentageValueMessage = 'Discount Percentage is required';
+      if (this.coupenObj.type === 'Percentage') {
+        if (this.coupenObj.percentage === null || isNaN(this.coupenObj.percentage)) {
+          missingFields.push('Discount Percentage is Required');
+          this.checkPrecentageValueMessage = 'Discount Percentage is required';
+        } else if (this.coupenObj.percentage < 1 || this.coupenObj.percentage > 99) {
+          missingFields.push('Discount Percentage must be between 1 and 99');
+          this.checkPrecentageValueMessage = 'Enter a value between 1 and 99';
+        }
+      } else if (this.coupenObj.type === 'Fixed Amount') {
+          if (this.coupenObj.fixDiscount === null || isNaN(this.coupenObj.fixDiscount)) {
+            missingFields.push('Discount Amount is Required');
+            this.checkfixAmountValueMessage = 'Discount Amount is required';
+          }
       }
-    } else if (this.coupenObj.type === 'Fixed Amount') {
-      if (this.coupenObj.fixDiscount === null || isNaN(this.coupenObj.fixDiscount)) {
-        missingFields.push('Discount Amount is Required');
-        this.checkfixAmountValueMessage = 'Discount Amount is required';
-      }
-    }
 
     console.log(!this.coupenObj.priceLimit,"djdjdjjd");
     

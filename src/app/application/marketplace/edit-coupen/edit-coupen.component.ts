@@ -307,6 +307,12 @@ export class EditCoupenComponent {
   }
 }
 
+  onCheckLimitChange(): void {
+    if (!this.coupenObj.checkLimit) {
+      this.coupenObj.priceLimit = 0;
+    }
+  }
+
 validateDecimalInput(event: Event, field: 'priceLimit' | 'fixDiscount' | 'percentage') {
   const input = event.target as HTMLInputElement;
   let value = input.value;

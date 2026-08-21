@@ -141,17 +141,34 @@ export class EditCoupenComponent {
   }
 
   checkStartDate() {
-    if (this.coupenObj.startDate && this.coupenObj.startDate < this.today) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Invalid Start Date',
-        text: 'Start Date cannot be a past date!',
-        confirmButtonText: 'OK',
-      }).then(() => {
-        this.coupenObj.startDate = null;
-      });
-    }
+  if (this.coupenObj.startDate && this.coupenObj.startDate < this.today) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Invalid Start Date',
+      text: 'Start Date cannot be a past date!',
+      confirmButtonText: 'OK',
+    }).then(() => {
+      this.coupenObj.startDate = null;
+    });
+    return;
   }
+
+  // NEW: Clear Expire Date if it's now earlier than the newly selected Start Date
+  if (
+    this.coupenObj.startDate &&
+    this.coupenObj.endDate &&
+    this.coupenObj.endDate < this.coupenObj.startDate
+  ) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Expire Date Cleared',
+      text: 'Expire Date was earlier than the new Start Date, so it has been reset. Please choose a new Expire Date.',
+      confirmButtonText: 'OK',
+    }).then(() => {
+      this.coupenObj.endDate = null;
+    });
+  }
+}
 
   onSubmit() {
   // Reset validation messages

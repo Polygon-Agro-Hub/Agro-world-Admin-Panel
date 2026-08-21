@@ -48,10 +48,8 @@ export class GoviShopPosUserEditComponent implements OnInit {
 
     this.route.queryParamMap.subscribe((params) => {
       const id = params.get('id');
-      console.log('Query parameter ID:', id);
       
       this.id = Number(id);
-      console.log('id', this.id)
       this.fetchPosUserById();
       });
   }
@@ -63,8 +61,6 @@ export class GoviShopPosUserEditComponent implements OnInit {
     this.goviShopService.getPosUserById(id)
       .subscribe(
         (response) => {
-          console.log('response', response)
-
           this.isLoading = false;
 
           this.branchData = response.data.branches;
@@ -77,8 +73,6 @@ export class GoviShopPosUserEditComponent implements OnInit {
         
           // Then assign userObj so the dropdown can match branchId against populated options
           this.userObj = response.data.posUser
-
-          console.log('branchOptions', this.branchOptions)
       
         },
         (error) => {
@@ -165,7 +159,6 @@ export class GoviShopPosUserEditComponent implements OnInit {
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        console.log('object', this.userObj)
         this.updatePOSUser();
       } else {
         this.isLoading = false;
@@ -309,7 +302,6 @@ updatePOSUser() {
 
   this.isLoading = true;
   this.isVerification = false;
-  console.log('userObg', this.userObj)
   this.goviShopService.updatePOSUser(
     this.userObj,
     )

@@ -1745,10 +1745,6 @@ export class AddFiealdOfficerComponent implements OnInit {
     return value;
   }
 
-  yourMethod(file: File | null) {
-   console.log('file', this.selectedFrontNicFile)
-  }
-
   onAssignDistrictClear(): void {
   // Clear job role and CFO when assign districts are cleared
   if (!this.personalData.assignDistrict || this.personalData.assignDistrict.length === 0) {

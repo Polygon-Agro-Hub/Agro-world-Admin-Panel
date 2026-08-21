@@ -135,38 +135,44 @@
         </p>
 
         <div class="mb-6">
-          <label class="text-textLight dark:text-textDark font-medium">Start Date *</label>
-          <p-calendar id="startDate" name="startDate" [(ngModel)]="coupenObj.startDate" (onSelect)="checkStartDate()"
-            placeholder="Start Date" [showIcon]="true" [showClear]="true" #startDateInput="ngModel" required
-            [showButtonBar]="true" iconDisplay="input" [style]="{ width: '100%' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
-           [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
-           [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
-           [&_.p-datepicker-header]:dark:bg-[#2d354d] 
-           [&_.p-datepicker-header]:dark:text-white
-           [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]"
-            inputStyleClass="mt-2 block w-full p-2 cursor-pointer border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            [appendTo]="'body'" dateFormat="yy-mm-dd" />
-          <div *ngIf="startDateInput.touched && startDateInput.errors?.['required']" class="text-red-500 text-sm mt-1">
-            Start date is required.
-          </div>
-        </div>
+  <label class="text-textLight dark:text-textDark font-medium">Start Date *</label>
+  <div class="relative mt-2">
+    <p-calendar id="startDate" name="startDate" [(ngModel)]="coupenObj.startDate" (onSelect)="checkStartDate()"
+      placeholder="Start Date" [showIcon]="true" [showClear]="true" #startDateInput="ngModel" required
+      [showButtonBar]="true" iconDisplay="input" [style]="{ width: '100%' }" 
+      panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+      [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+      [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+      [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+      [&_.p-datepicker-header]:dark:text-white
+      [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]"
+      inputStyleClass="block w-full p-2 cursor-pointer border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack pr-20"
+      [appendTo]="'body'" dateFormat="yy-mm-dd" />
+  </div>
+  <div *ngIf="startDateInput.touched && startDateInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+    Start date is required.
+  </div>
+</div>
 
-        <div class="mb-6">
-          <label class="text-textLight dark:text-textDark font-medium">Expire Date *</label>
-          <p-calendar id="endDate" name="endDate" [(ngModel)]="coupenObj.endDate" (onSelect)="checkExpireDate()"
-            placeholder="Expire Date" [showIcon]="true" [showClear]="true" #endDateInput="ngModel" required
-            [showButtonBar]="true" iconDisplay="input" [style]="{ width: '100%' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
-           [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
-           [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
-           [&_.p-datepicker-header]:dark:bg-[#2d354d] 
-           [&_.p-datepicker-header]:dark:text-white
-           [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]"
-            inputStyleClass="mt-2 block w-full cursor-pointer p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            [appendTo]="'body'" dateFormat="yy-mm-dd" [minDate]="DateConverter(coupenObj.startDate)" />
-          <div *ngIf="endDateInput.touched && endDateInput.errors?.['required']" class="text-red-500 text-sm mt-1">
-            Expire date is required.
-          </div>
-        </div>
+<div class="mb-6">
+  <label class="text-textLight dark:text-textDark font-medium">Expire Date *</label>
+  <div class="relative mt-2">
+    <p-calendar id="endDate" name="endDate" [(ngModel)]="coupenObj.endDate" (onSelect)="checkExpireDate()"
+      placeholder="Expire Date" [showIcon]="true" [showClear]="true" #endDateInput="ngModel" required
+      [showButtonBar]="true" iconDisplay="input" [style]="{ width: '100%' }" 
+      panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+      [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+      [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+      [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+      [&_.p-datepicker-header]:dark:text-white
+      [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]"
+      inputStyleClass="block w-full cursor-pointer p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack pr-20"
+      [appendTo]="'body'" dateFormat="yy-mm-dd" [minDate]="DateConverter(coupenObj.startDate)" />
+  </div>
+  <div *ngIf="endDateInput.touched && endDateInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+    Expire date is required.
+  </div>
+</div>
       </div>
     </div>
   </div>

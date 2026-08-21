@@ -209,11 +209,11 @@ export class ViewCompanyHeadComponent implements OnInit {
       <h1 class="text-center text-2xl font-bold mb-4 dark:text-white">Officer Name : ${item.firstNameEnglish}</h1>
       <div>
         ${item.status === 'Not Approved' 
-          ? '<p class="text-center dark:text-white">Are you sure you want to approve or reject this collection Centre Head ?</p>'
+          ? '<p class="text-center dark:text-white">Are you sure you want to approve or reject this Collection Centre Head ?</p>'
           : showRejectButton 
-            ? '<p class="text-center dark:text-white">Are you sure you want to reject this collection Centre Head ?</p>'
+            ? '<p class="text-center dark:text-white">Are you sure you want to reject this Collection Centre Head ?</p>'
             : showApproveButton 
-              ? '<p class="text-center dark:text-white">Are you sure you want to approve this collection Centre Head ?</p>'
+              ? '<p class="text-center dark:text-white">Are you sure you want to approve this Collection Centre Head ?</p>'
               : ''
         }
       </div>

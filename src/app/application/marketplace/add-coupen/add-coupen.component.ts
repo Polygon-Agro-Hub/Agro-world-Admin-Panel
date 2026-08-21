@@ -132,17 +132,20 @@ export class AddCoupenComponent {
     if (!this.coupenObj.type) missingFields.push('Type is Required');
 
 
-    if (this.coupenObj.type === 'Percentage') {
-      if (this.coupenObj.percentage === null || isNaN(this.coupenObj.percentage)) {
-        missingFields.push('Discount Percentage is Required');
-        this.checkPrecentageValueMessage = 'Discount Percentage is required';
+      if (this.coupenObj.type === 'Percentage') {
+        if (this.coupenObj.percentage === null || isNaN(this.coupenObj.percentage)) {
+          missingFields.push('Discount Percentage is Required');
+          this.checkPrecentageValueMessage = 'Discount Percentage is required';
+        } else if (this.coupenObj.percentage < 1 || this.coupenObj.percentage > 99) {
+          missingFields.push('Discount Percentage must be between 1 and 99');
+          this.checkPrecentageValueMessage = 'Enter a value between 1 and 99';
+        }
+      } else if (this.coupenObj.type === 'Fixed Amount') {
+          if (this.coupenObj.fixDiscount === null || isNaN(this.coupenObj.fixDiscount)) {
+            missingFields.push('Discount Amount is Required');
+            this.checkfixAmountValueMessage = 'Discount Amount is required';
+          }
       }
-    } else if (this.coupenObj.type === 'Fixed Amount') {
-      if (this.coupenObj.fixDiscount === null || isNaN(this.coupenObj.fixDiscount)) {
-        missingFields.push('Discount Amount is Required');
-        this.checkfixAmountValueMessage = 'Discount Amount is required';
-      }
-    }
 
     console.log(!this.coupenObj.priceLimit,"djdjdjjd");
     
@@ -270,6 +273,13 @@ export class AddCoupenComponent {
       input.value = value;
     }
 
+    if (field === 'percentage' && value !== '') {
+      if (value.length > 2) {
+        value = value.slice(0, 2);
+        input.value = value;
+      }
+    }
+
     this.coupenObj[field] = value ? parseFloat(value) : null!;
   }
 
@@ -280,12 +290,8 @@ export class AddCoupenComponent {
       return;
     }
 
-    if (num < 0) {
-      // this.coupenObj.percentage = 0;
-      this.checkPrecentageValueMessage = 'Cannot be negative number';
-    } else if (num > 100 || num === 0) {
-      // this.coupenObj.percentage = 100;
-      this.checkPrecentageValueMessage = 'Enter a value between 1 and 100';
+    if (num < 1 || num > 99) {
+      this.checkPrecentageValueMessage = 'Enter a value between 1 and 99';
     } else {
       this.checkPrecentageValueMessage = '';
     }
@@ -306,16 +312,21 @@ export class AddCoupenComponent {
   }
 
   preventNegative(e: KeyboardEvent) {
-    if (e.key === '-' || e.key === ',' || e.key === '.') {
-      e.preventDefault();
+    const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Tab', 'Home', 'End'];
+
+    if (allowedKeys.includes(e.key) || e.ctrlKey || e.metaKey) {
+      if (e.ctrlKey && e.key === 'v') {
+        setTimeout(() => {
+          if (this.coupenObj.percentage < 0) {
+            this.coupenObj.percentage = 0;
+          }
+        }, 0);
+      }
+      return;
     }
 
-    if (e.ctrlKey && e.key === 'v') {
-      setTimeout(() => {
-        if (this.coupenObj.percentage < 0) {
-          this.coupenObj.percentage = 0;
-        }
-      }, 0);
+    if (!/^[0-9]$/.test(e.key)) {
+      e.preventDefault();
     }
   }
 

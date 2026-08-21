@@ -155,7 +155,7 @@ export class ViewCropGroupComponent {
           }
         });
 
-        console.log('Final category options:', this.categoryOptions);
+        
       },
       error: (err) => {
         console.error('Error fetching categories:', err);

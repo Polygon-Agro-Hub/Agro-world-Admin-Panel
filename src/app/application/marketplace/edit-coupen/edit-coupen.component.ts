@@ -167,11 +167,11 @@ export class EditCoupenComponent {
   if (!this.coupenObj.type) validationErrors.push('Type');
 
   // Validate type-specific fields
-  if (this.coupenObj.type === 'Percentage') {
+    if (this.coupenObj.type === 'Percentage') {
     if (this.coupenObj.percentage == null || isNaN(this.coupenObj.percentage)) {
       validationErrors.push('Discount Percentage is required');
-    } else if (this.coupenObj.percentage < 0 || this.coupenObj.percentage > 100) {
-      validationErrors.push('Percentage must be between 0 and 100');
+    } else if (this.coupenObj.percentage < 1 || this.coupenObj.percentage > 99) {
+      validationErrors.push('Percentage must be between 1 and 99');
     }
   }
 
@@ -289,10 +289,8 @@ export class EditCoupenComponent {
   checkPrecentageValue(num: number) {
   if (num == null || isNaN(num)) {
     this.checkPrecentageValueMessage = 'Percentage value is required';
-  } else if (num < 0) {
-    this.checkPrecentageValueMessage = 'Cannot be a negative number';
-  } else if (num > 100) {
-    this.checkPrecentageValueMessage = 'Cannot be greater than 100';
+  } else if (num < 1 || num > 99) {
+    this.checkPrecentageValueMessage = 'Enter a value between 1 and 99';
   } else {
     this.checkPrecentageValueMessage = '';
   }
@@ -309,12 +307,17 @@ export class EditCoupenComponent {
   }
 }
 
+  onCheckLimitChange(): void {
+    if (!this.coupenObj.checkLimit) {
+      this.coupenObj.priceLimit = 0;
+    }
+  }
+
 validateDecimalInput(event: Event, field: 'priceLimit' | 'fixDiscount' | 'percentage') {
   const input = event.target as HTMLInputElement;
   let value = input.value;
 
-  // Regex to match numbers with up to 2 decimal places
-  const regex = /^\d+(\.\d{0,2})?$/;
+  const regex = field === 'percentage' ? /^\d+$/ : /^\d+(\.\d{0,2})?$/;
 
   if (value === '') {
     this.coupenObj[field] = null!;
@@ -328,9 +331,34 @@ validateDecimalInput(event: Event, field: 'priceLimit' | 'fixDiscount' | 'percen
     input.value = value;
   }
 
+  if (field === 'percentage' && value !== '') {
+    if (value.length > 2) {
+      value = value.slice(0, 2);
+      input.value = value;
+    }
+  }
+
   this.coupenObj[field] = value ? parseFloat(value) : null!;
 }
 
+  preventNegative(e: KeyboardEvent) {
+    const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Tab', 'Home', 'End'];
+
+    if (allowedKeys.includes(e.key) || e.ctrlKey || e.metaKey) {
+      if (e.ctrlKey && e.key === 'v') {
+        setTimeout(() => {
+          if (this.coupenObj.percentage < 0) {
+            this.coupenObj.percentage = 0;
+          }
+        }, 0);
+      }
+      return;
+    }
+
+    if (!/^[0-9]$/.test(e.key)) {
+      e.preventDefault();
+    }
+  }
 
 
   onCodeInput(event: any): void {

@@ -81,6 +81,14 @@ export class CreateNewsComponent {
   originalExpireDate: Date | null = null;
   originalPublishDateEdit: Date | null = null;
   originalExpireDateEdit: Date | null = null;
+  minSelectableDate: Date = new Date(new Date().setHours(0, 0, 0, 0));
+  minExpireDate: Date = this.minSelectableDate;
+
+  minPublishDateEdit: Date | null = null;
+maxPublishDateEdit: Date | null = null;
+minExpireDateEdit: Date | null = null;
+fetchedPublishDate: Date | null = null;
+fetchedExpireDate: Date | null = null;
 
   todayDate: Date = new Date();
 
@@ -489,30 +497,80 @@ export class CreateNewsComponent {
   }
 
   getNewsById(id: any) {
-    this.isLoading = true;
-    this.newsService.getNewsById(id).subscribe(
-      (data) => {
-        data.forEach((newsItem: any) => {
-          if (newsItem.publishDate) {
-            newsItem.publishDate = this.formatDate(newsItem.publishDate);
-            this.originalPublishDateEdit = new Date(newsItem.publishDate);
-          }
-          if (newsItem.expireDate) {
-            newsItem.expireDate = this.formatDate(newsItem.expireDate);
-            this.originalExpireDateEdit = new Date(newsItem.expireDate);
-          }
-        });
-        this.newsItems = data;
-        this.currentPublishDate = this.newsItems[0].publishDate;
-        this.currentExpireDate = this.newsItems[0].expireDate;
-        this.originalNewsSnapshot = this.buildSnapshot();
-        this.isLoading = false;
-      },
-      (error) => {
-        this.isLoading = false;
-      },
-    );
+  this.isLoading = true;
+  this.newsService.getNewsById(id).subscribe(
+    (data) => {
+      data.forEach((newsItem: any) => {
+        if (newsItem.publishDate) {
+          newsItem.publishDate = this.formatDate(newsItem.publishDate);
+          this.originalPublishDateEdit = new Date(newsItem.publishDate);
+        }
+        if (newsItem.expireDate) {
+          newsItem.expireDate = this.formatDate(newsItem.expireDate);
+          this.originalExpireDateEdit = new Date(newsItem.expireDate);
+        }
+      });
+      this.newsItems = data;
+      this.currentPublishDate = this.newsItems[0].publishDate;
+      this.currentExpireDate = this.newsItems[0].expireDate;
+
+      // Snapshot of the fetched dates — used as fixed reference points
+      this.fetchedPublishDate = this.originalPublishDateEdit
+        ? new Date(this.originalPublishDateEdit)
+        : null;
+      this.fetchedExpireDate = this.originalExpireDateEdit
+        ? new Date(this.originalExpireDateEdit)
+        : null;
+
+      // Publish Date: can't go before the fetched date, can't reach/pass Expire Date
+      this.minPublishDateEdit = this.fetchedPublishDate
+        ? new Date(this.fetchedPublishDate)
+        : null;
+      this.updateMaxPublishDateEdit();
+
+      this.updateMinExpireDateEdit();
+
+      // Expire Date: today is blocked, only tomorrow onward is selectable
+      const tomorrow = new Date();
+      tomorrow.setHours(0, 0, 0, 0);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      this.minExpireDateEdit = tomorrow;
+
+      this.originalNewsSnapshot = this.buildSnapshot();
+      this.isLoading = false;
+    },
+    (error) => {
+      this.isLoading = false;
+    },
+  );
+}
+
+private updateMinExpireDateEdit(): void {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  if (this.originalPublishDateEdit) {
+    const dayAfterPublish = new Date(this.originalPublishDateEdit);
+    dayAfterPublish.setDate(dayAfterPublish.getDate() + 1);
+    dayAfterPublish.setHours(0, 0, 0, 0);
+
+    // whichever is later: today, or the day right after Publish Date
+    this.minExpireDateEdit = dayAfterPublish > today ? dayAfterPublish : today;
+  } else {
+    this.minExpireDateEdit = today;
   }
+}
+
+private updateMaxPublishDateEdit(): void {
+  if (this.originalExpireDateEdit) {
+    const maxPublish = new Date(this.originalExpireDateEdit);
+    maxPublish.setDate(maxPublish.getDate() - 1);
+    maxPublish.setHours(0, 0, 0, 0);
+    this.maxPublishDateEdit = maxPublish;
+  } else {
+    this.maxPublishDateEdit = null;
+  }
+}
 
   private buildSnapshot(): string {
     if (!this.newsItems[0]) return '';
@@ -860,7 +918,26 @@ export class CreateNewsComponent {
     console.log('publishDate', this.originalPublishDate);
     this.checkPublishDate();
     this.checkPublishExpireDate();
+    this.updateMinExpireDate();
   }
+
+  private updateMinExpireDate(): void {
+  if (this.originalPublishDate) {
+    const nextDay = new Date(this.originalPublishDate);
+    nextDay.setDate(nextDay.getDate() + 1);
+    nextDay.setHours(0, 0, 0, 0);
+    this.minExpireDate = nextDay;
+  } else {
+    this.minExpireDate = this.minSelectableDate;
+  }
+
+  // If an already-selected expire date is now invalid (<= new publish date), clear it
+  if (this.originalExpireDate && this.originalExpireDate < this.minExpireDate) {
+    setTimeout(() => {
+      this.originalExpireDate = null;
+    });
+  }
+}
 
   onExpireDateChange(date: Date | null) {
     this.originalExpireDate = date;
@@ -873,13 +950,15 @@ export class CreateNewsComponent {
     console.log('publishDateEdit', this.originalPublishDateEdit);
     this.checkPublishDateEdit();
     this.checkPublishExpireDateEdit();
+    this.updateMinExpireDateEdit();
   }
 
   onExpireDateChangeEdit(date: Date | null) {
-    this.originalExpireDateEdit = date;
-    console.log('expireDateEdit', this.originalExpireDateEdit);
-    this.checkExpireDateEdit();
-  }
+  this.originalExpireDateEdit = date;
+  console.log('expireDateEdit', this.originalExpireDateEdit);
+  this.checkExpireDateEdit();
+  this.updateMaxPublishDateEdit();
+}
 
   formatDateForBackend(date: Date | null): string {
     if (!date) return '';
@@ -925,29 +1004,28 @@ export class CreateNewsComponent {
   }
 
   checkPublishDateEdit() {
-    console.log('checkPublishDateEdit called');
-    console.log('today', this.todayDate);
-    if (this.originalPublishDateEdit) {
-      this.todayDate.setHours(0, 0, 0, 0);
-      if (this.originalPublishDateEdit < this.todayDate) {
-        setTimeout(() => {
-          this.originalPublishDateEdit = null;
-        });
-        Swal.fire({
-          icon: 'error',
-          title: 'Missing or Invalid Information',
-          html: 'Publish date should be later than Today',
-          confirmButtonText: 'OK',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold text-lg',
-            htmlContainer: 'text-left',
-          },
-        });
-        console.log('original publish date edit', this.originalPublishDateEdit);
-      }
+  console.log('checkPublishDateEdit called');
+  console.log('today', this.todayDate);
+  if (this.originalPublishDateEdit) {
+    this.todayDate.setHours(0, 0, 0, 0);
+    if (this.originalPublishDateEdit < this.todayDate) {
+      setTimeout(() => {
+        this.originalPublishDateEdit = null;
+      });
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Information',
+        html: 'Publish date must be on or after today',
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+          htmlContainer: 'text-left',
+        },
+      });
     }
   }
+}
 
   checkPublishDateEditNews() {
     if (this.newsItems[0].publishDate < this.today) {
@@ -968,7 +1046,7 @@ export class CreateNewsComponent {
           Swal.fire({
             icon: 'error',
             title: 'Invalid Data Inputs',
-            html: 'Expiry date must be on or after the publish date.',
+            html: 'Expiry date must be after the publish date.',
             confirmButtonText: 'OK',
               customClass: {
               popup:

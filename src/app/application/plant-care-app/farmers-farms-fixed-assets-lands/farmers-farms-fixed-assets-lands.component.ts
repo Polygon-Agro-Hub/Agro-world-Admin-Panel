@@ -85,13 +85,6 @@ export class FarmersFarmsFixedAssetsLandComponent implements OnInit {
       this.farmName = params['farmName'] || null;
       this.category = params['category'] || null;
 
-      console.log('Query Params:', {
-        landfixedassetId: this.landfixedassetId,
-        fullName: this.fullName,
-        farmName: this.farmName,
-        category: this.category,
-      });
-
       if (this.landfixedassetId) {
         this.getLandOwnershipDetails();
       }
@@ -112,14 +105,12 @@ export class FarmersFarmsFixedAssetsLandComponent implements OnInit {
         this.leaseDeatils = response.leaseDetails;
         this.ownLandDetails = response.ownLandDetails;
         this.sharedLandDetails = response.sharedLandDetails;
-        console.log('leaseDeatils', this.leaseDeatils)
         this.ownershipType =
           response.ownershipType === 'Permited'
             ? 'Permitted'
             : response.ownershipType;
 
         this.hasData = !!(response.landDetails && response.ownershipDetails);
-        console.log('Land ownership details:', response);
       },
       (error) => {
         this.isLoading = false;

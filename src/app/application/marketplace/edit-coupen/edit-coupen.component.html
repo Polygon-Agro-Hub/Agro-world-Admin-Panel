@@ -8,14 +8,15 @@
     <p class="text-lg text-textLight dark:text-textDark font-semibold">
       Edit Coupon
     </p>
-    <div>
+    <div class="flex items-center">
       <button type="button" (click)="onCancel()"
         class="px-4 w-30 py-2 bg-[#74788D] border border-gray-300 rounded-md text-[#D3D3D3] focus:outline-none focus:ring-2 focus:ring-blue-500">
         Cancel
       </button>
-      <span class="bg-[#3980C0] text-lg text-white px-5 py-2 rounded-lg mx-2 cursor-pointer" (click)="onSubmit()">
+      <button type="button" (click)="onSubmit()"
+        class="bg-[#3980C0] text-white px-5 py-2 w-30 rounded-md mx-2 border border-[#3980C0] cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500">
         Save
-      </span>
+      </button>
     </div>
   </div>
 
@@ -34,26 +35,26 @@
       <div class="mb-16">
         <label class="text-[#534E4E] dark:text-textDark">Type *</label>
         <div class="flex items-center space-x-4 mt-3">
-          <div class="flex items-center space-x-2">
+          <div class="flex items-center space-x-2" *ngIf="coupenObj.type === 'Percentage'">
             <!-- With Discount Radio Button -->
-            <input class="w-5 h-5 cursor-pointer accent-[#0021F5]" type="radio" id="type" name="type"
+            <input class="w-5 h-5 cursor-pointer accent-[#0021F5]" type="radio" id="typePercentage" name="type"
               [value]="'Percentage'" [(ngModel)]="coupenObj.type" />
-            <label for="Percentage" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            <label for="typePercentage" class="block text-sm font-medium text-gray-700 dark:text-textDark">
               Percentage
             </label>
           </div>
-          <div class="flex items-center space-x-2">
-            <input class="w-5 h-5 cursor-pointer accent-[#0021F5]" type="radio" id="type" name="type"
+          <div class="flex items-center space-x-2" *ngIf="coupenObj.type === 'Fixed Amount'">
+            <input class="w-5 h-5 cursor-pointer accent-[#0021F5]" type="radio" id="typeFixedAmount" name="type"
               [value]="'Fixed Amount'" [(ngModel)]="coupenObj.type" />
-            <label for="noDiscount" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            <label for="typeFixedAmount" class="block text-sm font-medium text-gray-700 dark:text-textDark">
               Fixed Amount
             </label>
           </div>
 
-          <div class="flex items-center space-x-2">
-            <input class="w-5 h-5 cursor-pointer accent-[#0021F5]" type="radio" id="type" name="type"
+          <div class="flex items-center space-x-2" *ngIf="coupenObj.type === 'Free Delivery'">
+            <input class="w-5 h-5 cursor-pointer accent-[#0021F5]" type="radio" id="typeFreeDelivery" name="type"
               [(ngModel)]="coupenObj.type" [value]="'Free Delivery'" />
-            <label for="noDiscount" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            <label for="typeFreeDelivery" class="block text-sm font-medium text-gray-700 dark:text-textDark">
               Free Delivary
             </label>
           </div>
@@ -63,8 +64,9 @@
       <div *ngIf="coupenObj.type === 'Percentage'" class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">Discount Percentage *</label>
         <input type="number" id="percentage" name="percentage" [(ngModel)]="coupenObj.percentage"
-          #percentageInput="ngModel" required min="0" max="100" (input)="validateDecimalInput($event, 'percentage')"
-          (change)="checkPrecentageValue(coupenObj.percentage)"
+          #percentageInput="ngModel" required min="1" max="99" maxlength="2"
+          (input)="validateDecimalInput($event, 'percentage')" (change)="checkPrecentageValue(coupenObj.percentage)"
+          (keydown)="preventNegative($event)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         <div *ngIf="percentageInput.touched && percentageInput.errors?.['required']" class="text-red-500 text-sm mt-1">
           Discount percentage is required.
@@ -85,6 +87,7 @@
 
       <div class="flex flex-row mb-6">
         <input type="checkbox" id="checkLimit" name="checkLimit" [(ngModel)]="coupenObj.checkLimit" [value]="true"
+          (change)="onCheckLimitChange()"
           class="mr-6 ml-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack transform scale-150 cursor-pointer accent-[#0021F5]" />
 
         <label for="chekLimit" class="text-[#534E4E] dark:text-textDark">
@@ -142,7 +145,7 @@
            [&_.p-datepicker-header]:dark:text-white
            [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]"
             inputStyleClass="mt-2 block w-full p-2 cursor-pointer border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            [appendTo]="'body'" dateFormat="yy-mm-dd"/>
+            [appendTo]="'body'" dateFormat="yy-mm-dd" />
           <div *ngIf="startDateInput.touched && startDateInput.errors?.['required']" class="text-red-500 text-sm mt-1">
             Start date is required.
           </div>
@@ -159,7 +162,7 @@
            [&_.p-datepicker-header]:dark:text-white
            [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]"
             inputStyleClass="mt-2 block w-full cursor-pointer p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            [appendTo]="'body'" dateFormat="yy-mm-dd" [minDate]="DateConverter(coupenObj.startDate)"/>
+            [appendTo]="'body'" dateFormat="yy-mm-dd" [minDate]="DateConverter(coupenObj.startDate)" />
           <div *ngIf="endDateInput.touched && endDateInput.errors?.['required']" class="text-red-500 text-sm mt-1">
             Expire date is required.
           </div>

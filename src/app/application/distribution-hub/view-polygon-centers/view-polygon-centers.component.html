@@ -101,13 +101,13 @@
               class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center">
               Location
             </th>
-            <th *ngIf="
+            <!-- <th *ngIf="
         ( urlSegment === 'distribution-hub' && permissionService.hasPermission('Polygon centres view dashboard') ) ||
         ( urlSegment === 'steckholders' && permissionService.hasPermission('Stakeholder distribution view dashboard') ) ||
         tokenService.getUserDetails().role === '1'"
               class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center">
               Dashboard
-            </th>
+            </th> -->
             <th *ngIf="
         ( urlSegment === 'distribution-hub' && permissionService.hasPermission('Polygon centres view a distribution centre') ) ||
         ( urlSegment === 'steckholders' && permissionService.hasPermission('Stakeholder distribution view a centre') ) ||
@@ -180,7 +180,7 @@
                 <!-- Disabled/grayed out icon when no coordinates -->
               </span>
             </td>
-            <td *ngIf="
+            <!-- <td *ngIf="
         ( urlSegment === 'distribution-hub' && permissionService.hasPermission('Polygon centres view dashboard') ) ||
         ( urlSegment === 'steckholders' && permissionService.hasPermission('Stakeholder distribution view dashboard') ) ||
         tokenService.getUserDetails().role === '1'" class="px-2 py-3 text-center text-textLight dark:text-textDark">
@@ -188,7 +188,7 @@
                 (click)="viewDistributionCenterDashboard(item.companyCenerId, item.centerName, item.regCode)">
                 <i class="fa-solid fa-arrow-up-right-from-square"></i>
               </button>
-            </td>
+            </td> -->
             <td *ngIf="
         ( urlSegment === 'distribution-hub' && permissionService.hasPermission('Polygon centres view a distribution centre') ) ||
         ( urlSegment === 'steckholders' && permissionService.hasPermission('Stakeholder distribution view a centre') ) ||

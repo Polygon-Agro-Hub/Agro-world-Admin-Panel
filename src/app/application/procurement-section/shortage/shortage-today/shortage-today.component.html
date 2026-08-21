@@ -74,7 +74,7 @@
               <div class="flex flex-col justify-center">
                 <p class="text-sm text-gray-500 dark:text-gray-400 m-0 whitespace-nowrap">Market Price per kg</p>
                 <p class="text-base font-bold text-textLight dark:text-textDark m-0">
-                  Rs. {{ item.marketPrice }}
+                  Rs. {{ item.marketPrice | number:'1.2-2' }}
                 </p>
               </div>
 

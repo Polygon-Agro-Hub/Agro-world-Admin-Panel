@@ -23,7 +23,7 @@
       <div class="text-right">
         <p class="text-sm text-gray-500 dark:text-gray-400 m-0">Market Price per kg</p>
         <p class="text-lg font-bold text-textLight dark:text-textDark m-0">
-          Rs. {{ selectedItem.marketPrice }}
+          {{ selectedItem.marketPrice || 0 | number:'1.2-2' }}
         </p>
       </div>
     </div>
@@ -38,7 +38,7 @@
           <label class="text-[12px] font-normal text-textLight dark:text-textDark mb-1">
             Enter Qty ({{ selectedItem.unit }})
           </label>
-          <input type="number" min="0" step="0.01" [max]="selectedItem.shortageQty" [(ngModel)]="assignQty"
+          <input type="number" min="0" step="0.001" [max]="selectedItem.shortageQty" [(ngModel)]="assignQty"
             (input)="onQtyInput($event)"
             class="w-full h-10 p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-tileBlack text-textLight dark:text-textDark font-semibold text-center" />
         </div>

@@ -24,7 +24,7 @@
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
         <h2 class="text-xl font-normal text-[#292929] dark:text-textDark">
-          GoViShop Suppliers ({{ totalSuppliers < 10 ? '0'+ totalSuppliers : totalSuppliers  }})
+          GoViShop Suppliers ({{ totalSuppliers === 0 ? '0' : (totalSuppliers < 10 ? '0' + totalSuppliers : totalSuppliers) }})
         </h2>
       </div>
       <div class="flex items-center gap-4 ml-5">

@@ -127,7 +127,7 @@ getTaskById(id: any) {
         !!this.taskItems.videoLinkSinhala ||
         !!this.taskItems.videoLinkTamil;
 
-      console.log(this.taskItems.reqImages);
+      
       
 
       // Set default value of 0 if reqImages is null/undefined
@@ -283,7 +283,7 @@ updateTask() {
         imageLink: this.hasImageLink ? this.taskItems.imageLink : null,
       };
 
-      console.log('taskData', taskData)
+      
 
       this.taskService.updateUserCropTask(this.id, taskData).subscribe({
         next: (res: any) => {

@@ -24,6 +24,7 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { environment } from '../../../environment/environment';
 import { TokenService } from '../../../services/token/services/token.service';
 import { ThemeService } from '../../../services/theme.service';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 @Component({
   selector: 'app-collection-officer-report-view',
@@ -179,27 +180,34 @@ export class CollectionOfficerReportViewComponent implements OnInit, OnDestroy {
           { label: 'Grade C', data: gradeCData, backgroundColor: '#3DE188' },
         ],
       },
+      plugins: [ChartDataLabels],
       options: {
         responsive: true,
-        maintainAspectRatio: false,
-        indexAxis: 'y',
-        plugins: {
-          title: {
-            display: true,
-            text: `${this.name} ${this.lastName} - Crop Weights`,
-            color: titleColor,
-            padding: { top: 10, bottom: 30 },
-            font: { size: 18, weight: 600 },
-          },
-          legend: {
-            position: 'bottom',
-            labels: {
-              padding: 30,
-              color: textColor,
-              font: { size: 14, weight: 400 },
-            },
-          },
+    maintainAspectRatio: false,
+    indexAxis: 'y',
+    plugins: {
+      title: {
+        display: true,
+        text: `${this.name} ${this.lastName} - Crop Weights`,
+        color: titleColor,
+        padding: { top: 10, bottom: 30 },
+        font: { size: 18, weight: 600 },
+      },
+      legend: {
+        position: 'bottom',
+        labels: {
+          padding: 30,
+          color: textColor,
+          font: { size: 14, weight: 400 },
         },
+      },
+      datalabels: {
+        display:false,
+        color: '#fff',
+        font: { size: 11, weight: 600 },
+        formatter: (value: number) => (value > 0 ? value : ''), // ✅ hides the 0
+      },
+    },
         scales: {
           x: {
             stacked: true,

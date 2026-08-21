@@ -663,7 +663,6 @@ export class AddFiealdOfficerComponent implements OnInit {
   }
 
   nextFormCreate(page: 'pageOne' | 'pageTwo' | 'pageThree') {
-    console.log('personalData', this.personalData);
     if (page === 'pageTwo') {
       // Mark page one fields as touched to show validation messages
       this.markPageOneFieldsAsTouched();
@@ -803,7 +802,6 @@ export class AddFiealdOfficerComponent implements OnInit {
   }
 
   nextFormCreate2(page: 'pageOne' | 'pageTwo' | 'pageThree') {
-    console.log('personalData', this.personalData);
 
     if (page === 'pageThree') {
       // Mark page two fields as touched to show validation messages

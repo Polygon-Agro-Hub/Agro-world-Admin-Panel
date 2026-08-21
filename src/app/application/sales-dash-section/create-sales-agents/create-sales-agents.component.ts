@@ -207,7 +207,7 @@ export class CreateSalesAgentsComponent implements OnInit {
     event.preventDefault();
     const fileInput = document.getElementById('imageUpload');
     fileInput?.click();
-    console.log('file input triggered');
+    
   }
 
   onFileSelected(event: any): void {
@@ -233,14 +233,14 @@ export class CreateSalesAgentsComponent implements OnInit {
         this.selectedImage = e.target.result;
       };
       reader.readAsDataURL(file);
-      console.log(this.selectedImage);
+      
     }
   }
 
   updateEmployeeType(selectedType: string): void {
     this.empType = selectedType;
     this.personalData.empType = selectedType;
-    console.log('Selected Employee Type:', this.personalData.empType);
+    
   }
 
   updateProvince(event: DropdownChangeEvent): void {

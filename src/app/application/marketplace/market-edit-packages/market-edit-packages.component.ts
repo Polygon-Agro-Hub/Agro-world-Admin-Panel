@@ -68,7 +68,7 @@ export class MarketEditPackagesComponent {
     this.route.params.subscribe((params) => {
       if (params && params['id']) {
         this.packageId = +params['id'];
-        console.log(this.packageId);
+        
         if (this.packageId) {
           this.isLoading = true;
           forkJoin({
@@ -117,7 +117,7 @@ export class MarketEditPackagesComponent {
 
   getPackageDetails() {
     this.marketSrv.getPackageById(this.packageId).subscribe((res) => {
-      console.log('this is response', res);
+      
       this.packageObj = res;
       this.packageObj.startDate = res.startDate
         ? new Date(res.startDate)
@@ -139,7 +139,7 @@ export class MarketEditPackagesComponent {
   getProductTypes() {
     this.marketSrv.fetchProductTypes().subscribe((res) => {
       this.productTypeObj = res.data;
-      console.log('this is type', this.productTypeObj);
+      
     });
   }
 
@@ -152,8 +152,8 @@ export class MarketEditPackagesComponent {
   }
 
   async onSubmit() {
-    console.log('selected image', this.selectedImage);
-    console.log('submit', this.packageObj);
+    
+    
 
     if (
       !this.packageObj.displayName ||
@@ -347,7 +347,7 @@ export class MarketEditPackagesComponent {
     this.packageObj.approximatedPrice =
       productPrice + (serviceFee + packageFee);
 
-    console.log('Approximated Price:', this.packageObj.approximatedPrice);
+    
     return this.packageObj.approximatedPrice;
   }
 

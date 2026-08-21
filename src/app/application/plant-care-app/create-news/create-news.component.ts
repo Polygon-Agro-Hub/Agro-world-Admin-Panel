@@ -174,8 +174,8 @@ fetchedExpireDate: Date | null = null;
   }
 
   createNews() {
-    console.log('clicked');
-    console.log(this.createNewsObj);
+    
+    
 
     if (!this.isPublishAfterExpireValid) {
       Swal.fire({
@@ -915,7 +915,7 @@ private updateMaxPublishDateEdit(): void {
 
   onDateChange(date: Date | null) {
     this.originalPublishDate = date;
-    console.log('publishDate', this.originalPublishDate);
+    
     this.checkPublishDate();
     this.checkPublishExpireDate();
     this.updateMinExpireDate();
@@ -941,13 +941,13 @@ private updateMaxPublishDateEdit(): void {
 
   onExpireDateChange(date: Date | null) {
     this.originalExpireDate = date;
-    console.log('expireDate', this.originalExpireDate);
+    
     this.checkExpireDate();
   }
 
   onDateChangeEdit(date: Date | null) {
     this.originalPublishDateEdit = date;
-    console.log('publishDateEdit', this.originalPublishDateEdit);
+    
     this.checkPublishDateEdit();
     this.checkPublishExpireDateEdit();
     this.updateMinExpireDateEdit();
@@ -955,7 +955,7 @@ private updateMaxPublishDateEdit(): void {
 
   onExpireDateChangeEdit(date: Date | null) {
   this.originalExpireDateEdit = date;
-  console.log('expireDateEdit', this.originalExpireDateEdit);
+  
   this.checkExpireDateEdit();
   this.updateMaxPublishDateEdit();
 }
@@ -979,8 +979,8 @@ private updateMaxPublishDateEdit(): void {
   }
 
   checkPublishDate() {
-    console.log('checkPublishDate called');
-    console.log('today', this.todayDate);
+    
+    
     if (this.originalPublishDate) {
       this.todayDate.setHours(0, 0, 0, 0);
       if (this.originalPublishDate < this.todayDate) {
@@ -998,14 +998,14 @@ private updateMaxPublishDateEdit(): void {
             htmlContainer: 'text-left',
           },
         });
-        console.log('ordginal publish date', this.originalPublishDate);
+        
       }
     }
   }
 
   checkPublishDateEdit() {
-  console.log('checkPublishDateEdit called');
-  console.log('today', this.todayDate);
+  
+  
   if (this.originalPublishDateEdit) {
     this.todayDate.setHours(0, 0, 0, 0);
     if (this.originalPublishDateEdit < this.todayDate) {
@@ -1034,10 +1034,10 @@ private updateMaxPublishDateEdit(): void {
   }
 
   checkExpireDate() {
-    console.log('called');
+    
 
     if (this.originalExpireDate) {
-      console.log('expireDate', this.originalExpireDate);
+      
       if (this.originalPublishDate) {
         if (this.originalExpireDate < this.originalPublishDate) {
           setTimeout(() => {
@@ -1109,10 +1109,10 @@ private updateMaxPublishDateEdit(): void {
   }
 
   checkExpireDateEdit() {
-    console.log('checkExpireDateEdit called');
+    
 
     if (this.originalExpireDateEdit) {
-      console.log('expireDateEdit', this.originalExpireDateEdit);
+      
       if (this.originalPublishDateEdit) {
         if (this.originalExpireDateEdit < this.originalPublishDateEdit) {
           setTimeout(() => {
@@ -1190,7 +1190,7 @@ private updateMaxPublishDateEdit(): void {
   }
 
   checkPublishExpireDate() {
-    console.log('checkPublishexpireDate called');
+    
     if (this.originalPublishDate && this.originalExpireDate) {
       this.isPublishAfterExpireValid =
         this.originalPublishDate <= this.originalExpireDate;
@@ -1200,7 +1200,7 @@ private updateMaxPublishDateEdit(): void {
   }
 
   checkPublishExpireDateEdit() {
-    console.log('checkPublishexpireDateEdit called');
+    
     if (this.originalPublishDateEdit && this.originalExpireDateEdit) {
       this.isPublishAfterExpireValidEditNews =
         this.originalPublishDateEdit <= this.originalExpireDateEdit;

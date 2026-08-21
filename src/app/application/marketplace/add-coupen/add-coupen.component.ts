@@ -108,17 +108,26 @@ export class AddCoupenComponent {
   }
 
   checkStartDate() {
-    if (this.coupenObj.startDate < this.today) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Invalid Start Date',
-        text: 'Start Date cannot be a past date!',
-        confirmButtonText: 'OK',
-      }).then(() => {
-        this.coupenObj.startDate = '';
-      });
-    }
+  if (this.coupenObj.startDate < this.today) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Invalid Start Date',
+      text: 'Start Date cannot be a past date!',
+      confirmButtonText: 'OK',
+    }).then(() => {
+      this.coupenObj.startDate = '';
+    });
+    return;
   }
+
+  // Clear Expire Date silently if it's now earlier than the newly selected Start Date
+  if (
+    this.coupenObj.endDate &&
+    this.DateConverter(this.coupenObj.endDate) < this.DateConverter(this.coupenObj.startDate)
+  ) {
+    this.coupenObj.endDate = '';
+  }
+}
 
   onSubmit() {
     this.clearValidationMessages();

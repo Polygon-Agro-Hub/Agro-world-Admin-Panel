@@ -95,7 +95,7 @@ export class ViewCurrentCenterTargetComponent implements OnInit {
   }
 
   fetchAllTarget(centerId: number = this.centerId, page: number = 1, limit: number = this.itemsPerPage, status: string = this.selectStatus, search: string = this.searchText) {
-    console.log('status', status)
+    
     this.isLoading = true;
     this.collectionCenterSrv.getAllCenterDailyTarget(centerId, page, limit, status, search).subscribe(
       (res) => {

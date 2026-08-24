@@ -52,7 +52,7 @@ export class GoviLinkDashbordComponent implements OnInit {
   loadDashboardData(): void {
     this.goviLinkService.getDashboardData().subscribe({
       next: (res) => {
-        console.log('API response:', res);
+        
         if (res.success) {
           // Square cards — officer counts sorted by role order
           const officerCards: SquareCardConfig[] = res.officerCount

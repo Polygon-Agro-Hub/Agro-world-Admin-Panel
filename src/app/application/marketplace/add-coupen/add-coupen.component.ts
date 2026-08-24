@@ -321,23 +321,29 @@ export class AddCoupenComponent {
   }
 
   preventNegative(e: KeyboardEvent) {
-    const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Tab', 'Home', 'End'];
+  const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Tab', 'Home', 'End'];
 
-    if (allowedKeys.includes(e.key) || e.ctrlKey || e.metaKey) {
-      if (e.ctrlKey && e.key === 'v') {
-        setTimeout(() => {
-          if (this.coupenObj.percentage < 0) {
-            this.coupenObj.percentage = 0;
-          }
-        }, 0);
-      }
-      return;
+  if (allowedKeys.includes(e.key) || e.ctrlKey || e.metaKey) {
+    if (e.ctrlKey && e.key === 'v') {
+      setTimeout(() => {
+        if (this.coupenObj.percentage < 0) {
+          this.coupenObj.percentage = 0;
+        }
+      }, 0);
     }
-
-    if (!/^[0-9]$/.test(e.key)) {
-      e.preventDefault();
-    }
+    return;
   }
+
+  if (!/^[0-9]$/.test(e.key)) {
+    e.preventDefault();
+  }
+
+  // Block '0' as the very first character typed
+  const input = e.target as HTMLInputElement;
+  if (e.key === '0' && input.value.length === 0) {
+    e.preventDefault();
+  }
+}
 
   onCodeInput(event: Event): void {
     const input = event.target as HTMLInputElement;

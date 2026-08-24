@@ -137,6 +137,79 @@ export class PlantcareComponent {
     this.router.navigate(['/plant-care/action/create-crop-variety']);
   }
 
+  downloadCropCalendarTemplate(): void {
+    this.isLoading = true;
+
+    const header = [
+      'Task index',
+      'Day',
+      'Task type (English)',
+      'Task type (Sinhala)',
+      'Task type (Tamil)',
+      'Task Category (English)',
+      'Task Category (Sinhala)',
+      'Task Category (Tamil)',
+      'Task (English)',
+      'Task (Sinhala)',
+      'Task (Tamil)',
+      'Task description (English)',
+      'Task description (Sinhala)',
+      'Task description (Tamil)',
+      'Image Link',
+      'Video Link English',
+      'Video Link Sinhala',
+      'Video Link Tamil',
+      'Required Images',
+    ];
+
+    const numberOfRowsToGenerate = 200;
+    const emptyRows = Array.from({ length: numberOfRowsToGenerate }, () =>
+      Array(header.length).fill(''),
+    );
+
+    const worksheetData = [header, ...emptyRows];
+    const ws = XLSX.utils.aoa_to_sheet(worksheetData);
+
+    // Apply bold style only for the first row (headers).
+    header.forEach((_, colIndex) => {
+      const headerCellAddress = XLSX.utils.encode_cell({ r: 0, c: colIndex });
+      if (!ws[headerCellAddress]) {
+        ws[headerCellAddress] = { t: 's', v: header[colIndex] };
+      }
+      ws[headerCellAddress].s = {
+        font: { bold: true },
+      };
+    });
+
+    ws['!cols'] = [
+      { wch: 12 },
+      { wch: 8 },
+      { wch: 22 },
+      { wch: 22 },
+      { wch: 22 },
+      { wch: 24 },
+      { wch: 24 },
+      { wch: 24 },
+      { wch: 18 },
+      { wch: 18 },
+      { wch: 18 },
+      { wch: 30 },
+      { wch: 30 },
+      { wch: 30 },
+      { wch: 28 },
+      { wch: 28 },
+      { wch: 28 },
+      { wch: 28 },
+      { wch: 20 },
+    ];
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'CropCalendarTemplate');
+    XLSX.writeFile(wb, 'Crop_Calendar_Template.xlsx');
+
+    this.isLoading = false;
+  }
+
   publicForum(): void {
     this.router.navigate(['/plant-care/action/public-forum']);
   }

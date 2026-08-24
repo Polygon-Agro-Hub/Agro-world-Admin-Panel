@@ -475,7 +475,7 @@ export class AddFarmerClustersComponent implements OnInit {
 
   private processUpload(): void {
     // Ensure cluster name is trimmed before validation
-    console.log("Start------------");
+    
 
     if (this.clusterName) {
       this.clusterName = this.clusterName.trim();
@@ -522,7 +522,7 @@ export class AddFarmerClustersComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
     this.successMessage = '';
-    console.log("XL read start-----------------");
+    
 
 
     const reader = new FileReader();
@@ -568,7 +568,7 @@ export class AddFarmerClustersComponent implements OnInit {
         if (duplicates.length > 0) {
           this.isLoading = false;
           this.duplicateEntries = duplicates;
-          console.log('duplicateEntries', this.duplicateEntries)
+          
           this.downloadDuplicateCSV(duplicates);
           this.showDuplicateErrorPopup(duplicates);
           return;
@@ -626,7 +626,7 @@ export class AddFarmerClustersComponent implements OnInit {
     const nic =
       row['NIC'] || row['nic'] || row['NIC Number'] || row['NICNumber'];
     if (!nic) {
-      console.log('No NIC found in row:', row);
+      
       return null;
     }
 
@@ -650,7 +650,7 @@ export class AddFarmerClustersComponent implements OnInit {
       row['RegistrationCode'] || 
       row['Reg Code'];
     if (!regCode) {
-      console.log('No Registration Code found in row:', row);
+      
       return null;
     }
 
@@ -1033,7 +1033,7 @@ export class AddFarmerClustersComponent implements OnInit {
 
   private handleError(error: any): void {
     this.isLoading = false;
-    console.log('error', error)
+    
 
     let errorMessage = 'Failed to upload file. Please try again.';
 
@@ -1046,7 +1046,7 @@ export class AddFarmerClustersComponent implements OnInit {
 
     if (error.error?.missingRegCodes) {
 
-      console.log('missingRegCodeDetails', error.error?.missingRegCodes)
+      
       // Handle the new response structure with missingRegCodeDetails
       const missingRegCodeDetails = error.error.missingRegCodeDetails || [];
       this.missingRegCodesP = error.error?.missingRegCodes;
@@ -1322,7 +1322,7 @@ export class AddFarmerClustersComponent implements OnInit {
 
   private downloadMissingRegCodesCSV(missingRegCodes: string[]): void {
     try {
-      console.log('missingRegCodes', missingRegCodes)
+      
       const headers = ['No', 'Farm ID'];
 
       // Force Excel to treat Farm ID column as text using ="value"

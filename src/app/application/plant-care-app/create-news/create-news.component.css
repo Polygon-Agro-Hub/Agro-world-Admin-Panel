@@ -195,3 +195,20 @@ input[type="date"]::-moz-calendar-picker-indicator {
 ::ng-deep .ql-editor li[data-list="ordered"]::before {
   content: counter(list-0, decimal) '. ' !important;
 }
+
+/* Quill heading styles - Tailwind Preflight resets h1/h2 font-size and weight, so restore size only, no bold */
+::ng-deep .ql-editor h1,
+::ng-deep .news-content h1 {
+  font-size: 2em !important;
+  font-weight: normal !important;
+  line-height: 1.2 !important;
+  margin: 0.67em 0 !important;
+}
+
+::ng-deep .ql-editor h2,
+::ng-deep .news-content h2 {
+  font-size: 1.5em !important;
+  font-weight: normal !important;
+  line-height: 1.25 !important;
+  margin: 0.75em 0 !important;
+}

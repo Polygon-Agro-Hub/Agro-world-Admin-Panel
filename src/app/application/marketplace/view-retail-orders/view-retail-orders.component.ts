@@ -120,7 +120,7 @@ export class ViewRetailOrdersComponent implements OnInit {
 
   searchReailOrders() {
     this.searchItem = this.searchItem.trim();
-    console.log(this.searchItem);
+    
     this.page = 1;
     this.fetchAllRetailOrders();
   }
@@ -149,7 +149,7 @@ export class ViewRetailOrdersComponent implements OnInit {
   }
 
   applyDateFilter() {
-    console.log(this.isDateSelected);
+    
     if (this.selectDate instanceof Date) {
       const year = this.selectDate.getFullYear();
       const month = String(this.selectDate.getMonth() + 1).padStart(2, '0');

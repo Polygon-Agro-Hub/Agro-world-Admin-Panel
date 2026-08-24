@@ -365,7 +365,7 @@ export class PermissionAreaComponent {
         (cat) => cat.id.toString() === this.selectedCategory
       );
       if (selectedCategoryObj) {
-        console.log('Selected Category:', selectedCategoryObj.category);
+        
       }
     }
   }
@@ -520,7 +520,7 @@ export class PermissionAreaComponent {
   }
 
   viewConsole() {
-    console.log("categories", this.categories);
+    
 
   }
 

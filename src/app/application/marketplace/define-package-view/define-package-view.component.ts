@@ -565,7 +565,7 @@ export class DefinePackageViewComponent implements OnInit {
     const filteredItems = this.marketplaceItems.filter(
       (item) => item.productTypeId === typeId,
     );
-    console.log('Filtered Items for typeId', typeId, ':', filteredItems);
+    
     return filteredItems;
   }
 

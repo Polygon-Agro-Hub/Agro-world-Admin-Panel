@@ -60,11 +60,11 @@ export class ViewCenterPriceComponent {
     this.centerName = this.route.snapshot.params['centerName'];
 
     this.Cname = this.route.snapshot.queryParams['Cname'];
-    console.log('Cname from query params:', this.Cname);
+    
 
     this.route.queryParams.subscribe((params) => {
       this.Cname = params['Cname'];
-      console.log('Cname updated:', this.Cname);
+      
     });
 
     this.fetchAllMarketPrices();

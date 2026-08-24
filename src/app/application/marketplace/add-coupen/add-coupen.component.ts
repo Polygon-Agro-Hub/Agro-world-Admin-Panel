@@ -156,7 +156,7 @@ export class AddCoupenComponent {
           }
       }
 
-    console.log(!this.coupenObj.priceLimit,"djdjdjjd");
+    
     
     if (this.coupenObj.checkLimit && !this.coupenObj.priceLimit) {
       if(this.coupenObj.priceLimit === 0) missingFields.push('Price limit must be greater than 0');

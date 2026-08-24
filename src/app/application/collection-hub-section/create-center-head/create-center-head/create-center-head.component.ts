@@ -162,7 +162,7 @@ export class CreateCenterHeadComponent implements OnInit {
     });
 
     this.personalData.companyId = this.companyId
-    console.log('coompanyId', this.personalData.companyId)
+    
 
     this.getAllCompanies();
     this.EpmloyeIdCreate();

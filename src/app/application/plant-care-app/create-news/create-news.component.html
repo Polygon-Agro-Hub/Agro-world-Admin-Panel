@@ -23,6 +23,7 @@
           (onClear)="onDateChange($event)"
           [showIcon]="true"
           [showClear]="false"
+          [minDate]="minSelectableDate"
           [showButtonBar]="true"
           placeholder="--Select Date--"
           iconDisplay="input"
@@ -44,7 +45,7 @@
       </div>
 
       <div class="mr-5">
-        <label class="mr-5 text-textLight dark:text-textDark">Expires Date</label>
+        <label class="mr-5 text-textLight dark:text-textDark">Expire Date</label>
         <p-calendar
           id="toDate"
           [(ngModel)]="originalExpireDate"
@@ -53,6 +54,7 @@
           [showIcon]="true"
           [showClear]="false"
           [showButtonBar]="true"
+          [minDate]="minExpireDate"
           placeholder="--Select Date--"
           iconDisplay="input"
           [style]="{ width: '16rem', height: '2rem' }"
@@ -286,6 +288,9 @@
           [(ngModel)]="originalPublishDateEdit"
           (onSelect)="onDateChangeEdit($event)"
           (onClear)="onDateChangeEdit($event)"
+          [minDate]="minPublishDateEdit"
+          [maxDate]="maxPublishDateEdit"
+          [defaultDate]="$any(fetchedPublishDate)"
           [showIcon]="true"
           [showClear]="false"
           [showButtonBar]="true"
@@ -309,13 +314,15 @@
       </div>
 
       <div class="mr-5">
-        <label class="mr-5 text-textLight dark:text-textDark">Expires Date</label>
+        <label class="mr-5 text-textLight dark:text-textDark">Expire Date</label>
         <p-calendar
           id="expireDateEdit"
           [(ngModel)]="originalExpireDateEdit"
-          (onSelect)="onExpireDateChangeEdit($event)"
-          (onClear)="onExpireDateChangeEdit($event)"
-          [showIcon]="true"
+  (onSelect)="onExpireDateChangeEdit($event)"
+  (onClear)="onExpireDateChangeEdit($event)"
+  [minDate]="minExpireDateEdit"
+  [defaultDate]="$any(fetchedExpireDate)"
+  [showIcon]="true"
           [showClear]="false"
           [showButtonBar]="true"
           placeholder="--Select Date--"
@@ -597,8 +604,10 @@
         Cancel
       </button>
       <button
-        class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
         type="button"
+        class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
+        [disabled]="!hasUnsavedChanges()"
+        [ngClass]="{ 'opacity-50 cursor-not-allowed': !hasUnsavedChanges() }"
         (click)="updateNews()"
       >
         Save

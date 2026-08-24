@@ -7,6 +7,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { StakeholderService } from '../../../../services/stakeholder/stakeholder.service';
 import { NgxPaginationModule } from 'ngx-pagination';
 import Swal from 'sweetalert2';
+import { PermissionService } from '../../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../../services/token/services/token.service';
 
 export interface Supplier {
   id: number;
@@ -36,7 +38,7 @@ export class ViewGovishopSupliersComponent implements OnInit {
   isLoading = false;
   searchTerm = '';
   selectedPlan: string = '';
-  totalSuppliers!: number;
+  totalSuppliers: number = 0;
   expiredCount = 0;
   activeCount = 0;
 
@@ -53,6 +55,7 @@ export class ViewGovishopSupliersComponent implements OnInit {
 
   hasData: boolean = false;
   textAreaTouched: boolean = false;
+  urlSegment: string = '';
 
   planOptions = [
     { label: 'Standard', value: 'Standard' },
@@ -64,7 +67,9 @@ export class ViewGovishopSupliersComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private goviShopService: StakeholderService
+    private goviShopService: StakeholderService,
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
   ) {}
 
   ngOnInit(): void {
@@ -77,13 +82,6 @@ export class ViewGovishopSupliersComponent implements OnInit {
     // Separate currentPlan and planStatus based on selected filter
     let currentPlan: string | undefined;
     
-    console.log('Fetching suppliers with params:', {
-      search: this.searchTerm || undefined,
-      currentPlan: this.selectedPlan,
-      page: this.page,
-      limit: this.itemsPerPage
-    });
-    
     this.goviShopService.getAllGoviShopUsers(
       this.searchTerm || undefined,
       this.selectedPlan,
@@ -91,20 +89,18 @@ export class ViewGovishopSupliersComponent implements OnInit {
       this.itemsPerPage
     ).subscribe({
       next: (response) => {
-
-        console.log('Raw API Response:', response);
-        this.suppliers = response.data.shopUsers; 
-        this.totalItems = response.data.pagination.total
-        this.totalSuppliers = this.suppliers.length || 0;
-
-        console.log('totalSuppliers', this.totalSuppliers)
+        this.suppliers = response.data.shopUsers || [];
+        this.totalItems = response.data.pagination?.total || 0;
+        this.totalSuppliers = this.totalItems;
         this.hasData = this.suppliers.length > 0;
-        console.log('suppliers', this.suppliers);
-        
         this.isLoading = false;
       },
       error: (error) => {
         console.error('Error loading suppliers:', error);
+        this.suppliers = [];
+        this.totalItems = 0;
+        this.totalSuppliers = 0;
+        this.hasData = false;
         this.isLoading = false;
       }
     });

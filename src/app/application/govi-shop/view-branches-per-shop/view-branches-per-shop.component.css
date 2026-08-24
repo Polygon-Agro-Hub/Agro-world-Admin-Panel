@@ -8,6 +8,15 @@
     display: inline-flex !important;
 }
 
+/* Apply font family to dropdowns */
+::ng-deep .p-dropdown,
+::ng-deep .p-dropdown-panel,
+::ng-deep .p-dropdown-items,
+::ng-deep .p-dropdown-item,
+::ng-deep .p-dropdown-label {
+    font-family: 'Roboto', 'Helvetica Neue', sans-serif !important;
+}
+
 ::ng-deep .dark .p-dropdown-panel {
     background-color: #2d354d !important;
     color: #B1B1B1 !important;
@@ -15,11 +24,13 @@
     /* <-- add this for rounded corners */
     overflow: hidden;
     /* ensures child items don't spill over rounded corners */
+    font-family: 'Roboto', 'Helvetica Neue', sans-serif !important;
 }
 
 ::ng-deep .dark .p-dropdown-panel .p-dropdown-item {
     background-color: #2d354d !important;
     color: #B1B1B1 !important;
+    font-family: 'Roboto', 'Helvetica Neue', sans-serif !important;
 }
 
 ::ng-deep .dark .p-dropdown-panel .p-dropdown-item:hover {
@@ -168,11 +179,13 @@
   color: #B1B1B1 !important;
   border-radius: 6px !important;
   overflow: hidden;
+  font-family: 'Roboto', 'Helvetica Neue', sans-serif !important;
 }
 
 ::ng-deep .dark .p-dropdown-panel .p-dropdown-item {
   background-color: #2d354d !important;
   color: #B1B1B1 !important;
+  font-family: 'Roboto', 'Helvetica Neue', sans-serif !important;
 }
 
 ::ng-deep .dark .p-dropdown-panel .p-dropdown-item:hover {
@@ -204,4 +217,3 @@
 }
 
 /* The rest of your existing calendar styles... */
-

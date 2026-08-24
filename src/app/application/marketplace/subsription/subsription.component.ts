@@ -6,7 +6,6 @@ import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
-import { environment } from '../../../environment/environment.development';
 
 import { MarketPlaceService } from '../../../services/market-place/market-place.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';

@@ -248,3 +248,9 @@
 ::ng-deep .dark .category-search-dropdown .p-dropdown-filter::placeholder {
   color: #9ca3af !important;
 }
+
+::ng-deep p-dropdown.p-dropdown-custom.dropdown-excluded .p-dropdown {
+  border: 1.5px solid #FF0000 !important;
+  border-radius: 0.75rem !important;
+  box-shadow: none !important;
+}

@@ -1,76 +1,162 @@
+/* Calendar button color styles */
+:host ::ng-deep .p-calendar .p-button {
+  color: black;
+}
+
+:host-context(.dark) ::ng-deep .p-calendar .p-button {
+  color: white;
+}
+
+/* Calendar input padding to make room for icons */
+::ng-deep .p-calendar .p-inputtext {
+  padding-right: 3rem !important;
+}
+
+/* Clear icon positioning */
+::ng-deep .p-calendar .p-calendar-clear-icon {
+  right: 1.2rem !important;
+  top: 8.2px !important;
+  order: 1;
+}
+
+/* Calendar trigger icon positioning */
+::ng-deep .p-calendar .p-datepicker-trigger {
+  right: 0.5rem !important;
+  order: 2;
+}
+
+/* Light mode placeholder */
+:host ::ng-deep .p-calendar .p-inputtext::placeholder {
+  color: #6c6c6c;
+}
+
+/* Dark mode placeholder */
+:host-context(.dark) ::ng-deep .p-calendar .p-inputtext::placeholder {
+  color: #8B8B8B;
+}
+
+/* Making popup smaller - REDUCED SIZE */
 ::ng-deep .calendar-popup-small {
-  min-width: 280px !important;
-  max-width: 420px !important;
+  width: 260px !important;
+  min-width: 240px !important;
+  max-width: 280px !important;
 }
 
-::ng-deep .calendar-popup-small .p-datepicker {
-  width: 100% !important;
-  font-size: 100% !important;
+::ng-deep .calendar-popup-small .p-datepicker-calendar {
+  font-size: 0.75rem;
 }
 
-::ng-deep .calendar-popup-small .p-datepicker table td > span {
-  width: 1.8rem !important;
-  height: 1.8rem !important;
+::ng-deep .calendar-popup-small .p-datepicker-calendar td {
+  padding: 0.15rem !important;
 }
 
-::ng-deep .calendar-popup-small .p-datepicker .p-datepicker-header {
-  padding: 0.5rem !important;
+::ng-deep .calendar-popup-small .p-datepicker-calendar td span {
+  width: 1.25rem !important;
+  height: 1.25rem !important;
+  line-height: 1.25rem !important;
+  font-size: 0.7rem !important;
 }
 
-/* Option 1: Target specific classes */
-.small-calendar .p-calendar {
-  font-size: 0.875rem; /* Smaller font size */
+/* Shrink calendar icon */
+:host ::ng-deep .p-calendar .p-datepicker-trigger {
+  width: 0.9rem !important;
+  height: 0.9rem !important;
+  font-size: 0.65rem !important;
+  right: 0.3rem !important;
+  top: 0.35rem !important;
 }
 
-.small-calendar-input {
-  height: 2rem !important; /* Smaller height */
-  padding: 0.25rem 0.5rem !important; /* Smaller padding */
-  font-size: 0.875rem !important;
+/* Reduce calendar popup size - COMPACT */
+:host ::ng-deep .p-datepicker {
+  font-size: 0.7rem !important;
+  padding: 0.2rem !important;
+  min-width: auto !important;
+  width: auto !important;
 }
 
-/* Option 2: Target the calendar icon */
-.small-calendar .p-calendar .p-datepicker-trigger {
-  width: 2rem !important;
-  height: 2rem !important;
+/* Reduce padding and cell size inside popup */
+:host ::ng-deep .p-datepicker td > span {
+  padding: 0.15rem !important;
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+  font-size: 0.7rem !important;
 }
 
-/* Option 3: Adjust the calendar popup */
-.calendar-popup-small .p-datepicker {
-  width: 250px !important;
+/* Reduce header spacing */
+:host ::ng-deep .p-datepicker .p-datepicker-header {
+  padding: 0.3rem !important;
 }
 
-.calendar-popup-small .p-datepicker table td {
-  padding: 0.1rem !important;
-}
-
-.calendar-popup-small .p-datepicker table td > span {
-  width: 1.8rem !important;
-  height: 1.8rem !important;
+/* Reduce month/year dropdown sizes */
+:host ::ng-deep .p-datepicker .p-datepicker-title {
   font-size: 0.75rem !important;
 }
 
-.calendar-popup-small .p-datepicker-header {
-  padding: 0.25rem !important;
-  font-size: 0.875rem !important;
+:host ::ng-deep .p-datepicker .p-datepicker-title select {
+  font-size: 0.7rem !important;
+  padding: 0.1rem 0.3rem !important;
 }
 
-/* Option 4: Global style for all p-calendar in this component */
-:host ::ng-deep .p-calendar {
-  font-size: 0.875rem;
+/* Reduce button bar spacing */
+:host ::ng-deep .p-datepicker .p-datepicker-buttonbar {
+  padding: 0.3rem !important;
 }
 
-:host ::ng-deep .p-calendar .p-inputtext {
-  padding: 0.25rem 0.5rem;
-  height: 2rem;
-  font-size: 0.875rem;
+:host ::ng-deep .p-datepicker .p-datepicker-buttonbar .p-button {
+  font-size: 0.7rem !important;
+  padding: 0.2rem 0.5rem !important;
 }
 
-:host ::ng-deep .p-calendar .p-datepicker-trigger {
-  width: 2rem;
-  height: 2rem;
+/* Reduce today button spacing if present */
+:host ::ng-deep .p-datepicker .p-datepicker-footer {
+  padding: 0.3rem !important;
 }
 
-:host ::ng-deep .p-datepicker {
-  transform: scale(0.9);
-  transform-origin: top left;
+/* Shrink the week/day headers */
+:host ::ng-deep .p-datepicker th {
+  padding: 0.2rem !important;
+  font-size: 0.7rem !important;
+}
+
+/* Hides clear icon when dropdown has no selected value */
+::ng-deep .p-dropdown .p-dropdown-clear {
+  display: none;
+}
+
+/* Show the clear button only when a value is selected */
+::ng-deep .p-dropdown.ng-dirty.ng-valid .p-dropdown-clear {
+  display: inline-flex !important;
+}
+
+/* Dark mode dropdown styles */
+::ng-deep .dark .p-dropdown-panel {
+  background-color: #2d354d !important;
+  color: #B1B1B1 !important;
+  border-radius: 6px !important;
+  overflow: hidden;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item {
+  background-color: #2d354d !important;
+  color: #B1B1B1 !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item:hover {
+  background-color: #3a4160 !important;
+  color: #fff !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item.p-highlight {
+  background-color: #2d354d !important;
+  color: #B1B1B1 !important;
+}
+
+::ng-deep .p-datepicker .p-datepicker-title .p-datepicker-month {
+  margin-right: 1px !important;
+  font-size: smaller !important;
+}
+
+::ng-deep .p-datepicker .p-datepicker-title .p-datepicker-year {
+  margin-left: 1px !important;
+  font-size: smaller !important;
 }

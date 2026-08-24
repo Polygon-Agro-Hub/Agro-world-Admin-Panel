@@ -219,3 +219,241 @@
 ::ng-deep .p-datepicker .p-datepicker-title .p-datepicker-year {
   margin-left: 2px !important;
 }
+
+/* =============================================
+   CALENDAR INPUT FIELD
+   ============================================= */
+
+/* Base input */
+:host ::ng-deep .p-calendar .p-inputtext {
+  cursor: pointer !important;
+  padding-right: 3.5rem !important; /* room for both icons */
+}
+
+/* Light mode placeholder */
+:host ::ng-deep .p-calendar .p-inputtext::placeholder {
+  color: #6c6c6c;
+}
+
+/* Dark mode placeholder */
+:host-context(.dark) ::ng-deep .p-calendar .p-inputtext::placeholder {
+  color: #8b8b8b;
+}
+
+/* =============================================
+   CALENDAR ICONS (trigger + clear)
+   ============================================= */
+
+/* Calendar trigger icon — right side */
+:host ::ng-deep .p-calendar .p-datepicker-trigger {
+  position: absolute !important;
+  right: 0 !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 2rem !important;
+  height: 100% !important;
+  font-size: 0.85rem !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: black;
+}
+
+:host-context(.dark) ::ng-deep .p-calendar .p-datepicker-trigger {
+  color: white;
+}
+
+/* Clear icon — just left of trigger */
+:host ::ng-deep .p-calendar .p-calendar-clear-icon {
+  position: absolute !important;
+  right: 2rem !important;
+  top: 50% !important;
+  cursor: pointer !important;
+  font-size: 0.7rem !important;
+  color: #6c6c6c;
+}
+
+:host-context(.dark) ::ng-deep .p-calendar .p-calendar-clear-icon {
+  color: #9ca3af;
+}
+
+:host-context(.dark) ::ng-deep .p-calendar .p-calendar-clear-icon:hover {
+  color: #e5e7eb;
+}
+
+/* Ensure the calendar wrapper is relatively positioned */
+:host ::ng-deep .p-calendar {
+  position: relative !important;
+}
+
+/* =============================================
+   CALENDAR POPUP PANEL
+   ============================================= */
+
+::ng-deep .custom-calendar-panel {
+  width: 280px !important;
+  min-width: 260px !important;
+  font-size: 0.8rem !important;
+  padding: 0.4rem !important;
+  border-radius: 0.75rem !important;
+  overflow: hidden;
+}
+
+/* Dark mode panel */
+::ng-deep .dark .custom-calendar-panel {
+  background-color: #2d354d !important;
+  color: #d1d5db !important;
+  border-color: #4b5563 !important;
+}
+
+/* Header */
+::ng-deep .custom-calendar-panel .p-datepicker-header {
+  padding: 0.3rem 0.5rem !important;
+  font-size: 0.85rem !important;
+}
+
+::ng-deep .dark .custom-calendar-panel .p-datepicker-header {
+  background-color: #2d354d !important;
+  color: #f3f4f6 !important;
+  border-bottom-color: #4b5563 !important;
+}
+
+/* Month/year title row */
+::ng-deep .custom-calendar-panel .p-datepicker-title {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.4rem !important;
+  font-size: 0.85rem !important;
+}
+
+/* Prev/next nav buttons */
+::ng-deep .custom-calendar-panel .p-datepicker-prev,
+::ng-deep .custom-calendar-panel .p-datepicker-next {
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+}
+
+::ng-deep .dark .custom-calendar-panel .p-datepicker-prev,
+::ng-deep .dark .custom-calendar-panel .p-datepicker-next {
+  color: #d1d5db !important;
+}
+
+/* Calendar table */
+::ng-deep .custom-calendar-panel .p-datepicker-calendar {
+  font-size: 0.8rem !important;
+}
+
+::ng-deep .custom-calendar-panel .p-datepicker-calendar th {
+  font-size: 0.72rem !important;
+  padding: 0.2rem !important;
+  text-align: center;
+}
+
+::ng-deep .custom-calendar-panel .p-datepicker-calendar td {
+  padding: 0.1rem !important;
+}
+
+/* Day cells */
+::ng-deep .custom-calendar-panel .p-datepicker-calendar td > span {
+  width: 1.75rem !important;
+  height: 1.75rem !important;
+  line-height: 1.75rem !important;
+  font-size: 0.78rem !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Hover state */
+::ng-deep .custom-calendar-panel .p-datepicker-calendar td > span:hover {
+  background-color: #e5e7eb !important;
+}
+
+::ng-deep .dark .custom-calendar-panel .p-datepicker-calendar td > span:hover {
+  background-color: #4a5568 !important;
+  color: #fff !important;
+}
+
+/* Today's date */
+::ng-deep .custom-calendar-panel .p-datepicker-calendar td.p-datepicker-today > span {
+  font-weight: 700;
+  border: 1.5px solid #93c5fd !important;
+  background: transparent !important;
+}
+
+::ng-deep .dark .custom-calendar-panel .p-datepicker-calendar td.p-datepicker-today > span {
+  border-color: #60a5fa !important;
+  color: #93c5fd !important;
+}
+
+/* Selected/highlighted date */
+::ng-deep .custom-calendar-panel .p-datepicker-calendar td > span.p-highlight {
+  background-color: #3b82f6 !important;
+  color: #fff !important;
+  border: none !important;
+}
+
+/* =============================================
+   DROPDOWN (shared styles, unchanged)
+   ============================================= */
+
+::ng-deep .p-dropdown .p-dropdown-clear {
+  display: none;
+}
+
+::ng-deep .p-dropdown.ng-dirty.ng-valid .p-dropdown-clear {
+  display: inline-flex !important;
+}
+
+::ng-deep .dark .p-dropdown-panel {
+  background-color: #2d354d !important;
+  color: #b1b1b1 !important;
+  border-radius: 6px !important;
+  overflow: hidden;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item {
+  background-color: #2d354d !important;
+  color: #b1b1b1 !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item:hover {
+  background-color: #3a4160 !important;
+  color: #fff !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item.p-highlight {
+  background-color: #2d354d !important;
+  color: #b1b1b1 !important;
+}
+
+::ng-deep .dark .p-dropdown-filter {
+  border-color: #6b7280;
+  background-color: #4b5563 !important;
+  color: #f9fafb !important;
+}
+
+::ng-deep .dark .p-dropdown-filter::placeholder {
+  color: #9ca3af !important;
+}
+
+::ng-deep .dark .p-dropdown-filter-container {
+  background-color: #374151 !important;
+  border-bottom-color: #6b7280 !important;
+}
+
+::ng-deep .dark .p-dropdown-filter-icon {
+  color: #9ca3af !important;
+}
+
+::ng-deep .dark .p-dropdown-filter:focus {
+  background-color: #4b5563 !important;
+  color: #f9fafb !important;
+  border-color: #6b7280 !important;
+  outline: none;
+}
+
+::ng-deep .dark .p-dropdown-header {
+  background-color: #4b5563;
+}

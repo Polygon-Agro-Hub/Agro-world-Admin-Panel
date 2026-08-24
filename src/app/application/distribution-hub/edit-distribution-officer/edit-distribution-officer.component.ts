@@ -900,9 +900,20 @@ export class EditDistributionOfficerComponent implements OnInit {
     return isAddressValid;
   }
 
+ getSelectedCompanyName(): string {
+    if (!this.CompanyData || this.CompanyData.length === 0 || this.personalData?.companyId == null) {
+      return '';
+    }
+
+    const match = this.CompanyData.find(
+      (c: any) => +c.id === +this.personalData.companyId
+    );
+    return match ? match.companyNameEnglish : '';
+  }
+
   getAllCompanies() {
-    this.distributionHubSrv.getAllCompanyList().subscribe((res) => {
-      this.CompanyData = res;
+    this.distributionHubSrv.getAllCompanyList().subscribe((res: any) => {
+      this.CompanyData = res.companies || [];
     });
   }
 

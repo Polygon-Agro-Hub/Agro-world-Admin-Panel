@@ -1,0 +1,96 @@
+<!-- Back Button -->
+<button class="mb-5 text-textLight dark:text-textDark" (click)="goBack()">
+    <i class="fa-solid fa-arrow-left"></i>
+    Back
+</button>
+
+<!-- Card -->
+<div class="px-12 py-10 max-w-[1000px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+
+    <!-- Vegetable Image -->
+    <div class="flex justify-center mb-7">
+        <div class="w-24 h-24 rounded-full flex items-center justify-center overflow-hidden relative"
+            [style.backgroundColor]="variety.bgColor || '#f0fdf4'"
+            [style.border]="'2px solid ' + (variety.bgColor || '#bbf7d0')">
+
+            <div *ngIf="isLoading || imageLoading"
+                class="absolute inset-0 flex items-center justify-center bg-white/60 dark:bg-black/30">
+                <div class="w-7 h-7 border-[3px] border-green-200 border-t-green-500 rounded-full animate-spin"></div>
+            </div>
+
+            <img [src]="variety.imageUrl" [alt]="variety.nameEn" (load)="onImageLoad()" (error)="onImageError()"
+                [class.opacity-0]="isLoading || imageLoading"
+                class="w-full h-full object-contain p-2 transition-opacity duration-200" />
+        </div>
+    </div>
+
+    <!-- English Section -->
+    <div class="mb-2">
+        <div class="mb-4">
+            <label class="block text-[15px] font-medium text-[#534E4E] dark:text-white mb-1.5">
+                Variety Name (in English)
+            </label>
+            <p
+                class="w-full px-3.5 py-2.5 border border-gray-300 font-normal rounded-lg text-[15px] text-[#000000] bg-[#ffffff] dark:bg-gray-800 dark:text-white">
+                {{ variety.nameEn || '—' }}
+            </p>
+        </div>
+        <div class="mb-4">
+            <label class="block text-[15px] font-medium text-[#534E4E] dark:text-white mb-1.5">
+                Description (in English)
+            </label>
+            <p
+                class="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg font-normal text-[15px] text-[#000000] bg-[#ffffff] dark:bg-gray-800 dark:text-white leading-relaxed whitespace-pre-wrap">
+                {{ variety.descriptionEn || '—' }}
+            </p>
+        </div>
+    </div>
+
+    <hr class="border-[#909090] my-5" />
+
+    <!-- Sinhala Section -->
+    <div class="mb-2">
+        <div class="mb-4">
+            <label class="block text-[15px] font-medium text-[#534E4E] dark:text-white mb-1.5">
+                Variety Name (in Sinhala)
+            </label>
+            <p
+                class="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg font-normal text-[15px] text-[#000000] bg-[#ffffff] dark:bg-gray-800 dark:text-white">
+                {{ variety.nameSi || '—' }}
+            </p>
+        </div>
+        <div class="mb-4">
+            <label class="block text-[15px] font-medium text-[#534E4E] dark:text-white mb-1.5">
+                Description (in Sinhala)
+            </label>
+            <p
+                class="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-[15px] font-normal text-[#000000] bg-[#ffffff] dark:bg-gray-800 dark:text-white leading-relaxed whitespace-pre-wrap">
+                {{ variety.descriptionSi || '—' }}
+            </p>
+        </div>
+    </div>
+
+    <hr class="border-[#909090] my-5" />
+
+    <!-- Tamil Section -->
+    <div class="mb-2">
+        <div class="mb-4">
+            <label class="block text-[15px] font-medium text-[#534E4E] dark:text-white mb-1.5">
+                Variety Name (in Tamil)
+            </label>
+            <p
+                class="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-[15px] text-[#000000] font-normal bg-[#ffffff] dark:bg-gray-800 dark:text-white">
+                {{ variety.nameTa || '—' }}
+            </p>
+        </div>
+        <div class="mb-4">
+            <label class="block text-[15px] font-medium text-[#534E4E] dark:text-white mb-1.5">
+                Description (in Tamil)
+            </label>
+            <p
+                class="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-[15px] text-[#000000] bg-[#ffffff] font-normal dark:bg-gray-800 dark:text-white leading-relaxed whitespace-pre-wrap">
+                {{ variety.descriptionTa || '—' }}
+            </p>
+        </div>
+    </div>
+</div>

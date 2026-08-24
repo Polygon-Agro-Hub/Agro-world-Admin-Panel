@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;500;600;700&display=swap');
+
 .popup-overlay {
     position: fixed;
     top: 0;
@@ -118,4 +120,17 @@
   width: 1.5rem !important;
   height: 1.5rem !important;
   line-height: 1.5rem !important;
+}
+
+::ng-deep .p-dropdown .p-dropdown-label.p-placeholder {
+    color: #4A4A4A !important;
+}
+
+.sinhala-title,
+.sinhala-description {
+  font-family: 'Noto Sans Sinhala', sans-serif;
+}
+
+.sinhala-title {
+  font-weight: 700;
 }

@@ -6,7 +6,7 @@
       {{ centerDetails.regCode }} {{ centerDetails.centerName }}
     </p>
     <div
-      class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
+      class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45] mr-4"
     >
       <input
         [(ngModel)]="searchText"
@@ -60,9 +60,9 @@
   </div>
 
   <div
-    *ngIf="hasData"
-    class="min-w-max mt-8 mr-5 border-gray-100 border-[2px] rounded-lg dark:border-[#202021]"
-  >
+  *ngIf="hasData"
+  class="min-w-max mt-8 mr-5 border-gray-100 border-[1px] rounded-lg dark:border-[#202021] overflow-hidden"
+>
     <table class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap ">
       <thead
         class="pl-5 font-normal text-textLight dark:text-textDark text-center border-gray-200 dark:border-[#4B555A]"
@@ -79,7 +79,7 @@
       <tbody class="bg-white dark:bg-[#061E2C] dark:border-[#1E293B]">
         <!-- <tr
                     *ngFor="let item of priceListArr | paginate : { itemsPerPage: itemsPerPage, currentPage: page, totalItems: totalItems }; let i = index"> -->
-        <tr class="border-b border-gray-200 dark:border-[#4B555A]"
+        <tr 
           *ngFor="
             let item of cropsArr
               | paginate

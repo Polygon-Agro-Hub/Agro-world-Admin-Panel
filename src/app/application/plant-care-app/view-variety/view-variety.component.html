@@ -53,24 +53,24 @@
 
     <div *ngIf="hasData" class="overflow-x-auto">
       <table
-        class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto"
+        class="w-[75%] divide-y divide-gray-200 dark:divide-[#4B555A] table-auto"
       >
         <thead>
           <tr>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
-              Index
+              No
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Preview
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Variety
-            </th>
-            <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
-            >
-              Image
             </th>
           </tr>
         </thead>
@@ -82,14 +82,50 @@
             <td class="py-3 text-textLight dark:text-textDark text-center">
               {{ i + 1 }}
             </td>
+            <td class="px-4 py-3 text-center">
+              <div class="flex justify-center">
+                <div
+                  class="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center"
+                  [style.backgroundColor]="item.bgColor"
+                >
+                  <img
+                    *ngIf="item.image"
+                    [src]="item.image"
+                    alt="{{ item.varietyNameEnglish }}"
+                    class="w-full h-full object-cover"
+                    (error)="(item.image)"
+                  />
+                  <div
+                    *ngIf="!item.image"
+                    class="text-xs text-textLight dark:text-textDark"
+                  >
+                    No Image
+                  </div>
+                </div>
+              </div>
+            </td>
+            <!-- <td class="px-4 py-3 flex justify-center text-center text-textLight dark:text-textDark">
+              <div class="w-24 h-24 rounded-full flex items-center justify-center overflow-hidden"
+                [style.backgroundColor]="item.bgColor || '#f0fdf4'"
+                [style.border]="'2px solid ' + (item.bgColor || '#bbf7d0')"
+              >
+              <img 
+                class="profile-pic object-contain mix-blend-multiply" 
+                [src]="item.image" 
+              />
+            </div>
+            </td> -->
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.varietyNameEnglish }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              <img class="profile-pic text-center" [src]="item.image" />
-            </td>
-
-            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+              <button class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd]" (click)="viewVarity(item.id)" >
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
               <button
               *ngIf="permissionService.hasPermission('Edit varieties') ||
                   tokenService.getUserDetails().role === '1'"

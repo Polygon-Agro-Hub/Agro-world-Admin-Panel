@@ -8,10 +8,10 @@ import { CollectionCenterService } from '../../../services/collection-center/col
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { TokenService } from '../../../services/token/services/token.service';
-import { environment } from '../../../environment/environment.development';
 import Swal from 'sweetalert2';
 import { ComplaintsService } from '../../../services/complaints/complaints.service';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { environment } from '../../../environment/environment';
 
 @Component({
   selector: 'app-view-driver-complaints',
@@ -145,14 +145,9 @@ export class ViewDriverComplaintsComponent {
   }
 
 
-  fetchComplain(id: any, farmerName: string, language: string) {
-    this.isLoading = true;
-    this.distributedComplainSrv.getDistributionComplainById(id).subscribe((res) => {
-
-      this.complain = res;
-      this.isLoading = false;
-      this.showReplyPopUp(farmerName, language);
-    });
+  fetchComplain(item: any, farmerName: string, language: string) {
+    this.complain = item;
+    this.showReplyPopUp(farmerName, language);
   }
 
   showReplyPopUp(fname: string, language: string) {
@@ -175,7 +170,7 @@ export class ViewDriverComplaintsComponent {
       });
 
       this.http
-        .get<any>(`${environment.API_URL}auth/get-all-complain-category-list-super/Transport`, {
+        .get<any>(`${environment.API_URL}auth/get-all-complain-category-list-super/7`, {
           headers,
         })
         .subscribe(

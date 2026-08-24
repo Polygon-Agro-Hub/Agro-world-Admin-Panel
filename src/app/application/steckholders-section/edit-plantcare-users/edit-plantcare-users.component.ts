@@ -24,6 +24,7 @@ interface PlantCareUser {
   accHolderName: string;
   bankName: string;
   branchName: string;
+  farmerQr: string | null;
 }
 
 interface Branch {
@@ -65,6 +66,7 @@ export class EditPlantcareUsersComponent implements OnInit {
   imagePreview: string = '';
   selectedImage: File | null = null;
   isLoading = false;
+  showBankDetails = false;
   selectedBankId: number | null = null;
   itemId: number | null = null;
   branches: Branch[] = [];
@@ -198,8 +200,6 @@ export class EditPlantcareUsersComponent implements OnInit {
           value: bank.name
         }));
         this.allBranches = branches;
-        console.log('Banks loaded:', this.banks);
-        console.log('Branches loaded:', this.allBranches);
 
         if (this.itemId) {
           this.loadUserData(this.itemId);
@@ -271,6 +271,7 @@ export class EditPlantcareUsersComponent implements OnInit {
       .subscribe(
         (data) => {
           this.isLoading = false;
+          this.showBankDetails = data.farmerQr !== null;
           this.userForm.patchValue(data);
           this.imagePreview = data.profileImage;
 
@@ -290,10 +291,8 @@ export class EditPlantcareUsersComponent implements OnInit {
                 this.userForm.get('branchName')?.setValue(data.branchName);
                 this.selectedBranchId = this.branches.find((b) => b.name === data.branchName)?.ID || null;
               }
-              console.log('Branch options after load:', this.branchOptions);
             }
           }
-          console.log('Loaded user data:', data);
           this.cdr.detectChanges();
         },
         (error) => {
@@ -327,7 +326,6 @@ export class EditPlantcareUsersComponent implements OnInit {
           label: branch.name,
           value: branch.name
         }));
-        console.log('Branches for bank', selectedBankName, ':', this.branches);
         this.userForm.get('branchName')?.setValue('');
       } else {
         this.branches = [];
@@ -559,8 +557,6 @@ export class EditPlantcareUsersComponent implements OnInit {
 
 
   onSubmitCreate() {
-    // Log form values to verify
-    console.log('userForm values before submit:', this.userForm.value);
 
     const missingFields: string[] = [];
 
@@ -763,8 +759,6 @@ export class EditPlantcareUsersComponent implements OnInit {
     });
   }
   onSubmit() {
-    // Log form values to verify
-    console.log('userForm values before submit:', this.userForm.value);
 
     const missingFields: string[] = [];
 
@@ -809,24 +803,26 @@ export class EditPlantcareUsersComponent implements OnInit {
       missingFields.push('Language is Required');
     }
 
-    if (this.userForm.get('accHolderName')?.invalid) {
-      missingFields.push("Account Holder's Name is Required");
-    }
-
-    if (this.userForm.get('accNumber')?.invalid) {
-      if (this.userForm.get('accNumber')?.errors?.['required']) {
-        missingFields.push('Account Number is Required');
-      } else if (this.userForm.get('accNumber')?.errors?.['pattern']) {
-        missingFields.push('Account Number - Must contain only numbers');
+    if (this.showBankDetails) {
+      if (this.userForm.get('accHolderName')?.invalid) {
+        missingFields.push("Account Holder's Name is Required");
       }
-    }
 
-    if (this.userForm.get('bankName')?.invalid) {
-      missingFields.push('Bank Name is Required');
-    }
+      if (this.userForm.get('accNumber')?.invalid) {
+        if (this.userForm.get('accNumber')?.errors?.['required']) {
+          missingFields.push('Account Number is Required');
+        } else if (this.userForm.get('accNumber')?.errors?.['pattern']) {
+          missingFields.push('Account Number - Must contain only numbers');
+        }
+      }
 
-    if (this.userForm.get('branchName')?.invalid) {
-      missingFields.push('Branch Name is Required');
+      if (this.userForm.get('bankName')?.invalid) {
+        missingFields.push('Bank Name is Required');
+      }
+
+      if (this.userForm.get('branchName')?.invalid) {
+        missingFields.push('Branch Name is Required');
+      }
     }
 
     // Validate image if selected

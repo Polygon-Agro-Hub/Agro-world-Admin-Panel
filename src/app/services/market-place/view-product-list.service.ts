@@ -1,11 +1,11 @@
-import { Injectable } from "@angular/core";
-import { environment } from "../../environment/environment";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Observable } from "rxjs";
-import { TokenService } from "../token/services/token.service";
+import { Injectable } from '@angular/core';
+import { environment } from '../../environment/environment';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { TokenService } from '../token/services/token.service';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class ViewProductListService {
   private apiUrl = `${environment.API_URL}`;
@@ -17,36 +17,60 @@ export class ViewProductListService {
   ) {}
 
   getProductList(
-  page: number,
-  limit: number,
-  search: string = "",
-  displayTypeValue: string = "",
-  categoryValue: string = "",
-  discountFilter: string = "" // Add new parameter
-): Observable<any> {
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${this.token}`,
-  });
+    page: number,
+    limit: number,
+    search: string = '',
+    displayTypeValue: string = '',
+    categoryValue: string = '',
+    discountFilter: string = '',
+    productTypeId?: number,
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
 
-  let url = `${this.apiUrl}market-place/get-market-items?page=${page}&limit=${limit}`;
-  
-  if (search) {
-    url += `&search=${encodeURIComponent(search)}`;
+    let url = `${this.apiUrl}market-place/get-market-items?page=${page}&limit=${limit}`;
+
+    if (search) {
+      url += `&search=${encodeURIComponent(search)}`;
+    }
+
+    if (displayTypeValue) {
+      url += `&displayTypeValue=${encodeURIComponent(displayTypeValue)}`;
+    }
+
+    if (categoryValue) {
+      url += `&categoryValue=${encodeURIComponent(categoryValue)}`;
+    }
+
+    if (discountFilter) {
+      url += `&discountFilter=${encodeURIComponent(discountFilter)}`;
+    }
+
+    if (productTypeId) {
+      url += `&productTypeId=${productTypeId}`;
+    }
+
+    return this.http.get<any>(url, { headers });
   }
 
-  if (displayTypeValue) {
-    url += `&displayTypeValue=${encodeURIComponent(displayTypeValue)}`;
+  fetchProductTypes(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.get<any>(`${this.apiUrl}market-place/get-product-type`, {
+      headers,
+    });
   }
 
-  if (categoryValue) {
-    url += `&categoryValue=${encodeURIComponent(categoryValue)}`;
+  toggleProductStatus(id: number, isEnable: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.patch<any>(
+      `${this.apiUrl}market-place/toggle-status/${id}`,
+      { isEnable },
+      { headers },
+    );
   }
-  
-  // Add discount filter parameter
-  if (discountFilter) {
-    url += `&discountFilter=${encodeURIComponent(discountFilter)}`;
-  }
-  
-  return this.http.get<any>(url, { headers });
-}
 }

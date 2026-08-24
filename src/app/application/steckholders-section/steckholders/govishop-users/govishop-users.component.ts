@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 import { Router, ActivatedRoute } from '@angular/router';
 import { StakeholderService } from '../../../../services/stakeholder/stakeholder.service';
+import { PermissionService } from '../../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../../services/token/services/token.service';
 
 export interface GoviShopUser {
   id: string;
@@ -42,7 +44,9 @@ export class GovishopUsersComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private goviShopService: StakeholderService
+    private goviShopService: StakeholderService,
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
   ) {}
 
   ngOnInit(): void {
@@ -50,10 +54,6 @@ export class GovishopUsersComponent implements OnInit {
       this.shopId = params['shopId'] || '';
       this.supplierName = params['shopName'] || '';
       this.role = params['role'] || 'Manager';
-      
-      console.log('Shop ID:', this.shopId);
-      console.log('Shop Name:', this.supplierName);
-      console.log('Role:', this.role);
       
       if (this.shopId) {
         this.loadUsers();
@@ -63,20 +63,11 @@ export class GovishopUsersComponent implements OnInit {
 
   loadUsers(): void {
     this.isLoading = true;
-    
-    console.log('Fetching users with params:', {
-      shopId: this.shopId,
-      search: this.searchTerm || undefined,
-      role: this.role
-    });
-    
     this.goviShopService.getUsers(
       this.searchTerm || undefined,
       this.role
     ).subscribe({
       next: (response: any) => {
-        console.log('API Response:', response);
-        
         if (response && response.success === true && Array.isArray(response.data)) {
           this.users = response.data.map((item: any) => ({
             id: item.id,
@@ -85,8 +76,8 @@ export class GovishopUsersComponent implements OnInit {
             branch: item.branchName || 'N/A',
             phoneNumber: item.phone,
             email: item.email,
-            lastUpdatedBy: null,
-            lastUpdatedAt: null,
+            lastUpdatedBy: item.updatedBy,
+            lastUpdatedAt: item.updatedAt,
             joinedAt: new Date(item.createdAt)
           }));
         } else if (response && Array.isArray(response.data)) {
@@ -97,9 +88,10 @@ export class GovishopUsersComponent implements OnInit {
             branch: item.branchName || 'N/A',
             phoneNumber: item.phone,
             email: item.email,
-            lastUpdatedBy: null,
-            lastUpdatedAt: null,
+            lastUpdatedBy: item.updatedBy,
+            lastUpdatedAt: item.updatedAt,
             joinedAt: new Date(item.createdAt)
+
           }));
         } else if (Array.isArray(response)) {
           this.users = response.map((item: any) => ({
@@ -109,15 +101,14 @@ export class GovishopUsersComponent implements OnInit {
             branch: item.branchName || 'N/A',
             phoneNumber: item.phone,
             email: item.email,
-            lastUpdatedBy: null,
-            lastUpdatedAt: null,
+            lastUpdatedBy: item.updatedBy,
+            lastUpdatedAt: item.updatedAt,
             joinedAt: new Date(item.createdAt)
           }));
         } else {
           this.users = [];
         }
-        
-        console.log('Mapped users:', this.users);
+      
         this.isLoading = false;
       },
       error: (error) => {

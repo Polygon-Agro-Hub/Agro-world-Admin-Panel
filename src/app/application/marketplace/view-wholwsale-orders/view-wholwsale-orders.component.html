@@ -5,243 +5,236 @@
   Back
 </button>
 
-<div
-  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
-  <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
-    <div class="flex justify-between items-center mb-8">
-      <div class="flex items-center">
-        <h2 class="text-2xl font-normal text-[#292929] dark:text-textDark">
-          All Orders ({{ this.totalItems }})
-        </h2>
-      </div>
-      <div class="flex items-center">
-        <!-- <div class="mr-5">
-          <p-calendar
-            [(ngModel)]="selectDate"
-            [showIcon]="true"
-            [showClear]="true"
-            dateFormat="yy-mm-dd"
-            placeholder="Date"
-            (onSelect)="onDateSelect()"
-            (ngModelChange)="onDateChange($event)"
-            [styleClass]="
-              isDateSelected
-                ? 'w-48 border border-2 text-center rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]'
-                : 'w-32 border border-2 text-center rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]'
-            "
-          ></p-calendar>
-        </div> -->
+<!-- Card wrapper is now a normal block, NOT scrollable -->
+<div>
+  <div class="bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg overflow-hidden">
+    <div class="p-4 md:p-10">
 
-        <div class="mr-5">
-          <p-calendar id="toDate" [(ngModel)]="selectDate" (onSelect)="dateFilter()" (onClear)="onDateClear()"
-            placeholder="Ordered Date" [showIcon]="true" [showClear]="true" [showButtonBar]="true" iconDisplay="input"
-            [style]="{ width: '16rem', height: '2rem' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
-                           [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
-                           [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
-                           [&_.p-datepicker-header]:dark:bg-[#2d354d] 
-                           [&_.p-datepicker-header]:dark:text-white
-                           [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
-                           
-                           [&_.p-button:hover]:dark:bg-[#6b7280]"
-            inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
-            [appendTo]="'body'" />
+      <!-- Header row: stays fixed, no horizontal scroll -->
+      <div class="flex justify-between items-center mb-8 flex-wrap gap-4">
+        <div class="flex items-center">
+          <h2 class="text-2xl font-normal text-textLight dark:text-textDark whitespace-nowrap">
+            All Orders ({{ totalItems === 0 ? '0' : totalItems < 10 ? '0' + totalItems : totalItems }}) </h2>
         </div>
 
-        <div class="mr-5">
-          <p-dropdown
-            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="methodOptions" [checkmark]="true" optionLabel="label" optionValue="value"
-            [showClear]="!!selectMethod" placeholder="Method" [(ngModel)]="selectMethod"
-            (onChange)="applyMethodFilters()"></p-dropdown>
-        </div>
+        <div class="flex items-center gap-3 flex-wrap">
+          <!-- Date Filter -->
+          <div>
+            <p-calendar id="toDate" [(ngModel)]="selectDate" (onSelect)="dateFilter()" (onClear)="onDateClear()"
+              placeholder="Ordered Date" [showIcon]="true" [showClear]="true" iconDisplay="input"
+              styleClass="calendar-compact dark-calendar"
+              [style]="{ width: '145px' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+                             [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+                             [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+                             [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+                             [&_.p-datepicker-header]:dark:text-white
+                             [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+                             [&_.p-button:hover]:dark:bg-[#6b7280]"
+              inputStyleClass="text-[16px] h-8 rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-2 border-[#E5E5E5] dark:border-[#AFAFAF] placeholder:text-[#9CA3AF] dark:placeholder:text-[#9CA3AF] focus:outline-none focus:border-blue-500 dark:focus:border-blue-400 cursor-pointer"
+              [inputStyle]="{ width: '145px', padding: '0.5rem 2.5rem 0.5rem 0.75rem', fontSize: '0.875rem' }"
+              [appendTo]="'body'" />
+          </div>
 
-        <div class="mr-5">
-          <p-dropdown
-            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="statusOptions" [checkmark]="true" optionLabel="label" optionValue="value"
-            [showClear]="!!selectStatus" placeholder="Status" [(ngModel)]="selectStatus"
-            (onChange)="applyStatusFilters()"></p-dropdown>
-        </div>
+          <!-- Status Dropdown -->
+          <div>
+            <p-dropdown
+              styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#D1D5DB] dark:border-[#AFAFAF]"
+              [options]="statusOptions" [checkmark]="false" optionLabel="label" optionValue="value"
+              [showClear]="!!selectStatus" placeholder="Status" [(ngModel)]="selectStatus"
+              (onChange)="applyStatusFilters()"></p-dropdown>
+          </div>
 
-        <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
-          <input type="text" placeholder="Search By Invoice No, Customer Name"
-            class="bg-transparent outline-none w-full text-textLight dark:text-textDark" [(ngModel)]="searchItem"
-            (keydown.enter)="searchReailOrders()" />
-          <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-            (click)="searchReailOrders()">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
-            </svg>
-          </button>
-          <button type="button" (click)="clearSearch()" class="text-gray-500 hover:text-gray-700 focus:outline-none">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+          <!-- Method Dropdown -->
+          <div>
+            <p-dropdown
+              styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#D1D5DB] dark:border-[#AFAFAF]"
+              [options]="methodOptions" [checkmark]="false" optionLabel="label" optionValue="value"
+              [showClear]="!!selectMethod" placeholder="Method" [(ngModel)]="selectMethod"
+              (onChange)="applyMethodFilters()"></p-dropdown>
+          </div>
+
+          
+
+          <!-- Search Bar -->
+          <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96 relative group">
+            <input type="text" placeholder="Search By Invoice No, Customer Name"
+              class="bg-transparent outline-none w-full dark:text-textDark text-gray-600" [(ngModel)]="searchItem"
+              (keydown.enter)="searchReailOrders()" />
+            <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+              (click)="searchReailOrders()">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
+              </svg>
+            </button>
+            <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none" (click)="clearSearch()">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="overflow-x-auto">
-      <table class="min-w-full divide-y divide-gray-200 table-auto" *ngIf="hasData">
-        <thead>
-          <tr>
-            <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-left">
-              NO
-            </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left text-nowrap">
-              INVOICE NO
-            </th>
-            <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-left">
-              ORDERED DATE
-            </th>
-            <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-left">
-              CUSTOMER NAME
-            </th>
-            <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-left">
-              METHOD
-            </th>
+      <!-- / Header row -->
 
-            <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
-              AMOUNT
-            </th>
-            <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
-              STATUS
-            </th>
-            <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center"
-              *ngIf="permissionService.hasPermission('Download wholesale invoice') || tokenService.getUserDetails().role === '1'">
-              PRE-INVOICE
-            </th>
-            <th class="whitespace-nowrap px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center"
-              *ngIf="permissionService.hasPermission('Download retail invoice') || tokenService.getUserDetails().role === '1'">
-              POST-INVOICE
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="
-              let item of retailordersArr
-                | paginate
-                  : {
-                      itemsPerPage: itemsPerPage,
-                      currentPage: page,
-                      totalItems: totalItems
-                    };
-              let i = index
-            ">
-            <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
-              {{
-              ((page - 1) * itemsPerPage + i + 1).toString().padStart(3, "0")
-              }}
-            </td>
+      <!-- No Data -->
+      <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6">
+        <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
+        <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+      </div>
 
-            <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
-              {{ item.invNo }}
-            </td>
+      <!-- Table: ONLY this scrolls horizontally -->
+      <div *ngIf="hasData" class="w-full overflow-x-auto">
+        <div class="min-w-[1300px]">
+          <table class="w-full divide-y divide-gray-200 dark:divide-[#4B555A]">
+            <thead>
+              <tr>
+                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">NO</th>
+                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">INVOICE
+                  NO</th>
+                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">ORDERED
+                  DATE</th>
+                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">CUSTOMER
+                  NAME</th>
+                  <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">COMPANY
+                  NAME</th>
+                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">METHOD
+                </th>
+                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">PAYMENT METHOD</th>
+                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">AMOUNT
+                </th>
+                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">STATUS
+                </th>
+                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap"
+                  *ngIf="permissionService.hasPermission('Download wholesale invoice') || tokenService.getUserDetails().role === '1'">
+                  PRE-INVOICE
+                </th>
+                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap"
+                  *ngIf="permissionService.hasPermission('Download retail post invoice') || tokenService.getUserDetails().role === '1'">
+                  POST-INVOICE
+                </th>
+                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">QR
+                  CODE</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="
+                  let item of retailordersArr
+                    | paginate: { itemsPerPage: itemsPerPage, currentPage: page, totalItems: totalItems };
+                  let i = index" class="border-b border-gray-200 dark:border-[#4B555A]">
 
-            <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
-              {{ item.orderdDate | date : "d MMM, y h:mma" }}
-            </td>
+                <td class="px-3 py-3 text-left text-[#000000] dark:text-textDark whitespace-nowrap">
+                  {{ ((page - 1) * itemsPerPage + i + 1).toString().padStart(3, '0') }}
+                </td>
 
-            <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
-              {{ item.customerName }}
-            </td>
-            <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
-              {{ item.method }}
-            </td>
-            <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
-              {{ item.amount | number : "1.2-2" }}
-            </td>
+                <td class="px-3 py-3 text-left text-[#000000] dark:text-textDark whitespace-nowrap">
+                  {{ item.invNo }}
+                </td>
 
-            <!-- <div>
-                <span
-                  [ngClass]="{
-                    'font-bold px-3 py-1 text-sm bg-[#F8FFA6] text-[#A8A100] rounded-lg': item.status === 'Ordered',
-                    'font-bold px-3 py-1 text-sm bg-green-100 text-[#308233] rounded-lg': item.status === 'Delivered',
-                    'font-bold px-3 py-1 text-sm bg-red-100 text-[#D16D6A] rounded-lg': item.status === 'Assigned',
-                    'font-bold px-3 py-1 text-sm bg-red-100 text-[#D16D6A] rounded-lg': item.status === 'Picked Up',
-                    'font-bold px-3 py-1 text-sm bg-red-100 text-[#D16D6A] rounded-lg': item.status === 'Processing'
-                  }"
-                  class="inline-block font-medium rounded-md px-4 py-2 text-xs text-center w-32"
-                >
-                  {{ item.status }}
-                </span>
-              </div> -->
+                <td class="px-3 py-3 text-left text-[#000000] dark:text-textDark whitespace-nowrap">
+                  {{ item.orderdDate | date : "d MMM, y h:mma" }}
+                </td>
 
+                <td class="px-3 py-3 text-left text-[#000000] dark:text-textDark whitespace-nowrap">
+                  {{ item.customerName }}
+                </td>
 
-            <td class="px-4 py-3 text-center dark:text-textDark">
-              <!-- <span class="inline-block min-w-24 font-normal rounded-2xl border px-2 py-1" [ngClass]="{
-                  'text-[#A8A100] bg-[#F8FFA6] border-[#F8FFA6]': item.status === 'Assigned' || item.status === 'Ordered',
-                  'text-[#308233] bg-[#BBFFC6] border-[#BBFFC6]':
-                    item.status === 'Delivered',
-                  'text-[#80118A] bg-[#FCD4FF] border-[#FCD4FF]': item.status === 'Out For Delivery',
-                  'text-[#BBFFC6] bg-[#BBFFC6] border-[#308233]':
-                    item.status === 'Picked Up',
-                  'text-[#3B82F6] bg-[#CFE1FF] border-[#CFE1FF]':
-                    item.status === 'Processing',
-                  'text-[#D17A00] bg-[#FFEDCF] border-[#FFEDCF]':
-                    item.status === 'On the way',
-                  'text-[#FF0004] bg-[#FFDFDF] border-[#FFDFDF]':
-                    item.status === 'Failed', 
-                  'text-[#5C5C5C] bg-[#DFDFDF] border-[#DFDFDF]':
-                    item.status === 'Cancelled',
-                  'text-[#00818A] bg-[#ACFBFF]':
-                    item.status === 'Ready to Pickup'
-                    
-                }"> -->
-              <span class="inline-block min-w-36 text-center font-normal rounded-2xl border px-3 py-1 truncate"
-                [ngClass]="{
-                'text-[#A8A100] bg-[#F8FFA6] border-[#F8FFA6]': item.status === 'Assigned' || item.status === 'Ordered',
-                'text-[#308233] bg-[#BBFFC6] border-[#BBFFC6]': item.status === 'Delivered' ||  item.status === 'Picked up',
-                'text-[#80118A] bg-[#FCD4FF] border-[#FCD4FF]': item.status === 'Out For Delivery',
-                'text-[#3B82F6] bg-[#CFE1FF] border-[#CFE1FF]': item.status === 'Processing',
-                'text-[#FF0004] bg-[#FFDFDF] border-[#FFDFDF]': item.status === 'Failed',
-                'text-[#5C5C5C] bg-[#DFDFDF] border-[#DFDFDF]': item.status === 'Cancelled',
-                'text-[#7E8700] bg-[#F8FEA5] border-[#F8FEA5]': item.status === 'Collected',
-                'text-[#D17A00] bg-[#FFEDCF] ': item.status === 'Hold' || item.status === 'On the way',
-                'text-[#00818A] bg-[#ACFBFF] border-[#ACFBFF]': item.status === 'Ready to Pickup',
-                'text-[#FF1100] bg-[#FFDCDA]': item.status === 'Return Received' || item.status === 'Return'
-              }">
-                {{ item.status === 'Ordered' ? 'Assigned' : item.status }}
-              </span>
-            </td>
+                <td class="px-3 py-3 text-left text-[#000000] dark:text-textDark whitespace-nowrap">
+                  {{ item.companyName }}
+                </td>
 
-            <td class="px-4 py-3 text-center dark:text-textDark"
-              *ngIf="permissionService.hasPermission('Download wholesale invoice') || tokenService.getUserDetails().role === '1'">
-              <button class="text-textLight dark:text-textDark gap-1"
-                (click)="downloadInvoice(item.orderId, item.invNo)">
-                <i class="fa-solid fa-file-lines text-2xl"></i>
-              </button>
-            </td>
-            <td class="px-4 py-3 text-center dark:text-textDark"
-              *ngIf="permissionService.hasPermission('Download retail post invoice') || tokenService.getUserDetails().role === '1'">
+                <td class="px-3 py-3 text-left text-[#000000] dark:text-textDark whitespace-nowrap">
+                  {{ item.method }}
+                </td>
 
-              <div class="relative inline-block">
-                <button class="text-textLight dark:text-textDark gap-1"
-                  [class.opacity-50]="!isPostInvoiceEnabled(item.status)"
-                  [class.cursor-not-allowed]="!isPostInvoiceEnabled(item.status)"
-                  [class.cursor-pointer]="isPostInvoiceEnabled(item.status)"
-                  [disabled]="!isPostInvoiceEnabled(item.status)"
-                  (click)="isPostInvoiceEnabled(item.status) ? downloadPostInvoice(item.orderId, item.invNo) : null">
-                  <i class="fa-solid fa-file-lines text-2xl"></i>
-                </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div *ngIf="hasData" class="dark:bg-[#262f45]">
-      <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
-        [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
-        [screenReaderCurrentLabel]="'Youre on page'">
-      </pagination-controls>
-    </div>
-    <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6 ">
-      <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
-      <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+                <td class="px-3 py-3 text-center">
+  <div class="flex items-center justify-left gap-2 whitespace-nowrap">
+    <!-- Credit Balance portion -->
+    <span *ngIf="item.creditPaid > 0"
+      class="inline-flex flex-col items-center rounded-full min-w-36 py-1 leading-tight bg-[#FFEDCF] font-normal">
+      <span class="text-[#D17A00]">Credit Balance</span>
+      <span class="text-black">Rs. {{ item.creditPaid | number : '1.2-2' }}</span>
+    </span>
+
+    <!-- Cash/Card portion -->
+    <span *ngIf="item.paymentMethod"
+      class="inline-flex flex-col items-center rounded-full min-w-36 py-1 leading-tight"
+      [ngClass]="{
+        'bg-[#BBFFC6]': item.paymentMethod === 'Cash',
+        'bg-[#CFE1FF]': item.paymentMethod === 'Card'
+      }">
+      <span [ngClass]="{
+        'text-[#308233]': item.paymentMethod === 'Cash',
+        'text-[#3B82F6]': item.paymentMethod === 'Card'
+      }">{{ item.paymentMethod }}</span>
+      <span class="font-normal text-black">Rs. {{ item.moneyPaid | number : '1.2-2' }}</span>
+    </span>
+  </div>
+</td>
+
+                <td class="px-3 py-3 text-center text-[#000000] dark:text-textDark whitespace-nowrap">
+                  {{ item.amount | number : "1.2-2" }}
+                </td>
+
+                <td class="px-3 py-3 text-center dark:text-textDark whitespace-nowrap">
+                  <span class="inline-block min-w-36 text-center font-normal rounded-2xl border px-3 py-1 truncate"
+                    [ngClass]="{
+                      'text-[#A8A100] bg-[#F8FFA6] border-[#F8FFA6]': item.status === 'Assigned' || item.status === 'Ordered',
+                      'text-[#308233] bg-[#BBFFC6] border-[#BBFFC6]': item.status === 'Delivered' || item.status === 'Picked up',
+                      'text-[#80118A] bg-[#FCD4FF] border-[#FCD4FF]': item.status === 'Out For Delivery',
+                      'text-[#3B82F6] bg-[#CFE1FF] border-[#CFE1FF]': item.status === 'Processing',
+                      'text-[#FF0004] bg-[#FFDFDF] border-[#FFDFDF]': item.status === 'Failed',
+                      'text-[#5C5C5C] bg-[#DFDFDF] border-[#DFDFDF]': item.status === 'Cancelled',
+                      'text-[#7E8700] bg-[#F8FEA5] border-[#DFDFDF]': item.status === 'Collected',
+                      'text-[#D17A00] bg-[#FFEDCF] ': item.status === 'Hold' || item.status === 'On the way',
+                      'text-[#00818A] bg-[#ACFBFF] border-[#ACFBFF]': item.status === 'Ready to Pickup',
+                      'text-[#FF1100] bg-[#FFDCDA]': item.status === 'Return Received' || item.status === 'Return'
+                    }">
+                    {{ item.status === 'Ordered' ? 'Assigned' : item.status }}
+                  </span>
+                </td>
+
+                <td class="px-3 py-3 text-center dark:text-textDark whitespace-nowrap"
+                  *ngIf="permissionService.hasPermission('Download wholesale invoice') || tokenService.getUserDetails().role === '1'">
+                  <button class="text-textLight dark:text-textDark gap-1"
+                    (click)="downloadInvoice(item.orderId, item.invNo)">
+                    <i class="fa-solid fa-file-lines text-2xl"></i>
+                  </button>
+                </td>
+
+                <td class="px-3 py-3 text-center dark:text-textDark whitespace-nowrap"
+                  *ngIf="permissionService.hasPermission('Download retail post invoice') || tokenService.getUserDetails().role === '1'">
+                  <div class="relative inline-block">
+                    <button class="text-textLight dark:text-textDark gap-1"
+                      [class.opacity-50]="!isPostInvoiceEnabled(item.status)"
+                      [class.cursor-not-allowed]="!isPostInvoiceEnabled(item.status)"
+                      [class.cursor-pointer]="isPostInvoiceEnabled(item.status)"
+                      [disabled]="!isPostInvoiceEnabled(item.status)"
+                      (click)="isPostInvoiceEnabled(item.status) ? downloadPostInvoice(item.orderId, item.invNo) : null">
+                      <i class="fa-solid fa-file-lines text-2xl"></i>
+                    </button>
+                  </div>
+                </td>
+
+                <td class="px-3 py-3 text-center cursor-pointer whitespace-nowrap">
+                  <i class="fa-solid fa-download text-2xl text-blue-500"
+                    (click)="downloadQRCode(item.qrCode, item.invNo)"></i>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="dark:bg-[#262f45] mt-4">
+          <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
+            [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
+            [screenReaderCurrentLabel]="'Youre on page'">
+          </pagination-controls>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>

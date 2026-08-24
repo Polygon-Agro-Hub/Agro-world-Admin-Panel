@@ -127,9 +127,9 @@ export class EditCertificateDetailsComponent implements OnInit {
         '',
         [
           Validators.required,
-          Validators.min(0),
-          Validators.max(100),
-          Validators.pattern(/^\d*\.?\d*$/),
+          Validators.min(1),
+          Validators.max(99),
+          Validators.pattern(/^\d+$/),
         ],
       ],
       scope: ['', Validators.required],
@@ -876,5 +876,49 @@ export class EditCertificateDetailsComponent implements OnInit {
 
     // Prevent any other key
     event.preventDefault();
+  }
+
+  allowCommissionInput(event: KeyboardEvent): void {
+    const charCode = event.key;
+    const input = event.target as HTMLInputElement;
+    const currentValue = input.value;
+
+    if (['Backspace', 'Delete', 'Tab', 'Escape', 'Enter'].includes(charCode)) {
+      return;
+    }
+
+    if (
+      event.ctrlKey &&
+      ['a', 'c', 'v', 'x'].includes(charCode.toLowerCase())
+    ) {
+      return;
+    }
+
+    if (charCode === '-' || charCode === '.') {
+      event.preventDefault();
+      return;
+    }
+
+    if (charCode < '0' || charCode > '9') {
+      event.preventDefault();
+      return;
+    } 
+
+    const selectionStart = input.selectionStart ?? currentValue.length;
+    const selectionEnd = input.selectionEnd ?? currentValue.length;
+    const proposedValue =
+      currentValue.substring(0, selectionStart) +
+      charCode +
+      currentValue.substring(selectionEnd);
+
+    if (proposedValue.length > 2) {
+      event.preventDefault();
+      return;
+    }
+
+    const numericValue = parseInt(proposedValue, 10);
+    if (!isNaN(numericValue) && numericValue > 99) {
+      event.preventDefault();
+    }
   }
 }

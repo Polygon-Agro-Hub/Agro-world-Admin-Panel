@@ -39,6 +39,7 @@ interface ProductTypes {
 
 interface MarketplaceItem {
   id: number;
+  productTypeId: number;
   displayName: string;
   normalPrice: number;
   discountedPrice: number;
@@ -49,6 +50,8 @@ interface MarketplaceItem {
   startValue: string;
   unitType: string;
   varietyId: number;
+  isPreferred: boolean;
+  isDisable: boolean;
 }
 
 interface PackageItem {
@@ -130,7 +133,7 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
         this.router.navigate(['/procurement/define-packages'], {
           queryParams: { tab },
         });
-        }
+      }
       // If user clicks "No" or dismisses, the modal will automatically close
     });
   }
@@ -181,6 +184,9 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
           normalPrice: item.normalPrice,
           discountedPrice: item.discountedPrice,
           isExcluded: item.isExcluded,
+          isDisable: item.isDisable,
+          isPreferred: item.isPreferred,
+          productTypeId: item.productTypeId,
 
         }));
         if (callback) callback();
@@ -206,7 +212,8 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
         this.additionalItems = response.additionalItems;
         this.excludeItemsArr = response.excludeList;
         this.excludedItemsCount = response.excludeList.length;
-        this.categories = response.category;
+        // this.categories = response.category;
+        this.categories = response.category.filter((cat: any) => cat.isValid === 1);
         this.additionalItemsCount = response.additionalItems.length || 0;
 
         // ✅ Reset totals
@@ -219,11 +226,17 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
           // ✅ Sum package's productPrice for totalPackagePrice
           this.totalPackagePrice += order.productPrice ?? 0;
 
+          // Sort items A→Z by product type short code
+          order.items.sort((a, b) =>
+            (a.productTypeShortCode || '').localeCompare(b.productTypeShortCode || '')
+          );
+
           order.items.forEach(item => {
             const selectedProduct = this.marketplaceItems.find(
               product => +product.id === +item.productId
             );
             item.isExcluded = selectedProduct?.isExcluded ?? false;
+            item.isDisable = selectedProduct?.isDisable ?? true;
 
             const qty = item.qty ?? 0;
             const discountedPrice = selectedProduct?.discountedPrice ?? 0;
@@ -259,9 +272,11 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
       item.price = price * qty;
 
       item.isExcluded = selectedProduct.isExcluded;
+      item.isDisable = selectedProduct.isDisable;
     } else {
       item.price = 0;
       item.isExcluded = false; // fallback
+      item.isDisable = false;
     }
 
     this.recalculatePackageTotal();
@@ -395,11 +410,30 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
       });
     });
 
+    const hasDisbledProduct = this.orderdetailsArr.some((pkg, pkgIndex) => {
+      return pkg.items.some((item, itemIndex) => {
+        
+        return item.isDisable === true;
+      });
+    });
+
     if (hasInvalidProduct) {
       this.loading = false;
       Swal.fire({
         title: 'Missing or Invalid Information',
         text: 'Product & Quantity are missing.',
+        icon: 'warning',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        }
+      });
+      return;
+    } else if (hasDisbledProduct) {
+      this.loading = false;
+      Swal.fire({
+        title: 'Disabled Product Selected',
+        text: 'Please, do not select disabled products.',
         icon: 'warning',
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
@@ -559,6 +593,8 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
 
   OpenAddNewItemPopUp(id: number) {
     this.selectPackageId = id;
+    this.selectCategoryId = '';
+    this.newItem = new OrderItem();  
     this.isNewAddPopUp = true;
   }
 
@@ -592,9 +628,14 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
       this.newItem.qty = 0;
     }
 
+    const selectedProduct = this.marketplaceItems.find(
+    product => product.id === this.newItem.productId
+  );
+
     this.newItem.productTypeId = Number(this.selectCategoryId);
     this.newItem.productName = selectedCategory.typeName;
     this.newItem.productTypeShortCode = selectedCategory.shortCode;
+    this.newItem.isDisable = selectedProduct?.isDisable ?? false;
 
     const existingItemIndex = selectedOrderDetail.items.findIndex(
       item => item.productId === this.newItem.productId &&
@@ -608,6 +649,7 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
     }
 
     this.newItem = new OrderItem();
+    this.selectCategoryId = ''; 
 
     selectedOrderDetail.items.sort((a, b) => a.productTypeId - b.productTypeId);
     this.isNewAddPopUp = false;
@@ -618,6 +660,12 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
     if (item.qty < 0) {
       item.qty = 0;
     }
+
+    // Ensure max 2 decimal places, even from paste or spinner arrows
+    if (item.qty !== null && item.qty !== undefined) {
+      item.qty = Math.round(item.qty * 100) / 100;
+    }
+
     this.calculatePrice(item);
   }
 
@@ -694,6 +742,41 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
     this.closeAddNewItemPopUp(); // Close the popup
   }
 
+  filterMarketItemByTypeId(typeId: number): MarketplaceItem[] {
+    const filteredItems = this.marketplaceItems.filter(item => item.productTypeId === typeId);
+
+    const preferred = filteredItems
+      .filter(item => item.isPreferred && !item.isExcluded)
+      .sort((a, b) => a.displayName.localeCompare(b.displayName));
+
+    const remaining = filteredItems
+      .filter(item => !item.isPreferred && !item.isExcluded)
+      .sort((a, b) => a.displayName.localeCompare(b.displayName));
+
+    const excluded = filteredItems
+      .filter(item => item.isExcluded)
+      .sort((a, b) => a.displayName.localeCompare(b.displayName));
+
+    return [...preferred, ...remaining, ...excluded];
+  }
+
+  restrictDecimals(item: any, event: Event) {
+    const input = event.target as HTMLInputElement;
+    let value = input.value;
+
+    const regex = /^\d*\.?\d{0,2}$/;
+
+    if (!regex.test(value)) {
+      const parts = value.split('.');
+      if (parts.length > 1) {
+        value = parts[0] + '.' + parts[1].slice(0, 2);
+      }
+
+      input.value = value;
+    }
+
+    item.qty = value === '' ? null : Number(value);
+  }
 
 }
 
@@ -721,6 +804,7 @@ class OrderItem {
   qty!: number;
   price!: number;
   isExcluded: boolean = false;
+  isDisable: boolean = false;
 }
 
 class ExcludeItems {

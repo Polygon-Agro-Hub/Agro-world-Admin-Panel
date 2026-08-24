@@ -207,7 +207,7 @@ export class CreateSalesAgentsComponent implements OnInit {
     event.preventDefault();
     const fileInput = document.getElementById('imageUpload');
     fileInput?.click();
-    console.log('file input triggered');
+    
   }
 
   onFileSelected(event: any): void {
@@ -233,14 +233,14 @@ export class CreateSalesAgentsComponent implements OnInit {
         this.selectedImage = e.target.result;
       };
       reader.readAsDataURL(file);
-      console.log(this.selectedImage);
+      
     }
   }
 
   updateEmployeeType(selectedType: string): void {
     this.empType = selectedType;
     this.personalData.empType = selectedType;
-    console.log('Selected Employee Type:', this.personalData.empType);
+    
   }
 
   updateProvince(event: DropdownChangeEvent): void {
@@ -833,7 +833,6 @@ export class CreateSalesAgentsComponent implements OnInit {
   }
 
   validateNICInput(event: KeyboardEvent) {
-    // Allow navigation keys
     const allowedKeys = [
       'Backspace',
       'Delete',
@@ -848,23 +847,54 @@ export class CreateSalesAgentsComponent implements OnInit {
       return;
     }
 
-    // Allow only numbers or uppercase V (but not lowercase v)
+    const input = event.target as HTMLInputElement;
+    const currentValue = input.value;
+    const key = event.key.toUpperCase();
+
+  // Allow only numbers or uppercase V (but not lowercase v)
     const nicInputPattern = /^[0-9V]$/;
-    if (!nicInputPattern.test(event.key.toUpperCase())) {
+    if (!nicInputPattern.test(key)) {
       event.preventDefault();
+      return;
+    }
+
+  // Block typing 'V' unless it's exactly the 10th character (9 digits + V)
+    if (key === 'V') {
+      const isAllDigitsSoFar = /^\d{9}$/.test(currentValue);
+      if (!isAllDigitsSoFar) {
+        event.preventDefault();
+        return;
+      }
+      return; 
+    }
+
+    // - Old format: 9 digits + V
+    if (currentValue.includes('V')) {
+      event.preventDefault();
+      return;
+    }
+
+    // - New format: 12 digits max
+    if (currentValue.length >= 12) {
+      event.preventDefault();
+      return;
     }
   }
 
   formatNIC() {
     if (this.personalData.nic) {
-      // Convert to uppercase and remove any spaces
       this.personalData.nic = this.personalData.nic
         .toUpperCase()
         .replace(/\s/g, '');
 
-      // If it ends with 'v', convert to 'V'
       if (this.personalData.nic.endsWith('v')) {
         this.personalData.nic = this.personalData.nic.slice(0, -1) + 'V';
+      }
+
+      if (this.personalData.nic.includes('V')) {
+        this.personalData.nic = this.personalData.nic.slice(0, 10);
+      } else {
+        this.personalData.nic = this.personalData.nic.slice(0, 12);
       }
     }
   }

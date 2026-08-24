@@ -42,6 +42,9 @@
                 No
               </th>
               <th class="px-4 py-3 text-left dark:text-gray-400 whitespace-nowrap font-normal">
+                Farmer Name
+              </th>
+              <th class="px-4 py-3 text-left dark:text-gray-400 whitespace-nowrap font-normal">
                 Farmer NIC
               </th>
               <th
@@ -75,13 +78,20 @@
               </td>
 
               <td class="px-4 py-3 text-[#000000] dark:text-textDark">
+                {{ formatNIC(request.Farmer_Name) }}
+              </td>
+
+              <td class="px-4 py-3 text-[#000000] dark:text-textDark">
                 {{ formatNIC(request.NIC) }}
               </td>
 
               <td
                 *ngIf="permissionService.hasPermission('View pension requests details') || tokenService.getUserDetails().role === '1'"
                 class="px-4 py-3 text-center">
-                <button (click)="viewDetails(request.Request_ID)" class="w-6 h-6 text-blue-500 hover:text-blue-700"
+                <button (click)="viewDetails(request.Request_ID)" 
+                  class="w-6 h-6 transition-colors"
+                  [disabled]="request.reqStatus === 'Rejected'"
+                  [class]="request.reqStatus === 'Rejected' ? 'text-[#A8B0C5] cursor-not-allowed' : 'text-blue-500 hover:text-blue-700'"
                   title="View Details">
                   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
@@ -103,7 +113,9 @@
               <td
                 *ngIf="permissionService.hasPermission('View pension requests cultivation history') || tokenService.getUserDetails().role === '1'"
                 class="px-4 py-3 text-center">
-                <button class="px-4 py-2 text-blue-500 hover:text-blue-700 font-medium"
+                <button class="px-4 py-2 font-medium transition-colors"
+                  [disabled]="request.reqStatus === 'Rejected'"
+                  [class]="request.reqStatus === 'Rejected' ? 'text-[#A8B0C5] cursor-not-allowed' : 'text-blue-500 hover:text-blue-700'"
                   (click)="openReviewRequest(request)">
                   <i class="fa-solid fa-arrow-up-right-from-square"></i>
                 </button>
@@ -111,7 +123,9 @@
               <td
                 *ngIf="permissionService.hasPermission('View pension requests document') || tokenService.getUserDetails().role === '1'"
                 class="px-4 py-3 text-center">
-                <button class="px-4 py-2 text-red-500 hover:text-red-700 font-medium"
+                <button class="px-4 py-2 font-medium transition-colors"
+                  [disabled]="request.reqStatus === 'Rejected'"
+                  [class]="request.reqStatus === 'Rejected' ? 'text-[#A8B0C5] cursor-not-allowed' : 'text-red-500 hover:text-red-700'"
                   (click)="openViewDocuments(request)">
                   <i class="fa-solid fa-arrow-up-right-from-square"></i>
                 </button>

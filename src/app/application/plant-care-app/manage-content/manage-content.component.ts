@@ -108,8 +108,6 @@ export class ManageContentComponent implements OnInit {
       ? this.formatLocalDate(dateObj)
       : undefined;
 
-    console.log("createdDateFilter", this.createdDateFilter);
-    console.log('Formatted Date:', formattedDate);
 
     this.newsService
       .fetchAllNews(
@@ -236,7 +234,7 @@ export class ManageContentComponent implements OnInit {
     this.isPopupVisible = false;
     this.selectedNewsItem = null; // Clear the selected item
   }
- 
+
 
 
   updateStatus(id: any, currentStatus: string) {
@@ -305,8 +303,9 @@ export class ManageContentComponent implements OnInit {
     this.fetchAllNews(1, this.itemsPerPage);
   }
 
-
-
+  back() {
+    this.router.navigate(['/plant-care/action']);
+  }
 
 
   onDateClear() {

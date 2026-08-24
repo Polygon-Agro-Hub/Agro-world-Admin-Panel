@@ -14,3 +14,20 @@ textarea::placeholder {
   font-style: italic;
   color: gray;
 }
+
+/* For Chrome, Safari, Edge, Opera */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  cursor: pointer;
+}
+
+/* For Firefox */
+input[type="number"] {
+  cursor: pointer;
+}
+
+/* Optional: Make the input field itself also show pointer cursor when hovering over spinner area */
+input[type="number"]:hover::-webkit-inner-spin-button,
+input[type="number"]:hover::-webkit-outer-spin-button {
+  cursor: pointer;
+}

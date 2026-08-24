@@ -66,7 +66,7 @@ export class AuditPersonalInfoComponent implements OnInit {
     private route: ActivatedRoute,
     public tokenService: TokenService,
     public permissionService: PermissionService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const requestId = this.route.snapshot.paramMap.get('requestId');
@@ -219,6 +219,7 @@ export class AuditPersonalInfoComponent implements OnInit {
   }
 
   RejectRequest() {
+    if (!this.rejectReason) return;
     this.rejectPopUpOpen = false;
 
     this.isLoading = true;
@@ -427,7 +428,7 @@ export class AuditPersonalInfoComponent implements OnInit {
     }
   }
 
-  editSharesPopUp() {}
+  editSharesPopUp() { }
 
   addSpaceAfterFirstThree(str: string | undefined): string {
     if (!str || typeof str !== 'string') return '';

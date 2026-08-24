@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
 import { GovishopService } from '../../../services/govi-shop/govishop.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 export interface Branch {
   id: number;
@@ -18,6 +20,7 @@ export interface Branch {
   posCount: number;
   updatedAt: Date | null;
   updatedBy: string | null;
+  shopName: string;
 }
 
 @Component({
@@ -31,7 +34,7 @@ export interface Branch {
     NgxPaginationModule,
   ],
   templateUrl: './view-branches-per-shop.component.html',
-  styleUrl: './view-branches-per-shop.component.css'
+  styleUrl: './view-branches-per-shop.component.css',
 })
 export class ViewBranchesPerShopComponent implements OnInit {
   isLoading = false;
@@ -100,21 +103,23 @@ export class ViewBranchesPerShopComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private govishopService: GovishopService
+    private govishopService: GovishopService,
+    private location: Location,
+    public permissionService: PermissionService,
+    public tokenService: TokenService,
   ) {}
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
       this.shopId = params['shopId'] ? Number(params['shopId']) : null;
-      this.shopName = params['shopName'] || 'Shop';
-      if (this.shopId) {
-        this.loadBranches();
-      }
+      this.shopName = params['shopName'] || '';
+      this.loadBranches();
     });
   }
 
   loadBranches(): void {
-    if (!this.shopId) return;
+
+    
     this.isLoading = true;
 
     this.govishopService
@@ -124,7 +129,7 @@ export class ViewBranchesPerShopComponent implements OnInit {
         this.itemsPerPage,
         this.selectedProvince || undefined,
         this.selectedDistrict || undefined,
-        this.searchTerm || undefined
+        this.searchTerm || undefined,
       )
       .subscribe({
         next: (response) => {
@@ -172,16 +177,18 @@ export class ViewBranchesPerShopComponent implements OnInit {
     const branch = this.pendingToggleBranch;
     const newStatus = this.pendingToggleStatus;
 
-    this.govishopService.toggleBranchActiveStatus(branch.id, newStatus).subscribe({
-      next: () => {
-        branch.isActive = newStatus;
-        this.closeToggleModal();
-      },
-      error: (err) => {
-        console.error('Toggle error:', err);
-        this.closeToggleModal();
-      },
-    });
+    this.govishopService
+      .toggleBranchActiveStatus(branch.id, newStatus)
+      .subscribe({
+        next: () => {
+          branch.isActive = newStatus;
+          this.closeToggleModal();
+        },
+        error: (err) => {
+          console.error('Toggle error:', err);
+          this.closeToggleModal();
+        },
+      });
   }
 
   closeToggleModal(): void {
@@ -193,18 +200,30 @@ export class ViewBranchesPerShopComponent implements OnInit {
     this.router.navigate(['govi-shop/action/view-branch-details', branchId]);
   }
 
-  viewBranchProducts(branchId: number): void {
-  // navigate or open modal for products
-}
+  viewBranchProducts(
+    branchId: number,
+    branchName: string,
+    shopName: string,
+  ): void {
+    this.router.navigate(['govi-shop/action/branch-products', branchId], {
+      queryParams: {
+        branchName,
+        shopName,
+      },
+    });
+  }
 
-editBranch(branchId: number): void {
-  // navigate to edit page or open edit modal
-}
+  editBranch(branchId: number): void {
+    this.router.navigate(['govi-shop/action/edit-branch', branchId])
+  }
 
   back(): void {
-    this.router.navigate(
-      ['govi-shop/action/all-govi-shops'],
-      { queryParams: {} }
-    );
+    if (this.shopId) {
+      this.router.navigate(['govi-shop/action/all-govi-shops'], {
+      queryParams: {},
+    });
+    } else {
+      this.location.back();
+    }
   }
 }

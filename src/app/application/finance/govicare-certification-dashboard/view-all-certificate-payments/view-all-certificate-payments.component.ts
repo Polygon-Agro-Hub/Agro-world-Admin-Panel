@@ -15,6 +15,7 @@ interface CertificatePayment {
   expireDate: string;
   validityPeriod: string;
   sortDate: string;
+  payType?: string;
 }
 
 @Component({
@@ -42,6 +43,7 @@ export class ViewAllCertificatePaymentsComponent implements OnInit {
   hasData: boolean = false;
   maxDate: Date = new Date(); // Today's date - for blocking future dates
   minToDate: Date | null = null; // Minimum date for "To" field
+  hasDateRangeSelected: boolean = false;
 
   constructor(
     private router: Router,
@@ -56,16 +58,13 @@ export class ViewAllCertificatePaymentsComponent implements OnInit {
   // Called when fromDate changes
   onFromDateChange() {
     if (this.fromDate) {
-      // Set minimum date for "To" field (day after fromDate)
       this.minToDate = new Date(this.fromDate);
       this.minToDate.setDate(this.minToDate.getDate() + 1);
       
-      // If toDate is already set and is invalid, clear it
       if (this.toDate) {
         const fromTime = this.fromDate.getTime();
         const toTime = this.toDate.getTime();
         
-        // Clear toDate if it's the same as or before fromDate
         if (toTime <= fromTime) {
           this.toDate = null;
         }
@@ -73,12 +72,15 @@ export class ViewAllCertificatePaymentsComponent implements OnInit {
     } else {
       this.minToDate = null;
     }
+    
+    // Reset date range selected status when dates change
+    this.hasDateRangeSelected = false;
+    this.hasData = false;
   }
 
   fetchCertificatePayments() {
     this.isLoading = true;
     
-    // Convert Date objects to string format for API
     const fromDateStr = this.fromDate ? this.formatDate(this.fromDate) : '';
     const toDateStr = this.toDate ? this.formatDate(this.toDate) : '';
     
@@ -128,8 +130,16 @@ export class ViewAllCertificatePaymentsComponent implements OnInit {
   }
 
   applyDateFilter() {
-    this.page = 1; // Reset to first page on filter
-    this.fetchCertificatePayments();
+    // Check if date range is selected
+    this.hasDateRangeSelected = !!(this.fromDate && this.toDate);
+    
+    if (this.hasDateRangeSelected) {
+      this.page = 1;
+      this.fetchCertificatePayments();
+    } else {
+      // Optional: Show a message that both dates are required
+      console.log('Please select both from and to dates');
+    }
   }
 
   back(): void {

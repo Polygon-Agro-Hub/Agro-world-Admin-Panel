@@ -5,8 +5,10 @@ import { Subscription } from 'rxjs';
 
 interface DashboardData {
   vegCultivation: number;
-  grainCultivation: number;
+  spicesCultivation: number;
+  cerealsCultivation: number;
   fruitCultivation: number;
+  leLegumesCultivation: number;
   mushCultivation: number;
 }
 
@@ -19,7 +21,7 @@ interface DashboardData {
 })
 export class DashbordPieChartComponent implements OnChanges, OnInit, OnDestroy {
   @Input() dashboardData: DashboardData = {} as DashboardData;
-  
+
   data: any;
   options: any;
   private themeSubscription?: Subscription;
@@ -27,11 +29,7 @@ export class DashbordPieChartComponent implements OnChanges, OnInit, OnDestroy {
   constructor(private themeService: ThemeService) {}
 
   ngOnInit(): void {
-    // Initialize chart with current theme
     this.updateChartTheme();
-    
-    // Subscribe to theme changes if your ThemeService has an observable
-    // If not, you can use a polling approach or event listener
     this.subscribeToThemeChanges();
   }
 
@@ -45,15 +43,16 @@ export class DashbordPieChartComponent implements OnChanges, OnInit, OnDestroy {
     if (changes['dashboardData'] && changes['dashboardData'].currentValue) {
       this.initializeChart(
         this.dashboardData.vegCultivation,
-        this.dashboardData.grainCultivation,
+        this.dashboardData.spicesCultivation,
+        this.dashboardData.cerealsCultivation,
         this.dashboardData.fruitCultivation,
+        this.dashboardData.leLegumesCultivation,
         this.dashboardData.mushCultivation
       );
     }
   }
 
   private subscribeToThemeChanges(): void {
-    // Subscribe to theme changes using the enhanced ThemeService
     this.themeSubscription = this.themeService.themeChanged$.subscribe(() => {
       this.updateChartTheme();
     });
@@ -62,45 +61,52 @@ export class DashbordPieChartComponent implements OnChanges, OnInit, OnDestroy {
   private updateChartTheme(): void {
     const isDark = this.themeService.isDarkTheme();
     const labelColor = isDark ? '#ffffff' : '#333333';
-    
+
     if (this.options) {
       this.options.plugins.legend.labels = {
-        color: labelColor
+        color: labelColor,
+        usePointStyle: true,      // ← circle bullets
+        pointStyle: 'circle',     // ← circle bullets
+        pointStyleWidth: 15,
+        padding: 20,
       };
-      // Force chart to re-render
       this.options = { ...this.options };
     }
   }
 
   initializeChart(
     vegCultivation: number,
-    grainCultivation: number,
+    spicesCultivation: number,
+    cerealsCultivation: number,
     fruitCultivation: number,
+    leLegumesCultivation: number,
     mushCultivation: number
   ) {
     const total =
-      vegCultivation + grainCultivation + fruitCultivation + mushCultivation;
+      vegCultivation + spicesCultivation + cerealsCultivation +
+      fruitCultivation + leLegumesCultivation + mushCultivation;
 
     const calculatePercentage = (value: number) =>
       total ? ((value / total) * 100).toFixed(0) : '0';
 
     this.data = {
-      labels: ['Vegetables', 'Fruits', 'Grains', 'Mushrooms'],
+      labels: ['Vegetables', 'Spices', 'Cereals', 'Fruits', 'Legumes', 'Mushrooms'],
       datasets: [
         {
           data: [
             calculatePercentage(vegCultivation),
+            calculatePercentage(spicesCultivation),
+            calculatePercentage(cerealsCultivation),
             calculatePercentage(fruitCultivation),
-            calculatePercentage(grainCultivation),
+            calculatePercentage(leLegumesCultivation),
             calculatePercentage(mushCultivation),
           ],
-          backgroundColor: ['#4E9F78', '#E68A3D', '#3D75E6', '#9156A0'],
-          hoverBackgroundColor: ['#4E9F78', '#E68A3D', '#3D75E6', '#9156A0'],
+          backgroundColor: ['#2BA297', '#A54D00', '#3B82F6', '#FB923C', '#648885', '#9156A0'],
+          hoverBackgroundColor: ['#2BA297', '#A54D00', '#3B82F6', '#FB923C', '#648885', '#9156A0'],
         },
       ],
     };
 
-    // Get current theme colors
     const isDark = this.themeService.isDarkTheme();
     const labelColor = isDark ? '#ffffff' : '#333333';
 
@@ -110,13 +116,17 @@ export class DashbordPieChartComponent implements OnChanges, OnInit, OnDestroy {
           position: 'bottom',
           labels: {
             color: labelColor,
+            usePointStyle: true,      // ← circle bullets
+            pointStyle: 'circle',     // ← circle bullets
+            pointStyleWidth: 15,      // ← bullet size
+            padding: 20,              // ← spacing between items
           },
         },
         tooltip: {
           callbacks: {
             label: (tooltipItem: any) => {
-              let dataset = tooltipItem.dataset.data;
-              let index = tooltipItem.dataIndex;
+              const dataset = tooltipItem.dataset.data;
+              const index = tooltipItem.dataIndex;
               return `${dataset[index]}%`;
             },
           },

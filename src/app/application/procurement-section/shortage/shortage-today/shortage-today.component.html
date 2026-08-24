@@ -1,0 +1,95 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<div class="min-h-max">
+  <button class="mb-5 text-textLight dark:text-textDark" (click)="goBack()">
+    <i class="fa-solid fa-arrow-left"></i>
+    Back
+  </button>
+
+  <div class="bg-white dark:bg-tileBlack rounded-lg shadow-sm overflow-hidden min-h-[80vh]">
+
+    <div class="px-7 py-5 border-b border-gray-100 dark:border-gray-700">
+      <h2 class="text-[16px] font-medium text-textLight dark:text-textDark m-0">
+        Shortage Today ({{ shortageCount.toString().padStart(2, '0') }})
+      </h2>
+    </div>
+
+    <div [class.min-h-[500px]]="isWaiting || shortageCount === 0" [class.flex]="isWaiting || shortageCount === 0"
+      [class.items-center]="isWaiting || shortageCount === 0" [class.justify-center]="isWaiting || shortageCount === 0"
+      [class.p-6]="!isWaiting && shortageCount > 0">
+
+      <!-- 1. Still waiting for the reveal time -->
+      <ng-container *ngIf="isWaiting; else revealed">
+        <div class="text-center px-5 py-14">
+          <div #lottieContainer class="w-48 h-48 mx-auto"></div>
+          <h3 class="text-[30px] font-semibold text-textLight dark:text-textDark mb-4">Please Wait!</h3>
+          <p class="text-[16px] font-normal text-[#494949] dark:text-gray-400 max-w-lg mx-auto">
+            --If there are any shortages, you will be able to see them by
+            <strong class="font-bold text-textLight dark:text-textDark">{{ formattedTime }}</strong>
+            on {{ formattedDate }}.--
+          </p>
+        </div>
+      </ng-container>
+
+      <!-- 2. Reveal time has passed -->
+      <ng-template #revealed>
+
+        <!-- 2a. No shortages -->
+        <ng-container *ngIf="shortageCount === 0; else shortageList">
+          <div class="text-center px-5 py-14">
+            <p class="text-[16px] font-normal text-[#494949] dark:text-gray-400 mb-6">
+              --No Product Shortage for Today--
+            </p>
+            <img src="/assets/images/NoData.png" alt="No product shortage" class="w-16 h-16 mx-auto" />
+          </div>
+        </ng-container>
+
+        <!-- 2b. Has shortages -->
+        <ng-template #shortageList>
+          <div class="flex flex-col gap-3">
+            <div *ngFor="let item of shortages"
+              class="w-fit grid grid-cols-[56px_180px_100px_100px_150px_100px] items-stretch gap-4 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-3">
+
+              <img [src]="item.image" [alt]="item.name"
+                class="w-14 h-14 object-cover rounded-md bg-gray-50 dark:bg-gray-800 self-center" />
+
+              <span class="text-textLight dark:text-textDark font-semibold text-base self-center">
+                {{ item.name }}
+              </span>
+
+              <div class="bg-[#FEF7EF] dark:bg-orange-900/20 rounded-md px-3 py-2 flex flex-col justify-center">
+                <p class="text-xs text-gray-500 dark:text-gray-400 m-0">Shortage</p>
+                <p class="text-sm font-semibold text-textLight dark:text-textDark m-0 whitespace-nowrap">
+                  {{ formatNumber(item.shortageQty) }} kg
+                </p>
+              </div>
+
+              <div class="bg-[#E1ECFF] dark:bg-blue-900/20 rounded-md px-3 py-2 flex flex-col justify-center">
+                <p class="text-xs text-gray-500 dark:text-gray-400 m-0">Assigned</p>
+                <p class="text-sm font-semibold text-textLight dark:text-textDark m-0 whitespace-nowrap">
+                  {{ formatNumber(item.assignedQty) }} kg
+                </p>
+              </div>
+
+              <div class="flex flex-col justify-center">
+                <p class="text-sm text-gray-500 dark:text-gray-400 m-0 whitespace-nowrap">Market Price per kg</p>
+                <p class="text-base font-bold text-textLight dark:text-textDark m-0">
+                  Rs. {{ item.marketPrice | number:'1.2-2' }}
+                </p>
+              </div>
+
+              <button 
+                *ngIf="permissionService.hasPermission('View today shortage') || tokenService.getUserDetails().role === '1'"
+                (click)="onView(item)"
+                class="bg-[#3980C0] hover:bg-[#316ba8] text-white font-medium text-sm rounded-md transition-colors whitespace-nowrap justify-self-end self-stretch px-6 flex items-center justify-center">
+                View
+              </button>
+            </div>
+          </div>
+        </ng-template>
+
+      </ng-template>
+
+    </div>
+  </div>
+</div>

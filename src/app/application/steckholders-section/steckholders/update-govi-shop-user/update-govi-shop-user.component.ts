@@ -53,8 +53,6 @@ export class UpdateGoviShopUserComponent implements OnInit {
 
     this.route.queryParamMap.subscribe((params) => {
       const id = params.get('id');
-      console.log('Query parameter ID:', id);
-      
       this.id = Number(id);
       this.fetchSupplierById()
       });
@@ -67,12 +65,8 @@ export class UpdateGoviShopUserComponent implements OnInit {
     this.goviShopService.getSupplierById(id)
       .subscribe(
         (response) => {
-          console.log('response', response)
-
           this.isLoading = false;
-          this.goviShopSupplierObj = response.data
-          console.log('response', this.goviShopSupplierObj)
-      
+          this.goviShopSupplierObj = response.data      
         },
         (error) => {
           if (error.status === 401) {

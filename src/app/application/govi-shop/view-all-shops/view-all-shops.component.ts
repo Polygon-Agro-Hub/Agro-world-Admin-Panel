@@ -6,6 +6,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { GovishopService } from '../../../services/govi-shop/govishop.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 export interface Shop {
   id: number;
@@ -72,7 +74,9 @@ export class ViewAllShopsComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private govishopService: GovishopService
+    private govishopService: GovishopService,
+    public permissionService: PermissionService,
+    public tokenService: TokenService,
   ) { }
 
   ngOnInit(): void {
@@ -155,15 +159,13 @@ export class ViewAllShopsComponent implements OnInit {
 
   viewShopDetails(id: number): void {
     this.router.navigate(
-      ['steckholders/action/govi-shop-suppliers/govishop-view-shops/shop-details'],
-      { queryParams: { shopId: id } }
+      ['govi-shop/action/all-govi-shops/preview-govi-shop', id]
     );
   }
 
   editShop(id: number): void {
     this.router.navigate(
-      ['steckholders/action/govi-shop-suppliers/govishop-view-shops/edit-shop'],
-      { queryParams: { shopId: id } }
+      ['govi-shop/action/update-govi-shop', id]
     );
   }
 

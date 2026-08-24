@@ -54,7 +54,7 @@ export class UpdateGoviShopComponent implements OnInit {
   ngOnInit(): void {
 
     this.shopId = Number(this.route.snapshot.paramMap.get('id'));
-    console.log('shopId', this.shopId)
+    
 
     this.fetchGoViShopById()
   }
@@ -66,11 +66,11 @@ export class UpdateGoviShopComponent implements OnInit {
     this.goviShopService.getGoViShopForUpdate(id)
       .subscribe(
         (response) => {
-          console.log('response', response)
+          
 
           this.isLoading = false;
           this.goviShopObj = response.data
-          console.log('response', this.goviShopObj)
+          
       
         },
         (error) => {

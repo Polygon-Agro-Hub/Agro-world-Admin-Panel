@@ -57,36 +57,30 @@ export class OutOfDeliveryComponent implements OnChanges {
 }
 
   onStatusChange() {
-    console.log('Status changed to:', this.selectStatus);
     this.fetchData();
   }
 
   onDateSelect() {
-    console.log('Date selected:', this.selectDate);
     this.fetchData();
   }
 
   onDateClear() {
-    console.log('Date clear event triggered');
-    this.selectDate = new Date();
-    this.fetchData();
-  }
+  this.selectDate = null; 
+  this.fetchData();
+}
 
   onSearch() {
     this.searchText = this.searchText.trim();
-    console.log('Search triggered:', this.searchText);
     this.fetchData();
   }
 
   clearSearch() {
-    console.log('Clearing search');
     this.searchText = '';
     this.fetchData();
   }
 
   // Method to reset all filters
   resetAllFilters() {
-    console.log('Resetting all filters');
     this.selectDate = null;
     this.selectStatus = '';
     this.searchText = '';
@@ -214,14 +208,7 @@ export class OutOfDeliveryComponent implements OnChanges {
   }
 
   fetchData() {
-    this.isLoading = true;
-    console.log('Fetching data with params:', {
-      centerId: this.centerObj.centerId,
-      // date: dateParam || 'No date filter',
-      status: this.selectStatus || 'No status filter',
-      search: this.searchText || 'No search filter'
-    });
-    
+    this.isLoading = true;    
     this.DestributionSrv.getCenterOutForDlvryOrders(
       this.centerObj.centerId, 
       this.formatDateForAPI(this.selectDate),
@@ -230,7 +217,6 @@ export class OutOfDeliveryComponent implements OnChanges {
     ).subscribe(
       (res) => {
         this.orderArr = res.data || [];
-        console.log('Fetched data count:', this.orderArr.length);
         this.filteredOrders = [...this.orderArr];
         this.orderCount = this.filteredOrders.length;
         this.hasData = this.filteredOrders.length > 0;

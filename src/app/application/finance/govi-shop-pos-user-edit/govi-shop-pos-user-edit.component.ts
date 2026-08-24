@@ -432,7 +432,7 @@ resetPassword() {
                 confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
               },
             });
-            this.fetchPosUserById();
+            this.location.back();
           } else {
             Swal.fire({
               icon: 'error',

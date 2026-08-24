@@ -7,7 +7,7 @@
       <h2 class="text-white text-xs md:text-sm">Vegetable</h2>
       <h5 class="text-white text-[10px] md:text-xs">Total Enrollments</h5>
       <h2 class="text-white text-lg md:text-xl font-bold">
-        {{ dashboardData.vegCultivation }}
+        {{ padNumber(dashboardData.vegCultivation) }}
       </h2>
     </div>
 
@@ -18,7 +18,7 @@
       <h2 class="text-white text-xs md:text-sm">Legumes</h2>
       <h5 class="text-white text-[10px] md:text-xs">Total Enrollments</h5>
       <h2 class="text-white text-lg md:text-xl font-bold">
-        {{ dashboardData.leLegumesCultivation }}
+        {{ padNumber(dashboardData.leLegumesCultivation) }}
       </h2>
     </div>
 
@@ -29,7 +29,7 @@
       <h2 class="text-white text-xs md:text-sm">Fruits</h2>
       <h5 class="text-white text-[10px] md:text-xs">Total Enrollments</h5>
       <h2 class="text-white text-lg md:text-xl font-bold">
-        {{ dashboardData.fruitCultivation }}
+        {{ padNumber(dashboardData.fruitCultivation) }}
       </h2>
     </div>
 
@@ -40,7 +40,7 @@
       <h2 class="text-white text-xs md:text-sm">Cereals</h2>
       <h5 class="text-white text-[10px] md:text-xs">Total Enrollments</h5>
       <h2 class="text-white text-lg md:text-xl font-bold">
-        {{ dashboardData.grainCultivation }}
+        {{ padNumber(dashboardData.cerealsCultivation) }}
       </h2>
     </div>
 
@@ -51,7 +51,7 @@
       <h2 class="text-white text-xs md:text-sm">Spices</h2>
       <h5 class="text-white text-[10px] md:text-xs">Total Enrollments</h5>
       <h2 class="text-white text-lg md:text-xl font-bold">
-        {{ dashboardData.spicesCultivation }}
+        {{ padNumber(dashboardData.spicesCultivation) }}
       </h2>
     </div>
 
@@ -62,7 +62,7 @@
       <h2 class="text-white text-xs md:text-sm">Mushrooms</h2>
       <h5 class="text-white text-[10px] md:text-xs">Total Enrollments</h5>
       <h2 class="text-white text-lg md:text-xl font-bold">
-        {{ dashboardData.mushCultivation }}
+        {{ padNumber(dashboardData.mushCultivation) }}
       </h2>
     </div>
 
@@ -90,7 +90,7 @@
         Today
       </h2>
       <h2 class="text-lg md:text-2xl my-1 dark:text-white">
-        {{ dashboardData.new_users }}
+        {{ padNumber(dashboardData.new_users) }}
       </h2>
     </div>
   </div>

@@ -1,1 +1,70 @@
-<p>finance-dashboard works!</p>
+  <div *ngIf="loading" class="flex items-center justify-center py-20">
+    <app-loading-spinner />
+  </div>
+ 
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="flex flex-col items-center gap-3 py-16 text-gray-500 dark:text-gray-400">
+    <p class="text-sm">Failed to load dashboard data.</p>
+    <button
+      (click)="loadDashboard()"
+      class="px-5 py-2 bg-teal-600 text-white text-sm rounded-md hover:bg-teal-700 transition-colors"
+    >
+      Retry
+    </button>
+  </div>
+
+  <!-- Dashboard Content -->
+  <div *ngIf="!loading && !error">
+
+    <!-- ── Count Cards Row ─────────────────────────────────────────────── -->
+    <div class="flex gap-4 mb-5 flex-wrap">
+      <div
+        *ngFor="let card of countCards"
+        class="flex-1 min-w-[140px] max-w-[200px] rounded-xl px-4 py-4 flex flex-col items-center gap-1 cursor-default transition-all duration-150 hover:-translate-y-0.5 hover:shadow-lg"
+        [style.background-color]="card.bgColor"
+      >
+        <div class="mb-1 opacity-95">
+          <i [class]="card.faIcon + ' text-white text-2xl'"></i>
+        </div>
+        <div class="text-[13px] font-medium text-white/90 text-center leading-snug">{{ card.label }}</div>
+        <div class="text-3xl font-bold text-white tracking-tight">{{ getCountValue(card.key) }}</div>
+      </div>
+    </div>
+
+    <!-- ── Income / Expense Cards Grid ────────────────────────────────── -->
+    <div class="grid grid-cols-3 gap-3.5 max-[900px]:grid-cols-2 max-[560px]:grid-cols-1">
+      <div
+        *ngFor="let card of incomeCards"
+        class="flex flex-col dark:bg-[#061E2C] items-center justify-center bg-white px-4 rounded-lg shadow-lg min-h-32 relative transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md"
+      >
+        <div class="flex flex-row justify-between items-center w-full">
+
+          <!-- Icon Badge -->
+          <div
+            class="flex justify-center items-center px-5 py-4 rounded-full"
+            [style.background-color]="card.iconBg"
+          >
+            <i [class]="card.faIcon + ' text-2xl'" [style.color]="card.iconColor"></i>
+          </div>
+
+          <!-- Label + Value -->
+          <div class="flex flex-col flex-1 py-5 px-4">
+            <p class="text-[#4B5563] text-sm dark:text-white leading-snug">{{ card.label }}</p>
+            <p
+              class="text-xl font-bold dark:text-white mt-0.5"
+              [ngClass]="card.isExpense ? 'text-red-600' : 'text-black'"
+            >
+              {{ formatCurrency(getIncomeValue(card.key)) }}
+            </p>
+          </div>
+
+        </div>
+
+        <!-- "This month" footer label -->
+        <div class="absolute bottom-2 w-full px-5">
+          <p class="text-[#ABB0B8] dark:text-gray-400 text-end text-xs">This Month – {{ currentMonthLabel }}</p>
+        </div>
+      </div>
+    </div>
+
+  </div>

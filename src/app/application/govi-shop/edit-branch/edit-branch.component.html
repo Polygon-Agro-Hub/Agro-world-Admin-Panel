@@ -1,0 +1,128 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<button (click)="onBack()" class="text-textLight dark:text-textDark mb-6 flex items-center gap-2">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+
+<div *ngIf="!isVerification" class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg">
+  <h2 class="text-xl font-normal text-[#292929] dark:text-textDark mb-2">
+    Edit Branch
+  </h2>
+
+  <div class="px-12 ">
+    <form (ngSubmit)="onUpload(form)" #form="ngForm">
+      <!-- First Row: Cluster Name and District -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 mt-10">
+        <!-- Cluster Name Input -->
+        <div>
+          <label for="branchName" class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-2">
+            Branch Name *
+          </label>
+          <input type="text" id="branchName" [(ngModel)]="branchObj.branchName" name="branchName"
+            #branchNameInput="ngModel" (input)="onFormatInput2($event)"
+            class="w-full px-3 py-2 h-12 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+            required />
+          <div *ngIf="branchNameInput.touched && !branchObj.branchName" class="text-red-500 text-sm mt-1">
+            <div>Branch Name is required</div>
+          </div>
+
+          <div *ngIf="branchObj.branchName && hasLeadingOrTrailingSpaces && formSubmitted"
+            class="text-red-500 text-sm mt-1">
+            Branch name should not have leading or trailing spaces
+          </div>
+        </div>
+
+        <div class="">
+          <label for="address" class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-2">
+            Address *
+          </label>
+          <input id="address" name="address" [(ngModel)]="branchObj.address"
+            class="w-full px-3 py-2 h-12 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+            #addressInput="ngModel" required (input)="onFormatInput1($event)" />
+          <div *ngIf="addressInput.touched && !branchObj.address" class="text-red-500 text-sm mt-1">
+            <div> Shop Addess is required</div>
+          </div>
+        </div>
+
+        <div>
+          <label for="clusterName" class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-2">
+            Phone Number *
+          </label>
+          <input type="text" id="mobilePhone" [(ngModel)]="branchObj.mobilePhone" name="mobilePhone"
+            #mobilePhoneInput="ngModel"
+            class="w-full px-3 py-2 h-12 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+            placeholder="e.g. 07XXXXXXXX" required pattern="^[0-9]{10}$"
+            (keypress)="blockInvalidKeypressForPhone($event)" (paste)="blockInvalidPasteForPhone($event)"
+            (input)="onPhoneInput($event)" minlength="10" maxlength="10"
+            (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()" />
+          <div *ngIf="mobilePhoneInput.touched && !branchObj.mobilePhone" class="text-red-500 text-sm mt-1">
+            <div> Mobile Phone Number is required</div>
+          </div>
+          <div *ngIf="branchObj.mobilePhone && mobilePhoneInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+            Please enter a valid mobile phone number.
+          </div>
+        </div>
+
+        <div>
+          <label for="landPhone" class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-2">
+            Land Phone Number
+          </label>
+          <input type="text" id="LandPhone" [(ngModel)]="branchObj.LandPhone" name="LandPhone" #landPhoneInput="ngModel"
+            class="w-full px-3 py-2 h-12 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+            placeholder="e.g. 07XXXXXXXX" pattern="^[0-9]{10}$" (keypress)="blockInvalidKeypressForPhone($event)"
+            (paste)="blockInvalidPasteForPhone($event)" (input)="onPhoneInput($event)" minlength="10" maxlength="10"
+            (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()" />
+          <div *ngIf="branchObj.LandPhone && landPhoneInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+            Please enter a valid land phone number.
+          </div>
+        </div>
+
+        <div class="pb-6">
+          <label for="district" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            District *
+          </label>
+          <p-dropdown [options]="districts" name="district" [(ngModel)]="branchObj.district" optionLabel="name"
+            optionValue="name" filter="true" filterBy="name" placeholder="Select a district"
+            (onChange)="updateProvince($event)" [showClear]="true" [autoDisplayFirst]="false" #districtInput="ngModel"
+            required styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
+            class="mt-1 block w-full p-dropdown-custom" appendTo="body"></p-dropdown>
+
+          <div *ngIf="districtInput.touched && !branchObj.district" class="text-red-500 text-sm mt-1">
+            District is required
+          </div>
+        </div>
+
+        <div class="pb-6">
+          <label for="province" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            Province *
+          </label>
+          <input id="province" name="province" [(ngModel)]="branchObj.province"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            readonly />
+        </div>
+      </div>
+
+
+      <!-- Buttons -->
+      <div class="flex justify-end gap-3 pt-4">
+        <button type="button"
+          class="px-6 py-2 bg-[#74788D] text-[#D3D3D3] rounded-lg hover:bg-[#74788D] transition-colors w-32"
+          (click)="onCancel()">
+          Cancel
+        </button>
+        <button type="submit" class="px-6 py-2 rounded-lg text-white transition-colors w-32" [disabled]="form.invalid"
+          [ngClass]="{
+            'bg-gray-500 cursor-not-allowed hover:bg-gray-500':
+              form.invalid,
+
+            'bg-[#3980C0] hover:bg-[#2d6ca3]':
+              form.valid
+          }">
+          <span *ngIf="!isLoading">Update</span>
+          <span *ngIf="isLoading">Processing...</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,20 @@
+.italic-placeholder::placeholder {
+    font-style: italic;
+}
+
+/* Browser compatibility */
+.italic-placeholder::-webkit-input-placeholder {
+    font-style: italic;
+}
+
+.italic-placeholder::-moz-placeholder {
+    font-style: italic;
+}
+
+.italic-placeholder:-ms-input-placeholder {
+    font-style: italic;
+}
+
+.italic-placeholder::placeholder {
+    font-style: italic;
+}

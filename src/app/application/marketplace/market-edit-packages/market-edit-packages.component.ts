@@ -5,11 +5,20 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { CalendarModule } from 'primeng/calendar';
+import { DropdownModule } from 'primeng/dropdown';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-market-edit-packages',
   standalone: true,
-  imports: [CommonModule, FormsModule, LoadingSpinnerComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    LoadingSpinnerComponent,
+    DropdownModule,
+    CalendarModule,
+  ],
   templateUrl: './market-edit-packages.component.html',
   styleUrl: './market-edit-packages.component.css',
 })
@@ -25,13 +34,16 @@ export class MarketEditPackagesComponent {
   selectedFileName!: string;
   isLoading: boolean = false;
 
+  packageTypeOptions = [
+    { label: 'One Time Package', value: 'One Time' },
+    { label: 'Recurring Package', value: 'Recurring' },
+  ];
+
   constructor(
     private marketSrv: MarketPlaceService,
     private route: ActivatedRoute,
-    private router: Router
-  ) { }
-
-
+    private router: Router,
+  ) {}
 
   back(): void {
     Swal.fire({
@@ -49,10 +61,8 @@ export class MarketEditPackagesComponent {
       if (result.isConfirmed) {
         this.router.navigate(['market/action/view-packages-list']);
       }
-
     });
   }
-
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
@@ -60,9 +70,40 @@ export class MarketEditPackagesComponent {
         this.packageId = +params['id'];
         console.log(this.packageId);
         if (this.packageId) {
-          this.getProductTypes();
-          this.getPackageDetails();
-          this.calculateApproximatedPrice();
+          this.isLoading = true;
+          forkJoin({
+            productTypes: this.marketSrv.fetchProductTypes(),
+            packageDetails: this.marketSrv.getPackageById(this.packageId),
+          }).subscribe(
+            ({ productTypes, packageDetails }) => {
+              this.productTypeObj = productTypes.data;
+
+              this.packageObj = packageDetails;
+              this.packageObj.startDate = packageDetails.startDate
+                ? new Date(packageDetails.startDate)
+                : (null as any);
+              this.packageObj.endDate = packageDetails.endDate
+                ? new Date(packageDetails.endDate)
+                : (null as any);
+              this.selectedImage = this.packageObj.imageUrl;
+
+              this.packageObj.packageItems.sort((a, b) => {
+                const nameA = a.typeName?.toLowerCase() || '';
+                const nameB = b.typeName?.toLowerCase() || '';
+                return nameA.localeCompare(nameB);
+              });
+
+              this.mergeIsValidWithPackageItems();
+
+              this.calculateApproximatedPrice();
+              this.isLoading = false;
+            },
+            (error) => {
+              console.error('Error loading package data', error);
+              this.error = 'Failed to load package data';
+              this.isLoading = false;
+            },
+          );
         } else {
           console.error('No package ID provided');
           this.error = 'No package ID provided';
@@ -78,6 +119,12 @@ export class MarketEditPackagesComponent {
     this.marketSrv.getPackageById(this.packageId).subscribe((res) => {
       console.log('this is response', res);
       this.packageObj = res;
+      this.packageObj.startDate = res.startDate
+        ? new Date(res.startDate)
+        : (null as any);
+      this.packageObj.endDate = res.endDate
+        ? new Date(res.endDate)
+        : (null as any);
       this.selectedImage = this.packageObj.imageUrl;
 
       // ✅ Sort items by typeName alphabetically
@@ -114,7 +161,10 @@ export class MarketEditPackagesComponent {
       !this.packageObj.productPrice ||
       !this.packageObj.packageFee ||
       !this.packageObj.serviceFee ||
-      !this.selectedImage
+      !this.selectedImage ||
+      !this.packageObj.packageType ||
+      !this.packageObj.startDate ||
+      (this.packageObj.packageType === 'One Time' && !this.packageObj.endDate)
     ) {
       let errorMessage = '';
 
@@ -129,6 +179,15 @@ export class MarketEditPackagesComponent {
       if (!this.packageObj.serviceFee)
         errorMessage += 'Service fee is required.<br>';
       if (!this.selectedImage) errorMessage += 'Package Image is required.<br>';
+      if (!this.packageObj.packageType)
+        errorMessage += 'Package Type is required.<br>';
+      if (this.packageObj.packageType && !this.packageObj.startDate)
+        errorMessage += 'Start Date is required.<br>';
+      if (
+        this.packageObj.packageType === 'One Time' &&
+        !this.packageObj.endDate
+      )
+        errorMessage += 'End Date is required.<br>';
 
       Swal.fire({
         icon: 'error',
@@ -138,7 +197,8 @@ export class MarketEditPackagesComponent {
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
           title: 'font-semibold',
-          confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+          confirmButton:
+            'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
           htmlContainer: 'text-left', // keeps multiline HTML aligned nicely
         },
       });
@@ -147,7 +207,7 @@ export class MarketEditPackagesComponent {
       return;
     }
     const hasValidQty = this.packageObj.packageItems.some(
-      (item) => item.qty !== null && item.qty > 0
+      (item) => item.qty !== null && item.qty > 0,
     );
 
     if (!hasValidQty) {
@@ -161,7 +221,6 @@ export class MarketEditPackagesComponent {
       return;
     }
 
-
     try {
       this.marketSrv
         .editPackage(this.packageObj, this.selectedImage, this.packageId)
@@ -174,16 +233,20 @@ export class MarketEditPackagesComponent {
                 text: 'The package was updated successfully!',
                 confirmButtonText: 'OK',
                 customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  popup:
+                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                   title: 'font-semibold',
                   confirmButton:
                     'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
                 },
               }).then(() => {
                 this.packageObj = new Package();
-                if (res.packageId) this.router.navigate(['/market/action/define-package-view'], { queryParams: { id: res.packageId } });
-                else this.router.navigate(['/market/action/view-packages-list']);
-                ;
+                if (res.packageId)
+                  this.router.navigate(['/market/action/define-package-view'], {
+                    queryParams: { id: res.packageId },
+                  });
+                else
+                  this.router.navigate(['/market/action/view-packages-list']);
               });
             } else {
               Swal.fire({
@@ -192,12 +255,13 @@ export class MarketEditPackagesComponent {
                 text: res.message,
                 confirmButtonText: 'OK',
                 customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  popup:
+                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                   title: 'font-semibold',
-                  confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+                  confirmButton:
+                    'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
                 },
               });
-
             }
             this.isLoading = false;
           },
@@ -209,7 +273,7 @@ export class MarketEditPackagesComponent {
               confirmButtonText: 'OK',
             });
             this.isLoading = false;
-          }
+          },
         );
     } catch (error) {
       Swal.fire({
@@ -305,7 +369,10 @@ export class MarketEditPackagesComponent {
     }
 
     // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
-    if ((event.ctrlKey || event.metaKey) && [65, 67, 86, 88].includes(event.keyCode)) {
+    if (
+      (event.ctrlKey || event.metaKey) &&
+      [65, 67, 86, 88].includes(event.keyCode)
+    ) {
       return true;
     }
 
@@ -375,6 +442,44 @@ export class MarketEditPackagesComponent {
     this.calculateApproximatedPrice();
   }
 
+  onPackageTypeChange(): void {
+    if (this.packageObj.packageType === 'Recurring') {
+      this.packageObj.endDate = null as any;
+    }
+  }
+
+  onStartDateChange(): void {
+    if (
+      this.packageObj.endDate &&
+      this.packageObj.startDate &&
+      this.packageObj.endDate < this.packageObj.startDate
+    ) {
+      this.packageObj.endDate = null as any;
+    }
+  }
+
+  hasInvalidProductTypeQty(): boolean {
+    return this.packageObj.packageItems.some(
+      (item) =>
+        Number(item.isValid) === 0 &&
+        item.qty !== null &&
+        item.qty !== undefined &&
+        Number(item.qty) !== 0,
+    );
+  }
+
+  mergeIsValidWithPackageItems(): void {
+    this.packageObj.packageItems.forEach((item) => {
+      const matchedType = this.productTypeObj.find(
+        (pt: any) => pt.id === item.productTypeId,
+      );
+      item.isValid = matchedType ? Number(matchedType.isValid) : 1;
+    });
+  }
+
+  isInvalidType(isValid: number | string): boolean {
+    return Number(isValid) === 0;
+  }
 }
 
 class Package {
@@ -391,12 +496,16 @@ class Package {
   approximatedPrice!: number;
   imageUrl!: string;
   packageItems: PackageItems[] = [];
+  packageType: string = '';
+  startDate!: Date;
+  endDate!: Date;
 }
 
 class ProductType {
   typeName!: string;
   shortCode!: string;
   id!: number;
+  isValid!: number;
 }
 
 class PackageItems {
@@ -404,4 +513,5 @@ class PackageItems {
   productTypeId!: number | null;
   typeName!: string | null; // ✅ Fixed type
   qty!: number | null;
+  isValid!: number;
 }

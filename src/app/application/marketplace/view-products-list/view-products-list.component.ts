@@ -41,6 +41,10 @@ export class ViewProductsListComponent {
   ];
   selectedDisplayType: any = null;
 
+  productTypeOptions: { name: string; value: number }[] = [];
+  selectedProductType: any = null;
+  
+
   categoryOption = [
     { name: 'Retail', value: 'Retail' },
     { name: 'WholeSale', value: 'WholeSale' },
@@ -48,21 +52,28 @@ export class ViewProductsListComponent {
   selectedCategoryOption: any = null;
   isLoading = false;
 
+  // Status toggle confirmation popup state
+  showStatusConfirm = false;
+  statusConfirmMessage = '';
+  statusConfirmWarning = '';
+  private pendingToggleItem: ProductList | null = null;
+  private pendingNewStatus: number = 0;
+
   constructor(
     private viewProductsList: ViewProductListService,
     private router: Router,
     private http: HttpClient,
     public tokenService: TokenService,
     public permissionService: PermissionService,
-
-  ) { }
+  ) {}
 
   fetchAllProducts(
     page: number = 1,
     limit: number = this.itemsPerPage,
     search: string = this.searchVariety,
     displayType: string = this.selectedDisplayType?.value,
-    category: string = this.selectedCategoryOption?.value
+    category: string = this.selectedCategoryOption?.value,
+    productTypeId: number = this.selectedProductType?.value,
   ) {
     this.isLoading = true;
     const trimmedSearch = search.trim();
@@ -79,7 +90,15 @@ export class ViewProductsListComponent {
     const categoryValue = category || '';
 
     this.viewProductsList
-      .getProductList(page, limit, trimmedSearch, displayTypeValue, categoryValue, discountFilter)
+      .getProductList(
+        page,
+        limit,
+        trimmedSearch,
+        displayTypeValue,
+        categoryValue,
+        discountFilter,
+        productTypeId,
+      )
       .subscribe(
         (response) => {
           console.log('this is the response', response);
@@ -96,8 +115,25 @@ export class ViewProductsListComponent {
           } else {
             Swal.fire('Error', 'Failed to fetch products.', 'error');
           }
-        }
+        },
       );
+  }
+
+  loadProductTypes() {
+  this.viewProductsList.fetchProductTypes().subscribe((res) => {
+    const data = res.data || res;
+    this.productTypeOptions = data
+      .map((pt: any) => ({
+        name: `${pt.shortCode} - ${pt.typeName}`,
+        value: pt.id,
+      }))
+      .sort((a: any, b: any) => a.name.localeCompare(b.name));
+  });
+}
+
+  onProductTypeChange() {
+    this.page = 1;
+    this.fetchAllProducts();
   }
 
   onDisplayTypeChange() {
@@ -106,6 +142,7 @@ export class ViewProductsListComponent {
   }
 
   ngOnInit() {
+    this.loadProductTypes();
     this.fetchAllProducts(this.page, this.itemsPerPage);
   }
 
@@ -156,8 +193,8 @@ export class ViewProductsListComponent {
         icon: '!border-gray-200 dark:!border-gray-500',
         confirmButton: 'hover:!bg-[#3085d6] dark:hover:!bg[#3085d6]',
         cancelButton: '',
-        actions: 'gap-2'
-      }
+        actions: 'gap-2',
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         this.http
@@ -172,9 +209,10 @@ export class ViewProductsListComponent {
                   text: 'The product has been deleted.',
                   icon: 'success',
                   customClass: {
-                    popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+                    popup:
+                      'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
                     title: 'dark:text-white',
-                  }
+                  },
                 });
                 this.fetchAllProducts();
               }
@@ -187,11 +225,12 @@ export class ViewProductsListComponent {
                 text: 'There was a problem deleting the product.',
                 icon: 'error',
                 customClass: {
-                  popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+                  popup:
+                    'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
                   title: 'dark:text-white',
-                }
+                },
               });
-            }
+            },
           );
       }
     });
@@ -226,20 +265,104 @@ export class ViewProductsListComponent {
   }
 
   formatDiscountPercentage(discount: number, normalPrice: number): string {
-  if (discount <= 0 || normalPrice <= 0) {
-    return 'No';
+    if (discount <= 0 || normalPrice <= 0) {
+      return 'No';
+    }
+
+    const percentage = (discount / normalPrice) * 100;
+    const percentageValue = Number(percentage.toFixed(2));
+
+    // Check if the percentage is a whole number
+    if (percentageValue % 1 === 0) {
+      return `${percentageValue.toFixed(0)}%`; // Display as whole number
+    } else {
+      return `${percentageValue}%`; // Display with decimals
+    }
+  }
+
+  // Add this method to your ViewProductsListComponent class
+formatNumber(value: number): string {
+  if (value === undefined || value === null) {
+    return '----';
   }
   
-  const percentage = (discount / normalPrice) * 100;
-  const percentageValue = Number(percentage.toFixed(2));
-  
-  // Check if the percentage is a whole number
-  if (percentageValue % 1 === 0) {
-    return `${percentageValue.toFixed(0)}%`; // Display as whole number
-  } else {
-    return `${percentageValue}%`; // Display with decimals
+  // Convert to string and remove trailing zeros after decimal
+  const numStr = value.toString();
+  if (numStr.includes('.')) {
+    // Remove trailing zeros, but keep at least one decimal if needed
+    let formatted = numStr.replace(/\.?0+$/, '');
+    // If the number ends with a decimal point, add a zero back
+    if (formatted.endsWith('.')) {
+      formatted += '0';
+    }
+    return formatted;
   }
+  return numStr;
 }
+
+toggleStatus(item: ProductList): void {
+    const newStatus = item.isEnable === 1 ? 0 : 1;
+    const actionText = newStatus === 1 ? 'Enabled' : 'Disabled';
+
+    this.pendingToggleItem = item;
+    this.pendingNewStatus = newStatus;
+
+    this.statusConfirmMessage = `Are you sure you want to change the status of "${item.displayName}" to ${actionText}?`;
+    this.statusConfirmWarning =
+      newStatus === 0
+        ? 'Note : Disabling this product will disable all of its associated packages. As a result, the affected packages will become undefined.'
+        : '';
+
+    this.showStatusConfirm = true;
+  }
+
+  onStatusConfirmConfirmed(): void {
+    this.showStatusConfirm = false;
+    if (!this.pendingToggleItem) return;
+
+    const item = this.pendingToggleItem;
+    const newStatus = this.pendingNewStatus;
+    const previousStatus = item.isEnable;
+
+    // optimistic UI update
+    item.isEnable = newStatus;
+
+    this.viewProductsList.toggleProductStatus(item.id, newStatus).subscribe(
+      () => {
+        Swal.fire({
+          title: 'Updated',
+          text: `Product ${newStatus === 1 ? 'enabled' : 'disabled'} successfully.`,
+          icon: 'success',
+          timer: 1200,
+          showConfirmButton: false,
+          customClass: {
+            popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+            title: 'dark:text-white',
+          },
+        });
+
+        // Refresh the current page from the server to reflect the true state
+      this.fetchAllProducts(this.page, this.itemsPerPage);
+      },
+      (error) => {
+        // revert on failure
+        item.isEnable = previousStatus;
+        console.error('Error toggling status:', error);
+        if (error.status === 401) {
+          Swal.fire('Unauthorized', 'Please log in again.', 'error');
+        } else {
+          Swal.fire('Error', 'Failed to update status.', 'error');
+        }
+      },
+    );
+
+    this.pendingToggleItem = null;
+  }
+
+  onStatusConfirmCancelled(): void {
+    this.showStatusConfirm = false;
+    this.pendingToggleItem = null;
+  }
 }
 
 class ProductList {
@@ -251,6 +374,7 @@ class ProductList {
   method!: string;
   varietyNameEnglish!: string;
   discountedPrice: number = -1;
+  comPrice: number = -1;
   startValue!: number;
   maxQuantity!: number;
   discount!: number;
@@ -259,4 +383,9 @@ class ProductList {
   unitType!: string;
   changeby!: number;
   category!: string;
+  productTypeId!: number;
+  productTypeShortCode!: string;
+  modifyBy!: string;
+  isEnable!: number;
+  productTypeIsValid!: number;
 }

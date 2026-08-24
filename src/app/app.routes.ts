@@ -292,6 +292,28 @@ import { AllDeletedSuppliersComponent } from './application/govi-shop/all-delete
 import { ViewAllShopsComponent } from './application/govi-shop/view-all-shops/view-all-shops.component';
 import { ViewBranchDetailsComponent } from './application/govi-shop/view-branch-details/view-branch-details.component';
 import { ViewBranchesPerShopComponent } from './application/govi-shop/view-branches-per-shop/view-branches-per-shop.component';
+import { ViewBranchProductsComponent } from './application/govi-shop/view-branch-products/view-branch-products.component';
+import { EditBranchComponent } from './application/govi-shop/edit-branch/edit-branch.component';
+import { ViewDeleteShopsComponent } from './application/govi-shop/view-delete-shops/view-delete-shops.component';
+import { ViewCropVarietyComponent } from './application/plant-care-app/view-crop-variety/view-crop-variety.component';
+import { ViewCropGroupDetailsComponent } from './application/plant-care-app/view-crop-group-details/view-crop-group-details.component';
+import { GoviTransViewTransactionsComponent } from './application/finance/govi-trans-view-transactions/govi-trans-view-transactions.component';
+import { TransactionAmountComponent } from './application/finance/transaction-amount/transaction-amount.component';
+import { GoviTransFinanceComponent } from './application/finance/govi-trans-finance/govi-trans-finance/govi-trans-finance.component';
+import { ViewDriverCategoriesComponent } from './application/finance/govi-trans-finance/view-driver-categories/view-driver-categories.component';
+import { AddEditDriverCategoryComponent } from './application/finance/govi-trans-finance/add-edit-driver-category/add-edit-driver-category.component';
+import { ViewTransactionDocumentComponent } from './application/finance/govi-trans-finance/view-transaction-document/view-transaction-document.component';
+import { ShortageTodayComponent } from './application/procurement-section/shortage/shortage-today/shortage-today.component';
+import { ShortageAssignComponent } from './application/procurement-section/shortage/shortage-assign/shortage-assign.component';
+import { ProcurementShortageHistoryComponent } from './application/procurement-section/shortage/procurement-shortage-history/procurement-shortage-history.component';
+import { ShortageFinalizationTodayComponent } from './application/procurement-section/shortage/shortage-finalization-today/shortage-finalization-today.component';
+import { DistributionFinanceComponent } from './application/finance/distribution-finance-acion/distribution-finance/distribution-finance.component';
+import { ViewSubmissionsComponent } from './application/finance/distribution-finance-acion/view-submissions/view-submissions.component';
+import { ViewTransactionsComponent } from './application/finance/distribution-finance-acion/view-transactions/view-transactions.component';
+import { ViewSubmissionDocumentComponent } from './application/finance/distribution-finance-acion/view-submission-document/view-submission-document.component';
+import { TestComponentComponent } from './application/steckholders-section/test-component/test-component.component';
+import { ViewTransactionAllOrdersComponent } from './application/finance/distribution-finance-acion/view-transaction-all-orders/view-transaction-all-orders.component';
+import { ViewCopTransactionsDocumentComponent } from './application/finance/distribution-finance-acion/view-cop-transactions-document/view-cop-transactions-document.component';
 
 export const routes: Routes = [
   {
@@ -301,6 +323,7 @@ export const routes: Routes = [
   },
 
   { path: 'login', component: LoginComponent },
+  { path: 'test', component: TestComponentComponent },
 
   { path: 'status-451', component: Status451Component },
   { path: 'forgot-password', component: ForgotPasswordComponent },
@@ -494,6 +517,13 @@ export const routes: Routes = [
                 data: { permission: 'Edit crop group' },
               },
               {
+                path: 'view-crop-group-details',
+                component: ViewCropGroupDetailsComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Edit crop group' },
+              },
+
+              {
                 path: 'view-crop-group',
                 component: ViewCropGroupComponent,
               },
@@ -620,6 +650,11 @@ export const routes: Routes = [
                 canActivate: [PermissionGuard],
                 data: { permission: 'View audit farm cluster' },
               },
+              {
+                path: 'view-a-crop-variety',
+                canActivate: [PermissionGuard],
+                component: ViewCropVarietyComponent,
+              }
             ],
           },
         ],
@@ -811,10 +846,65 @@ export const routes: Routes = [
                   {
                     path: 'view-documents/:id',
                     component: GoviShopViewDocumentComponent,
+                  }
+                ],
+              },
+              {
+                path: 'govi-trans-finance',
+                children:[
+                  {path:'', component: GoviTransFinanceComponent},
+                  {path: 'view-driver-categories', component: ViewDriverCategoriesComponent},
+                  {
+                    path: 'add-driver-category',
+                    component: AddEditDriverCategoryComponent,
+                  },
+                  {
+                    path: 'edit-driver-category/:id',
+                    component: AddEditDriverCategoryComponent,
+                  },
+                  {
+                    path: 'view-transactions',
+                    component: GoviTransViewTransactionsComponent,
+                  },
+                  {
+                    path: 'view-transactions/amount/:id',
+                    component: TransactionAmountComponent,
+                  },
+                  {
+                    path: 'view-transactions/document/:id',
+                    component: ViewTransactionDocumentComponent,
+                  }
+                ]
+              },
+              {
+                path: 'distribution-finance',
+                children: [
+                  {
+                    path: '',
+                    component: DistributionFinanceComponent,
+                  },
+                  {
+                    path: 'view-submissions',
+                    component: ViewSubmissionsComponent,
+                  },
+                  {
+                    path: 'view-transactions',
+                    component: ViewTransactionsComponent,
+                  },
+                  {
+                    path: 'view-submissions-document/:id',
+                    component: ViewSubmissionDocumentComponent,
+                  },
+                  {
+                    path: 'view-transactions-all-orders/:id',
+                    component: ViewTransactionAllOrdersComponent,
+                  },
+                  {
+                    path: 'view-cop-transactions-document/:id',
+                    component: ViewCopTransactionsDocumentComponent,
                   },
                 ],
               },
-
             ],
           },
         ],
@@ -1100,6 +1190,8 @@ export const routes: Routes = [
               },
               {
                 path: 'govi-shop-suppliers',
+                canActivate: [PermissionGuard],
+                data: { permission: 'View GoViShop Suppliers' },
                 children: [
                   {
                     path: '',
@@ -1129,7 +1221,7 @@ export const routes: Routes = [
                   },
                   {
                     path: 'govishop-users',
-                    component:GovishopUsersComponent,
+                    component: GovishopUsersComponent,
                   },
                   {
                     path: 'edit-govi-shop-pos-user',
@@ -1144,7 +1236,6 @@ export const routes: Routes = [
                     path: 'update-govi-shop/:id',
                     component: UpdateGoviShopComponent,
                   },
-
                 ],
               },
 
@@ -1448,6 +1539,22 @@ export const routes: Routes = [
             canActivate: [PermissionGuard],
             data: { permission: 'Procurement centre requirement' },
           },
+          {
+            path: 'procurement-shortage-history',
+            component: ProcurementShortageHistoryComponent,
+
+          },
+          {
+            path: 'view-shortage-today',
+            component: ShortageTodayComponent
+          },
+          { path: 'shortage-assign/:id', 
+            component: ShortageAssignComponent 
+          },
+          {
+            path: 'view-shortage-finalization-today',
+            component: ShortageFinalizationTodayComponent
+          }
         ],
       },
 
@@ -2128,38 +2235,75 @@ export const routes: Routes = [
               },
               {
                 path: 'all-govi-shops',
+                canActivate: [PermissionGuard],
+                data: { permission: 'View All Govi Shops' },
                 component: ViewAllShopsComponent,
+                
               },
+
               {
                 path: 'all-shop-requests',
+                canActivate: [PermissionGuard],
+                data: { permission: 'View All Shop Requests' },
                 component: GovishopViewShopsComponent,
               },
               {
                 path: 'all-branches-pershop',
+                canActivate: [PermissionGuard],
+                data: { permission: 'View branches per shop' },
                 component: ViewBranchesPerShopComponent,
               },
-
+              {
+                path: 'branch-products/:branchId',
+                component: ViewBranchProductsComponent,
+              },
               {
                 path: 'update-govi-shop/:id',
+                canActivate: [PermissionGuard],
+                data: { permission: 'edit govi shop' },
                 component: UpdateGoviShopComponent,
               },
 
               {
-                path: 'preview-govi-shop/:id',
+                path: 'all-govi-shops/preview-govi-shop/:id',
+                canActivate: [PermissionGuard],
+                data: { permission: 'preview govi shop' },
                 component: GoviShopPreviewShopComponent,
               },
               {
                 path: 'deleted-suppliers',
+                canActivate: [PermissionGuard],
+                data: { permission: 'View All Deleted Suppliers' },
                 component: AllDeletedSuppliersComponent,
               },
               {
                 path: 'view-branch-details/:id',
-                component: ViewBranchDetailsComponent
+                component: ViewBranchDetailsComponent,
+              },
+
+              {
+                path: 'all-branches',
+                canActivate: [PermissionGuard],
+                data: { permission: 'View All Branches' },
+                component: ViewBranchesPerShopComponent,
+              },
+
+              {
+                path: 'edit-branch/:branchId',
+                component: EditBranchComponent,
+              },
+              
+              { path: 'view-delete-shops',
+                component: ViewDeleteShopsComponent,
+              },
+              {
+                path: 'preview-govi-shop/:id',
+                component: GoviShopPreviewShopComponent,
               }
             ],
-          }
-        ]
-      }
+          },
+        ],
+      },
     ],
   },
   { path: '**', component: NotFoundComponent },
@@ -2169,4 +2313,4 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

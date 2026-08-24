@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { ThemeService } from '../../../services/theme.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 interface IdistrictReport {
   cropName: string;
@@ -169,27 +170,34 @@ export class CollectionofficerDistrictReportComponent implements OnInit, OnDestr
             { label: 'Grade C', data: gradeCData, backgroundColor: '#3DE188' },
           ],
         },
+        plugins: [ChartDataLabels],
         options: {
           responsive: true,
-          maintainAspectRatio: false,
-          indexAxis: 'y',
-          plugins: {
-            title: {
-              display: true,
-              text: `${this.selectedDistrict.name} - Crop Weights`,
-              color: titleColor,
-              padding: { top: 10, bottom: 30 },
-              font: { size: 18, weight: 600 },
-            },
-            legend: {
-              position: 'bottom',
-              labels: {
-                padding: 30,
-                color: textColor,
-                font: { size: 14, weight: 400 },
-              },
-            },
-          },
+    maintainAspectRatio: false,
+    indexAxis: 'y',
+    plugins: {
+      title: {
+        display: true,
+        text: `${this.selectedDistrict.name} - Crop Weights`,
+        color: titleColor,
+        padding: { top: 10, bottom: 30 },
+        font: { size: 18, weight: 600 },
+      },
+      legend: {
+        position: 'bottom',
+        labels: {
+          padding: 30,
+          color: textColor,
+          font: { size: 14, weight: 400 },
+        },
+      },
+      datalabels: {
+        display: false,
+        color: '#fff',
+        font: { size: 11, weight: 600 },
+        formatter: (value: number) => (value > 0 ? value : ''), // ✅ hides the 0
+      },
+    },
           scales: {
             x: {
               stacked: true,
@@ -231,11 +239,13 @@ export class CollectionofficerDistrictReportComponent implements OnInit, OnDestr
 
       const margin = 20;
       const chartStartX = 50;
-      const chartStartY = 60; // Reduced from 70 to decrease gap after title
+      const chartStartY = 30; // Reduced from 70 to decrease gap after title
       const barHeight = 8;
       const gap = 2;
       const chartHeight = 100;
       const chartWidth = 100;
+      const yAxisTitleX = 20;
+
 
       const colors = {
         gradeA: '#FF9263',
@@ -315,9 +325,8 @@ export class CollectionofficerDistrictReportComponent implements OnInit, OnDestr
       // Draw y-axis title at the TOP
       doc.setFontSize(10);
       doc.setTextColor('#738AC0');
-      const textX = yAxisX - 15;
-      const textY = barAreaStartY - 8; // Position above the first tick mark
-      doc.text('Crop Variety', textX, textY, { angle: 360, align: 'center' });
+      const textY = (barAreaStartY + barAreaEndY) / 2;
+      doc.text('Crop Variety', yAxisTitleX, textY, { angle: 90, align: 'center' });
 
       // Draw y-axis tick marks and crop name labels
       let currentBarY = barAreaStartY;
@@ -428,9 +437,11 @@ export class CollectionofficerDistrictReportComponent implements OnInit, OnDestr
       // Draw x-axis title
       doc.setFontSize(10);
       doc.setTextColor('#738AC0');
-      doc.text('Total Weight (kg)', xAxisStartX + 130, xAxisY + 5, {
-        align: 'right',
-      });
+      // doc.text('Total Weight (kg)', xAxisStartX + 130, xAxisY + 5, {
+      //   align: 'center',
+      // });
+      doc.text('Total Weight (kg)', xAxisStartX + (chartWidth / 2), xAxisY + 5, { align: 'center' });
+
 
       // Summary Table
       const tableStartY = xAxisY + 15; // Reduced from 30 to decrease gap between chart and table

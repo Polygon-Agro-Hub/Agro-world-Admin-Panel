@@ -1,0 +1,191 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<button class="mb-5 text-textLight dark:text-textDark flex items-center gap-2" (click)="back()">
+    <i class="fa-solid fa-arrow-left"></i>
+    Back
+</button>
+
+<div class="pt-5 pr-8 pl-8 pb-5 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg mb-11">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-[20px] font-normal text-[#292929] dark:text-textDark">
+            Deleted Shops ({{ totalCount | number: "2.0"}})
+        </h2>
+
+        <div class="flex items-center gap-3">
+            <p-dropdown [(ngModel)]="businessType" [options]="businessTypes" optionLabel="label" optionValue="value"
+                placeholder="Business Type" (onChange)="onBusinessTypeChange()" [showClear]="businessType ? true : false"
+                styleClass="border border-1 rounded-xl h-8 items-center border-[#828282] dark:border-[#AFAFAF]" [style]="{
+                    background: 'var(--dropdown-bg)',
+                    color: 'var(--dropdown-text)',
+                }">
+            </p-dropdown>
+
+            <div class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-96 group relative">
+                <input type="text" [(ngModel)]="searchItem" (keyup.enter)="onSearch()"
+                    placeholder="Search Shop Name, Phone..."
+                    class="bg-transparent outline-none w-full text-gray-600 dark:text-gray-300 text-sm" />
+
+                <!-- Tooltip -->
+                <div
+                    class="absolute top-full mt-2 left-1/2 -translate-x-1/2 bg-gray-800 dark:bg-gray-700 text-white dark:text-gray-200 text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10 pointer-events-none">
+                    Search by Shop Name or Phone
+                </div>
+
+                <button type="button" (click)="onSearch()"
+                    class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
+                    </svg>
+                </button>
+
+                <button type="button" (click)="clearSearch()" *ngIf="searchItem"
+                    class="text-gray-500 hover:text-gray-700 focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="w-full overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full"
+        style="transform: translateZ(0); -webkit-overflow-scrolling: touch">
+
+        <!-- No Data State -->
+        <div *ngIf="deletedShops.length === 0 && !isLoading"
+            class="flex flex-col items-center w-full h-64 px-10 py-7 dark:text-textDark mt-6">
+            <p class="text-[#494949] my-6 dark:text-textDark">
+                --No Data Available--
+            </p>
+            <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+        </div>
+
+        <!-- Table with Data -->
+        <table *ngIf="deletedShops.length > 0" class="w-full text-left">
+            <thead>
+                <tr class="border-b border-gray-200 dark:border-gray-600">
+                    <th class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400">
+                        No
+                    </th>
+                    <th class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400">
+                        Logo
+                    </th>
+                    <th class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 whitespace-nowrap">
+                        Shop Name
+                    </th>
+                    <th class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400">
+                        Business Type
+                    </th>
+                    <th class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 whitespace-nowrap">
+                        Phone Number
+                    </th>
+                    <th class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 ">
+                        Email Address
+                    </th>
+                    <th 
+                        *ngIf="
+                permissionService.hasPermission('View shop delete reason') ||
+                tokenService.getUserDetails().role === '1'
+                "
+                    class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 whitespace-nowrap text-center">
+                        Reason
+                    </th>
+            </thead>
+            <tbody>
+                <tr *ngFor="let shop of deletedShops; let i = index"
+                    class="border-b border-gray-100 dark:border-gray-700 transition-colors">
+
+                    <td class="py-3 px-3 text-[#000000] dark:text-textDark">
+                        {{ i + 1 | number: "2.0" }}
+                    </td>
+
+                    <td class="py-3 px-3">
+                        <div
+                            class="w-9 h-9 rounded-full bg-white border flex items-center justify-center overflow-hidden">
+                            <img *ngIf="getLogoUrl(shop.logo)" [src]="getLogoUrl(shop.logo)"
+                                class="w-full h-full object-cover rounded-full" [alt]="shop.shopName" />
+                            <svg *ngIf="!getLogoUrl(shop.logo)" class="w-5 h-5 text-[#C9A227]" fill="currentColor"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M5.5 1A1.5 1.5 0 004 2.5v1A1.5 1.5 0 005.5 5h13A1.5 1.5 0 0020 3.5v-1A1.5 1.5 0 0018.5 1h-13zM3 7.5A1.5 1.5 0 014.5 6h15A1.5 1.5 0 0121 7.5V8H3v-.5zm0 2v9A1.5 1.5 0 004.5 20h15a1.5 1.5 0 001.5-1.5v-9H3z" />
+                            </svg>
+                        </div>
+                    </td>
+
+                    <td class="py-3 px-3 text-[#000000] dark:text-textDark font-normal">
+                        {{ shop.shopName }}
+                    </td>
+
+                    <td class="py-3 px-3 text-[#000000] dark:text-textDark font-normal">
+                        {{ shop.shopType }}
+                    </td>
+
+                    <td class="py-3 px-3 text-[#000000] dark:text-textDark font-normal whitespace-nowrap">
+                        {{ shop.phone }}
+                    </td>
+
+                    <td class="py-3 px-3 text-[#000000] dark:text-textDark font-normal">
+                        {{ shop.email }}
+                    </td>
+
+                    <td
+                    *ngIf="
+              permissionService.hasPermission('View shop delete reason') ||
+              tokenService.getUserDetails().role === '1'
+            "
+                    class="py-3 px-3 text-center">
+                        <button (click)="openReasonModal(shop)"
+                            class="text-blue-500 hover:text-blue-700 transition-colors" title="View Reason">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path
+                                    d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Reason Modal Popup -->
+<div *ngIf="showReasonModal"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm"
+    (click)="closeReasonModal()">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-md w-full mx-4 transform transition-all"
+        (click)="$event.stopPropagation()">
+
+        <!-- Modal Header -->
+        <div class="flex justify-center items-center p-4 border-b border-gray-200 dark:border-gray-700">
+            <h3 class="text-[16px] font-semibold text-gray-900 dark:text-white">
+                Reason for Deletion
+            </h3>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="p-4">
+            <div>
+                <div class=" rounded-lg p-3">
+                    <p class="text-[16px] text-[#000000] dark:text-gray-300 text-center">
+                        {{ selectedShop?.removalReason || 'No reason provided' }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="flex justify-center p-4">
+            <button (click)="closeReasonModal()"
+                class="px-10 py-3 bg-[#74788D] text-[#D3D3D3] rounded-lg transition-colors cursor-pointer">
+                Close
+            </button>
+        </div>
+    </div>
+</div>

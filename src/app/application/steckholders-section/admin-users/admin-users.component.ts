@@ -80,6 +80,7 @@ export class AdminUsersComponent implements OnInit {
     this.page = page;
     const token = this.tokenService.getToken();
     if (!token) return;
+    console.log(page)
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,

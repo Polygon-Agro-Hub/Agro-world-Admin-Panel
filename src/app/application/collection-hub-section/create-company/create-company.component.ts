@@ -209,6 +209,12 @@ export class CreateCompanyComponent implements OnInit {
           canvas.width = width;
           canvas.height = height;
           const ctx = canvas.getContext('2d');
+
+          if (ctx) {
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(0, 0, width, height);
+          }
+          
           ctx?.drawImage(img, 0, 0, width, height);
 
           canvas.toBlob(
@@ -699,16 +705,13 @@ export class CreateCompanyComponent implements OnInit {
         this.companyData.bankName = selectedBank.name;
       }
 
-      const currentBranch = this.branches.find(
-        (branch) => branch.ID === this.selectedBranchId
-      );
-      if (!currentBranch) {
-        this.selectedBranchId = null;
-        this.companyData.branchName = '';
-      }
+      this.selectedBranchId = null;
+      this.companyData.branchName = '';
     } else {
       this.branches = [];
       this.companyData.bankName = '';
+      this.selectedBranchId = null;
+      this.companyData.branchName = '';
     }
   }
 

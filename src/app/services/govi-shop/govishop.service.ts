@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../environment/environment.development';
 import { TokenService } from '../token/services/token.service';
+import { environment } from '../../environment/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -128,7 +128,7 @@ export class GovishopService {
   }
 
   getBranchesByShopId(
-    shopId: number,
+    shopId: number | null,
     page: number = 1,
     limit: number = 10,
     province?: string,
@@ -182,6 +182,63 @@ export class GovishopService {
       headers: this.getHeaders(),
     });
   }
+
+  // Update the method signature in your service
+getProductsByBranchId(
+  branchId: number,
+  categoryId?: string,
+  searchItem?: string
+): Observable<any> {
+  let params = new HttpParams();
+
+  if (categoryId && categoryId !== 'all') params = params.set('categoryId', categoryId);
+  if (searchItem) params = params.set('searchItem', searchItem);
+
+  return this.http.get<any>(
+    `${this.apiUrl}get-products/${branchId}`,
+    { headers: this.getHeaders(), params }
+  );
+}
+
+getBranchForUpdate(id: number) {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.get<any>(`${this.apiUrl}get-branch-for-update/${id}`, {
+      headers,
+    });
+  }
+
+
+updateBranchData(shopData: any): Observable<any> {
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.post(`${this.apiUrl}update-govi-shop-branch`,
+    shopData,
+      {
+        headers
+      });
+}
+getAllRemovedShops(
+  businessType?: string | null,
+  searchItem?: string | null,
+): Observable<{ results: any[]; total: number }> {
+  let params = new HttpParams();
+
+  if (businessType) params = params.set('businessType', businessType);
+  if (searchItem) params = params.set('searchItem', searchItem);
+
+  return this.http.get<{ results: any[]; total: number }>(
+    `${this.apiUrl}get-all-removed-shops`,
+    { headers: this.getHeaders(), params },
+  );
+}
+
+
 }
 
 export interface BranchDetailsShopInfo {

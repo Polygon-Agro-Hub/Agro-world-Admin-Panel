@@ -25,6 +25,7 @@ import { Subscription } from 'rxjs';
 })
 export class DashbordAreaChartComponent implements OnChanges, OnInit, OnDestroy {
   @Output() districtSelected = new EventEmitter<string>();
+  @Output() chartDataChanged = new EventEmitter<{ registered: number; unregistered: number }>();
 
   data: any;
   options: any;
@@ -188,6 +189,7 @@ export class DashbordAreaChartComponent implements OnChanges, OnInit, OnDestroy 
     unregisteredCount: number,
     isDistrictSelected: boolean
   ): void {
+    this.chartDataChanged.emit({ registered: registeredCount, unregistered: unregisteredCount });
     const maxYValue = Math.ceil(
       Math.max(registeredCount, unregisteredCount) * 1.2
     );

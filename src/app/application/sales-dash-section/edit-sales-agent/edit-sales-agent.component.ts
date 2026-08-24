@@ -811,15 +811,14 @@ export class EditSalesAgentComponent implements OnInit {
   navigatePath(path: string) {
     this.router.navigate([path]);
   }
+  
   updateProvince(event: DropdownChangeEvent): void {
     const selectedDistrict = event.value;
     const selected = this.districts.find(
       (district) => district.name === selectedDistrict
     );
 
-    if (this.itemId === null) {
-      this.personalData.province = selected ? selected.province : '';
-    }
+    this.personalData.province = selected ? selected.province : '';
   }
 
   validateNameInput(event: KeyboardEvent): void {
@@ -897,15 +896,31 @@ export class EditSalesAgentComponent implements OnInit {
       return; // Allow these special keys
     }
 
-    // Block lowercase 'v' explicitly
-    if (event.key === 'v') {
+    const nicInputPattern = /^[0-9Vv]$/;
+    if (!nicInputPattern.test(event.key)) {
       event.preventDefault();
       return;
     }
 
-    // Allow only numbers or uppercase V
-    const nicInputPattern = /^[0-9V]$/;
-    if (!nicInputPattern.test(event.key)) {
+    const input = event.target as HTMLInputElement;
+    const currentValue = input.value;
+
+    if (event.key.toLowerCase() === 'v') {
+      const isAllDigitsSoFar = /^\d{9}$/.test(currentValue);
+      if (!isAllDigitsSoFar) {
+        event.preventDefault();
+      }
+      return;
+    }
+
+    // Block typing more than 10 digits
+    if (currentValue.includes('V')) {
+      event.preventDefault();
+      return;
+    }
+
+    // - New format: 12 digits max
+    if (currentValue.length >= 12) {
       event.preventDefault();
     }
   }
@@ -920,7 +935,12 @@ export class EditSalesAgentComponent implements OnInit {
         this.personalData.nic = this.personalData.nic.slice(0, -1) + 'V';
       }
 
-      // Validate after formatting
+      if (this.personalData.nic.includes('V')) {
+        this.personalData.nic = this.personalData.nic.slice(0, 10);
+      } else {
+        this.personalData.nic = this.personalData.nic.slice(0, 12);
+      }
+
       this.validateNIC();
     } else {
       this.nicError = false;

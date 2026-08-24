@@ -144,7 +144,14 @@
           </tr>
         </tbody>
       </table>
-      <div class="dark:bg-[#262f45]">
+
+      <div *ngIf="feedbacks.length === 0 && !isLoading"
+        class="flex flex-col items-center justify-center w-full py-20">
+        <p class="text-[#494949] my-6 dark:text-textDark text-lg">-- No Data --</p>
+        <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 opacity-80" />
+      </div>
+
+      <div *ngIf="feedbacks.length > 0" class="dark:bg-[#262f45]">
         <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
           [nextLabel]="'Next'" screenReaderPaginationLabel="'Pagination'" screenReaderPageLabel="'page'"
           [screenReaderCurrentLabel]="'Youre on page'"></pagination-controls>

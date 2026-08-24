@@ -281,35 +281,44 @@ formatDateForFileName(date: any): string {
   }
 
   getCollectionReport(): void {
-    if (!this.fromDate || !this.toDate) {
-      return;
-    }
-
-    this.isLoading = true;
-    this.collectionoOfficer
-      .getCollectionReportByOfficerId(
-        this.convertToISO(this.fromDate),
-        this.convertToISO(this.toDate),
-        this.officerId
-      )
-      .subscribe(
-        (response: any) => {
-          this.dailyReports = response;
-          this.calculateTotalWeight();
-          this.calculateTotalFarmers();
-          this.go = this.dailyReports && this.dailyReports.length > 0;
-          const now = new Date();
-          this.generatedTime = now.toLocaleTimeString();
-          this.generatedDate = now.toLocaleDateString();
-          this.isLoading = false;
-        },
-        (error) => {
-          console.error('Error fetching collection report:', error);
-          this.isLoading = false;
-          this.clearReportData();
-        }
-      );
+  if (!this.fromDate || !this.toDate) {
+    return;
   }
+
+  this.isLoading = true;
+  this.collectionoOfficer
+    .getCollectionReportByOfficerId(
+      this.convertToISO(this.fromDate),
+      this.convertToISO(this.toDate),
+      this.officerId
+    )
+    .subscribe(
+      (response: any) => {
+        // If response contains both dailyReports and totalCount
+        if (response.dailyReports) {
+          this.dailyReports = response.dailyReports;
+          // this.finalTotalFarmers = response.totalCount || 0;
+        } else {
+          this.dailyReports = response;
+          // Calculate based on your needs
+          // this.finalTotalFarmers = this.dailyReports.length; 
+        }
+        
+        this.calculateTotalWeight();
+        this.calculateTotalFarmers();
+        this.go = this.dailyReports && this.dailyReports.length > 0;
+        const now = new Date();
+        this.generatedTime = now.toLocaleTimeString();
+        this.generatedDate = now.toLocaleDateString();
+        this.isLoading = false;
+      },
+      (error) => {
+        console.error('Error fetching collection report:', error);
+        this.isLoading = false;
+        this.clearReportData();
+      }
+    );
+}
 
   calculateTotalWeight() {
     this.finalTotalWeight = this.dailyReports.reduce((sum, report) => {

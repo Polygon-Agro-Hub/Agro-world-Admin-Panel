@@ -114,13 +114,7 @@ export class ViewDistributionOfficerComponent {
     this.fetchAllDistributionOfficer(this.page, this.itemsPerPage);
     this.getAllcompany();
     this.fetchDistributionCenterNames();
-    // this.route.queryParams.subscribe((params) => {
-    //   this.centerId = params['id'] ? +params['id'] : null;
-    // });
 
-    // if(this.centerId != null){
-    //   console.log(this.centerId);
-    // }
   }
 
   fetchAllDistributionOfficer(
@@ -490,7 +484,6 @@ export class ViewDistributionOfficerComponent {
 
   onSearch() {
     this.searchNIC = this.searchNIC?.trim() || ''
-    console.log('searchNIC', "'", this.searchNIC, "'")
     this.fetchAllDistributionOfficer(this.page, this.itemsPerPage);
   }
 

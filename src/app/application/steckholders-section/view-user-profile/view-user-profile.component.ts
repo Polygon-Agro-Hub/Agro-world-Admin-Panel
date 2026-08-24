@@ -51,7 +51,7 @@ export class ViewUserProfileComponent implements OnInit {
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
       this.userId = params["userId"] ? +params["userId"] : null;
-      console.log("Received item ID:", this.userId);
+      
     });
     if (this.userId) {
       this.loadUserData(this.userId);

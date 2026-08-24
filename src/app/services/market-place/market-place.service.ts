@@ -548,18 +548,36 @@ export class MarketPlaceService {
   fetchAllRetailCustomers(
     page: number = 1,
     limit: number = 10,
-    searchText: string = ''
+    searchText: string = '',
+    ratingFilter: string = ''
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
 
     let url = `${this.apiUrl}market-place/get-all-retails-customers?page=${page}&limit=${limit}`;
+
     if (searchText) {
       url += `&searchText=${searchText}`;
     }
 
+    if (ratingFilter) {
+      url += `&ratingFilter=${ratingFilter}`;
+    }
+
     return this.http.get<any>(url, { headers });
+  }
+
+  updateCustomerRating(customerId: string, rateofCus: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.patch<any>(
+      `${this.apiUrl}market-place/update-retail-customer-rating/${customerId}`,
+      { rateofCus },
+      { headers }
+    );
   }
 
   getOrderDetailsById(id: string): Observable<any> {
@@ -684,18 +702,36 @@ export class MarketPlaceService {
   fetchAllWholesaleCustomers(
     page: number = 1,
     limit: number = 10,
-    searchText: string = ''
+    searchText: string = '',
+    ratingFilter: string = '' 
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-
+ 
     let url = `${this.apiUrl}market-place/get-all-wholesale-customers?page=${page}&limit=${limit}`;
+ 
     if (searchText) {
       url += `&searchText=${searchText}`;
     }
-
+ 
+    if (ratingFilter) {
+      url += `&ratingFilter=${ratingFilter}`;  // ← new
+    }
+ 
     return this.http.get<any>(url, { headers });
+  }
+ 
+  updateWholesaleCustomerRating(customerId: string, rateofCus: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+ 
+    return this.http.patch<any>(
+      `${this.apiUrl}market-place/update-wholesale-customer-rating/${customerId}`,
+      { rateofCus },
+      { headers }
+    );
   }
 
   fetchUserOrders(
@@ -781,6 +817,20 @@ export class MarketPlaceService {
 
     let url = `${this.apiUrl}market-place/market-dashbord-details`;
     return this.http.get<any>(url, { headers });
+  }
+
+  updateProductTypeStatus(id: number, isValid: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    const body = { isValid: isValid };
+
+    return this.http.patch(
+      `${this.apiUrl}market-place/update-product-type-status/${id}`,
+      body,
+      { headers }
+    );
   }
 
 }

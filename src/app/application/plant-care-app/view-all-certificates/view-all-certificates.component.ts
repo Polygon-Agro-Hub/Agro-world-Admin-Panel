@@ -77,7 +77,6 @@ export class ViewAllCertificatesComponent implements OnInit {
 
   fetchData() {
     this.isLoading = true;
-    console.log(this.selectQaction);
 
     this.searchText = this.searchText.trim();
     this.certificateSrv
@@ -88,7 +87,6 @@ export class ViewAllCertificatesComponent implements OnInit {
         this.searchText
       )
       .subscribe((res) => {
-        console.log(res);
         this.certificateArr = res.data;
         this.isLoading = false;
         this.hasData = this.certificateArr.length > 0;

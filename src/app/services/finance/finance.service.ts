@@ -346,6 +346,34 @@ export interface InvestmentOfficer {
   distrct?: any;
 }
 
+export interface FinanceMainDashboardCounts {
+  allPensionRequests: number;
+  supplierUpgrades: number;
+  allProjectRequests: number;
+  publishedProjects: number;
+}
+
+export interface FinanceMainDashboardIncome {
+  goviCareProIncome: number;
+  certificationsIncome: number;
+  collectionExpenses: number;
+  goviMartSalesIncome: number;
+  salesDashIncome: number;
+  returnedOrdersLoss: number;
+  goviShopPremiumIncome: number;
+  goviShopOrderCommission: number;
+}
+
+export interface FinanceMainDashboardData {
+  counts: FinanceMainDashboardCounts;
+  income: FinanceMainDashboardIncome;
+}
+
+export interface FinanceMainDashboardResponse {
+  status: boolean;
+  data: FinanceMainDashboardData;
+}
+
 export interface ApprovedGoviCareRequest extends GoviCareRequest {
   publishStatus: string;
 }
@@ -797,7 +825,6 @@ export class FinanceService {
     searchText: string = '',
 
   ): Observable<any> {
-    console.log('searchText', searchText)
 
     let url = `${this.apiUrl}finance/get-all-published-projects?page=${1}`;
 
@@ -859,7 +886,6 @@ export class FinanceService {
   }
 
   approveInvestmentStatus(id: number): Observable<any> {
-    console.log('id', id)
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.tokenService.getToken()}`,
     });
@@ -1000,8 +1026,6 @@ export class FinanceService {
     id?: number,
     status?: string
   ): Observable<any> {
-    console.log('Fetching investment users - Page:', page, 'Limit:', limit, 'Search:', search, 'ID:', id, 'Status:', status);
-
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
@@ -1085,7 +1109,7 @@ export class FinanceService {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-  
+
     const url = `${this.apiUrl}shop/reneve-govi-shop-user/${id}`;
     return this.http.put<any>(url, { status }, { headers });
   }
@@ -1097,7 +1121,197 @@ export class FinanceService {
     });
 
     const url = `${this.apiUrl}shop/reject-govi-shop-user-status/${id}`;
-    return this.http.post<any>(url, {text}, { headers });
+    return this.http.post<any>(url, { text }, { headers });
   }
+
+  getFinanceMainDashboard(): Observable<FinanceMainDashboardResponse> {
+    const url = `${this.apiUrl}finance/main-dashboard`;
+    return this.http.get<FinanceMainDashboardResponse>(url, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  fetchAllTransactions(
+    page: number,
+    limit: number,
+    status: string,
+    date: string,
+    searchItem: string,
+
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    let url = `${this.apiUrl}finance/get-all-transactions?page=${page}&limit=${limit}`;
+
+    if (status) {
+      url += `&status=${status}`;
+    }
+
+    if (date) {
+      url += `&date=${date}`;
+    }
+
+    if (searchItem) {
+      url += `&searchItem=${searchItem}`;
+    }
+
+    return this.http.get<any>(url, { headers });
+  }
+
+  fetchTransactionOrders(
+    id: number
+
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    let url = `${this.apiUrl}finance/get-all-transaction-orders/${id}`;
+
+    return this.http.get<any>(url, { headers });
+  }
+
+  viewTransactionDocument(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}finance/view-transaction-document/${id}`;
+    return this.http.get<any>(url, { headers });
+  }
+
+  updateTransactionStatus(id: number, transStatus: string, rejectReason?: string): Observable<any> {
+    const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}finance/update-transaction-status/${id}`;
+    return this.http.put<any>(url, { transStatus, rejectReason }, { headers });
+  }
+
+  getAllShortageSubmissions(
+    page: number,
+    limit: number,
+    status: string,
+    purchasedAt: string,
+    searchItem: string
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    let url = `${this.apiUrl}finance/get-all-shortage-submission?page=${page}&limit=${limit}`;
+
+    if (status) {
+      url += `&status=${status}`;
+    }
+
+    if (purchasedAt) {
+      url += `&purchasedAt=${purchasedAt}`;
+    }
+
+    if (searchItem) {
+      url += `&searchItem=${searchItem}`;
+    }
+
+    return this.http.get<any>(url, { headers });
+  }
+
+  viewShortageSubmissionDocument(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.get<any>(
+      `${this.apiUrl}finance/view-submission-document/${id}`,
+      { headers }
+    );
+  }
+
+  updateShortageSubmissionTransactionStatus(id: number, reqStatus: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.put<any>(
+      `${this.apiUrl}finance/update-submission-status/${id}`,
+      { reqStatus },
+      { headers }
+    );
+  }
+
+   viewCopTransactionDocument(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.get<any>(
+      `${this.apiUrl}finance/view-cop-transaction-document/${id}`,
+      { headers }
+    );
+  }
+
+  updateCopTransactionStatus(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.put<any>(
+      `${this.apiUrl}finance/update-cop-transaction-status/${id}`,
+      {},
+      { headers }
+    );
+  }
+
+  getAllCOPTransactions(
+    page: number,
+    limit: number,
+    status: string,
+    purchasedAt: string,
+    searchItem: string
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    let url = `${this.apiUrl}finance/get-all-cop-transactions?page=${page}&limit=${limit}`;
+
+    if (status) {
+      url += `&status=${status}`;
+    }
+
+    if (purchasedAt) {
+      url += `&purchasedAt=${purchasedAt}`;
+    }
+
+    if (searchItem) {
+      url += `&searchItem=${searchItem}`;
+    }
+
+    return this.http.get<any>(url, { headers });
+  }
+
+  getPickupHandOverSummary(id: number): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
+  return this.http.get<any>(
+    `${this.apiUrl}finance/pickup-handover-summary/${id}`,
+    { headers }
+  );
+}
 }
 

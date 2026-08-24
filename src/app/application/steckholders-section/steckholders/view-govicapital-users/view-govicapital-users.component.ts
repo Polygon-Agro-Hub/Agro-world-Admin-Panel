@@ -38,9 +38,6 @@ export class ViewGovicapitalUsersComponent implements OnInit {
 
   loadUsers(searchTerm: string = ''): void {
     this.isLoading = true;
-    
-    console.log('Loading users with search term:', searchTerm, 'Page:', this.page, 'Limit:', this.itemsPerPage);
-    
     this.financeService.getGocicareAllInvestmentUsers(
       this.page,
       this.itemsPerPage,
@@ -53,18 +50,10 @@ export class ViewGovicapitalUsersComponent implements OnInit {
       )
       .subscribe({
         next: (response) => {
-          console.log('Raw API response:', response);
-          
-          // Make sure we're accessing the correct properties
           const items = response.items || response || [];
           this.users = this.transformUserData(items);
           this.totalItems = response.total || items.length;
           this.hasData = this.users.length > 0;
-          
-          console.log('Transformed users:', this.users);
-          console.log('Total items:', this.totalItems);
-          console.log('Current page:', response.currentPage || this.page);
-          console.log('Total pages:', response.totalPages);
         },
         error: (error) => {
           console.error('Error loading users:', error);
@@ -101,9 +90,6 @@ export class ViewGovicapitalUsersComponent implements OnInit {
   }
 
   onSearchClick(): void {
-    console.log('Search clicked with query:', this.searchQuery);
-    
-    // Trim the search query to remove whitespace
     const searchTerm = this.searchQuery ? this.searchQuery.trim() : '';
     
     // Reset to first page when searching
@@ -132,7 +118,6 @@ export class ViewGovicapitalUsersComponent implements OnInit {
   // Pagination method
   onPageChange(event: number): void {
     this.page = event;
-    console.log('Page changed to:', this.page);
     this.loadUsers(this.searchQuery ? this.searchQuery.trim() : '');
   }
 

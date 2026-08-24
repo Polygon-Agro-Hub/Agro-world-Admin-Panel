@@ -9,13 +9,13 @@
       Add a Coupon
     </p>
     <div>
-      <button (click)="onCancel()" type="button" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
-        Cancel
-      </button>
-      <span class="bg-[#3980C0] text-lg text-white px-5 py-2 rounded-lg mx-2 cursor-pointer" (click)="onSubmit()">
-        Save
-      </span>
-    </div>
+        <button (click)="onCancel()" type="button" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
+          Cancel
+        </button>
+        <button (click)="onSubmit()" type="button" class="px-4 py-2 bg-[#3980C0] text-white rounded-md mx-2">
+          Save
+        </button>
+      </div>
   </div>
 
   <div class="flex flex-row justify-between">
@@ -25,9 +25,9 @@
         <input type="text" id="code" name="code" [(ngModel)]="coupenObj.code" #codeInput="ngModel" required
           (input)="onCodeInput($event)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-        <div *ngIf="codeInput.touched && codeInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+        <!-- <div *ngIf="codeInput.touched && codeInput.errors?.['required']" class="text-red-500 text-sm mt-1">
           Code is required.
-        </div>
+        </div> -->
         <div *ngIf="checkPrecentageValueMessage === 'Coupon with this code already exists'"
           class="text-red-500 text-sm mt-1">
           {{ checkPrecentageValueMessage }}
@@ -69,13 +69,13 @@
       <div *ngIf="coupenObj.type === 'Percentage'" class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">Discount Percentage *</label>
         <input type="number" id="percentage" name="percentage" [(ngModel)]="coupenObj.percentage"
-          #percentageInput="ngModel" required min="0" max="100" (input)="validateDecimalInput($event, 'percentage')"
+          #percentageInput="ngModel" required min="1" max="99" maxlength="2" (input)="validateDecimalInput($event, 'percentage')"
           (change)="checkPrecentageValue(coupenObj.percentage)" (keydown)="preventNegative($event)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         <!-- <div *ngIf="percentageInput.touched && percentageInput.errors?.['required']" class="text-red-500 text-sm mt-1">
           Discount percentage is required.
         </div> -->
-        <div class="text-red-500 text-sm mt-1">{{ checkPrecentageValueMessage }}</div>
+        <!-- <div class="text-red-500 text-sm mt-1">{{ checkPrecentageValueMessage }}</div> -->
       </div>
 
       <!-- Fixed Amount -->
@@ -151,7 +151,7 @@
                      [&_.p-datepicker-header]:dark:bg-[#2d354d] 
                      [&_.p-datepicker-header]:dark:text-white
                      [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]"
-            inputStyleClass="mt-2 block cursor-pointer w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack cursor-pointer"
+            inputStyleClass="block cursor-pointer w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack cursor-pointer"
             [appendTo]="'body'" [minDate]="minDate" />
           <div *ngIf="startDateInput.touched && startDateInput.errors?.['required']" class="text-red-500 text-sm mt-1">
             Start date is required.
@@ -159,7 +159,7 @@
         </div>
 
         <div class="mb-6">
-          <label class="text-textLight dark:text-textDark font-medium">Expire Date *</label>
+          <label class="text-textLight dark:text-textDark font-medium mb-2">Expire Date *</label>
           <p-calendar id="endDate" name="endDate" [(ngModel)]="coupenObj.endDate" (onSelect)="checkExpireDate()"
             placeholder="End Date" #endDateInput="ngModel" required [showIcon]="true" [showClear]="true"
             [showButtonBar]="true" iconDisplay="input" [style]="{ width: '100%' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 cursor-pointer
@@ -168,8 +168,8 @@
                      [&_.p-datepicker-header]:dark:bg-[#2d354d] 
                      [&_.p-datepicker-header]:dark:text-white
                      [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]"
-            inputStyleClass="mt-2 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack cursor-pointer"
-            [appendTo]="'body'" [minDate]="DateConverter(coupenObj.startDate)" [disabled]="!coupenObj.startDate"/>
+            inputStyleClass="block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack cursor-pointer"
+            [appendTo]="'body'" [minDate]="DateConverter(coupenObj.startDate)" [disabled]="!coupenObj.startDate" />
           <div *ngIf="endDateInput.touched && endDateInput.errors?.['required']" class="text-red-500 text-sm mt-1">
             Expire date is required.
           </div>

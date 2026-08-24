@@ -5,7 +5,7 @@
   Back
 </button>
 <button *ngIf="
-    (urlSegment === 'collection-hub' && permissionService.hasPermission('Add Collection Center')) || (urlSegment === 'steckholders' && permissionService.hasPermission('Onboard Collection Centre')) ||
+    (urlSegment === 'collection-hub' && permissionService.hasPermission('Add Collection Center to table')) || (urlSegment === 'steckholders' && permissionService.hasPermission('Onboard Collection Centre')) ||
     tokenService.getUserDetails().role === '1'
   " class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center" (click)="add()">
   <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -14,17 +14,13 @@
   Add New
 </button>
 
-<p *ngIf="( urlSegment === 'collection-hub')">
-asdasd
-</p>
-
 <div
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
   <div class="pt-5 pr-12 pl-12 pb-5 min-w-max bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-          Collection Centres ({{ this.totalItems }})
+          Collection Centres ({{ (totalItems || 0) < 10 ? '0' + (totalItems || 0) : (totalItems || 0) }})
         </h2>
       </div>
       <div class="flex items-center">

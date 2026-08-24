@@ -48,9 +48,9 @@ export class ReportCurrentAssertsComponent implements OnInit {
     this.name = this.route.snapshot.params['name'];
     this.farmId = this.route.snapshot.params['farmId'];
     this.farmName = this.route.snapshot.params['farmName'];
-    console.log("userId", this.userId);
-    console.log("name", this.name);
-    console.log("farmId", this.farmId);
+    
+    
+    
     this.fetchCurrentAssert(this.userId,this.farmId);
   }
 

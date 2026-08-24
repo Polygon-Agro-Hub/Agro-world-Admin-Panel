@@ -175,7 +175,7 @@ export class CreateGoviShopSupplierComponent implements OnInit {
       )
       .subscribe(
         (res) => {
-          console.log('res', res)
+          
           if (res?.status) {
             this.isVerification = true;
             this.sendOtp();
@@ -201,15 +201,15 @@ export class CreateGoviShopSupplierComponent implements OnInit {
   sendOtp() {
 
     this.isVerification = true;
-    console.log('otp called')
+    
     this.goviShopService.sendOtp(
       this.mobileNumber
       )
       .subscribe(
         (res) => {
-          console.log('res', res)
+          
           this.referenceId = res.referenceId;
-          console.log('referenceId', this.referenceId)
+          
           this.isLoading= false;
           if (res.messageResult.status === '1001') {
             Swal.fire({
@@ -464,14 +464,14 @@ onKeyDown(event: KeyboardEvent, index: number) {
 
 verifyOtp(): void {
   const otp = this.otpValues.join('');
-  console.log('otp', otp);
+  
 
   this.isLoading = true;
 
   this.goviShopService.verifyOtp(this.referenceId, otp)
     .subscribe(
       (res) => {
-        console.log('verify res', res);
+        
         this.isLoading = false;
 
         if (res.statusCode === '1000') {
@@ -507,6 +507,8 @@ verifyOtp(): void {
             },   
           });
           this.otpValues = ['', '', '', '', ''];
+          this.inputs.toArray().forEach(input => input.nativeElement.value = '');
+          this.inputs.first?.nativeElement.focus();
         }
       },
       (error) => {
@@ -649,7 +651,7 @@ isOtpComplete(): boolean {
 }
 
 verifyOtp1() {
-  console.log('otp', this.otpValues)
+  
 }
 
 startTimer() {
@@ -685,7 +687,9 @@ pad(num: number): string {
 handleResend() {
   if (!this.canResend) return;
 
-  console.log('Resend triggered');
+  
+  this.inputs.toArray().forEach(input => input.nativeElement.value = '');
+  this.inputs.first?.nativeElement.focus();
   this.sendOtp();
   this.startTimer(); // restart countdown
 }

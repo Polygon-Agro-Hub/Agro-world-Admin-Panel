@@ -27,8 +27,6 @@ export class CollectionService {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    console.log(company);
-
 
     let url = `${this.apiUrl}auth/collection-officer/get-all-collection-officers?page=${page}&limit=${limit}`;
     if (centerId) {
@@ -73,8 +71,6 @@ export class CollectionService {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    console.log(company);
-
 
     let url = `${this.apiUrl}auth/collection-officer/get-all-collection-officers?page=${page}&limit=${limit}`;
 
@@ -122,18 +118,16 @@ export class CollectionService {
       'Content-Type': 'application/json',
     });
 
-    console.log('Center name sent to API:', centerName);
-
     let url = `${this.apiUrl}auth/collection-officer/get-all-collection-officers-status?page=${page}&limit=${limit}`;
 
     if (centerName) {
-      url += `&centerName=${centerName}`; // ✅ Fixed typo and added trim
+      url += `&centerName=${centerName}`; 
     }
 
     if (nic) {
       url += `&nic=${nic}`; // Changed from searchNIC to nic
     }
-    console.log('API URL:', url);
+
     return this.http.get<any>(url, { headers });
   }
   getCompanyNames(): Observable<any> {
@@ -313,8 +307,8 @@ export class CollectionService {
     status: string = '',
     searchNIC: string = '',
     centerId: number | null = null,
+    driverCatId: number | null = null,
   ): Observable<any> {
-    console.log('centerId', centerId)
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
@@ -323,6 +317,10 @@ export class CollectionService {
     let url = `${this.apiUrl}auth/driver/view-all-drivers?page=${page}&limit=${limit}`;
     if (centerId) {
       url += `&centerId=${centerId}`;
+    }
+
+    if (driverCatId) {
+      url += `&driverCatId=${driverCatId}`;
     }
 
     if (centerStatus) {

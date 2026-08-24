@@ -53,20 +53,16 @@ export class FieldOfficerProfileComponent {
     this.router.navigate([path]);
   }
 
-
   fetchOfficerById(id: number) {
     this.isLoading = true;
     this.plantcareService
       .fetchAllfieldOfficerProfile(id)
       .subscribe((res: any) => {
         window.scrollTo(0, 0);
-        console.log("this is data", res);
-
         this.isLoading = false;
         this.officerObj = res.officerData.fieldOfficer;
       });
   }
-
 
   goBack() {
     window.history.back();
@@ -77,7 +73,6 @@ export class FieldOfficerProfileComponent {
   //     `/steckholders/action/collective-officer/view-officer-targets/${officerId}`,
   //   ]);
   // }
-
 
   openImage(url: string): void {
     if (url) {

@@ -25,7 +25,8 @@
               "node_modules/ngx-spinner/animations/ball-scale-multiple.css",
               "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
               "node_modules/primeng/resources/primeng.min.css",
-              "node_modules/primeicons/primeicons.css"
+              "node_modules/primeicons/primeicons.css",
+              "node_modules/quill/dist/quill.snow.css"
             ],
             "scripts": [],
             "server": "src/main.server.ts",
@@ -45,8 +46,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "8MB",
-                  "maximumError": "9MB"
+                  "maximumWarning": "25MB",
+                  "maximumError": "25MB"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -70,6 +71,39 @@
               "sourceMap": true,
               "baseHref": "/admin/",
               "deployUrl": "/admin/"
+            },
+            "uat": {
+              "fileReplacements": [
+                {
+                  "replace": "src/app/environment/environment.ts",
+                  "with": "src/app/environment/environment.uat.ts"
+                }
+              ],
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "25MB",
+                  "maximumError": "25MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "1MB",
+                  "maximumError": "1MB"
+                }
+              ],
+              "outputHashing": "all",
+              "baseHref": "/",
+              "deployUrl": "/"
+            },
+            "local": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "baseHref": "/admin/",
+              "deployUrl": "/admin/"
             }
           },
           "defaultConfiguration": "production"
@@ -82,6 +116,12 @@
             },
             "development": {
               "buildTarget": "plantr_care-admin:build:development"
+            },
+            "uat": {
+              "buildTarget": "plantr_care-admin:build:uat"
+            },
+            "local": {
+              "buildTarget": "plantr_care-admin:build:local"
             }
           },
           "defaultConfiguration": "development"

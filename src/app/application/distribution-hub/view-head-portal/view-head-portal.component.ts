@@ -169,8 +169,8 @@ getFlagUrl(countryCode: string): string {
       companies: this.distributionHubService.getAllCompanyList(),
       headData: this.distributionHubService.getDistributionHeadDetailsById(id),
     }).subscribe({
-      next: ({ companies, headData }) => {
-        this.companyList = companies;
+      next: ({ companies, headData }: any) => {
+        this.companyList = companies.companies || [];
         const data = headData.data; // Access the nested 'data' field
         if (!data) {
           console.error('No data in API response');

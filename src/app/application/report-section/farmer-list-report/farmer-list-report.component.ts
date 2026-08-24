@@ -39,19 +39,19 @@ export class FarmerListReportComponent {
   ) { }
 
   ngOnInit(): void {
-    console.log(this.famerID);
+    
     const today = new Date();
     // this.todayDate = today.toISOString().split('T')[0];
     this.route.queryParams.subscribe((params) => {
       this.itemId = params['id'] ? +params['id'] : null;
       this.userId = params['userId'] ? +params['userId'] : null;
       this.QRcode = params['QRcode'] ? params['QRcode'] : '';
-      console.log('Received item ID:', this.itemId);
-      console.log('Received user ID:', this.userId);
+      
+      
     });
     this.loadFarmerList();
 
-    console.log('Farmer List:', this.todayDate);
+    
   }
 
   loadFarmerList() {
@@ -62,10 +62,10 @@ export class FarmerListReportComponent {
         .subscribe(
           (response) => {
             this.isLoading = false;
-            console.log(response);
+            
             this.cropList = response.crops[0];
             this.farmerList = response.farmer[0];
-            console.log('Farmer List:', response.date[0]);
+            
             this.todayDate = response.date[0];
           },
           (error) => {
@@ -455,9 +455,9 @@ try {
       doc.setTextColor(0, 0, 0);
     }
 
-console.log('Saving PDF...');
+
 doc.save(`${inv}.pdf`);
-console.log('PDF generation completed successfully');
+
 this.isLoadingButton = false;
   } catch (error) {
     console.error('Error generating PDF:', error);

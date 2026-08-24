@@ -256,7 +256,7 @@ export class AddCoupenComponent {
     const input = event.target as HTMLInputElement;
     let value = input.value;
 
-    const regex = /^\d+(\.\d{0,2})?$/;
+    const regex = field === 'percentage' ? /^\d+$/ : /^\d+(\.\d{0,2})?$/;
 
     if (value === '') {
       this.coupenObj[field] = null!;
@@ -270,6 +270,13 @@ export class AddCoupenComponent {
       input.value = value;
     }
 
+    if (field === 'percentage' && value !== '') {
+      if (value.length > 2) {
+        value = value.slice(0, 2);
+        input.value = value;
+      }
+    }
+
     this.coupenObj[field] = value ? parseFloat(value) : null!;
   }
 
@@ -280,12 +287,8 @@ export class AddCoupenComponent {
       return;
     }
 
-    if (num < 0) {
-      // this.coupenObj.percentage = 0;
-      this.checkPrecentageValueMessage = 'Cannot be negative number';
-    } else if (num > 100 || num === 0) {
-      // this.coupenObj.percentage = 100;
-      this.checkPrecentageValueMessage = 'Enter a value between 1 and 100';
+    if (num < 1 || num > 99) {
+      this.checkPrecentageValueMessage = 'Enter a value between 1 and 99';
     } else {
       this.checkPrecentageValueMessage = '';
     }
@@ -306,17 +309,21 @@ export class AddCoupenComponent {
   }
 
   preventNegative(e: KeyboardEvent) {
-    if (e.key === '-' || e.key === ',') {
-      e.preventDefault();
+    const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Tab', 'Home', 'End'];
+
+    if (allowedKeys.includes(e.key) || e.ctrlKey || e.metaKey) {
+      if (e.ctrlKey && e.key === 'v') {
+        setTimeout(() => {
+          if (this.coupenObj.percentage < 0) {
+            this.coupenObj.percentage = 0;
+          }
+        }, 0);
+      }
+      return;
     }
 
-
-    if (e.ctrlKey && e.key === 'v') {
-      setTimeout(() => {
-        if (this.coupenObj.percentage < 0) {
-          this.coupenObj.percentage = 0;
-        }
-      }, 0);
+    if (!/^[0-9]$/.test(e.key)) {
+      e.preventDefault();
     }
   }
 

@@ -80,7 +80,6 @@ export class TodayDeliveriesViewDetailsPopupComponent
   constructor(private distributionService: DistributionHubService) {}
 
   ngOnInit(): void {
-    console.log('deliveryId', this.deliveryId)
     if (this.visible) {
       this.loadTrackingDetails();
     }
@@ -158,9 +157,7 @@ export class TodayDeliveriesViewDetailsPopupComponent
     if (d.completeTime) {
       steps.push({ type: 'delivered', payload: { completeTime: d.completeTime } });
     }
-    console.log('Built Steps:', steps);
     
-
     return steps;
   }
 

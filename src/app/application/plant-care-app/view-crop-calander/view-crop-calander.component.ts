@@ -54,8 +54,7 @@ export class ViewCropCalanderComponent implements OnInit {
     { name: 'Spices', value: 'Spices' },
     { name: 'Mushrooms', value: 'Mushrooms' },
     { name: 'Legumes', value: 'Legumes' },
-
-  ];
+  ].sort((a, b) => a.name.localeCompare(b.name));
 
   constructor(
     private cropCalendarService: CropCalendarService,
@@ -165,7 +164,7 @@ deleteCropCalender(id: any) {
   }
 
   onSearch() {
-    console.log('Search triggered with text:', this.searchText);
+    
     this.searchText = this.searchText.trim(); // Trim leading and trailing spaces
     this.page = 1; // Reset to first page on search
     this.fetchAllCropCalenders(this.page, this.itemsPerPage, this.searchText);

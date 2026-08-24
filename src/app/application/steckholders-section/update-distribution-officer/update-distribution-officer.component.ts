@@ -13,6 +13,9 @@ import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
 import { CommonModule, Location } from '@angular/common';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { CalendarModule } from 'primeng/calendar';
+import { ImageUploadService } from '../../../services/image-upload-service/image-upload.service';
+import { forkJoin, of, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 interface Bank {
   ID: number;
@@ -121,6 +124,7 @@ export class UpdateDistributionOfficerComponent {
   bankOptions: any[] = [];
   branchOptions: any[] = [];
   districtOptions: any[] = [];
+  categoryOptions: any[] = [];
   invalidFields: Set<string> = new Set();
   itemsPerPage: number = 10;
   selectCenterStatus: string = '';
@@ -237,6 +241,7 @@ export class UpdateDistributionOfficerComponent {
     private router: Router,
     private distributionOfficerServ: DistributionHubService,
     private location: Location,
+    private imageUploadService: ImageUploadService,
   ) {}
 
   ngOnInit() {
@@ -295,6 +300,7 @@ export class UpdateDistributionOfficerComponent {
         this.personalData.languages = officerData.languages || '';
         this.personalData.companyId = officerData.companyId || '';
         this.personalData.centerId = officerData.distributedCenterId || '';
+        this.personalData.driverCatId = officerData.driverCatId || null;
         this.personalData.bankName = officerData.bankName || '';
         this.personalData.branchName = officerData.branchName || '';
         this.personalData.accHolderName = officerData.accHolderName || '';
@@ -1407,7 +1413,7 @@ export class UpdateDistributionOfficerComponent {
     let rolePrefix: string | undefined;
 
     const rolePrefixes: { [key: string]: string } = {
-      'Distribution Centre Manager': 'DBM',
+      'Distribution Centre Manager': 'DCM',
       'Distribution Officer': 'DIO',
     };
 
@@ -1478,6 +1484,13 @@ export class UpdateDistributionOfficerComponent {
 
       if (!this.personalData.jobRole) {
         missingFields.push('Job Role is Required');
+      }
+
+      if (
+        this.personalData.jobRole === 'Driver' &&
+        !this.personalData.driverCatId
+      ) {
+        missingFields.push('Driver Category is Required');
       }
 
       if (
@@ -1664,11 +1677,16 @@ export class UpdateDistributionOfficerComponent {
 
   getAllCompanies() {
     this.distributionOfficerServ.getAllCompanyList().subscribe((res) => {
-      this.CompanyData = res;
+      this.CompanyData = res.companies;
 
       this.companyOptions = this.CompanyData.map((company) => ({
         label: company.companyNameEnglish,
         value: company.id,
+      }));
+
+      this.categoryOptions = res.driverCategories.map((cat: any) => ({
+        label: cat.slvCatName,
+        value: cat.id,
       }));
     });
   }
@@ -1749,8 +1767,70 @@ export class UpdateDistributionOfficerComponent {
     this.isLanguageRequired = this.selectedLanguages.length === 0;
   }
 
+  private uploadChangedImages(): Observable<{ [key: string]: string }> {
+    const order: string[] = [];
+    const files: File[] = [];
+
+    if (this.selectedFile) {
+      order.push('profile');
+      files.push(this.selectedFile);
+    }
+
+    if (this.personalData.jobRole === 'Driver') {
+      if (this.licenseFrontImageUpdated && this.licenseFrontImageFile) {
+        order.push('licFront');
+        files.push(this.licenseFrontImageFile);
+      }
+      if (this.licenseBackImageUpdated && this.licenseBackImageFile) {
+        order.push('licBack');
+        files.push(this.licenseBackImageFile);
+      }
+      if (this.insurenceFrontImageUpdated && this.insurenceFrontImageFile) {
+        order.push('insFront');
+        files.push(this.insurenceFrontImageFile);
+      }
+      if (this.insurenceBackImageUpdated && this.insurenceBackImageFile) {
+        order.push('insBack');
+        files.push(this.insurenceBackImageFile);
+      }
+      if (this.vehicleFrontImageUpdated && this.vehicleFrontImageFile) {
+        order.push('vehiFront');
+        files.push(this.vehicleFrontImageFile);
+      }
+      if (this.vehicleBackImageUpdated && this.vehicleBackImageFile) {
+        order.push('vehiBack');
+        files.push(this.vehicleBackImageFile);
+      }
+      if (this.vehicleSideAImageUpdated && this.vehicleSideAImageFile) {
+        order.push('vehiSideA');
+        files.push(this.vehicleSideAImageFile);
+      }
+      if (this.vehicleSideBImageUpdated && this.vehicleSideBImageFile) {
+        order.push('vehiSideB');
+        files.push(this.vehicleSideBImageFile);
+      }
+    }
+
+    if (files.length === 0) {
+      return of({});
+    }
+
+    const uploads$ = files.map((file) =>
+      this.imageUploadService.uploadImage(file, 'distributionofficer/image'),
+    );
+
+    return forkJoin(uploads$).pipe(
+      map((urls: string[]) => {
+        const result: { [key: string]: string } = {};
+        order.forEach((key, idx) => {
+          result[key] = urls[idx];
+        });
+        return result;
+      }),
+    );
+  }
+
   onSubmit() {
-    console.log('called')
     if (this.personalData.jobRole === 'Driver') {
       this.licNoModel.control.markAsTouched();
       this.confirmLicNoModel.control.markAsTouched();
@@ -1759,7 +1839,7 @@ export class UpdateDistributionOfficerComponent {
       this.vRegNoModel.control.markAsTouched();
       this.confirmVRegNoModel.control.markAsTouched();
     }
-    
+
     const missingFields: string[] = [];
 
     if (!this.personalData.email) {
@@ -1788,6 +1868,13 @@ export class UpdateDistributionOfficerComponent {
 
     if (!this.personalData.jobRole) {
       missingFields.push('Job Role is Required');
+    }
+
+    if (
+      this.personalData.jobRole === 'Driver' &&
+      !this.personalData.driverCatId
+    ) {
+      missingFields.push('Driver Category is Required');
     }
 
     if (
@@ -2039,131 +2126,161 @@ export class UpdateDistributionOfficerComponent {
       if (result.isConfirmed) {
         this.isLoading = true;
 
-        const payload = {
-          ...this.personalData,
-          phoneNumber01: this.personalData.contact1,
-          phoneCode01: this.personalData.contact1Code || '+94',
-          phoneNumber02: this.personalData.contact2,
-          phoneCode02:
-            this.personalData.contact2Code ||
-            this.personalData.contact1Code ||
-            '+94',
-        };
+        // ⬇️ Submit කරන්න කලින්, change කරපු images විතරක් R2 ට batch upload කරනවා
+        this.uploadChangedImages().subscribe({
+          next: (urls) => {
+            const payload = {
+              ...this.personalData,
+              phoneNumber01: this.personalData.contact1,
+              phoneCode01: this.personalData.contact1Code || '+94',
+              phoneNumber02: this.personalData.contact2,
+              phoneCode02:
+                this.personalData.contact2Code ||
+                this.personalData.contact1Code ||
+                '+94',
+            };
 
-        let driverDataToSend = null;
-        if (this.personalData.jobRole === 'Driver') {
-          driverDataToSend = {
-            ...this.driverObj,
-            insExpDate: this.formatDateForDatabase(this.driverObj.insExpDate),
-            licFrontName: this.licenseFrontImageFileName,
-            licBackName: this.licenseBackImageFileName,
-            insFrontName: this.insurenceFrontImageFileName,
-            insBackName: this.insurenceBackImageFileName,
-            vFrontName: this.vehicleFrontImageFileName,
-            vBackName: this.vehicleBackImageFileName,
-            vSideAName: this.vehicleSideAImageFileName,
-            vSideBName: this.vehicleSideBImageFileName,
-          };
-        }
+            let driverDataToSend = null;
+            if (this.personalData.jobRole === 'Driver') {
+              driverDataToSend = {
+                ...this.driverObj,
+                insExpDate: this.formatDateForDatabase(
+                  this.driverObj.insExpDate,
+                ),
+                licFrontName: this.licenseFrontImageFileName,
+                licBackName: this.licenseBackImageFileName,
+                insFrontName: this.insurenceFrontImageFileName,
+                insBackName: this.insurenceBackImageFileName,
+                vFrontName: this.vehicleFrontImageFileName,
+                vBackName: this.vehicleBackImageFileName,
+                vSideAName: this.vehicleSideAImageFileName,
+                vSideBName: this.vehicleSideBImageFileName,
+              };
+            }
 
-        this.distributionOfficerServ
-          .editDistributionOfficer(
-            payload,
-            this.itemId,
-            this.selectedImage,
-            driverDataToSend,
-            this.licenseFrontImagePreview,
-            this.licenseBackImagePreview,
-            this.insurenceFrontImagePreview,
-            this.insurenceBackImagePreview,
-            this.vehicleFrontImagePreview,
-            this.vehicleBackImagePreview,
-            this.vehicleSideAImagePreview,
-            this.vehicleSideBImagePreview,
-          )
-          .subscribe(
-            (res: any) => {
-              this.isLoading = false;
+            this.distributionOfficerServ
+              .editDistributionOfficer(
+                payload,
+                this.itemId,
+                urls['profile'] || null, // ⬅ අලුතෙන් upload වුණොත් URL, නැත්නම් null
+                driverDataToSend,
+                urls['licFront'] || null,
+                urls['licBack'] || null,
+                urls['insFront'] || null,
+                urls['insBack'] || null,
+                urls['vehiFront'] || null,
+                urls['vehiBack'] || null,
+                urls['vehiSideA'] || null,
+                urls['vehiSideB'] || null,
+              )
+              .subscribe(
+                (res: any) => {
+                  this.isLoading = false;
 
-              let successMessage = '';
-              switch (this.personalData.jobRole) {
-                case 'Driver':
-                  successMessage = 'Driver Updated Successfully';
-                  break;
-                case 'Distribution Officer':
-                  successMessage = 'Distribution Officer Updated Successfully';
-                  break;
-                case 'Distribution Centre Manager':
-                  successMessage =
-                    'Distribution Centre Manager Updated Successfully';
-                  break;
-                default:
-                  successMessage = 'Distribution Officer Updated Successfully';
-              }
-
-              Swal.fire({
-                icon: 'success',
-                title: 'Success',
-                text: successMessage,
-                confirmButtonText: 'OK',
-                customClass: {
-                  popup:
-                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                  title: 'font-semibold text-lg',
-                  confirmButton:
-                    'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
-                },
-              });
-              this.location.back();
-            },
-            (error: any) => {
-              this.isLoading = false;
-              let errorMessage = 'An unexpected error occurred';
-              let messages: string[] = [];
-
-              if (error.error && Array.isArray(error.error.errors)) {
-                messages = error.error.errors.map((err: string) => {
-                  switch (err) {
-                    case 'NIC':
-                      return 'The NIC number is already registered.';
-                    case 'Email':
-                      return 'Email already exists.';
-                    case 'PhoneNumber01':
-                      return 'Mobile Number 1 already exists.';
-                    case 'PhoneNumber02':
-                      return 'Mobile Number 2 already exists.';
+                  let successMessage = '';
+                  switch (this.personalData.jobRole) {
+                    case 'Driver':
+                      successMessage = 'Driver Updated Successfully';
+                      break;
+                    case 'Distribution Officer':
+                      successMessage =
+                        'Distribution Officer Updated Successfully';
+                      break;
+                    case 'Distribution Centre Manager':
+                      successMessage =
+                        'Distribution Centre Manager Updated Successfully';
+                      break;
                     default:
-                      return 'Validation error: ' + err;
+                      successMessage =
+                        'Distribution Officer Updated Successfully';
                   }
-                });
-              }
 
-              if (messages.length > 0) {
-                errorMessage =
-                  '<div class="text-left"><p class="mb-2">Please fix the following Duplicate field issues:</p><ul class="list-disc pl-5">';
-                messages.forEach((m) => {
-                  errorMessage += `<li>${m}</li>`;
-                });
-                errorMessage += '</ul></div>';
+                  Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: successMessage,
+                    confirmButtonText: 'OK',
+                    customClass: {
+                      popup:
+                        'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                      title: 'font-semibold text-lg',
+                      confirmButton:
+                        'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+                    },
+                  });
+                  this.location.back();
+                },
+                (error: any) => {
+                  this.isLoading = false;
+                  let errorMessage = 'An unexpected error occurred';
+                  let messages: string[] = [];
 
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Duplicate Information',
-                  html: errorMessage,
-                  confirmButtonText: 'OK',
-                  customClass: {
-                    popup:
-                      'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                    title: 'font-semibold text-lg',
-                    htmlContainer: 'text-left',
-                    confirmButton:
-                      'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
-                  },
-                });
-                return;
-              }
-            },
-          );
+                  if (error.error && Array.isArray(error.error.errors)) {
+                    messages = error.error.errors.map((err: string) => {
+                      switch (err) {
+                        case 'NIC':
+                          return 'The NIC number is already registered.';
+                        case 'Email':
+                          return 'Email already exists.';
+                        case 'PhoneNumber01':
+                          return 'Mobile Number 1 already exists.';
+                        case 'PhoneNumber02':
+                          return 'Mobile Number 2 already exists.';
+                        default:
+                          return 'Validation error: ' + err;
+                      }
+                    });
+                  }
+
+                  if (messages.length > 0) {
+                    errorMessage =
+                      '<div class="text-left"><p class="mb-2">Please fix the following Duplicate field issues:</p><ul class="list-disc pl-5">';
+                    messages.forEach((m) => {
+                      errorMessage += `<li>${m}</li>`;
+                    });
+                    errorMessage += '</ul></div>';
+
+                    Swal.fire({
+                      icon: 'error',
+                      title: 'Duplicate Information',
+                      html: errorMessage,
+                      confirmButtonText: 'OK',
+                      customClass: {
+                        popup:
+                          'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                        title: 'font-semibold text-lg',
+                        htmlContainer: 'text-left',
+                        confirmButton:
+                          'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+                      },
+                    });
+                    return;
+                  }
+
+                  // ⬇️ messages array එක empty උනත් (validation errors නැති server error එකක්) - generic error එක පෙන්නනවා
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: errorMessage,
+                    confirmButtonText: 'OK',
+                    customClass: {
+                      popup:
+                        'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                      title: 'font-semibold text-lg',
+                    },
+                  });
+                },
+              );
+          },
+          error: () => {
+            this.isLoading = false;
+            Swal.fire({
+              title: 'Error',
+              text: 'Image upload to server failed. Please try again.',
+              icon: 'error',
+            });
+          },
+        });
       }
     });
   }
@@ -2531,6 +2648,7 @@ class Personal {
   empId!: any;
   centerId!: number | null;
   irmId!: number | null;
+  driverCatId!: number | null;
   empType!: string;
   firstNameEnglish!: string;
   firstNameSinhala!: string;

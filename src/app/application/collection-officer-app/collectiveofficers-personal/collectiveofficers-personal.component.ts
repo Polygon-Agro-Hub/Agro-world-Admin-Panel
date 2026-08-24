@@ -1314,7 +1314,7 @@ preventNICInvalidCharacters(event: KeyboardEvent): void {
   }
 }
 
-formatNIC() {
+  formatNIC() {
     if (this.personalData.nic) {
       this.personalData.nic = this.personalData.nic
         .toUpperCase()
@@ -1322,6 +1322,12 @@ formatNIC() {
 
       if (this.personalData.nic.endsWith('v')) {
         this.personalData.nic = this.personalData.nic.slice(0, -1) + 'V';
+      }
+
+      if (this.personalData.nic.includes('V')) {
+        this.personalData.nic = this.personalData.nic.slice(0, 10);
+      } else {
+        this.personalData.nic = this.personalData.nic.slice(0, 12);
       }
     }
   }
@@ -1338,11 +1344,34 @@ formatNIC() {
     ];
 
     if (allowedKeys.includes(event.key)) {
-      return; 
+      return;
     }
 
     const nicInputPattern = /^[0-9V]$/;
-    if (!nicInputPattern.test(event.key.toUpperCase())) {
+    const key = event.key.toUpperCase();
+
+    if (!nicInputPattern.test(key)) {
+      event.preventDefault();
+      return;
+    }
+
+    const input = event.target as HTMLInputElement;
+    const currentValue = input.value;
+
+    if (key === 'V') {
+      const isAllDigitsSoFar = /^\d{9}$/.test(currentValue);
+      if (!isAllDigitsSoFar) {
+        event.preventDefault();
+      }
+      return;
+    }
+
+    if (currentValue.includes('V')) {
+      event.preventDefault();
+      return;
+    }
+
+    if (currentValue.length >= 12) {
       event.preventDefault();
     }
   }

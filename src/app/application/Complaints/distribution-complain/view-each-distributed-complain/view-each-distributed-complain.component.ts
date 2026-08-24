@@ -1,4 +1,4 @@
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule, DatePipe, Location } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
@@ -11,7 +11,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { TokenService } from '../../../../services/token/services/token.service';
 import { ComplaintsService } from '../../../../services/complaints/complaints.service';
 import Swal from 'sweetalert2';
-import { environment } from '../../../../environment/environment.development';
+import { environment } from '../../../../environment/environment';
 
 @Component({
   selector: 'app-view-each-distributed-complain',
@@ -48,7 +48,8 @@ export class ViewEachDistributedComplainComponent {
     private datePipe: DatePipe,
     private http: HttpClient,
     private tokenService: TokenService,
-    private distributedComplainSrv: ComplaintsService
+    private distributedComplainSrv: ComplaintsService,
+    private location: Location
 
   ) { }
 
@@ -60,8 +61,8 @@ export class ViewEachDistributedComplainComponent {
   }
 
   back(): void {
-    this.router.navigate(['complaints/collection-center-complains']);
-  }
+    this.location.back();
+}
 
 
   fetchComplain() {

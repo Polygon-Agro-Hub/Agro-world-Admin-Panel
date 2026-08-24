@@ -97,7 +97,7 @@
           tokenService.getUserDetails().role === '1'
         "
         (click)="ViewAll()"
-        class="dark:bg-[#061E2C] dark:text-white font-medium py-2 px-5 rounded-lg text-lg flex mb-5 items-center gap-2 shadow dark:shadow-slate-700"
+        class="dark:bg-[#061E2C] bg-[#ffffff] dark:text-white font-medium py-2 px-5 rounded-lg text-lg flex mb-5 items-center gap-2 shadow dark:shadow-slate-700"
       >
         View All
         <i
@@ -115,19 +115,19 @@
           class="bg-gray-50 dark:bg-[#061E2C] dark:text-gray-400 border-b-4 dark:border-b-2"
         >
           <tr>
-            <th scope="col" class="px-6 py-3 text-left dark:text-white">
+            <th scope="col" class="px-6 py-3 text-left text-[#4B5563] dark:text-white">
               Transaction ID
             </th>
-            <th scope="col" class="px-6 py-3 text-left dark:text-white">
+            <th scope="col" class="px-6 py-3 text-left text-[#4B5563] dark:text-white">
               Farmer Name
             </th>
-            <th scope="col" class="px-6 py-3 text-left dark:text-white">
+            <th scope="col" class="px-6 py-3 text-left text-[#4B5563] dark:text-white">
               Service Name
             </th>
-            <th scope="col" class="px-6 py-3 text-left dark:text-white">
+            <th scope="col" class="px-6 py-3 text-left text-[#4B5563] dark:text-white">
               Amount (Rs.)
             </th>
-            <th scope="col" class="px-6 py-3 text-left dark:text-white">
+            <th scope="col" class="px-6 py-3 text-left text-[#4B5563] dark:text-white">
               Date & Time
             </th>
           </tr>
@@ -135,21 +135,21 @@
         <tbody class="divide-y divide-gray-100">
           <tr
             *ngFor="let item of recentPayments"
-            class="bg-white border-b-2 dark:bg-[#061E2C] dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+            class="bg-white dark:bg-[#061E2C] dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
           >
-            <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">
+            <td class="px-6 py-4 text-left text-[#000000] dark:text-[#C8C8C8]">
               {{ item.id }}
             </td>
-            <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">
+            <td class="px-6 py-4 text-left text-[#000000] dark:text-[#C8C8C8]">
               {{ item.farmer }}
             </td>
-            <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">
+            <td class="px-6 py-4 text-left text-[#000000] dark:text-[#C8C8C8]">
               {{ item.service }}
             </td>
-            <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">
+            <td class="px-6 py-4 text-left text-[#000000] dark:text-[#C8C8C8]">
               {{ item.amount }}
             </td>
-            <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">
+            <td class="px-6 py-4 text-left text-[#000000] dark:text-[#C8C8C8]">
               {{ item.datetime }}
             </td>
           </tr>

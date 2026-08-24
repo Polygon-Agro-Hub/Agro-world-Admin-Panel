@@ -138,20 +138,20 @@ export class DriversAndVehiclesComponent implements OnInit {
   }
 
   changeStatus(): void {
-    console.log('Status changed to:', this.selectStatus);
+    
     this.page = 1;
     this.fetchDriversAndVehicles();
   }
 
   changeVehicleType(): void {
-    console.log('Vehicle type changed to:', this.selectVehicleType);
+    
     this.page = 1;
     this.fetchDriversAndVehicles();
   }
 
   // Search handler
   onSearch(): void {
-    console.log('Search text:', this.searchText);
+    
     this.page = 1;
     this.fetchDriversAndVehicles();
   }

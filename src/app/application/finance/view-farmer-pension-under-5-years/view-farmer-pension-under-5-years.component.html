@@ -50,7 +50,7 @@
             <th class="px-4 py-3 text-left font-medium text-sm text-[#5C5C5C] dark:text-gray-500">
               Approved By
             </th>
-            <th class="px-4 py-3 text-left font-medium text-sm text-[#5C5C5C] dark:text-gray-500">
+            <th class="px-4 py-3 text-center font-medium text-sm text-[#5C5C5C] dark:text-gray-500">
               Approved Date & Time
             </th>
             <th
@@ -89,9 +89,12 @@
             <td class="px-4 py-4 text-sm text-black dark:text-gray-300 text-left">
               {{ f.approvedBy }}
             </td>
-            <td class="px-4 py-4 text-sm text-black dark:text-gray-300 text-left">
-              {{ f.approvedDate }}
-            </td>
+            <td class="px-4 py-4 text-sm text-black dark:text-gray-300 text-center">
+  <div class="flex flex-col">
+    <span>{{ f.approvedDate.split(' ')[0] }}</span>
+    <span>{{ f.approvedDate.split(' ').slice(1).join(' ') }}</span>
+  </div>
+</td>
             <td
               *ngIf="permissionService.hasPermission('View under 5 years farmers pension details') || tokenService.getUserDetails().role === '1'"
               class="px-4 py-4 text-center">

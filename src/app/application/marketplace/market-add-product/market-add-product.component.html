@@ -44,6 +44,18 @@
         </div>
       </div>
 
+      <div class="mb-6">
+        <label class="text-[#534E4E] dark:text-textDark">Product Type *</label>
+        <p-dropdown id="category" name="category" [(ngModel)]="productObj.productTypeId"
+          (ngModelChange)="onProductTypeChange($event)" required [options]="productTypeOptions" optionLabel="label"
+          optionValue="value" placeholder="--Select Product Type--" #categoryField="ngModel"
+          [styleClass]="'w-full border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'">
+        </p-dropdown>
+        <div *ngIf="categoryField.invalid && categoryField.touched" class="text-red-500 text-sm mt-1">
+          Product Type is required.
+        </div>
+      </div>
+
       <!-- Crop Selection -->
       <div class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">Crop *</label>
@@ -62,8 +74,9 @@
         <label class="text-[#534E4E] dark:text-textDark">Variety *</label>
         <p-dropdown id="variety" name="variety" [(ngModel)]="productObj.varietyId" [options]="selectedVarieties"
           optionLabel="varietyEnglish" optionValue="id" [filter]="true" filterBy="varietyEnglish"
-          placeholder="Select Variety" [showClear]="!!productObj.varietyId" (onChange)="selectVerityImage()" #varietyField="ngModel"
-          required [class]="'mt-2 w-full rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'"
+          placeholder="Select Variety" [showClear]="!!productObj.varietyId" (onChange)="selectVerityImage()"
+          #varietyField="ngModel" required
+          [class]="'mt-2 w-full rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'"
           [panelStyleClass]="'bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'"
           [disabled]="!isVerityVisible">
         </p-dropdown>
@@ -77,22 +90,24 @@
         <div class="flex items-center space-x-4 mt-3">
           <div class="flex items-center space-x-2">
             <!-- With Discount Radio Button -->
-            <input class="w-5 h-5 cursor-pointer" type="radio" id="withDiscount" name="priceType" [(ngModel)]="productObj.promo"
-              [value]="true" (change)="applyDiscount()" />
+            <input class="w-5 h-5 cursor-pointer" type="radio" id="withDiscount" name="priceType"
+              [(ngModel)]="productObj.promo" [value]="true" (change)="applyDiscount()" />
             <label for="withDiscount" class="block text-sm font-medium text-gray-700 dark:text-textDark cursor-pointer">
               With Discount
             </label>
           </div>
           <div class="flex items-center space-x-2">
             <!-- No Discount Radio Button -->
-            <input class="w-5 h-5 cursor-pointer" type="radio" id="noDiscount" name="priceType" [(ngModel)]="productObj.promo"
-              [value]="false" (change)="compaireDiscount()" />
+            <input class="w-5 h-5 cursor-pointer" type="radio" id="noDiscount" name="priceType"
+              [(ngModel)]="productObj.promo" [value]="false" (change)="compaireDiscount()" />
             <label for="noDiscount" class="block text-sm font-medium text-gray-700 dark:text-textDark cursor-pointer">
               No Discount
             </label>
           </div>
         </div>
       </div>
+
+      <div class="border-t border-gray-300 dark:border-gray-600 my-10"></div>
 
       <div class="mb-6" *ngIf="productObj.promo">
         <label class="text-[#534E4E] dark:text-textDark">Display Type *</label>
@@ -107,8 +122,9 @@
           </option>
         </select> -->
         <p-dropdown id="displaytype" name="displaytype" [(ngModel)]="productObj.displaytype" (onChange)="changeType()"
-          [options]="displayTypeOptions" optionLabel="label" optionValue="value" placeholder="--Select Display Type--" #displayTypeField="ngModel" required
-          [showClear]="false" [class]="'mt-2 w-full rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'"
+          [options]="displayTypeOptions" optionLabel="label" optionValue="value" placeholder="--Select Display Type--"
+          #displayTypeField="ngModel" required [showClear]="false"
+          [class]="'mt-2 w-full rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'"
           [panelStyleClass]="'bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'">
         </p-dropdown>
         <div *ngIf="displayTypeField.invalid && displayTypeField.touched" class="text-red-500 text-sm mt-1">
@@ -122,19 +138,20 @@
     productObj.promo
   ">
         <label class="text-[#534E4E] dark:text-textDark">Discount Percentage *</label>
-        <input type="number" min="0" max="100" step="0.01" id="discountedPrice" name="discountedPrice"
+        <input type="number" min="1" max="99" step="1" id="discountedPrice" name="discountedPrice"
           (change)="calculeSalePrice()" (input)="validatePriceInput($event, 'discountedPrice')"
-          (keydown)="preventInvalidChars($event)" [(ngModel)]="productObj.discountedPrice"
+          (keydown)="preventInvalidChars($event, 'discountedPrice')" [(ngModel)]="productObj.discountedPrice"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           #discountField="ngModel" required />
-        <div *ngIf="discountField.invalid && discountField.touched" class="text-red-500 text-sm mt-1">
+        <div *ngIf="discountField.errors?.['required'] && discountField.touched" class="text-red-500 text-sm mt-1">
           Discount Percentage is required.
         </div>
-        <div *ngIf="productObj.discountedPrice < 0" class="text-red-500 text-sm mt-1">
-          Discount Percentage cannot be negative.
+        <div *ngIf="discountField.touched && productObj.discountedPrice !== null && productObj.discountedPrice < 1"
+          class="text-red-500 text-sm mt-1">
+          Discount Percentage must be at least 1%.
         </div>
-        <div *ngIf="productObj.discountedPrice > 100" class="text-red-500 text-sm mt-1">
-          Discount Percentage cannot exceed 100%.
+        <div *ngIf="productObj.discountedPrice > 99" class="text-red-500 text-sm mt-1">
+          Discount Percentage cannot exceed 99%.
         </div>
       </div>
 
@@ -176,7 +193,7 @@
       <div class="mb-6" *ngIf="productObj.promo && productObj.displaytype === 'AP&SP'">
         <label class="text-[#534E4E] dark:text-textDark">Sale Price *</label>
         <input type="number" min="0" step="0.01" id="salePrice" name="salePrice" [(ngModel)]="productObj.salePrice"
-          (change)="calculeSalePrice()" (input)="validateSalePrice()"
+          (change)="calculeSalePrice()" (input)="validatePriceInput($event, 'salePrice')"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           #salePriceField="ngModel" required />
         <div *ngIf="salePriceField.invalid && salePriceField.touched" class="text-red-500 text-sm mt-1">
@@ -186,6 +203,23 @@
           Sale Price cannot be negative.
         </div>
       </div>
+
+      <div class="mb-6">
+        <label class="text-[#534E4E] dark:text-textDark">Competitor Price per kg *</label>
+        <input type="number" min="0" step="0.01" id="competitorPrice" name="competitorPrice"
+          [(ngModel)]="productObj.comPrice" (input)="validatePriceInput($event, 'comPrice')"
+          (keydown)="preventInvalidChars($event)"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          #competitorPriceField="ngModel" required />
+        <div *ngIf="competitorPriceField.invalid && competitorPriceField.touched" class="text-red-500 text-sm mt-1">
+          Competitor Price is required.
+        </div>
+        <div *ngIf="productObj.comPrice < 0" class="text-red-500 text-sm mt-1">
+          Competitor Price cannot be negative.
+        </div>
+      </div>
+
+      <div class="border-t border-gray-300 dark:border-gray-600 my-10"></div>
 
       <div class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">
@@ -198,9 +232,7 @@
             <mat-label class="">Tags</mat-label>
             <mat-chip-grid #templateChipGrid class="">
               @for (keyword of templateKeywords(); track keyword) {
-              <mat-chip-row 
-                (removed)="removeTemplateKeyword(keyword)" 
-                class="">
+              <mat-chip-row (removed)="removeTemplateKeyword(keyword)" class="">
                 {{ keyword }}
                 <button matChipRemove [attr.aria-label]="'remove ' + keyword">
                   <mat-icon class="">cancel</mat-icon>
@@ -208,17 +240,13 @@
               </mat-chip-row>
               }
             </mat-chip-grid>
-          
-            <input 
-              matInput 
-              placeholder="New keyword..." 
-              [matChipInputFor]="templateChipGrid"
-              (matChipInputTokenEnd)="addTemplateKeyword($event)"
-              class="" />
+
+            <input matInput placeholder="New keyword..." [matChipInputFor]="templateChipGrid"
+              (matChipInputTokenEnd)="addTemplateKeyword($event)" class="" />
           </mat-form-field>
         </div>
 
-        
+
 
         <!-- Validation message -->
         <!-- Replace your current tags validation message with this -->
@@ -228,114 +256,121 @@
       </div>
     </div>
 
+    <!-- <p *ngIf="productObj.unitType === 'Kg' " class="text-[#4B5563] text-base font-[500] my-1">
+            {{ productObj.startValue }} Kg
+          </p>
+
+          <p *ngIf="productObj.unitType !== 'Kg' " class="text-[#4B5563] text-base font-[500] my-1">
+            {{ productObj.startValue * 1000 }} g
+          </p>
+
+          <p class="text-[#00957D] my-1 text-base font-[500]">
+            Rs.{{ (productObj.normalPrice * productObj.startValue) || 0 | number:'1.2-2' }}
+          </p> -->
+
     <div class="flex flex-col px-6 py-3 mx-6 w-[40%]">
       <!-- cart items -->
       <div class="rounded-lg border-2 border-[#CFCFCF] px-12 py-6">
         <p class="text-lg text-black font-medium dark:text-textDark">Preview</p>
 
-        <div *ngIf="!isNoDiscount"
+        <!-- Empty state: no variety selected -->
+        <div *ngIf="!productObj || productObj.varietyId === 0 || productObj.varietyId === null"
           class="flex flex-col justify-center items-center relative my-3 bg-[#FFFFFF] px-5 py-3 h-auto rounded-xl dark:bg-tileBlack dark:text-textDark">
-          <div *ngIf="
-              productObj.displaytype === 'D&AP' ||
-              productObj.displaytype === 'AP&SP&D'
-            "
+
+          <!-- Placeholder image -->
+          <div class="mt-8 mb-2">
+            <img src="assets/images/PreviewImage.png" alt="placeholder" class="w-40 h-auto object-contain" />
+          </div>
+
+          <!-- Placeholder texts -->
+          <p class="text-xl font-[600] text-black dark:text-textDark my-2">--Product Name--</p>
+          <p class="text-[#4B5563] text-base font-[500] my-1">Min Qty</p>
+          <p class="text-[#00957D] my-1 text-base font-[500]">Price</p>
+
+          <!-- Add to Cart button (disabled look) -->
+          <button
+            class="flex flex-row justify-center items-center gap-3 shadow-xl border rounded-lg px-7 py-1 mb-10 mt-2"
+            disabled>
+            <i class="fa-solid fa-bag-shopping text-xl text-gray-300"></i>
+            <p class="text-lg text-gray-300">Add to Cart</p>
+          </button>
+        </div>
+
+        <!-- Normal state with discount -->
+        <div *ngIf="productObj && productObj.varietyId > 0 && !isNoDiscount"
+          class="flex flex-col justify-center items-center relative my-3 bg-[#FFFFFF] px-5 py-3 h-auto rounded-xl dark:bg-tileBlack dark:text-textDark">
+
+          <div *ngIf="productObj.displaytype === 'D&AP' || productObj.displaytype === 'AP&SP&D'"
             class="flex flex-col justify-center items-center absolute top-0 left-0 bg-[#00957D] rounded-tl-lg pl-2 pt-3 pr-12 pb-10"
             style="clip-path: polygon(0 0, 100% 0, 0 100%, 0 90%)">
-            <p *ngIf="productObj.discountedPrice === 0" class="text-white">
-              #%
-            </p>
-            <p *ngIf="productObj.discountedPrice !== 0" class="text-white">
-              {{ productObj.discountedPrice }}%
-            </p>
+            <p *ngIf="productObj.discountedPrice === 0" class="text-white">#%</p>
+            <p *ngIf="productObj.discountedPrice !== 0" class="text-white">{{ productObj.discountedPrice }}%</p>
             <p class="text-white">off</p>
           </div>
 
-          <!-- Image container with loading spinner -->
           <div class="relative w-full h-auto flex items-center justify-center mt-8">
-            <!-- Loading spinner -->
             <div *ngIf="isImageLoading" class="absolute inset-0 flex items-center justify-center">
               <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#00957D]"></div>
             </div>
-
-            <!-- Image -->
             <img *ngIf="productObj.varietyId > 0" [src]="selectedImage" (load)="onImageLoad()" (error)="onImageError()"
               class="w-full h-auto object-contain px-4 py-2" [class.opacity-0]="isImageLoading"
               [class.opacity-100]="!isImageLoading" />
           </div>
 
-          <p class="text-lg text-black dark:text-textDark my-2">
-            {{ productObj.cropName }}
-          </p>
+          <p class="text-xl font-[600] text-black dark:text-textDark my-2">{{ productObj.cropName }}</p>
+
+          <p *ngIf="productObj.unitType === 'Kg'" class="text-[#4B5563] text-base font-[500] my-1">{{
+            productObj.startValue }} Kg</p>
+          <p *ngIf="productObj.unitType !== 'Kg'" class="text-[#4B5563] text-base font-[500] my-1">{{
+            productObj.startValue * 1000 }} g</p>
 
           <div>
-            <p *ngIf="
-                productObj.displaytype === 'D&AP' && productObj.salePrice !== 0
-              " class="text-[#00957D] my-1">
-              Rs.{{ productObj.normalPrice }}
+            <p *ngIf="productObj.displaytype === 'D&AP' && productObj.salePrice !== 0"
+              class="text-[#00957D] my-1 text-base font-[500]">
+              Rs. {{ (productObj.normalPrice * productObj.startValue) || 0 | number:'1.2-2' }}
             </p>
-
-            <p *ngIf="
-                (productObj.displaytype === 'AP&SP' ||
-                  productObj.displaytype === 'AP&SP&D') &&
-                productObj.salePrice !== 0
-              " class="text-[#787878] my-1 line-through">
-              Rs.{{ productObj.normalPrice }}.00
-            </p>
+            <div *ngIf="productObj.displaytype === 'AP&SP' || productObj.displaytype === 'AP&SP&D'"
+              class="text-[16px] text-[#00957D] my-1">
+              <p *ngIf="productObj.salePrice === 0">Rs. 0.00</p>
+              <p *ngIf="productObj.salePrice !== 0">Rs. {{ (productObj.salePrice * productObj.startValue) || 0 |
+                number:'1.2-2' }}</p>
+            </div>
           </div>
 
-          <div *ngIf="
-              productObj.displaytype === 'AP&SP' ||
-              productObj.displaytype === 'AP&SP&D'
-            " class="text-xl text-[#00957D] my-1">
-            <p *ngIf="productObj.salePrice === 0">Rs.0.00</p>
-            <p *ngIf="productObj.salePrice !== 0">
-              Rs. {{ productObj.salePrice }}.00
-            </p>
-          </div>
+          <p *ngIf="(productObj.displaytype === 'AP&SP' || productObj.displaytype === 'AP&SP&D') && productObj.salePrice !== 0"
+            class="text-[#787878] my-1 line-through text-[12px]">
+            Rs. {{ (productObj.normalPrice * productObj.startValue) || 0 | number:'1.2-2' }}
+          </p>
+
           <button class="flex flex-row justify-between shadow-xl border rounded-lg px-7 py-1 mb-10">
             <i class="fa-solid fa-bag-shopping text-xl text-gray-300"></i>
             <p class="text-lg text-gray-300 mx-3">Add to Cart</p>
           </button>
         </div>
 
-        <div *ngIf="isNoDiscount"
+        <!-- Normal state without discount -->
+        <div *ngIf="productObj && productObj.varietyId > 0 && isNoDiscount"
           class="flex flex-col justify-center items-center relative my-3 bg-[#FFFFFF] px-5 py-3 h-auto rounded-xl dark:bg-tileBlack dark:text-textDark">
-          <!-- Image container with loading spinner -->
+
           <div class="relative w-full h-auto flex items-center justify-center mt-8">
-            <!-- Loading spinner -->
             <div *ngIf="isImageLoading" class="absolute inset-0 flex items-center justify-center">
               <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#00957D]"></div>
             </div>
-
-            <!-- Image -->
             <img *ngIf="productObj.varietyId > 0" [src]="selectedImage" (load)="onImageLoad()" (error)="onImageError()"
               class="w-full h-auto object-contain px-4 py-2" [class.opacity-0]="isImageLoading"
               [class.opacity-100]="!isImageLoading" />
           </div>
 
-          <p class="text-lg text-black dark:text-textDark my-2">
-            {{ productObj.cropName }}
+          <p class="text-xl font-[600] text-black dark:text-textDark my-2">{{ productObj.cropName }}</p>
+
+          <p *ngIf="productObj.unitType === 'Kg'" class="text-[#4B5563] text-base font-[500] my-1">{{
+            productObj.startValue }} Kg</p>
+          <p *ngIf="productObj.unitType !== 'Kg'" class="text-[#4B5563] text-base font-[500] my-1">{{
+            productObj.startValue * 1000 }} g</p>
+
+          <p class="text-[#00957D] my-1 text-base font-[500]">
+            Rs. {{ (productObj.normalPrice * productObj.startValue) || 0 | number:'1.2-2' }}
           </p>
-
-          <!-- <div>
-            <p *ngIf="
-          ( productObj.displaytype === 'D&AP' ) &&
-          productObj.salePrice !== 0
-        " class="text-[#787878] my-1">
-              Rs.{{ productObj.normalPrice }}.00
-            </p>
-
-            <p *ngIf="
-          (
-            productObj.displaytype === 'AP&SP' ||
-            productObj.displaytype === 'AP&SP&D') &&
-          productObj.salePrice !== 0
-        " class="text-[#787878] my-1 line-through">
-              Rs.{{ productObj.normalPrice }}.00
-            </p>
-          </div> -->
-
-          <p class="text-[#00957D] my-1">Rs.{{ productObj.normalPrice }}.00</p>
 
           <button class="flex flex-row justify-between shadow-xl border rounded-lg px-7 py-1 mb-10">
             <i class="fa-solid fa-bag-shopping text-xl text-gray-300"></i>
@@ -351,7 +386,8 @@
         <div class="my-3">
           <label class="text-lg text-[#534E4E] dark:text-textDark">Default Unit Type *</label>
           <p-dropdown id="unitType" name="unitType" [(ngModel)]="productObj.unitType" required #unitTypeField="ngModel"
-            [options]="unitTypeOptions" optionLabel="label" optionValue="value" placeholder="--Select Unit Type--" (ngModelChange)="onUnitTypeChange()"
+            [options]="unitTypeOptions" optionLabel="label" optionValue="value" placeholder="--Select Unit Type--"
+            (ngModelChange)="onUnitTypeChange()"
             [styleClass]="'w-full border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'">
           </p-dropdown>
           <div *ngIf="unitTypeField.invalid && unitTypeField.touched" class="text-red-500 text-sm mt-1">
@@ -362,8 +398,8 @@
         <div class="my-3">
           <label class="text-lg text-[#534E4E] dark:text-textDark">Minimum Quantity in Kg*</label>
           <input type="number" min="0.001" step="0.1" id="startValue" name="startValue"
-            [(ngModel)]="productObj.startValue" #minimumQuantityInput="ngModel" (input)="validatePriceInput($event, 'startValue')"
-            (keydown)="preventInvalidChars($event)"
+            [(ngModel)]="productObj.startValue" #minimumQuantityInput="ngModel"
+            (input)="validatePriceInput($event, 'startValue')" (keydown)="preventInvalidChars($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             #startValueField="ngModel" required />
           <!-- <div *ngIf="startValueField.invalid && startValueField.touched" class="text-red-500 text-sm mt-1">
@@ -387,14 +423,15 @@
           <label class="text-lg text-[#534E4E] dark:text-textDark">Maximum Quantity in Kg*</label>
           <input type="number" min="0.1" step="0.1" id="maxQuntity" name="maxQuntity"
             [(ngModel)]="productObj.maxQuantity" (input)="validatePriceInput($event, 'maxQuantity')"
-            (keydown)="preventInvalidChars($event)" 
+            (keydown)="preventInvalidChars($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             #maxQuantityField="ngModel" required />
           <!-- <div *ngIf="maxQuantityField.invalid && maxQuantityField.touched" class="text-red-500 text-sm mt-1">
     Maximum Quantity is required.
   </div> -->
           <!-- Update this validation message -->
-          <div *ngIf="maxQuantityField.touched && productObj.maxQuantity <= 0 && productObj.maxQuantity" class="text-red-500 text-sm mt-1">
+          <div *ngIf="maxQuantityField.touched && productObj.maxQuantity <= 0 && productObj.maxQuantity"
+            class="text-red-500 text-sm mt-1">
             Please enter a value greater than 0.
           </div>
 
@@ -418,7 +455,8 @@
     Increase/Decrease by is required.
   </div> -->
           <!-- Update this validation message -->
-          <div *ngIf="changeByField.touched && productObj.changeby <= 0 && productObj.changeby" class="text-red-500 text-sm mt-1">
+          <div *ngIf="changeByField.touched && productObj.changeby <= 0 && productObj.changeby"
+            class="text-red-500 text-sm mt-1">
             Please enter a value greater than 0.
           </div>
 

@@ -30,6 +30,8 @@ interface CollectionOfficers {
   officerModiyBy: string;
   adminModifyBy: string;
   regCode: string;
+  driverCatId: number;
+  slvCatName: string;
 }
 
 interface JobRole {
@@ -60,6 +62,7 @@ export class ViewDriverComponent implements OnInit {
   //   { id: 2, jobRole: 'Collection Centre Manager' },
   // ];
   centerNames: CenterName[] = [];
+  category: Category[] = [];
   collectionCenterManagerNames: ManagerNames[] = [];
   page: number = 1;
   totalItems: number = 0;
@@ -79,6 +82,7 @@ export class ViewDriverComponent implements OnInit {
   selectedIrmId: string | null = null;
   selectCenterStatus: string = '';
   selectStatus: string = '';
+  selectCategory: string = '';
   isSteckholdersRoute: boolean = false;
 
   hasData: boolean = false;
@@ -96,6 +100,7 @@ export class ViewDriverComponent implements OnInit {
   ];
 
   centerOptions: CenterOptions[] = [];
+  categoryOptions: CategoryOptions[] = [];
 
   centerId: number | null = null;
   Cname: string = '';
@@ -119,7 +124,6 @@ export class ViewDriverComponent implements OnInit {
     this.fetchAllDrivers();
     this.getAllcompany();
     this.fetchCenterNames();
-    console.log('role', this.tokenService.getUserDetails().role);
   }
 
   fetchAllDrivers(
@@ -128,7 +132,8 @@ export class ViewDriverComponent implements OnInit {
     centerStatus: string = this.selectCenterStatus,
     status: string = this.selectStatus,
     searchNIC: string = this.searchNIC,
-    centerId: number | null = this.cId
+    centerId: number | null = this.cId,
+    driverCatId: string | null = this.selectCategory || null
   ) {
     this.isLoading = true;
     this.collectionService
@@ -138,7 +143,8 @@ export class ViewDriverComponent implements OnInit {
         centerStatus,
         status,
         searchNIC,
-        centerId
+        centerId,
+        driverCatId ? Number(driverCatId) : null
       )
       .subscribe(
         (response) => {
@@ -146,6 +152,13 @@ export class ViewDriverComponent implements OnInit {
           this.hasData = response.total > 0;
           this.collectionOfficers = response.items;
           this.totalItems = response.total;
+
+          if (response.driverCategories) {
+            this.categoryOptions = response.driverCategories.map((cat: Category) => ({
+              label: cat.slvCatName,
+              value: cat.id.toString()
+            }));
+          }
         },
         (error) => {
           this.isLoading = false;
@@ -762,6 +775,17 @@ class ManagerNames {
 }
 
 class CenterOptions {
+  label!: string;
+  value!: string;
+}
+
+class Category {
+  id!: number;
+  catId!: number;
+  slvCatName!: string;
+}
+
+class CategoryOptions {
   label!: string;
   value!: string;
 }

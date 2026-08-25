@@ -306,12 +306,12 @@
             [ngClass]="{'p-invalid': branchDropdown.invalid && (branchDropdown.dirty || branchDropdown.touched)}">
           </p-dropdown>
 
-          <div *ngIf="branchDropdown.invalid && (branchDropdown.dirty || branchDropdown.touched)"
-            class="text-red-600 text-sm mt-1">
-            <div *ngIf="branchDropdown.errors?.['required']">
-              Branch Name is required.
-            </div>
-          </div>
+          <div *ngIf="(branchDropdown.touched || attemptedSubmit) && !selectedBranchId"
+  class="text-red-600 text-sm mt-1">
+  <div *ngIf="!selectedBankId">
+    Branch Name is required.
+  </div>
+</div>
 
 
         </div>

@@ -60,7 +60,7 @@ export class CreateCompanyComponent implements OnInit {
 
   companyData: Company = new Company();
   userForm: FormGroup;
-  selectedPage: 'pageOne' | 'pageTwo' = 'pageOne';
+  selectedPage: 'pageOne' | 'pageTwo' = 'pageTwo';
   itemId: number | null = null;
   touchedFields: { [key in keyof Company]?: boolean } = {};
   banks: Bank[] = [];
@@ -91,6 +91,7 @@ export class CreateCompanyComponent implements OnInit {
   faviconSizeError: boolean = false;
   sameNumberError: boolean = false;
   emailValidationMessage: string = '';
+  attemptedSubmit: boolean = false;
 
 
   companyType: string = '';
@@ -771,6 +772,8 @@ export class CreateCompanyComponent implements OnInit {
   }
 
   saveCompanyData() {
+
+  this.attemptedSubmit = true;
 
   this.accHolderName?.control.markAsTouched();
   this.accNumberInput?.control.markAsTouched();

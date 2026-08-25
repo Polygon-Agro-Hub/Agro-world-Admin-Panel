@@ -70,10 +70,10 @@ export class AddCollectionCenterComponent implements OnInit {
       centerName: ['', [Validators.required, this.noNumbersValidator]],
       contact01: [
   '',
-  [Validators.required, Validators.pattern(/^[0-9]{9}$/)],
+  [Validators.required, Validators.pattern(/^[1-9][0-9]{8}$/)],
 ],
 contact01Code: ['+94', Validators.required],
-contact02: ['', [Validators.pattern(/^[0-9]{9}$/)]],
+contact02: ['', [Validators.pattern(/^[1-9][0-9]{8}$/)]],
 contact02Code: ['+94'],
       buildingNumber: ['', Validators.required],
       street: ['', [Validators.required, this.noNumbersValidator]],
@@ -630,6 +630,18 @@ private refreshRegCode(): void {
   } else {
     this.collectionCenterForm.patchValue({ regCode: '' }, { emitEvent: false });
   }
+}
+
+stripLeadingZero(controlName: string): void {
+  const control = this.collectionCenterForm.get(controlName);
+  if (!control) return;
+
+  let value: string = control.value || '';
+
+  // Remove a leading zero (or multiple leading zeros) as the user types
+  value = value.replace(/^0+/, '');
+
+  control.setValue(value, { emitEvent: false });
 }
 }
 

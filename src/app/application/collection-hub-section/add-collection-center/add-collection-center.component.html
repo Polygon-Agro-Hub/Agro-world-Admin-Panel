@@ -165,10 +165,11 @@
   type="tel"
   formControlName="contact01"
   id="contact01"
-  pattern="^[0-9]{9}$"
+  pattern="^[1-9][0-9]{8}$"
   minlength="9"
   maxlength="9"
   (keypress)="allowOnlyNumbers($event)"
+  (input)="stripLeadingZero('contact01')"
   class="block w-full p-2 border h-12 border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
   placeholder="Enter your phone number"
 />
@@ -242,6 +243,7 @@
           <!-- Phone Input -->
           <div class="flex flex-col flex-1">
             <!-- Contact 02 -->
+<!-- Contact 02 -->
 <input type="tel"
   formControlName="contact02"
   id="contact02"
@@ -249,7 +251,8 @@
   placeholder="Enter your phone number"
   class="block w-full p-2 border h-12 border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
   (keypress)="allowOnlyNumbers($event)"
-  pattern="^[0-9]{9}$" minlength="9" maxlength="9"/>
+  (input)="stripLeadingZero('contact02')"
+  pattern="^[1-9][0-9]{8}$" minlength="9" maxlength="9"/>
           </div>
         </div>
       

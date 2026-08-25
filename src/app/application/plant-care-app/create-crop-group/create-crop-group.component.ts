@@ -285,6 +285,14 @@ export class CreateCropGroupComponent {
       errors.push('Please fill all NPK Ratio values');
     }
 
+    if (
+      (this.cropGroup.nitrogen && !this.isValidNPKValue(this.cropGroup.nitrogen)) ||
+      (this.cropGroup.phosphorus && !this.isValidNPKValue(this.cropGroup.phosphorus)) ||
+      (this.cropGroup.potassium && !this.isValidNPKValue(this.cropGroup.potassium))
+    ) {
+      errors.push('NPK values must be whole numbers between 0 and 99');
+    }
+
     if (!this.cropGroup.bgColor) {
       errors.push('Please choose a Background Color');
     }
@@ -496,6 +504,14 @@ export class CreateCropGroupComponent {
       errors.push('Please fill all NPK Ratio values');
     }
 
+    if (
+      (this.newsItems[0].nitrogen && !this.isValidNPKValue(this.newsItems[0].nitrogen)) ||
+      (this.newsItems[0].phosphorus && !this.isValidNPKValue(this.newsItems[0].phosphorus)) ||
+      (this.newsItems[0].potassium && !this.isValidNPKValue(this.newsItems[0].potassium))
+    ) {
+      errors.push('NPK values must be whole numbers between 0 and 99');
+    }
+
     if (!this.newsItems[0].bgColor) {
       errors.push('Please choose a Background Color');
     }
@@ -691,6 +707,77 @@ export class CreateCropGroupComponent {
     }
 
     if (!/^\d$/.test(char) && !allowedKeys.includes(char)) {
+      event.preventDefault();
+    }
+  }
+
+  allowNPKValue(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement;
+    const char = event.key;
+    const allowedKeys = [
+      'Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'ArrowLeft', 'ArrowRight',
+    ];
+
+    if (allowedKeys.includes(char)) return;
+
+    if (char === ' ' && input.selectionStart === 0) {
+      event.preventDefault();
+      return;
+    }
+
+    if (char === '.') {
+      event.preventDefault();
+      return;
+    }
+
+    if (!/^\d$/.test(char)) {
+      event.preventDefault();
+      return;
+    }
+
+    const start = input.selectionStart ?? input.value.length;
+    const end = input.selectionEnd ?? input.value.length;
+    const newValue = input.value.slice(0, start) + char + input.value.slice(end);
+
+    const num = parseInt(newValue, 10);
+    if (!isNaN(num) && num > 99) {
+      event.preventDefault();
+    }
+  }
+
+  sanitizeNPKInput(
+    event: Event,
+    model: { nitrogen: string; phosphorus: string; potassium: string },
+    field: 'nitrogen' | 'phosphorus' | 'potassium'
+  ): void {
+    const input = event.target as HTMLInputElement;
+    const rawValue = input.value.trim();
+
+    if (!rawValue) {
+      model[field] = '';
+      return;
+    }
+
+    if (!/^\d+$/.test(rawValue)) {
+      input.value = '';
+      model[field] = '';
+      return;
+    }
+
+    const parsedValue = parseInt(rawValue, 10);
+    const sanitizedValue = Math.min(parsedValue, 99).toString();
+
+    input.value = sanitizedValue;
+    model[field] = sanitizedValue;
+  }
+
+  isValidNPKValue(value: string | null | undefined): boolean {
+    return /^(?:[0-9]|[1-9][0-9])$/.test((value ?? '').trim());
+  }
+
+  blockDecimalPaste(event: ClipboardEvent): void {
+    const pasted = event.clipboardData?.getData('text') ?? '';
+    if (!/^\d{1,2}$/.test(pasted) || parseInt(pasted, 10) > 99) {
       event.preventDefault();
     }
   }

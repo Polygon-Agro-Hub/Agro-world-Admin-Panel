@@ -413,10 +413,14 @@
             type="text"
             [(ngModel)]="cropGroup.nitrogen"
             name="nitrogen"
-            (keydown)="allowDecimal2Places($event)"
+            (keydown)="allowNPKValue($event)"
+            (paste)="blockDecimalPaste($event)"
+            (input)="sanitizeNPKInput($event, cropGroup, 'nitrogen')"
             class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
             #nitrogenInput="ngModel"
-            pattern="^\d+(\.\d{1,2})?$"
+            pattern="^(?:[0-9]|[1-9][0-9])$"
+            maxlength="2"
+            autocomplete="off"
             required
           />
           <span class="text-sm text-textLight dark:text-textDark"
@@ -426,10 +430,14 @@
             type="text"
             [(ngModel)]="cropGroup.phosphorus"
             name="phosphorus"
-            (keydown)="allowDecimal2Places($event)"
+            (keydown)="allowNPKValue($event)"
+            (paste)="blockDecimalPaste($event)"
+            (input)="sanitizeNPKInput($event, cropGroup, 'phosphorus')"
             class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
             #phosphorusInput="ngModel"
-            pattern="^\d+(\.\d{1,2})?$"
+            pattern="^(?:[0-9]|[1-9][0-9])$"
+            maxlength="2"
+            autocomplete="off"
             required
           />
           <span class="text-sm text-textLight dark:text-textDark"
@@ -439,10 +447,14 @@
             type="text"
             [(ngModel)]="cropGroup.potassium"
             name="potassium"
-            (keydown)="allowDecimal2Places($event)"
+            (keydown)="allowNPKValue($event)"
+            (paste)="blockDecimalPaste($event)"
+            (input)="sanitizeNPKInput($event, cropGroup, 'potassium')"
             class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
             #potassiumInput="ngModel"
-            pattern="^\d+(\.\d{1,2})?$"
+            pattern="^(?:[0-9]|[1-9][0-9])$"
+            maxlength="2"
+            autocomplete="off"
             required
           />
         </div>
@@ -464,7 +476,7 @@
           "
           class="text-red-500 text-sm mt-1"
         >
-          Please enter a valid number (whole number or up to 2 decimal places) for NPK values
+          NPK values must be whole numbers between 0 and 99
         </div>
       </div>
 
@@ -974,10 +986,14 @@
               type="text"
               [(ngModel)]="newsItems[0].nitrogen"
               name="nitrogen"
-              (keydown)="allowDecimal2Places($event)"
+              (keydown)="allowNPKValue($event)"
+              (paste)="blockDecimalPaste($event)"
+              (input)="sanitizeNPKInput($event, newsItems[0], 'nitrogen')"
               class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
               #nitrogenEditInput="ngModel"
-              pattern="^\d+(\.\d{1,2})?$"
+              pattern="^(?:[0-9]|[1-9][0-9])$"
+              maxlength="2"
+              autocomplete="off"
               required
             />
             <span class="text-sm text-textLight dark:text-textDark"
@@ -987,10 +1003,14 @@
               type="text"
               [(ngModel)]="newsItems[0].phosphorus"
               name="phosphorus"
-              (keydown)="allowDecimal2Places($event)"
+              (keydown)="allowNPKValue($event)"
+              (paste)="blockDecimalPaste($event)"
+              (input)="sanitizeNPKInput($event, newsItems[0], 'phosphorus')"
               class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
               #phosphorusEditInput="ngModel"
-              pattern="^\d+(\.\d{1,2})?$"
+              pattern="^(?:[0-9]|[1-9][0-9])$"
+              maxlength="2"
+              autocomplete="off"
               required
             />
             <span class="text-sm text-textLight dark:text-textDark"
@@ -1000,10 +1020,14 @@
               type="text"
               [(ngModel)]="newsItems[0].potassium"
               name="potassium"
-              (keydown)="allowDecimal2Places($event)"
+              (keydown)="allowNPKValue($event)"
+              (paste)="blockDecimalPaste($event)"
+              (input)="sanitizeNPKInput($event, newsItems[0], 'potassium')"
               class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
               #potassiumEditInput="ngModel"
-              pattern="^\d+(\.\d{1,2})?$"
+              pattern="^(?:[0-9]|[1-9][0-9])$"
+              maxlength="2"
+              autocomplete="off"
               required
             />
           </div>
@@ -1031,7 +1055,7 @@
             "
             class="text-red-500 text-sm mt-1"
           >
-            Please enter a valid number (whole number or up to 2 decimal places) for NPK values
+            NPK values must be whole numbers between 0 and 99
           </div>
         </div>
 

@@ -230,61 +230,27 @@ isFieldInvalid(field: string): boolean {
 
   onProvinceChange() {
   this.updateDistrictOptions();
-  
-  
   this.collectionCenterForm.get('district')?.reset();
-  
-  
+
   const control = this.collectionCenterForm.get('city');
   if (control) {
     const value = control.value || '';
     control.setValue(value.replace(/^\s+/, ''), { emitEvent: false });
   }
 
-  const selectedProvince = this.collectionCenterForm.get('province')?.value;
-  const selectedDistrict = this.collectionCenterForm.get('district')?.value;
-  const selectedCity = this.collectionCenterForm.get('city')?.value;
-
-  this.selectProvince = selectedProvince;
-  this.updateRegCode();
-
-  if (selectedProvince && selectedDistrict && selectedCity) {
-    this.isLoadingregcode = true;
-    this.collectionCenterService
-      .generateRegCode(selectedProvince, selectedDistrict, selectedCity)
-      .subscribe((response) => {
-        this.collectionCenterForm.patchValue({ regCode: response.regCode });
-        this.isLoadingregcode = false;
-      });
-  }
+  this.selectProvince = this.collectionCenterForm.get('province')?.value;
+  this.refreshRegCode();
 }
 
 
   onDistrictChange() {
-    const selectedProvince = this.collectionCenterForm.get('province')?.value;
-    const selectedDistrict = this.collectionCenterForm.get('district')?.value;
-    const selectedCity = this.collectionCenterForm.get('city')?.value;
-
-    if (selectedProvince && selectedDistrict && selectedCity) {
-      this.isLoadingregcode = true;
-      this.collectionCenterService
-        .generateRegCode(selectedProvince, selectedDistrict, selectedCity)
-        .subscribe(
-          (response) => {
-            this.collectionCenterForm.patchValue({ regCode: response.regCode });
-            this.isLoadingregcode = false;
-          },
-          () => {
-            this.isLoadingregcode = false;
-          }
-        );
-    }
-  }
+  this.refreshRegCode();
+}
 
   onCityChange() {
-    this.city = this.collectionCenterForm.get('city')?.value;
-    this.updateRegCode();
-  }
+  this.city = this.collectionCenterForm.get('city')?.value;
+  this.refreshRegCode();
+}
 
   updateRegCode() {
     const province = this.collectionCenterForm.get('province')?.value;
@@ -669,6 +635,33 @@ getAllCompanies() {
   capitalizeFirstLetter(input: string): string {
   if (!input) return '';
   return input.charAt(0).toUpperCase() + input.slice(1);
+}
+
+// Replace updateRegCode() with a single source of truth:
+private refreshRegCode(): void {
+  const province = this.collectionCenterForm.get('province')?.value;
+  const district = this.collectionCenterForm.get('district')?.value;
+  const city = this.collectionCenterForm.get('city')?.value;
+
+  if (province && district && city) {
+    this.isLoadingregcode = true;
+    this.collectionCenterService
+      .generateRegCode(province, district, city)
+      .subscribe({
+        next: (response) => {
+          this.collectionCenterForm.patchValue(
+            { regCode: response.regCode },
+            { emitEvent: false }
+          );
+          this.isLoadingregcode = false;
+        },
+        error: () => {
+          this.isLoadingregcode = false;
+        },
+      });
+  } else {
+    this.collectionCenterForm.patchValue({ regCode: '' }, { emitEvent: false });
+  }
 }
 }
 

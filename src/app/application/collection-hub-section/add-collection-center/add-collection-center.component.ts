@@ -51,11 +51,6 @@ export class AddCollectionCenterComponent implements OnInit {
   searchQuery: string = '';
   filteredCompanies: Company[] = [];
 
-  allowedPrefixes = ['70', '71', '72', '75', '76', '77', '78'];
-  isPhoneInvalidMap: { [key: string]: boolean } = {
-    phone01: false,
-    phone02: false,
-  };
 
   countries: Country[] = COUNTRIES;
   selectedCountry1: Country | null = null;
@@ -74,12 +69,12 @@ export class AddCollectionCenterComponent implements OnInit {
       regCode: ['', [Validators.required, Validators.pattern(/^[^\d]*$/)]],
       centerName: ['', [Validators.required, this.noNumbersValidator]],
       contact01: [
-        '',
-        [Validators.required, Validators.pattern(/^[7][0-9]{8}$/)],
-      ],
-      contact01Code: ['+94', Validators.required],
-      contact02: ['', [Validators.pattern(/^[7][0-9]{8}$/)]],
-      contact02Code: ['+94'],
+  '',
+  [Validators.required, Validators.pattern(/^[0-9]{9}$/)],
+],
+contact01Code: ['+94', Validators.required],
+contact02: ['', [Validators.pattern(/^[0-9]{9}$/)]],
+contact02Code: ['+94'],
       buildingNumber: ['', Validators.required],
       street: ['', [Validators.required, this.noNumbersValidator]],
       district: ['', Validators.required],
@@ -135,34 +130,7 @@ export class AddCollectionCenterComponent implements OnInit {
     return true;
   }
 
-  validateSriLankanPhone(input: string, key: string): void {
-    if (!input) {
-      this.isPhoneInvalidMap[key] = false;
-      return;
-    }
-
-    const firstDigit = input.charAt(0);
-    const prefix = input.substring(0, 2);
-    const isValidPrefix = this.allowedPrefixes.includes(prefix);
-    const isValidLength = input.length === 9;
-
-    if (firstDigit !== '7') {
-      this.isPhoneInvalidMap[key] = true;
-      return;
-    }
-
-    if (!isValidPrefix && input.length >= 2) {
-      this.isPhoneInvalidMap[key] = true;
-      return;
-    }
-
-    if (input.length === 9 && isValidPrefix) {
-      this.isPhoneInvalidMap[key] = false;
-      return;
-    }
-
-    this.isPhoneInvalidMap[key] = false;
-  }
+  
 
   ngOnInit() {
     this.initializeDropdownOptions();
@@ -282,19 +250,19 @@ isFieldInvalid(field: string): boolean {
   }
 
   if (!this.collectionCenterForm.get('contact01')?.value) {
-    missingFields.push('Contact Number - 1 is Required');
-  } else if (!/^[0-9]{9}$/.test(this.collectionCenterForm.get('contact01')?.value) || this.isPhoneInvalidMap['phone01']) {
-    missingFields.push('Contact Number - 1 - Must be a valid 9-digit number (e.g., 77XXXXXXX)');
-  }
+  missingFields.push('Contact Number - 1 is Required');
+} else if (!/^[0-9]{9}$/.test(this.collectionCenterForm.get('contact01')?.value)) {
+  missingFields.push('Contact Number - 1 - Must be a valid 9-digit number');
+}
 
-  if (this.collectionCenterForm.get('contact02')?.value) {
-    if (!/^[0-9]{9}$/.test(this.collectionCenterForm.get('contact02')?.value) || this.isPhoneInvalidMap['phone02']) {
-      missingFields.push('Contact Number - 2 - Must be a valid 9-digit number (e.g., 77XXXXXXX)');
-    }
-    if (this.collectionCenterForm.get('contact01')?.value === this.collectionCenterForm.get('contact02')?.value) {
-      missingFields.push('Contact Number - 1 and Contact Number - 2 cannot be the same');
-    }
+if (this.collectionCenterForm.get('contact02')?.value) {
+  if (!/^[0-9]{9}$/.test(this.collectionCenterForm.get('contact02')?.value)) {
+    missingFields.push('Contact Number - 2 - Must be a valid 9-digit number');
   }
+  if (this.collectionCenterForm.get('contact01')?.value === this.collectionCenterForm.get('contact02')?.value) {
+    missingFields.push('Contact Number - 1 and Contact Number - 2 cannot be the same');
+  }
+}
 
   if (!this.collectionCenterForm.get('buildingNumber')?.value || this.collectionCenterForm.get('buildingNumber')?.value.trim() === '') {
     missingFields.push('Building Number  is Required');

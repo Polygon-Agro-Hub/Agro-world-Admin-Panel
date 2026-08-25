@@ -104,10 +104,11 @@ export class AddCollectionCenterComponent implements OnInit {
   }
 
   onCompanyChange(event: any): void {
-    this.selectedCompaniesIds = event.value;
-    this.collectionCenterForm.get('companies')?.setValue(this.selectedCompaniesIds);
-    this.collectionCenterForm.get('companies')?.markAsTouched();
-  }
+  this.selectedCompaniesIds = event.value;
+  this.collectionCenterForm.get('companies')?.setValue(this.selectedCompaniesIds);
+  this.collectionCenterForm.get('companies')?.markAsTouched();
+  this.companyTouched = true;
+}
 
 
   onCompanyInputClick(): void {
@@ -301,6 +302,7 @@ isFieldInvalid(field: string): boolean {
  onSubmit() {
   
   this.collectionCenterForm.markAllAsTouched();
+  this.companyTouched = true;
 
   const missingFields: string[] = [];
 

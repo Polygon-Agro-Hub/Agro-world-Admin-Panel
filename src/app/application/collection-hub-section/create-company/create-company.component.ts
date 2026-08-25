@@ -166,14 +166,15 @@ export class CreateCompanyComponent implements OnInit {
     const code = numberField === 'oicConNum1' ? this.companyData.oicConCode1 : this.companyData.oicConCode2;
     const number = numberField === 'oicConNum1' ? this.companyData.oicConNum1 : this.companyData.oicConNum2;
 
-    if (!code || !number || number.toString().length !== 9) {
+    if (!number || number.toString().length !== 9) {
       return false;
     }
 
-    const fullNumber = `${code}${number}`;
+    if (code === '+94' && number.toString().startsWith('0')) {
+      return true;
+    }
 
-    const mobilePattern = /^\+947\d{8}$/;
-    return !mobilePattern.test(fullNumber);
+    return !/^\d{9}$/.test(number.toString());
   }
 
 
@@ -390,6 +391,7 @@ export class CreateCompanyComponent implements OnInit {
   }
 
   allowOnlyDigitsForAccountNumber(event: KeyboardEvent, field: 'accNumber' | 'confirmAccNumber' | 'oicConNum1' | 'oicConNum2'): void {
+    const input = event.target as HTMLInputElement;
     const char = event.key;
     const allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Delete', 'Tab'];
 
@@ -404,6 +406,17 @@ export class CreateCompanyComponent implements OnInit {
       } else if (field === 'confirmAccNumber') {
         this.confirmAccountNumberError = true;
         setTimeout(() => (this.confirmAccountNumberError = false), 2000);
+      }
+    }
+
+    if (field === 'oicConNum1' || field === 'oicConNum2') {
+      const code = field === 'oicConNum1' ? this.companyData.oicConCode1 : this.companyData.oicConCode2;
+      const start = input.selectionStart ?? input.value.length;
+      const end = input.selectionEnd ?? input.value.length;
+      const nextValue = input.value.slice(0, start) + char + input.value.slice(end);
+
+      if (code === '+94' && nextValue.startsWith('0')) {
+        event.preventDefault();
       }
     }
   }
@@ -436,6 +449,18 @@ export class CreateCompanyComponent implements OnInit {
       if (!/^[0-9]$/.test(key)) {
         event.preventDefault();
         return;
+      }
+
+      if (fieldName === 'oicConNum1' || fieldName === 'oicConNum2') {
+        const code = fieldName === 'oicConNum1' ? this.companyData.oicConCode1 : this.companyData.oicConCode2;
+        const selectionEnd = input.selectionEnd ?? currentValue.length;
+        const nextValue =
+          currentValue.slice(0, cursorPosition) + key + currentValue.slice(selectionEnd);
+
+        if (code === '+94' && nextValue.startsWith('0')) {
+          event.preventDefault();
+          return;
+        }
       }
     }
 
@@ -767,7 +792,7 @@ export class CreateCompanyComponent implements OnInit {
     if (!number) return false;
   
     const numStr = number.toString();
-    const pattern = /^7\d{8}$/;
+    const pattern = /^\d{9}$/;
     return pattern.test(numStr);
   }
 
@@ -845,10 +870,10 @@ export class CreateCompanyComponent implements OnInit {
   if (!this.companyData.foName) missingFields.push('Finance Officer Name is Required');
   if (!this.companyData.oicConNum1) missingFields.push('Contact Number 1 is Required');
   if (this.companyData.oicConNum1 && !this.isValidLocalMobile(this.companyData.oicConNum1)) {
-    missingFields.push('Please enter a valid Contact Number - 1 (format: 7XXXXXXXX)');
+    missingFields.push('Please enter a valid Contact Number - 1');
   }
   if (this.companyData.oicConNum2 && !this.isValidLocalMobile(this.companyData.oicConNum2)) {
-    missingFields.push('Please enter a valid Contact Number - 2 (format: 7XXXXXXXX)');
+    missingFields.push('Please enter a valid Contact Number - 2');
   }
   if (!this.companyData.logo) missingFields.push('Company Logo (must be an image <1MB)');
   if (!this.companyData.favicon) missingFields.push('Company Favicon (must be an image <1MB)');
@@ -1104,10 +1129,10 @@ export class CreateCompanyComponent implements OnInit {
   if (!this.companyData.foName) missingFields.push('Finance Officer Name is Required');
   if (!this.companyData.oicConNum1) missingFields.push('Contact Number 1 is Required');
   if (this.companyData.oicConNum1 && !this.isValidLocalMobile(this.companyData.oicConNum1)) {
-    missingFields.push('Please enter a valid Contact Number - 1 (format: 7XXXXXXXX)');
+    missingFields.push('Please enter a valid Contact Number - 1');
   }
   if (this.companyData.oicConNum2 && !this.isValidLocalMobile(this.companyData.oicConNum2)) {
-    missingFields.push('Please enter a valid Contact Number - 2 (format: 7XXXXXXXX)');
+    missingFields.push('Please enter a valid Contact Number - 2');
   }
   if (!this.companyData.logo) missingFields.push('Company Logo is Required');
   if (!this.companyData.favicon) missingFields.push('Company Favicon is Required');
@@ -1147,10 +1172,10 @@ export class CreateCompanyComponent implements OnInit {
   
   const contactNumberErrors: string[] = [];
   if (this.isInvalidMobileNumber('oicConNum1')) {
-    contactNumberErrors.push('Please enter a valid Contact Number - 1 (format: +947XXXXXXXX)');
+    contactNumberErrors.push('Please enter a valid Contact Number - 1');
   }
   if (this.companyData.oicConNum2 && this.isInvalidMobileNumber('oicConNum2')) {
-    contactNumberErrors.push('Please enter a valid Contact Number - 2 (format: +947XXXXXXXX)');
+    contactNumberErrors.push('Please enter a valid Contact Number - 2');
   }
 
 
@@ -1598,11 +1623,11 @@ export class CreateCompanyComponent implements OnInit {
     }
 
     if (this.isInvalidMobileNumber('oicConNum1')) {
-      return 'Please enter a valid Contact Number - 1 (format: +947XXXXXXXX)';
+      return 'Please enter a valid Contact Number - 1';
     }
 
     if (this.contactNumberError1) {
-      return 'Please enter a valid Contact Number - 1 (format: +947XXXXXXXX)';
+      return 'Please enter a valid Contact Number - 1';
     }
 
     return '';
@@ -1616,11 +1641,11 @@ export class CreateCompanyComponent implements OnInit {
     }
 
     if (this.isInvalidMobileNumber('oicConNum2')) {
-      return 'Please enter a valid Contact Number - 2 (format: +947XXXXXXXX)';
+      return 'Please enter a valid Contact Number - 2';
     }
 
     if (this.contactNumberError2) {
-      return 'Please enter a valid Contact Number - 2 (format: +947XXXXXXXX)';
+      return 'Please enter a valid Contact Number - 2';
     }
 
     if (this.sameNumberError) {

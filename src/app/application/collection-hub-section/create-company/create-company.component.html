@@ -359,7 +359,7 @@
       </p-dropdown>
 
       <input id="phoneNumber01" name="oicConNum1" type="tel" inputmode="numeric" pattern="[0-9]*"
-        maxlength="9" (keydown)="handleInputWithSpaceTrimming($event, 'oicConNum1')" required placeholder="7XXXXXXXX" [(ngModel)]="companyData.oicConNum1"
+        maxlength="9" (keydown)="handleInputWithSpaceTrimming($event, 'oicConNum1')" required [(ngModel)]="companyData.oicConNum1"
         #oicConNum1Ref="ngModel" (blur)="validateContactNumbers()"
         class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
     </div>
@@ -373,12 +373,12 @@
       
       <!-- Format validation (second priority) - only show if field has value and is not required error -->
       <div *ngIf="!oicConNum1Ref.errors?.['required'] && oicConNum1Ref.touched && isInvalidMobileNumber('oicConNum1')" class="text-red-500 text-sm">
-        Please enter a valid contact number (format: +947XXXXXXXX)
+        Please enter a valid contact number
       </div>
       
       <!-- Length validation (third priority) - only show if no other errors -->
       <div *ngIf="!oicConNum1Ref.errors?.['required'] && !isInvalidMobileNumber('oicConNum1') && contactNumberError1 && oicConNum1Ref.valid" class="text-red-500 text-sm">
-        Please enter a valid contact number (format: +947XXXXXXXX)
+        Please enter a valid contact number
       </div>
     </div>
   </div>
@@ -415,19 +415,19 @@
       <input id="phoneNumber02" name="oicConNum2" type="tel" inputmode="numeric" pattern="[0-9]*"
         maxlength="9" (keydown)="handleInputWithSpaceTrimming($event, 'oicConNum2')"
         class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        placeholder="7XXXXXXXX" [(ngModel)]="companyData.oicConNum2" (blur)="validateContactNumbers()" />
+        [(ngModel)]="companyData.oicConNum2" (blur)="validateContactNumbers()" />
     </div>
     
     <!-- Single error message container with priority logic -->
     <div class="mt-1">
       <!-- Format validation (highest priority for optional field) -->
       <div *ngIf="companyData.oicConNum2 && isInvalidMobileNumber('oicConNum2')" class="text-red-500 text-sm">
-        Please enter a valid contact number (format: +947XXXXXXXX)
+        Please enter a valid contact number
       </div>
       
       <!-- Length validation (second priority) - only show if format is valid -->
       <div *ngIf="companyData.oicConNum2 && !isInvalidMobileNumber('oicConNum2') && contactNumberError2" class="text-red-500 text-sm">
-        Please enter a valid contact number (format: +947XXXXXXXX)
+        Please enter a valid contact number
       </div>
       
       <!-- Duplicate validation (lowest priority) - only show if no other errors -->

@@ -12,7 +12,6 @@
         Add Company Details
       </h2>
 
-      <!-- Logo and Favicon Upload Section -->
       <div class="flex justify-between items-center mb-8">
         <div class="flex items-center mb-8">
           <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
@@ -40,24 +39,20 @@
             </div>
           </div>
           <div class="ml-3">
-            <!-- Required validation message -->
             <span *ngIf="isFieldInvalid('logo') && !logoSizeError" class="text-red-600 text-sm block">
               Logo is required.
             </span>
 
-            <!-- Size validation message -->
             <span *ngIf="logoSizeError" class="text-red-600 text-sm block">
               Image must be less than 1MB
             </span>
 
-            <!-- Helper text (only show when no errors) -->
             <span *ngIf="!isFieldInvalid('logo') && !logoSizeError" class="text-gray-500 text-xs block">
               Upload an image less than 1MB
             </span>
           </div>
         </div>
 
-        <!-- Update the Favicon Upload Section -->
         <div class="flex items-center mb-8">
           <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
             Add Favicon *
@@ -84,17 +79,14 @@
             </div>
           </div>
           <div class="ml-3">
-            <!-- Required validation message -->
             <span *ngIf="isFieldInvalid('favicon') && !faviconSizeError" class="text-red-600 text-sm block">
               Favicon is required.
             </span>
 
-            <!-- Size validation message -->
             <span *ngIf="faviconSizeError" class="text-red-600 text-sm block">
               Image must be less than 1MB
             </span>
 
-            <!-- Helper text (only show when no errors) -->
             <span *ngIf="!isFieldInvalid('favicon') && !faviconSizeError" class="text-gray-500 text-xs block">
               Upload an image less than 1MB
             </span>
@@ -125,15 +117,10 @@
             (input)="capitalizeFirstLetter('companyNameEnglish')" (blur)="onBlur('companyNameEnglish')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
-          <!-- Required message -->
           <div *ngIf="isFieldInvalid('companyNameEnglish')" class="text-red-500 text-sm mt-1">
             Company Name (in English) is required.
           </div>
 
-          <!-- Language-specific message -->
-          <!-- <div *ngIf="englishInputError" class="text-red-600 text-sm mt-1">
-            Only English letters are allowed in this field.
-          </div> -->
         </div>
 
 
@@ -146,15 +133,10 @@
             (keydown)="handleInputWithSpaceTrimming($event, 'companyNameEnglish')"
             (input)="capitalizeFirstLetter('companyNameEnglish')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <!-- Required message -->
           <div *ngIf="isFieldInvalid('companyNameSinhala')" class="text-red-500 text-sm mt-1">
             Company Name (in Sinhala) is required.
           </div>
 
-          <!-- Language-specific message -->
-          <!-- <div *ngIf="sinhalaInputError" class="text-red-600 text-sm mt-1">
-            Only Sinhala letters are allowed in this field.
-          </div> -->
         </div>
         <div class="pb-6">
           <label for="companyNameTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark">
@@ -164,14 +146,9 @@
             #companyNameTamil="ngModel" required (keydown)="handleInputWithSpaceTrimming($event, 'companyNameEnglish')"
             (input)="capitalizeFirstLetter('companyNameEnglish')" (blur)="onBlur('companyNameTamil')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <!-- Required message -->
           <div *ngIf="isFieldInvalid('companyNameTamil')" class="text-red-500 text-sm mt-1">
             Company Name (in Tamil) is required.
           </div>
-          <!-- Language-specific message -->
-          <!-- <div *ngIf="tamilInputError" class="text-red-600 text-sm mt-1">
-            Only Tamil letters are allowed.
-          </div> -->
         </div>
         <div class="pb-6">
           <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Company Email Address
@@ -204,7 +181,6 @@
         Billing Information
       </h2>
       <div>
-        <!-- Updated Account Holder Name and Account Number fields for ADD section (Page Two) -->
         <div class="pb-6">
           <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Holder's
             Name *</label>
@@ -233,9 +209,6 @@
             #accNumberInput="ngModel" required
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
-          <!-- <span *ngIf="isFieldInvalid('accNumber')" class="text-red-600 text-sm">
-          Account Number is required.
-        </span> -->
           <div *ngIf="accNumberInput.touched && !companyData.accNumber" class="text-red-500 text-sm mt-1">
             <div>Account Number is required</div>
           </div>
@@ -254,13 +227,11 @@
             #confirmAccNumberInput="ngModel" required (ngModelChange)="validateConfirmAccNumber()"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
-          <!-- Required validation message -->
           <span *ngIf="confirmAccountNumberRequired || confirmAccNumberInput.touched && !companyData.confirmAccNumber"
             class="text-red-600 text-sm">
             Confirm Account Number is required.
           </span>
 
-          <!-- Mismatch validation message -->
           <span *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired" class="text-red-600 text-sm">
             Account Numbers do not match.
           </span>
@@ -321,9 +292,6 @@
             (keydown)="allowOnlyEnglishLetterss($event)" (keydown)="handleInputWithSpaceTrimming($event, 'foName')"
             (input)="capitalizeFirstLetter('foName')" (blur)="onBlur('foName')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <!-- <div *ngIf="invalidFoName" class="text-red-500 text-sm mt-1">
-            Only English letters and spaces are allowed in Finance Officer’s Name.
-          </div> -->
           <span *ngIf="isFieldInvalid('foName') || (financeOfficerInput.touched && !companyData.foName)"
             class="text-red-600 text-sm">Finance Officer’s Name is required.</span>
         </div>
@@ -340,7 +308,6 @@
                   styleClass="border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown flex-shrink-0"
                   [style]="{ width: '140px' }">
 
-                  <!-- Dropdown items -->
                   <ng-template let-country pTemplate="item">
                     <div class="flex items-center gap-2">
                       <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
@@ -348,7 +315,6 @@
                     </div>
                   </ng-template>
 
-                  <!-- Selected item -->
                   <ng-template let-country pTemplate="selectedItem">
                     <div class="flex items-center gap-2" *ngIf="country">
                       <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
@@ -363,21 +329,17 @@
                   class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
               </div>
 
-              <!-- Single error message container with priority logic -->
               <div class="mt-1">
-                <!-- Required validation (highest priority) -->
                 <div *ngIf="oicConNum1Ref.errors?.['required'] && oicConNum1Ref.touched" class="text-red-500 text-sm">
                   Contact Number 1 is required.
                 </div>
 
-                <!-- Format validation (second priority) - only show if field has value and is not required error -->
                 <div
                   *ngIf="!oicConNum1Ref.errors?.['required'] && oicConNum1Ref.touched && isInvalidMobileNumber('oicConNum1')"
                   class="text-red-500 text-sm">
                   Please enter a valid contact number
                 </div>
 
-                <!-- Length validation (third priority) - only show if no other errors -->
                 <div
                   *ngIf="!oicConNum1Ref.errors?.['required'] && !isInvalidMobileNumber('oicConNum1') && contactNumberError1 && oicConNum1Ref.valid"
                   class="text-red-500 text-sm">
@@ -399,7 +361,6 @@
                   optionValue="dialCode"
                   styleClass="border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown flex-shrink-0"
                   [style]="{ width: '140px' }">
-                  <!-- Dropdown items -->
                   <ng-template let-country pTemplate="item">
                     <div class="flex items-center gap-2">
                       <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
@@ -407,7 +368,6 @@
                     </div>
                   </ng-template>
 
-                  <!-- Selected item -->
                   <ng-template let-country pTemplate="selectedItem">
                     <div class="flex items-center gap-2" *ngIf="country">
                       <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
@@ -421,20 +381,16 @@
                   [(ngModel)]="companyData.oicConNum2" (blur)="validateContactNumbers()" />
               </div>
 
-              <!-- Single error message container with priority logic -->
               <div class="mt-1">
-                <!-- Format validation (highest priority for optional field) -->
                 <div *ngIf="companyData.oicConNum2 && isInvalidMobileNumber('oicConNum2')" class="text-red-500 text-sm">
                   Please enter a valid contact number
                 </div>
 
-                <!-- Length validation (second priority) - only show if format is valid -->
                 <div *ngIf="companyData.oicConNum2 && !isInvalidMobileNumber('oicConNum2') && contactNumberError2"
                   class="text-red-500 text-sm">
                   Please enter a valid contact number
                 </div>
 
-                <!-- Duplicate validation (lowest priority) - only show if no other errors -->
                 <div *ngIf="!isInvalidMobileNumber('oicConNum2') && !contactNumberError2 && sameNumberError"
                   class="text-red-500 text-sm">
                   Contact Number - 1 and Contact Number - 2 cannot be the same.
@@ -466,7 +422,6 @@
       </h2>
 
       <div class="flex justify-between items-center mb-8">
-        <!-- Logo Section -->
         <div class="flex items-center">
           <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
             Company Logo *
@@ -495,14 +450,12 @@
               class="hidden" />
           </div>
           <div class="ml-3">
-            <!-- Show size error first, then required validation -->
             <span *ngIf="logoSizeError" class="text-red-600 text-sm block">Image must be less than 1MB</span>
             <span *ngIf="!logoSizeError && isFieldInvalid('logo')" class="text-red-600 text-sm block">Logo is
               required.</span>
           </div>
         </div>
 
-        <!-- Favicon Section -->
         <div class="flex items-center">
           <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
             Company Favicon *
@@ -531,7 +484,6 @@
               (change)="onFaviconChange($event)" class="hidden" />
           </div>
           <div class="ml-3">
-            <!-- Show size error first, then required validation -->
             <span *ngIf="faviconSizeError" class="text-red-600 text-sm block">Image must be less than 1MB</span>
             <span *ngIf="!faviconSizeError && isFieldInvalid('favicon')" class="text-red-600 text-sm block">Favicon is
               required.</span>
@@ -569,9 +521,6 @@
               Company Name (in English) is required.
             </div>
           </div>
-          <!-- <div *ngIf="englishInputError" class="text-red-600 text-sm mt-1">
-            Only English letters are allowed in this field.
-          </div> -->
         </div>
 
         <div class="pb-6">
@@ -590,9 +539,6 @@
               Company Name (in Sinhala) is required.
             </div>
           </div>
-          <!-- <div *ngIf="sinhalaInputError" class="text-red-600 text-sm mt-1">
-            Only Sinhala letters are allowed in this field.
-          </div> -->
         </div>
 
         <div class="pb-6">
@@ -610,12 +556,8 @@
               Company Name (in Tamil) is required.
             </div>
           </div>
-          <!-- <div *ngIf="tamilInputError" class="text-red-600 text-sm mt-1">
-            Only Tamil letters are allowed in this field.
-          </div> -->
         </div>
 
-        <!-- In Edit Company Details section -->
         <div class="pb-6">
           <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Company Email Address *
@@ -650,43 +592,17 @@
         Edit Billing Information
       </h2>
       <div>
-        <!-- Updated Account Holder Name and Account Number fields for EDIT section (Page Two) -->
         <div class="pb-6">
           <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account
             Holder's Name *</label>
           <input id="accHolderName" name="accHolderName" [(ngModel)]="companyData.accHolderName"
             #accountHolderInput="ngModel" (keydown)="allowOnlyEnglishLettersForAccountHolder($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <!-- <div *ngIf="invalidCharError" class="text-red-500 text-sm mt-1">
-            Only English letters and spaces are allowed. Numbers and special characters are not permitted.
-          </div> -->
 
           <div *ngIf="!companyData.accHolderName && accountHolderInput.touched" class="text-red-500 text-sm mt-1">
             Account Holder's Name is required.
           </div>
         </div>
-
-
-
-        <!-- <div class="pb-6">
-          <label for="confirmAccNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Confirm Account Number
-          </label>
-          <input type="text" id="confirmAccNumber" name="confirmAccNumber" [(ngModel)]="companyData.confirmAccNumber"
-            (keydown)="allowOnlyDigitsForAccountNumber($event)" (blur)="validateConfirmAccNumber()"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <div *ngIf="accountNumberError" class="text-red-600 text-sm mt-1">
-            Only digits are allowed in account number. Letters and special characters are not permitted.
-          </div>
-          <span *ngIf="confirmAccountNumberRequired" class="text-red-600 text-sm">
-            Confirm Account Number is required.
-          </span>
-          <span *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired" class="text-red-600 text-sm">
-            Account Numbers do not match.
-          </span>
-        </div> -->
-
-
 
         <div class="pb-6">
           <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Number
@@ -767,7 +683,6 @@
           <span *ngIf="isFieldInvalid('foName')" class="text-red-600 text-sm">Finance Officer’s Name is required.</span>
         </div>
         <div class="flex gap-6">
-          <!-- Contact Number 1 -->
           <div class="flex-1">
             <label for="oicConNum1" class="block text-sm font-medium text-gray-700 dark:text-textDark">
               Company Contact Number - 1 *
@@ -798,13 +713,11 @@
                 class="flex-1 p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
             </div>
 
-            <!-- Single validation message for Contact Number 1 -->
             <div class="mt-1 text-sm text-red-500" *ngIf="getContactNumber1ErrorMessage()">
               {{ getContactNumber1ErrorMessage() }}
             </div>
           </div>
 
-          <!-- Contact Number 2 -->
           <div class="flex-1">
             <label for="oicConNum2" class="block text-sm font-medium text-gray-700 dark:text-textDark">
               Company Contact Number - 2
@@ -828,7 +741,6 @@
                 </ng-template>
               </p-dropdown>
 
-              <!-- Always editable, show '--' as placeholder -->
               <input id="oicConNum2" name="oicConNum2" [(ngModel)]="companyData.oicConNum2" type="tel"
                 pattern="^[0-9]{9}$" #oicConNum2="ngModel"
                 (keydown)="allowOnlyDigitsForAccountNumber($event,'oicConNum2')" (blur)="validateContactNumbers()"
@@ -836,7 +748,6 @@
                 class="flex-1 p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
             </div>
 
-            <!-- Single validation message for Contact Number 2 -->
             <div class="mt-1 text-sm text-red-500" *ngIf="getContactNumber2ErrorMessage()">
               {{ getContactNumber2ErrorMessage() }}
             </div>

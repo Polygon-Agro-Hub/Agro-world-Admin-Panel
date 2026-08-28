@@ -124,7 +124,7 @@ export class EditDistributionCentreComponent implements OnInit {
     private fb: FormBuilder,
     private distributionService: DestributionService,
     private location: Location,
-    private emailValidationService: EmailvalidationsService
+    private emailValidationService: EmailvalidationsService,
   ) {
     this.initializeForm();
   }
@@ -134,12 +134,10 @@ export class EditDistributionCentreComponent implements OnInit {
     const id = this.route.snapshot.params['id'];
     this.fetchAllCompanies();
     this.initializeProvinceOptions();
-    this.setupFormValueChangeListeners()
+    this.setupFormValueChangeListeners();
     if (id) {
       this.fetchDistributionCenterById(id);
     }
-    ;
-
     // Add this for debugging - remove after fixing
     this.distributionForm.statusChanges.subscribe((status) => {
       if (status === 'INVALID') {
@@ -216,11 +214,11 @@ export class EditDistributionCentreComponent implements OnInit {
         switchMap((value) => {
           if (value && value.length >= 3 && value !== this.originalCenterName) {
             return this.distributionService.checkDistributionCentreNameExists(
-              value
+              value,
             );
           }
           return of({ exists: false });
-        })
+        }),
       )
       .subscribe((result) => {
         const nameControl = this.distributionForm.get('name');
@@ -244,7 +242,6 @@ export class EditDistributionCentreComponent implements OnInit {
   }
 
   checkFormValidity(): void {
-
     Object.keys(this.distributionForm.controls).forEach((key) => {
       const control = this.distributionForm.get(key);
       if (control && control.invalid) {
@@ -311,35 +308,34 @@ export class EditDistributionCentreComponent implements OnInit {
 
   // Update fetchAllCompanies method
   fetchAllCompanies() {
-  this.isLoading = true;
-  this.distributionService.getAllCompanies().subscribe(
-    (res) => {
-      this.companyList = res.data.map((company: any) => ({
-        id: company.id,
-        companyNameEnglish: company.companyNameEnglish,
-      }));
+    this.isLoading = true;
+    this.distributionService.getAllCompanies().subscribe(
+      (res) => {
+        this.companyList = res.data.map((company: any) => ({
+          id: company.id,
+          companyNameEnglish: company.companyNameEnglish,
+        }));
 
-      // Convert to dropdown options format
-      this.companyOptions = this.companyList.map((company) => ({
-        label: company.companyNameEnglish,
-        value: company.id,
-      }));
+        // Convert to dropdown options format
+        this.companyOptions = this.companyList.map((company) => ({
+          label: company.companyNameEnglish,
+          value: company.id,
+        }));
 
-      
-      // If distribution center details are already loaded, set the company value
-      if (this.distributionCenterDetails) {
-        this.setCompanyValue(this.distributionCenterDetails);
-      }
-      
-      this.isLoading = false;
-    },
-    (error) => {
-      console.error('Error fetching companies:', error);
-      this.showErrorAlert('Failed to load companies');
-      this.isLoading = false;
-    }
-  );
-}
+        // If distribution center details are already loaded, set the company value
+        if (this.distributionCenterDetails) {
+          this.setCompanyValue(this.distributionCenterDetails);
+        }
+
+        this.isLoading = false;
+      },
+      (error) => {
+        console.error('Error fetching companies:', error);
+        this.showErrorAlert('Failed to load companies');
+        this.isLoading = false;
+      },
+    );
+  }
 
   // Update initializeForm with enhanced validations
   // In your component class, update the initializeForm method:
@@ -395,7 +391,7 @@ export class EditDistributionCentreComponent implements OnInit {
         city: ['', [Validators.required, this.englishLettersOnlyValidator]],
         regCode: ['', Validators.required],
       },
-      { validators: [this.contactNumbersMatchValidator] }
+      { validators: [this.contactNumbersMatchValidator] },
     );
   }
 
@@ -456,13 +452,13 @@ export class EditDistributionCentreComponent implements OnInit {
           }),
           catchError(() => {
             return Promise.resolve(null);
-          })
+          }),
         );
     };
   }
 
   private contactNumbersMatchValidator = (
-    formGroup: AbstractControl
+    formGroup: AbstractControl,
   ): ValidationErrors | null => {
     if (!(formGroup instanceof FormGroup)) {
       return null;
@@ -510,14 +506,14 @@ export class EditDistributionCentreComponent implements OnInit {
         const errors = { ...contact1Control.errors };
         delete errors['sameContactNumbers'];
         contact1Control.setErrors(
-          Object.keys(errors).length > 0 ? errors : null
+          Object.keys(errors).length > 0 ? errors : null,
         );
       }
       if (contact2Control.errors?.['sameContactNumbers']) {
         const errors = { ...contact2Control.errors };
         delete errors['sameContactNumbers'];
         contact2Control.setErrors(
-          Object.keys(errors).length > 0 ? errors : null
+          Object.keys(errors).length > 0 ? errors : null,
         );
       }
       return null;
@@ -525,7 +521,7 @@ export class EditDistributionCentreComponent implements OnInit {
   };
 
   private phoneFormatValidator = (
-    formGroup: AbstractControl
+    formGroup: AbstractControl,
   ): ValidationErrors | null => {
     if (!(formGroup instanceof FormGroup)) {
       return null;
@@ -650,7 +646,9 @@ export class EditDistributionCentreComponent implements OnInit {
         .generateRegCode(province, district, city.trim())
         .subscribe({
           next: (response) => {
-            this.distributionForm.patchValue({ regCode: `D-${response.regCode}` });
+            this.distributionForm.patchValue({
+              regCode: `D-${response.regCode}`,
+            });
             this.isLoadingregcode = false;
           },
           error: (error) => {
@@ -668,93 +666,91 @@ export class EditDistributionCentreComponent implements OnInit {
     }
   }
 
-
   fetchDistributionCenterById(id: number) {
-  this.isLoading = true;
+    this.isLoading = true;
 
-  this.distributionService.getDistributionCentreById(id).subscribe(
-    (response: DistributionCenter) => {
-      this.distributionCenterDetails = response;
-      this.hasData = !!response;
-      
-      // Populate form with the data
-      this.populateForm(response);
-      
-      this.isLoading = false;
-    },
-    (error) => {
-      console.error('API Error:', error);
-      this.isLoading = false;
+    this.distributionService.getDistributionCentreById(id).subscribe(
+      (response: DistributionCenter) => {
+        this.distributionCenterDetails = response;
+        this.hasData = !!response;
 
-      if (error.status === 401) {
-        this.showErrorAlert('Unauthorized access');
-      } else if (error.status === 404) {
-        this.showErrorAlert('Distribution centre not found');
-        this.router.navigate([
-          '/distribution-hub/action/view-destribition-center',
-        ]);
-      } else {
-        this.showErrorAlert('Failed to load distribution centre details');
-      }
-    }
-  );
-}
+        // Populate form with the data
+        this.populateForm(response);
+
+        this.isLoading = false;
+      },
+      (error) => {
+        console.error('API Error:', error);
+        this.isLoading = false;
+
+        if (error.status === 401) {
+          this.showErrorAlert('Unauthorized access');
+        } else if (error.status === 404) {
+          this.showErrorAlert('Distribution centre not found');
+          this.router.navigate([
+            '/distribution-hub/action/view-destribition-center',
+          ]);
+        } else {
+          this.showErrorAlert('Failed to load distribution centre details');
+        }
+      },
+    );
+  }
 
   populateForm(data: DistributionCenter): void {
-  this.originalCenterName = data.centerName;
+    this.originalCenterName = data.centerName;
 
-  // Wait for company list to be loaded before setting the value
-  if (this.companyList.length > 0) {
-    this.setCompanyValue(data);
-  } else {
-    // If company list isn't loaded yet, wait a bit and try again
-    setTimeout(() => {
-      if (this.companyList.length > 0) {
-        this.setCompanyValue(data);
-      }
-    }, 500);
-  }
+    // Wait for company list to be loaded before setting the value
+    if (this.companyList.length > 0) {
+      this.setCompanyValue(data);
+    } else {
+      // If company list isn't loaded yet, wait a bit and try again
+      setTimeout(() => {
+        if (this.companyList.length > 0) {
+          this.setCompanyValue(data);
+        }
+      }, 500);
+    }
 
-  // Update district options based on province
-  if (data.province) {
-    const districts = this.districtsMap[data.province] || [];
-    this.districtOptions = districts.sort().map((district) => ({
-      label: district,
-      value: district,
-    }));
-  }
+    // Update district options based on province
+    if (data.province) {
+      const districts = this.districtsMap[data.province] || [];
+      this.districtOptions = districts.sort().map((district) => ({
+        label: district,
+        value: district,
+      }));
+    }
 
-  this.distributionForm.patchValue({
-    name: data.centerName,
-    contact1Code: data.code1,
-    contact1: data.contact01,
-    contact2Code: data.code2,
-    contact2: data.contact02,
-    latitude: data.latitude,
-    longitude: data.longitude,
-    email: data.email,
-    country: data.country,
-    province: data.province,
-    district: data.district,
-    city: data.city,
-    regCode: data.regCode,
-  });
-
-}
-
-private setCompanyValue(data: DistributionCenter): void {
-  const matchingCompany = this.companyList.find(
-    (company) => company.companyNameEnglish === data.company
-  );
-
-  if (matchingCompany) {
     this.distributionForm.patchValue({
-      company: matchingCompany.id
+      name: data.centerName,
+      contact1Code: data.code1,
+      contact1: data.contact01,
+      contact2Code: data.code2,
+      contact2: data.contact02,
+      latitude: data.latitude,
+      longitude: data.longitude,
+      email: data.email,
+      country: data.country,
+      province: data.province,
+      district: data.district,
+      city: data.city,
+      regCode: data.regCode,
     });
-  } else {
-    console.warn('No matching company found for:', data.company);
   }
-}
+
+  private setCompanyValue(data: DistributionCenter): void {
+    const matchingCompany = this.companyList.find(
+      (company) => company.companyNameEnglish === data.company,
+    );
+
+    if (matchingCompany) {
+      this.distributionForm.patchValue({
+        company: matchingCompany.id,
+      });
+    } else {
+      console.warn('No matching company found for:', data.company);
+    }
+  }
 
   getDistricts(): string[] {
     const selectedProvince = this.distributionForm.get('province')?.value;
@@ -815,7 +811,7 @@ private setCompanyValue(data: DistributionCenter): void {
     // Remove the form.valid check and always allow submission
     if (!this.companyList || this.companyList.length === 0) {
       this.showErrorAlert(
-        'Company list not loaded. Please wait or refresh the page.'
+        'Company list not loaded. Please wait or refresh the page.',
       );
       return;
     }
@@ -835,7 +831,6 @@ private setCompanyValue(data: DistributionCenter): void {
       missingFields.push('Contact Number Code is Required');
     }
 
-
     const contact1Control = this.distributionForm.get('contact1');
 
     if (contact1Control?.touched || contact1Control?.dirty) {
@@ -843,7 +838,7 @@ private setCompanyValue(data: DistributionCenter): void {
         missingFields.push('Contact Number -1 is Required');
       } else if (contact1Control.errors?.['pattern']) {
         missingFields.push(
-          'Contact Number -1 - Must be a valid Contact Number (format: +947XXXXXXXX)'
+          'Contact Number -1 - Must be a valid Contact Number (format: +947XXXXXXXX)',
         );
       }
     }
@@ -858,12 +853,14 @@ private setCompanyValue(data: DistributionCenter): void {
     if (contact2Control?.value) {
       // Check if phone number is valid
       if (!this.isValidPhoneNumber(contact2Control.value)) {
-        missingFields.push('Contact Number -2 - Must be a valid Contact Number');
+        missingFields.push(
+          'Contact Number -2 - Must be a valid Contact Number',
+        );
       }
 
       if (contact2Control?.value === contact1Control?.value) {
         missingFields.push(
-          'Contact Number 01 and Contact Number 02 cannot be the same'
+          'Contact Number 01 and Contact Number 02 cannot be the same',
         );
       }
     }
@@ -898,7 +895,7 @@ private setCompanyValue(data: DistributionCenter): void {
     if (
       this.distributionForm.get('longitude')?.value &&
       this.getFieldError('longitude') ===
-      'Longitude must be between -180 and 180'
+        'Longitude must be between -180 and 180'
     ) {
       missingFields.push('Longitude - must be between -180 and 180');
     }
@@ -965,7 +962,7 @@ private setCompanyValue(data: DistributionCenter): void {
 
         const companyId = Number(this.distributionForm.value.company);
         const selectedCompany = this.companyList.find(
-          (company) => Number(company.id) === companyId
+          (company) => Number(company.id) === companyId,
         );
 
         if (!selectedCompany) {
@@ -986,7 +983,7 @@ private setCompanyValue(data: DistributionCenter): void {
           country: this.distributionForm.value.country,
           regCode: this.distributionForm.value.regCode,
           longitude: parseFloat(
-            this.distributionForm.value.longitude
+            this.distributionForm.value.longitude,
           ).toString(),
           latitude: parseFloat(this.distributionForm.value.latitude).toString(),
           email: this.distributionForm.value.email,
@@ -1011,9 +1008,13 @@ private setCompanyValue(data: DistributionCenter): void {
                   },
                 }).then(() => {
                   if (updateData.company === 2) {
-                    this.navigatePath('/distribution-hub/action/view-polygon-centers');
+                    this.navigatePath(
+                      '/distribution-hub/action/view-polygon-centers',
+                    );
                   } else {
-                    this.navigatePath('/distribution-hub/action/view-destribition-center');
+                    this.navigatePath(
+                      '/distribution-hub/action/view-destribition-center',
+                    );
                   }
                   // this.location.back();
                 });
@@ -1077,7 +1078,7 @@ private setCompanyValue(data: DistributionCenter): void {
               }
 
               this.showErrorAlert(errorMessage);
-            }
+            },
           );
       }
     });
@@ -1115,7 +1116,7 @@ private setCompanyValue(data: DistributionCenter): void {
   }
 
   private formatErrorMessagesForAlert(
-    errors: { field: string; error: string }[]
+    errors: { field: string; error: string }[],
   ): string {
     if (errors.length === 0) {
       return 'Please correct the form errors.';
@@ -1187,7 +1188,7 @@ private setCompanyValue(data: DistributionCenter): void {
 
     if (field.errors['numericDecimal']) {
       return `${this.getFieldLabel(
-        fieldName
+        fieldName,
       )} must be a valid number (e.g., 6.9271 or -79.8612)`;
     }
 
@@ -1396,7 +1397,7 @@ private setCompanyValue(data: DistributionCenter): void {
 
   // Custom email validator using the service
   private customEmailValidator(
-    control: AbstractControl
+    control: AbstractControl,
   ): ValidationErrors | null {
     if (!control.value) {
       return null; // Let required validator handle empty values
@@ -1412,7 +1413,7 @@ private setCompanyValue(data: DistributionCenter): void {
   }
 
   private latitudeRangeValidator(
-    control: AbstractControl
+    control: AbstractControl,
   ): ValidationErrors | null {
     if (!control.value) return null;
 
@@ -1427,7 +1428,7 @@ private setCompanyValue(data: DistributionCenter): void {
   }
 
   private longitudeRangeValidator(
-    control: AbstractControl
+    control: AbstractControl,
   ): ValidationErrors | null {
     if (!control.value) return null;
 
@@ -1442,7 +1443,7 @@ private setCompanyValue(data: DistributionCenter): void {
   }
 
   private startsWithSevenValidator(
-    control: AbstractControl
+    control: AbstractControl,
   ): ValidationErrors | null {
     if (!control.value) return null;
 

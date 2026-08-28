@@ -17,24 +17,10 @@
 
       <p class="font-normal text-[#4A4A4A] dark:text-white whitespace-nowrap">Filter By</p>
 
-      <!-- <div class="relative w-46">
-        <div
-          class="border-2 rounded-xl dark:bg-[#292929] text-textLight dark:text-textDark flex flex-row justify-between items-center"
-        >
-          <input
-            [(ngModel)]="selectDate"
-            (change)="fetchSavedCenterCrops()"
-            type="date"
-            name="selectDate"
-            class="block w-auto appearance-none dark:bg-[#292929] text-textLight dark:text-textDark px-3 py-2 rounded-xl focus:outline-none cursor-pointer"
-          />
-        </div>
-      </div> -->
       <div class="mr-5">
         <p-calendar id="toDate" [(ngModel)]="selectDate" (onSelect)="onDateChange($event)"
           (onClear)="onDateChange(null)" (onClose)="checkDateSelection()" [showIcon]="true" [showClear]="true"
-          [showButtonBar]="true" placeholder="Select Date" iconDisplay="input"
-           panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600
+          [showButtonBar]="true" placeholder="Select Date" iconDisplay="input" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600
                      [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568]
                      [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
                      [&_.p-datepicker-header]:dark:bg-[#2d354d]
@@ -44,8 +30,6 @@
           inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
           [appendTo]="'body'"></p-calendar>
 
-        <!-- Validation message -->
-        <!-- <p *ngIf="dateError" class="text-red-500 mt-1">Please select the date to display target.</p> -->
       </div>
 
 
@@ -80,14 +64,14 @@
     </div>
   </div>
 
-
-
   <div *ngIf="hasData" class="w-full py-7 bg-tileLight dark:bg-tileBlack rounded-lg ">
 
-            <div class="flex items-center gap-2 mt-8 mr-5 px-4 py-3 rounded-lg bg-[#EDF5FC] text-sm font-[400] text-[#000000] dark:text-gray-800">
-            <i class="fa-solid fa-circle-info text-[#415CFF]"></i>
-            <p>Collections for deliveries scheduled on {{ scheduledDeliveryDate }} must be completed on {{ mustCompleteDate }}. These collections will appear in the system on {{ systemAppearDate }} at 7:00 PM.</p>
-        </div>
+    <div
+      class="flex items-center gap-2 mt-8 mr-5 px-4 py-3 rounded-lg bg-[#EDF5FC] text-sm font-[400] text-[#000000] dark:text-gray-800">
+      <i class="fa-solid fa-circle-info text-[#415CFF]"></i>
+      <p>Collections for deliveries scheduled on {{ scheduledDeliveryDate }} must be completed on {{ mustCompleteDate
+        }}. These collections will appear in the system on {{ systemAppearDate }} at 7:00 PM.</p>
+    </div>
 
 
     <div class="overflow-x-auto mt-8 mr-5 border-gray-100 border-[2px] rounded-lg">
@@ -114,33 +98,21 @@
               {{ item.varietyNameEnglish }}
             </td>
 
-            <!-- Grade A Column -->
-<td class="px-6 py-4 text-gray-900 dark:text-gray-300">
-  <input
-    type="number"
-    [(ngModel)]="item.targetA"
-    step="any"
-    name="targetA"
-    min="0"
-    (change)="checkNegativeValue(item, 'A')"
-    (input)="restrictDecimal($event, item, 'A')"
-    (input)="validateForm()"
-    class="border-[#3980C0] dark:bg-[#272F45] border-[2px] border-dotted rounded-lg w-20 px-2 py-1 mr-4"
-    [ngClass]="isGradeInvalid(item, 'A') ? 'border-[#FF0000]' : 'border-[#3980C0]'"
-    [disabled]="!item.isNew && !item.editingA"
-  />
+            <td class="px-6 py-4 text-gray-900 dark:text-gray-300">
+              <input type="number" [(ngModel)]="item.targetA" step="any" name="targetA" min="0"
+                (change)="checkNegativeValue(item, 'A')" (input)="restrictDecimal($event, item, 'A')"
+                (input)="validateForm()"
+                class="border-[#3980C0] dark:bg-[#272F45] border-[2px] border-dotted rounded-lg w-20 px-2 py-1 mr-4"
+                [ngClass]="isGradeInvalid(item, 'A') ? 'border-[#FF0000]' : 'border-[#3980C0]'"
+                [disabled]="!item.isNew && !item.editingA" />
 
-  <button
-    *ngIf="!item.isNew && !item.editingA && isDateValid"
-    (click)="(item.editingA = true) && pressEditIcon(item,'A')"
-  >
-    <i class="fa-solid fa-pen-to-square text-[#3980C0] text-xl"></i>
-  </button>
+              <button *ngIf="!item.isNew && !item.editingA && isDateValid"
+                (click)="(item.editingA = true) && pressEditIcon(item,'A')">
+                <i class="fa-solid fa-pen-to-square text-[#3980C0] text-xl"></i>
+              </button>
 
-  <button
-    *ngIf="!item.isNew && item.editingA && isDateValid"
-    class="px-3 py-2 text-white rounded-lg"
-    [ngClass]="{
+              <button *ngIf="!item.isNew && item.editingA && isDateValid" class="px-3 py-2 text-white rounded-lg"
+                [ngClass]="{
       'bg-[#3980C0]':
         item.preValueA !== item.targetA &&
         item.targetA >= 0 &&
@@ -152,57 +124,40 @@
         item.targetA < 0 ||
         item.targetA < item.preValueA ||
         isQtyExceeded(item)
-    }"
-    [disabled]="
+    }" [disabled]="
       item.preValueA === item.targetA ||
       item.targetA < 0 ||
       item.targetA < item.preValueA ||
       isQtyExceeded(item)
-    "
-    (click)="saveGrade('A', item, item.targetA, item.idA)"
-  >
-    Save
-  </button>
+    " (click)="saveGrade('A', item, item.targetA, item.idA)">
+                Save
+              </button>
 
-  <div
-    *ngIf="(item.isNew || item.editingA || item.editingB || item.editingC) && isQtyExceeded(item)"
-    class="flex items-center gap-1 mt-1 text-xs text-red-600 dark:text-red-400"
-  >
-    <i class="fa-solid fa-triangle-exclamation text-[#FF0000]"></i>
+              <div *ngIf="(item.isNew || item.editingA || item.editingB || item.editingC) && isQtyExceeded(item)"
+                class="flex items-center gap-1 mt-1 text-xs text-red-600 dark:text-red-400">
+                <i class="fa-solid fa-triangle-exclamation text-[#FF0000]"></i>
 
-    <span class="text-[#FF0000] font-[400]">
-      Only {{ item.remaining }} {{ item.unitType.toLowerCase() }} remains to assign;
-      you cannot assign more.
-    </span>
-  </div>
-</td>
+                <span class="text-[#FF0000] font-[400]">
+                  Only {{ item.remaining }} {{ item.unitType.toLowerCase() }} remains to assign;
+                  you cannot assign more.
+                </span>
+              </div>
+            </td>
 
-          <!-- Grade B Column -->
-<td class="px-6 py-4 text-gray-900 dark:text-gray-300">
-  <input
-    type="number"
-    [(ngModel)]="item.targetB"
-    step="any"
-    name="targetB"
-    min="0"
-    (change)="checkNegativeValue(item, 'B')"
-    (input)="restrictDecimal($event, item, 'B')"
-    (input)="validateForm()"
-    class="border-[#3980C0] dark:bg-[#272F45] border-[2px] border-dotted rounded-lg w-20 px-2 py-1 mr-4"
-    [ngClass]="isGradeInvalid(item, 'B') ? 'border-[#FF0000]' : 'border-[#3980C0]'"
-    [disabled]="!item.isNew && !item.editingB"
-  />
+            <td class="px-6 py-4 text-gray-900 dark:text-gray-300">
+              <input type="number" [(ngModel)]="item.targetB" step="any" name="targetB" min="0"
+                (change)="checkNegativeValue(item, 'B')" (input)="restrictDecimal($event, item, 'B')"
+                (input)="validateForm()"
+                class="border-[#3980C0] dark:bg-[#272F45] border-[2px] border-dotted rounded-lg w-20 px-2 py-1 mr-4"
+                [ngClass]="isGradeInvalid(item, 'B') ? 'border-[#FF0000]' : 'border-[#3980C0]'"
+                [disabled]="!item.isNew && !item.editingB" />
 
-  <button
-    *ngIf="!item.isNew && !item.editingB && isDateValid"
-    (click)="(item.editingB = true) && pressEditIcon(item,'B')"
-  >
-    <i class="fa-solid fa-pen-to-square text-[#3980C0] text-xl"></i>
-  </button>
+              <button *ngIf="!item.isNew && !item.editingB && isDateValid"
+                (click)="(item.editingB = true) && pressEditIcon(item,'B')">
+                <i class="fa-solid fa-pen-to-square text-[#3980C0] text-xl"></i>
+              </button>
 
-  <button
-    *ngIf="!item.isNew && item.editingB && isDateValid"
-    [ngClass]="{
+              <button *ngIf="!item.isNew && item.editingB && isDateValid" [ngClass]="{
       'bg-[#3980C0]':
         item.preValueB !== item.targetB &&
         item.targetB >= 0 &&
@@ -214,47 +169,31 @@
         item.targetB < 0 ||
         item.targetB < item.preValueB ||
         isQtyExceeded(item)
-    }"
-    class="px-3 py-2 text-white rounded-lg"
-    [disabled]="
+    }" class="px-3 py-2 text-white rounded-lg" [disabled]="
       item.preValueB === item.targetB ||
       item.targetB < 0 ||
       item.targetB < item.preValueB ||
       isQtyExceeded(item)
-    "
-    (click)="saveGrade('B', item, item.targetB, item.idB)"
-  >
-    Save
-  </button>
+    " (click)="saveGrade('B', item, item.targetB, item.idB)">
+                Save
+              </button>
 
-</td>
+            </td>
 
-            <!-- Grade C Column -->
-<td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">
-  <input
-    type="number"
-    [(ngModel)]="item.targetC"
-    step="any"
-    name="targetC"
-    min="0"
-    (change)="checkNegativeValue(item, 'C')"
-    (input)="restrictDecimal($event, item, 'C')"
-    (input)="validateForm()"
-    class="border-[#3980C0] dark:bg-[#272F45] border-[2px] border-dotted rounded-lg w-16 px-2 py-1 mr-4"
-    [ngClass]="isGradeInvalid(item, 'C') ? 'border-[#FF0000]' : 'border-[#3980C0]'"
-    [disabled]="!item.isNew && !item.editingC"
-  />
+            <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">
+              <input type="number" [(ngModel)]="item.targetC" step="any" name="targetC" min="0"
+                (change)="checkNegativeValue(item, 'C')" (input)="restrictDecimal($event, item, 'C')"
+                (input)="validateForm()"
+                class="border-[#3980C0] dark:bg-[#272F45] border-[2px] border-dotted rounded-lg w-16 px-2 py-1 mr-4"
+                [ngClass]="isGradeInvalid(item, 'C') ? 'border-[#FF0000]' : 'border-[#3980C0]'"
+                [disabled]="!item.isNew && !item.editingC" />
 
-  <button
-    *ngIf="!item.isNew && !item.editingC && isDateValid"
-    (click)="(item.editingC = true) && pressEditIcon(item,'C')"
-  >
-    <i class="fa-solid fa-pen-to-square text-[#3980C0] text-xl"></i>
-  </button>
+              <button *ngIf="!item.isNew && !item.editingC && isDateValid"
+                (click)="(item.editingC = true) && pressEditIcon(item,'C')">
+                <i class="fa-solid fa-pen-to-square text-[#3980C0] text-xl"></i>
+              </button>
 
-  <button
-    *ngIf="!item.isNew && item.editingC && isDateValid"
-    [ngClass]="{
+              <button *ngIf="!item.isNew && item.editingC && isDateValid" [ngClass]="{
       'bg-[#3980C0]':
         item.preValueC !== item.targetC &&
         item.targetC >= 0 &&
@@ -266,38 +205,34 @@
         item.targetC < 0 ||
         item.targetC < item.preValueC ||
         isQtyExceeded(item)
-    }"
-    class="px-3 py-2 text-white rounded-lg"
-    [disabled]="
+    }" class="px-3 py-2 text-white rounded-lg" [disabled]="
       item.preValueC === item.targetC ||
       item.targetC < 0 ||
       item.targetC < item.preValueC ||
       isQtyExceeded(item)
-    "
-    (click)="saveGrade('C', item, item.targetC, item.idC)"
-  >
-    Save
-  </button>
+    " (click)="saveGrade('C', item, item.targetC, item.idC)">
+                Save
+              </button>
 
 
-</td>
+            </td>
           </tr>
         </tbody>
       </table>
 
     </div>
 
-    <div *ngIf="hasNewItems && isDateValid && !isSelectedDatePast" class="flex flex-row justify-center items-center my-7 gap-8">
-    <button class="w-32 bg-[#FFFFFF] text-[#6B7D8C] border-[1px] border-[#95A1AC]  rounded-lg px-7 py-2"
+    <div *ngIf="hasNewItems && isDateValid && !isSelectedDatePast"
+      class="flex flex-row justify-center items-center my-7 gap-8">
+      <button class="w-32 bg-[#FFFFFF] text-[#6B7D8C] border-[1px] border-[#95A1AC]  rounded-lg px-7 py-2"
         (click)="onCancel()">
         Cancel
-    </button>
-    <button class="w-32 rounded-lg px-7 py-2 "
+      </button>
+      <button class="w-32 rounded-lg px-7 py-2 "
         [ngClass]="isFormValid ? 'bg-[hsl(231,100%,63%)] text-[#FFFFFF] shadow-md' : 'bg-[#95A1AC] text-[#6B7D8C]'"
-        [disabled]="!isFormValid"
-        (click)="onSubmit()">
+        [disabled]="!isFormValid" (click)="onSubmit()">
         Save
-    </button>
-</div>
+      </button>
+    </div>
   </div>
 </div>

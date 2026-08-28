@@ -55,9 +55,11 @@ export class UserBulkUploadComponent {
   // Check if dark mode is enabled
   private isDarkMode(): boolean {
     if (typeof window !== 'undefined') {
-      return document.documentElement.classList.contains('dark') ||
-             document.body.classList.contains('dark') ||
-             window.matchMedia('(prefers-color-scheme: dark)').matches;
+      return (
+        document.documentElement.classList.contains('dark') ||
+        document.body.classList.contains('dark') ||
+        window.matchMedia('(prefers-color-scheme: dark)').matches
+      );
     }
     return false;
   }
@@ -65,8 +67,8 @@ export class UserBulkUploadComponent {
   constructor(
     private http: HttpClient,
     private plantcareUsersService: PlantcareUsersService,
-    private router: Router
-  ) { }
+    private router: Router,
+  ) {}
 
   back(): void {
     this.router.navigate(['steckholders/action/farmers']);
@@ -74,7 +76,7 @@ export class UserBulkUploadComponent {
 
   onFileSelected(event: any): void {
     const file = event.target.files[0];
-    
+
     this.validateFile(file);
   }
 
@@ -101,7 +103,7 @@ export class UserBulkUploadComponent {
 
     if (fileExtension && allowedExtensions.includes(`.${fileExtension}`)) {
       this.selectedFile = file;
-      
+
       this.errorMessage = '';
     } else {
       this.errorMessage =
@@ -115,14 +117,13 @@ export class UserBulkUploadComponent {
         customClass: {
           popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
           title: 'dark:text-white',
-        }
+        },
       });
     }
   }
 
   onUpload(): void {
     if (!this.selectedFile) {
-      
       Swal.fire({
         icon: 'warning',
         title: 'Warning',
@@ -131,12 +132,10 @@ export class UserBulkUploadComponent {
         customClass: {
           popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
           title: 'dark:text-white',
-        }
+        },
       });
       return;
     }
-
-    
 
     this.isLoading = true;
     this.errorMessage = '';
@@ -146,7 +145,7 @@ export class UserBulkUploadComponent {
     reader.onload = (e: any) => {
       try {
         const data = e.target.result;
-        
+
         const workbook = XLSX.read(data, { type: 'array' });
         const firstSheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[firstSheetName];
@@ -158,18 +157,23 @@ export class UserBulkUploadComponent {
           const nicNumber = row['NIC Number'];
           const firstName = row['First Name'];
           const lastName = row['Last Name'];
-          
+
           // Return true only if at least one required field has a meaningful value
           return (
-            (phoneNumber !== undefined && phoneNumber !== null && String(phoneNumber).trim() !== '') ||
-            (nicNumber !== undefined && nicNumber !== null && String(nicNumber).trim() !== '') ||
-            (firstName !== undefined && firstName !== null && String(firstName).trim() !== '') ||
-            (lastName !== undefined && lastName !== null && String(lastName).trim() !== '')
+            (phoneNumber !== undefined &&
+              phoneNumber !== null &&
+              String(phoneNumber).trim() !== '') ||
+            (nicNumber !== undefined &&
+              nicNumber !== null &&
+              String(nicNumber).trim() !== '') ||
+            (firstName !== undefined &&
+              firstName !== null &&
+              String(firstName).trim() !== '') ||
+            (lastName !== undefined &&
+              lastName !== null &&
+              String(lastName).trim() !== '')
           );
         });
-
-        
-        
 
         const phoneNumbers = new Map();
         const nicNumbers = new Map();
@@ -180,16 +184,16 @@ export class UserBulkUploadComponent {
 
         let i;
 
-        for ( i = 0; i < filteredData.length; i++) {
+        for (i = 0; i < filteredData.length; i++) {
           const row = filteredData[i];
           const phoneNumber = String(
-            (row as { [key: string]: any })['Phone Number']
+            (row as { [key: string]: any })['Phone Number'],
           );
           const nicNumber = String(
-            (row as { [key: string]: any })['NIC Number']
+            (row as { [key: string]: any })['NIC Number'],
           );
           const firstName = String(
-            (row as { [key: string]: any })['First Name']
+            (row as { [key: string]: any })['First Name'],
           );
           const lastName = String((row as { [key: string]: any })['Last Name']);
 
@@ -197,7 +201,7 @@ export class UserBulkUploadComponent {
             phoneNumberOccurrences.set(phoneNumber, []);
           }
           phoneNumberOccurrences.get(phoneNumber)!.push(i);
-        
+
           // Track all occurrences of each NIC number
           if (!nicNumberOccurrences.has(nicNumber)) {
             nicNumberOccurrences.set(nicNumber, []);
@@ -205,37 +209,36 @@ export class UserBulkUploadComponent {
           nicNumberOccurrences.get(nicNumber)!.push(i);
         }
 
-        
-
         const duplicateIndices = new Set<number>();
 
         phoneNumberOccurrences.forEach((indices) => {
           if (indices.length > 1) {
-            indices.forEach(idx => duplicateIndices.add(idx));
-          }
-        });
-        
-        // Find indices where NIC number appears more than once
-        nicNumberOccurrences.forEach((indices) => {
-          if (indices.length > 1) {
-            indices.forEach(idx => duplicateIndices.add(idx));
+            indices.forEach((idx) => duplicateIndices.add(idx));
           }
         });
 
-        duplicateIndices.forEach(idx => {
+        // Find indices where NIC number appears more than once
+        nicNumberOccurrences.forEach((indices) => {
+          if (indices.length > 1) {
+            indices.forEach((idx) => duplicateIndices.add(idx));
+          }
+        });
+
+        duplicateIndices.forEach((idx) => {
           const row = filteredData[idx];
           duplicates.push({
             firstName: String((row as { [key: string]: any })['First Name']),
             lastName: String((row as { [key: string]: any })['Last Name']),
-            phoneNumber: String((row as { [key: string]: any })['Phone Number']),
+            phoneNumber: String(
+              (row as { [key: string]: any })['Phone Number'],
+            ),
             NICnumber: String((row as { [key: string]: any })['NIC Number']),
           });
         });
 
         if (duplicates.length > 0) {
-          
           this.isLoading = false;
-          this.handleDuplicateEntries(duplicates)
+          this.handleDuplicateEntries(duplicates);
           return;
         }
 
@@ -245,16 +248,18 @@ export class UserBulkUploadComponent {
         this.plantcareUsersService.uploadUserXlsxFile(formData).subscribe({
           next: (response: any) => {
             this.isLoading = false;
-            
+
             // Log the response for debugging
-            
-            
+
             // FIRST: Check for duplicate entries in Excel (internal duplication)
             if (response.duplicateData && response.duplicateData.length > 0) {
               this.handleDuplicateEntries(response.duplicateData);
             }
             // SECOND: Check for existing users in database (redundancy)
-            else if (response.existingUsers && response.existingUsers.length > 0) {
+            else if (
+              response.existingUsers &&
+              response.existingUsers.length > 0
+            ) {
               this.handleExistingUsers(response.existingUsers);
             }
             // THIRD: Check for successful upload
@@ -265,9 +270,10 @@ export class UserBulkUploadComponent {
                 text: `Successfully uploaded ${response.newUsersInserted} users!`,
                 confirmButtonText: 'OK',
                 customClass: {
-                  popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+                  popup:
+                    'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
                   title: 'dark:text-white',
-                }
+                },
               }).then((result) => {
                 if (result.isConfirmed) {
                   this.router.navigate(['/steckholders/action/farmers']);
@@ -282,16 +288,17 @@ export class UserBulkUploadComponent {
                 text: 'No new users were uploaded.',
                 confirmButtonText: 'OK',
                 customClass: {
-                  popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+                  popup:
+                    'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
                   title: 'dark:text-white',
-                }
+                },
               }).then((result) => {
                 if (result.isConfirmed) {
                   this.router.navigate(['/steckholders/action/farmers']);
                 }
               });
             }
-            
+
             this.selectedFile = null;
           },
           error: (error) => {
@@ -302,7 +309,9 @@ export class UserBulkUploadComponent {
       } catch (error) {
         this.isLoading = false;
         this.handleError(
-          new Error('Failed to process the file. Please check the file format.')
+          new Error(
+            'Failed to process the file. Please check the file format.',
+          ),
         );
       }
     };
@@ -318,43 +327,79 @@ export class UserBulkUploadComponent {
   // Helper method to handle duplicate entries
   private handleDuplicateEntries(duplicateData: any[]): void {
     // Check what format the backend is returning
-    
 
-
-    
     // Convert to DuplicationEntry format if needed
-    const duplicateEntries: DuplicationEntry[] = duplicateData.map((entry: any, index: number) => {
+    const duplicateEntries: DuplicationEntry[] = duplicateData.map(
+      (entry: any, index: number) => {
+        // Try different possible field names from backend
+        return {
+          firstName:
+            entry.firstName ||
+            entry.firstname ||
+            entry['First Name'] ||
+            entry['FIRST NAME'] ||
+            entry['first_name'] ||
+            `Entry ${index + 1}`,
+          lastName:
+            entry.lastName ||
+            entry.lastname ||
+            entry['Last Name'] ||
+            entry['LAST NAME'] ||
+            entry['last_name'] ||
+            '',
+          nic:
+            entry.nic ||
+            entry.NIC ||
+            entry.NICnumber ||
+            entry['NIC Number'] ||
+            entry['NIC'] ||
+            entry['nic_number'] ||
+            '',
+          phoneNumber:
+            entry.phoneNumber ||
+            entry.phone ||
+            entry['Phone Number'] ||
+            entry['PHONE NUMBER'] ||
+            entry['Phone'] ||
+            entry['phone_number'] ||
+            '',
+        };
+      },
+    );
 
-      
-      // Try different possible field names from backend
-      return {
-        firstName: entry.firstName || entry.firstname || entry['First Name'] || entry['FIRST NAME'] || entry['first_name'] || `Entry ${index + 1}`,
-        lastName: entry.lastName || entry.lastname || entry['Last Name'] || entry['LAST NAME'] || entry['last_name'] || '',
-        nic: entry.nic || entry.NIC || entry.NICnumber || entry['NIC Number'] || entry['NIC'] || entry['nic_number'] || '',
-        phoneNumber: entry.phoneNumber || entry.phone || entry['Phone Number'] || entry['PHONE NUMBER'] || entry['Phone'] || entry['phone_number'] || ''
-      };
-    });
-    
     this.downloadDuplicationExcel(duplicateEntries, 'Duplicate_entries.xlsx');
-    
+
     const isDarkMode = this.isDarkMode();
-    
+
     Swal.fire({
       icon: 'warning',
       title: 'Error : Duplicate Entries Found in Excel Sheet!',
-      html: isDarkMode 
-        ? this.buildDuplicationDarkModeTable(duplicateEntries, `Add GoVi Care user  - ${this.selectedFile.name}`)
-        : this.buildDuplicationLightModeTable(duplicateEntries, `Add GoVi Care user - ${this.selectedFile.name}`),
+      html: isDarkMode
+        ? this.buildDuplicationDarkModeTable(
+            duplicateEntries,
+            `Add GoVi Care user  - ${this.selectedFile.name}`,
+          )
+        : this.buildDuplicationLightModeTable(
+            duplicateEntries,
+            `Add GoVi Care user - ${this.selectedFile.name}`,
+          ),
       width: '700px',
       showConfirmButton: true,
       confirmButtonText: 'Close & Go Back',
       customClass: {
-        popup: isDarkMode ? '!bg-[#363636] !text-white !p-6' : '!bg-white !text-gray-800 !p-6',
-        title: isDarkMode ? '!text-red-400 !font-bold !text-lg !mb-4' : '!text-red-600 !font-bold !text-lg !mb-4',
-        htmlContainer: isDarkMode ? '!text-white !m-0 !p-0' : '!text-gray-800 !m-0 !p-0',
-        confirmButton: isDarkMode ? '!bg-blue-500 !text-white !font-medium !py-2 !px-6 !rounded !mt-4 hover:!bg-blue-600' 
-                                 : '!bg-blue-600 !text-white !font-medium !py-2 !px-6 !rounded !mt-4 hover:!bg-blue-700'
-      }
+        popup: isDarkMode
+          ? '!bg-[#363636] !text-white !p-6'
+          : '!bg-white !text-gray-800 !p-6',
+        title: isDarkMode
+          ? '!text-red-400 !font-bold !text-lg !mb-4'
+          : '!text-red-600 !font-bold !text-lg !mb-4',
+        htmlContainer: isDarkMode
+          ? '!text-white !m-0 !p-0'
+          : '!text-gray-800 !m-0 !p-0',
+        confirmButton: isDarkMode
+          ? '!bg-blue-500 !text-white !font-medium !py-2 !px-6 !rounded !mt-4 hover:!bg-blue-600'
+          : '!bg-blue-600 !text-white !font-medium !py-2 !px-6 !rounded !mt-4 hover:!bg-blue-700',
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         this.router.navigate(['/steckholders/action/farmers']);
@@ -364,44 +409,59 @@ export class UserBulkUploadComponent {
 
   // Helper method to handle existing users
   private handleExistingUsers(existingUsers: any[]): void {
-    const errorEntries: UserErrorEntry[] = existingUsers.map((user: any, index: number) => {
-      let status = '';
-      if (user.phoneExists && user.nicExists) {
-        status = 'Phone number & NIC already exists';
-      } else if (user.phoneExists) {
-        status = 'Phone number already exists';
-      } else if (user.nicExists) {
-        status = 'NIC already exists';
-      }
+    const errorEntries: UserErrorEntry[] = existingUsers.map(
+      (user: any, index: number) => {
+        let status = '';
+        if (user.phoneExists && user.nicExists) {
+          status = 'Phone number & NIC already exists';
+        } else if (user.phoneExists) {
+          status = 'Phone number already exists';
+        } else if (user.nicExists) {
+          status = 'NIC already exists';
+        }
 
-      return {
-        line: index + 3,
-        phone: user.phoneNumber || '',
-        nic: user.NICnumber || '',
-        status: status
-      };
-    });
+        return {
+          line: index + 3,
+          phone: user.phoneNumber || '',
+          nic: user.NICnumber || '',
+          status: status,
+        };
+      },
+    );
 
     this.downloadErrorExcel(errorEntries, 'Existing_users.xlsx');
-    
+
     const isDarkMode = this.isDarkMode();
-    
+
     Swal.fire({
       icon: 'warning',
       title: 'Error : User Redundancy!',
-      html: isDarkMode 
-        ? this.buildRedundancyDarkModeTable(errorEntries, `Add GoVi Care user - ${this.selectedFile.name}`)
-        : this.buildRedundancyLightModeTable(errorEntries, `Add GoVi Care user - ${this.selectedFile.name}`),
+      html: isDarkMode
+        ? this.buildRedundancyDarkModeTable(
+            errorEntries,
+            `Add GoVi Care user - ${this.selectedFile.name}`,
+          )
+        : this.buildRedundancyLightModeTable(
+            errorEntries,
+            `Add GoVi Care user - ${this.selectedFile.name}`,
+          ),
       width: '700px',
       showConfirmButton: true,
       confirmButtonText: 'Close & Go Back',
       customClass: {
-        popup: isDarkMode ? '!bg-[#363636] !text-white !p-6' : '!bg-white !text-gray-800 !p-6',
-        title: isDarkMode ? '!text-red-400 !font-bold !text-lg !mb-4' : '!text-red-600 !font-bold !text-lg !mb-4',
-        htmlContainer: isDarkMode ? '!text-white !m-0 !p-0' : '!text-gray-800 !m-0 !p-0',
-        confirmButton: isDarkMode ? '!bg-blue-500 !text-white !font-medium !py-2 !px-6 !rounded !mt-4 hover:!bg-blue-600' 
-                                 : '!bg-blue-600 !text-white !font-medium !py-2 !px-6 !rounded !mt-4 hover:!bg-blue-700'
-      }
+        popup: isDarkMode
+          ? '!bg-[#363636] !text-white !p-6'
+          : '!bg-white !text-gray-800 !p-6',
+        title: isDarkMode
+          ? '!text-red-400 !font-bold !text-lg !mb-4'
+          : '!text-red-600 !font-bold !text-lg !mb-4',
+        htmlContainer: isDarkMode
+          ? '!text-white !m-0 !p-0'
+          : '!text-gray-800 !m-0 !p-0',
+        confirmButton: isDarkMode
+          ? '!bg-blue-500 !text-white !font-medium !py-2 !px-6 !rounded !mt-4 hover:!bg-blue-600'
+          : '!bg-blue-600 !text-white !font-medium !py-2 !px-6 !rounded !mt-4 hover:!bg-blue-700',
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         this.router.navigate(['/steckholders/action/farmers']);
@@ -411,7 +471,10 @@ export class UserBulkUploadComponent {
 
   // ========== User Redundancy Error (LINE, PHONE, NIC, STATUS) ==========
 
-  private buildRedundancyLightModeTable(entries: UserErrorEntry[], fileName: string): string {
+  private buildRedundancyLightModeTable(
+    entries: UserErrorEntry[],
+    fileName: string,
+  ): string {
     return `
       <div style="font-family: Arial, sans-serif; color: #000;">
         <!-- Error message -->
@@ -450,7 +513,9 @@ export class UserBulkUploadComponent {
         <div style="height: 4px;"></div>
         
         <!-- Table rows -->
-        ${entries.map(entry => `
+        ${entries
+          .map(
+            (entry) => `
           <div style="margin-bottom: 6px; font-size: 14px;">
             <span style="display: inline-block; width: 60px; text-align: left;">
               <span style="color: #f59e0b; margin-right: 4px;">⚠</span>${entry.line}
@@ -459,7 +524,9 @@ export class UserBulkUploadComponent {
             <span style="display: inline-block; width: 120px; text-align: left;">${entry.nic}</span>
             <span style="display: inline-block; width: 250px; text-align: left;">${entry.status}</span>
           </div>
-        `).join('')}
+        `,
+          )
+          .join('')}
         
         <!-- Blank line -->
         <div style="height: 16px;"></div>
@@ -472,7 +539,10 @@ export class UserBulkUploadComponent {
     `;
   }
 
-  private buildRedundancyDarkModeTable(entries: UserErrorEntry[], fileName: string): string {
+  private buildRedundancyDarkModeTable(
+    entries: UserErrorEntry[],
+    fileName: string,
+  ): string {
     return `
       <div style="font-family: Arial, sans-serif; color: #e5e7eb;">
         <!-- Error message -->
@@ -511,7 +581,9 @@ export class UserBulkUploadComponent {
         <div style="height: 4px;"></div>
         
         <!-- Table rows -->
-        ${entries.map(entry => `
+        ${entries
+          .map(
+            (entry) => `
           <div style="margin-bottom: 6px; font-size: 14px; color: #e5e7eb;">
             <span style="display: inline-block; width: 60px; text-align: left;">
               <span style="color: #fbbf24; margin-right: 4px;">⚠</span>${entry.line}
@@ -520,7 +592,9 @@ export class UserBulkUploadComponent {
             <span style="display: inline-block; width: 120px; text-align: left;">${entry.nic}</span>
             <span style="display: inline-block; width: 250px; text-align: left;">${entry.status}</span>
           </div>
-        `).join('')}
+        `,
+          )
+          .join('')}
         
         <!-- Blank line -->
         <div style="height: 16px;"></div>
@@ -535,7 +609,10 @@ export class UserBulkUploadComponent {
 
   // ========== Duplication Entries Error (FIRST NAME, LAST NAME, NIC, PHONE NUMBER) ==========
 
-  private buildDuplicationLightModeTable(entries: DuplicationEntry[], fileName: string): string {
+  private buildDuplicationLightModeTable(
+    entries: DuplicationEntry[],
+    fileName: string,
+  ): string {
     return `
       <div style="font-family: Arial, sans-serif; color: #000;">
         <!-- Error message -->
@@ -574,7 +651,9 @@ export class UserBulkUploadComponent {
         <div style="height: 4px;"></div>
         
         <!-- Table rows -->
-        ${entries.map(entry => `
+        ${entries
+          .map(
+            (entry) => `
           <div style="margin-bottom: 6px; font-size: 14px;">
             <span style="display: inline-block; width: 120px; text-align: left;">
               <span style="color: #f59e0b; margin-right: 4px;">⚠</span>${entry.firstName}
@@ -583,7 +662,9 @@ export class UserBulkUploadComponent {
             <span style="display: inline-block; width: 120px; text-align: left;">${entry.nic}</span>
             <span style="display: inline-block; width: 150px; text-align: left;">${entry.phoneNumber}</span>
           </div>
-        `).join('')}
+        `,
+          )
+          .join('')}
         
         <!-- Blank line -->
         <div style="height: 16px;"></div>
@@ -596,7 +677,10 @@ export class UserBulkUploadComponent {
     `;
   }
 
-  private buildDuplicationDarkModeTable(entries: DuplicationEntry[], fileName: string): string {
+  private buildDuplicationDarkModeTable(
+    entries: DuplicationEntry[],
+    fileName: string,
+  ): string {
     return `
       <div style="font-family: Arial, sans-serif; color: #e5e7eb;">
         <!-- Error message -->
@@ -635,7 +719,9 @@ export class UserBulkUploadComponent {
         <div style="height: 4px;"></div>
         
         <!-- Table rows -->
-        ${entries.map(entry => `
+        ${entries
+          .map(
+            (entry) => `
           <div style="margin-bottom: 6px; font-size: 14px; color: #e5e7eb;">
             <span style="display: inline-block; width: 120px; text-align: left;">
               <span style="color: #fbbf24; margin-right: 4px;">⚠</span>${entry.firstName}
@@ -644,7 +730,9 @@ export class UserBulkUploadComponent {
             <span style="display: inline-block; width: 120px; text-align: left;">${entry.nic}</span>
             <span style="display: inline-block; width: 150px; text-align: left;">${entry.phoneNumber}</span>
           </div>
-        `).join('')}
+        `,
+          )
+          .join('')}
         
         <!-- Blank line -->
         <div style="height: 16px;"></div>
@@ -657,58 +745,62 @@ export class UserBulkUploadComponent {
     `;
   }
 
-  private downloadErrorExcel(entries: UserErrorEntry[], fileName: string): void {
+  private downloadErrorExcel(
+    entries: UserErrorEntry[],
+    fileName: string,
+  ): void {
     try {
-      const dataForExcel = entries.map(entry => ({
-        'LINE': entry.line,
-        'PHONE': entry.phone,
-        'NIC': entry.nic,
-        'STATUS': entry.status
+      const dataForExcel = entries.map((entry) => ({
+        LINE: entry.line,
+        PHONE: entry.phone,
+        NIC: entry.nic,
+        STATUS: entry.status,
       }));
-      
+
       const worksheet = XLSX.utils.json_to_sheet(dataForExcel);
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, 'Existing Users');
-      
+
       const excelBuffer = XLSX.write(workbook, {
         bookType: 'xlsx',
         type: 'array',
       });
-      
+
       const blob = new Blob([excelBuffer], {
         type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       });
-      
+
       saveAs(blob, fileName);
     } catch (error) {
       console.error('Failed to generate Excel file:', error);
     }
   }
 
-  private downloadDuplicationExcel(entries: DuplicationEntry[], fileName: string): void {
-
-    
+  private downloadDuplicationExcel(
+    entries: DuplicationEntry[],
+    fileName: string,
+  ): void {
     try {
-      const dataForExcel = entries.map(entry => ({
+      const dataForExcel = entries.map((entry) => ({
         'FIRST NAME': entry.firstName,
         'LAST NAME': entry.lastName,
-        'NIC': entry.nic,
-        'PHONE NUMBER': entry.phoneNumber
+        NIC: entry.nic,
+        'PHONE NUMBER': entry.phoneNumber,
       }));
-      
+
       const worksheet = XLSX.utils.json_to_sheet(dataForExcel);
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, 'Duplicate Entries');
-      
+
       const excelBuffer = XLSX.write(workbook, {
         bookType: 'xlsx',
         type: 'array',
       });
-      
+
       const blob = new Blob([excelBuffer], {
         type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       });
-      
+
       saveAs(blob, fileName);
     } catch (error) {
       console.error('Failed to generate Excel file:', error);
@@ -719,7 +811,8 @@ export class UserBulkUploadComponent {
     this.isLoading = false;
     this.selectedFile = null;
 
-    let errorMessage = error.error?.error || 'Failed to upload file. Please try again.';
+    let errorMessage =
+      error.error?.error || 'Failed to upload file. Please try again.';
     if (error.status === 400) {
       errorMessage = error.error?.error || 'Invalid file or data format.';
       Swal.fire({
@@ -730,10 +823,9 @@ export class UserBulkUploadComponent {
         customClass: {
           popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
           title: 'dark:text-white',
-        }
+        },
       });
-    } 
-    else if (error.status === 413) {
+    } else if (error.status === 413) {
       errorMessage = 'File size too large. Please upload a smaller file.';
     }
 

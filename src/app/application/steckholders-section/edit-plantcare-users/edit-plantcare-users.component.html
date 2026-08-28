@@ -48,7 +48,8 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
-            <label for="firstName" class="block text-sm font-medium text-textLight dark:text-textDark">First Name *</label>
+            <label for="firstName" class="block text-sm font-medium text-textLight dark:text-textDark">First Name
+              *</label>
             <input formControlName="firstName" id="firstName" (input)="onNameInput($event, 'firstName')"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
             <div *ngIf="
@@ -66,7 +67,8 @@
           </div>
 
           <div>
-            <label for="lastName" class="block text-sm font-medium text-textLight dark:text-textDark">Last Name *</label>
+            <label for="lastName" class="block text-sm font-medium text-textLight dark:text-textDark">Last Name
+              *</label>
             <input formControlName="lastName" id="lastName" (input)="onNameInput($event, 'lastName')"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
             <div *ngIf="
@@ -84,7 +86,8 @@
           </div>
 
           <div>
-            <label for="phoneNumber" class="block text-sm font-medium text-textLight dark:text-textDark">Mobile Number *</label>
+            <label for="phoneNumber" class="block text-sm font-medium text-textLight dark:text-textDark">Mobile Number
+              *</label>
             <input formControlName="phoneNumber" id="phoneNumber" (input)="onPhoneNumberInput($event)"
               (keypress)="onPhoneNumberKeyPress($event)"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
@@ -104,7 +107,8 @@
           </div>
 
           <div>
-            <label for="NICnumber" class="block text-sm font-medium text-textLight dark:text-textDark">NIC Number *</label>
+            <label for="NICnumber" class="block text-sm font-medium text-textLight dark:text-textDark">NIC Number
+              *</label>
             <input formControlName="NICnumber" id="NICnumber" (input)="onNICInput($event)"
               (keypress)="onNICKeyPress($event)"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
@@ -140,7 +144,8 @@
           </div>
 
           <div>
-            <label for="membership" class="block text-sm font-medium text-gray-700 dark:text-textDark">Membership *</label>
+            <label for="membership" class="block text-sm font-medium text-gray-700 dark:text-textDark">Membership
+              *</label>
             <p-dropdown formControlName="membership" id="membership" name="membership" [options]="membership"
               optionLabel="membershipName" optionValue="membershipName" [filter]="true" filterBy="membershipName"
               [showClear]="false" placeholder="Select" styleClass="w-full" panelStyleClass="custom-dropdown-panel"
@@ -176,67 +181,71 @@
           <div class="border-t border-gray-200 my-10"></div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-          <div>
-            <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Holder's Name *</label>
-            <input formControlName="accHolderName" id="accHolderName" (input)="onAccountHolderNameInput($event)"
-              (keypress)="onAccountHolderNameKeyPress($event)"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-            <div *ngIf="
+            <div>
+              <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account
+                Holder's Name *</label>
+              <input formControlName="accHolderName" id="accHolderName" (input)="onAccountHolderNameInput($event)"
+                (keypress)="onAccountHolderNameKeyPress($event)"
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+              <div *ngIf="
       userForm.get('accHolderName')?.invalid &&
       (userForm.get('accHolderName')?.dirty ||
         userForm.get('accHolderName')?.touched)
     " class="text-red-500 text-sm mt-1">
-              Account holder's name is required
+                Account holder's name is required
+              </div>
             </div>
-          </div>
 
-          <div>
-            <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Number *</label>
-            <input formControlName="accNumber" id="accNumber" (input)="onAccountNumberInput($event)"
-              (keypress)="onAccountNumberKeyPress($event)"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-            <div *ngIf="
+            <div>
+              <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Number
+                *</label>
+              <input formControlName="accNumber" id="accNumber" (input)="onAccountNumberInput($event)"
+                (keypress)="onAccountNumberKeyPress($event)"
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+              <div *ngIf="
       userForm.get('accNumber')?.invalid &&
       (userForm.get('accNumber')?.dirty ||
         userForm.get('accNumber')?.touched)
     " class="text-red-500 text-sm mt-1">
-              <div *ngIf="userForm.get('accNumber')?.errors?.['pattern']">
-                Please enter a valid account number (numbers only)
+                <div *ngIf="userForm.get('accNumber')?.errors?.['pattern']">
+                  Please enter a valid account number (numbers only)
+                </div>
               </div>
             </div>
-          </div>
 
-          <div>
-            <label for="bankDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">Bank Name *</label>
-            <p-dropdown formControlName="bankName" [options]="bankOptions" optionLabel="label" optionValue="value"
-              [filter]="true" filterBy="label" [showClear]="false" placeholder="Select a bank"
-              (onChange)="onBankChange()" styleClass="w-full" panelStyleClass="custom-dropdown-panel"
-              class="p-dropdown-custom">
-            </p-dropdown>
-            <div *ngIf="
+            <div>
+              <label for="bankDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">Bank Name
+                *</label>
+              <p-dropdown formControlName="bankName" [options]="bankOptions" optionLabel="label" optionValue="value"
+                [filter]="true" filterBy="label" [showClear]="false" placeholder="Select a bank"
+                (onChange)="onBankChange()" styleClass="w-full" panelStyleClass="custom-dropdown-panel"
+                class="p-dropdown-custom">
+              </p-dropdown>
+              <div *ngIf="
       userForm.get('bankName')?.invalid &&
       (userForm.get('bankName')?.dirty ||
         userForm.get('bankName')?.touched)
     " class="text-red-500 text-sm mt-1">
-              Bank name is required
+                Bank name is required
+              </div>
             </div>
-          </div>
 
-          <div>
-            <label for="branchDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">Branch Name *</label>
-            <p-dropdown formControlName="branchName" [options]="branchOptions" optionLabel="label" optionValue="value"
-              [filter]="true" filterBy="label" [showClear]="false" [disabled]="!userForm.get('bankName')?.value"
-              placeholder="Select a branch" (onChange)="onBranchChange()" styleClass="w-full"
-              panelStyleClass="custom-dropdown-panel" class="p-dropdown-custom">
-            </p-dropdown>
-            <div *ngIf="
+            <div>
+              <label for="branchDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">Branch Name
+                *</label>
+              <p-dropdown formControlName="branchName" [options]="branchOptions" optionLabel="label" optionValue="value"
+                [filter]="true" filterBy="label" [showClear]="false" [disabled]="!userForm.get('bankName')?.value"
+                placeholder="Select a branch" (onChange)="onBranchChange()" styleClass="w-full"
+                panelStyleClass="custom-dropdown-panel" class="p-dropdown-custom">
+              </p-dropdown>
+              <div *ngIf="
       userForm.get('branchName')?.invalid &&
       (userForm.get('branchName')?.dirty ||
         userForm.get('branchName')?.touched)
     " class="text-red-500 text-sm mt-1">
-              Branch name is required
+                Branch name is required
+              </div>
             </div>
-          </div>
           </div>
         </ng-container>
       </div>
@@ -569,77 +578,77 @@
 
           <ng-container *ngIf="showBankDetails">
             <div>
-            <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account
-              Holder's Name *</label>
-            <input formControlName="accHolderName" id="accHolderName"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-              readonly />
-            <div *ngIf="
+              <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account
+                Holder's Name *</label>
+              <input formControlName="accHolderName" id="accHolderName"
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+                readonly />
+              <div *ngIf="
                 userForm.get('accHolderName')?.invalid &&
                 (userForm.get('accHolderName')?.dirty ||
                   userForm.get('accHolderName')?.touched)
               " class="text-red-500 text-sm mt-1">
-              Account holder's name is required
+                Account holder's name is required
+              </div>
             </div>
-          </div>
 
             <div>
-            <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-              Account Number *
-            </label>
-            <input formControlName="accNumber" id="accNumber" type="number"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-              readonly />
-            <div *ngIf="
+              <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+                Account Number *
+              </label>
+              <input formControlName="accNumber" id="accNumber" type="number"
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+                readonly />
+              <div *ngIf="
                 userForm.get('accNumber')?.invalid &&
                 (userForm.get('accNumber')?.dirty ||
                   userForm.get('accNumber')?.touched)
               " class="text-red-500 text-sm mt-1">
-              <div *ngIf="userForm.get('accNumber')?.errors?.['required']">
-                Account number is required
-              </div>
-              <div *ngIf="userForm.get('accNumber')?.errors?.['pattern']">
-                Please enter a valid account number
+                <div *ngIf="userForm.get('accNumber')?.errors?.['required']">
+                  Account number is required
+                </div>
+                <div *ngIf="userForm.get('accNumber')?.errors?.['pattern']">
+                  Please enter a valid account number
+                </div>
               </div>
             </div>
-          </div>
 
             <!-- Bank Name Dropdown -->
             <!-- Bank Name Field (converted from dropdown) -->
             <div>
-            <label for="bankName" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-              Bank Name *
-            </label>
-            <p-dropdown formControlName="bankName" [options]="bankOptions" optionLabel="label" optionValue="value"
-              [filter]="true" filterBy="label" [showClear]="false" placeholder="Select a bank"
-              (onChange)="onBankChange()" styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
-              class="mt-1 block w-full p-dropdown-custom">
-            </p-dropdown>
-            <div *ngIf="
+              <label for="bankName" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+                Bank Name *
+              </label>
+              <p-dropdown formControlName="bankName" [options]="bankOptions" optionLabel="label" optionValue="value"
+                [filter]="true" filterBy="label" [showClear]="false" placeholder="Select a bank"
+                (onChange)="onBankChange()" styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
+                class="mt-1 block w-full p-dropdown-custom">
+              </p-dropdown>
+              <div *ngIf="
       userForm.get('bankName')?.invalid &&
       (userForm.get('bankName')?.dirty ||
         userForm.get('bankName')?.touched)
     " class="text-red-500 text-sm mt-1">
-              Bank name is required
+                Bank name is required
+              </div>
             </div>
-          </div>
 
             <div>
-            <label for="branchName" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-              Branch Name *
-            </label>
-            <p-dropdown formControlName="branchName" [options]="branchOptions" optionLabel="label" optionValue="value"
-              [filter]="true" filterBy="label" [showClear]="false" (onChange)="onBranchChange()"
-              placeholder="Select a branch" styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
-              class="mt-1 block w-full p-dropdown-custom" readonly>
-            </p-dropdown>
-            <div *ngIf="
+              <label for="branchName" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+                Branch Name *
+              </label>
+              <p-dropdown formControlName="branchName" [options]="branchOptions" optionLabel="label" optionValue="value"
+                [filter]="true" filterBy="label" [showClear]="false" (onChange)="onBranchChange()"
+                placeholder="Select a branch" styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
+                class="mt-1 block w-full p-dropdown-custom" readonly>
+              </p-dropdown>
+              <div *ngIf="
       userForm.get('branchName')?.invalid &&
       (userForm.get('branchName')?.dirty ||
         userForm.get('branchName')?.touched)
     " class="text-red-500 text-sm mt-1">
-              Branch name is required
-            </div>
+                Branch name is required
+              </div>
 
             </div>
           </ng-container>

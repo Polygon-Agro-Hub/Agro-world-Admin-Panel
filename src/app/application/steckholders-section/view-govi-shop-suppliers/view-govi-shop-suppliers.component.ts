@@ -32,6 +32,7 @@ interface ShopData {
   templateUrl: './view-govi-shop-suppliers.component.html',
   styleUrl: './view-govi-shop-suppliers.component.css',
 })
+
 export class ViewGoviShopSuppliersComponent implements OnInit {
   isLoading = false;
   shopData: ShopData | null = null;
@@ -61,7 +62,7 @@ export class ViewGoviShopSuppliersComponent implements OnInit {
     private route: ActivatedRoute,
     private sanitizer: DomSanitizer,
     private stakeholderService: StakeholderService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {

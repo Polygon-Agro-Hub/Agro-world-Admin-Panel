@@ -1,4 +1,10 @@
-import { Component, OnInit, HostListener, Inject, PLATFORM_ID } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  HostListener,
+  Inject,
+  PLATFORM_ID,
+} from '@angular/core';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import Swal from 'sweetalert2';
@@ -33,7 +39,13 @@ interface BranchesData {
 @Component({
   selector: 'app-add-fieald-officer',
   standalone: true,
-  imports: [LoadingSpinnerComponent, CommonModule, DropdownModule, FormsModule, MultiSelectModule],
+  imports: [
+    LoadingSpinnerComponent,
+    CommonModule,
+    DropdownModule,
+    FormsModule,
+    MultiSelectModule,
+  ],
   templateUrl: './add-fieald-officer.component.html',
   styleUrl: './add-fieald-officer.component.css',
 })
@@ -80,20 +92,20 @@ export class AddFiealdOfficerComponent implements OnInit {
   // Add properties for English name validation
   englishNameErrors = {
     firstName: false,
-    lastName: false
+    lastName: false,
   };
 
   englishNameTouched = {
     firstName: false,
-    lastName: false
+    lastName: false,
   };
 
   constructor(
     private router: Router,
     private stakeHolderSrv: StakeholderService,
     private http: HttpClient,
-    @Inject(PLATFORM_ID) private platformId: Object
-  ) { }
+    @Inject(PLATFORM_ID) private platformId: Object,
+  ) {}
 
   jobRoles = ['Field Officer', 'Chief Field Officer'];
 
@@ -134,7 +146,7 @@ export class AddFiealdOfficerComponent implements OnInit {
     { name: 'Sabaragamuwa' },
     { name: 'Southern' },
     { name: 'Uva' },
-    { name: 'Western' }
+    { name: 'Western' },
   ];
 
   filteredDistricts: { name: string; province: string }[] = [];
@@ -185,13 +197,13 @@ export class AddFiealdOfficerComponent implements OnInit {
 
     // Filter districts based on selected province
     this.filteredDistricts = this.districts.filter(
-      (district) => district.province === selectedProvince
+      (district) => district.province === selectedProvince,
     );
 
     // Reset district selection when province changes
     if (this.personalData.distrct) {
       const districtStillValid = this.filteredDistricts.some(
-        d => d.name === this.personalData.distrct
+        (d) => d.name === this.personalData.distrct,
       );
       if (!districtStillValid) {
         this.personalData.distrct = '';
@@ -204,7 +216,11 @@ export class AddFiealdOfficerComponent implements OnInit {
     if (file) {
       // Validate file size (10MB limit)
       if (file.size > this.MAX_FILE_SIZE) {
-        Swal.fire('Error', 'File size exceeds 10MB. Please upload a smaller image.', 'error');
+        Swal.fire(
+          'Error',
+          'File size exceeds 10MB. Please upload a smaller image.',
+          'error',
+        );
         return;
       }
 
@@ -240,7 +256,6 @@ export class AddFiealdOfficerComponent implements OnInit {
   isEmpTypeSelected(): boolean {
     return !!this.empType;
   }
-
 
   onCheckboxChange(lang: string, event: any) {
     if (event.target.checked) {
@@ -279,94 +294,96 @@ export class AddFiealdOfficerComponent implements OnInit {
   getAllCompanies() {
     this.stakeHolderSrv.getAllCompanies().subscribe((res) => {
       this.companyData = res;
-      this.companyOptions = this.companyData.map(company => ({
+      this.companyOptions = this.companyData.map((company) => ({
         label: company.companyName,
-        value: company.id
+        value: company.id,
       }));
     });
   }
 
   isFieldInvalid(fieldName: keyof Personal): boolean {
-  const isTouched = !!this.touchedFields[fieldName];
+    const isTouched = !!this.touchedFields[fieldName];
 
-  if (!isTouched) {
-    return false;
+    if (!isTouched) {
+      return false;
+    }
+
+    const value = this.personalData[fieldName];
+
+    // Special handling for assignDistrict array
+    if (fieldName === 'assignDistrict') {
+      return !value || (Array.isArray(value) && value.length === 0);
+    }
+
+    // Special handling for jobRole when assignDistrict is empty
+    if (
+      fieldName === 'jobRole' &&
+      this.personalData.assignDistrict &&
+      this.personalData.assignDistrict.length === 0
+    ) {
+      return false; // Don't show error if assignDistrict is empty
+    }
+
+    // Special handling for email field - check validation even if touched
+    if (fieldName === 'email' && value) {
+      return !this.isValidEmail(value);
+    }
+
+    // Default validation for other fields
+    return !value;
   }
-
-  const value = this.personalData[fieldName];
-
-  // Special handling for assignDistrict array
-  if (fieldName === 'assignDistrict') {
-    return !value || (Array.isArray(value) && value.length === 0);
-  }
-
-  // Special handling for jobRole when assignDistrict is empty
-  if (fieldName === 'jobRole' && this.personalData.assignDistrict && 
-      this.personalData.assignDistrict.length === 0) {
-    return false; // Don't show error if assignDistrict is empty
-  }
-
-  // Special handling for email field - check validation even if touched
-  if (fieldName === 'email' && value) {
-    return !this.isValidEmail(value);
-  }
-
-  // Default validation for other fields
-  return !value;
-}
 
   // New method to specifically check email validation
   isEmailInvalid(): boolean {
     const email = this.personalData.email;
     const isTouched = !!this.touchedFields['email'];
-    
+
     if (!isTouched) {
       return false;
     }
-    
+
     if (!email) {
       return true; // Required field is empty
     }
-    
+
     return !this.isValidEmail(email);
   }
 
   EpmloyeIdCreate() {
-  if (!this.personalData.jobRole) {
-    return;
+    if (!this.personalData.jobRole) {
+      return;
+    }
+
+    let rolePrefix: string | undefined;
+
+    const rolePrefixes: { [key: string]: string } = {
+      'Field Officer': 'FIO',
+      'Chief Field Officer': 'CFO',
+    };
+
+    rolePrefix = rolePrefixes[this.personalData.jobRole];
+
+    if (!rolePrefix) {
+      return;
+    }
+
+    this.getLastID(rolePrefix)
+      .then((lastID) => {
+        this.personalData.empId = rolePrefix + lastID;
+      })
+      .catch((error) => {});
   }
-
-  let rolePrefix: string | undefined;
-
-  const rolePrefixes: { [key: string]: string } = {
-    'Field Officer': 'FIO',
-    'Chief Field Officer': 'CFO',
-  };
-
-  rolePrefix = rolePrefixes[this.personalData.jobRole];
-
-  if (!rolePrefix) {
-    return;
-  }
-
-  this.getLastID(rolePrefix)
-    .then((lastID) => {
-      this.personalData.empId = rolePrefix + lastID;
-    })
-    .catch((error) => { });
-}
 
   getAllCollectionManagers() {
-    this.stakeHolderSrv
-      .getAllManagerList()
-      .subscribe((res) => {
-        this.fiealdManagerData = res;
-        // Convert to dropdown options format
-        this.managerOptions = this.fiealdManagerData.map((manager) => ({
-          label: manager.empId + " - " +  manager.firstName + ' ' + manager.lastName,
-          value: manager.id,
-        }));
-      });
+    this.stakeHolderSrv.getAllManagerList().subscribe((res) => {
+      this.fiealdManagerData = res;
+      // Convert to dropdown options format
+      this.managerOptions = this.fiealdManagerData.map((manager) => ({
+        label:
+          manager.empId + ' - ' + manager.firstName + ' ' + manager.lastName,
+        value: manager.id,
+      }));
+    });
   }
 
   getLastID(role: string): Promise<string> {
@@ -379,7 +396,7 @@ export class AddFiealdOfficerComponent implements OnInit {
         },
         (error) => {
           reject(error);
-        }
+        },
       );
     });
   }
@@ -400,58 +417,60 @@ export class AddFiealdOfficerComponent implements OnInit {
   // New method to check for non-English characters
   hasNonEnglishCharacters(fieldName: 'firstName' | 'lastName'): boolean {
     const value = this.personalData[fieldName];
-    
+
     if (!value || !this.englishNameTouched[fieldName]) {
       return false;
     }
-    
+
     return this.englishNameErrors[fieldName];
   }
 
   preventSpecialCharacters(event: KeyboardEvent): void {
     const input = event.target as HTMLInputElement;
     const char = String.fromCharCode(event.which || event.keyCode);
-    
+
     // Block space if it's at the start (cursor at position 0)
     if (char === ' ' && input.selectionStart === 0) {
       event.preventDefault();
       return;
     }
-    
+
     // Allow only English letters, spaces, hyphens, and apostrophes
     // Also prevent Sinhala and Tamil characters
     const allowedPattern = /^[A-Za-z\s\-']$/;
-    
+
     // Check for Sinhala and Tamil characters specifically
     const isSinhala = /[\u0D80-\u0DFF]/.test(char);
     const isTamil = /[\u0B80-\u0BFF]/.test(char);
-    
+
     if (isSinhala || isTamil || !allowedPattern.test(char)) {
       event.preventDefault();
     }
   }
 
   // New method to validate English names when pasting
-  onEnglishNamePaste(event: ClipboardEvent, fieldName: 'firstName' | 'lastName'): void {
+  onEnglishNamePaste(
+    event: ClipboardEvent,
+    fieldName: 'firstName' | 'lastName',
+  ): void {
     event.preventDefault();
-    
+
     // Get pasted text
     const pastedText = event.clipboardData?.getData('text') || '';
-    
+
     // Filter out non-English characters
     const englishOnly = pastedText.replace(/[^A-Za-z\s\-']/g, '');
-    
+
     // Update the value
     if (fieldName === 'firstName') {
       this.personalData.firstName = englishOnly;
     } else {
       this.personalData.lastName = englishOnly;
     }
-    
+
     // Trigger capitalization
     this.capitalizeNames();
   }
-
 
   isValidPhoneNumber(phone: string): boolean {
     if (!phone) return false;
@@ -484,7 +503,7 @@ export class AddFiealdOfficerComponent implements OnInit {
 
   preventNonNumeric(
     event: KeyboardEvent,
-    fieldName: 'phoneNumber1' | 'phoneNumber2'
+    fieldName: 'phoneNumber1' | 'phoneNumber2',
   ): void {
     const input = event.target as HTMLInputElement;
     const char = String.fromCharCode(event.which);
@@ -683,7 +702,7 @@ export class AddFiealdOfficerComponent implements OnInit {
       //   missingFields.push('Company Name is Required');
       // }
 
-      //   if (!this.personalData.assignDistrict || 
+      //   if (!this.personalData.assignDistrict ||
       //     (Array.isArray(this.personalData.assignDistrict) && this.personalData.assignDistrict.length === 0)) {
       //   missingFields.push('Assigned Districts is Required');
       // }
@@ -692,7 +711,10 @@ export class AddFiealdOfficerComponent implements OnInit {
         missingFields.push('Job Role is Required');
       }
 
-      if (this.personalData.jobRole === 'Field Officer' && !this.personalData.irmId) {
+      if (
+        this.personalData.jobRole === 'Field Officer' &&
+        !this.personalData.irmId
+      ) {
         missingFields.push('Chief Field Officer is Required');
       }
 
@@ -726,21 +748,28 @@ export class AddFiealdOfficerComponent implements OnInit {
       }
 
       // Validate assigned districts
-      if (!this.personalData.assignDistrict || this.personalData.assignDistrict.length === 0) {
+      if (
+        !this.personalData.assignDistrict ||
+        this.personalData.assignDistrict.length === 0
+      ) {
         missingFields.push('Assigned Districts are Required');
       }
 
       if (!this.personalData.phoneNumber1) {
         missingFields.push('Mobile Number - 01 is Required');
       } else if (!this.isValidPhoneNumber(this.personalData.phoneNumber1)) {
-        missingFields.push('Mobile Number - 01 - Must be 9 digits starting with 7');
+        missingFields.push(
+          'Mobile Number - 01 - Must be 9 digits starting with 7',
+        );
       }
 
       if (
         this.personalData.phoneNumber2 &&
         !this.isValidPhoneNumber(this.personalData.phoneNumber2)
       ) {
-        missingFields.push('Mobile Number - 02 - Must be 9 digits starting with 7');
+        missingFields.push(
+          'Mobile Number - 02 - Must be 9 digits starting with 7',
+        );
       }
 
       if (
@@ -749,7 +778,7 @@ export class AddFiealdOfficerComponent implements OnInit {
         this.personalData.phoneNumber1 === this.personalData.phoneNumber2
       ) {
         missingFields.push(
-          'Mobile Number - 02 - Cannot be the same as Mobile Number - 01'
+          'Mobile Number - 02 - Cannot be the same as Mobile Number - 01',
         );
       }
 
@@ -757,7 +786,7 @@ export class AddFiealdOfficerComponent implements OnInit {
         missingFields.push('NIC Number is Required');
       } else if (!this.isValidNIC(this.personalData.nic)) {
         missingFields.push(
-          'NIC Number - Must be 12 digits or 9 digits followed by V'
+          'NIC Number - Must be 12 digits or 9 digits followed by V',
         );
       }
 
@@ -765,7 +794,7 @@ export class AddFiealdOfficerComponent implements OnInit {
         missingFields.push('Email is Required');
       } else if (!this.isValidEmail(this.personalData.email)) {
         missingFields.push(
-          `Email - ${this.getEmailErrorMessage(this.personalData.email)}`
+          `Email - ${this.getEmailErrorMessage(this.personalData.email)}`,
         );
       }
 
@@ -796,13 +825,12 @@ export class AddFiealdOfficerComponent implements OnInit {
 
     // Navigate to the selected page
     this.selectedPage = page;
-    
+
     // Scroll to top after page change
     this.scrollToTop();
   }
 
   nextFormCreate2(page: 'pageOne' | 'pageTwo' | 'pageThree') {
-
     if (page === 'pageThree') {
       // Mark page two fields as touched to show validation messages
       this.markPageTwoFieldsAsTouched();
@@ -843,7 +871,7 @@ export class AddFiealdOfficerComponent implements OnInit {
 
     // Navigate to the selected page if validation passes
     this.selectedPage = page;
-    
+
     // Scroll to top after page change
     this.scrollToTop();
   }
@@ -855,9 +883,9 @@ export class AddFiealdOfficerComponent implements OnInit {
       setTimeout(() => {
         window.scrollTo({
           top: 0,
-          behavior: 'smooth'
+          behavior: 'smooth',
         });
-        
+
         // Also try scrolling the container div
         const container = document.querySelector('.mx-auto.p-6') as HTMLElement;
         if (container) {
@@ -881,7 +909,7 @@ export class AddFiealdOfficerComponent implements OnInit {
       'email',
       'jobRole',
       'irmId',
-      'assignDistrict'
+      'assignDistrict',
     ];
 
     pageOneFields.forEach((field) => {
@@ -891,7 +919,7 @@ export class AddFiealdOfficerComponent implements OnInit {
     this.languagesTouched = true;
     this.empTypeTouched = true;
     this.jobRoleTouched = true;
-    
+
     // Mark English name fields as touched
     this.englishNameTouched.firstName = true;
     this.englishNameTouched.lastName = true;
@@ -909,7 +937,7 @@ export class AddFiealdOfficerComponent implements OnInit {
 
     modelRef[fieldName] = trimmedValue;
     inputElement.value = trimmedValue;
-    
+
     // Mark field as touched when user types
     if (fieldName === 'email') {
       this.markFieldAsTouched('email');
@@ -1061,18 +1089,21 @@ export class AddFiealdOfficerComponent implements OnInit {
 
   onBankChange() {
     if (this.selectedBankId) {
-      const branchesForBank = this.allBranches[this.selectedBankId.toString()] || [];
+      const branchesForBank =
+        this.allBranches[this.selectedBankId.toString()] || [];
       // Sort branches alphabetically
-      this.branches = branchesForBank.sort((a, b) => a.name.localeCompare(b.name));
+      this.branches = branchesForBank.sort((a, b) =>
+        a.name.localeCompare(b.name),
+      );
 
       // Convert to dropdown options format
-      this.branchOptions = this.branches.map(branch => ({
+      this.branchOptions = this.branches.map((branch) => ({
         label: branch.name,
-        value: branch.ID
+        value: branch.ID,
       }));
 
       const selectedBank = this.banks.find(
-        (bank) => bank.ID === this.selectedBankId
+        (bank) => bank.ID === this.selectedBankId,
       );
       if (selectedBank) {
         this.personalData.bank = selectedBank.name;
@@ -1090,7 +1121,7 @@ export class AddFiealdOfficerComponent implements OnInit {
   onBranchChange() {
     if (this.selectedBranchId) {
       const selectedBranch = this.branches.find(
-        (branch) => branch.ID === this.selectedBranchId
+        (branch) => branch.ID === this.selectedBranchId,
       );
       if (selectedBranch) {
         this.personalData.branch = selectedBranch.name;
@@ -1108,12 +1139,12 @@ export class AddFiealdOfficerComponent implements OnInit {
         this.banks = data.sort((a, b) => a.name.localeCompare(b.name));
 
         // Convert to dropdown options format
-        this.bankOptions = this.banks.map(bank => ({
+        this.bankOptions = this.banks.map((bank) => ({
           label: bank.name,
-          value: bank.ID
+          value: bank.ID,
         }));
       },
-      (error) => { }
+      (error) => {},
     );
   }
 
@@ -1122,24 +1153,24 @@ export class AddFiealdOfficerComponent implements OnInit {
       (data) => {
         this.allBranches = data;
       },
-      (error) => { }
+      (error) => {},
     );
   }
 
   ngOnInit(): void {
-  this.loadBanks();
-  this.loadBranches();
-  this.EpmloyeIdCreate();
-  // Pre-fill country with Sri Lanka
-  this.personalData.country = 'Sri Lanka';
-  this.getAllCollectionManagers();
+    this.loadBanks();
+    this.loadBranches();
+    this.EpmloyeIdCreate();
+    // Pre-fill country with Sri Lanka
+    this.personalData.country = 'Sri Lanka';
+    this.getAllCollectionManagers();
 
-  // Initialize assignDistrict as array
-  this.personalData.assignDistrict = [];
-  
-  // Initialize jobRole as empty string
-  this.personalData.jobRole = '';
-}
+    // Initialize assignDistrict as array
+    this.personalData.assignDistrict = [];
+
+    // Initialize jobRole as empty string
+    this.personalData.jobRole = '';
+  }
 
   validateResidentialDetails(): string[] {
     const errors: string[] = [];
@@ -1171,14 +1202,17 @@ export class AddFiealdOfficerComponent implements OnInit {
     }
 
     if (!this.personalData.accName) {
-      errors.push('Account Holder\'s Name is required');
+      errors.push("Account Holder's Name is required");
     } else if (this.hasInvalidAccountHolderCharacters()) {
-      errors.push('Account Holder\'s Name should only contain English letters');
+      errors.push("Account Holder's Name should only contain English letters");
     }
 
     if (!this.personalData.accNumber) {
       errors.push('Account Number is required');
-    } else if (this.personalData.accNumber.length < 8 || this.personalData.accNumber.length > 16) {
+    } else if (
+      this.personalData.accNumber.length < 8 ||
+      this.personalData.accNumber.length > 16
+    ) {
       errors.push('Account Number must be between 8 and 16 digits');
     }
 
@@ -1217,7 +1251,7 @@ export class AddFiealdOfficerComponent implements OnInit {
       'accName',
       'accNumber',
       'bank',
-      'branch'
+      'branch',
     ];
 
     pageTwoFields.forEach((field) => {
@@ -1241,7 +1275,9 @@ export class AddFiealdOfficerComponent implements OnInit {
     this.triggerFileInputForType('contract');
   }
 
-  triggerFileInputForType(fileType: 'frontNic' | 'backNic' | 'passbook' | 'contract'): void {
+  triggerFileInputForType(
+    fileType: 'frontNic' | 'backNic' | 'passbook' | 'contract',
+  ): void {
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
     fileInput.accept = 'image/jpeg,image/png,image/jpg';
@@ -1261,10 +1297,17 @@ export class AddFiealdOfficerComponent implements OnInit {
     fileInput.click();
   }
 
-  handleFileUpload(file: File, fileType: 'frontNic' | 'backNic' | 'passbook' | 'contract'): void {
+  handleFileUpload(
+    file: File,
+    fileType: 'frontNic' | 'backNic' | 'passbook' | 'contract',
+  ): void {
     // Validate file size (10MB limit)
     if (file.size > this.MAX_FILE_SIZE) {
-      Swal.fire('Error', 'File size exceeds 10MB. Please upload a smaller image.', 'error');
+      Swal.fire(
+        'Error',
+        'File size exceeds 10MB. Please upload a smaller image.',
+        'error',
+      );
       return;
     }
 
@@ -1318,15 +1361,17 @@ export class AddFiealdOfficerComponent implements OnInit {
 
   getFileTypeLabel(fileType: string): string {
     const labels: { [key: string]: string } = {
-      'frontNic': 'NIC Front Image',
-      'backNic': 'NIC Back Image',
-      'passbook': 'Bank Passbook',
-      'contract': 'Signed Contract'
+      frontNic: 'NIC Front Image',
+      backNic: 'NIC Back Image',
+      passbook: 'Bank Passbook',
+      contract: 'Signed Contract',
     };
     return labels[fileType] || 'File';
   }
 
-  removeUploadedFile(fileType: 'frontNic' | 'backNic' | 'passbook' | 'contract'): void {
+  removeUploadedFile(
+    fileType: 'frontNic' | 'backNic' | 'passbook' | 'contract',
+  ): void {
     Swal.fire({
       icon: 'warning',
       title: 'Are you sure?',
@@ -1390,7 +1435,10 @@ export class AddFiealdOfficerComponent implements OnInit {
       missingFields.push('Job Role is Required');
     }
 
-    if (this.personalData.jobRole === 'Field Officer' && !this.personalData.irmId) {
+    if (
+      this.personalData.jobRole === 'Field Officer' &&
+      !this.personalData.irmId
+    ) {
       missingFields.push('Chief Field Officer is Required');
     }
 
@@ -1424,34 +1472,50 @@ export class AddFiealdOfficerComponent implements OnInit {
     }
 
     // Validate assigned districts
-    if (!this.personalData.assignDistrict || this.personalData.assignDistrict.length === 0) {
+    if (
+      !this.personalData.assignDistrict ||
+      this.personalData.assignDistrict.length === 0
+    ) {
       missingFields.push('Assigned Districts are Required');
     }
 
     if (!this.personalData.phoneNumber1) {
       missingFields.push('Mobile Number - 01 is Required');
     } else if (!this.isValidPhoneNumber(this.personalData.phoneNumber1)) {
-      missingFields.push('Mobile Number - 01 - Must be 9 digits starting with 7');
+      missingFields.push(
+        'Mobile Number - 01 - Must be 9 digits starting with 7',
+      );
     }
 
-    if (this.personalData.phoneNumber2 && !this.isValidPhoneNumber(this.personalData.phoneNumber2)) {
-      missingFields.push('Mobile Number - 02 - Must be 9 digits starting with 7');
+    if (
+      this.personalData.phoneNumber2 &&
+      !this.isValidPhoneNumber(this.personalData.phoneNumber2)
+    ) {
+      missingFields.push(
+        'Mobile Number - 02 - Must be 9 digits starting with 7',
+      );
     }
 
     if (this.areDuplicatePhoneNumbers()) {
-      missingFields.push('Mobile Number - 02 - Cannot be the same as Mobile Number - 01');
+      missingFields.push(
+        'Mobile Number - 02 - Cannot be the same as Mobile Number - 01',
+      );
     }
 
     if (!this.personalData.nic) {
       missingFields.push('NIC Number is Required');
     } else if (!this.isValidNIC(this.personalData.nic)) {
-      missingFields.push('NIC Number - Must be 12 digits or 9 digits followed by V');
+      missingFields.push(
+        'NIC Number - Must be 12 digits or 9 digits followed by V',
+      );
     }
 
     if (!this.personalData.email) {
       missingFields.push('Email is Required');
     } else if (!this.isValidEmail(this.personalData.email)) {
-      missingFields.push(`Email - ${this.getEmailErrorMessage(this.personalData.email)}`);
+      missingFields.push(
+        `Email - ${this.getEmailErrorMessage(this.personalData.email)}`,
+      );
     }
 
     // Check required fields for pageTwo
@@ -1478,7 +1542,9 @@ export class AddFiealdOfficerComponent implements OnInit {
     if (!this.personalData.accName) {
       missingFields.push("Account Holder's Name is Required");
     } else if (this.hasInvalidAccountHolderCharacters()) {
-      missingFields.push("Account Holder's Name should only contain English letters");
+      missingFields.push(
+        "Account Holder's Name should only contain English letters",
+      );
     }
 
     if (!this.personalData.accNumber) {
@@ -1496,7 +1562,9 @@ export class AddFiealdOfficerComponent implements OnInit {
     }
 
     if (!this.personalData.comAmount || this.personalData.comAmount <= 0) {
-      missingFields.push('Commission Amount is required and must be greater than 0');
+      missingFields.push(
+        'Commission Amount is required and must be greater than 0',
+      );
     }
 
     // Check required documents for pageThree
@@ -1522,19 +1590,24 @@ export class AddFiealdOfficerComponent implements OnInit {
       { file: this.selectedFrontNicFile, name: 'NIC Front Image' },
       { file: this.selectedBackNicFile, name: 'NIC Back Image' },
       { file: this.selectedPassbookFile, name: 'Bank Passbook' },
-      { file: this.selectedContractFile, name: 'Signed Contract' }
+      { file: this.selectedContractFile, name: 'Signed Contract' },
     ];
 
     for (const item of filesToCheck) {
       if (item.file && item.file.size > this.MAX_FILE_SIZE) {
-        Swal.fire('Error', `${item.name} exceeds 10MB. Please upload a smaller image.`, 'error');
+        Swal.fire(
+          'Error',
+          `${item.name} exceeds 10MB. Please upload a smaller image.`,
+          'error',
+        );
         return;
       }
     }
 
     // If errors, show list and stop - validation messages will now be visible
     if (missingFields.length > 0) {
-      let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+      let errorMessage =
+        '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
       missingFields.forEach((field) => {
         errorMessage += `<li>${field}</li>`;
       });
@@ -1571,102 +1644,113 @@ export class AddFiealdOfficerComponent implements OnInit {
         this.isLoading = true;
 
         // Store original array reference
-        const originalAssignDistrict = this.personalData.assignDistrict ? [...this.personalData.assignDistrict] : [];
+        const originalAssignDistrict = this.personalData.assignDistrict
+          ? [...this.personalData.assignDistrict]
+          : [];
 
         // Convert assignDistrict array to string for database storage
         let assignDistrictString = '';
-        if (this.personalData.assignDistrict && Array.isArray(this.personalData.assignDistrict)) {
+        if (
+          this.personalData.assignDistrict &&
+          Array.isArray(this.personalData.assignDistrict)
+        ) {
           assignDistrictString = this.personalData.assignDistrict.join(',');
         }
 
         // Create a copy of personalData with string assignDistrict for API call
         const dataToSend = {
           ...this.personalData,
-          assignDistrict: assignDistrictString
+          assignDistrict: assignDistrictString,
         };
 
         // Call the service method with the modified data
-        this.stakeHolderSrv.createFieldOfficer(
-          dataToSend,
-          this.selectedFile, // profile image
-          this.selectedFrontNicFile,
-          this.selectedBackNicFile,
-          this.selectedPassbookFile,
-          this.selectedContractFile
-        ).subscribe(
-          (res: any) => {
-            this.isLoading = false;
-
-            Swal.fire({
-              icon: 'success',
-              title: 'Success',
-              text: 'Field Officer Created Successfully',
-              confirmButtonText: 'OK',
-              customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              },
-            });
-            this.navigatePath('/steckholders/action/field-inspectors');
-          },
-          (error: any) => {
-            this.isLoading = false;
-
-            // Restore original array so UI displays correctly when user returns
-            this.personalData.assignDistrict = originalAssignDistrict;
-
-            let errorMessage = 'An unexpected error occurred';
-            let messages: string[] = [];
-
-            if (error.error && Array.isArray(error.error.errors)) {
-              // Map backend error keys to user-friendly messages
-              messages = error.error.errors.map((err: string) => {
-                switch (err) {
-                  case 'NIC':
-                    return 'The NIC number is already registered.';
-                  case 'Email':
-                    return 'The Email is already registered.';
-                  case 'PhoneNumber1':
-                    return 'Mobile Number 01 is already registered.';
-                  case 'PhoneNumber2':
-                    return 'Mobile Number 02 is already registered.';
-                  default:
-                    return 'Validation error: ' + err;
-                }
-              });
-            }
-
-            if (messages.length > 0) {
-              errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following duplicate field issues:</p><ul class="list-disc pl-5">';
-              messages.forEach(m => {
-                errorMessage += `<li>${m}</li>`;
-              });
-              errorMessage += '</ul></div>';
+        this.stakeHolderSrv
+          .createFieldOfficer(
+            dataToSend,
+            this.selectedFile, // profile image
+            this.selectedFrontNicFile,
+            this.selectedBackNicFile,
+            this.selectedPassbookFile,
+            this.selectedContractFile,
+          )
+          .subscribe(
+            (res: any) => {
+              this.isLoading = false;
 
               Swal.fire({
-                icon: 'error',
-                title: 'Duplicate Information',
-                html: errorMessage,
+                icon: 'success',
+                title: 'Success',
+                text: 'Field Officer Created Successfully',
                 confirmButtonText: 'OK',
                 customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                  title: 'font-semibold text-lg',
-                  htmlContainer: 'text-left',
+                  popup:
+                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                 },
               });
-            } else {
-              // Generic error message
-              Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Failed to create field officer. Please try again.',
-                confirmButtonText: 'OK',
-                customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                },
-              });
-            }
-          }
-        );
+              this.navigatePath('/steckholders/action/field-inspectors');
+            },
+            (error: any) => {
+              this.isLoading = false;
+
+              // Restore original array so UI displays correctly when user returns
+              this.personalData.assignDistrict = originalAssignDistrict;
+
+              let errorMessage = 'An unexpected error occurred';
+              let messages: string[] = [];
+
+              if (error.error && Array.isArray(error.error.errors)) {
+                // Map backend error keys to user-friendly messages
+                messages = error.error.errors.map((err: string) => {
+                  switch (err) {
+                    case 'NIC':
+                      return 'The NIC number is already registered.';
+                    case 'Email':
+                      return 'The Email is already registered.';
+                    case 'PhoneNumber1':
+                      return 'Mobile Number 01 is already registered.';
+                    case 'PhoneNumber2':
+                      return 'Mobile Number 02 is already registered.';
+                    default:
+                      return 'Validation error: ' + err;
+                  }
+                });
+              }
+
+              if (messages.length > 0) {
+                errorMessage =
+                  '<div class="text-left"><p class="mb-2">Please fix the following duplicate field issues:</p><ul class="list-disc pl-5">';
+                messages.forEach((m) => {
+                  errorMessage += `<li>${m}</li>`;
+                });
+                errorMessage += '</ul></div>';
+
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Duplicate Information',
+                  html: errorMessage,
+                  confirmButtonText: 'OK',
+                  customClass: {
+                    popup:
+                      'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                    title: 'font-semibold text-lg',
+                    htmlContainer: 'text-left',
+                  },
+                });
+              } else {
+                // Generic error message
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Error',
+                  text: 'Failed to create field officer. Please try again.',
+                  confirmButtonText: 'OK',
+                  customClass: {
+                    popup:
+                      'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  },
+                });
+              }
+            },
+          );
       } else {
         Swal.fire({
           icon: 'info',
@@ -1684,10 +1768,22 @@ export class AddFiealdOfficerComponent implements OnInit {
   markAllFieldsAsTouched(): void {
     // Mark page one fields
     const pageOneFields: (keyof Personal)[] = [
-      'empType', 'language', 'jobRole', 'irmId',
-      'firstName', 'lastName', 'firstNameSinhala', 'lastNameSinhala',
-      'firstNameTamil', 'lastNameTamil', 'phoneNumber1', 'phoneNumber2',
-      'nic', 'email', 'distrct', 'assignDistrict'
+      'empType',
+      'language',
+      'jobRole',
+      'irmId',
+      'firstName',
+      'lastName',
+      'firstNameSinhala',
+      'lastNameSinhala',
+      'firstNameTamil',
+      'lastNameTamil',
+      'phoneNumber1',
+      'phoneNumber2',
+      'nic',
+      'email',
+      'distrct',
+      'assignDistrict',
     ];
 
     pageOneFields.forEach((field) => {
@@ -1696,8 +1792,16 @@ export class AddFiealdOfficerComponent implements OnInit {
 
     // Mark page two fields
     const pageTwoFields: (keyof Personal)[] = [
-      'house', 'street', 'city', 'distrct', 'province',
-      'comAmount', 'accName', 'accNumber', 'bank', 'branch'
+      'house',
+      'street',
+      'city',
+      'distrct',
+      'province',
+      'comAmount',
+      'accName',
+      'accNumber',
+      'bank',
+      'branch',
     ];
 
     pageTwoFields.forEach((field) => {
@@ -1708,7 +1812,7 @@ export class AddFiealdOfficerComponent implements OnInit {
     this.languagesTouched = true;
     this.empTypeTouched = true;
     this.jobRoleTouched = true;
-    
+
     // Mark English name fields as touched
     this.englishNameTouched.firstName = true;
     this.englishNameTouched.lastName = true;
@@ -1722,65 +1826,66 @@ export class AddFiealdOfficerComponent implements OnInit {
     } catch {
       return false;
     }
-
   }
 
   getFileName(value: string): string {
     if (!value) return '';
-    
+
     // If it's a URL, extract the filename
     if (this.isValidUrl(value)) {
       try {
         const url = new URL(value);
         const pathname = url.pathname;
         const filename = pathname.substring(pathname.lastIndexOf('/') + 1);
-      
+
         return decodeURIComponent(filename);
       } catch {
         return value;
       }
     }
-    
+
     // If it's just a filename, return it as-is
     return value;
   }
 
   onAssignDistrictClear(): void {
-  // Clear job role and CFO when assign districts are cleared
-  if (!this.personalData.assignDistrict || this.personalData.assignDistrict.length === 0) {
-    this.personalData.jobRole = '';
-    this.personalData.irmId = '';
-    this.selectedBranchId = null;
-    this.branchOptions = [];
-  }
-}
-
-onJobRoleClear(): void {
-  if (!this.personalData.jobRole) {
-    this.personalData.irmId = '';
-  }
-}
-
-onAssignDistrictChange(event: any): void {
-  // If no districts are selected, clear job role and CFO
-  if (!event.value || event.value.length === 0) {
-    this.personalData.jobRole = '';
-    this.personalData.irmId = '';
-  }
-}
-
-onJobRoleChange(event: DropdownChangeEvent): void {
-  const role = event.value;
-  
-  // Reset irmId when job role changes or is cleared
-  if (!role || role !== 'Field Officer') {
-    this.personalData.irmId = '';
+    // Clear job role and CFO when assign districts are cleared
+    if (
+      !this.personalData.assignDistrict ||
+      this.personalData.assignDistrict.length === 0
+    ) {
+      this.personalData.jobRole = '';
+      this.personalData.irmId = '';
+      this.selectedBranchId = null;
+      this.branchOptions = [];
+    }
   }
 
-  // Generate employee ID
-  this.EpmloyeIdCreate();
-}
+  onJobRoleClear(): void {
+    if (!this.personalData.jobRole) {
+      this.personalData.irmId = '';
+    }
+  }
 
+  onAssignDistrictChange(event: any): void {
+    // If no districts are selected, clear job role and CFO
+    if (!event.value || event.value.length === 0) {
+      this.personalData.jobRole = '';
+      this.personalData.irmId = '';
+    }
+  }
+
+  onJobRoleChange(event: DropdownChangeEvent): void {
+    const role = event.value;
+
+    // Reset irmId when job role changes or is cleared
+    if (!role || role !== 'Field Officer') {
+      this.personalData.irmId = '';
+    }
+
+    // Generate employee ID
+    this.EpmloyeIdCreate();
+  }
 }
 
 class Personal {
@@ -1790,7 +1895,7 @@ class Personal {
   firstNameSinhala!: string;
   firstNameTamil!: string;
   lastName!: string;
-  lastNameSinhala!: string
+  lastNameSinhala!: string;
   lastNameTamil!: string;
   empType!: string;
   empId!: string;

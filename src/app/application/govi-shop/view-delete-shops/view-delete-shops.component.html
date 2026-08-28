@@ -13,7 +13,8 @@
 
         <div class="flex items-center gap-3">
             <p-dropdown [(ngModel)]="businessType" [options]="businessTypes" optionLabel="label" optionValue="value"
-                placeholder="Business Type" (onChange)="onBusinessTypeChange()" [showClear]="businessType ? true : false"
+                placeholder="Business Type" (onChange)="onBusinessTypeChange()"
+                [showClear]="businessType ? true : false"
                 styleClass="border border-1 rounded-xl h-8 items-center border-[#828282] dark:border-[#AFAFAF]" [style]="{
                     background: 'var(--dropdown-bg)',
                     color: 'var(--dropdown-text)',
@@ -86,12 +87,10 @@
                     <th class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 ">
                         Email Address
                     </th>
-                    <th 
-                        *ngIf="
-                permissionService.hasPermission('View shop delete reason') ||
-                tokenService.getUserDetails().role === '1'
-                "
-                    class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 whitespace-nowrap text-center">
+                    <th *ngIf="
+                            permissionService.hasPermission('View shop delete reason') ||
+                            tokenService.getUserDetails().role === '1'
+                            " class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 whitespace-nowrap text-center">
                         Reason
                     </th>
             </thead>
@@ -132,12 +131,10 @@
                         {{ shop.email }}
                     </td>
 
-                    <td
-                    *ngIf="
-              permissionService.hasPermission('View shop delete reason') ||
-              tokenService.getUserDetails().role === '1'
-            "
-                    class="py-3 px-3 text-center">
+                    <td *ngIf="
+                        permissionService.hasPermission('View shop delete reason') ||
+                        tokenService.getUserDetails().role === '1'
+                        " class="py-3 px-3 text-center">
                         <button (click)="openReasonModal(shop)"
                             class="text-blue-500 hover:text-blue-700 transition-colors" title="View Reason">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"

@@ -21,6 +21,7 @@ import { PermissionService } from '../../../services/roles-permission/permission
   templateUrl: './view-govi-link-jobs.component.html',
   styleUrls: ['./view-govi-link-jobs.component.css'],
 })
+
 export class ViewGoviLinkJobsComponent implements OnInit {
   isLoading = false;
   jobs: any[] = [];
@@ -433,7 +434,7 @@ export class ViewGoviLinkJobsComponent implements OnInit {
   }
 
   getDisplayStatus(status: string): string {
-  if (status === 'Assigned') return 'Pending';
-  return status || '--';
-}
+    if (status === 'Assigned') return 'Pending';
+    return status || '--';
+  }
 }

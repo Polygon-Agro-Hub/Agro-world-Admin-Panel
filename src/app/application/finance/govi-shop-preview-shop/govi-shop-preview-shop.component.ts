@@ -24,6 +24,7 @@ import { TokenService } from '../../../services/token/services/token.service';
   templateUrl: './govi-shop-preview-shop.component.html',
   styleUrl: './govi-shop-preview-shop.component.css'
 })
+
 export class GoviShopPreviewShopComponent {
   officerObj: GoViShop = new GoViShop();
   shopId!: number;
@@ -37,7 +38,7 @@ export class GoviShopPreviewShopComponent {
   modalTitle = '';
   modalImage = '';
   scale = 1;
-  
+
   // Pan functionality
   isPanning = false;
   startX = 0;
@@ -67,12 +68,12 @@ export class GoviShopPreviewShopComponent {
     this.scrollToTop();
     this.shopId = this.route.snapshot.params['id'];
     const segments = this.router.url
-    .split('/')
-    .filter(segment => segment.length > 0);
+      .split('/')
+      .filter(segment => segment.length > 0);
 
     this.urlSegment = segments[segments.length - 3];
     this.fetchShopById(this.shopId);
-    
+
   }
 
   scrollToTop(): void {
@@ -87,20 +88,14 @@ export class GoviShopPreviewShopComponent {
     this.goviShopService
       .getShopById(id)
       .subscribe((res: any) => {
-        
-
         this.isLoading = false;
         this.officerObj = res.data;
-
-        
       });
-
   }
 
   goBack() {
     this.location.back();
   }
-
 
   editFieldOfficer(id: number) {
     // Navigate to edit page with the officer ID
@@ -200,7 +195,7 @@ export class GoviShopPreviewShopComponent {
   deleteOfficer() {
 
   }
-  
+
   openModal(logo: string): void {
     // if (!this.idInfo) return;
     this.isLoading = true;
@@ -214,7 +209,7 @@ export class GoviShopPreviewShopComponent {
       this.modalTitle = 'BR Image';
     }
 
-    
+
     this.modalImage = logo
     this.isLoading = false;
   }
@@ -286,7 +281,7 @@ export class GoviShopPreviewShopComponent {
   closeRejectView() {
     this.rejectView = false;
     this.textAreaTouched = false;
-    this.text='';
+    this.text = '';
   }
 
   confirmApprove(): void {
@@ -359,7 +354,7 @@ export class GoviShopPreviewShopComponent {
                 title: 'font-semibold text-lg',
                 confirmButton: 'px-6 py-2 rounded-md',
                 cancelButton: 'px-6 py-2 rounded-md',
-              }, 
+              },
             }).then(() => {
               this.fetchShopById(this.shopId);
             });
@@ -522,7 +517,7 @@ export class GoviShopPreviewShopComponent {
   //   const imageboxY = 8; // Start from top margin
   //   const imageboxWidth = 190;
   //   const imageboxHeight = hasImage ? 44 : 30; // Adjust height based on image presence
-    
+
   //   // Draw rounded border for top section
   //   doc.setDrawColor(241, 247, 250);
   //   doc.setLineWidth(0.5);
@@ -531,13 +526,13 @@ export class GoviShopPreviewShopComponent {
   //   // Title - Personal Information
   //   doc.setFontSize(16);
   //   doc.setFont("Inter", "bold");
-    
+
   //   // Fix for Personal Information section border
   //   const personalboxX = 10;
   //   const personalboxY = startY - 6;
   //   const personalboxWidth = 190;
   //   const personalboxHeight = 57; // Fixed height for personal info section
-    
+
   //   // Draw rounded border for personal info section
   //   doc.setDrawColor(241, 247, 250);
   //   doc.setLineWidth(0.5);
@@ -638,7 +633,7 @@ export class GoviShopPreviewShopComponent {
   //   doc.text(getValueOrNA(this.officerObj.companyNameEnglish), startX, 36);
 
   //   doc.text(getValueOrNA(this.officerObj.companyNameEnglish), startX, 36);
-  
+
   //   doc.setFontSize(12);
   //   doc.setFont("Inter", "normal");
 
@@ -796,17 +791,17 @@ export class GoviShopPreviewShopComponent {
 
   //   // Only include driver-related sections if the job role is "Driver"
   //   if (this.officerObj.jobRole === 'Driver') {
-      
+
   //     // Add new page for Driver Details
   //     doc.addPage();
-      
+
   //     // Set background for new page
   //     doc.setFillColor(colors.background);
   //     doc.rect(0, 0, pageWidth, pageHeight, 'F');
-      
+
   //     // Reset Y position for new page
   //     const driverStartY = 10;
-      
+
   //     // Driving Details Section
   //     const DdetailsX = 10;
   //     const DdetailsY = driverStartY;
@@ -981,20 +976,20 @@ export class GoviShopPreviewShopComponent {
 
 class GoViShop {
   shopId!: number;
-  shopName!:string;
-  address!:string;
+  shopName!: string;
+  address!: string;
   email!: string;
-  shopType!:string;
-  mobileNumber!:string;
-  updatedAt!:string;
-  updatedBy!:string;
-  approvedBY!:string;
-  approvedAt!:string;
+  shopType!: string;
+  mobileNumber!: string;
+  updatedAt!: string;
+  updatedBy!: string;
+  approvedBY!: string;
+  approvedAt!: string;
   logo!: string;
   shopTypeImg!: string;
-  ownerName!:string;
-  nic!:string;
-  shopPhone!:string;
+  ownerName!: string;
+  nic!: string;
+  shopPhone!: string;
   isActive!: number;
   approvedStatus!: string;
 }

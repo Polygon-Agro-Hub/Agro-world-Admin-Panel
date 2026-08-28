@@ -7,7 +7,7 @@
 <div *ngIf="this.itemId" class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg">
   <div *ngIf="selectedPage === 'pageOne'">
     <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
-      {{ itemId ? "Edit" : "Create" }} Personal Details 
+      {{ itemId ? "Edit" : "Create" }} Personal Details
     </h2>
     <div>
       <div class="flex justify-center pt-3 pb-9">
@@ -110,49 +110,34 @@
         -->
 
         <div>
-  <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-    Assigned Districts *
-  </label>
-  <p-multiSelect id="assignDistrict" 
-                 [(ngModel)]="personalData.assignDistrict" 
-                 [options]="districts" 
-                 optionLabel="name" 
-                 placeholder="Select districts" 
-                 [filter]="true" 
-                 [showClear]="true"
-                 (onClear)="onAssignedDistrictsChange()"
-                 (onModelChange)="onAssignedDistrictsChange()"
-                 [styleClass]="'mt-1 w-full h-12 text-textLight dark:text-textDark bg-gray-100 dark:bg-gray-800'"
-                 [ngClass]="{ 'p-invalid': isFieldInvalid('assignDistrict') }" 
-                 selectedItemsLabel="{0} districts selected" />
-  <span *ngIf="isFieldInvalid('assignDistrict')" class="text-red-600 text-sm">
-    Assigned District is a required field
-  </span>
-</div>
+          <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            Assigned Districts *
+          </label>
+          <p-multiSelect id="assignDistrict" [(ngModel)]="personalData.assignDistrict" [options]="districts"
+            optionLabel="name" placeholder="Select districts" [filter]="true" [showClear]="true"
+            (onClear)="onAssignedDistrictsChange()" (onModelChange)="onAssignedDistrictsChange()"
+            [styleClass]="'mt-1 w-full h-12 text-textLight dark:text-textDark bg-gray-100 dark:bg-gray-800'"
+            [ngClass]="{ 'p-invalid': isFieldInvalid('assignDistrict') }" selectedItemsLabel="{0} districts selected" />
+          <span *ngIf="isFieldInvalid('assignDistrict')" class="text-red-600 text-sm">
+            Assigned District is a required field
+          </span>
+        </div>
         <!-- Replace the current Job Role dropdown section with this: -->
-<div class="w-full">
-  <label for="jobRole" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-    Job Role *
-  </label>
-  
-  <p-dropdown
-    [(ngModel)]="personalData.jobRole"
-    [options]="jobRoles"
-    placeholder="Select a Job Role"
-    [showClear]="true"
-    styleClass="w-full mt-1"
-    panelStyleClass="custom-dropdown-panel"
-    class="mt-1 block w-full p-dropdown-custom"
-    (onChange)="onJobRoleChange($event)"
-    (onClear)="onJobRoleClear()"
-    [ngClass]="{ 'p-invalid': isFieldInvalid('jobRole') }"
->
-</p-dropdown>
-  
-  <span *ngIf="isFieldInvalid('jobRole')" class="text-red-600 text-sm">
-    Job Role is a required field
-  </span>
-</div>
+        <div class="w-full">
+          <label for="jobRole" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            Job Role *
+          </label>
+
+          <p-dropdown [(ngModel)]="personalData.jobRole" [options]="jobRoles" placeholder="Select a Job Role"
+            [showClear]="true" styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
+            class="mt-1 block w-full p-dropdown-custom" (onChange)="onJobRoleChange($event)"
+            (onClear)="onJobRoleClear()" [ngClass]="{ 'p-invalid': isFieldInvalid('jobRole') }">
+          </p-dropdown>
+
+          <span *ngIf="isFieldInvalid('jobRole')" class="text-red-600 text-sm">
+            Job Role is a required field
+          </span>
+        </div>
         <div *ngIf="personalData.jobRole === 'Field Officer'">
           <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Chief Field Officer *
@@ -269,7 +254,7 @@
                 " class="text-red-600 text-sm block">
                 Please enter a valid mobile number (format: +947XXXXXXXX)
               </span>
-              
+
 
               <span *ngIf="!personalData.phoneNumber1 && phone01Input.touched" class="text-red-500 text-sm mt-1">
                 Mobile Number - 01 is Required.
@@ -407,37 +392,33 @@
         </div>
 
         <div class="pb-6">
-  <label for="province" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-    Province *
-  </label>
-  <p-dropdown id="province" name="province" [(ngModel)]="personalData.province" 
-              (onChange)="onProvinceChange($event)"
-              [options]="provinces" optionLabel="name" optionValue="name" 
-              filter="true" filterBy="name" placeholder="Select a province" 
-              class="mt-1 block w-full" [autoDisplayFirst]="false" required
-              styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
-              class="mt-1 block w-full p-dropdown-custom">
-  </p-dropdown>
-  <span *ngIf="isFieldInvalid('province')" class="text-red-600 text-sm">
-    Province is a required field
-  </span>
-</div>
+          <label for="province" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            Province *
+          </label>
+          <p-dropdown id="province" name="province" [(ngModel)]="personalData.province"
+            (onChange)="onProvinceChange($event)" [options]="provinces" optionLabel="name" optionValue="name"
+            filter="true" filterBy="name" placeholder="Select a province" class="mt-1 block w-full"
+            [autoDisplayFirst]="false" required styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
+            class="mt-1 block w-full p-dropdown-custom">
+          </p-dropdown>
+          <span *ngIf="isFieldInvalid('province')" class="text-red-600 text-sm">
+            Province is a required field
+          </span>
+        </div>
 
         <div class="pb-6">
-  <label for="district" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-    District *
-  </label>
-  <p-dropdown id="distrct" name="distrct" [(ngModel)]="personalData.distrct" 
-              [options]="filteredDistricts" optionLabel="name" optionValue="name" 
-              filter="true" filterBy="name" placeholder="Select a district" 
-              class="mt-1 block w-full" [autoDisplayFirst]="false" required
-              styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
-              class="mt-1 block w-full p-dropdown-custom">
-  </p-dropdown>
-  <span *ngIf="isFieldInvalid('distrct')" class="text-red-600 text-sm">
-    District is a required field
-  </span>
-</div>
+          <label for="district" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            District *
+          </label>
+          <p-dropdown id="distrct" name="distrct" [(ngModel)]="personalData.distrct" [options]="filteredDistricts"
+            optionLabel="name" optionValue="name" filter="true" filterBy="name" placeholder="Select a district"
+            class="mt-1 block w-full" [autoDisplayFirst]="false" required styleClass="w-full mt-1"
+            panelStyleClass="custom-dropdown-panel" class="mt-1 block w-full p-dropdown-custom">
+          </p-dropdown>
+          <span *ngIf="isFieldInvalid('distrct')" class="text-red-600 text-sm">
+            District is a required field
+          </span>
+        </div>
       </div>
     </div>
 
@@ -447,35 +428,27 @@
       </h2>
 
       <div class="pb-6">
-  <label for="comAmount" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-    Commission Amount (%) *
-  </label>
-  <div class="flex items-center mt-1">
-    <input 
-      id="comAmount" 
-      name="comAmount" 
-      type="number" 
-      step="0.01" 
-      min="0" 
-      max="100"
-      [(ngModel)]="personalData.comAmount"
-      (input)="onCommissionAmountInput($event)"
-      (keypress)="allowDecimalNumbers($event)"
-      class="flex-1 p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" 
-      placeholder="0.00"
-    />
-  </div>
-  <span *ngIf="isFieldInvalid('comAmount')" class="text-red-600 text-sm">
-    Commission Amount is a required field
-  </span>
-  <span *ngIf="
+        <label for="comAmount" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          Commission Amount (%) *
+        </label>
+        <div class="flex items-center mt-1">
+          <input id="comAmount" name="comAmount" type="number" step="0.01" min="0" max="100"
+            [(ngModel)]="personalData.comAmount" (input)="onCommissionAmountInput($event)"
+            (keypress)="allowDecimalNumbers($event)"
+            class="flex-1 p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            placeholder="0.00" />
+        </div>
+        <span *ngIf="isFieldInvalid('comAmount')" class="text-red-600 text-sm">
+          Commission Amount is a required field
+        </span>
+        <span *ngIf="
       personalData.comAmount !== null &&
       personalData.comAmount !== undefined &&
       (personalData.comAmount < 0 || personalData.comAmount > 100)
     " class="text-red-600 text-sm">
-    Commission Amount must be between 0 and 100
-  </span>
-</div>
+          Commission Amount must be between 0 and 100
+        </span>
+      </div>
 
       <div class="pb-6">
         <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Holder's
@@ -544,141 +517,138 @@
       </button>
     </div>
   </div>
-<div *ngIf="selectedPage === 'pageThree'">
-  <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
-    Required Documents
-  </h2>
-  <div>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
-      <!-- NIC Front Image -->
-      <div class="pb-6">
-        <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
-          NIC's Front Image *
-        </label>
-        <button type="button"
-          class="w-full p-3 border border-gray-300 rounded-md text-gray-600 dark:text-textDark bg-gray-100 dark:bg-tileBlack hover:bg-gray-200 dark:hover:bg-gray-800 flex items-center justify-center gap-2 transition-colors"
-          (click)="uploadFrontImage()">
-          <i class="fa-solid fa-arrow-up-from-bracket"></i>
-          {{ personalData.frontNic ? "Change" : "Upload" }} Front Image
-        </button>
-        <div *ngIf="personalData.frontNic" class="mt-2 text-sm flex items-center justify-between">
-          <div>
-            <span class="text-gray-600 dark:text-textDark">Attached : </span>
-            <a [href]="isValidUrl(personalData.frontNic) ? personalData.frontNic : '#'" 
-               [target]="isValidUrl(personalData.frontNic) ? '_blank' : '_self'"
-               class="text-blue-600 hover:underline"
-               [class.pointer-events-none]="!isValidUrl(personalData.frontNic)">
-              {{ getFileName(personalData.frontNic) }}
-            </a>
-          </div>
-          <button type="button" class="text-red-500 hover:text-red-700 ml-2" (click)="removeUploadedFile('frontNic')">
-            <i class="fa-solid fa-trash"></i>
+  <div *ngIf="selectedPage === 'pageThree'">
+    <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
+      Required Documents
+    </h2>
+    <div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+        <!-- NIC Front Image -->
+        <div class="pb-6">
+          <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+            NIC's Front Image *
+          </label>
+          <button type="button"
+            class="w-full p-3 border border-gray-300 rounded-md text-gray-600 dark:text-textDark bg-gray-100 dark:bg-tileBlack hover:bg-gray-200 dark:hover:bg-gray-800 flex items-center justify-center gap-2 transition-colors"
+            (click)="uploadFrontImage()">
+            <i class="fa-solid fa-arrow-up-from-bracket"></i>
+            {{ personalData.frontNic ? "Change" : "Upload" }} Front Image
           </button>
+          <div *ngIf="personalData.frontNic" class="mt-2 text-sm flex items-center justify-between">
+            <div>
+              <span class="text-gray-600 dark:text-textDark">Attached : </span>
+              <a [href]="isValidUrl(personalData.frontNic) ? personalData.frontNic : '#'"
+                [target]="isValidUrl(personalData.frontNic) ? '_blank' : '_self'" class="text-blue-600 hover:underline"
+                [class.pointer-events-none]="!isValidUrl(personalData.frontNic)">
+                {{ getFileName(personalData.frontNic) }}
+              </a>
+            </div>
+            <button type="button" class="text-red-500 hover:text-red-700 ml-2" (click)="removeUploadedFile('frontNic')">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+          <span *ngIf="isDocumentFieldInvalid('frontNic')" class="text-red-600 text-sm block mt-1">
+            NIC Front Image is required
+          </span>
         </div>
-        <span *ngIf="isDocumentFieldInvalid('frontNic')" class="text-red-600 text-sm block mt-1">
-          NIC Front Image is required
-        </span>
-      </div>
 
-      <!-- NIC Back Image -->
-      <div class="pb-6">
-        <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
-          NIC's Back Image *
-        </label>
-        <button type="button"
-          class="w-full p-3 border border-gray-300 rounded-md text-gray-600 dark:text-textDark bg-gray-100 dark:bg-tileBlack hover:bg-gray-200 dark:hover:bg-gray-800 flex items-center justify-center gap-2 transition-colors"
-          (click)="uploadBackImage()">
-          <i class="fa-solid fa-arrow-up-from-bracket"></i>
-          {{ personalData.backNic ? "Change" : "Upload" }} Back Image
-        </button>
-        <div *ngIf="personalData.backNic" class="mt-2 text-sm flex items-center justify-between">
-          <div>
-            <span class="text-gray-600 dark:text-textDark">Attached : </span>
-            <a [href]="isValidUrl(personalData.backNic) ? personalData.backNic : '#'" 
-               [target]="isValidUrl(personalData.backNic) ? '_blank' : '_self'"
-               class="text-blue-600 hover:underline"
-               [class.pointer-events-none]="!isValidUrl(personalData.backNic)">
-              {{ getFileName(personalData.backNic) }}
-            </a>
-          </div>
-          <button type="button" class="text-red-500 hover:text-red-700 ml-2" (click)="removeUploadedFile('backNic')">
-            <i class="fa-solid fa-trash"></i>
+        <!-- NIC Back Image -->
+        <div class="pb-6">
+          <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+            NIC's Back Image *
+          </label>
+          <button type="button"
+            class="w-full p-3 border border-gray-300 rounded-md text-gray-600 dark:text-textDark bg-gray-100 dark:bg-tileBlack hover:bg-gray-200 dark:hover:bg-gray-800 flex items-center justify-center gap-2 transition-colors"
+            (click)="uploadBackImage()">
+            <i class="fa-solid fa-arrow-up-from-bracket"></i>
+            {{ personalData.backNic ? "Change" : "Upload" }} Back Image
           </button>
+          <div *ngIf="personalData.backNic" class="mt-2 text-sm flex items-center justify-between">
+            <div>
+              <span class="text-gray-600 dark:text-textDark">Attached : </span>
+              <a [href]="isValidUrl(personalData.backNic) ? personalData.backNic : '#'"
+                [target]="isValidUrl(personalData.backNic) ? '_blank' : '_self'" class="text-blue-600 hover:underline"
+                [class.pointer-events-none]="!isValidUrl(personalData.backNic)">
+                {{ getFileName(personalData.backNic) }}
+              </a>
+            </div>
+            <button type="button" class="text-red-500 hover:text-red-700 ml-2" (click)="removeUploadedFile('backNic')">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+          <span *ngIf="isDocumentFieldInvalid('backNic')" class="text-red-600 text-sm block mt-1">
+            NIC Back Image is required
+          </span>
         </div>
-        <span *ngIf="isDocumentFieldInvalid('backNic')" class="text-red-600 text-sm block mt-1">
-          NIC Back Image is required
-        </span>
-      </div>
 
-      <!-- Bank Passbook -->
-      <div class="pb-6">
-        <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
-          Bank Passbook *
-        </label>
-        <button type="button"
-          class="w-full p-3 border border-gray-300 rounded-md text-gray-600 dark:text-textDark bg-gray-100 dark:bg-tileBlack hover:bg-gray-200 dark:hover:bg-gray-800 flex items-center justify-center gap-2 transition-colors"
-          (click)="uploadPassbookImage()">
-          <i class="fa-solid fa-arrow-up-from-bracket"></i>
-          {{ personalData.backPassbook ? "Change" : "Upload" }} Passbook Image
-        </button>
-        <div *ngIf="personalData.backPassbook" class="mt-2 text-sm flex items-center justify-between">
-          <div>
-            <span class="text-gray-600 dark:text-textDark">Attached : </span>
-            <a [href]="isValidUrl(personalData.backPassbook) ? personalData.backPassbook : '#'" 
-               [target]="isValidUrl(personalData.backPassbook) ? '_blank' : '_self'"
-               class="text-blue-600 hover:underline"
-               [class.pointer-events-none]="!isValidUrl(personalData.backPassbook)">
-              {{ getFileName(personalData.backPassbook) }}
-            </a>
-          </div>
-          <button type="button" class="text-red-500 hover:text-red-700 ml-2" (click)="removeUploadedFile('passbook')">
-            <i class="fa-solid fa-trash"></i>
+        <!-- Bank Passbook -->
+        <div class="pb-6">
+          <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+            Bank Passbook *
+          </label>
+          <button type="button"
+            class="w-full p-3 border border-gray-300 rounded-md text-gray-600 dark:text-textDark bg-gray-100 dark:bg-tileBlack hover:bg-gray-200 dark:hover:bg-gray-800 flex items-center justify-center gap-2 transition-colors"
+            (click)="uploadPassbookImage()">
+            <i class="fa-solid fa-arrow-up-from-bracket"></i>
+            {{ personalData.backPassbook ? "Change" : "Upload" }} Passbook Image
           </button>
+          <div *ngIf="personalData.backPassbook" class="mt-2 text-sm flex items-center justify-between">
+            <div>
+              <span class="text-gray-600 dark:text-textDark">Attached : </span>
+              <a [href]="isValidUrl(personalData.backPassbook) ? personalData.backPassbook : '#'"
+                [target]="isValidUrl(personalData.backPassbook) ? '_blank' : '_self'"
+                class="text-blue-600 hover:underline"
+                [class.pointer-events-none]="!isValidUrl(personalData.backPassbook)">
+                {{ getFileName(personalData.backPassbook) }}
+              </a>
+            </div>
+            <button type="button" class="text-red-500 hover:text-red-700 ml-2" (click)="removeUploadedFile('passbook')">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+          <span *ngIf="isDocumentFieldInvalid('passbook')" class="text-red-600 text-sm block mt-1">
+            Bank Passbook is required
+          </span>
         </div>
-        <span *ngIf="isDocumentFieldInvalid('passbook')" class="text-red-600 text-sm block mt-1">
-          Bank Passbook is required
-        </span>
-      </div>
 
-      <!-- Signed Contract -->
-      <div class="pb-6">
-        <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
-          Signed Contract *
-        </label>
-        <button type="button"
-          class="w-full p-3 border border-gray-300 rounded-md text-gray-600 dark:text-textDark bg-gray-100 dark:bg-tileBlack hover:bg-gray-200 dark:hover:bg-gray-800 flex items-center justify-center gap-2 transition-colors"
-          (click)="uploadContractImage()">
-          <i class="fa-solid fa-arrow-up-from-bracket"></i>
-          {{ personalData.contract ? "Change" : "Upload" }} Contract Image
-        </button>
-        <div *ngIf="personalData.contract" class="mt-2 text-sm flex items-center justify-between">
-          <div>
-            <span class="text-gray-600 dark:text-textDark">Attached : </span>
-            <a [href]="isValidUrl(personalData.contract) ? personalData.contract : '#'" 
-               [target]="isValidUrl(personalData.contract) ? '_blank' : '_self'"
-               class="text-blue-600 hover:underline"
-               [class.pointer-events-none]="!isValidUrl(personalData.contract)">
-              {{ getFileName(personalData.contract) }}
-            </a>
-          </div>
-          <button type="button" class="text-red-500 hover:text-red-700 ml-2" (click)="removeUploadedFile('contract')">
-            <i class="fa-solid fa-trash"></i>
+        <!-- Signed Contract -->
+        <div class="pb-6">
+          <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+            Signed Contract *
+          </label>
+          <button type="button"
+            class="w-full p-3 border border-gray-300 rounded-md text-gray-600 dark:text-textDark bg-gray-100 dark:bg-tileBlack hover:bg-gray-200 dark:hover:bg-gray-800 flex items-center justify-center gap-2 transition-colors"
+            (click)="uploadContractImage()">
+            <i class="fa-solid fa-arrow-up-from-bracket"></i>
+            {{ personalData.contract ? "Change" : "Upload" }} Contract Image
           </button>
+          <div *ngIf="personalData.contract" class="mt-2 text-sm flex items-center justify-between">
+            <div>
+              <span class="text-gray-600 dark:text-textDark">Attached : </span>
+              <a [href]="isValidUrl(personalData.contract) ? personalData.contract : '#'"
+                [target]="isValidUrl(personalData.contract) ? '_blank' : '_self'" class="text-blue-600 hover:underline"
+                [class.pointer-events-none]="!isValidUrl(personalData.contract)">
+                {{ getFileName(personalData.contract) }}
+              </a>
+            </div>
+            <button type="button" class="text-red-500 hover:text-red-700 ml-2" (click)="removeUploadedFile('contract')">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+          <span *ngIf="isDocumentFieldInvalid('contract')" class="text-red-600 text-sm block mt-1">
+            Signed Contract is required
+          </span>
         </div>
-        <span *ngIf="isDocumentFieldInvalid('contract')" class="text-red-600 text-sm block mt-1">
-          Signed Contract is required
-        </span>
       </div>
     </div>
-  </div>
 
-  <div class="flex justify-end">
-    <button (click)="nextFormCreate2('pageTwo')" type="button"
-      class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2 w-32">
-      Back
-    </button>
-    <button (click)="onSubmit()" type="button" class="px-4 py-2 bg-[#3980C0] text-white rounded-md">
-      {{ itemId ? "Update" : "Send to Approve" }}
-    </button>
+    <div class="flex justify-end">
+      <button (click)="nextFormCreate2('pageTwo')" type="button"
+        class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2 w-32">
+        Back
+      </button>
+      <button (click)="onSubmit()" type="button" class="px-4 py-2 bg-[#3980C0] text-white rounded-md">
+        {{ itemId ? "Update" : "Send to Approve" }}
+      </button>
+    </div>
   </div>
-</div>

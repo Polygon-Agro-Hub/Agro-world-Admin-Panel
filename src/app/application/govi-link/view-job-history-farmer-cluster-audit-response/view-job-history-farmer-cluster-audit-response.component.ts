@@ -11,6 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   templateUrl: './view-job-history-farmer-cluster-audit-response.component.html',
   styleUrl: './view-job-history-farmer-cluster-audit-response.component.css'
 })
+
 export class ViewJobHistoryFarmerClusterAuditResponseComponent implements OnInit {
 
   constructor(private goviLinkService: GoviLinkService, private router: Router, private route: ActivatedRoute) { }
@@ -36,105 +37,98 @@ export class ViewJobHistoryFarmerClusterAuditResponseComponent implements OnInit
   };
 
   questions: Question[] = [];
-
   problems: Problem[] = [];
-
   farmsData: FarmData[] = [];
 
   ngOnInit(): void {
-     this.route.queryParams.subscribe(queryParams => {
+    this.route.queryParams.subscribe(queryParams => {
       this.jobId = queryParams['jobId'] || '';
-      
-  
       this.loadData();
     });
   }
 
   loadData() {
-  this.isLoading = true;
+    this.isLoading = true;
 
-  if (!this.jobId) {
-    console.error('No jobId provided');
-    this.isLoading = false;
-    return;
-  }
+    if (!this.jobId) {
+      console.error('No jobId provided');
+      this.isLoading = false;
+      return;
+    }
 
-  this.goviLinkService.getFarmerClusterAudith(this.jobId).subscribe({
-    next: (res) => {
-      
+    this.goviLinkService.getFarmerClusterAudith(this.jobId).subscribe({
+      next: (res) => {
+        if (!res.success) {
+          console.error('API returned success: false');
+          this.isLoading = false;
+          return;
+        }
 
-      if (!res.success) {
-        console.error('API returned success: false');
-        this.isLoading = false;
-        return;
-      }
+        const header = res.header;
+        const farms = res.farms;
 
-      const header = res.header;
-      const farms = res.farms;
+        this.jobData.jobId = header.jobId;
+        this.jobData.certificate = `${header.srtName} for farmer cluster`;
+        this.jobData.completedFarms = `${header.completedFarms || 0}/${header.totalFarms || 0} Farms`;
 
-      this.jobData.jobId = header.jobId;
-      this.jobData.certificate = `${header.srtName} for farmer cluster`;
-      
-      this.jobData.completedFarms = `${header.completedFarms || 0}/${header.totalFarms || 0} Farms`;
+        this.farmsData = farms.map((farm: ApiFarm) => {
+          const questions = farm.questions.map((q: ApiQuestion, index: number) => {
+            const isPhoto = q.type.toLowerCase().includes('photo');
+            let completed = false;
 
-      this.farmsData = farms.map((farm: ApiFarm) => {
-        const questions = farm.questions.map((q: ApiQuestion, index: number) => {
-          const isPhoto = q.type.toLowerCase().includes('photo');
-          let completed = false;
+            if (isPhoto) {
+              completed = !!q.uploadImage;
+            } else {
+              completed = q.officerTickResult === 1;
+            }
 
-          if (isPhoto) {
-            completed = !!q.uploadImage;
-          } else {
-            completed = q.officerTickResult === 1;
-          }
+            return {
+              id: String(index + 1).padStart(2, '0'),
+              type: q.type,
+              question: q.qEnglish,
+              status: completed ? 'Completed' : 'Incomplete',
+              hasPhoto: isPhoto && !!q.uploadImage,
+              photoUrl: q.uploadImage || '',
+            };
+          });
+
+          const completedCount = questions.filter(q => q.status === 'Completed').length;
+
+          const problemMap = new Map<string, Problem>();
+          farm.questions.forEach((item: ApiQuestion) => {
+            if (item.problem && item.solution) {
+              const key = item.problem + item.solution;
+              if (!problemMap.has(key)) {
+                problemMap.set(key, {
+                  id: String(problemMap.size + 1).padStart(2, '0'),
+                  problem: item.problem,
+                  solution: item.solution,
+                });
+              }
+            }
+          });
 
           return {
-            id: String(index + 1).padStart(2, '0'),
-            type: q.type,
-            question: q.qEnglish,
-            status: completed ? 'Completed' : 'Incomplete',
-            hasPhoto: isPhoto && !!q.uploadImage,
-            photoUrl: q.uploadImage || '',
+            regCode: farm.regCode,
+            questions: questions,
+            problems: Array.from(problemMap.values()),
+            completedQuestions: `${completedCount}/${questions.length} Questions`
           };
         });
 
-        const completedCount = questions.filter(q => q.status === 'Completed').length;
+        this.farmNav.total = this.farmsData.length;
+        this.farmNav.current = 1;
 
-        const problemMap = new Map<string, Problem>();
-        farm.questions.forEach((item: ApiQuestion) => {
-          if (item.problem && item.solution) {
-            const key = item.problem + item.solution;
-            if (!problemMap.has(key)) {
-              problemMap.set(key, {
-                id: String(problemMap.size + 1).padStart(2, '0'),
-                problem: item.problem,
-                solution: item.solution,
-              });
-            }
-          }
-        });
+        this.loadFarmData();
 
-        return {
-          regCode: farm.regCode,
-          questions: questions,
-          problems: Array.from(problemMap.values()),
-          completedQuestions: `${completedCount}/${questions.length} Questions`
-        };
-      });
-
-      this.farmNav.total = this.farmsData.length;
-      this.farmNav.current = 1;
-
-      this.loadFarmData();
-
-      this.isLoading = false;
-    },
-    error: (err) => {
-      console.error('API Error:', err);
-      this.isLoading = false;
-    },
-  });
-}
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('API Error:', err);
+        this.isLoading = false;
+      },
+    });
+  }
 
   loadFarmData() {
     if (this.farmsData.length === 0) return;

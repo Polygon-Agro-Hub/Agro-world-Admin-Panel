@@ -31,6 +31,7 @@ export interface Shop {
   templateUrl: './view-all-shops.component.html',
   styleUrl: './view-all-shops.component.css',
 })
+
 export class ViewAllShopsComponent implements OnInit {
   isLoading = false;
 

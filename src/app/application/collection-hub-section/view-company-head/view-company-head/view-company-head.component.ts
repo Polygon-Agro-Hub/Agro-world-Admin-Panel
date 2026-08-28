@@ -49,8 +49,8 @@ export class ViewCompanyHeadComponent implements OnInit {
     private datePipe: DatePipe,
     private collectionService: CollectionService,
     public tokenService: TokenService,
-    public permissionService: PermissionService
-  ) { }
+    public permissionService: PermissionService,
+  ) {}
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
@@ -64,7 +64,7 @@ export class ViewCompanyHeadComponent implements OnInit {
     companyId: number = this.companyId!,
     page: number = 1,
     limit: number = this.itemsPerPage,
-    search: string = this.searchText
+    search: string = this.searchText,
   ) {
     this.isLoading = true;
     this.companyService
@@ -76,7 +76,7 @@ export class ViewCompanyHeadComponent implements OnInit {
           this.companyHead.forEach((head) => {
             head.createdAtFormatted = this.datePipe.transform(
               head.createdAt,
-              "yyyy/MM/dd 'at' hh.mm a"
+              "yyyy/MM/dd 'at' hh.mm a",
             );
           });
           this.hasData = this.companyHead.length > 0;
@@ -86,7 +86,7 @@ export class ViewCompanyHeadComponent implements OnInit {
           if (error.status === 401) {
             this.isLoading = false;
           }
-        }
+        },
       );
   }
 
@@ -95,9 +95,7 @@ export class ViewCompanyHeadComponent implements OnInit {
   }
 
   viewCompanyHead(id: number) {
-    this.router.navigate(
-      [`/collection-hub/view-center-head/${id}`]
-    );
+    this.router.navigate([`/collection-hub/view-center-head/${id}`]);
   }
 
   onPageChange(event: number) {
@@ -106,7 +104,7 @@ export class ViewCompanyHeadComponent implements OnInit {
       this.companyId!,
       this.page,
       this.itemsPerPage,
-      this.searchText
+      this.searchText,
     );
   }
 
@@ -116,34 +114,32 @@ export class ViewCompanyHeadComponent implements OnInit {
 
   navigatePath(path: string) {
     this.router.navigate([path], {
-      queryParams: { companyId: this.companyId }
+      queryParams: { companyId: this.companyId },
     });
   }
-  
 
   onSearch() {
     if (this.searchText) {
       this.searchText = this.searchText.replace(/^\s+/, '');
     }
 
-    this.page = 1; 
+    this.page = 1;
     this.fetchAllCompanyHeads(
       this.companyId!,
       this.page,
       this.itemsPerPage,
-      this.searchText
+      this.searchText,
     );
   }
 
-
   offSearch() {
     this.searchText = '';
-    this.page = 1; 
+    this.page = 1;
     this.fetchAllCompanyHeads(
       this.companyId!,
       this.page,
       this.itemsPerPage,
-      this.searchText
+      this.searchText,
     );
   }
 
@@ -177,7 +173,8 @@ export class ViewCompanyHeadComponent implements OnInit {
                 text: 'The Centre Head has been deleted.',
                 icon: 'success',
                 customClass: {
-                  popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
+                  popup:
+                    'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
                   title: 'font-semibold text-lg',
                 },
               });
@@ -190,31 +187,35 @@ export class ViewCompanyHeadComponent implements OnInit {
               text: 'There was an error deleting the Centre Head.',
               icon: 'error',
               customClass: {
-                popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
+                popup:
+                  'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
                 title: 'font-semibold text-lg',
               },
             });
-          }
+          },
         );
       }
     });
   }
 
   openPopup(item: any) {
-  const showApproveButton = item.status === 'Rejected' || item.status === 'Not Approved';
-  const showRejectButton = item.status === 'Approved' || item.status === 'Not Approved';
+    const showApproveButton =
+      item.status === 'Rejected' || item.status === 'Not Approved';
+    const showRejectButton =
+      item.status === 'Approved' || item.status === 'Not Approved';
 
-  const tableHtml = `
+    const tableHtml = `
     <div class="px-10 py-8 rounded-md bg-white dark:bg-gray-800">
       <h1 class="text-center text-2xl font-bold mb-4 dark:text-white">Officer Name : ${item.firstNameEnglish}</h1>
       <div>
-        ${item.status === 'Not Approved' 
-          ? '<p class="text-center dark:text-white">Are you sure you want to approve or reject this Collection Centre Head ?</p>'
-          : showRejectButton 
-            ? '<p class="text-center dark:text-white">Are you sure you want to reject this Collection Centre Head ?</p>'
-            : showApproveButton 
-              ? '<p class="text-center dark:text-white">Are you sure you want to approve this Collection Centre Head ?</p>'
-              : ''
+        ${
+          item.status === 'Not Approved'
+            ? '<p class="text-center dark:text-white">Are you sure you want to approve or reject this Collection Centre Head ?</p>'
+            : showRejectButton
+              ? '<p class="text-center dark:text-white">Are you sure you want to reject this Collection Centre Head ?</p>'
+              : showApproveButton
+                ? '<p class="text-center dark:text-white">Are you sure you want to approve this Collection Centre Head ?</p>'
+                : ''
         }
       </div>
       <div class="flex justify-center mt-4">
@@ -224,141 +225,150 @@ export class ViewCompanyHeadComponent implements OnInit {
     </div>
   `;
 
-  Swal.fire({
-    html: tableHtml,
-    showConfirmButton: false,
-    width: 'auto',
-    background: 'transparent',
-    backdrop: 'rgba(0, 0, 0, 0.5)',
-    grow: 'row',
-    showClass: { popup: 'animate__animated animate__fadeIn' },
-    hideClass: { popup: 'animate__animated animate__fadeOut' },
-    customClass: {
-      popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
-      title: 'font-semibold text-lg',
-    },
-    didOpen: () => {
-      if (showApproveButton) {
-        document
-          .getElementById('approveButton')
-          ?.addEventListener('click', () => {
-            // Close the original popup and directly approve
-            Swal.close();
-            this.isPopupVisible = false;
-            this.isLoading = true;
-            
-            // Directly proceed with approval without confirmation
-            this.collectionService.ChangeStatus(item.id, 'Approved').subscribe(
-              (res) => {
-                this.isLoading = false;
-                if (res.status) {
-                  Swal.fire({
-                    icon: 'success',
-                    title: 'Approved!',
-                    text: 'The Collection Centre Head was approved successfully.',
-                    showConfirmButton: false,
-                    timer: 3000,
-                    customClass: {
-                      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                      title: 'font-semibold text-lg',
-                      htmlContainer: 'text-left',
-                    },
-                  });
-                  this.fetchAllCompanyHeads();
-                } else {
-                  Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'Something went wrong. Please try again.',
-                    showConfirmButton: false,
-                    timer: 3000,
-                    customClass: {
-                      popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
-                      title: 'font-semibold text-lg',
-                    },
-                  });
-                }
-              },
-              () => {
-                this.isLoading = false;
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Error!',
-                  text: 'An error occurred while approving. Please try again.',
-                  showConfirmButton: false,
-                  timer: 3000,
-                  customClass: {
-                    popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
-                    title: 'font-semibold text-lg',
-                  },
-                });
-              }
-            );
-          });
-      }
+    Swal.fire({
+      html: tableHtml,
+      showConfirmButton: false,
+      width: 'auto',
+      background: 'transparent',
+      backdrop: 'rgba(0, 0, 0, 0.5)',
+      grow: 'row',
+      showClass: { popup: 'animate__animated animate__fadeIn' },
+      hideClass: { popup: 'animate__animated animate__fadeOut' },
+      customClass: {
+        popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
+        title: 'font-semibold text-lg',
+      },
+      didOpen: () => {
+        if (showApproveButton) {
+          document
+            .getElementById('approveButton')
+            ?.addEventListener('click', () => {
+              // Close the original popup and directly approve
+              Swal.close();
+              this.isPopupVisible = false;
+              this.isLoading = true;
 
-      if (showRejectButton) {
-        document
-          .getElementById('rejectButton')
-          ?.addEventListener('click', () => {
-            // Close the original popup and directly reject
-            Swal.close();
-            this.isPopupVisible = false;
-            this.isLoading = true;
-            
-            // Directly proceed with rejection without confirmation
-            this.collectionService.ChangeStatus(item.id, 'Rejected').subscribe(
-              (res) => {
-                this.isLoading = false;
-                if (res.status) {
-                  Swal.fire({
-                    icon: 'success',
-                    title: 'Rejected!',
-                    text: 'The Collection Centre Head was rejected successfully.',
-                    showConfirmButton: false,
-                    timer: 3000,
-                    customClass: {
-                      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                      title: 'font-semibold text-lg',
-                      htmlContainer: 'text-left',
-                    },
-                  });
-                  this.fetchAllCompanyHeads();
-                } else {
-                  Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'Something went wrong. Please try again.',
-                    showConfirmButton: false,
-                    timer: 3000,
-                    customClass: {
-                      popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
-                      title: 'font-semibold text-lg',
-                    },
-                  });
-                }
-              },
-              () => {
-                this.isLoading = false;
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Error!',
-                  text: 'An error occurred while rejecting. Please try again.',
-                  showConfirmButton: false,
-                  timer: 3000,
-                  customClass: {
-                    popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
-                    title: 'font-semibold text-lg',
+              // Directly proceed with approval without confirmation
+              this.collectionService
+                .ChangeStatus(item.id, 'Approved')
+                .subscribe(
+                  (res) => {
+                    this.isLoading = false;
+                    if (res.status) {
+                      Swal.fire({
+                        icon: 'success',
+                        title: 'Approved!',
+                        text: 'The Collection Centre Head was approved successfully.',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        customClass: {
+                          popup:
+                            'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                          title: 'font-semibold text-lg',
+                          htmlContainer: 'text-left',
+                        },
+                      });
+                      this.fetchAllCompanyHeads();
+                    } else {
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Something went wrong. Please try again.',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        customClass: {
+                          popup:
+                            'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
+                          title: 'font-semibold text-lg',
+                        },
+                      });
+                    }
                   },
-                });
-              }
-            );
-          });
-      }
-    },
-  });
-}
+                  () => {
+                    this.isLoading = false;
+                    Swal.fire({
+                      icon: 'error',
+                      title: 'Error!',
+                      text: 'An error occurred while approving. Please try again.',
+                      showConfirmButton: false,
+                      timer: 3000,
+                      customClass: {
+                        popup:
+                          'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
+                        title: 'font-semibold text-lg',
+                      },
+                    });
+                  },
+                );
+            });
+        }
 
+        if (showRejectButton) {
+          document
+            .getElementById('rejectButton')
+            ?.addEventListener('click', () => {
+              // Close the original popup and directly reject
+              Swal.close();
+              this.isPopupVisible = false;
+              this.isLoading = true;
+
+              // Directly proceed with rejection without confirmation
+              this.collectionService
+                .ChangeStatus(item.id, 'Rejected')
+                .subscribe(
+                  (res) => {
+                    this.isLoading = false;
+                    if (res.status) {
+                      Swal.fire({
+                        icon: 'success',
+                        title: 'Rejected!',
+                        text: 'The Collection Centre Head was rejected successfully.',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        customClass: {
+                          popup:
+                            'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                          title: 'font-semibold text-lg',
+                          htmlContainer: 'text-left',
+                        },
+                      });
+                      this.fetchAllCompanyHeads();
+                    } else {
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Something went wrong. Please try again.',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        customClass: {
+                          popup:
+                            'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
+                          title: 'font-semibold text-lg',
+                        },
+                      });
+                    }
+                  },
+                  () => {
+                    this.isLoading = false;
+                    Swal.fire({
+                      icon: 'error',
+                      title: 'Error!',
+                      text: 'An error occurred while rejecting. Please try again.',
+                      showConfirmButton: false,
+                      timer: 3000,
+                      customClass: {
+                        popup:
+                          'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
+                        title: 'font-semibold text-lg',
+                      },
+                    });
+                  },
+                );
+            });
+        }
+      },
+    });
+  }
 }
 
 class CompanyHead {

@@ -17,33 +17,34 @@ import { GoviLinkService } from '../../../services/govi-link/govi-link.service';
   templateUrl: './govi-link-dashbord.component.html',
   styleUrl: './govi-link-dashbord.component.css',
 })
+
 export class GoviLinkDashbordComponent implements OnInit {
   private roleConfig: {
     [key: string]: { iconClass: string; bgColor: string; order: number };
   } = {
-    'Chief Field Officer': {
-      iconClass: 'fa-solid fa-layer-group',
-      bgColor: '#0D9488',
-      order: 1,
-    },
-    'Field Officer': {
-      iconClass: 'fa-solid fa-layer-group',
-      bgColor: '#FB923C',
-      order: 2,
-    },
-    'Zone Officer': {
-      iconClass: 'fa-solid fa-map-location-dot',
-      bgColor: '#f59e0b',
-      order: 3,
-    },
-    default: { iconClass: 'fa-solid fa-user', bgColor: '#B78C00', order: 99 },
-  };
+      'Chief Field Officer': {
+        iconClass: 'fa-solid fa-layer-group',
+        bgColor: '#0D9488',
+        order: 1,
+      },
+      'Field Officer': {
+        iconClass: 'fa-solid fa-layer-group',
+        bgColor: '#FB923C',
+        order: 2,
+      },
+      'Zone Officer': {
+        iconClass: 'fa-solid fa-map-location-dot',
+        bgColor: '#f59e0b',
+        order: 3,
+      },
+      default: { iconClass: 'fa-solid fa-user', bgColor: '#B78C00', order: 99 },
+    };
 
   squareCards: SquareCardConfig[] = [];
   timelyCards: RectangleCardConfig[] = [];
   lateCards: RectangleCardConfig[] = [];
 
-  constructor(private goviLinkService: GoviLinkService) {}
+  constructor(private goviLinkService: GoviLinkService) { }
 
   ngOnInit(): void {
     this.loadDashboardData();
@@ -52,7 +53,7 @@ export class GoviLinkDashbordComponent implements OnInit {
   loadDashboardData(): void {
     this.goviLinkService.getDashboardData().subscribe({
       next: (res) => {
-        
+
         if (res.success) {
           // Square cards — officer counts sorted by role order
           const officerCards: SquareCardConfig[] = res.officerCount
@@ -97,7 +98,7 @@ export class GoviLinkDashbordComponent implements OnInit {
           this.timelyCards = [
             {
               label: 'Individual Farmer Audits (Timely)',
-              count: res.auditSummery.individual_same_day ?? 0, // 👈 Summery
+              count: res.auditSummery.individual_same_day ?? 0, 
               dateLabel,
               iconBg: '#fef9e7',
               iconColor: '#f0c000',
@@ -105,7 +106,7 @@ export class GoviLinkDashbordComponent implements OnInit {
             },
             {
               label: 'Cluster Audits (Timely)',
-              count: res.auditSummery.cluster_same_day ?? 0, // 👈 Summery
+              count: res.auditSummery.cluster_same_day ?? 0, 
               dateLabel,
               iconBg: '#fef9e7',
               iconColor: '#f0c000',
@@ -113,7 +114,7 @@ export class GoviLinkDashbordComponent implements OnInit {
             },
             {
               label: 'Service Visits (Timely)',
-              count: res.serviceSummery.same_day ?? 0, // 👈 Summery
+              count: res.serviceSummery.same_day ?? 0, 
               dateLabel,
               iconBg: '#fef9e7',
               iconColor: '#f0c000',
@@ -125,7 +126,7 @@ export class GoviLinkDashbordComponent implements OnInit {
           this.lateCards = [
             {
               label: 'Individual Farmer Audits (Late)',
-              count: res.auditSummery.individual_diff_day ?? 0, // 👈 Summery
+              count: res.auditSummery.individual_diff_day ?? 0, 
               dateLabel,
               iconBg: '#fce4ec',
               iconColor: '#e91e8c',
@@ -133,7 +134,7 @@ export class GoviLinkDashbordComponent implements OnInit {
             },
             {
               label: 'Cluster Audits (Late)',
-              count: res.auditSummery.cluster_diff_day ?? 0, // 👈 Summery
+              count: res.auditSummery.cluster_diff_day ?? 0, 
               dateLabel,
               iconBg: '#fce4ec',
               iconColor: '#e91e8c',
@@ -141,7 +142,7 @@ export class GoviLinkDashbordComponent implements OnInit {
             },
             {
               label: 'Service Visits (Late)',
-              count: res.serviceSummery.diff_day ?? 0, // 👈 Summery
+              count: res.serviceSummery.diff_day ?? 0, 
               dateLabel,
               iconBg: '#fce4ec',
               iconColor: '#e91e8c',

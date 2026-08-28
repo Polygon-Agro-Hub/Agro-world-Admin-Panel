@@ -17,7 +17,6 @@ import { TokenService } from '../../../services/token/services/token.service';
 import { DropdownModule } from 'primeng/dropdown';
 import * as XLSX from 'xlsx';
 
-
 interface PlantCareUser {
   id: number;
   firstName: string;
@@ -135,8 +134,8 @@ export class ViewPlantcareUsersComponent implements OnInit {
     private plantcareService: PlantcareUsersService,
     private http: HttpClient,
     private router: Router,
-    public permissionService: PermissionService
-  ) { }
+    public permissionService: PermissionService,
+  ) {}
 
   ngOnInit() {
     this.fetchAllPlantCareUsers(this.page, this.itemsPerPage);
@@ -148,13 +147,20 @@ export class ViewPlantcareUsersComponent implements OnInit {
     search: string = this.searchNIC,
     regStatus: string = this.regStatus,
     district: string = this.district,
-    plan: string = this.selectPlan
+    plan: string = this.selectPlan,
   ) {
     this.isLoading = true;
     // Trim the search string to remove leading/trailing spaces
     const trimmedSearch = search.trim();
     this.plantcareService
-      .getAllPlantCareUsers(page, limit, trimmedSearch, regStatus, district, plan)
+      .getAllPlantCareUsers(
+        page,
+        limit,
+        trimmedSearch,
+        regStatus,
+        district,
+        plan,
+      )
       .subscribe(
         (response) => {
           this.isLoading = false;
@@ -170,7 +176,8 @@ export class ViewPlantcareUsersComponent implements OnInit {
               text: 'Please log in again.',
               icon: 'error',
               customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                 title: 'font-semibold',
               },
             });
@@ -180,12 +187,13 @@ export class ViewPlantcareUsersComponent implements OnInit {
               text: 'Failed to fetch Govi Care users.',
               icon: 'error',
               customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                 title: 'font-semibold',
               },
             });
           }
-        }
+        },
       );
   }
 
@@ -258,9 +266,10 @@ export class ViewPlantcareUsersComponent implements OnInit {
                   text: 'GoviCare user has been deleted.',
                   icon: 'success',
                   customClass: {
-                    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                    popup:
+                      'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                     title: 'font-semibold',
-                  }
+                  },
                 });
                 this.fetchAllPlantCareUsers();
               }
@@ -271,11 +280,12 @@ export class ViewPlantcareUsersComponent implements OnInit {
                 text: 'There was a problem deleting the GoVi Care user.',
                 icon: 'error',
                 customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  popup:
+                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                   title: 'font-semibold',
                 },
               });
-            }
+            },
           );
       }
     });
@@ -284,7 +294,7 @@ export class ViewPlantcareUsersComponent implements OnInit {
   editPlantCareUser(id: number) {
     this.router.navigate(
       ['/steckholders/action/farmers/edit-plantcare-users'],
-      { queryParams: { id } }
+      { queryParams: { id } },
     );
   }
 
@@ -305,7 +315,7 @@ export class ViewPlantcareUsersComponent implements OnInit {
       (error) => {
         if (error.status === 401) {
         }
-      }
+      },
     );
   }
 
@@ -314,7 +324,7 @@ export class ViewPlantcareUsersComponent implements OnInit {
       ['/steckholders/action/farmers/view-plantcare-users'],
       {
         queryParams: { id, isView },
-      }
+      },
     );
   }
 
@@ -360,87 +370,100 @@ export class ViewPlantcareUsersComponent implements OnInit {
   //   URL.revokeObjectURL(url);
   // }
   downloadTemplate(): void {
-  this.isLoading = true;
+    this.isLoading = true;
 
-  // Define the header row
-  const header = ['First Name', 'Last Name', 'Phone Number', 'NIC Number', 'Membership', 'District'];
+    // Define the header row
+    const header = [
+      'First Name',
+      'Last Name',
+      'Phone Number',
+      'NIC Number',
+      'Membership',
+      'District',
+    ];
 
-  // Define sample empty data rows
-  const numberOfRowsToGenerate = 10000;
-  const emptyRows = Array.from({ length: numberOfRowsToGenerate }, () => [
-    '', // First Name
-    '', // Last Name
-    '', // Phone Number
-    '', // NIC Number
-    '', // Membership
-    '', // District
-  ]);
+    // Define sample empty data rows
+    const numberOfRowsToGenerate = 10000;
+    const emptyRows = Array.from({ length: numberOfRowsToGenerate }, () => [
+      '', // First Name
+      '', // Last Name
+      '', // Phone Number
+      '', // NIC Number
+      '', // Membership
+      '', // District
+    ]);
 
-  // Combine header and data rows
-  const worksheetData = [header, ...emptyRows];
-  const ws = XLSX.utils.aoa_to_sheet(worksheetData);
+    // Combine header and data rows
+    const worksheetData = [header, ...emptyRows];
+    const ws = XLSX.utils.aoa_to_sheet(worksheetData);
 
-  // Force all columns to be treated as TEXT
-  const range = XLSX.utils.decode_range(ws['!ref']!);
-  
-  // Iterate over all cells in all columns and set them as text
-  for (let R = range.s.r; R <= range.e.r; ++R) {
-    for (let C = 0; C <= 5; ++C) { // All 6 columns
-      const cellAddress = XLSX.utils.encode_cell({ r: R, c: C });
-      
-      // For phone number column (index 2) and NIC column (index 3)
-      if (C === 2 || C === 3) {
-        // Create or update cell with text format
-        if (!ws[cellAddress]) {
-          ws[cellAddress] = { v: '', t: 's' };
+    // Force all columns to be treated as TEXT
+    const range = XLSX.utils.decode_range(ws['!ref']!);
+
+    // Iterate over all cells in all columns and set them as text
+    for (let R = range.s.r; R <= range.e.r; ++R) {
+      for (let C = 0; C <= 5; ++C) {
+        // All 6 columns
+        const cellAddress = XLSX.utils.encode_cell({ r: R, c: C });
+
+        // For phone number column (index 2) and NIC column (index 3)
+        if (C === 2 || C === 3) {
+          // Create or update cell with text format
+          if (!ws[cellAddress]) {
+            ws[cellAddress] = { v: '', t: 's' };
+          } else {
+            ws[cellAddress].t = 's'; // 's' for string type
+          }
+          // Set Excel format to @ which means "text"
+          ws[cellAddress].z = '@';
         } else {
-          ws[cellAddress].t = 's'; // 's' for string type
-        }
-        // Set Excel format to @ which means "text"
-        ws[cellAddress].z = '@';
-      } else {
-        // For other columns, also set as text to be safe
-        if (!ws[cellAddress]) {
-          ws[cellAddress] = { v: '', t: 's' };
-        } else {
-          ws[cellAddress].t = 's';
+          // For other columns, also set as text to be safe
+          if (!ws[cellAddress]) {
+            ws[cellAddress] = { v: '', t: 's' };
+          } else {
+            ws[cellAddress].t = 's';
+          }
         }
       }
     }
+
+    // Set column widths
+    ws['!cols'] = [
+      { wch: 25 }, // First Name
+      { wch: 20 }, // Last Name
+      { wch: 20 }, // Phone Number (needs space for +94 prefix)
+      { wch: 20 }, // NIC Number
+      { wch: 20 }, // Membership
+      { wch: 20 }, // District
+    ];
+
+    // Create workbook
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Template');
+
+    // Write to XLSX file
+    XLSX.writeFile(wb, 'Bulk_Onboarding_Template.xlsx');
+
+    this.isLoading = false;
   }
 
-  // Set column widths
-  ws['!cols'] = [
-    { wch: 25 }, // First Name
-    { wch: 20 }, // Last Name
-    { wch: 20 }, // Phone Number (needs space for +94 prefix)
-    { wch: 20 }, // NIC Number
-    { wch: 20 }, // Membership
-    { wch: 20 }, // District
-  ];
-
-  // Create workbook
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, 'Template');
-
-  // Write to XLSX file
-  XLSX.writeFile(wb, 'Bulk_Onboarding_Template.xlsx');
-
-  this.isLoading = false;
-}
-
   viewFarmerStaff(id: number, name: string = '', phone: string = '') {
-    this.router.navigate([`/steckholders/action/farmers/view-farmer-staff/${id}`], {
-      queryParams: { fname: name, phone: phone }
-    })
+    this.router.navigate(
+      [`/steckholders/action/farmers/view-farmer-staff/${id}`],
+      {
+        queryParams: { fname: name, phone: phone },
+      },
+    );
   }
 
   onSearchKeydown(event: KeyboardEvent): void {
     const input = event.target as HTMLInputElement;
 
     // Prevent space at the beginning of input
-    if (event.key === ' ' &&
-      (input.selectionStart === 0 || this.searchNIC === '')) {
+    if (
+      event.key === ' ' &&
+      (input.selectionStart === 0 || this.searchNIC === '')
+    ) {
       event.preventDefault();
     }
   }

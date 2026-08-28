@@ -11,7 +11,7 @@ import Swal from 'sweetalert2';
   standalone: true,
   imports: [CommonModule, FormsModule, LoadingSpinnerComponent],
   templateUrl: './view-farm-owner.component.html',
-  styleUrls: ['./view-farm-owner.component.css']
+  styleUrls: ['./view-farm-owner.component.css'],
 })
 export class ViewFarmOwnerComponent implements OnInit {
   ownerId!: number;
@@ -22,7 +22,7 @@ export class ViewFarmOwnerComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private plantcareService: PlantcareUsersService,
-    public tokenService: TokenService
+    public tokenService: TokenService,
   ) {}
 
   ngOnInit(): void {
@@ -30,25 +30,25 @@ export class ViewFarmOwnerComponent implements OnInit {
     this.fetchOwner();
   }
 
-back(): void {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: 'You may lose the added data after going back!',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Go Back',
-    cancelButtonText: 'No, Stay Here',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-    buttonsStyling: true,
-  }).then((result) => {
-    if (result.isConfirmed) {
-      window.history.back(); // <-- goes to the previous page in history
-    }
-  });
-}
+  back(): void {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+      buttonsStyling: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.history.back(); // <-- goes to the previous page in history
+      }
+    });
+  }
 
   fetchOwner() {
     this.isLoading = true;
@@ -60,7 +60,7 @@ back(): void {
       error: (err) => {
         console.error('Error fetching farm owner:', err);
         this.isLoading = false;
-      }
+      },
     });
   }
 }
@@ -69,13 +69,13 @@ export class FarmOwner {
   id!: number;
   firstName: string = '';
   lastName: string = '';
-  phoneCode: string = '';     // <--- Added
-  phoneNumber: string = '';   // <--- Added
-  nic: string = '';           // <--- Added
-  role: string = '';    // Optional, if exists
-  district: string = '';      // Optional
+  phoneCode: string = ''; // <--- Added
+  phoneNumber: string = ''; // <--- Added
+  nic: string = ''; // <--- Added
+  role: string = ''; // Optional, if exists
+  district: string = ''; // Optional
   accHolderName: string = ''; // Optional
-  accNumber: string = '';     // Optional
-  bankName: string = '';      // Optional
-  branchName: string = '';    // Optional
+  accNumber: string = ''; // Optional
+  bankName: string = ''; // Optional
+  branchName: string = ''; // Optional
 }

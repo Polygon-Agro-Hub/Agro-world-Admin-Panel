@@ -117,7 +117,7 @@ export class CreateSalesAgentsComponent implements OnInit {
     { code: 'IN', dialCode: '+91', name: 'India' },
     { code: 'NL', dialCode: '+31', name: 'Netherlands' },
     { code: 'UK', dialCode: '+44', name: 'United Kingdom' },
-    { code: 'US', dialCode: '+1', name: 'United States' }
+    { code: 'US', dialCode: '+1', name: 'United States' },
   ];
 
   constructor(
@@ -127,8 +127,8 @@ export class CreateSalesAgentsComponent implements OnInit {
     private route: ActivatedRoute,
     private http: HttpClient,
     private router: Router,
-    private salesAgentService: SalesAgentsService
-  ) { }
+    private salesAgentService: SalesAgentsService,
+  ) {}
 
   ngOnInit(): void {
     this.EpmloyeIdCreate();
@@ -144,7 +144,7 @@ export class CreateSalesAgentsComponent implements OnInit {
       },
       (error) => {
         console.error('Error loading banks:', error);
-      }
+      },
     );
   }
 
@@ -199,7 +199,7 @@ export class CreateSalesAgentsComponent implements OnInit {
       },
       (error) => {
         console.error('Error loading branches:', error);
-      }
+      },
     );
   }
 
@@ -207,7 +207,6 @@ export class CreateSalesAgentsComponent implements OnInit {
     event.preventDefault();
     const fileInput = document.getElementById('imageUpload');
     fileInput?.click();
-    
   }
 
   onFileSelected(event: any): void {
@@ -233,20 +232,18 @@ export class CreateSalesAgentsComponent implements OnInit {
         this.selectedImage = e.target.result;
       };
       reader.readAsDataURL(file);
-      
     }
   }
 
   updateEmployeeType(selectedType: string): void {
     this.empType = selectedType;
     this.personalData.empType = selectedType;
-    
   }
 
   updateProvince(event: DropdownChangeEvent): void {
     const selectedDistrict = event.value;
     const selected = this.districts.find(
-      (district) => district.name === selectedDistrict
+      (district) => district.name === selectedDistrict,
     );
 
     if (this.itemId === null) {
@@ -275,7 +272,9 @@ export class CreateSalesAgentsComponent implements OnInit {
     this.isLeadingSpaceErrorMap[field] = /^\s/.test(value);
 
     // Check for valid English name (starts with capital, rest are letters/spaces)
-    this.isSpecialCharErrorMap[field] = !/^[A-Z][a-zA-Z\s]*$/.test(value.trim());
+    this.isSpecialCharErrorMap[field] = !/^[A-Z][a-zA-Z\s]*$/.test(
+      value.trim(),
+    );
   }
 
   getLastID(): Promise<string> {
@@ -289,7 +288,7 @@ export class CreateSalesAgentsComponent implements OnInit {
         (error) => {
           console.error('Error fetching last ID:', error);
           reject(error);
-        }
+        },
       );
     });
   }
@@ -301,7 +300,7 @@ export class CreateSalesAgentsComponent implements OnInit {
 
       // Update company data with bank name
       const selectedBank = this.banks.find(
-        (bank) => bank.ID === this.selectedBankId
+        (bank) => bank.ID === this.selectedBankId,
       );
       if (selectedBank) {
         this.personalData.bankName = selectedBank.name;
@@ -321,7 +320,7 @@ export class CreateSalesAgentsComponent implements OnInit {
     if (this.selectedBranchId) {
       // Update company data with branch name
       const selectedBranch = this.branches.find(
-        (branch) => branch.ID === this.selectedBranchId
+        (branch) => branch.ID === this.selectedBranchId,
       );
       if (selectedBranch) {
         this.personalData.branchName = selectedBranch.name;
@@ -433,14 +432,16 @@ export class CreateSalesAgentsComponent implements OnInit {
     // Check for invalid characters (but allow +)
     const invalidChars = /[!#$%^&*()=<>?\/\\]/;
     if (invalidChars.test(email)) {
-      this.emailError = 'Email contains invalid special characters (only +, -, _, and . are allowed)';
+      this.emailError =
+        'Email contains invalid special characters (only +, -, _, and . are allowed)';
       return false;
     }
 
     // Check basic format (allowing + in the local part)
     const emailRegex = /^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(email)) {
-      this.emailError = 'Please enter a valid email in the format: example@domain.com or user+tag@domain.com';
+      this.emailError =
+        'Please enter a valid email in the format: example@domain.com or user+tag@domain.com';
       return false;
     }
 
@@ -504,7 +505,9 @@ export class CreateSalesAgentsComponent implements OnInit {
     // Contact validations
     const isPhoneNumber1Valid =
       !!phoneNumber1 && phonePattern.test(phoneNumber1);
-    const isEmailValid = !!email && this.isValidEmail(email) &&
+    const isEmailValid =
+      !!email &&
+      this.isValidEmail(email) &&
       !email.includes('..') &&
       !email.startsWith('.') &&
       !email.includes('.@') &&
@@ -556,14 +559,14 @@ export class CreateSalesAgentsComponent implements OnInit {
   checkForDuplicates(): Promise<string[]> {
     return new Promise((resolve) => {
       this.isCheckingDuplicates = true;
-      
+
       // Simulate API call to check duplicates
       setTimeout(() => {
         const duplicates: string[] = [];
-        
+
         // In a real implementation, you would make API calls here
         // For now, we'll rely on the backend validation
-        
+
         this.isCheckingDuplicates = false;
         resolve(duplicates);
       }, 500);
@@ -604,21 +607,29 @@ export class CreateSalesAgentsComponent implements OnInit {
     const accountPattern = /^[a-zA-Z0-9]+$/;
 
     // Field Validations
-    if (!this.personalData.empType) missingFields.push('Staff Employee Type is Required');
+    if (!this.personalData.empType)
+      missingFields.push('Staff Employee Type is Required');
 
-    if (!this.personalData.firstName) missingFields.push('First Name is Required');
+    if (!this.personalData.firstName)
+      missingFields.push('First Name is Required');
 
-    if (!this.personalData.lastName) missingFields.push('Last Name is Required');
+    if (!this.personalData.lastName)
+      missingFields.push('Last Name is Required');
 
-    if (!this.personalData.phoneNumber1) missingFields.push('Contact Number 1 is Required');
+    if (!this.personalData.phoneNumber1)
+      missingFields.push('Contact Number 1 is Required');
     else if (!phonePattern.test(this.personalData.phoneNumber1))
       missingFields.push('Contact Number 1 - Must be 9 digits starting with 7');
 
     if (this.personalData.phoneNumber2) {
       if (!phonePattern.test(this.personalData.phoneNumber2))
-        missingFields.push('Contact Number 2 - Must be 9 digits starting with 7');
+        missingFields.push(
+          'Contact Number 2 - Must be 9 digits starting with 7',
+        );
       if (this.personalData.phoneNumber1 === this.personalData.phoneNumber2)
-        missingFields.push('Contact Number 2 - Cannot be the same as Contact Number 1');
+        missingFields.push(
+          'Contact Number 2 - Cannot be the same as Contact Number 1',
+        );
     }
 
     if (!this.personalData.email) missingFields.push('Email is Required');
@@ -629,33 +640,47 @@ export class CreateSalesAgentsComponent implements OnInit {
     else if (!nicPattern.test(this.personalData.nic))
       missingFields.push('NIC - Must be 12 digits or 9 digits followed by V');
 
-    if (!this.personalData.houseNumber) missingFields.push('House Number is Required');
-    if (!this.personalData.streetName) missingFields.push('Street Name is Required');
+    if (!this.personalData.houseNumber)
+      missingFields.push('House Number is Required');
+    if (!this.personalData.streetName)
+      missingFields.push('Street Name is Required');
     if (!this.personalData.city) missingFields.push('City is Required');
     if (!this.personalData.district) missingFields.push('District is Required');
     if (!this.personalData.province) missingFields.push('Province is Required');
 
-    if (!this.personalData.accHolderName) missingFields.push("Account Holder's Name is Required");
+    if (!this.personalData.accHolderName)
+      missingFields.push("Account Holder's Name is Required");
     else if (!this.isValidName(this.personalData.accHolderName))
-      missingFields.push('Account Holder Name - Only English letters, spaces, hyphens, and apostrophes allowed');
+      missingFields.push(
+        'Account Holder Name - Only English letters, spaces, hyphens, and apostrophes allowed',
+      );
 
-    if (!this.personalData.accNumber) missingFields.push('Account Number is Required');
+    if (!this.personalData.accNumber)
+      missingFields.push('Account Number is Required');
     else if (!accountPattern.test(this.personalData.accNumber))
-      missingFields.push('Account Number - Only alphanumeric characters allowed');
+      missingFields.push(
+        'Account Number - Only alphanumeric characters allowed',
+      );
 
-    if (!this.personalData.confirmAccNumber) missingFields.push('Confirm Account Number is Required');
+    if (!this.personalData.confirmAccNumber)
+      missingFields.push('Confirm Account Number is Required');
     else if (this.personalData.accNumber !== this.personalData.confirmAccNumber)
       missingFields.push('Confirm Account Number - Must match Account Number');
     else if (!accountPattern.test(this.personalData.confirmAccNumber))
-      missingFields.push('Confirm Account Number - Only alphanumeric characters allowed');
+      missingFields.push(
+        'Confirm Account Number - Only alphanumeric characters allowed',
+      );
 
-    if (!this.personalData.bankName) missingFields.push('Bank Name is Required');
-    if (!this.personalData.branchName) missingFields.push('Branch Name is Required');
+    if (!this.personalData.bankName)
+      missingFields.push('Bank Name is Required');
+    if (!this.personalData.branchName)
+      missingFields.push('Branch Name is Required');
 
     // Show errors if any
     if (missingFields.length > 0) {
-      let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
-      missingFields.forEach(field => errorMessage += `<li>${field}</li>`);
+      let errorMessage =
+        '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+      missingFields.forEach((field) => (errorMessage += `<li>${field}</li>`));
       errorMessage += '</ul></div>';
 
       Swal.fire({
@@ -685,13 +710,16 @@ export class CreateSalesAgentsComponent implements OnInit {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold text-lg',
         htmlContainer: 'text-left',
-        confirmButton: 'bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700',
-        cancelButton: 'bg-gray-300 hover:bg-gray-400 dark:bg-gray-700 dark:hover:bg-gray-600',
+        confirmButton:
+          'bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700',
+        cancelButton:
+          'bg-gray-300 hover:bg-gray-400 dark:bg-gray-700 dark:hover:bg-gray-600',
       },
     }).then((result) => {
       if (result.isConfirmed) {
         this.isLoading = true;
-        this.salesAgentService.createSalesAgent(this.personalData, this.selectedImage)
+        this.salesAgentService
+          .createSalesAgent(this.personalData, this.selectedImage)
           .subscribe(
             (res: any) => {
               this.isLoading = false;
@@ -702,34 +730,43 @@ export class CreateSalesAgentsComponent implements OnInit {
                 text: 'Sales Agent Profile Created Successfully',
                 icon: 'success',
                 customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  popup:
+                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                   title: 'font-semibold text-lg',
-                  confirmButton: 'bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700',
+                  confirmButton:
+                    'bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700',
                 },
               });
               this.navigatePath('/steckholders/action/sales-agents');
             },
             (error: any) => {
               this.isLoading = false;
-              
+
               // Handle duplicate field errors from backend
-              if (error.error && error.error.errors && Array.isArray(error.error.errors)) {
+              if (
+                error.error &&
+                error.error.errors &&
+                Array.isArray(error.error.errors)
+              ) {
                 this.duplicateErrors = error.error.errors;
                 this.showDuplicateErrors();
               } else {
-                this.errorMessage = error.error.error || 'An unexpected error occurred';
+                this.errorMessage =
+                  error.error.error || 'An unexpected error occurred';
                 Swal.fire({
                   title: 'Error',
                   text: this.errorMessage,
                   icon: 'error',
                   customClass: {
-                    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                    popup:
+                      'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                     title: 'font-semibold text-lg',
-                    confirmButton: 'bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700',
+                    confirmButton:
+                      'bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700',
                   },
                 });
               }
-            }
+            },
           );
       }
     });
@@ -739,13 +776,15 @@ export class CreateSalesAgentsComponent implements OnInit {
   showDuplicateErrors(): void {
     if (this.duplicateErrors.length === 0) return;
 
-    let errorMessage = '<div class="text-left"><p class="mb-2">The following fields already exist in the system:</p><ul class="list-disc pl-5">';
-    
-    this.duplicateErrors.forEach(error => {
+    let errorMessage =
+      '<div class="text-left"><p class="mb-2">The following fields already exist in the system:</p><ul class="list-disc pl-5">';
+
+    this.duplicateErrors.forEach((error) => {
       errorMessage += `<li>${error}</li>`;
     });
-    
-    errorMessage += '</ul><p class="mt-2 text-sm">Please use different values for these fields.</p></div>';
+
+    errorMessage +=
+      '</ul><p class="mt-2 text-sm">Please use different values for these fields.</p></div>';
 
     Swal.fire({
       icon: 'error',
@@ -756,7 +795,8 @@ export class CreateSalesAgentsComponent implements OnInit {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold text-lg',
         htmlContainer: 'text-left',
-        confirmButton: 'bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700',
+        confirmButton:
+          'bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700',
       },
     });
   }
@@ -771,7 +811,15 @@ export class CreateSalesAgentsComponent implements OnInit {
 
   validateNameInput(event: KeyboardEvent): void {
     // Allow navigation and control keys
-    const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Home', 'End'];
+    const allowedKeys = [
+      'Backspace',
+      'Delete',
+      'ArrowLeft',
+      'ArrowRight',
+      'Tab',
+      'Home',
+      'End',
+    ];
     if (allowedKeys.includes(event.key)) return;
 
     const target = event.target as HTMLInputElement;
@@ -779,7 +827,7 @@ export class CreateSalesAgentsComponent implements OnInit {
 
     // Block leading spaces for firstName and lastName
     if (['firstName', 'lastName'].includes(fieldName)) {
-      const currentValue = this.personalData[fieldName] as string || '';
+      const currentValue = (this.personalData[fieldName] as string) || '';
       if (event.key === ' ' && (!currentValue || target.selectionStart === 0)) {
         event.preventDefault();
         return;
@@ -795,7 +843,18 @@ export class CreateSalesAgentsComponent implements OnInit {
     }
   }
 
-  capitalizeFirstLetter(field: 'firstName' | 'lastName' | 'houseNumber' | 'streetName' | 'city' | 'accHolderName' | 'bankName' | 'branchName', event?: any) {
+  capitalizeFirstLetter(
+    field:
+      | 'firstName'
+      | 'lastName'
+      | 'houseNumber'
+      | 'streetName'
+      | 'city'
+      | 'accHolderName'
+      | 'bankName'
+      | 'branchName',
+    event?: any,
+  ) {
     let value = this.personalData[field];
     if (!value) return;
 
@@ -851,21 +910,21 @@ export class CreateSalesAgentsComponent implements OnInit {
     const currentValue = input.value;
     const key = event.key.toUpperCase();
 
-  // Allow only numbers or uppercase V (but not lowercase v)
+    // Allow only numbers or uppercase V (but not lowercase v)
     const nicInputPattern = /^[0-9V]$/;
     if (!nicInputPattern.test(key)) {
       event.preventDefault();
       return;
     }
 
-  // Block typing 'V' unless it's exactly the 10th character (9 digits + V)
+    // Block typing 'V' unless it's exactly the 10th character (9 digits + V)
     if (key === 'V') {
       const isAllDigitsSoFar = /^\d{9}$/.test(currentValue);
       if (!isAllDigitsSoFar) {
         event.preventDefault();
         return;
       }
-      return; 
+      return;
     }
 
     // - Old format: 9 digits + V
@@ -967,7 +1026,7 @@ export class CreateSalesAgentsComponent implements OnInit {
   validateGeneralInput(
     event: KeyboardEvent,
     fieldName: string,
-    allowSpace: boolean = false
+    allowSpace: boolean = false,
   ): void {
     const currentValue =
       (this.personalData[fieldName as keyof Personal] as string) || '';
@@ -982,8 +1041,13 @@ export class CreateSalesAgentsComponent implements OnInit {
   validateEmailInput(event: KeyboardEvent, fieldName: string): void {
     // Allow navigation and control keys
     const allowedKeys = [
-      'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight',
-      'Tab', 'Home', 'End'
+      'Backspace',
+      'Delete',
+      'ArrowLeft',
+      'ArrowRight',
+      'Tab',
+      'Home',
+      'End',
     ];
 
     if (allowedKeys.includes(event.key)) {
@@ -1069,8 +1133,13 @@ export class CreateSalesAgentsComponent implements OnInit {
   validateAccountHolderNameInput(event: KeyboardEvent): void {
     // Allow navigation and control keys
     const allowedKeys = [
-      'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight',
-      'Tab', 'Home', 'End'
+      'Backspace',
+      'Delete',
+      'ArrowLeft',
+      'ArrowRight',
+      'Tab',
+      'Home',
+      'End',
     ];
 
     if (allowedKeys.includes(event.key)) {

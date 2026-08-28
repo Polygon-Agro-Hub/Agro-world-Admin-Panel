@@ -1,5 +1,4 @@
-<button class="mb-5 text-textLight dark:text-textDark" (click)="back()"
->
+<button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
@@ -22,42 +21,34 @@
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
             (keydown)="preventLeadingSpace($event, 'userName')" (input)="formatTextInput('userName')" />
           <div *ngIf="
-      userForm.get('userName')?.invalid &&
-      (userForm.get('userName')?.dirty ||
-        userForm.get('userName')?.touched)
-    " class="text-red-500 text-sm mt-1">
+            userForm.get('userName')?.invalid &&
+            (userForm.get('userName')?.dirty ||
+            userForm.get('userName')?.touched)" 
+            class="text-red-500 text-sm mt-1">
             {{ getErrorMessage("userName") }}
           </div>
         </div>
 
         <div>
-  <!-- Email Input -->
-  <label for="mail" class="block text-sm font-medium text-textLight dark:text-textDark">
-    Email <span class="text-[#2E2E2E]">*</span>
-  </label>
-  <input id="mail" name="mail" formControlName="mail"
-    class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-    (keydown)="preventLeadingSpace($event, 'mail')" (input)="formatTextInput('mail')" />
-  <div *ngIf="userForm.get('mail')?.invalid && (userForm.get('mail')?.dirty || userForm.get('mail')?.touched)" 
-       class="text-red-500 text-sm mt-1">
-    {{ getErrorMessage("mail") }}
-  </div>
-</div>
+          <!-- Email Input -->
+          <label for="mail" class="block text-sm font-medium text-textLight dark:text-textDark">
+            Email <span class="text-[#2E2E2E]">*</span>
+          </label>
+          <input id="mail" name="mail" formControlName="mail"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+            (keydown)="preventLeadingSpace($event, 'mail')" (input)="formatTextInput('mail')" />
+          <div *ngIf="userForm.get('mail')?.invalid && (userForm.get('mail')?.dirty || userForm.get('mail')?.touched)"
+            class="text-red-500 text-sm mt-1">
+            {{ getErrorMessage("mail") }}
+          </div>
+        </div>
 
         <div>
           <!-- Role Input -->
           <label for="role" class="block text-sm font-medium text-textLight dark:text-textDark">Department <span
               class="text-[#2E2E2E]">*</span></label>
-          <p-dropdown 
-            id="role"
-            formControlName="role"
-            [options]="rolesList" 
-            optionLabel="role"
-            optionValue="id"
-            placeholder="Select Department"
-            [showClear]="false"
-            [filter]="false"
-            class="w-full mt-1">
+          <p-dropdown id="role" formControlName="role" [options]="rolesList" optionLabel="role" optionValue="id"
+            placeholder="Select Department" [showClear]="false" [filter]="false" class="w-full mt-1">
           </p-dropdown>
           <div *ngIf="
               userForm.get('role')?.invalid &&
@@ -71,16 +62,8 @@
           <!-- Role Input -->
           <label for="position" class="block text-sm font-medium text-textLight dark:text-textDark">Position <span
               class="text-[#2E2E2E]">*</span></label>
-          <p-dropdown 
-            id="position"
-            formControlName="position"
-            [options]="positionList" 
-            optionLabel="positions"
-            optionValue="id"
-            placeholder="Select Position"
-            [showClear]="false"
-            [filter]="false"
-            class="w-full mt-1">
+          <p-dropdown id="position" formControlName="position" [options]="positionList" optionLabel="positions"
+            optionValue="id" placeholder="Select Position" [showClear]="false" [filter]="false" class="w-full mt-1">
           </p-dropdown>
           <div *ngIf="
               userForm.get('position')?.invalid &&
@@ -106,10 +89,10 @@
               (click)="togglePasswordVisibility()" style="color: #4a90e2"></i>
           </div>
           <div *ngIf="
-      userForm.get('password')?.invalid &&
-      (userForm.get('password')?.dirty ||
-        userForm.get('password')?.touched)
-    " class="text-red-500 text-sm mt-1">
+            userForm.get('password')?.invalid &&
+            (userForm.get('password')?.dirty ||
+            userForm.get('password')?.touched)"       
+            class="text-red-500 text-sm mt-1">
             {{ getErrorMessage("password") }}
           </div>
         </div>
@@ -121,9 +104,10 @@
       <button type="button" class="px-4 py-2 bg-[#74788D] text-white rounded-md mr-2" (click)="onCancel()">
         Cancel
       </button>
-      <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="createAdmin()" [disabled]="userForm.invalid">
+      <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="createAdmin()"
+        [disabled]="userForm.invalid">
         Save
-        
+
       </button>
     </div>
   </div>
@@ -146,10 +130,10 @@
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             (keydown)="preventLeadingSpace($event, 'userName')" (input)="formatTextInput('userName')" />
           <div *ngIf="
-      userForm.get('userName')?.invalid &&
-      (userForm.get('userName')?.dirty ||
-        userForm.get('userName')?.touched)
-    " class="text-red-500 text-sm mt-1">
+            userForm.get('userName')?.invalid &&
+            (userForm.get('userName')?.dirty ||
+            userForm.get('userName')?.touched)"       
+            class="text-red-500 text-sm mt-1">
             {{ getErrorMessage("userName") }}
           </div>
         </div>
@@ -162,9 +146,9 @@
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             (keydown)="preventLeadingSpace($event, 'mail')" (input)="formatTextInput('mail')" />
           <div *ngIf="
-      userForm.get('mail')?.invalid &&
-      (userForm.get('mail')?.dirty || userForm.get('mail')?.touched)
-    " class="text-red-500 text-sm mt-1">
+            userForm.get('mail')?.invalid &&
+            (userForm.get('mail')?.dirty || userForm.get('mail')?.touched)" 
+            class="text-red-500 text-sm mt-1">
             {{ getErrorMessage("mail") }}
           </div>
         </div>
@@ -173,16 +157,8 @@
           <label for="role" class="block text-sm font-medium text-textLight dark:text-textDark">
             Role <span class="text-[#2E2E2E]">*</span>
           </label>
-          <p-dropdown 
-            id="role"
-            formControlName="role"
-            [options]="rolesList" 
-            optionLabel="role"
-            optionValue="id"
-            placeholder="Select Department"
-            [showClear]="false"
-            [filter]="false"
-            class="w-full mt-1">
+          <p-dropdown id="role" formControlName="role" [options]="rolesList" optionLabel="role" optionValue="id"
+            placeholder="Select Department" [showClear]="false" [filter]="false" class="w-full mt-1">
           </p-dropdown>
         </div>
 
@@ -190,22 +166,14 @@
           <!-- Role Input -->
           <label for="position" class="block text-sm font-medium text-textLight dark:text-textDark">Position <span
               class="text-[#2E2E2E]">*</span></label>
-          <p-dropdown 
-            id="position"
-            formControlName="position"
-            [options]="positionList" 
-            optionLabel="positions"
-            optionValue="id"
-            placeholder="Select Position"
-            [showClear]="false"
-            [filter]="false"
-            class="w-full mt-1">
+          <p-dropdown id="position" formControlName="position" [options]="positionList" optionLabel="positions"
+            optionValue="id" placeholder="Select Position" [showClear]="false" [filter]="false" class="w-full mt-1">
           </p-dropdown>
           <div *ngIf="
               userForm.get('position')?.invalid &&
               (userForm.get('position')?.dirty ||
-                userForm.get('position')?.touched)
-            " class="text-red-500 text-sm mt-1">
+                userForm.get('position')?.touched)" 
+                class="text-red-500 text-sm mt-1">
             User position are required
           </div>
         </div>
@@ -217,7 +185,8 @@
       <button type="button" class="px-4 py-2 bg-[#74788D] text-white rounded-md mr-2" (click)="onCancel()">
         Cancel
       </button>
-      <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="updateAdmin(this.itemId)" [disabled]="userForm.invalid">
+      <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="updateAdmin(this.itemId)"
+        [disabled]="userForm.invalid">
         Save
       </button>
     </div>

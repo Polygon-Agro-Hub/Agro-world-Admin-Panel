@@ -999,20 +999,20 @@ export class CollectiveofficersEditComponent {
       }
 
       setTimeout(() => {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth' // or 'auto' for instant scroll
-            });
-            
-            // Alternatively, scroll to the container
-            const container = document.querySelector('.mx-auto.p-6');
-            if (container) {
-                container.scrollIntoView({ 
-                    behavior: 'smooth', 
-                    block: 'start' 
-                });
-            }
-        }, 100); // Small delay to ensure DOM is updated
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth' // or 'auto' for instant scroll
+        });
+
+        // Alternatively, scroll to the container
+        const container = document.querySelector('.mx-auto.p-6');
+        if (container) {
+          container.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      }, 100); // Small delay to ensure DOM is updated
     }
 
     this.selectedPage = page;
@@ -1050,35 +1050,35 @@ export class CollectiveofficersEditComponent {
   }
 
   getAllCollectionCetnter() {
-  this.collectionCenterSrv
-    .getAllCentreList(this.personalData.companyId)
-    .subscribe((res) => {
-      this.collectionCenterData = res;
-      this.centerOptions = this.collectionCenterData.map((center) => ({
-        label: `${center.regCode ? center.regCode + ' - ' : ''}${center.centerName}`, // Combine regCode with name
-        value: center.id,
-        regCode: center.regCode // Keep regCode if needed
-      }));
-    });
-}
+    this.collectionCenterSrv
+      .getAllCentreList(this.personalData.companyId)
+      .subscribe((res) => {
+        this.collectionCenterData = res;
+        this.centerOptions = this.collectionCenterData.map((center) => ({
+          label: `${center.regCode ? center.regCode + ' - ' : ''}${center.centerName}`, // Combine regCode with name
+          value: center.id,
+          regCode: center.regCode // Keep regCode if needed
+        }));
+      });
+  }
 
   getAllCollectionCenters() {
-  this.collectionCenterData = [];
-  this.personalData.centerId = null;
-  this.managerOptions = [];
-  this.personalData.irmId = null;
-  
-  this.collectionCenterSrv
-    .getAllCentreList(this.personalData.companyId)
-    .subscribe((res) => {
-      this.collectionCenterData = res;
-      this.centerOptions = this.collectionCenterData.map((center) => ({
-        label: `${center.regCode ? center.regCode + ' - ' : ''}${center.centerName}`, // Combine regCode with name
-        value: center.id,
-        regCode: center.regCode // Keep regCode if needed
-      }));
-    });
-}
+    this.collectionCenterData = [];
+    this.personalData.centerId = null;
+    this.managerOptions = [];
+    this.personalData.irmId = null;
+
+    this.collectionCenterSrv
+      .getAllCentreList(this.personalData.companyId)
+      .subscribe((res) => {
+        this.collectionCenterData = res;
+        this.centerOptions = this.collectionCenterData.map((center) => ({
+          label: `${center.regCode ? center.regCode + ' - ' : ''}${center.centerName}`, // Combine regCode with name
+          value: center.id,
+          regCode: center.regCode // Keep regCode if needed
+        }));
+      });
+  }
 
 
   getAllCollectionManagers() {

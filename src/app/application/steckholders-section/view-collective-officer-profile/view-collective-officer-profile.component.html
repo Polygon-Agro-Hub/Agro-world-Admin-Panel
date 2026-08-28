@@ -22,7 +22,8 @@
           </p>
           <p>
             <span class="text-[#627189] dark:text-[#a6aebb]">{{ officerObj.jobRole }} </span>-
-              <span class="text-black dark:text-[#a6aebb]">{{ this.empHeader }}{{ officerObj.empId }}<span *ngIf="officerObj.jobRole === 'Driver'"> | {{officerObj.slvCatName}}</span></span>
+            <span class="text-black dark:text-[#a6aebb]">{{ this.empHeader }}{{ officerObj.empId }}<span
+                *ngIf="officerObj.jobRole === 'Driver'"> | {{officerObj.slvCatName}}</span></span>
           </p>
 
           <!-- collection officer -->
@@ -41,8 +42,7 @@
 
       <div class="flex flex-col gap-y-6">
         <div class="flex flex-row gap-4 justify-between" *ngIf="officerObj.jobRole === 'Driver'">
-          <div class="flex flex-row justify-center min-w-24"
-            *ngIf="
+          <div class="flex flex-row justify-center min-w-24" *ngIf="
             ( urlSegment === 'steckholders' && permissionService.hasPermission('Stakeholder delete driver') || tokenService.getUserDetails().role === '1') ||
             ( urlSegment === 'distribution-hub' && permissionService.hasPermission('Polygon center delete driver') || tokenService.getUserDetails().role === '1') 
             ">
@@ -54,8 +54,7 @@
             </button>
           </div>
 
-          <div class="flex flex-row justify-center "
-            *ngIf="
+          <div class="flex flex-row justify-center " *ngIf="
               (urlSegment === 'steckholders' && permissionService.hasPermission('Stakeholder edit driver') ) ||
               (urlSegment === 'distribution-hub' && permissionService.hasPermission('Polygon center edit driver')) ||
               tokenService.getUserDetails().role === '1'
@@ -164,7 +163,7 @@
           <p class="text-[#030308] dark:text-[#ffffff]">
             {{ officerObj.manageName || '--'}}
           </p>
-          
+
         </div>
       </div>
     </div>

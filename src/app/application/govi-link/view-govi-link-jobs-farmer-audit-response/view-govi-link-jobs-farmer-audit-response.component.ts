@@ -11,12 +11,13 @@ import { ActivatedRoute, Router } from '@angular/router';
   templateUrl: './view-govi-link-jobs-farmer-audit-response.component.html',
   styleUrl: './view-govi-link-jobs-farmer-audit-response.component.css',
 })
+
 export class ViewGoviLinkJobsFarmerAuditResponseComponent implements OnInit {
   constructor(
     private service: GoviLinkService,
     private router: Router,
     private route: ActivatedRoute,
-  ) {}
+  ) { }
 
   isLoading = false;
   isModalOpen = false;

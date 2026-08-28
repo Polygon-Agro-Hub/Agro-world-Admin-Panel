@@ -31,8 +31,8 @@ export class SteckholdersComponent implements OnInit, OnDestroy {
     @Inject(PLATFORM_ID) private platformId: Object,
     public tokenService: TokenService,
     public permissionService: PermissionService,
-    private router: Router
-  ) { }
+    private router: Router,
+  ) {}
 
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
@@ -108,7 +108,9 @@ export class SteckholdersComponent implements OnInit, OnDestroy {
   }
 
   navigateToViewCollectionCenter(): void {
-    this.router.navigate(['/steckholders/action/stakholder-collection-centers']);
+    this.router.navigate([
+      '/steckholders/action/stakholder-collection-centers',
+    ]);
   }
 
   navigateToViewSalesAgents(): void {
@@ -124,7 +126,9 @@ export class SteckholdersComponent implements OnInit, OnDestroy {
   }
 
   navigateToViewDistributionCenter(): void {
-    this.router.navigate(['/steckholders/action/stakholder-distributed-centers']);
+    this.router.navigate([
+      '/steckholders/action/stakholder-distributed-centers',
+    ]);
   }
 
   navigateToViewFieldInspectors(): void {

@@ -40,8 +40,8 @@
         <!-- Date Filter with p-calendar -->
         <div>
           <p-calendar id="toDate" [(ngModel)]="dateFilter" (onSelect)="onDateSelect()" (onClear)="clearDateFilter()"
-            placeholder="Select Date" [showIcon]="true" [showClear]="true" [showButtonBar]="true" iconDisplay="input" [readonlyInput]="true"
-            [style]="{ width: '16rem', height: '2rem' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+            placeholder="Select Date" [showIcon]="true" [showClear]="true" [showButtonBar]="true" iconDisplay="input"
+            [readonlyInput]="true" [style]="{ width: '16rem', height: '2rem' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
                            [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
                            [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
                            [&_.p-datepicker-header]:dark:bg-[#2d354d] 
@@ -150,14 +150,14 @@
               {{ job.district }}
             </td>
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark whitespace-nowrap">
-  <span class="px-2 py-1 rounded-full font-medium" [ngClass]="{
-      'text-red-500': job.status === 'Pending' || job.status === 'Assigned',
-      'text-green-500': job.status === 'Completed',
-      'bg-gray-200 text-gray-800': !job.status
-    }">
-    {{ getDisplayStatus(job.status) }}
-  </span>
-</td>
+              <span class="px-2 py-1 rounded-full font-medium" [ngClass]="{
+                  'text-red-500': job.status === 'Pending' || job.status === 'Assigned',
+                  'text-green-500': job.status === 'Completed',
+                  'bg-gray-200 text-gray-800': !job.status
+                }">
+                {{ getDisplayStatus(job.status) }}
+              </span>
+            </td>
             <td
               *ngIf="permissionService.hasPermission('Assign govi link jobs assign inspectors') || tokenService.getUserDetails().role === '1'"
               class="px-3 py-3 text-center text-textLight dark:text-textDark cursor-pointer whitespace-nowrap w-full">
@@ -168,7 +168,8 @@
                       job.assignStatus === 'Assigned',
                     'bg-[#F8FFA6] text-[#A8A100] cursor-pointer hover:bg-yellow-200':
                       job.assignStatus === 'Not Assigned'
-                  }" (click)="onAssignStatusClick(job)" title="Click to assign or view officer" [style.min-width]="'120px'">
+                  }" (click)="onAssignStatusClick(job)" title="Click to assign or view officer"
+                [style.min-width]="'120px'">
                 <!-- Set a fixed minimum width -->
                 {{ job.assignStatus }}
               </span>

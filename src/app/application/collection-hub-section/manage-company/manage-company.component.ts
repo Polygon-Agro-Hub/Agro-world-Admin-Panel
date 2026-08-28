@@ -158,12 +158,14 @@ export class ManageCompanyComponent {
     private companyService: CollectionCenterService,
     private router: Router,
     public tokenService: TokenService,
-    public permissionService: PermissionService
-  ) { }
+    public permissionService: PermissionService,
+  ) {}
 
   ngOnInit() {
     this.fetchAllCompanys();
-    this.urlSegment = this.router.url.split('/').filter(segment => segment.length > 0)[0];
+    this.urlSegment = this.router.url
+      .split('/')
+      .filter((segment) => segment.length > 0)[0];
   }
 
   fetchAllCompanys() {
@@ -174,17 +176,16 @@ export class ManageCompanyComponent {
         this.companies = response.results;
         this.total = response.total;
         this.hasData = this.companies.length > 0;
-
       },
       () => {
         this.isLoading = false;
         this.hasData = false;
-      }
+      },
     );
   }
 
   searchPlantCareUsers(): void {
-    this.search = this.search?.trim() || ''
+    this.search = this.search?.trim() || '';
     this.fetchAllCompanys();
   }
 
@@ -229,7 +230,7 @@ export class ManageCompanyComponent {
         title: 'font-semibold',
       },
       confirmButtonColor: '#2563eb', // Blue confirm
-      cancelButtonColor: '#dc2626',  // Red cancel
+      cancelButtonColor: '#dc2626', // Red cancel
     }).then((result) => {
       if (result.isConfirmed) {
         this.companyService.deleteCompany(id).subscribe(
@@ -239,7 +240,8 @@ export class ManageCompanyComponent {
               text: 'The company has been deleted.',
               icon: 'success',
               customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                 title: 'font-semibold',
               },
               confirmButtonColor: '#2563eb',
@@ -252,17 +254,17 @@ export class ManageCompanyComponent {
               text: 'There was an error deleting the company.',
               icon: 'error',
               customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                 title: 'font-semibold',
               },
               confirmButtonColor: '#2563eb',
             });
-          }
+          },
         );
       }
     });
   }
-
 
   back(): void {
     window.history.back();

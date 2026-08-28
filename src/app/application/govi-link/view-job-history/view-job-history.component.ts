@@ -47,6 +47,7 @@ interface DropdownOption {
   templateUrl: './view-job-history.component.html',
   styleUrl: './view-job-history.component.css'
 })
+
 export class ViewJobHistoryComponent implements OnInit {
   jobHistory: FieldAuditHistory[] = [];
   filteredHistory: FieldAuditHistory[] = [];
@@ -105,73 +106,71 @@ export class ViewJobHistoryComponent implements OnInit {
     private goviLinkService: GoviLinkService,
     public tokenService: TokenService,
     public permissionService: PermissionService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.fetchJobHistory();
   }
 
-
   fetchJobHistory() {
-  this.isLoading = true;
+    this.isLoading = true;
+    const filters = {
+      status: this.selectedStatus || undefined,
+      district: this.selectedDistrict || undefined,
+      completedDateFrom: this.completedDateFrom ? this.formatDate(this.completedDateFrom) : undefined,
+      searchJobId: this.getSearchParam('jobId'),
+      searchFarmId: this.getSearchParam('farmId'),
+      searchNic: this.getSearchParam('nic')
+    };
 
-  const filters = {
-    status: this.selectedStatus || undefined,
-    district: this.selectedDistrict || undefined,
-    completedDateFrom: this.completedDateFrom ? this.formatDate(this.completedDateFrom) : undefined,
-    searchJobId: this.getSearchParam('jobId'),
-    searchFarmId: this.getSearchParam('farmId'),
-    searchNic: this.getSearchParam('nic')
-  };
+    // Remove undefined values
+    Object.keys(filters).forEach(key => {
+      if (filters[key as keyof typeof filters] === undefined) {
+        delete filters[key as keyof typeof filters];
+      }
+    });
 
-  // Remove undefined values
-  Object.keys(filters).forEach(key => {
-    if (filters[key as keyof typeof filters] === undefined) {
-      delete filters[key as keyof typeof filters];
-    }
-  });
+    this.goviLinkService.getFieldAuditHistory(filters).subscribe(
+      (response) => {
+        this.isLoading = false;
+        if (response.success) {
+          // Map the data first
+          const mappedData = response.data.map((item: any) => ({
+            jobId: item.jobId,
+            empId: item.empId,
+            farmId: item.farmId,
+            farmCode: item.farmCode,
+            regCode: item.regCode,
+            visitPurpose: this.formatVisitPurpose(item.visitPurpose),
+            farmerNIC: item.farmerNIC,
+            district: item.district,
+            scheduledDate: this.formatDateTime(item.scheduledDate),
+            completedDate: this.formatDateTime(item.completedDate),
+            onScreenTime: item.onScreenTime || '--',
+            status: item.status,
+            assignedOn: this.formatDateTime(item.assignedOn),
+            assignedByName: item.assignedByName || '--',
+            assignedOfficer: item.assignedOfficer || '--'
+          }));
 
-  this.goviLinkService.getFieldAuditHistory(filters).subscribe(
-    (response) => {
-      this.isLoading = false;
-      if (response.success) {
-        // Map the data first
-        const mappedData = response.data.map((item: any) => ({
-          jobId: item.jobId,
-          empId: item.empId,
-          farmId: item.farmId,
-          farmCode: item.farmCode,
-          regCode: item.regCode,
-          visitPurpose: this.formatVisitPurpose(item.visitPurpose),
-          farmerNIC: item.farmerNIC,
-          district: item.district,
-          scheduledDate: this.formatDateTime(item.scheduledDate),
-          completedDate: this.formatDateTime(item.completedDate),
-          onScreenTime: item.onScreenTime || '--',
-          status: item.status,
-          assignedOn: this.formatDateTime(item.assignedOn),
-          assignedByName: item.assignedByName || '--',
-          assignedOfficer: item.assignedOfficer || '--'
-        }));
-        
-        // Filter out records with null or empty empId
-        this.jobHistory = mappedData.filter((item: FieldAuditHistory) => 
-          item.empId && item.empId !== null && item.empId !== '--' && item.empId.trim() !== ''
-        );
-        
-        this.totalItems = this.jobHistory.length;
-        this.hasData = this.totalItems > 0;
-      } else {
+          // Filter out records with null or empty empId
+          this.jobHistory = mappedData.filter((item: FieldAuditHistory) =>
+            item.empId && item.empId !== null && item.empId !== '--' && item.empId.trim() !== ''
+          );
+
+          this.totalItems = this.jobHistory.length;
+          this.hasData = this.totalItems > 0;
+        } else {
+          this.hasData = false;
+        }
+      },
+      (error) => {
+        this.isLoading = false;
+        console.error('Error fetching job history:', error);
         this.hasData = false;
       }
-    },
-    (error) => {
-      this.isLoading = false;
-      console.error('Error fetching job history:', error);
-      this.hasData = false;
-    }
-  );
-}
+    );
+  }
 
   getSearchParam(type: 'jobId' | 'farmId' | 'nic'): string | undefined {
     if (!this.searchTerm || this.searchTerm.trim() === '') {
@@ -179,7 +178,7 @@ export class ViewJobHistoryComponent implements OnInit {
     }
 
     const trimmed = this.searchTerm.trim();
-    
+
     // Determine search type based on input pattern
     if (type === 'jobId' && /^\d{11}$/.test(trimmed)) {
       return trimmed;
@@ -190,7 +189,7 @@ export class ViewJobHistoryComponent implements OnInit {
     if (type === 'nic' && /^\d{9}[vVxX]|\d{12}$/.test(trimmed)) {
       return trimmed;
     }
-    
+
     // If unsure, return for all types
     return trimmed;
   }
@@ -261,22 +260,21 @@ export class ViewJobHistoryComponent implements OnInit {
     this.router.navigate(['/govi-link/action']);
   }
 
-  
-viewResponse(jobId: string, purpose: string) {
+  viewResponse(jobId: string, purpose: string) {
 
-  if (jobId && jobId.startsWith("FA")) {
-    this.router.navigate(['/govi-link/action/view-govi-link-jobs-farmer-audit-response'], {
-      queryParams: { jobId },
-    });
-  } else if (jobId && jobId.startsWith("CA")) {
-    this.router.navigate(['/govi-link/action/view-govi-link-jobs-farmer-cluster-audit-response'], {
-      queryParams: { jobId },
-    });
-  } else if (jobId && jobId.startsWith("SR")) {
-    this.router.navigate(['/govi-link/action/view-govi-link-jobs-service-request-response'], {
-      queryParams: { jobId },
-    });
+    if (jobId && jobId.startsWith("FA")) {
+      this.router.navigate(['/govi-link/action/view-govi-link-jobs-farmer-audit-response'], {
+        queryParams: { jobId },
+      });
+    } else if (jobId && jobId.startsWith("CA")) {
+      this.router.navigate(['/govi-link/action/view-govi-link-jobs-farmer-cluster-audit-response'], {
+        queryParams: { jobId },
+      });
+    } else if (jobId && jobId.startsWith("SR")) {
+      this.router.navigate(['/govi-link/action/view-govi-link-jobs-service-request-response'], {
+        queryParams: { jobId },
+      });
+    }
+
   }
-  
-}
 }

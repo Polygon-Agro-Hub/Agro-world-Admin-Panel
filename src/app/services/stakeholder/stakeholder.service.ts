@@ -7,6 +7,7 @@ import { catchError, map } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root',
 })
+
 export class StakeholderService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
@@ -378,7 +379,7 @@ export class StakeholderService {
     approval: string,
     bussinessType: string,
     searchItem: string,
-    
+
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -423,19 +424,19 @@ export class StakeholderService {
     });
 
     return this.http.post(`${this.apiUrl}shop/update-govi-shop-user`,
-    supplierData,
+      supplierData,
       {
         headers
       });
   }
-  
+
   getAllShopsRequests(
     page: number,
     limit: number,
     approval: string,
     bussinessType: string,
     searchItem: string,
-    
+
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -485,7 +486,7 @@ export class StakeholderService {
     });
 
     return this.http.post(`${this.apiUrl}shop/update-govi-shop`,
-    shopData,
+      shopData,
       {
         headers
       });
@@ -501,31 +502,31 @@ export class StakeholderService {
   }
 
   getUsers(
-  search?: string,
-  role?: string
-): Observable<any> {
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${this.token}`,
-    'Content-Type': 'application/json',
-  });
-
-  let params = new HttpParams();
-
-  // Add filter parameters if provided
-  if (search) {
-    params = params.set('search', search);
-  }
-
-  if (role) {
-    params = params.set('role', role);
-  }
-
-  return this.http
-    .get(`${this.apiUrl}shop/users`, {
-      headers,
-      params,
+    search?: string,
+    role?: string
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
     });
-}
+
+    let params = new HttpParams();
+
+    // Add filter parameters if provided
+    if (search) {
+      params = params.set('search', search);
+    }
+
+    if (role) {
+      params = params.set('role', role);
+    }
+
+    return this.http
+      .get(`${this.apiUrl}shop/users`, {
+        headers,
+        params,
+      });
+  }
 
   getPosUserById(id: number) {
     const headers = new HttpHeaders({
@@ -544,7 +545,7 @@ export class StakeholderService {
     });
 
     return this.http.post(`${this.apiUrl}shop/update-pos-user`,
-    userData,
+      userData,
       {
         headers
       });
@@ -557,7 +558,7 @@ export class StakeholderService {
     });
 
     return this.http.post(`${this.apiUrl}shop/reset-govi-shop-user-password`,
-    userData,
+      userData,
       {
         headers
       });
@@ -569,7 +570,7 @@ export class StakeholderService {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    
+
     return this.http.get(
       `${this.apiUrl}shop/get-govi-shop-branches/${shopId}`,
       {
@@ -583,7 +584,7 @@ export class StakeholderService {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-  
+
     const url = `${this.apiUrl}shop/approve-govi-shop/${id}`;
     return this.http.put<any>(url, {}, { headers });
   }
@@ -595,20 +596,20 @@ export class StakeholderService {
     });
 
     const url = `${this.apiUrl}shop/reject-govi-shop/${id}`;
-    return this.http.post<any>(url, {text}, { headers });
+    return this.http.post<any>(url, { text }, { headers });
   }
 
   toggleShopActiveStatus(shopId: number, isActive: number): Observable<any> {
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${this.token}`,
-    'Content-Type': 'application/json',
-  });
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
 
-  const url = `${this.apiUrl}shop/toggle-shop-status/${shopId}`;
-  return this.http.put<any>(url, { isActive }, { headers });
-}
+    const url = `${this.apiUrl}shop/toggle-shop-status/${shopId}`;
+    return this.http.put<any>(url, { isActive }, { headers });
+  }
 
-deleteGoviShop(id: number, reason: string | null): Observable<any> {
+  deleteGoviShop(id: number, reason: string | null): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
@@ -619,7 +620,6 @@ deleteGoviShop(id: number, reason: string | null): Observable<any> {
       body: { reason }
     });
   }
-
 
 }
 

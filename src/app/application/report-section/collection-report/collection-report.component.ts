@@ -43,6 +43,7 @@ interface PurchaseReport {
   styleUrl: './collection-report.component.css',
   providers: [DatePipe],
 })
+
 export class CollectionReportComponent {
   isLoading = false;
   fromDate: Date | null = null;
@@ -64,7 +65,7 @@ export class CollectionReportComponent {
     public tokenService: TokenService,
     public permissionService: PermissionService,
     private datePipe: DatePipe
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.getAllCenters();
@@ -74,7 +75,7 @@ export class CollectionReportComponent {
   fetchAllCollectionReport(page: number = 1, limit: number = this.itemsPerPage) {
     this.isLoading = true;
     const centerId = this.selectedCenter?.id || '';
-    
+
     // Convert Date objects to formatted strings
     const formattedFromDate = this.fromDate ? this.datePipe.transform(this.fromDate, 'yyyy-MM-dd') : '';
     const formattedToDate = this.toDate ? this.datePipe.transform(this.toDate, 'yyyy-MM-dd') : '';
@@ -122,7 +123,7 @@ export class CollectionReportComponent {
     if (event.key === ' ') {
       const input = event.target as HTMLInputElement;
       const cursorPosition = input.selectionStart;
-      
+
       // Prevent space if it's at the beginning or if there's a space at cursor position
       if (cursorPosition === 0 || this.search.trim() === '') {
         event.preventDefault();
@@ -160,142 +161,142 @@ export class CollectionReportComponent {
   }
 
   downloadTemplate1() {
-  this.isDownloading = true;
+    this.isDownloading = true;
 
-  let queryParams = [];
+    let queryParams = [];
 
-  if (this.selectedCenter) {
-    queryParams.push(`centerId=${this.selectedCenter.id}`);
-  }
-
-  // Convert Date objects to formatted strings for download
-  const formattedFromDate = this.fromDate ? this.datePipe.transform(this.fromDate, 'yyyy-MM-dd') : '';
-  const formattedToDate = this.toDate ? this.datePipe.transform(this.toDate, 'yyyy-MM-dd') : '';
-
-  if (formattedFromDate) {
-    queryParams.push(`startDate=${formattedFromDate}`);
-  }
-
-  if (formattedToDate) {
-    queryParams.push(`endDate=${formattedToDate}`);
-  }
-
-  if (this.search) {
-    queryParams.push(`search=${this.search}`);
-  }
-
-  const queryString =
-    queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
-  const apiUrl = `${environment.API_URL}auth/download-collection-report${queryString}`;
-
-  fetch(apiUrl, {
-    method: 'GET',
-  })
-    .then((response) => {
-      if (response.ok) {
-        return response.blob();
-      } else {
-        throw new Error('Failed to download the file');
-      }
-    })
-    .then((blob) => {
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-
-      // Generate filename according to the new format
-      let filename = 'Collection Report';
-      
-      // Add date range if both dates are selected
-      if (formattedFromDate && formattedToDate) {
-        const fromDateObj = new Date(this.fromDate!);
-        const toDateObj = new Date(this.toDate!);
-        
-        const fromDateFormatted = this.formatDateForFilename(fromDateObj);
-        const toDateFormatted = this.formatDateForFilename(toDateObj);
-        
-        filename += ` from ${fromDateFormatted} to ${toDateFormatted}`;
-      } else if (formattedFromDate) {
-        // If only from date is selected
-        const fromDateObj = new Date(this.fromDate!);
-        const fromDateFormatted = this.formatDateForFilename(fromDateObj);
-        filename += ` on ${fromDateFormatted}`;
-      }
-      
-      // Add generation timestamp in the new format: YYYY-MM-DD HH.MM AM/PM
-      const now = new Date();
-      const generatedDate = this.formatDateForGeneration(now);
-      const generatedTime = this.formatTimeForFilename(now);
-      
-      filename += ` Generated at ${generatedDate} ${generatedTime}`;
-      
-      filename += '.xlsx';
-
-      a.download = filename;
-      a.click();
-      window.URL.revokeObjectURL(url);
-
-      Swal.fire({
-        icon: 'success',
-        title: 'Downloaded',
-        text: 'Please check your downloads folder',
-      });
-      this.isDownloading = false;
-    })
-    .catch((error) => {
-      Swal.fire({
-        icon: 'error',
-        title: 'Download Failed',
-        text: error.message,
-      });
-      this.isDownloading = false;
-    });
-}
-
-// Format date for filename (returns format like "10th February")
-private formatDateForFilename(date: Date): string {
-  const day = date.getDate();
-  const month = date.toLocaleString('en-US', { month: 'long' });
-  
-  // Add ordinal suffix to day
-  const getOrdinalSuffix = (day: number): string => {
-    if (day > 3 && day < 21) return 'th';
-    switch (day % 10) {
-      case 1: return 'st';
-      case 2: return 'nd';
-      case 3: return 'rd';
-      default: return 'th';
+    if (this.selectedCenter) {
+      queryParams.push(`centerId=${this.selectedCenter.id}`);
     }
-  };
 
-  const dayWithSuffix = `${day}${getOrdinalSuffix(day)}`;
-  
-  // Return format: "10th February"
-  return `${dayWithSuffix} ${month}`;
-}
+    // Convert Date objects to formatted strings for download
+    const formattedFromDate = this.fromDate ? this.datePipe.transform(this.fromDate, 'yyyy-MM-dd') : '';
+    const formattedToDate = this.toDate ? this.datePipe.transform(this.toDate, 'yyyy-MM-dd') : '';
 
-// Format date for generation timestamp (YYYY-MM-DD format)
-private formatDateForGeneration(date: Date): string {
-  const year = date.getFullYear();
-  const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  const day = date.getDate().toString().padStart(2, '0');
-  
-  // Return format: "2026-03-03"
-  return `${year}-${month}-${day}`;
-}
+    if (formattedFromDate) {
+      queryParams.push(`startDate=${formattedFromDate}`);
+    }
 
-// Format time for filename (HH.MM AM/PM format)
-private formatTimeForFilename(date: Date): string {
-  let hours = date.getHours();
-  const minutes = date.getMinutes().toString().padStart(2, '0');
-  const ampm = hours >= 12 ? 'PM' : 'AM';
-  
-  hours = hours % 12;
-  hours = hours ? hours : 12; // the hour '0' should be '12'
-  
-  // Format: HH.MM AM/PM (using dots instead of colons)
-  return `${hours.toString().padStart(2, '0')}.${minutes} ${ampm}`;
-}
+    if (formattedToDate) {
+      queryParams.push(`endDate=${formattedToDate}`);
+    }
+
+    if (this.search) {
+      queryParams.push(`search=${this.search}`);
+    }
+
+    const queryString =
+      queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
+    const apiUrl = `${environment.API_URL}auth/download-collection-report${queryString}`;
+
+    fetch(apiUrl, {
+      method: 'GET',
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.blob();
+        } else {
+          throw new Error('Failed to download the file');
+        }
+      })
+      .then((blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+
+        // Generate filename according to the new format
+        let filename = 'Collection Report';
+
+        // Add date range if both dates are selected
+        if (formattedFromDate && formattedToDate) {
+          const fromDateObj = new Date(this.fromDate!);
+          const toDateObj = new Date(this.toDate!);
+
+          const fromDateFormatted = this.formatDateForFilename(fromDateObj);
+          const toDateFormatted = this.formatDateForFilename(toDateObj);
+
+          filename += ` from ${fromDateFormatted} to ${toDateFormatted}`;
+        } else if (formattedFromDate) {
+          // If only from date is selected
+          const fromDateObj = new Date(this.fromDate!);
+          const fromDateFormatted = this.formatDateForFilename(fromDateObj);
+          filename += ` on ${fromDateFormatted}`;
+        }
+
+        // Add generation timestamp in the new format: YYYY-MM-DD HH.MM AM/PM
+        const now = new Date();
+        const generatedDate = this.formatDateForGeneration(now);
+        const generatedTime = this.formatTimeForFilename(now);
+
+        filename += ` Generated at ${generatedDate} ${generatedTime}`;
+
+        filename += '.xlsx';
+
+        a.download = filename;
+        a.click();
+        window.URL.revokeObjectURL(url);
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Downloaded',
+          text: 'Please check your downloads folder',
+        });
+        this.isDownloading = false;
+      })
+      .catch((error) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Download Failed',
+          text: error.message,
+        });
+        this.isDownloading = false;
+      });
+  }
+
+  // Format date for filename (returns format like "10th February")
+  private formatDateForFilename(date: Date): string {
+    const day = date.getDate();
+    const month = date.toLocaleString('en-US', { month: 'long' });
+
+    // Add ordinal suffix to day
+    const getOrdinalSuffix = (day: number): string => {
+      if (day > 3 && day < 21) return 'th';
+      switch (day % 10) {
+        case 1: return 'st';
+        case 2: return 'nd';
+        case 3: return 'rd';
+        default: return 'th';
+      }
+    };
+
+    const dayWithSuffix = `${day}${getOrdinalSuffix(day)}`;
+
+    // Return format: "10th February"
+    return `${dayWithSuffix} ${month}`;
+  }
+
+  // Format date for generation timestamp (YYYY-MM-DD format)
+  private formatDateForGeneration(date: Date): string {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+
+    // Return format: "2026-03-03"
+    return `${year}-${month}-${day}`;
+  }
+
+  // Format time for filename (HH.MM AM/PM format)
+  private formatTimeForFilename(date: Date): string {
+    let hours = date.getHours();
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+
+    // Format: HH.MM AM/PM (using dots instead of colons)
+    return `${hours.toString().padStart(2, '0')}.${minutes} ${ampm}`;
+  }
 
   // Method to handle from date selection
   onFromDateChange() {
@@ -303,7 +304,7 @@ private formatTimeForFilename(date: Date): string {
       // Set minimum date for toDate as today (to disable previous dates)
       // This ensures only today and future dates can be selected in toDate
       this.minToDate = new Date();
-      
+
       // If toDate exists and is before today, reset toDate
       if (this.toDate && this.toDate < this.minToDate) {
         this.toDate = null;

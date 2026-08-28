@@ -11,277 +11,138 @@
 
   <form [formGroup]="collectionCenterForm" (ngSubmit)="onSubmit()">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-      <!-- Registration Code -->
 
       <div>
-    <label for="centerName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Collection Centre Name *</label>
-  <input
-    formControlName="centerName"
-    id="centerName"
-    name="centerName"
-    (input)="onCenterNameInput($event)"
-    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-  />
-  <div
-    *ngIf="
+        <label for="centerName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Collection Centre
+          Name *</label>
+        <input formControlName="centerName" id="centerName" name="centerName" (input)="onCenterNameInput($event)"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        <div *ngIf="
       (collectionCenterForm.get('centerName')?.dirty ||
         collectionCenterForm.get('centerName')?.touched) &&
       collectionCenterForm.get('centerName')?.hasError('required')
-    "
-    class="text-red-500 text-sm mt-1"
-  >
-    Centre Name is required
-  </div>
-        <!-- <div *ngIf="
-            collectionCenterForm
-              .get('centerName')
-              ?.hasError('containsNumbers') &&
-            (collectionCenterForm.get('centerName')?.dirty ||
-              collectionCenterForm.get('centerName')?.touched)
-          " class="text-red-500 text-sm mt-1">
-          Centre name cannot contain numbers.
-        </div> -->
+    " class="text-red-500 text-sm mt-1">
+          Centre Name is required
+        </div>
       </div>
 
-      <!-- <div class="relative">
-
-        <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+      <div class="relative">
+        <label for="companies" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Companies *
         </label>
 
-        <input
-          type="text"
-          [value]="selectedCompaniesNames.join(', ')"
-          readonly
-          class="mt-2 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 cursor-pointer"
-          placeholder="Select companies"
-          (click)="onCompanyInputClick()"
-        />
-      
+        <p-multiSelect [options]="filteredCompanies" [(ngModel)]="selectedCompaniesIds"
+          (onChange)="onCompanyChange($event)" optionLabel="companyNameEnglish" optionValue="id" [filter]="true"
+          filterPlaceholder="Search company..." [showClear]="true" placeholder="Select companies"
+          [styleClass]="'w-full h-12 flex items-center text-textLight dark:text-textDark bg-gray-100 dark:bg-gray-800'"
+          [ngModelOptions]="{standalone: true}">
+        </p-multiSelect>
 
-        <div
-          *ngIf="dropdownOpen"
-          class="absolute left-0 w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-md shadow-lg z-50 max-h-60 overflow-auto"
-          style="top: 100%; position: absolute"
-        >
-          <div
-            *ngFor="let company of CompanyData"
-            class="p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
-            (click)="toggleSelection(company)"
-          >
-            <input
-              type="checkbox"
-              [checked]="selectedCompaniesIds.includes(company.id)"
-              class="mr-2"
-              (click)="$event.stopPropagation()"
-            />
-            {{ company.companyNameEnglish }}
-          </div>
-        </div>
-      
-
-        <div *ngIf="companyTouched && companyDisplayText === ''" class="text-red-500 text-sm mt-1">
+        <div *ngIf="companyTouched && !selectedCompaniesIds.length" class="text-red-500 text-sm mt-1">
           Company is required
         </div>
-      </div> -->
+      </div>
 
-<div class="relative">
-  <label for="companies" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-    Companies *
-  </label>
-
-<p-multiSelect
-  [options]="filteredCompanies"
-  [(ngModel)]="selectedCompaniesIds"
-  (onChange)="onCompanyChange($event)"
-  optionLabel="companyNameEnglish"
-  optionValue="id"
-  [filter]="true"
-  filterPlaceholder="Search company..."
-  [showClear]="true"
-  placeholder="Select companies"
-  [styleClass]="'w-full h-12 flex items-center text-textLight dark:text-textDark bg-gray-100 dark:bg-gray-800'"
-  [ngModelOptions]="{standalone: true}">
-</p-multiSelect>
-
-
-
-  <div *ngIf="companyTouched && !selectedCompaniesIds.length" class="text-red-500 text-sm mt-1">
-    Company is required
-  </div>
-</div>
-
-      
-
-      <!-- <div *ngIf="accHolderNameInput.touched && (accHolderNameInput.errors?.['required'] || !personalData.accHolderName)"  class="text-red-500 text-sm mt-1">
-          Account Holder’s Name is required
-        </div> -->
-
-      <!-- Contact Number 01 -->
       <div>
         <label for="contact01Code" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Contact Number 01 *
         </label>
-      
-        <div class="mt-1 flex">
-          <p-dropdown
-  [options]="countries"
-  formControlName="contact01Code"
-  [optionLabel]="'dialCode'"
-  [optionValue]="'dialCode'"
-  styleClass="border border-gray-300 mr-2 rounded-md bg-white dark:bg-tileBlack text-gray-800 dark:text-white custom-dropdown"
-  [style]="{ width: '120px' }"
->
-  <!-- Dropdown items -->
-  <ng-template let-country pTemplate="item">
-    <div class="flex items-center gap-2">
-      <img
-        [src]="getFlagUrl(country.code)"
-        width="24"
-        height="18"
-        alt="{{ country.name }}"
-      />
-      <span>{{ country.dialCode }}</span>
-    </div>
-  </ng-template>
 
-  <!-- Selected item -->
-  <ng-template let-country pTemplate="selectedItem">
-    <div class="flex items-center gap-2" *ngIf="country">
-      <img
-        [src]="getFlagUrl(country.code)"
-        width="24"
-        height="18"
-        alt="{{ country.name }}"
-      />
-      <span>{{ country.dialCode }}</span>
-    </div>
-  </ng-template>
-</p-dropdown>
-      
-          <!-- Phone Input -->
+        <div class="mt-1 flex">
+          <p-dropdown [options]="countries" formControlName="contact01Code" [optionLabel]="'dialCode'"
+            [optionValue]="'dialCode'"
+            styleClass="border border-gray-300 mr-2 rounded-md bg-white dark:bg-tileBlack text-gray-800 dark:text-white custom-dropdown"
+            [style]="{ width: '120px' }">
+            <ng-template let-country pTemplate="item">
+              <div class="flex items-center gap-2">
+                <img [src]="getFlagUrl(country.code)" width="24" height="18" alt="{{ country.name }}" />
+                <span>{{ country.dialCode }}</span>
+              </div>
+            </ng-template>
+
+            <ng-template let-country pTemplate="selectedItem">
+              <div class="flex items-center gap-2" *ngIf="country">
+                <img [src]="getFlagUrl(country.code)" width="24" height="18" alt="{{ country.name }}" />
+                <span>{{ country.dialCode }}</span>
+              </div>
+            </ng-template>
+          </p-dropdown>
+
           <div class="flex flex-col flex-1">
-            <input
-  type="tel"
-  formControlName="contact01"
-  id="contact01"
-  pattern="^[1-9][0-9]{8}$"
-  minlength="9"
-  maxlength="9"
-  (keypress)="allowOnlyNumbers($event)"
-  (input)="stripLeadingZero('contact01')"
-  class="block w-full p-2 border h-12 border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-  placeholder="Enter your phone number"
-/>
+            <input type="tel" formControlName="contact01" id="contact01" pattern="^[1-9][0-9]{8}$" minlength="9"
+              maxlength="9" (keypress)="allowOnlyNumbers($event)" (input)="stripLeadingZero('contact01')"
+              class="block w-full p-2 border h-12 border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+              placeholder="Enter your phone number" />
           </div>
         </div>
-      
-       
-      
-      
-          <div *ngIf="collectionCenterForm.get('contact01')?.touched">
-  <div
-    *ngIf="collectionCenterForm.get('contact01')?.errors?.['required']"
-    class="text-red-500 text-sm mt-1"
-  >
-    Contact Number 01 is required.
-  </div>
 
-  <div
-    *ngIf="collectionCenterForm.get('contact01')?.errors?.['pattern']"
-    class="text-red-500 text-sm mt-1"
-  >
-    Phone Number must be exactly 9 digits.
-  </div>
-</div>
-        
+        <div *ngIf="collectionCenterForm.get('contact01')?.touched">
+          <div *ngIf="collectionCenterForm.get('contact01')?.errors?.['required']" class="text-red-500 text-sm mt-1">
+            Contact Number 01 is required.
+          </div>
+
+          <div *ngIf="collectionCenterForm.get('contact01')?.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+            Phone Number must be exactly 9 digits.
+          </div>
+        </div>
+
       </div>
-      
 
-      <!-- Contact Number 02 -->
       <div>
         <label for="contact02Code" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Contact Number 02
         </label>
-      
-        <div class="mt-1 flex">
-          <p-dropdown
-  [options]="countries"
-  formControlName="contact02Code"
-  [optionLabel]="'dialCode'"
-  [optionValue]="'dialCode'"
-  styleClass="border border-gray-300 mr-2 rounded-md bg-white dark:bg-tileBlack text-gray-800 dark:text-white custom-dropdown"
-  [style]="{ width: '120px' }"
->
-  <!-- Dropdown items -->
-  <ng-template let-country pTemplate="item">
-    <div class="flex items-center gap-2">
-      <img
-        [src]="getFlagUrl(country.code)"
-        width="24"
-        height="18"
-        alt="{{ country.name }}"
-      />
-      <span>{{ country.dialCode }}</span>
-    </div>
-  </ng-template>
 
-  <!-- Selected item -->
-  <ng-template let-country pTemplate="selectedItem">
-    <div class="flex items-center gap-2" *ngIf="country">
-      <img
-        [src]="getFlagUrl(country.code)"
-        width="24"
-        height="18"
-        alt="{{ country.name }}"
-      />
-      <span>{{ country.dialCode }}</span>
-    </div>
-  </ng-template>
-</p-dropdown>
-      
-          <!-- Phone Input -->
+        <div class="mt-1 flex">
+          <p-dropdown [options]="countries" formControlName="contact02Code" [optionLabel]="'dialCode'"
+            [optionValue]="'dialCode'"
+            styleClass="border border-gray-300 mr-2 rounded-md bg-white dark:bg-tileBlack text-gray-800 dark:text-white custom-dropdown"
+            [style]="{ width: '120px' }">
+            <ng-template let-country pTemplate="item">
+              <div class="flex items-center gap-2">
+                <img [src]="getFlagUrl(country.code)" width="24" height="18" alt="{{ country.name }}" />
+                <span>{{ country.dialCode }}</span>
+              </div>
+            </ng-template>
+
+            <ng-template let-country pTemplate="selectedItem">
+              <div class="flex items-center gap-2" *ngIf="country">
+                <img [src]="getFlagUrl(country.code)" width="24" height="18" alt="{{ country.name }}" />
+                <span>{{ country.dialCode }}</span>
+              </div>
+            </ng-template>
+          </p-dropdown>
+
           <div class="flex flex-col flex-1">
-            <!-- Contact 02 -->
-<!-- Contact 02 -->
-<input type="tel"
-  formControlName="contact02"
-  id="contact02"
-  name="contact02"
-  placeholder="Enter your phone number"
-  class="block w-full p-2 border h-12 border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-  (keypress)="allowOnlyNumbers($event)"
-  (input)="stripLeadingZero('contact02')"
-  pattern="^[1-9][0-9]{8}$" minlength="9" maxlength="9"/>
+            <input type="tel" formControlName="contact02" id="contact02" name="contact02"
+              placeholder="Enter your phone number"
+              class="block w-full p-2 border h-12 border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+              (keypress)="allowOnlyNumbers($event)" (input)="stripLeadingZero('contact02')" pattern="^[1-9][0-9]{8}$"
+              minlength="9" maxlength="9" />
           </div>
         </div>
-      
+
         <div *ngIf="collectionCenterForm.get('contact02')?.touched">
-  <div *ngIf="
+          <div *ngIf="
       collectionCenterForm.get('contact01')?.value &&
       collectionCenterForm.get('contact02')?.value &&
       collectionCenterForm.get('contact01')?.value === collectionCenterForm.get('contact02')?.value"
-    class="text-red-500 text-sm mt-1">
-    Contact Number - 1 and Contact Number - 2 cannot be the same
-  </div>
+            class="text-red-500 text-sm mt-1">
+            Contact Number - 1 and Contact Number - 2 cannot be the same
+          </div>
 
-  <div
-    *ngIf="collectionCenterForm.get('contact02')?.errors?.['pattern']"
-    class="text-red-500 text-sm mt-1"
-  >
-    Phone Number must be exactly 9 digits.
-  </div>
-</div>
+          <div *ngIf="collectionCenterForm.get('contact02')?.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+            Phone Number must be exactly 9 digits.
+          </div>
+        </div>
 
       </div>
 
-      <!-- Building Number -->
       <div>
         <label for="buildingNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Building
           Number *</label>
-        <input formControlName="buildingNumber" id="buildingNumber" name="buildingNumber" 
-       (input)="trimBuildingNumber()"
-       class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        <input formControlName="buildingNumber" id="buildingNumber" name="buildingNumber" (input)="trimBuildingNumber()"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         <div *ngIf="
             collectionCenterForm.get('buildingNumber')?.invalid &&
             (collectionCenterForm.get('buildingNumber')?.dirty ||
@@ -291,12 +152,10 @@
         </div>
       </div>
 
-      <!-- Street Name -->
       <div>
         <label for="street" class="block text-sm font-medium text-gray-700 dark:text-textDark">Street Name *</label>
-        <input formControlName="street" id="street" name="street" 
-       (input)="trimStreetName()"
-       class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        <input formControlName="street" id="street" name="street" (input)="trimStreetName()"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         <div *ngIf="
             collectionCenterForm.get('street')?.invalid &&
             (collectionCenterForm.get('street')?.dirty ||
@@ -310,9 +169,8 @@
 
       <div>
         <label for="city" class="block text-sm font-medium text-gray-700 dark:text-textDark">City *</label>
-        <input formControlName="city" id="city" name="city" 
-       (input)="trimCity()"
-       class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        <input formControlName="city" id="city" name="city" (input)="trimCity()"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         <div *ngIf="
             collectionCenterForm.get('city')?.invalid &&
             (collectionCenterForm.get('city')?.dirty ||
@@ -322,106 +180,57 @@
         </div>
       </div>
 
-      <!-- Province -->
-      <!-- Province -->
-<div >
-  <label class="block text-sm font-medium text-gray-700 mb-1 dark:text-textDark">Province *</label>
-  <p-dropdown formControlName="province" [options]="provinceOptions" optionLabel="label" optionValue="value"
-    [filter]="true" filterBy="label" [showClear]="false" placeholder="Select Province"
-    (onChange)="onProvinceChange()" styleClass="w-full" panelStyleClass="custom-dropdown-panel"
-    class="block w-full p-dropdown-custom" [class.border-red-500]="isFieldInvalid('province')">
-  </p-dropdown>
-  <div *ngIf="isFieldInvalid('province')" class="text-red-500 text-sm mt-1">
-    Province is required
-  </div>
-</div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1 dark:text-textDark">Province *</label>
+        <p-dropdown formControlName="province" [options]="provinceOptions" optionLabel="label" optionValue="value"
+          [filter]="true" filterBy="label" [showClear]="false" placeholder="Select Province"
+          (onChange)="onProvinceChange()" styleClass="w-full" panelStyleClass="custom-dropdown-panel"
+          class="block w-full p-dropdown-custom" [class.border-red-500]="isFieldInvalid('province')">
+        </p-dropdown>
+        <div *ngIf="isFieldInvalid('province')" class="text-red-500 text-sm mt-1">
+          Province is required
+        </div>
+      </div>
 
-<!-- District -->
-<div class="flex-1">
-  <label class="block text-sm font-medium text-gray-700 mb-1 dark:text-textDark">District *</label>
-  <p-dropdown formControlName="district" [options]="districtOptions" optionLabel="label" optionValue="value"
-    [filter]="true" filterBy="label" [showClear]="false" [disabled]="!collectionCenterForm.get('province')?.value"
-    placeholder="Select District" (onChange)="onDistrictChange()" styleClass="w-full"
-    panelStyleClass="custom-dropdown-panel" class="block w-full p-dropdown-custom"
-    [class.border-red-500]="isFieldInvalid('district')">
-  </p-dropdown>
-  <div *ngIf="isFieldInvalid('district')" class="text-red-500 text-sm mt-1">
-    District is required
-  </div>
-</div>
+      <div class="flex-1">
+        <label class="block text-sm font-medium text-gray-700 mb-1 dark:text-textDark">District *</label>
+        <p-dropdown formControlName="district" [options]="districtOptions" optionLabel="label" optionValue="value"
+          [filter]="true" filterBy="label" [showClear]="false" [disabled]="!collectionCenterForm.get('province')?.value"
+          placeholder="Select District" (onChange)="onDistrictChange()" styleClass="w-full"
+          panelStyleClass="custom-dropdown-panel" class="block w-full p-dropdown-custom"
+          [class.border-red-500]="isFieldInvalid('district')">
+        </p-dropdown>
+        <div *ngIf="isFieldInvalid('district')" class="text-red-500 text-sm mt-1">
+          District is required
+        </div>
+      </div>
 
       <div>
         <label for="country" class="block text-sm font-medium text-gray-700 dark:text-textDark">Country *</label>
-        <input
-          id="country"
-          type="text"
-          formControlName="country"
-          readonly
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        />
+        <input id="country" type="text" formControlName="country" readonly
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
       </div>
-      
 
-      <!-- <div>
-        <label for="regCode" class="block text-sm font-medium text-gray-700 dark:text-textDark">Reg Code</label>
-        <input formControlName="regCode" id="regCode" name="regCode"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          [readonly]="true" />
-      </div> -->
 
-      <!-- <div>
-        <label for="regCode" class="block text-sm font-medium text-gray-700 dark:text-textDark">Reg Code</label>
-        <div class="relative">
-          <input formControlName="regCode" id="regCode" name="regCode"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            [readonly]="true" />
-          <div *ngIf="isLoadingregcode" class="absolute right-2 top-2">
-            <svg class="animate-spin h-5 w-5 text-gray-500 dark:text-textDark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
-              <path fill="currentColor" d="M4 12a8 8 0 0 1 8-8V0C4.48 0 0 4.48 0 9s4.48 9 10 9V15a8 8 0 0 1-8-8z"></path>
-            </svg>
-          </div>
-        </div>
-      </div> -->
+
 
       <div>
-  <label for="regCode" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-    Collection Centre Reg Code
-  </label>
-  <div class="relative">
-    <input
-      formControlName="regCode"
-      id="regCode"
-      name="regCode"
-      readonly
-      class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-    />
-  </div>
-</div>
+        <label for="regCode" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          Collection Centre Reg Code
+        </label>
+        <div class="relative">
+          <input formControlName="regCode" id="regCode" name="regCode" readonly
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        </div>
+      </div>
     </div>
     <div class="flex justify-end items-end m-10">
       <div class="px-6 py-2 mx-5 bg-[#74788D] text-white rounded-md cursor-pointer" (click)="onCancel()">
         Cancel
       </div>
-      <button type="submit" class="px-6 py-2 bg-[#3980C0] text-white rounded-md"
-  
-    
->
-  Save
-</button>
+      <button type="submit" class="px-6 py-2 bg-[#3980C0] text-white rounded-md">
+        Save
+      </button>
     </div>
   </form>
 </div>
-
-
-<!-- isPhoneInvalidMap['phone01'] ||
-      (collectionCenterForm.get('contact02').value && 
-        (collectionCenterForm.get('contact01').value === collectionCenterForm.get('contact02').value ||
-         isPhoneInvalidMap['phone02'] ||
-         collectionCenterForm.get('contact02').invalid) -->
-
-
-         <!-- (collectionCenterForm.get('contact02')?.value &&
-      (collectionCenterForm.get('contact01')?.value === collectionCenterForm.get('contact02')?.value ||
-       isPhoneInvalidMap['phone02'])
-    )" -->

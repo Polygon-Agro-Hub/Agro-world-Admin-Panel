@@ -27,19 +27,11 @@
 
       <div class="mr-8">
         <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96 relative group">
-          <!-- Popover -->
-          <!-- <div
-            class="absolute top-[50px] left-0 bg-gray-700 text-white text-xs rounded-md py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-          >
-            Search by company
-          </div> -->
 
-          <!-- Input field -->
           <input type="text" placeholder="Search by Company Name or Email"
             class="bg-transparent outline-none w-full dark:text-textDark text-gray-600" [(ngModel)]="search"
             (keydown.enter)="searchPlantCareUsers()" />
 
-          <!-- Search button -->
           <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
             (click)="searchPlantCareUsers()">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
@@ -49,7 +41,6 @@
             </svg>
           </button>
 
-          <!-- Clear button -->
           <button type="button" (click)="clearSearch()" class="text-gray-500 hover:text-gray-700 focus:outline-none">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
               stroke="currentColor">
@@ -77,11 +68,6 @@
             <th class="px-4 py-3 font-normal whitespace-nowrap text-textLight dark:text-textDark text-left">
               Company Email
             </th>
-            <!-- <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
-            >
-              Status
-            </th> -->
             <th class="px-4 py-3 font-normal whitespace-nowrap text-textLight dark:text-textDark text-center">
               No. of Centres
             </th>
@@ -102,9 +88,6 @@
             <th class="px-4 py-3 font-normal whitespace-nowrap text-textLight dark:text-textDark text-left">
               Contact Number 02
             </th>
-            <!-- <th class="px-4 py-3 font-normal whitespace-nowrap text-textLight dark:text-textDark text-center">
-              CUO Profiles
-            </th> -->
             <th class="py-3 font-normal text-textLight dark:text-textDark text-center" *ngIf="
               ( urlSegment === 'collection-hub' && permissionService.hasPermission('View Company Head Portals') )||
               ( urlSegment === 'steckholders' && permissionService.hasPermission('Stakeholder view collection Head Portals') )||
@@ -129,7 +112,8 @@
             <td class="px-4 py-3 whitespace-nowrap text-left text-textLight dark:text-textDark">
               {{ item.companyName }}
             </td>
-            <td *ngIf="item.companyEmail" class="px-4 py-3 whitespace-nowrap text-left text-textLight dark:text-textDark">
+            <td *ngIf="item.companyEmail"
+              class="px-4 py-3 whitespace-nowrap text-left text-textLight dark:text-textDark">
               {{ item.companyEmail }}
             </td>
             <td *ngIf="!item.companyEmail"
@@ -137,22 +121,6 @@
               Email added by default
             </td>
 
-            <!-- <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
-              <div *ngIf="item.status === 1">
-                <span
-                  class="w-24 h-7 inline-block bg-green-100 text-green-500 font-medium rounded-md px-3 py-1 text-sm"
-                >
-                  Active
-                </span>
-              </div>
-              <div *ngIf="item.status === 0">
-                <span
-                  class="w-24 h-7 inline-block bg-red-100 text-red-500 font-medium rounded-md px-3 py-1 text-sm"
-                >
-                  Deactive
-                </span>
-              </div>
-            </td> -->
 
             <td class="px-2 py-3 whitespace-nowrap text-center text-textLight dark:text-textDark">
               {{ item.numOfCenters }}
@@ -174,9 +142,6 @@
             <td class="px-4 py-3 whitespace-nowrap text-left text-textLight dark:text-textDark">
               {{ item.oicConNum2 ? (item.oicConCode2 + item.oicConNum2) : '--' }}
             </td>
-            <!-- <td class="px-2 py-3 whitespace-nowrap text-center text-textLight dark:text-textDark">
-              {{ item.numOfCustomerOfficers }}
-            </td> -->
             <td class="pb-1 whitespace-nowrap text-center text-textLight dark:text-textDark">
               <button *ngIf="
               ( urlSegment === 'collection-hub' && permissionService.hasPermission('View Company Head Portals') )||

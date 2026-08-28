@@ -24,9 +24,9 @@ import { Location } from '@angular/common';
     ReactiveFormsModule,
     FormsModule,
     LoadingSpinnerComponent,
-    DropdownModule, 
+    DropdownModule,
     InputTextModule,
-    MultiSelectModule
+    MultiSelectModule,
   ],
   templateUrl: './edit-collection-center.component.html',
   styleUrl: './edit-collection-center.component.css',
@@ -126,10 +126,10 @@ export class EditCollectionCenterComponent implements OnInit {
     private collectionCenterService: CollectionCenterService,
     private router: Router,
     private route: ActivatedRoute,
-    private location: Location
+    private location: Location,
   ) {
     this.collectionCenterID = this.route.snapshot.params['id'];
-    const defaultCountry = this.countries.find(c => c.code === 'lk') || null;
+    const defaultCountry = this.countries.find((c) => c.code === 'lk') || null;
     this.selectedCountry1 = defaultCountry;
     this.selectedCountry2 = defaultCountry;
   }
@@ -205,22 +205,24 @@ export class EditCollectionCenterComponent implements OnInit {
     const inputElement = event.target as HTMLInputElement;
     let input = inputElement.value;
 
-  
     this.leadingSpaceError = false;
     this.specialCharOrNumberError = false;
 
     if (input.startsWith(' ')) {
       this.leadingSpaceError = true;
-      input = input.trimStart(); 
+      input = input.trimStart();
     }
 
-    const validInput = input.replace(/[^A-Za-z\u0D80-\u0DFF\u0B80-\u0BFF ]/g, '');
+    const validInput = input.replace(
+      /[^A-Za-z\u0D80-\u0DFF\u0B80-\u0BFF ]/g,
+      '',
+    );
     if (validInput !== input) {
       this.specialCharOrNumberError = true;
     }
-    
+
     if (validInput.length > 0) {
-      validInput.trimStart(); 
+      validInput.trimStart();
       this.centerFetchData.centerName =
         validInput.charAt(0).toUpperCase() + validInput.slice(1);
     } else {
@@ -234,19 +236,18 @@ export class EditCollectionCenterComponent implements OnInit {
     const inputElement = event.target as HTMLInputElement;
     let rawValue = inputElement.value;
     const trimmedValue = rawValue.replace(/^\s+/, '');
-    
+
     if (rawValue !== trimmedValue) {
-      rawValue = trimmedValue; 
+      rawValue = trimmedValue;
     }
-    
+
     if (rawValue.length > 0) {
-      this.centerFetchData.buildingNumber = 
+      this.centerFetchData.buildingNumber =
         rawValue.charAt(0).toUpperCase() + rawValue.slice(1);
     } else {
       this.centerFetchData.buildingNumber = '';
     }
-    
-    
+
     inputElement.value = this.centerFetchData.buildingNumber;
   }
 
@@ -254,26 +255,26 @@ export class EditCollectionCenterComponent implements OnInit {
     const inputElement = event.target as HTMLInputElement;
     let rawValue = inputElement.value;
     const trimmedValue = rawValue.replace(/^\s+/, '');
-    
+
     if (rawValue !== trimmedValue) {
-      rawValue = trimmedValue; 
+      rawValue = trimmedValue;
     }
-    
+
     if (rawValue.length > 0) {
-      this.centerFetchData.street = 
+      this.centerFetchData.street =
         rawValue.charAt(0).toUpperCase() + rawValue.slice(1);
     } else {
       this.centerFetchData.street = '';
     }
-    
+
     inputElement.value = this.centerFetchData.street;
   }
 
   onCompanyChange(event: any): void {
     const selectedCompanies = this.CompanyData.filter((c) =>
-      this.selectedCompaniesIds.includes(c.id)
+      this.selectedCompaniesIds.includes(c.id),
     );
-    
+
     this.centerFetchData.companies = selectedCompanies
       .map((c) => c.companyNameEnglish)
       .join(',');
@@ -285,7 +286,7 @@ export class EditCollectionCenterComponent implements OnInit {
         this.CompanyData = res;
         this.updateSelectedCompanies();
       },
-      () => {}
+      () => {},
     );
   }
 
@@ -297,17 +298,17 @@ export class EditCollectionCenterComponent implements OnInit {
         (res) => {
           if (res?.status) {
             this.centerFetchData = res.results;
-            
+
             if (this.centerFetchData.province) {
               const filteredProvince = this.ProvinceData.find(
-                (item) => item.province === this.centerFetchData.province
+                (item) => item.province === this.centerFetchData.province,
               );
-              
+
               if (filteredProvince) {
                 this.selectedDistrict = filteredProvince.district;
               }
             }
-            
+
             this.existRegCode = this.centerFetchData.regCode;
             this.updateSelectedCompanies();
             this.isLoading = false;
@@ -320,7 +321,7 @@ export class EditCollectionCenterComponent implements OnInit {
         (error) => {
           this.isLoading = false;
           console.error('Error fetching collection center:', error);
-        }
+        },
       );
   }
 
@@ -331,7 +332,7 @@ export class EditCollectionCenterComponent implements OnInit {
         .map((name) => name.trim());
 
       this.selectedCompaniesIds = this.CompanyData.filter((company) =>
-        companyNames.includes(company.companyNameEnglish)
+        companyNames.includes(company.companyNameEnglish),
       ).map((company) => company.id);
     }
   }
@@ -350,7 +351,7 @@ export class EditCollectionCenterComponent implements OnInit {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        this.location.back(); 
+        this.location.back();
       }
     });
   }
@@ -366,24 +367,21 @@ export class EditCollectionCenterComponent implements OnInit {
   }
 
   onProvinceChange() {
-    
-    
     this.centerFetchData.district = '';
     this.selectedDistrict = [];
-    
+
     const filteredProvince = this.ProvinceData.find(
-      (item) => item.province === this.centerFetchData.province
+      (item) => item.province === this.centerFetchData.province,
     );
-    
+
     if (filteredProvince) {
       this.selectedDistrict = filteredProvince.district;
     }
-    
+
     this.generateRegCodeIfReady();
   }
 
   onDistrictChange() {
-    
     this.generateRegCodeIfReady();
   }
 
@@ -391,27 +389,24 @@ export class EditCollectionCenterComponent implements OnInit {
     const inputElement = event.target as HTMLInputElement;
     let rawValue = inputElement.value;
     const trimmedValue = rawValue.replace(/^\s+/, '');
-    
+
     if (rawValue !== trimmedValue) {
-      rawValue = trimmedValue; 
+      rawValue = trimmedValue;
     }
-    
+
     if (rawValue.length > 0) {
-      this.centerFetchData.city = 
+      this.centerFetchData.city =
         rawValue.charAt(0).toUpperCase() + rawValue.slice(1);
     } else {
       this.centerFetchData.city = '';
     }
-    
-    
+
     inputElement.value = this.centerFetchData.city;
-    
-    
+
     this.onCityChange();
   }
 
   onCityChange() {
-    
     this.generateRegCodeIfReady();
   }
 
@@ -429,7 +424,7 @@ export class EditCollectionCenterComponent implements OnInit {
           },
           (error) => {
             console.error('Error generating reg code:', error);
-          }
+          },
         );
     }
   }
@@ -437,10 +432,15 @@ export class EditCollectionCenterComponent implements OnInit {
   onSubmit() {
     const missingFields: string[] = [];
 
-    if (!this.centerFetchData.centerName || this.centerFetchData.centerName.trim() === '') {
+    if (
+      !this.centerFetchData.centerName ||
+      this.centerFetchData.centerName.trim() === ''
+    ) {
       missingFields.push('Collection Centre Name is Required');
     } else if (/[^A-Za-z ]/.test(this.centerFetchData.centerName)) {
-      missingFields.push('Collection Centre Name - Must contain only English letters and spaces');
+      missingFields.push(
+        'Collection Centre Name - Must contain only English letters and spaces',
+      );
     }
 
     if (!this.selectedCompaniesIds || this.selectedCompaniesIds.length === 0) {
@@ -449,24 +449,42 @@ export class EditCollectionCenterComponent implements OnInit {
 
     if (!this.centerFetchData.contact01) {
       missingFields.push('Contact Number - 1 is Required');
-    } else if (!/^[0-9]{9}$/.test(this.centerFetchData.contact01.toString()) || this.isPhoneInvalidMap['phone01']) {
-      missingFields.push('Contact Number - 1 - Must be a valid 9-digit number (e.g., 77XXXXXXX)');
+    } else if (
+      !/^[0-9]{9}$/.test(this.centerFetchData.contact01.toString()) ||
+      this.isPhoneInvalidMap['phone01']
+    ) {
+      missingFields.push(
+        'Contact Number - 1 - Must be a valid 9-digit number (e.g., 77XXXXXXX)',
+      );
     }
 
     if (this.centerFetchData.contact02) {
-      if (!/^[0-9]{9}$/.test(this.centerFetchData.contact02.toString()) || this.isPhoneInvalidMap['phone02']) {
-        missingFields.push('Contact Number - 2 - Must be a valid 9-digit number (e.g., 77XXXXXXX)');
+      if (
+        !/^[0-9]{9}$/.test(this.centerFetchData.contact02.toString()) ||
+        this.isPhoneInvalidMap['phone02']
+      ) {
+        missingFields.push(
+          'Contact Number - 2 - Must be a valid 9-digit number (e.g., 77XXXXXXX)',
+        );
       }
       if (this.centerFetchData.contact01 === this.centerFetchData.contact02) {
-        missingFields.push('Contact Number - 1 and Contact Number - 2 cannot be the same');
+        missingFields.push(
+          'Contact Number - 1 and Contact Number - 2 cannot be the same',
+        );
       }
     }
 
-    if (!this.centerFetchData.buildingNumber || this.centerFetchData.buildingNumber.trim() === '') {
+    if (
+      !this.centerFetchData.buildingNumber ||
+      this.centerFetchData.buildingNumber.trim() === ''
+    ) {
       missingFields.push('Building Number is Required');
     }
 
-    if (!this.centerFetchData.street || this.centerFetchData.street.trim() === '') {
+    if (
+      !this.centerFetchData.street ||
+      this.centerFetchData.street.trim() === ''
+    ) {
       missingFields.push('Street Name is Required');
     }
 
@@ -491,7 +509,8 @@ export class EditCollectionCenterComponent implements OnInit {
     }
 
     if (missingFields.length > 0) {
-      let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+      let errorMessage =
+        '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
       missingFields.forEach((field) => {
         errorMessage += `<li>${field}</li>`;
       });
@@ -527,70 +546,85 @@ export class EditCollectionCenterComponent implements OnInit {
       if (result.isConfirmed) {
         this.isLoading = true;
 
-        this.collectionCenterService.updateColectionCenter(this.centerFetchData, this.selectedCompaniesIds, this.collectionCenterID).subscribe({
-          next: (res: any) => {
-            this.isLoading = false;
-            if (res.status) {
-              Swal.fire({
-                icon: 'success',
-                title: 'Success',
-                text: 'Collection Centre updated successfully!',
-                confirmButtonText: 'OK',
-                customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                  title: 'font-semibold text-lg',
-                },
-              }).then(() => {
-                this.router.navigate(['/collection-hub/view-collection-centers']);
-              });
-            } else {
+        this.collectionCenterService
+          .updateColectionCenter(
+            this.centerFetchData,
+            this.selectedCompaniesIds,
+            this.collectionCenterID,
+          )
+          .subscribe({
+            next: (res: any) => {
+              this.isLoading = false;
+              if (res.status) {
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Success',
+                  text: 'Collection Centre updated successfully!',
+                  confirmButtonText: 'OK',
+                  customClass: {
+                    popup:
+                      'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                    title: 'font-semibold text-lg',
+                  },
+                }).then(() => {
+                  this.router.navigate([
+                    '/collection-hub/view-collection-centers',
+                  ]);
+                });
+              } else {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Error',
+                  text:
+                    res.message === 'This RegCode already exists!'
+                      ? 'The registration code is already in use.'
+                      : res.message ||
+                        'Something went wrong while updating the Collection Centre.',
+                  confirmButtonText: 'OK',
+                  customClass: {
+                    popup:
+                      'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                    title: 'font-semibold text-lg',
+                  },
+                });
+              }
+            },
+            error: (error: any) => {
+              this.isLoading = false;
+              let errorMessage = 'An unexpected error occurred';
+              if (error.error && error.error.error) {
+                switch (error.error.error) {
+                  case 'Duplicate reg code':
+                    errorMessage = 'The registration code is already in use.';
+                    break;
+                  case 'Duplicate contact number':
+                    errorMessage = 'The contact number is already registered.';
+                    break;
+                  case 'Invalid company selection':
+                    errorMessage =
+                      'One or more selected companies are invalid.';
+                    break;
+                  case 'Collection center not found':
+                    errorMessage = 'The Collection Centre does not exist.';
+                    break;
+                  default:
+                    errorMessage =
+                      error.error.error || 'An unexpected error occurred';
+                }
+              }
               Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: res.message === 'This RegCode already exists!' 
-                  ? 'The registration code is already in use.' 
-                  : res.message || 'Something went wrong while updating the Collection Centre.',
+                text: errorMessage,
                 confirmButtonText: 'OK',
                 customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  popup:
+                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                   title: 'font-semibold text-lg',
                 },
               });
-            }
-          },
-          error: (error: any) => {
-            this.isLoading = false;
-            let errorMessage = 'An unexpected error occurred';
-            if (error.error && error.error.error) {
-              switch (error.error.error) {
-                case 'Duplicate reg code':
-                  errorMessage = 'The registration code is already in use.';
-                  break;
-                case 'Duplicate contact number':
-                  errorMessage = 'The contact number is already registered.';
-                  break;
-                case 'Invalid company selection':
-                  errorMessage = 'One or more selected companies are invalid.';
-                  break;
-                case 'Collection center not found':
-                  errorMessage = 'The Collection Centre does not exist.';
-                  break;
-                default:
-                  errorMessage = error.error.error || 'An unexpected error occurred';
-              }
-            }
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: errorMessage,
-              confirmButtonText: 'OK',
-              customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                title: 'font-semibold text-lg',
-              },
-            });
-          },
-        });
+            },
+          });
       }
     });
   }

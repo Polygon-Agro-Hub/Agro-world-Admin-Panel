@@ -315,6 +315,7 @@ import { TestComponentComponent } from './application/steckholders-section/test-
 import { ViewTransactionAllOrdersComponent } from './application/finance/distribution-finance-acion/view-transaction-all-orders/view-transaction-all-orders.component';
 import { ViewCopTransactionsDocumentComponent } from './application/finance/distribution-finance-acion/view-cop-transactions-document/view-cop-transactions-document.component';
 import { SalesComponent } from './application/finance/sales/sales/sales.component';
+import { CompletedViewAllOdersComponent } from './application/finance/sales/completed-view-all-oders/completed-view-all-oders.component';
 
 export const routes: Routes = [
   {
@@ -734,6 +735,10 @@ export const routes: Routes = [
                   {
                     path: 'sales',
                     component: SalesComponent
+                  },
+                  {
+                    path: 'view-all-orders',
+                    component: CompletedViewAllOdersComponent,
                   }
                 ]
               },

@@ -24,7 +24,7 @@ export class SalesComponent {
 
   ViewAllOrders(): void {
     this.router.navigate([
-      '/finance/action/govi-trans-finance/view-transactions',
+      '/finance/action/finance-sales/view-all-orders',
     ]);
   }
 }

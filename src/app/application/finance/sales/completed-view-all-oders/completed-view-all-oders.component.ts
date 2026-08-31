@@ -40,8 +40,12 @@ export class CompletedViewAllOdersComponent {
 
   fromDate: Date | null = null;
   toDate: Date | null = null;
+
+  // Max selectable "From" date = yesterday (blocks today & future)
+  maxFromDate: Date;
+
+  // Min selectable "To" date = day after "From" date (blocks same/earlier)
   minToDate: Date | null = null;
-  maxDate: Date = new Date();
 
   search = '';
 
@@ -99,7 +103,13 @@ export class CompletedViewAllOdersComponent {
 
   purchaseReport: CompletedOrder[] = [];
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) {
+    // "From" can never be today or later — cap it at yesterday
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    yesterday.setHours(23, 59, 59, 999);
+    this.maxFromDate = yesterday;
+  }
 
   back(): void {
     this.router.navigate(['/finance/action/finance-sales/sales']);
@@ -107,8 +117,20 @@ export class CompletedViewAllOdersComponent {
 
   onFromDateChange(): void {
     this.isFromDateSelected = !!this.fromDate;
-    this.minToDate = this.fromDate;
-    if (!this.toDate) {
+
+    if (this.fromDate) {
+      // "To" must be at least one day after "From" (blocks same/earlier date)
+      const nextDay = new Date(this.fromDate);
+      nextDay.setDate(nextDay.getDate() + 1);
+      nextDay.setHours(0, 0, 0, 0);
+      this.minToDate = nextDay;
+
+      // If a previously selected "To" date is no longer valid, clear it
+      if (this.toDate && this.toDate <= this.fromDate) {
+        this.toDate = null;
+      }
+    } else {
+      this.minToDate = null;
       this.toDate = null;
     }
   }
@@ -116,6 +138,7 @@ export class CompletedViewAllOdersComponent {
   onFromDateClear(): void {
     this.fromDate = null;
     this.toDate = null;
+    this.minToDate = null;
     this.isFromDateSelected = false;
     this.hasData = false;
     this.purchaseReport = [];

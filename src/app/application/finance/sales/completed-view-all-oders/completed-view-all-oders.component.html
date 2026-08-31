@@ -18,8 +18,8 @@
                 <label for="fromDate"
                     class="text-[18px] text-[#000000] font-normal dark:text-textDark whitespace-nowrap">From :</label>
                 <p-calendar id="fromDate" [(ngModel)]="fromDate" dateFormat="yy/mm/dd" placeholder="--Select Date--"
-                    [showIcon]="true" [showClear]="true" [showButtonBar]="true" [maxDate]="maxDate" iconDisplay="input"
-                    [style]="{ width: '15rem', height: '2.5rem' }"
+                    [showIcon]="true" [showClear]="true" [showButtonBar]="true" [maxDate]="maxFromDate"
+                    iconDisplay="input" [style]="{ width: '15rem', height: '2.5rem' }"
                     inputStyleClass="px-3 py-2 border border-gray-200 cursor-pointer rounded-md bg-white dark:bg-[#272F45] text-textLight dark:text-textDark w-full h-10 text-[16px]"
                     (onSelect)="onFromDateChange()" (onClear)="onFromDateClear()" />
             </div>
@@ -29,9 +29,8 @@
                 <label for="toDate"
                     class="text-[18px] text-[#000000] font-normal dark:text-textDark whitespace-nowrap">To :</label>
                 <p-calendar id="toDate" [(ngModel)]="toDate" dateFormat="yy/mm/dd" placeholder="--Select Date--"
-                    [showIcon]="true" [showClear]="true" [showButtonBar]="true" [minDate]="fromDate || minToDate"
-                    [maxDate]="maxDate" iconDisplay="input" [style]="{ width: '15rem', height: '2.5rem' }"
-                    [disabled]="!fromDate"
+                    [showIcon]="true" [showClear]="true" [showButtonBar]="true" [minDate]="minToDate"
+                    iconDisplay="input" [style]="{ width: '15rem', height: '2.5rem' }" [disabled]="!fromDate"
                     inputStyleClass="px-3 py-2 border border-gray-200 cursor-pointer rounded-md bg-white dark:bg-[#272F45] text-textLight dark:text-textDark w-full h-10 text-[16px]"
                     [ngClass]="{ 'opacity-50 cursor-not-allowed': !fromDate }" (onClear)="onToDateClear()" />
             </div>
@@ -154,7 +153,9 @@
                         <td class="px-4 py-3 text-[16px] text-[#000000] font-normal dark:text-textDark text-left">{{
                             item.contactNo }}
                         </td>
-                        <td class="px-4 py-3 text-[16px] text-[#000000] font-normal dark:text-textDark text-left whitespace-nowrap">{{
+                        <td
+                            class="px-4 py-3 text-[16px] text-[#000000] font-normal dark:text-textDark text-left whitespace-nowrap">
+                            {{
                             item.orderType }}
                         </td>
                         <td class="px-4 py-3 text-[16px] text-[#000000] font-normal dark:text-textDark text-left">{{

@@ -6,8 +6,6 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './completed-view-all-oders.component.html',
-  styleUrl: './completed-view-all-oders.component.css'
+  styleUrl: './completed-view-all-oders.component.css',
 })
-export class CompletedViewAllOdersComponent {
-
-}
+export class CompletedViewAllOdersComponent {}

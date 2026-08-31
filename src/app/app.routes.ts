@@ -314,6 +314,7 @@ import { ViewSubmissionDocumentComponent } from './application/finance/distribut
 import { TestComponentComponent } from './application/steckholders-section/test-component/test-component.component';
 import { ViewTransactionAllOrdersComponent } from './application/finance/distribution-finance-acion/view-transaction-all-orders/view-transaction-all-orders.component';
 import { ViewCopTransactionsDocumentComponent } from './application/finance/distribution-finance-acion/view-cop-transactions-document/view-cop-transactions-document.component';
+import { SalesComponent } from './application/finance/sales/sales/sales.component';
 
 export const routes: Routes = [
   {
@@ -727,7 +728,15 @@ export const routes: Routes = [
                 canActivate: [PermissionGuard],
                 data: { permission: 'Finance Payment History' },
               },
-
+              {
+                path: 'finance-sales',
+                children:[
+                  {
+                    path: 'sales',
+                    component: SalesComponent
+                  }
+                ]
+              },
               {
                 path: 'finance-govicapital',
                 children: [

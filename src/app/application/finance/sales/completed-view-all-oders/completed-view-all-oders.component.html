@@ -19,7 +19,7 @@
                 <p-calendar id="fromDate" [(ngModel)]="fromDate" dateFormat="yy/mm/dd" placeholder="--Select Date--"
                     [showIcon]="true" [showClear]="true" [showButtonBar]="true" [maxDate]="maxDate" iconDisplay="input"
                     [style]="{ width: '15rem', height: '2.5rem' }"
-                    inputStyleClass="px-3 py-2 border border-gray-200 cursor-pointer rounded-md bg-white dark:bg-[#272F45] text-textLight dark:text-textDark w-full h-10 text-sm"
+                    inputStyleClass="px-3 py-2 border border-gray-200 cursor-pointer rounded-md bg-white dark:bg-[#272F45] text-textLight dark:text-textDark w-full h-10 text-[16px]"
                     (onSelect)="onFromDateChange()" (onClear)="onFromDateClear()" />
             </div>
 
@@ -30,7 +30,7 @@
                     [showIcon]="true" [showClear]="true" [showButtonBar]="true" [minDate]="fromDate || minToDate"
                     [maxDate]="maxDate" iconDisplay="input" [style]="{ width: '15rem', height: '2.5rem' }"
                     [disabled]="!fromDate"
-                    inputStyleClass="px-3 py-2 border border-gray-200 cursor-pointer rounded-md bg-white dark:bg-[#272F45] text-textLight dark:text-textDark w-full h-10 text-sm"
+                    inputStyleClass="px-3 py-2 border border-gray-200 cursor-pointer rounded-md bg-white dark:bg-[#272F45] text-textLight dark:text-textDark w-full h-10 text-[16px]"
                     [ngClass]="{ 'opacity-50 cursor-not-allowed': !fromDate }" (onClear)="onToDateClear()" />
             </div>
 

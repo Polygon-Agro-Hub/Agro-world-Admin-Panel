@@ -15,7 +15,8 @@
         <div class="flex items-center justify-center gap-10">
             <!-- From Date -->
             <div class="flex items-center gap-4">
-                <label for="fromDate" class="text-[18px] text-[#000000] font-normal dark:text-textDark whitespace-nowrap">From :</label>
+                <label for="fromDate"
+                    class="text-[18px] text-[#000000] font-normal dark:text-textDark whitespace-nowrap">From :</label>
                 <p-calendar id="fromDate" [(ngModel)]="fromDate" dateFormat="yy/mm/dd" placeholder="--Select Date--"
                     [showIcon]="true" [showClear]="true" [showButtonBar]="true" [maxDate]="maxDate" iconDisplay="input"
                     [style]="{ width: '15rem', height: '2.5rem' }"
@@ -25,7 +26,8 @@
 
             <!-- To Date -->
             <div class="flex items-center gap-4">
-                <label for="toDate" class="text-[18px] text-[#000000] font-normal dark:text-textDark whitespace-nowrap">To :</label>
+                <label for="toDate"
+                    class="text-[18px] text-[#000000] font-normal dark:text-textDark whitespace-nowrap">To :</label>
                 <p-calendar id="toDate" [(ngModel)]="toDate" dateFormat="yy/mm/dd" placeholder="--Select Date--"
                     [showIcon]="true" [showClear]="true" [showButtonBar]="true" [minDate]="fromDate || minToDate"
                     [maxDate]="maxDate" iconDisplay="input" [style]="{ width: '15rem', height: '2.5rem' }"
@@ -54,7 +56,7 @@
                         All ({{ totalItems.toString().padStart(2, '0') }})
                     </h3>
                     <button
-                        class="bg-[#3980C0] text-white text-sm font-medium py-1.5 px-4 rounded-md flex items-center gap-2 w-fit"
+                        class="bg-[#3980C0] text-white text-[15px] font-medium py-1.5 px-4 rounded-md flex items-center gap-2 w-fit"
                         (click)="downloadTemplate1()" [disabled]="isDownloading" [ngClass]="{
                           'opacity-50 cursor-not-allowed': isDownloading
                         }">
@@ -90,42 +92,42 @@
             <table class="min-w-full divide-y divide-gray-100 dark:divide-gray-700 table-auto">
                 <thead>
                     <tr>
-                        <th class="py-3 text-xs font-medium text-gray-400 dark:text-textDark text-left">No</th>
+                        <th class="py-3 text-[16px] font-normal text-[#5C5C5C] dark:text-textDark text-left">No</th>
                         <th
-                            class="px-4 py-3 text-xs font-medium text-gray-400 dark:text-textDark text-left whitespace-nowrap">
+                            class="px-4 py-3 text-[16px] font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">
                             Invoice No</th>
                         <th
-                            class="px-4 py-3 text-xs font-medium text-gray-400 dark:text-textDark text-left whitespace-nowrap">
+                            class="px-4 py-3 text-[16px] font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">
                             Customer Name</th>
                         <th
-                            class="px-4 py-3 text-xs font-medium text-gray-400 dark:text-textDark text-left whitespace-nowrap">
+                            class="px-4 py-3 text-[16px] font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">
                             Contact No.</th>
                         <th
-                            class="px-4 py-3 text-xs font-medium text-gray-400 dark:text-textDark text-left whitespace-nowrap">
+                            class="px-4 py-3 text-[16px] font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">
                             Order Type</th>
                         <th
-                            class="px-4 py-3 text-xs font-medium text-gray-400 dark:text-textDark text-left whitespace-nowrap">
+                            class="px-4 py-3 text-[16px] font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">
                             Amount (Rs.)</th>
                         <th
-                            class="px-4 py-3 text-xs font-medium text-gray-400 dark:text-textDark text-left whitespace-nowrap">
+                            class="px-4 py-3 text-[16px] font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">
                             Cash Paid (Rs.)</th>
                         <th
-                            class="px-4 py-3 text-xs font-medium text-gray-400 dark:text-textDark text-left whitespace-nowrap">
+                            class="px-4 py-3 text-[16px] font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">
                             Card Paid (Rs.)</th>
                         <th
-                            class="px-4 py-3 text-xs font-medium text-gray-400 dark:text-textDark text-left whitespace-nowrap">
+                            class="px-4 py-3 text-[16px] font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">
                             Credit Paid (Rs.)</th>
                         <th
-                            class="px-4 py-3 text-xs font-medium text-gray-400 dark:text-textDark text-left whitespace-nowrap">
+                            class="px-4 py-3 text-[16px] font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">
                             Ordered At</th>
                         <th
-                            class="px-4 py-3 text-xs font-medium text-gray-400 dark:text-textDark text-left whitespace-nowrap">
+                            class="px-4 py-3 text-[16px] font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">
                             Completed At</th>
                         <th
-                            class="px-4 py-3 text-xs font-medium text-gray-400 dark:text-textDark text-left whitespace-nowrap">
+                            class="px-4 py-3 text-[16px] font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">
                             Platform</th>
                         <th
-                            class="px-4 py-3 text-xs font-medium text-gray-400 dark:text-textDark text-left whitespace-nowrap">
+                            class="px-4 py-3 text-[16px] font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">
                             Buyer Type</th>
                     </tr>
                 </thead>
@@ -140,32 +142,46 @@
                     };
               let i = index
             " class="border-t border-gray-100 dark:border-gray-700">
-                        <td class="py-3 text-sm text-gray-600 dark:text-textDark text-left">
+                        <td class="py-3 text-[16px] text-[#000000] font-normal dark:text-textDark text-left">
                             {{ ((page - 1) * itemsPerPage + i + 1).toString().padStart(3, '0') }}
                         </td>
-                        <td class="px-4 py-3 text-sm text-gray-600 dark:text-textDark text-left">{{ item.invoiceNo }}
+                        <td class="px-4 py-3 text-[16px] text-[#000000] font-normal dark:text-textDark text-left">{{
+                            item.invoiceNo }}
                         </td>
-                        <td class="px-4 py-3 text-sm text-gray-600 dark:text-textDark text-left">{{ item.customerName }}
+                        <td class="px-4 py-3 text-[16px] text-[#000000] font-normal dark:text-textDark text-left">{{
+                            item.customerName }}
                         </td>
-                        <td class="px-4 py-3 text-sm text-gray-600 dark:text-textDark text-left">{{ item.contactNo }}
+                        <td class="px-4 py-3 text-[16px] text-[#000000] font-normal dark:text-textDark text-left">{{
+                            item.contactNo }}
                         </td>
-                        <td class="px-4 py-3 text-sm text-gray-600 dark:text-textDark text-left">{{ item.orderType }}
+                        <td class="px-4 py-3 text-[16px] text-[#000000] font-normal dark:text-textDark text-left whitespace-nowrap">{{
+                            item.orderType }}
                         </td>
-                        <td class="px-4 py-3 text-sm text-gray-600 dark:text-textDark text-left">{{ item.amount |
+                        <td class="px-4 py-3 text-[16px] text-[#000000] font-normal dark:text-textDark text-left">{{
+                            item.amount |
                             number:'1.2-2' }}</td>
-                        <td class="px-4 py-3 text-sm text-gray-600 dark:text-textDark text-left">{{ item.cashPaid |
+                        <td class="px-4 py-3 text-[16px] text-[#000000] font-normal dark:text-textDark text-left">{{
+                            item.cashPaid |
                             number:'1.2-2' }}</td>
-                        <td class="px-4 py-3 text-sm text-gray-600 dark:text-textDark text-left">{{ item.cardPaid |
+                        <td class="px-4 py-3 text-[16px] text-[#000000] font-normal dark:text-textDark text-left">{{
+                            item.cardPaid |
                             number:'1.2-2' }}</td>
-                        <td class="px-4 py-3 text-sm text-gray-600 dark:text-textDark text-left">{{ item.creditPaid |
+                        <td class="px-4 py-3 text-[16px] text-[#000000] font-normal dark:text-textDark text-left">{{
+                            item.creditPaid |
                             number:'1.2-2' }}</td>
-                        <td class="px-4 py-3 text-sm text-gray-600 dark:text-textDark text-left whitespace-nowrap">{{
+                        <td
+                            class="px-4 py-3 text-[16px] text-[#000000] font-normal dark:text-textDark text-left whitespace-nowrap">
+                            {{
                             item.orderedAt }}</td>
-                        <td class="px-4 py-3 text-sm text-gray-600 dark:text-textDark text-left whitespace-nowrap">{{
+                        <td
+                            class="px-4 py-3 text-[16px] text-[#000000] font-normal dark:text-textDark text-left whitespace-nowrap">
+                            {{
                             item.completedAt }}</td>
-                        <td class="px-4 py-3 text-sm text-gray-600 dark:text-textDark text-left">{{ item.platform }}
+                        <td class="px-4 py-3 text-[16px] text-[#000000] font-normal dark:text-textDark text-left">{{
+                            item.platform }}
                         </td>
-                        <td class="px-4 py-3 text-sm text-gray-600 dark:text-textDark text-left">{{ item.buyerType }}
+                        <td class="px-4 py-3 text-[16px] text-[#000000] font-normal dark:text-textDark text-left">{{
+                            item.buyerType }}
                         </td>
                     </tr>
                 </tbody>

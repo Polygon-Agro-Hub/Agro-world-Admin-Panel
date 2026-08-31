@@ -47,37 +47,41 @@
     <div class="p-6 w-full bg-white dark:bg-tileBlack rounded-lg shadow-md">
 
         <div *ngIf="hasData">
-            <!-- Search + Download row -->
-            <div class="flex justify-between items-center mb-4">
-                <div class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-1.5 w-80">
-                    <input type="text" placeholder="Search By Invoice No.."
-                        class="bg-transparent outline-none w-full text-sm text-gray-600 dark:text-textDark"
-                        [(ngModel)]="search" (keydown.enter)="applysearch()" (keydown)="preventLeadingSpace($event)"
-                        (input)="onSearchInput($event)" />
-                    <button type="button" class="text-gray-400 hover:text-gray-600 focus:outline-none"
-                        (click)="applysearch()">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
-                        </svg>
+            <!-- Top row: All + Download (left, stacked) / Search (centered) -->
+            <div class="grid grid-cols-3 items-start mb-6">
+                <div class="flex flex-col gap-3">
+                    <h3 class="text-base font-semibold text-gray-800 dark:text-textDark">
+                        All ({{ totalItems.toString().padStart(2, '0') }})
+                    </h3>
+                    <button
+                        class="bg-[#3980C0] text-white text-sm font-medium py-1.5 px-4 rounded-md flex items-center gap-2 w-fit"
+                        (click)="downloadTemplate1()" [disabled]="isDownloading" [ngClass]="{
+                          'opacity-50 cursor-not-allowed': isDownloading
+                        }">
+                        <i class="fa-solid fa-download" *ngIf="!isDownloading"></i>
+                        <i class="fa-solid fa-spinner fa-spin" *ngIf="isDownloading"></i>
+                        {{ isDownloading ? "Downloading..." : "Download" }}
                     </button>
                 </div>
-            </div>
 
-            <div class="flex items-center gap-4 mb-2">
-                <h3 class="text-base font-semibold text-gray-800 dark:text-textDark">
-                    All ({{ totalItems.toString().padStart(2, '0') }})
-                </h3>
-                <button
-                    class="bg-[#3980C0] text-white text-sm font-medium py-1.5 px-4 rounded-md flex items-center gap-2 ml-auto"
-                    (click)="downloadTemplate1()" [disabled]="isDownloading" [ngClass]="{
-            'opacity-50 cursor-not-allowed': isDownloading
-          }">
-                    <i class="fa-solid fa-download" *ngIf="!isDownloading"></i>
-                    <i class="fa-solid fa-spinner fa-spin" *ngIf="isDownloading"></i>
-                    {{ isDownloading ? "Downloading..." : "Download" }}
-                </button>
+                <div class="flex justify-center">
+                    <div class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-1.5 w-80">
+                        <input type="text" placeholder="Search By Invoice No.."
+                            class="bg-transparent outline-none w-full text-sm text-gray-600 dark:text-textDark"
+                            [(ngModel)]="search" (keydown.enter)="applysearch()" (keydown)="preventLeadingSpace($event)"
+                            (input)="onSearchInput($event)" />
+                        <button type="button" class="text-gray-400 hover:text-gray-600 focus:outline-none"
+                            (click)="applysearch()">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div></div>
             </div>
         </div>
 

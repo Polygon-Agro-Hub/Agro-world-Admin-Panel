@@ -147,7 +147,7 @@ export class ViewJobHistoryComponent implements OnInit {
             scheduledDate: this.formatDateTime(item.scheduledDate),
             completedDate: this.formatDateTime(item.completedDate),
             onScreenTime: item.onScreenTime || '--',
-            status: item.status,
+            status: this.formatStatus(item.status),
             assignedOn: this.formatDateTime(item.assignedOn),
             assignedByName: item.assignedByName || '--',
             assignedOfficer: item.assignedOfficer || '--'
@@ -217,6 +217,13 @@ export class ViewJobHistoryComponent implements OnInit {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
+  }
+
+  formatStatus(status: string): string {
+    const mapping: { [key: string]: string } = {
+      'Assigned': 'Pending'
+    };
+    return mapping[status] || status;
   }
 
   // Date filter handlers

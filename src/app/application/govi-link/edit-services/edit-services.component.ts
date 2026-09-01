@@ -24,6 +24,9 @@ export class EditServicesComponent implements OnInit {
     srvFee: 0,
   };
 
+  // Display-only string for the fee input, always formatted to 2 decimals
+  srvFeeDisplay: string = '0.00';
+
   isLoading = false;
   errorMessage: string | null = null;
   successMessage: string | null = null;
@@ -56,6 +59,8 @@ export class EditServicesComponent implements OnInit {
           tamilName: res.tamilName,
           srvFee: Number(res.srvFee),
         };
+        // Always show 2 decimal places, in both view and edit mode
+        this.srvFeeDisplay = this.serviceData.srvFee.toFixed(2);
       },
       error: (err) => {
         this.isLoading = false;
@@ -267,6 +272,7 @@ export class EditServicesComponent implements OnInit {
       tamilName: '',
       srvFee: 0,
     };
+    this.srvFeeDisplay = '0.00';
   }
 
   // Called on blur or after each keyup to format first letter
@@ -306,30 +312,31 @@ export class EditServicesComponent implements OnInit {
     }
   }
 
+  // Called on blur - normalizes the display string and syncs the numeric value,
+  // always padding to exactly 2 decimal places
   formatSrvFee() {
-    if (
-      this.serviceData.srvFee !== null &&
-      this.serviceData.srvFee !== undefined
-    ) {
-      let value = this.serviceData.srvFee.toString();
-      if (value.includes('.')) {
-        const [intPart, decimalPart] = value.split('.');
-        this.serviceData.srvFee = parseFloat(
-          intPart + '.' + decimalPart.slice(0, 2)
-        );
-      }
-    }
+    const num = parseFloat(this.srvFeeDisplay);
+    const safeNum = isNaN(num) ? 0 : num;
+    this.serviceData.srvFee = safeNum;
+    this.srvFeeDisplay = safeNum.toFixed(2);
   }
 
+  // Called on input - restricts typed value to max 2 decimal places
+  // and keeps the underlying numeric value in sync
   blockAfterTwoDecimals(event: any) {
-    let value = event.target.value;
+    let value: string = event.target.value;
+
     if (value.includes('.')) {
       const [intPart, decimalPart] = value.split('.');
       if (decimalPart.length > 2) {
-        event.target.value = intPart + '.' + decimalPart.slice(0, 2);
-        this.serviceData.srvFee = parseFloat(event.target.value);
+        value = intPart + '.' + decimalPart.slice(0, 2);
+        event.target.value = value;
+        this.srvFeeDisplay = value;
       }
     }
+
+    const num = parseFloat(value);
+    this.serviceData.srvFee = isNaN(num) ? 0 : num;
   }
 
   onCancel(form: NgForm) {

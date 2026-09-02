@@ -62,16 +62,16 @@ export class DistributionViewCompanyComponent implements OnInit {
       this.companyId = params['id'] ? +params['id'] : null;
       this.companyName = params['companyName'] ? params['companyName'] : null;
     });
-    
+
     // Check permission
     this.checkPermission();
-    
+
     this.fetchAllCompanyHeads();
   }
 
   // Method to check permission
   checkPermission(): void {
-    this.canApproveReject = 
+    this.canApproveReject =
       this.permissionService.hasPermission('Distribution Hub approved/not approved cch') ||
       this.tokenService.getUserDetails().role === '1';
   }
@@ -79,7 +79,7 @@ export class DistributionViewCompanyComponent implements OnInit {
   // Alternative method approach (if you prefer using a method instead of property)
   hasPermission(): boolean {
     return this.permissionService.hasPermission('Distribution Hub approved/not approved cch') ||
-           this.tokenService.getUserDetails().role === '1';
+      this.tokenService.getUserDetails().role === '1';
   }
 
   fetchAllCompanyHeads(
@@ -274,17 +274,17 @@ export class DistributionViewCompanyComponent implements OnInit {
                   this.isLoading = false;
                   if (res.status) {
                     Swal.fire({
-  icon: 'success',
-  title: 'Success!',
-  text: 'The Distributed Center Head was approved successfully.',
-  showConfirmButton: true,
-  confirmButtonText: 'OK',
-  timer: 3000,
-  customClass: {
-    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-    title: 'font-semibold text-lg',
-  },
-});
+                      icon: 'success',
+                      title: 'Success!',
+                      text: 'The Distributed Centre Head was approved successfully.',
+                      showConfirmButton: true,
+                      confirmButtonText: 'OK',
+                      timer: 3000,
+                      customClass: {
+                        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                        title: 'font-semibold text-lg',
+                      },
+                    });
                     this.fetchAllCompanyHeads();
                   } else {
                     Swal.fire({
@@ -332,7 +332,7 @@ export class DistributionViewCompanyComponent implements OnInit {
                     Swal.fire({
                       icon: 'success',
                       title: 'Success!',
-                      text: 'The Distributed Center Head was rejected successfully.',
+                      text: 'The Distributed Centre Head was rejected successfully.',
                       showConfirmButton: true,
                       confirmButtonText: 'OK',
                       timer: 3000,

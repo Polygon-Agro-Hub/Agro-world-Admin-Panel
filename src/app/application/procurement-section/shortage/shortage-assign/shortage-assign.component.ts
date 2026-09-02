@@ -4,9 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
-import { ProcumentsService } from '../../../../services/procuments/procuments.service'; // adjust path/name as needed
+import { ProcumentsService } from '../../../../services/procuments/procuments.service';
 import { PermissionService } from '../../../../services/roles-permission/permission.service';
 import { TokenService } from '../../../../services/token/services/token.service';
+import Swal from 'sweetalert2';
 
 interface AssignmentRecord {
   qty: number;
@@ -39,6 +40,7 @@ interface Centre {
   templateUrl: './shortage-assign.component.html',
   styleUrl: './shortage-assign.component.css',
 })
+
 export class ShortageAssignComponent implements OnInit {
   isLoading = false;
 
@@ -49,8 +51,6 @@ export class ShortageAssignComponent implements OnInit {
   assignQty: number = 0;
   selectedCentreId: number | null = null;
   ceilingPercent: number = 0;
-
-  showConfirmModal = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -154,14 +154,32 @@ export class ShortageAssignComponent implements OnInit {
   }
 
   onAssign(): void {
-    if (!this.canAssign) {
+    if (!this.canAssign || !this.selectedItem || !this.selectedCentre) {
       return;
     }
-    this.showConfirmModal = true;
-  }
 
-  cancelAssign(): void {
-    this.showConfirmModal = false;
+    const centre = this.selectedCentre;
+
+    Swal.fire({
+      title: 'Assign Confirmation',
+      text: `Are you sure you want to assign ${this.formatNumber(this.assignQty)} ${this.selectedItem.unit} of ${this.selectedItem.name} to ${centre.code} (${centre.name})?`,
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Assign',
+      cancelButtonText: 'No, Go Back',
+      confirmButtonColor: '#3980C0',
+      cancelButtonColor: '#6B7280',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white rounded-xl',
+        title: 'font-semibold text-lg',
+        actions: 'flex-row-reverse justify-start',
+        confirmButton: 'rounded-lg',
+        cancelButton: 'rounded-lg',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.confirmAssign();
+      }
+    });
   }
 
   confirmAssign(): void {
@@ -183,13 +201,20 @@ export class ShortageAssignComponent implements OnInit {
       })
       .subscribe({
         next: (res: any) => {
-          this.showConfirmModal = false;
           window.location.reload();
         },
         error: (err) => {
           console.error('Error assigning shortage:', err);
-          this.showConfirmModal = false;
           this.isLoading = false;
+          Swal.fire({
+            title: 'Error',
+            text: 'An error occurred while assigning the shortage.',
+            icon: 'error',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
         },
       });
   }
@@ -225,9 +250,7 @@ export class ShortageAssignComponent implements OnInit {
     let value = input.value;
 
     let digitsOnly = value.replace(/\D/g, '');
-
     digitsOnly = digitsOnly.replace(/^0+/, '');
-
     digitsOnly = digitsOnly.slice(0, 2);
 
     let num = digitsOnly === '' ? 0 : Number(digitsOnly);
@@ -245,7 +268,6 @@ export class ShortageAssignComponent implements OnInit {
   }
 
   formatNumber(value: number): string {
-    // Convert to string and remove trailing zeros
     return value.toString().replace(/\.?0+$/, '');
   }
 }

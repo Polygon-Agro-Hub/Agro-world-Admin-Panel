@@ -51,6 +51,12 @@ export class ViewWholesaleCustomersComponent implements OnInit {
   isUpdatingRating: boolean = false;
   showRatingToast: boolean = false;
 
+    // ─── Update Credit Balance Popup ───
+  isCreditPopupOpen: boolean = false;
+  selectedCustomerForCredit: Customers | null = null;
+  newCreditLimit: number | null = null;
+  isUpdatingCredit: boolean = false;
+
     ratingFilterOptions = [
     { label: 'X 2 Stars', value: 'VVIP', icon: 'assets/images/ratings/VIP.png' },
     { label: 'X 1 Star',   value: 'VIP',  icon: 'assets/images/ratings/VIP.png'  },
@@ -278,6 +284,67 @@ export class ViewWholesaleCustomersComponent implements OnInit {
     if (event.key === ' ' && input.selectionStart === 0) {
       event.preventDefault();
     }
+  }
+
+  openUpdateCreditPopup(customer: Customers) {
+    this.selectedCustomerForCredit = customer;
+    this.newCreditLimit            = customer.creditBalance ?? null;
+    this.isCreditPopupOpen         = true;
+  }
+
+  closeUpdateCreditPopup() {
+    this.isCreditPopupOpen         = false;
+    this.selectedCustomerForCredit = null;
+    this.newCreditLimit            = null;
+  }
+
+   submitUpdateCredit() {
+    if (!this.selectedCustomerForCredit || this.newCreditLimit === null || this.newCreditLimit === undefined) return;
+
+    this.isUpdatingCredit = true;
+
+    this.marketSrv
+      .updateWholesaleCustomerCreditBalance({
+        id: this.selectedCustomerForCredit.id,
+        creditBalance: this.newCreditLimit
+      })
+      .subscribe(
+        () => {
+          const target = this.customerObj.find(
+            (c) => c.id === this.selectedCustomerForCredit!.id
+          );
+          if (target) target.creditBalance = this.newCreditLimit!;
+
+          this.isUpdatingCredit = false;
+          this.closeUpdateCreditPopup();
+
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Credit balance updated successfully!',
+            confirmButtonText: 'OK',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
+        },
+        (err) => {
+          console.error('Error updating credit balance', err);
+          this.isUpdatingCredit = false;
+
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Failed to update credit balance. Please try again.',
+            confirmButtonText: 'OK',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
+        }
+      );
   }
 }
 

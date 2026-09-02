@@ -833,6 +833,18 @@ export class MarketPlaceService {
     );
   }
 
+  updateWholesaleCustomerCreditBalance(Data: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.patch(
+      `${this.apiUrl}market-place/update-wholesale-customer-credit-balance`,
+      Data,
+      { headers }
+    );
+  }
+
 }
 
 

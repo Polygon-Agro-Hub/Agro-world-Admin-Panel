@@ -433,9 +433,9 @@
     <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Update Credit Balance</h3>
 
     <!-- Customer info card -->
-    <div class="w-full bg-[#F1F1F1] dark:bg-[#272F45] rounded-2xl p-5 flex flex-col gap-4 mb-6">
+    <div class="w-full border border-gray-300 dark:border-[#4B555A] bg-white dark:bg-[#272F45] rounded-2xl p-5 flex flex-col gap-4 mb-6">
       <div class="flex items-center gap-3">
-        <div class="w-8 h-8 rounded-full bg-white dark:bg-gray-600 flex items-center justify-center flex-shrink-0">
+        <div class="w-8 h-8 rounded-full bg-[#EFF0F1] dark:bg-gray-600 flex items-center justify-center flex-shrink-0">
           <i class="fa-solid fa-user text-sm text-gray-700 dark:text-gray-200"></i>
         </div>
         <span class="text-base font-medium text-gray-900 dark:text-white leading-tight">
@@ -443,7 +443,7 @@
         </span>
       </div>
       <div class="flex items-center gap-3" *ngIf="selectedCustomerForCredit?.companyName">
-        <div class="w-8 h-8 rounded-full bg-white dark:bg-gray-600 flex items-center justify-center flex-shrink-0">
+        <div class="w-8 h-8 rounded-full bg-[#EFF0F1] dark:bg-gray-600 flex items-center justify-center flex-shrink-0">
           <i class="fa-solid fa-building text-sm text-gray-700 dark:text-gray-200"></i>
         </div>
         <span class="text-base font-medium text-gray-900 dark:text-white">
@@ -455,9 +455,9 @@
     <!-- Credit Limit input -->
     <div class="w-full border border-gray-300 dark:border-[#4B555A] rounded-2xl p-4 mb-6">
       <label class="block text-sm text-gray-600 dark:text-gray-300 mb-3">Credit Limit</label>
-      <div class="flex items-center gap-3">
+      <div class="flex items-center border border-gray-300 dark:border-[#4B555A] rounded-xl py-2 px-2">
         <span class="text-xl text-gray-900 dark:text-white">Rs.</span>
-        <div class="w-px h-6 bg-gray-300 dark:bg-gray-500"></div>
+        <div class="w-px h-6 bg-gray-300 dark:bg-gray-500 mx-2"></div>
         <input
           type="number"
           min="0"
@@ -469,13 +469,13 @@
     <div class="flex justify-center gap-4 w-full">
       <button
         (click)="closeUpdateCreditPopup()"
-        class="flex-1 bg-[#74788D] text-[#D3D3D3] py-3 rounded-full font-medium hover:bg-[#5f6275] transition-colors">
+        class="flex-1 bg-[#74788D] text-[#D3D3D3] py-3 rounded-xl font-medium hover:bg-[#5f6275] transition-colors">
         Cancel
       </button>
       <button
         (click)="submitUpdateCredit()"
         [disabled]="newCreditLimit === null || newCreditLimit === undefined || isUpdatingCredit"
-        class="flex-1 bg-[#3980C0] text-white py-3 rounded-full font-medium hover:bg-[#2563eb] transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+        class="flex-1 bg-[#3980C0] text-white py-3 rounded-xl font-medium hover:bg-[#2563eb] transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
         {{ isUpdatingCredit ? 'Updating...' : 'Update' }}
       </button>
     </div>

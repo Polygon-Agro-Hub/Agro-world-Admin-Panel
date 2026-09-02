@@ -46,10 +46,10 @@
         <div class="flex flex-col justify-center">
           <label class="text-[12px] font-normal text-textLight dark:text-textDark mb-1">Select Centre</label>
           <p-dropdown [options]="centres" [(ngModel)]="selectedCentreId" optionLabel="label" optionValue="id"
-  placeholder="--Select Centre--"
-  styleClass="w-full h-10 shortage-centre-dropdown text-sm font-semibold text-textLight dark:text-textDark"
-  [panelStyleClass]="'shortage-centre-panel'">
-</p-dropdown>
+            placeholder="--Select Centre--"
+            styleClass="w-full h-10 shortage-centre-dropdown text-sm font-semibold text-textLight dark:text-textDark"
+            [panelStyleClass]="'shortage-centre-panel'">
+          </p-dropdown>
         </div>
 
         <div class="flex flex-col justify-center">
@@ -59,7 +59,7 @@
             class="w-full h-10 p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-tileBlack text-textLight dark:text-textDark font-semibold text-center" />
         </div>
 
-        <div 
+        <div
            *ngIf="permissionService.hasPermission('Assign today shortage') || tokenService.getUserDetails().role === '1'"
            class="flex flex-col justify-center">
           <button (click)="onAssign()" [disabled]="!canAssign"
@@ -116,34 +116,5 @@
       </div>
     </div>
 
-  </div>
-
-  <!-- ===================== ASSIGN CONFIRMATION MODAL ===================== -->
-  <div *ngIf="showConfirmModal"
-    class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 min-h-[80vh]">
-    <div class="bg-white dark:bg-tileBlack rounded-3xl w-full max-w-lg p-10 text-center">
-
-      <h2 class="text-2xl font-bold text-textLight dark:text-textDark mb-6">
-        Assign Confirmation
-      </h2>
-
-      <p class="text-lg text-textLight dark:text-textDark mb-8 leading-relaxed">
-        Are you sure you want to assign {{ formatNumber(assignQty) }} {{ selectedItem?.unit }} of {{ selectedItem?.name
-        }}
-        to {{ selectedCentre?.code }} ({{ selectedCentre?.name }})?
-      </p>
-
-      <div class="flex items-center justify-center gap-4">
-        <button (click)="cancelAssign()"
-          class="bg-[#6B7280] hover:bg-[#5b6472] text-white font-semibold text-lg px-8 py-4 rounded-xl transition-colors">
-          No, Go Back
-        </button>
-        <button (click)="confirmAssign()"
-          class="bg-[#3980C0] hover:bg-[#316ba8] text-white font-semibold text-lg px-8 py-4 rounded-xl transition-colors">
-          Yes, Assign
-        </button>
-      </div>
-
-    </div>
   </div>
 </div>

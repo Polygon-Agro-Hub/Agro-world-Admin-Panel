@@ -311,4 +311,5 @@ class Customers {
   companyPhoneCode!: string;
   companyPhone!: string;
   rateofCus?: string; 
+  creditBalance!: number;
 }

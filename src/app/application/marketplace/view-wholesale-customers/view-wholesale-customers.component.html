@@ -92,6 +92,7 @@
                 <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">Customer ID</th>
                 <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">Customer Name</th>
                 <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">Company Name</th>
+                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">Credit Limit (Rs.)</th>
                 <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">Created At</th>
                 <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">Contact</th>
                 <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">No. of Orders</th>
@@ -123,6 +124,10 @@
 
                 <td class="px-3 py-3 text-left dark:text-textDark whitespace-nowrap">
                   {{ item.companyName || '—' }}
+                </td>
+
+                <td class="px-3 py-3 text-left dark:text-textDark whitespace-nowrap">
+                  {{ item.creditBalance || '—' }}
                 </td>
 
                 <td class="px-3 py-3 text-center dark:text-textDark whitespace-nowrap">

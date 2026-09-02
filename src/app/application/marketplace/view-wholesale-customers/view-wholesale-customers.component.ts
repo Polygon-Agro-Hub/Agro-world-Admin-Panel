@@ -299,7 +299,11 @@ export class ViewWholesaleCustomersComponent implements OnInit {
   }
 
    submitUpdateCredit() {
-    if (!this.selectedCustomerForCredit || this.newCreditLimit === null || this.newCreditLimit === undefined) return;
+    if (!this.selectedCustomerForCredit ||
+      this.newCreditLimit === null ||
+      this.newCreditLimit === undefined ||
+      this.newCreditLimit < 2000 ||
+      !Number.isInteger(this.newCreditLimit)) return;
 
     this.isUpdatingCredit = true;
 
@@ -345,6 +349,32 @@ export class ViewWholesaleCustomersComponent implements OnInit {
           });
         }
       );
+  }
+
+  blockInvalidCreditKeys(event: KeyboardEvent): void {
+    const blockedKeys = ['-', '+', '.', ',', 'e', 'E'];
+    if (blockedKeys.includes(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  blockInvalidCreditPaste(event: ClipboardEvent): void {
+    const pasted = event.clipboardData?.getData('text') ?? '';
+    if (!/^\d+$/.test(pasted)) {
+      event.preventDefault();
+    }
+  }
+
+  onCreditInputChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let cleaned = input.value.replace(/[^0-9]/g, '');
+    cleaned = cleaned.replace(/^0+(?=\d)/, '');
+
+    if (cleaned !== input.value) {
+      input.value = cleaned;
+    }
+
+    this.newCreditLimit = cleaned ? parseInt(cleaned, 10) : null;
   }
 }
 

@@ -631,6 +631,47 @@ getAllShortageAssignedDetails(date?: string): Observable<any> {
 
   return this.http.get<any>(url, { headers });
 }
+
+createPackingTargetLimit(tarValue: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    // Structure the data to match the endpoint's expected format
+    const requestData = {
+      tarValue: tarValue,
+    };
+
+    return this.http
+      .post(`${this.apiUrl}procument/add-packing-target-limit`, requestData, {
+        headers,
+      })
+      .pipe(
+        catchError((error) => {
+          console.error('Error in createPackingTargetLimit:', error);
+          return throwError(() => new Error(error));
+        })
+      );
+  }
+
+  getLatestPackingTargetLimit(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http
+      .get(`${this.apiUrl}procument/get-latest-packing-target-limit`, {
+        headers,
+      })
+      .pipe(
+        catchError((error) => {
+          console.error('Error in getLatestPackingTargetLimit:', error);
+          return throwError(() => new Error(error));
+        })
+      );
+  }
   
 }
 

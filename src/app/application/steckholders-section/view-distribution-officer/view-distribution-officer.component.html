@@ -49,7 +49,8 @@
         <p-dropdown name="selectedIrmId" [(ngModel)]="selectedIrmId" [options]="collectionCenterManagerNames"
           optionLabel="labelName" optionValue="id" placeholder="Select a Manager" [showClear]="false" [required]="true"
           [filter]="true" filterBy="empId,firstNameEnglish,lastNameEnglish" filterPlaceholder="Search Managers..."
-          class="w-full" (onChange)="irmValidationError = false"  [styleClass]="'w-full border border-gray-300 dark:border-gray-600 rounded-xl dark:bg-gray-700 dark:text-white'"
+          class="w-full" (onChange)="irmValidationError = false"
+          [styleClass]="'w-full border border-gray-300 dark:border-gray-600 rounded-xl dark:bg-gray-700 dark:text-white'"
           [ngClass]="{'border-red-500': irmValidationError, 'border-gray-300': !irmValidationError}">
         </p-dropdown>
 

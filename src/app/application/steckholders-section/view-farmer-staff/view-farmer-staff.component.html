@@ -27,8 +27,6 @@
                         (onChange)="fetchData()" />
                 </div>
 
-
-
                 <div
                     class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96 relative group">
                     <!-- Input field -->
@@ -64,7 +62,6 @@
             <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
         </div>
 
-
         <div *ngIf="hasData" class="w-full py-4">
             <!-- Added py-4 for vertical padding -->
             <table class="min-w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto">
@@ -97,7 +94,6 @@
                             <!-- Reduced px-4 to px-3 -->
                             View
                         </th>
-
 
                         <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
                             <!-- Reduced px-4 to px-3 -->
@@ -149,16 +145,12 @@
                                 </svg>
                             </button>
                         </td>
-
-
-
-                        <td class="px-3 py-3 text-center dark:text-white" >{{ item.modifiedByUserName || '--' }}</td>
+                        <td class="px-3 py-3 text-center dark:text-white">{{ item.modifiedByUserName || '--' }}</td>
                         <td class="px-3 py-3 text-center">
                             <!-- Reduced px-4 to px-3 -->
                             <div class="flex justify-center space-x-4">
-
-
-                                <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]" *ngIf="permissionService.hasPermission('Edit staff member') || tokenService.getUserDetails().role === '1'"
+                                <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
+                                    *ngIf="permissionService.hasPermission('Edit staff member') || tokenService.getUserDetails().role === '1'"
                                     (click)="editFarmerStaff(item.id)">
 
                                     <svg fill="currentColor" viewBox="0 0 32 32" version="1.1"
@@ -169,8 +161,8 @@
                                         </path>
                                     </svg>
                                 </button>
-
-                                <button class="w-6 h-6 text-[#fc3636] hover:text-[#f38f8f]" *ngIf="permissionService.hasPermission('Delete staff member') || tokenService.getUserDetails().role === '1'"
+                                <button class="w-6 h-6 text-[#fc3636] hover:text-[#f38f8f]"
+                                    *ngIf="permissionService.hasPermission('Delete staff member') || tokenService.getUserDetails().role === '1'"
                                     (click)="deleteFarmStaff(item.id)">
                                     <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                         fill="none" viewBox="0 0 24 24">

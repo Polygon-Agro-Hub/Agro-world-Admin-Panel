@@ -47,9 +47,7 @@
     background-color: #2d354d !important;
     color: #B1B1B1 !important;
     border-radius: 6px !important;
-    /* <-- add this for rounded corners */
     overflow: hidden;
-    /* ensures child items don't spill over rounded corners */
 }
 
 ::ng-deep .dark .p-dropdown-panel .p-dropdown-item {
@@ -76,44 +74,44 @@
   }
 
   ::ng-deep .p-calendar .p-inputtext {
-    padding-right: 3rem !important; /* Make room for both icons */
+    padding-right: 3rem !important;
   }
   
   ::ng-deep .p-calendar .p-calendar-clear-icon {
-    right: 1.2rem !important; /* Position clear button to the left of calendar icon */
-    top: 8.2px !important; /* Move clear button slightly down */
+    right: 1.2rem !important;
+    top: 8.2px !important;
     order: 1;
   }
   
   
   ::ng-deep .p-calendar .p-datepicker-trigger {
-    right: 0.5rem !important; /* Position calendar icon on the far right */
+    right: 0.5rem !important;
     order: 2;
   }
   
-  /* For light mode placeholder */
+/* For light mode placeholder */
 :host ::ng-deep .p-calendar .p-inputtext::placeholder {
-  color: #6c6c6c; /* gray-400 */
+  color: #6c6c6c;
 }
 
 /* For dark mode placeholder */
 :host-context(.dark) ::ng-deep .p-calendar .p-inputtext::placeholder {
-  color: #8B8B8B; /* gray-300 */
+  color: #8B8B8B;
 }
 
 /* making pop up small*/
 
 ::ng-deep .calendar-popup-small {
-  width: 320px !important; /* Adjust as needed */
+  width: 320px !important;
   min-width: 280px !important;
 }
 
 ::ng-deep .calendar-popup-small .p-datepicker-calendar {
-  font-size: 0.875rem; /* Smaller font */
+  font-size: 0.875rem;
 }
 
 ::ng-deep .calendar-popup-small .p-datepicker-calendar td {
-  padding: 0.25rem !important; /* Smaller cell padding */
+  padding: 0.25rem !important;
 }
 
 ::ng-deep .calendar-popup-small .p-datepicker-calendar td span {
@@ -133,4 +131,21 @@
 
 .sinhala-title {
   font-weight: 700;
+}
+
+/* Quill heading styles - Tailwind Preflight resets h1/h2 font-size and weight, so restore size only, no bold */
+::ng-deep .ql-editor h1,
+::ng-deep .news-content h1 {
+  font-size: 2em !important;
+  font-weight: normal !important;
+  line-height: 1.2 !important;
+  margin: 0.67em 0 !important;
+}
+
+::ng-deep .ql-editor h2,
+::ng-deep .news-content h2 {
+  font-size: 1.5em !important;
+  font-weight: normal !important;
+  line-height: 1.25 !important;
+  margin: 0.75em 0 !important;
 }

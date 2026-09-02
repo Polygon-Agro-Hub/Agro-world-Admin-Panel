@@ -23,6 +23,7 @@ import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
   templateUrl: './edit-branch.component.html',
   styleUrl: './edit-branch.component.css'
 })
+
 export class EditBranchComponent implements OnInit {
 
   branchObj: Branch = new Branch();
@@ -37,7 +38,7 @@ export class EditBranchComponent implements OnInit {
   referenceId: string = ''
 
   timer: any;
-  timeLeft = 600; 
+  timeLeft = 600;
   displayTime = '10:00';
   canResend = false;
 
@@ -74,7 +75,6 @@ export class EditBranchComponent implements OnInit {
     { name: 'Vavuniya', province: 'Northern' },
   ];
 
-
   constructor(
     private router: Router,
     private location: Location,
@@ -83,11 +83,8 @@ export class EditBranchComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-
     this.branchId = Number(this.route.snapshot.paramMap.get('branchId'));
     this.setupDropdownOptions();
-    
-
     this.fetchBranchById()
   }
 
@@ -108,12 +105,8 @@ export class EditBranchComponent implements OnInit {
     this.goviShopService.getBranchForUpdate(id)
       .subscribe(
         (response) => {
-          
-
           this.isLoading = false;
           this.branchObj = response.data
-          
-      
         },
         (error) => {
           if (error.status === 401) {
@@ -154,7 +147,6 @@ export class EditBranchComponent implements OnInit {
     if (!mobilePattern.test(this.branchObj.LandPhone) && this.branchObj.LandPhone) {
       missingFields.push('Land Phone Number must be a valid number');
     }
-
 
     if (missingFields.length > 0) {
       let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
@@ -207,125 +199,123 @@ export class EditBranchComponent implements OnInit {
     this.location.back();
   }
 
-onCancel(): void {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: 'You may lose the added data after canceling!',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Cancel',
-    cancelButtonText: 'No, Keep Editing',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold text-lg',
-      htmlContainer: 'text-left',
-      confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
-    },
-    buttonsStyling: true,
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.location.back();
+  onCancel(): void {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after canceling!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Keep Editing',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+        confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+      },
+      buttonsStyling: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.location.back();
+      }
+    });
+  }
+
+  blockInvalidKeypressForPhone(event: KeyboardEvent) {
+    const input = event.target as HTMLInputElement;
+
+    // Allow control keys
+    if (['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete'].includes(event.key)) {
+      return;
     }
-  });
-}
 
-blockInvalidKeypressForPhone(event: KeyboardEvent) {
+    // Only allow digits
+    if (!/^[0-9]$/.test(event.key)) {
+      event.preventDefault();
+      return;
+    }
 
-  const input = event.target as HTMLInputElement;
+    // If first digit and not 7 → force 7
+    if (input.value.length === 0 && event.key !== '0') {
+      event.preventDefault();
 
-  // Allow control keys
-  if (['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete'].includes(event.key)) {
-    return;
+      input.value = '0';                 // visually set
+      input.dispatchEvent(new Event('input')); // update ngModel
+    }
   }
 
-  // Only allow digits
-  if (!/^[0-9]$/.test(event.key)) {
-    event.preventDefault();
-    return;
+  blockInvalidPasteForPhone(event: ClipboardEvent) {
+    const pastedData = event.clipboardData?.getData('text') || '';
+
+    // Must match 7XXXXXXXX
+    if (!/^7[0-9]{0,8}$/.test(pastedData)) {
+      event.preventDefault();
+    }
   }
 
-  // If first digit and not 7 → force 7
-  if (input.value.length === 0 && event.key !== '0') {
-    event.preventDefault();
-
-    input.value = '0';                 // visually set
-    input.dispatchEvent(new Event('input')); // update ngModel
-  }
-}
-
-blockInvalidPasteForPhone(event: ClipboardEvent) {
-
-  const pastedData = event.clipboardData?.getData('text') || '';
-
-  // Must match 7XXXXXXXX
-  if (!/^7[0-9]{0,8}$/.test(pastedData)) {
-    event.preventDefault();
-  }
-}
-
-onTrimInput(event: any): void {
-  const inputElement = event.target as HTMLInputElement;
-  const trimmedValue = inputElement.value.trimStart();
-  this.branchObj.email = trimmedValue;
-  inputElement.value = trimmedValue;
-}
-
-onFormatInput2(event: any): void {  //trim spaces only from start
-  const inputElement = event.target as HTMLInputElement;
-
-  if (inputElement && inputElement.value) {
-    // Trim spaces only at the start
-    let value = inputElement.value.trimStart();
-
-    // Capitalize first letter
-    value = value.charAt(0).toUpperCase() + value.slice(1);
-
-    // Update model
-    this.branchObj.branchName = value;
-
-    // Update input box value
-    inputElement.value = value;
-  }
-}
-
-onFormatInput1(event: any): void {  //trim spaces only from start
-  const inputElement = event.target as HTMLInputElement;
-
-  if (inputElement && inputElement.value) {
-    // Trim spaces only at the start
-    let value = inputElement.value.trimStart();
-
-    // Update model
-    this.branchObj.address = value;
-
-    // Update input box value
-    inputElement.value = value;
-  }
-}
-
-onPhoneInput(event: Event) {
-  const input = event.target as HTMLInputElement;
-
-  // Remove non-digits (extra safety)
-  let value = input.value.replace(/\D/g, '');
-
-  // If empty → do nothing
-  if (value.length === 0) {
-    input.value = '';
-    return;
+  onTrimInput(event: any): void {
+    const inputElement = event.target as HTMLInputElement;
+    const trimmedValue = inputElement.value.trimStart();
+    this.branchObj.email = trimmedValue;
+    inputElement.value = trimmedValue;
   }
 
-  if (value[0] !== '0') {
-    value = '0' + value.substring(1);
+  onFormatInput2(event: any): void {  //trim spaces only from start
+    const inputElement = event.target as HTMLInputElement;
+
+    if (inputElement && inputElement.value) {
+      // Trim spaces only at the start
+      let value = inputElement.value.trimStart();
+
+      // Capitalize first letter
+      value = value.charAt(0).toUpperCase() + value.slice(1);
+
+      // Update model
+      this.branchObj.branchName = value;
+
+      // Update input box value
+      inputElement.value = value;
+    }
   }
 
-  input.value = value;
+  onFormatInput1(event: any): void {  //trim spaces only from start
+    const inputElement = event.target as HTMLInputElement;
 
-  // Trigger ngModel update
-  input.dispatchEvent(new Event('input'));
-}
+    if (inputElement && inputElement.value) {
+      // Trim spaces only at the start
+      let value = inputElement.value.trimStart();
 
-updateProvince(event: DropdownChangeEvent): void {
+      // Update model
+      this.branchObj.address = value;
+
+      // Update input box value
+      inputElement.value = value;
+    }
+  }
+
+  onPhoneInput(event: Event) {
+    const input = event.target as HTMLInputElement;
+
+    // Remove non-digits (extra safety)
+    let value = input.value.replace(/\D/g, '');
+
+    // If empty → do nothing
+    if (value.length === 0) {
+      input.value = '';
+      return;
+    }
+
+    if (value[0] !== '0') {
+      value = '0' + value.substring(1);
+    }
+
+    input.value = value;
+
+    // Trigger ngModel update
+    input.dispatchEvent(new Event('input'));
+  }
+
+  updateProvince(event: DropdownChangeEvent): void {
     const selectedDistrict = event.value;
 
     const selected = this.districts.find(
@@ -333,96 +323,95 @@ updateProvince(event: DropdownChangeEvent): void {
     );
 
     if (selected) {
-        this.branchObj.province = selected.province;
-      } else {
-        this.branchObj.province = '';
-      }
+      this.branchObj.province = selected.province;
+    } else {
+      this.branchObj.province = '';
+    }
   }
 
-updateBranch() {
-  this.isLoading = true;
-  this.isVerification = false;
-  
-  this.goviShopService.updateBranchData(
-    this.branchObj,
+  updateBranch() {
+    this.isLoading = true;
+    this.isVerification = false;
+
+    this.goviShopService.updateBranchData(
+      this.branchObj,
     )
-    .subscribe(
-      (res) => {
-        this.isLoading= false;
-        if (res?.status) {
-          Swal.fire({
-            icon: 'success',
-            title: 'Success!',
-            text: 'GoViShop Branch Updated Successfully',
-            customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              title: 'font-semibold text-lg',
-              htmlContainer: 'text-left',
-              confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
-            },
-          }
-            
-          );
-          this.location.back();
-        } else {
-          this.isLoading= false;
-          Swal.fire({
-            icon: 'error',
-            title: 'Error!',
-            text: 'GoViShop Branch Update failed',
-            customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              title: 'font-semibold text-lg',
-              htmlContainer: 'text-left',
-              confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
-            },
-          });
-        }
-      },
-      (error: any) => {
-        this.isLoading = false;
-        let errorMessage = 'An unexpected error occurred';
-        let messages: string[] = [];
-
-        if (error.error && Array.isArray(error.error.errors)) {
-          messages = error.error.errors.map((err: string) => {
-            switch (err) {
-              
-              case 'mobilePhone':
-                return 'Mobile Phone Number is already exists.';
-              case 'LandPhone':
-                return 'Land Phone Number is already exists.';
-              default:
-                return 'Validation error: ' + err;
+      .subscribe(
+        (res) => {
+          this.isLoading = false;
+          if (res?.status) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Success!',
+              text: 'GoViShop Branch Updated Successfully',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold text-lg',
+                htmlContainer: 'text-left',
+                confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+              },
             }
-          });
+
+            );
+            this.location.back();
+          } else {
+            this.isLoading = false;
+            Swal.fire({
+              icon: 'error',
+              title: 'Error!',
+              text: 'GoViShop Branch Update failed',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold text-lg',
+                htmlContainer: 'text-left',
+                confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+              },
+            });
+          }
+        },
+        (error: any) => {
+          this.isLoading = false;
+          let errorMessage = 'An unexpected error occurred';
+          let messages: string[] = [];
+
+          if (error.error && Array.isArray(error.error.errors)) {
+            messages = error.error.errors.map((err: string) => {
+              switch (err) {
+
+                case 'mobilePhone':
+                  return 'Mobile Phone Number is already exists.';
+                case 'LandPhone':
+                  return 'Land Phone Number is already exists.';
+                default:
+                  return 'Validation error: ' + err;
+              }
+            });
+          }
+
+          if (messages.length > 0) {
+            errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following Duplicate field issues:</p><ul class="list-disc pl-5">';
+            messages.forEach(m => {
+              errorMessage += `<li>${m}</li>`;
+            });
+            errorMessage += '</ul></div>';
+
+            Swal.fire({
+              icon: 'error',
+              title: 'Duplicate Information',
+              html: errorMessage,
+              confirmButtonText: 'OK',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-[#363636] text-black dark:text-white',
+                title: 'font-semibold text-lg',
+                htmlContainer: 'text-left',
+                confirmButton: 'bg-red-500 dark:bg-red-500 hover:bg-red-600 dark:hover:bg-red-700',
+              },
+            });
+            return;
+          }
         }
-
-        if (messages.length > 0) {
-          errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following Duplicate field issues:</p><ul class="list-disc pl-5">';
-          messages.forEach(m => {
-            errorMessage += `<li>${m}</li>`;
-          });
-          errorMessage += '</ul></div>';
-
-          Swal.fire({
-            icon: 'error',
-            title: 'Duplicate Information',
-            html: errorMessage,
-            confirmButtonText: 'OK',
-            customClass: {
-              popup: 'bg-tileLight dark:bg-[#363636] text-black dark:text-white',
-              title: 'font-semibold text-lg',
-              htmlContainer: 'text-left',
-              confirmButton: 'bg-red-500 dark:bg-red-500 hover:bg-red-600 dark:hover:bg-red-700',
-            },
-          });
-          return;
-        }
-      }
-    );
-}
-
+      );
+  }
 
 }
 

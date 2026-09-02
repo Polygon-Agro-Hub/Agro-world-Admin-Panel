@@ -1,19 +1,30 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlantcareUsersService } from '../../../services/plant-care/plantcare-users.service';
 import { TokenService } from '../../../services/token/services/token.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
-import  Swal  from 'sweetalert2';
+import Swal from 'sweetalert2';
 import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
   selector: 'app-edit-user-staff',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, LoadingSpinnerComponent, DropdownModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    LoadingSpinnerComponent,
+    DropdownModule,
+  ],
   templateUrl: './edit-user-staff.component.html',
-  styleUrls: ['./edit-user-staff.component.css']
+  styleUrls: ['./edit-user-staff.component.css'],
 })
 export class EditUserStaffComponent implements OnInit {
   userForm!: FormGroup;
@@ -28,7 +39,7 @@ export class EditUserStaffComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private plantcareService: PlantcareUsersService,
-    public tokenService: TokenService
+    public tokenService: TokenService,
   ) {}
 
   ngOnInit(): void {
@@ -36,26 +47,32 @@ export class EditUserStaffComponent implements OnInit {
 
     // Initialize the form with validators
     this.userForm = this.fb.group({
-      firstName: ['', [
-        Validators.required,
-        Validators.pattern(/^\p{L}+[\p{L}\s]*$/u),
-        Validators.maxLength(50)
-      ]],
-      lastName: ['', [
-        Validators.required,
-        Validators.pattern(/^\p{L}+[\p{L}\s]*$/u),
-        Validators.maxLength(50)
-      ]],
+      firstName: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(/^\p{L}+[\p{L}\s]*$/u),
+          Validators.maxLength(50),
+        ],
+      ],
+      lastName: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(/^\p{L}+[\p{L}\s]*$/u),
+          Validators.maxLength(50),
+        ],
+      ],
       phoneCode: ['', [Validators.required]],
-      phoneNumber: ['', [
-        Validators.required,
-        Validators.pattern(/^[0-9]{9}$/)
-      ]],
-      nic: ['', [
-        Validators.required,
-        Validators.pattern(/^(\d{12}|\d{9}[Vv])$/)
-      ]],
-      role: ['', [Validators.required]]
+      phoneNumber: [
+        '',
+        [Validators.required, Validators.pattern(/^[0-9]{9}$/)],
+      ],
+      nic: [
+        '',
+        [Validators.required, Validators.pattern(/^(\d{12}|\d{9}[Vv])$/)],
+      ],
+      role: ['', [Validators.required]],
     });
 
     this.fetchOwner();
@@ -76,9 +93,15 @@ export class EditUserStaffComponent implements OnInit {
 
   // Listen to form changes for firstName, lastName, and nic
   ngAfterViewInit() {
-    this.userForm.get('firstName')?.valueChanges.subscribe(() => this.formatName('firstName'));
-    this.userForm.get('lastName')?.valueChanges.subscribe(() => this.formatName('lastName'));
-    this.userForm.get('nic')?.valueChanges.subscribe((value) => this.formatNIC(value));
+    this.userForm
+      .get('firstName')
+      ?.valueChanges.subscribe(() => this.formatName('firstName'));
+    this.userForm
+      .get('lastName')
+      ?.valueChanges.subscribe(() => this.formatName('lastName'));
+    this.userForm
+      .get('nic')
+      ?.valueChanges.subscribe((value) => this.formatNIC(value));
   }
 
   // Restrict input to numbers only
@@ -104,7 +127,9 @@ export class EditUserStaffComponent implements OnInit {
     }
     if (value) {
       const digitsOnly = value.replace(/[^0-9]/g, '').slice(0, 9);
-      this.userForm.get('phoneNumber')?.setValue(digitsOnly, { emitEvent: true }); // Trigger validation
+      this.userForm
+        .get('phoneNumber')
+        ?.setValue(digitsOnly, { emitEvent: true }); // Trigger validation
     }
   }
 
@@ -125,7 +150,7 @@ export class EditUserStaffComponent implements OnInit {
 
   // Mark all controls as touched to show validation errors
   markFormAsTouched() {
-    Object.values(this.userForm.controls).forEach(control => {
+    Object.values(this.userForm.controls).forEach((control) => {
       control.markAsTouched();
     });
   }
@@ -145,7 +170,7 @@ export class EditUserStaffComponent implements OnInit {
           title: 'Error!',
           text: 'Failed to fetch farm staff details.',
         });
-      }
+      },
     });
   }
 
@@ -156,32 +181,35 @@ export class EditUserStaffComponent implements OnInit {
     }
 
     this.isLoading = true;
-    this.plantcareService.updateFarmOwner(this.ownerId, this.userForm.value).subscribe({
-      next: (res) => {
-        this.isLoading = false;
-        Swal.fire({
-          icon: 'success',
-          title: 'Updated!',
-          text: 'Farm staff details have been updated successfully.',
-          confirmButtonText: 'OK',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold',
-          }
-        }).then(() => {
-          window.history.back();
-        });
-      },
-      error: (err) => {
-        this.isLoading = false;
-        Swal.fire({
-          icon: 'error',
-          title: 'Error!',
-          text: 'Failed to update farm staff details.',
-        });
-        console.error(err);
-      }
-    });
+    this.plantcareService
+      .updateFarmOwner(this.ownerId, this.userForm.value)
+      .subscribe({
+        next: (res) => {
+          this.isLoading = false;
+          Swal.fire({
+            icon: 'success',
+            title: 'Updated!',
+            text: 'Farm staff details have been updated successfully.',
+            confirmButtonText: 'OK',
+            customClass: {
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+            },
+          }).then(() => {
+            window.history.back();
+          });
+        },
+        error: (err) => {
+          this.isLoading = false;
+          Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'Failed to update farm staff details.',
+          });
+          console.error(err);
+        },
+      });
   }
 
   back(): void {

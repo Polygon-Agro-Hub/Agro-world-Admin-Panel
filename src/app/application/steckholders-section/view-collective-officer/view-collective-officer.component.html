@@ -24,13 +24,12 @@
     <div class="flex flex-col items-center justify-center">
       <div class="flex align-middle justify-start items-center gap-x-12">
         <div class="flex flex-col">
-          <p-dropdown [options]="centerNames" optionLabel="fullCenterName" optionValue="id" placeholder="Select Collection Centre"
-            [(ngModel)]="selectedCenterId" #selectedCenterIdInput="ngModel" (onChange)="onCenterChange()"
-            name="selectedCenterId" required
-            [filter]="true" filterBy="regCode,centerName" filterPlaceholder="Search managers..."
+          <p-dropdown [options]="centerNames" optionLabel="fullCenterName" optionValue="id"
+            placeholder="Select Collection Centre" [(ngModel)]="selectedCenterId" #selectedCenterIdInput="ngModel"
+            (onChange)="onCenterChange()" name="selectedCenterId" required [filter]="true" filterBy="regCode,centerName"
+            filterPlaceholder="Search managers..."
             [styleClass]="'border min-w-max ml-2 border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white custom-center-dropdown'"
-            [style]="{'width': '400px'}"
-            >
+            [style]="{'width': '400px'}">
           </p-dropdown>
           <div *ngIf="selectedCenterIdInput.touched && !selectedCenterId" class="text-red-500 ml-2 text-sm mt-1">
             <div>Centre Name is required</div>
@@ -43,8 +42,8 @@
         <div class="flex flex-col">
           <p-dropdown [options]="collectionCenterManagerNames" optionLabel="displayLabel" optionValue="id"
             placeholder="Select a Manager" [(ngModel)]="selectedIrmId" #selectedIrmIdInput="ngModel"
-            name="selectedIrmId" required panelStyleClass="custom-dropdown-panel"
-            [filter]="true" filterBy="empId,firstNameEnglish,lastNameEnglish" filterPlaceholder="Search managers..."
+            name="selectedIrmId" required panelStyleClass="custom-dropdown-panel" [filter]="true"
+            filterBy="empId,firstNameEnglish,lastNameEnglish" filterPlaceholder="Search managers..."
             [styleClass]="'min-w-max border ml-2 border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white'"
             [style]="{'width': '400px'}">
           </p-dropdown>
@@ -54,11 +53,8 @@
             <div>Manager Name is required</div>
           </div>
         </div>
-
       </div>
     </div>
-
-
 
     <div class="flex justify-center mt-4">
       <button (click)="editCloseModel()"
@@ -92,7 +88,6 @@
           <span class="font-semibold text-lg">
             "{{ selectedOfficer?.centerName }}"?</span>
         </p>
-
       </div>
 
       <div class="flex justify-center gap-4">
@@ -123,20 +118,18 @@
     <div class="flex justify-between items-center mb-8">
       <div *ngIf="!Cname" class="flex items-center">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-          Collection Officers ({{ (totalItems || 0) < 10 ? '0' + (totalItems || 0) : (totalItems || 0) }})
-        </h2>
+          Collection Officers ({{ (totalItems || 0) < 10 ? '0' + (totalItems || 0) : (totalItems || 0) }}) </h2>
       </div>
 
       <div *ngIf="Cname" class="flex items-center">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-          All ({{ this.totalItems }})({{ (totalItems || 0) < 10 ? '0' + (totalItems || 0) : (totalItems || 0) }})
-        </h2>
+          All ({{ this.totalItems }})({{ (totalItems || 0) < 10 ? '0' + (totalItems || 0) : (totalItems || 0) }}) </h2>
       </div>
 
       <div class="flex items-center mr-5" *ngIf="
-    (permissionService.hasPermission('Filter CO / CCM / DO') ||
-      tokenService.getUserDetails().role === '1') 
-  ">
+        (permissionService.hasPermission('Filter CO / CCM / DO') ||
+        tokenService.getUserDetails().role === '1') 
+      ">
         <i class="mr-6 w-6 h-6 fill-current text-textLight dark:text-textDark">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
             <path
@@ -218,14 +211,13 @@
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
               Centre Reg Code
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center" >
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               Centre Status
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center" 
-            *ngIf="
-            ((urlSegment === 'steckholders' && permissionService.hasPermission('Approve collection officer')) ||
-(urlSegment === 'collection-hub' && permissionService.hasPermission('Approve Polygon Centre officer')) ||
-   tokenService.getUserDetails().role === '1')
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center" *ngIf="
+              ((urlSegment === 'steckholders' && permissionService.hasPermission('Approve collection officer')) ||
+              (urlSegment === 'collection-hub' && permissionService.hasPermission('Approve Polygon Centre officer')) ||
+              tokenService.getUserDetails().role === '1')
             ">
               Status
             </th>
@@ -240,21 +232,20 @@
             </th>
 
             <th *ngIf="((urlSegment === 'steckholders' && permissionService.hasPermission('View individual collection officer')) ||
-            (urlSegment === 'collection-hub' && permissionService.hasPermission('View Polygon Centre Officer Profile')) ||
+              (urlSegment === 'collection-hub' && permissionService.hasPermission('View Polygon Centre Officer Profile')) ||
                 tokenService.getUserDetails().role === '1') && !Cname
-              " 
-              class="py-3 font-normal text-textLight dark:text-textDark text-center"></th>
+              " class="py-3 font-normal text-textLight dark:text-textDark text-center"></th>
 
             <th *ngIf="
-            ((urlSegment === 'steckholders' && permissionService.hasPermission('Manage CO / CCM / DO')) ||
-            (urlSegment === 'collection-hub' && permissionService.hasPermission('Edit Polygon Centre Officers')) ||
+              ((urlSegment === 'steckholders' && permissionService.hasPermission('Manage CO / CCM / DO')) ||
+              (urlSegment === 'collection-hub' && permissionService.hasPermission('Edit Polygon Centre Officers')) ||
                tokenService.getUserDetails().role === '1')"
               class="py-3 font-normal text-textLight dark:text-textDark text-center"></th>
             <th *ngIf="
             ((urlSegment === 'steckholders' && permissionService.hasPermission('Delete(remove) CO / CCM / DO')) ||
             (urlSegment === 'collection-hub' && permissionService.hasPermission('Delete Polygon Centre Officers')) ||
                tokenService.getUserDetails().role === '1')"
-                class="py-3 font-normal text-textLight dark:text-textDark text-center"></th>
+              class="py-3 font-normal text-textLight dark:text-textDark text-center"></th>
           </tr>
         </thead>
         <tbody>
@@ -294,8 +285,7 @@
                 <span [class.cursor-pointer]="
                     (urlSegment === 'steckholders' && permissionService.hasPermission('Claim collection officer')) || 
                     (urlSegment === 'collection-hub' && permissionService.hasPermission('Claim Polygon Centre officer')) || 
-                    tokenService.getUserDetails().role === '1'" 
-                    (click)="
+                    tokenService.getUserDetails().role === '1'" (click)="
                     (urlSegment === 'steckholders' && permissionService.hasPermission('Claim collection officer')) || 
                     (urlSegment === 'collection-hub' && permissionService.hasPermission('Claim Polygon Centre officer')) || 
                     tokenService.getUserDetails().role === '1'
@@ -312,10 +302,9 @@
             </td>
             <td *ngIf="
             ((urlSegment === 'steckholders' && permissionService.hasPermission('Approve collection officer')) ||
-(urlSegment === 'collection-hub' && permissionService.hasPermission('Approve Polygon Centre officer')) ||
-   tokenService.getUserDetails().role === '1')
-            "
-            class="px-4 py-3 text-center">
+            (urlSegment === 'collection-hub' && permissionService.hasPermission('Approve Polygon Centre officer')) ||
+            tokenService.getUserDetails().role === '1')
+            " class="px-4 py-3 text-center">
               <div>
                 <span [ngClass]="{
                     'font-bold px-3 py-1 text-sm bg-[#F8FFA6] text-[#A8A100] rounded-xl':
@@ -324,19 +313,19 @@
                       item.status === 'Approved',
                     'font-bold px-3 py-1 text-sm bg-red-100 text-[#D16D6A] rounded-xl':
                       item.status === 'Rejected'
-                  }" class="inline-block font-bold rounded-lg px-4 py-2 text-xs text-center w-32 shadow-md transition-all duration-200"
+                  }"
+                  class="inline-block font-bold rounded-lg px-4 py-2 text-xs text-center w-32 shadow-md transition-all duration-200"
                   [class.cursor-pointer]="
                     ((urlSegment === 'steckholders' && permissionService.hasPermission('Approve collection officer')) ||
-(urlSegment === 'collection-hub' && permissionService.hasPermission('Approve Polygon Centre officer')) ||
-   tokenService.getUserDetails().role === '1')
+                    (urlSegment === 'collection-hub' && permissionService.hasPermission('Approve Polygon Centre officer')) ||
+                    tokenService.getUserDetails().role === '1')
                   " (click)="
                   ((urlSegment === 'steckholders' && permissionService.hasPermission('Approve collection officer')) ||
-(urlSegment === 'collection-hub' && permissionService.hasPermission('Approve Polygon Centre officer')) ||
-   tokenService.getUserDetails().role === '1')
+                  (urlSegment === 'collection-hub' && permissionService.hasPermission('Approve Polygon Centre officer')) ||
+                  tokenService.getUserDetails().role === '1')
                       ? openPopup(item)
                       : null
                   ">
-
                   {{ item.status }}
                 </span>
               </div>
@@ -351,9 +340,6 @@
             <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
               {{ getModifiedBy(item) }}
             </td>
-
-
-
             <td *ngIf="((urlSegment === 'steckholders' && permissionService.hasPermission('View individual collection officer')) ||
              (urlSegment === 'collection-hub' && permissionService.hasPermission('View Polygon Centre Officer Profile')) ||
             tokenService.getUserDetails().role === '1') && isSteckholdersRoute" [class.ml-4]="Cname"
@@ -382,13 +368,10 @@
               </button>
             </td>
 
-            <td 
-            
-            *ngIf="
-((urlSegment === 'steckholders' && permissionService.hasPermission('Delete(remove) CO / CCM / DO')) ||
-             (urlSegment === 'collection-hub' && permissionService.hasPermission('Delete Polygon Centre Officers')) ||
-                tokenService.getUserDetails().role === '1')"
-              class="text-center">
+            <td *ngIf="
+              ((urlSegment === 'steckholders' && permissionService.hasPermission('Delete(remove) CO / CCM / DO')) ||
+              (urlSegment === 'collection-hub' && permissionService.hasPermission('Delete Polygon Centre Officers')) ||
+                tokenService.getUserDetails().role === '1')" class="text-center">
               <button class="text-[#fc3636] hover:text-[#f38f8f]" (click)="deleteCollectionOfficer(item.id)">
                 <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                   viewBox="0 0 24 24">

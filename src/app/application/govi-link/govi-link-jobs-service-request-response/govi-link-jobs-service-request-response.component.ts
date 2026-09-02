@@ -24,6 +24,7 @@ import { PermissionService } from '../../../services/roles-permission/permission
   templateUrl: './govi-link-jobs-service-request-response.component.html',
   styleUrl: './govi-link-jobs-service-request-response.component.css'
 })
+
 export class GoviLinkJobsServiceRequestResponseComponent implements OnInit {
 
   jobId!: string;
@@ -38,7 +39,7 @@ export class GoviLinkJobsServiceRequestResponseComponent implements OnInit {
   isModalOpen = false;
   modalImage = '';
   modalTitle = '';
-  
+
   // Zoom and pan properties
   scale = 1;
   positionX = 0;
@@ -50,42 +51,31 @@ export class GoviLinkJobsServiceRequestResponseComponent implements OnInit {
   questions: Question[] = [];
   problems: Problem[] = [];
 
-
   constructor(
     private router: Router,
     private goviLinkService: GoviLinkService,
     public tokenService: TokenService,
     public permissionService: PermissionService,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   ngOnInit() {
-    
-    
     this.route.queryParams.subscribe(queryParams => {
       this.jobId = queryParams['jobId'] || '';
       this.purpose = queryParams['purpose'] || '';
-  
-      
-  
       this.fetchResponse();
     });
   }
 
   fetchResponse() {
     this.isLoading = true;
-
     this.goviLinkService.getServiceRequestResponse(this.jobId).subscribe(
       (response) => {
         this.isLoading = false;
         if (response.success) {
-          
           this.serviceRequestResponse = response.data.auditDetails
           this.questions = response.data.advices
           this.problems = response.data.suggestions
-          
-          
-          
           this.totalItems = response.data.length;
           this.hasData = this.totalItems > 0;
         } else {
@@ -99,7 +89,6 @@ export class GoviLinkJobsServiceRequestResponseComponent implements OnInit {
       }
     );
   }
-
 
   onBack() {
     history.back();
@@ -156,10 +145,10 @@ export class GoviLinkJobsServiceRequestResponseComponent implements OnInit {
       this.isDragging = true;
       this.startX = event.clientX - this.positionX;
       this.startY = event.clientY - this.positionY;
-      
+
       // Prevent default drag behavior
       event.preventDefault();
-      
+
       // Change cursor style
       const container = event.currentTarget as HTMLElement;
       if (container) {
@@ -171,11 +160,11 @@ export class GoviLinkJobsServiceRequestResponseComponent implements OnInit {
   onDrag(event: MouseEvent) {
     if (this.isDragging && this.scale > 1) {
       event.preventDefault();
-      
+
       // Calculate new position
       this.positionX = event.clientX - this.startX;
       this.positionY = event.clientY - this.startY;
-      
+
       // Constrain panning within reasonable bounds
       this.constrainPosition();
     }
@@ -184,7 +173,7 @@ export class GoviLinkJobsServiceRequestResponseComponent implements OnInit {
   stopDrag() {
     if (this.isDragging) {
       this.isDragging = false;
-      
+
       // Reset cursor style
       const container = document.querySelector('.image-container') as HTMLElement;
       if (container) {
@@ -199,7 +188,7 @@ export class GoviLinkJobsServiceRequestResponseComponent implements OnInit {
       this.isDragging = true;
       this.startX = event.touches[0].clientX - this.positionX;
       this.startY = event.touches[0].clientY - this.positionY;
-      
+
       // Prevent default touch behavior (like page scrolling)
       event.preventDefault();
     }
@@ -208,11 +197,11 @@ export class GoviLinkJobsServiceRequestResponseComponent implements OnInit {
   onTouchMove(event: TouchEvent) {
     if (this.isDragging && this.scale > 1 && event.touches.length === 1) {
       event.preventDefault();
-      
+
       // Calculate new position
       this.positionX = event.touches[0].clientX - this.startX;
       this.positionY = event.touches[0].clientY - this.startY;
-      
+
       // Constrain panning within reasonable bounds
       this.constrainPosition();
     }
@@ -225,7 +214,7 @@ export class GoviLinkJobsServiceRequestResponseComponent implements OnInit {
     // This ensures the image doesn't move completely off-screen
     const maxPanX = (this.scale - 1) * 272;
     const maxPanY = (this.scale - 1) * 272;
-    
+
     // Apply constraints
     this.positionX = Math.min(Math.max(this.positionX, -maxPanX), maxPanX);
     this.positionY = Math.min(Math.max(this.positionY, -maxPanY), maxPanY);

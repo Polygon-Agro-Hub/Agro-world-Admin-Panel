@@ -141,17 +141,34 @@ export class EditCoupenComponent {
   }
 
   checkStartDate() {
-    if (this.coupenObj.startDate && this.coupenObj.startDate < this.today) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Invalid Start Date',
-        text: 'Start Date cannot be a past date!',
-        confirmButtonText: 'OK',
-      }).then(() => {
-        this.coupenObj.startDate = null;
-      });
-    }
+  if (this.coupenObj.startDate && this.coupenObj.startDate < this.today) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Invalid Start Date',
+      text: 'Start Date cannot be a past date!',
+      confirmButtonText: 'OK',
+    }).then(() => {
+      this.coupenObj.startDate = null;
+    });
+    return;
   }
+
+  // NEW: Clear Expire Date if it's now earlier than the newly selected Start Date
+  if (
+    this.coupenObj.startDate &&
+    this.coupenObj.endDate &&
+    this.coupenObj.endDate < this.coupenObj.startDate
+  ) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Expire Date Cleared',
+      text: 'Expire Date was earlier than the new Start Date, so it has been reset. Please choose a new Expire Date.',
+      confirmButtonText: 'OK',
+    }).then(() => {
+      this.coupenObj.endDate = null;
+    });
+  }
+}
 
   onSubmit() {
   // Reset validation messages
@@ -342,23 +359,29 @@ validateDecimalInput(event: Event, field: 'priceLimit' | 'fixDiscount' | 'percen
 }
 
   preventNegative(e: KeyboardEvent) {
-    const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Tab', 'Home', 'End'];
+  const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Tab', 'Home', 'End'];
 
-    if (allowedKeys.includes(e.key) || e.ctrlKey || e.metaKey) {
-      if (e.ctrlKey && e.key === 'v') {
-        setTimeout(() => {
-          if (this.coupenObj.percentage < 0) {
-            this.coupenObj.percentage = 0;
-          }
-        }, 0);
-      }
-      return;
+  if (allowedKeys.includes(e.key) || e.ctrlKey || e.metaKey) {
+    if (e.ctrlKey && e.key === 'v') {
+      setTimeout(() => {
+        if (this.coupenObj.percentage < 0) {
+          this.coupenObj.percentage = 0;
+        }
+      }, 0);
     }
-
-    if (!/^[0-9]$/.test(e.key)) {
-      e.preventDefault();
-    }
+    return;
   }
+
+  if (!/^[0-9]$/.test(e.key)) {
+    e.preventDefault();
+  }
+
+  // Block '0' as the very first character typed
+  const input = e.target as HTMLInputElement;
+  if (e.key === '0' && input.value.length === 0) {
+    e.preventDefault();
+  }
+}
 
 
   onCodeInput(event: any): void {

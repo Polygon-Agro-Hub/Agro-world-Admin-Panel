@@ -19,8 +19,7 @@
         class="w-full p-2 border rounded-md border-gray-300 text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         [(ngModel)]="serviceData.englishName" name="englishName" #englishName="ngModel" [disabled]="isView" required
         pattern="^\S.*$" (keydown)="!isView && blockFirstSpace($event)" (keydown)="!isView && blockLeadingSpace($event)"
-        (blur)="!isView && formatEnglishName()" (input)="!isView && capitalizeFirstLetter()"
-         />
+        (blur)="!isView && formatEnglishName()" (input)="!isView && capitalizeFirstLetter()" />
       <div *ngIf="!isView && englishName.invalid && (englishName.touched || englishName.dirty)"
         class="text-red-600 text-sm mt-1">
         <div *ngIf="englishName.errors?.['required']">English name is required.</div>
@@ -58,19 +57,19 @@
     </div>
 
     <!-- Service Fee -->
-    <!-- Service Fee -->
     <div class="mb-6">
       <label class="block text-sm font-medium mb-2 text-[#534E4E] dark:text-textDark">
         Service Fee (Rs.) <span *ngIf="!isView">*</span>
       </label>
-      <input type="number"
+      <input type="text" inputmode="decimal"
         class="w-full p-2 border rounded-md border-gray-300 text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        [(ngModel)]="serviceData.srvFee" name="srvFee" #srvFee="ngModel" [disabled]="isView" required min="0"
-        step="0.01" (blur)="!isView && formatSrvFee()" (input)="!isView && blockAfterTwoDecimals($event)"
+        [(ngModel)]="srvFeeDisplay" name="srvFee" #srvFee="ngModel" [disabled]="isView" required
+        pattern="^\d+(\.\d{1,2})?$"
+        (blur)="!isView && formatSrvFee()" (input)="!isView && blockAfterTwoDecimals($event)"
         (keypress)="!isView && allowOnlyNumbers($event)" />
       <div *ngIf="!isView && srvFee.invalid && (srvFee.touched || srvFee.dirty)" class="text-red-600 text-sm mt-1">
         <div *ngIf="srvFee.errors?.['required']">Service fee is required.</div>
-        <div *ngIf="srvFee.errors?.['min']">Service fee cannot be negative.</div>
+        <!-- <div *ngIf="srvFee.errors?.['pattern']">Enter a valid amount (up to 2 decimal places).</div> -->
       </div>
     </div>
 

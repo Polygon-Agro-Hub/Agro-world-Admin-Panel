@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormsModule, NgForm } from '@angular/forms'; 
+import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { GoviLinkService } from '../../../services/govi-link/govi-link.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
   templateUrl: './add-services.component.html',
   styleUrls: ['./add-services.component.css']
 })
+
 export class AddServicesComponent {
   serviceData: {
     englishName: string;
@@ -20,16 +21,16 @@ export class AddServicesComponent {
     sinhalaName: string;
     srvFee?: number;
   } = {
-    englishName: '',
-    tamilName: '',
-    sinhalaName: ''
-  };
+      englishName: '',
+      tamilName: '',
+      sinhalaName: ''
+    };
 
   isLoading = false;
   errorMessage: string | null = null;
   successMessage: string | null = null;
 
-  constructor(private goviLinkService: GoviLinkService, private router: Router ) {}
+  constructor(private goviLinkService: GoviLinkService, private router: Router) { }
 
   onSubmit(form: NgForm) {
     const missingFields: string[] = [];
@@ -124,7 +125,6 @@ export class AddServicesComponent {
           },
         }).then(() => {
           this.resetForm(form);
-          // ✅ Navigate to view services list
           this.router.navigate(['/govi-link/action/view-services-list']);
         });
       },
@@ -170,7 +170,7 @@ export class AddServicesComponent {
   blockFirstSpace(event: KeyboardEvent) {
     const target = event.target as HTMLInputElement;
     const cursorPosition = target.selectionStart;
-    
+
     // Prevent space if:
     // 1. Field is completely empty, OR
     // 2. Cursor is at the beginning of the field
@@ -178,7 +178,7 @@ export class AddServicesComponent {
       event.preventDefault();
       return;
     }
-    
+
     // Also prevent multiple consecutive spaces
     if (event.code === 'Space' && cursorPosition !== null) {
       // Check if there's a space before the cursor position
@@ -194,7 +194,7 @@ export class AddServicesComponent {
     if (this.serviceData[fieldName]) {
       // Remove any leading spaces
       this.serviceData[fieldName] = this.serviceData[fieldName].replace(/^\s+/, '');
-      
+
       // Capitalize first letter for English name
       if (fieldName === 'englishName' && this.serviceData.englishName.length > 0) {
         this.serviceData.englishName =
@@ -208,20 +208,20 @@ export class AddServicesComponent {
   onInputField(event: Event, fieldName: 'englishName' | 'sinhalaName' | 'tamilName') {
     const target = event.target as HTMLInputElement;
     const originalValue = target.value;
-    
+
     // Remove leading spaces
     const newValue = originalValue.replace(/^\s+/, '');
-    
+
     // Update the model if value changed
     if (newValue !== originalValue) {
       this.serviceData[fieldName] = newValue;
-      
+
       // Force Angular to update the view
       setTimeout(() => {
         target.value = newValue;
       });
     }
-    
+
     // Capitalize first letter for English name
     if (fieldName === 'englishName' && newValue.length > 0) {
       this.serviceData.englishName =
@@ -279,7 +279,7 @@ export class AddServicesComponent {
 
   onFeeKeyDown(event: KeyboardEvent) {
     const allowedKeys = [
-      'Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 
+      'Backspace', 'Delete', 'Tab', 'Escape', 'Enter',
       'Home', 'End', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'
     ];
 
@@ -334,7 +334,7 @@ export class AddServicesComponent {
 
     // Update the input value
     input.value = value;
-    
+
     // Update the model
     if (value === '' || value === '.') {
       this.serviceData.srvFee = undefined;

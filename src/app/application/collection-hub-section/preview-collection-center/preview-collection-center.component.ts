@@ -44,25 +44,25 @@ export class PreviewCollectionCenterComponent implements OnInit {
   city: string = '';
   isLoading = false;
   isView: boolean = false;
-    countries: PhoneCode[] = [
-  { code: 'LK', dialCode: '+94', name: 'Sri Lanka' },
-  { code: 'VN', dialCode: '+84', name: 'Vietnam' },
-  { code: 'KH', dialCode: '+855', name: 'Cambodia' },
-  { code: 'BD', dialCode: '+880', name: 'Bangladesh' },
-  { code: 'IN', dialCode: '+91', name: 'India' },
-  { code: 'NL', dialCode: '+31', name: 'Netherlands' },
-  { code: 'UK', dialCode: '+44', name: 'United Kingdom' },
-  { code: 'US', dialCode: '+1', name: 'United States' }
-];
+  countries: PhoneCode[] = [
+    { code: 'LK', dialCode: '+94', name: 'Sri Lanka' },
+    { code: 'VN', dialCode: '+84', name: 'Vietnam' },
+    { code: 'KH', dialCode: '+855', name: 'Cambodia' },
+    { code: 'BD', dialCode: '+880', name: 'Bangladesh' },
+    { code: 'IN', dialCode: '+91', name: 'India' },
+    { code: 'NL', dialCode: '+31', name: 'Netherlands' },
+    { code: 'UK', dialCode: '+44', name: 'United Kingdom' },
+    { code: 'US', dialCode: '+1', name: 'United States' },
+  ];
 
-getFlagUrl(countryCode: string): string {
-  return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
-}
+  getFlagUrl(countryCode: string): string {
+    return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
+  }
   constructor(
     private collectionCenterService: CollectionCenterService,
     private router: Router,
     private route: ActivatedRoute,
-    private location: Location
+    private location: Location,
   ) {
     this.collectionCenterID = this.route.snapshot.params['id'];
   }
@@ -146,7 +146,7 @@ getFlagUrl(countryCode: string): string {
       .updateColectionCenter(
         this.centerFetchData,
         this.selectedCompaniesIds,
-        this.collectionCenterID
+        this.collectionCenterID,
       )
       .subscribe(
         (res) => {
@@ -154,7 +154,7 @@ getFlagUrl(countryCode: string): string {
             Swal.fire(
               'Success',
               'Collection Centre updated Successfully',
-              'success'
+              'success',
             );
             this.router.navigate(['/collection-hub/view-collection-centers']);
           } else {
@@ -180,7 +180,7 @@ getFlagUrl(countryCode: string): string {
             title: 'Server Error',
             text: 'Failed to update the collection centre. Please try again later.',
           });
-        }
+        },
       );
   }
 
@@ -195,7 +195,7 @@ getFlagUrl(countryCode: string): string {
 
         this.updateSelectedCompanies();
       },
-      (error) => console.error('Error fetching companies:', error)
+      (error) => console.error('Error fetching companies:', error),
     );
   }
 
@@ -208,7 +208,7 @@ getFlagUrl(countryCode: string): string {
           if (res?.status) {
             this.centerFetchData = res.results;
             this.selectProvince = this.centerFetchData.province;
-            this.existRegCode = this.centerFetchData.regCode; 
+            this.existRegCode = this.centerFetchData.regCode;
 
             this.updateSelectedCompanies();
             this.onProvinceChange();
@@ -220,7 +220,7 @@ getFlagUrl(countryCode: string): string {
           }
         },
 
-        (error) => console.error('Error fetching collection centre:', error)
+        (error) => console.error('Error fetching collection centre:', error),
       );
   }
 
@@ -231,7 +231,7 @@ getFlagUrl(countryCode: string): string {
         .map((name) => name.trim());
 
       this.selectedCompaniesIds = this.CompanyData.filter((company) =>
-        companyNames.includes(company.companyNameEnglish)
+        companyNames.includes(company.companyNameEnglish),
       ).map((company) => company.id);
     }
   }
@@ -244,11 +244,10 @@ getFlagUrl(countryCode: string): string {
     }
 
     this.centerFetchData.companies = this.CompanyData.filter((c) =>
-      this.selectedCompaniesIds.includes(c.id)
+      this.selectedCompaniesIds.includes(c.id),
     )
       .map((c) => c.companyNameEnglish)
       .join(',');
-
   }
 
   onCancel() {
@@ -264,9 +263,9 @@ getFlagUrl(countryCode: string): string {
   }
 
   updateRegCode() {
-    const provinceCode = this.selectProvince.slice(0, 3).toUpperCase(); 
-    const districtCode = this.selectDistrict.slice(0, 3).toUpperCase(); 
-    const cityCode = this.city.slice(0, 3).toUpperCase(); 
+    const provinceCode = this.selectProvince.slice(0, 3).toUpperCase();
+    const districtCode = this.selectDistrict.slice(0, 3).toUpperCase();
+    const cityCode = this.city.slice(0, 3).toUpperCase();
 
     if (provinceCode && districtCode && cityCode) {
       this.centerFetchData.regCode = `${provinceCode}-${districtCode}-${cityCode}`;
@@ -279,7 +278,7 @@ getFlagUrl(countryCode: string): string {
     const selectedCity = this.centerFetchData.city;
 
     const filteredProvince = this.ProvinceData.filter(
-      (item) => item.province === this.selectProvince
+      (item) => item.province === this.selectProvince,
     );
     this.centerFetchData.province = this.selectProvince;
 
@@ -298,7 +297,7 @@ getFlagUrl(countryCode: string): string {
           },
           (error) => {
             console.error('Error fetching regCode:', error);
-          }
+          },
         );
     }
   }
@@ -317,7 +316,7 @@ getFlagUrl(countryCode: string): string {
           },
           (error) => {
             console.error('Error fetching regCode:', error);
-          }
+          },
         );
     }
   }
@@ -336,27 +335,26 @@ getFlagUrl(countryCode: string): string {
           },
           (error) => {
             console.error('Error fetching regCode:', error);
-          }
+          },
         );
     }
   }
 
   formatContactNumber(value: number | null): string {
-  if (value === null || value === undefined || value === 0 || isNaN(value)) {
-    return '-';
+    if (value === null || value === undefined || value === 0 || isNaN(value)) {
+      return '-';
+    }
+    return value.toString();
   }
-  return value.toString();
-}
 
-onContact02Change(value: string) {
-  if (value === '-' || value === '') {
-    this.centerFetchData.contact02 = null;
-  } else {
-    const parsedValue = parseInt(value, 10);
-    this.centerFetchData.contact02 = isNaN(parsedValue) ? null : parsedValue;
+  onContact02Change(value: string) {
+    if (value === '-' || value === '') {
+      this.centerFetchData.contact02 = null;
+    } else {
+      const parsedValue = parseInt(value, 10);
+      this.centerFetchData.contact02 = isNaN(parsedValue) ? null : parsedValue;
+    }
   }
-}
-
 }
 
 class CollectionCenter {

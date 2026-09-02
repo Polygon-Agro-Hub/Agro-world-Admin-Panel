@@ -5,6 +5,7 @@
 </button>
 <div class="h-[20px]"></div>
 <div *ngIf="this.itemId == null" class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg">
+  <form #personalForm="ngForm">
   <div *ngIf="selectedPage === 'pageOne'">
     <!-- <div> -->
     <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
@@ -627,5 +628,5 @@
       </button>
     </div>
   </div>
-
+</form>
 </div>

@@ -36,6 +36,7 @@ export interface Branch {
   templateUrl: './view-branches-per-shop.component.html',
   styleUrl: './view-branches-per-shop.component.css',
 })
+
 export class ViewBranchesPerShopComponent implements OnInit {
   isLoading = false;
 
@@ -107,7 +108,7 @@ export class ViewBranchesPerShopComponent implements OnInit {
     private location: Location,
     public permissionService: PermissionService,
     public tokenService: TokenService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
@@ -118,10 +119,7 @@ export class ViewBranchesPerShopComponent implements OnInit {
   }
 
   loadBranches(): void {
-
-    
     this.isLoading = true;
-
     this.govishopService
       .getBranchesByShopId(
         this.shopId,
@@ -220,8 +218,8 @@ export class ViewBranchesPerShopComponent implements OnInit {
   back(): void {
     if (this.shopId) {
       this.router.navigate(['govi-shop/action/all-govi-shops'], {
-      queryParams: {},
-    });
+        queryParams: {},
+      });
     } else {
       this.location.back();
     }

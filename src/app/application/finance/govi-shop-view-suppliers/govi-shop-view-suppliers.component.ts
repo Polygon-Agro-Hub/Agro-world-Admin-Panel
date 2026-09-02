@@ -38,6 +38,7 @@ import { PostinvoiceService } from '../../../services/invoice/postinvoice.servic
   templateUrl: './govi-shop-view-suppliers.component.html',
   styleUrl: './govi-shop-view-suppliers.component.css'
 })
+
 export class GoviShopViewSuppliersComponent implements OnInit {
   ordersArr: Orders[] = [];
   date: Date | null = null;
@@ -140,7 +141,6 @@ export class GoviShopViewSuppliersComponent implements OnInit {
 
   onPageChange(event: number) {
     this.page = event;
-    console.log('page', this.page)
     this.fetchAllOrders();
   }
 

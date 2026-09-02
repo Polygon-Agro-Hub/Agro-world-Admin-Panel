@@ -39,41 +39,30 @@
           Contact Number 01
         </label>
 
-       <div class="mt-1 flex gap-x-2">
-  <!-- Phone Code Dropdown -->
-  <p-dropdown
-    formControlName="phoneCode01"
-    [options]="countries"
-    optionLabel="dialCode"
-    optionValue="dialCode"
-    styleClass="border border-gray-300 rounded-l-md bg-gray-50 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown"
-    
-    [disabled]="true"
-  >
-    <ng-template let-country pTemplate="item">
-      <div class="flex items-center gap-2">
-        <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
-        <span>{{ country.dialCode }}</span>
-      </div>
-    </ng-template>
-    <ng-template let-country pTemplate="selectedItem">
-      <div class="flex items-center gap-2" *ngIf="country">
-        <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
-        <span>{{ country.dialCode }}</span>
-      </div>
-    </ng-template>
-  </p-dropdown>
+        <div class="mt-1 flex gap-x-2">
+          <!-- Phone Code Dropdown -->
+          <p-dropdown formControlName="phoneCode01" [options]="countries" optionLabel="dialCode" optionValue="dialCode"
+            styleClass="border border-gray-300 rounded-l-md bg-gray-50 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown"
+            [disabled]="true">
+            <ng-template let-country pTemplate="item">
+              <div class="flex items-center gap-2">
+                <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                <span>{{ country.dialCode }}</span>
+              </div>
+            </ng-template>
+            <ng-template let-country pTemplate="selectedItem">
+              <div class="flex items-center gap-2" *ngIf="country">
+                <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                <span>{{ country.dialCode }}</span>
+              </div>
+            </ng-template>
+          </p-dropdown>
 
-  <!-- Contact Number Input -->
-  <input
-    type="text"
-    [(ngModel)]="centerFetchData.contact01"
-    id="contact01"
-    name="contact01"
-    class="flex-1 p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-    [disabled]="true"
-  />
-</div>
+          <!-- Contact Number Input -->
+          <input type="text" [(ngModel)]="centerFetchData.contact01" id="contact01" name="contact01"
+            class="flex-1 p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            [disabled]="true" />
+        </div>
 
       </div>
 
@@ -81,44 +70,34 @@
       <div>
         <label for="contact02Code" class="block text-sm font-medium text-gray-700 dark:text-textDark">Contact Number
           02</label>
-       <div class="mt-1 flex gap-x-2">
-  <!-- Phone Code 2 Dropdown -->
-  <p-dropdown
-    formControlName="phoneCode02"
-    [options]="countries"
-    optionLabel="dialCode"
-    optionValue="dialCode"
-    styleClass="border border-gray-300 rounded-l-md bg-gray-50 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown"
-    [disabled]="true"
-  >
-    <!-- Dropdown items -->
-    <ng-template let-country pTemplate="item">
-      <div class="flex items-center gap-2">
-        <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
-        <span>{{ country.dialCode }}</span>
-      </div>
-    </ng-template>
+        <div class="mt-1 flex gap-x-2">
+          <!-- Phone Code 2 Dropdown -->
+          <p-dropdown formControlName="phoneCode02" [options]="countries" optionLabel="dialCode" optionValue="dialCode"
+            styleClass="border border-gray-300 rounded-l-md bg-gray-50 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown"
+            [disabled]="true">
+            <!-- Dropdown items -->
+            <ng-template let-country pTemplate="item">
+              <div class="flex items-center gap-2">
+                <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                <span>{{ country.dialCode }}</span>
+              </div>
+            </ng-template>
 
-    <!-- Selected item -->
-    <ng-template let-country pTemplate="selectedItem">
-      <div class="flex items-center gap-2" *ngIf="country">
-        <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
-        <span>{{ country.dialCode }}</span>
-      </div>
-    </ng-template>
-  </p-dropdown>
+            <!-- Selected item -->
+            <ng-template let-country pTemplate="selectedItem">
+              <div class="flex items-center gap-2" *ngIf="country">
+                <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                <span>{{ country.dialCode }}</span>
+              </div>
+            </ng-template>
+          </p-dropdown>
 
-  <!-- Contact Number 2 Input -->
-  <input
-    type="text"
-    [ngModel]="formatContactNumber(centerFetchData.contact02)"
-    (ngModelChange)="onContact02Change($event)"
-    id="contact02"
-    name="contact02"
-    class="flex-1 p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-    [disabled]="true"
-  />
-</div>
+          <!-- Contact Number 2 Input -->
+          <input type="text" [ngModel]="formatContactNumber(centerFetchData.contact02)"
+            (ngModelChange)="onContact02Change($event)" id="contact02" name="contact02"
+            class="flex-1 p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            [disabled]="true" />
+        </div>
 
       </div>
 

@@ -130,7 +130,12 @@
                     'View each farmer\'s crop calendar task list'
                   ) || tokenService.getUserDetails().role === '1'
                 " class="px-4 py-3 dark:text-textDark text-center">
-                <button class="w-5 h-5 text-blue-500 hover:text-blue-700" (click)="
+                <button
+                  class="w-5 h-5"
+                  [ngClass]="canOpenCalendar(item) ? 'text-blue-500 hover:text-blue-700' : 'text-gray-400 cursor-not-allowed'"
+                  [disabled]="!canOpenCalendar(item)"
+                  [attr.title]="canOpenCalendar(item) ? 'View calendar' : 'No tasks available'"
+                  (click)="
                     viewTaskByUser(
                       item.cropCalendar,
                       userId,

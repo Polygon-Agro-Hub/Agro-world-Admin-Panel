@@ -13,6 +13,7 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
   templateUrl: './view-officer-target.component.html',
   styleUrl: './view-officer-target.component.css',
 })
+
 export class ViewOfficerTargetComponent {
   officerId!: number;
 

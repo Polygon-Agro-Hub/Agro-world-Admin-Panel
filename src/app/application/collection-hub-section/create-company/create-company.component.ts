@@ -8,7 +8,6 @@ import {
   NgModel,
   ReactiveFormsModule,
   Validators,
-
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
@@ -48,7 +47,6 @@ interface BranchesData {
   styleUrl: './create-company.component.css',
 })
 export class CreateCompanyComponent implements OnInit {
-
   @ViewChild('accHolderName') accHolderName!: NgModel;
   @ViewChild('languagesCtrl') languagesCtrl!: NgModel;
   @ViewChild('accNumberInput') accNumberInput!: NgModel;
@@ -91,7 +89,7 @@ export class CreateCompanyComponent implements OnInit {
   faviconSizeError: boolean = false;
   sameNumberError: boolean = false;
   emailValidationMessage: string = '';
-
+  attemptedSubmit: boolean = false;
 
   companyType: string = '';
   countries = [
@@ -100,7 +98,7 @@ export class CreateCompanyComponent implements OnInit {
     { name: 'Cambodia', code: 'KH', dialCode: '+855' },
     { name: 'Bangladesh', code: 'BD', dialCode: '+880' },
     { name: 'India', code: 'IN', dialCode: '+91' },
-    { name: 'Netherlands', code: 'NL', dialCode: '+31' }
+    { name: 'Netherlands', code: 'NL', dialCode: '+31' },
   ];
   constructor(
     private fb: FormBuilder,
@@ -108,7 +106,7 @@ export class CreateCompanyComponent implements OnInit {
     private route: ActivatedRoute,
     private http: HttpClient,
     private router: Router,
-    private location: Location
+    private location: Location,
   ) {
     this.userForm = this.fb.group({
       regNumber: ['', Validators.required],
@@ -160,29 +158,32 @@ export class CreateCompanyComponent implements OnInit {
     return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
   }
 
-
   isInvalidMobileNumber(numberField: 'oicConNum1' | 'oicConNum2'): boolean {
-    const code = numberField === 'oicConNum1' ? this.companyData.oicConCode1 : this.companyData.oicConCode2;
-    const number = numberField === 'oicConNum1' ? this.companyData.oicConNum1 : this.companyData.oicConNum2;
+    const code =
+      numberField === 'oicConNum1'
+        ? this.companyData.oicConCode1
+        : this.companyData.oicConCode2;
+    const number =
+      numberField === 'oicConNum1'
+        ? this.companyData.oicConNum1
+        : this.companyData.oicConNum2;
 
-    if (!code || !number || number.toString().length !== 9) {
+    if (!number || number.toString().length !== 9) {
       return false;
     }
 
-    const fullNumber = `${code}${number}`;
+    if (code === '+94' && number.toString().startsWith('0')) {
+      return true;
+    }
 
-    const mobilePattern = /^\+947\d{8}$/;
-    return !mobilePattern.test(fullNumber);
+    return !/^\d{9}$/.test(number.toString());
   }
-
-
-
 
   async compressImage(
     file: File,
     maxWidth: number,
     maxHeight: number,
-    quality: number
+    quality: number,
   ): Promise<File> {
     return new Promise((resolve) => {
       const reader = new FileReader();
@@ -214,7 +215,7 @@ export class CreateCompanyComponent implements OnInit {
             ctx.fillStyle = '#FFFFFF';
             ctx.fillRect(0, 0, width, height);
           }
-          
+
           ctx?.drawImage(img, 0, 0, width, height);
 
           canvas.toBlob(
@@ -230,7 +231,7 @@ export class CreateCompanyComponent implements OnInit {
               }
             },
             'image/jpeg',
-            quality
+            quality,
           );
         };
       };
@@ -238,10 +239,19 @@ export class CreateCompanyComponent implements OnInit {
     });
   }
 
-
-  allowOnlyLetters(event: KeyboardEvent, inputValue: string, fieldName: string) {
+  allowOnlyLetters(
+    event: KeyboardEvent,
+    inputValue: string,
+    fieldName: string,
+  ) {
     const char = event.key;
-    const allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Delete', 'Tab'];
+    const allowedKeys = [
+      'Backspace',
+      'ArrowLeft',
+      'ArrowRight',
+      'Delete',
+      'Tab',
+    ];
 
     if (allowedKeys.includes(char)) return;
 
@@ -306,7 +316,13 @@ export class CreateCompanyComponent implements OnInit {
   allowOnlySinhala(event: KeyboardEvent, inputValue: string) {
     const char = event.key;
     const code = char.charCodeAt(0);
-    const allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Delete', 'Tab'];
+    const allowedKeys = [
+      'Backspace',
+      'ArrowLeft',
+      'ArrowRight',
+      'Delete',
+      'Tab',
+    ];
 
     if (allowedKeys.includes(char)) return;
 
@@ -324,7 +340,7 @@ export class CreateCompanyComponent implements OnInit {
       return;
     }
 
-    const isSinhala = code >= 0x0D80 && code <= 0x0DFF;
+    const isSinhala = code >= 0x0d80 && code <= 0x0dff;
 
     if (!isSinhala && char !== ' ') {
       event.preventDefault();
@@ -338,7 +354,13 @@ export class CreateCompanyComponent implements OnInit {
   allowOnlyTamil(event: KeyboardEvent, inputValue: string) {
     const char = event.key;
     const code = char.charCodeAt(0);
-    const allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Delete', 'Tab'];
+    const allowedKeys = [
+      'Backspace',
+      'ArrowLeft',
+      'ArrowRight',
+      'Delete',
+      'Tab',
+    ];
 
     if (allowedKeys.includes(char)) return;
 
@@ -356,7 +378,7 @@ export class CreateCompanyComponent implements OnInit {
       return;
     }
 
-    const isTamil = code >= 0x0B80 && code <= 0x0BFF;
+    const isTamil = code >= 0x0b80 && code <= 0x0bff;
 
     if (!isTamil && char !== ' ') {
       event.preventDefault();
@@ -370,11 +392,20 @@ export class CreateCompanyComponent implements OnInit {
   allowOnlyEnglishLettersForAccountHolder(event: KeyboardEvent): void {
     const input = event.target as HTMLInputElement;
     const char = event.key;
-    const allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Delete', 'Tab'];
+    const allowedKeys = [
+      'Backspace',
+      'ArrowLeft',
+      'ArrowRight',
+      'Delete',
+      'Tab',
+    ];
 
     if (allowedKeys.includes(char)) return;
 
-    if (char === ' ' && (input.selectionStart === 0 || input.value.endsWith(' '))) {
+    if (
+      char === ' ' &&
+      (input.selectionStart === 0 || input.value.endsWith(' '))
+    ) {
       event.preventDefault();
       return;
     }
@@ -388,9 +419,19 @@ export class CreateCompanyComponent implements OnInit {
     }
   }
 
-  allowOnlyDigitsForAccountNumber(event: KeyboardEvent, field: 'accNumber' | 'confirmAccNumber' | 'oicConNum1' | 'oicConNum2'): void {
+  allowOnlyDigitsForAccountNumber(
+    event: KeyboardEvent,
+    field: 'accNumber' | 'confirmAccNumber' | 'oicConNum1' | 'oicConNum2',
+  ): void {
+    const input = event.target as HTMLInputElement;
     const char = event.key;
-    const allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Delete', 'Tab'];
+    const allowedKeys = [
+      'Backspace',
+      'ArrowLeft',
+      'ArrowRight',
+      'Delete',
+      'Tab',
+    ];
 
     if (allowedKeys.includes(char)) return;
 
@@ -405,16 +446,43 @@ export class CreateCompanyComponent implements OnInit {
         setTimeout(() => (this.confirmAccountNumberError = false), 2000);
       }
     }
+
+    if (field === 'oicConNum1' || field === 'oicConNum2') {
+      const code =
+        field === 'oicConNum1'
+          ? this.companyData.oicConCode1
+          : this.companyData.oicConCode2;
+      const start = input.selectionStart ?? input.value.length;
+      const end = input.selectionEnd ?? input.value.length;
+      const nextValue =
+        input.value.slice(0, start) + char + input.value.slice(end);
+
+      if (code === '+94' && nextValue.startsWith('0')) {
+        event.preventDefault();
+      }
+    }
   }
 
-
-  handleInputWithSpaceTrimming(event: KeyboardEvent, fieldName: keyof Company): void {
+  handleInputWithSpaceTrimming(
+    event: KeyboardEvent,
+    fieldName: keyof Company,
+  ): void {
     const input = event.target as HTMLInputElement;
     const key = event.key;
     const currentValue = input.value;
     const cursorPosition = input.selectionStart || 0;
 
-    const controlKeys = ['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'];
+    const controlKeys = [
+      'Backspace',
+      'Delete',
+      'Tab',
+      'ArrowLeft',
+      'ArrowRight',
+      'ArrowUp',
+      'ArrowDown',
+      'Home',
+      'End',
+    ];
     if (controlKeys.includes(key)) {
       return;
     }
@@ -424,7 +492,12 @@ export class CreateCompanyComponent implements OnInit {
       return;
     }
 
-    const numericFields = ['accNumber', 'confirmAccNumber', 'oicConNum1', 'oicConNum2'];
+    const numericFields = [
+      'accNumber',
+      'confirmAccNumber',
+      'oicConNum1',
+      'oicConNum2',
+    ];
     const englishOnlyFields = ['accHolderName', 'foName'];
     const emailFields = ['email'];
     const sinhalaFields = [''];
@@ -435,6 +508,23 @@ export class CreateCompanyComponent implements OnInit {
       if (!/^[0-9]$/.test(key)) {
         event.preventDefault();
         return;
+      }
+
+      if (fieldName === 'oicConNum1' || fieldName === 'oicConNum2') {
+        const code =
+          fieldName === 'oicConNum1'
+            ? this.companyData.oicConCode1
+            : this.companyData.oicConCode2;
+        const selectionEnd = input.selectionEnd ?? currentValue.length;
+        const nextValue =
+          currentValue.slice(0, cursorPosition) +
+          key +
+          currentValue.slice(selectionEnd);
+
+        if (code === '+94' && nextValue.startsWith('0')) {
+          event.preventDefault();
+          return;
+        }
       }
     }
 
@@ -450,15 +540,15 @@ export class CreateCompanyComponent implements OnInit {
     }
 
     if (businessNameFields.includes(fieldName)) {
-  if (!/^[\p{L}\p{Nd} .'&\-()\/,#]$/u.test(key)) {
-    event.preventDefault();
-    this.englishInputError = true;
-    setTimeout(() => {
-      this.englishInputError = false;
-    }, 2000);
-    return;
-  }
-}
+      if (!/^[\p{L}\p{Nd} .'&\-()\/,#]$/u.test(key)) {
+        event.preventDefault();
+        this.englishInputError = true;
+        setTimeout(() => {
+          this.englishInputError = false;
+        }, 2000);
+        return;
+      }
+    }
 
     if (emailFields.includes(fieldName)) {
       return;
@@ -466,7 +556,7 @@ export class CreateCompanyComponent implements OnInit {
 
     if (sinhalaFields.includes(fieldName)) {
       const charCode = key.charCodeAt(0);
-      if ((charCode < 0x0D80 || charCode > 0x0DFF) && key !== ' ') {
+      if ((charCode < 0x0d80 || charCode > 0x0dff) && key !== ' ') {
         event.preventDefault();
         this.sinhalaInputError = true;
         setTimeout(() => {
@@ -478,7 +568,7 @@ export class CreateCompanyComponent implements OnInit {
 
     if (tamilFields.includes(fieldName)) {
       const charCode = key.charCodeAt(0);
-      if ((charCode < 0x0B80 || charCode > 0x0BFF) && key !== ' ') {
+      if ((charCode < 0x0b80 || charCode > 0x0bff) && key !== ' ') {
         event.preventDefault();
         this.tamilInputError = true;
         setTimeout(() => {
@@ -489,7 +579,9 @@ export class CreateCompanyComponent implements OnInit {
     }
 
     if (!numericFields.includes(fieldName) && key === ' ') {
-      const hasLetters = /[a-zA-Z\u0D80-\u0DFF\u0B80-\u0BFF]/.test(currentValue);
+      const hasLetters = /[a-zA-Z\u0D80-\u0DFF\u0B80-\u0BFF]/.test(
+        currentValue,
+      );
       const charBeforeCursor = currentValue.charAt(cursorPosition - 1);
 
       if (cursorPosition === 0 || charBeforeCursor === ' ' || !hasLetters) {
@@ -509,7 +601,10 @@ export class CreateCompanyComponent implements OnInit {
           input.value = trimmedValue;
           (this.companyData as any)[fieldName] = trimmedValue;
 
-          const newCursorPosition = Math.min(cursorPosition, trimmedValue.length);
+          const newCursorPosition = Math.min(
+            cursorPosition,
+            trimmedValue.length,
+          );
           input.setSelectionRange(newCursorPosition, newCursorPosition);
         }
       }, 0);
@@ -522,14 +617,14 @@ export class CreateCompanyComponent implements OnInit {
 
     if (input.files && input.files[0]) {
       const file = input.files[0];
-      const maxSize = 1024 * 1024; 
+      const maxSize = 1024 * 1024;
 
       if (file.size > maxSize) {
         this.logoSizeError = true;
         Swal.fire({
           icon: 'error',
           title: 'File Too Large',
-          text: 'Logo must be less than 1MB'
+          text: 'Logo must be less than 1MB',
         });
         input.value = '';
         return;
@@ -568,7 +663,7 @@ export class CreateCompanyComponent implements OnInit {
         Swal.fire({
           icon: 'error',
           title: 'File Too Large',
-          text: 'Favicon must be less than 1MB'
+          text: 'Favicon must be less than 1MB',
         });
         input.value = '';
         return;
@@ -608,7 +703,9 @@ export class CreateCompanyComponent implements OnInit {
     event.stopPropagation();
     this.companyData.favicon = '';
     this.selectedFaviconFile = null;
-    const faviconInput = document.getElementById('faviconUpload') as HTMLInputElement;
+    const faviconInput = document.getElementById(
+      'faviconUpload',
+    ) as HTMLInputElement;
     if (faviconInput) faviconInput.value = '';
     this.touchedFields['favicon'] = true;
   }
@@ -619,7 +716,7 @@ export class CreateCompanyComponent implements OnInit {
         this.banks = data.sort((a, b) => a.name.localeCompare(b.name));
         this.matchExistingBankToDropdown();
       },
-      (error) => { }
+      (error) => {},
     );
   }
 
@@ -629,7 +726,7 @@ export class CreateCompanyComponent implements OnInit {
         this.allBranches = data;
         this.matchExistingBankToDropdown();
       },
-      (error) => { }
+      (error) => {},
     );
   }
 
@@ -637,7 +734,7 @@ export class CreateCompanyComponent implements OnInit {
     if (this.selectedBankId) {
       this.branches = this.allBranches[this.selectedBankId.toString()] || [];
       const selectedBank = this.banks.find(
-        (bank) => bank.ID === this.selectedBankId
+        (bank) => bank.ID === this.selectedBankId,
       );
       if (selectedBank) {
         this.companyData.bankName = selectedBank.name;
@@ -654,7 +751,7 @@ export class CreateCompanyComponent implements OnInit {
   onBranchChange1() {
     if (this.selectedBranchId) {
       const selectedBranch = this.branches.find(
-        (branch) => branch.ID === this.selectedBranchId
+        (branch) => branch.ID === this.selectedBranchId,
       );
       if (selectedBranch) {
         this.companyData.branchName = selectedBranch.name;
@@ -673,7 +770,7 @@ export class CreateCompanyComponent implements OnInit {
       this.companyData.bankName
     ) {
       const matchedBank = this.banks.find(
-        (bank) => bank.name === this.companyData.bankName
+        (bank) => bank.name === this.companyData.bankName,
       );
 
       if (matchedBank) {
@@ -682,7 +779,7 @@ export class CreateCompanyComponent implements OnInit {
 
         if (this.companyData.branchName) {
           const matchedBranch = this.branches.find(
-            (branch) => branch.name === this.companyData.branchName
+            (branch) => branch.name === this.companyData.branchName,
           );
           if (matchedBranch) {
             this.selectedBranchId = matchedBranch.ID;
@@ -699,7 +796,7 @@ export class CreateCompanyComponent implements OnInit {
       ).sort((a, b) => a.name.localeCompare(b.name));
 
       const selectedBank = this.banks.find(
-        (bank) => bank.ID === this.selectedBankId
+        (bank) => bank.ID === this.selectedBankId,
       );
       if (selectedBank) {
         this.companyData.bankName = selectedBank.name;
@@ -717,7 +814,9 @@ export class CreateCompanyComponent implements OnInit {
 
   onBranchChange() {
     if (this.selectedBranchId) {
-      const selectedBranch = this.branches.find((branch) => branch.ID === this.selectedBranchId);
+      const selectedBranch = this.branches.find(
+        (branch) => branch.ID === this.selectedBranchId,
+      );
       if (selectedBranch) {
         this.companyData.branchName = selectedBranch.name;
         this.invalidFields.delete('branchName');
@@ -744,7 +843,10 @@ export class CreateCompanyComponent implements OnInit {
             this.companyData.oicConCode2 = '+94';
           }
 
-          if (!this.companyData.confirmAccNumber && this.companyData.accNumber) {
+          if (
+            !this.companyData.confirmAccNumber &&
+            this.companyData.accNumber
+          ) {
             this.companyData.confirmAccNumber = this.companyData.accNumber;
           }
 
@@ -755,193 +857,223 @@ export class CreateCompanyComponent implements OnInit {
           Swal.fire(
             'Error',
             'Failed to fetch company data. Please try again.',
-            'error'
+            'error',
           );
-        }
+        },
       );
     }
   }
 
   isValidLocalMobile(number: string | number): boolean {
     if (!number) return false;
-  
+
     const numStr = number.toString();
-    const pattern = /^7\d{8}$/;
+    const pattern = /^\d{9}$/;
     return pattern.test(numStr);
   }
 
   saveCompanyData() {
+    this.attemptedSubmit = true;
 
-  this.accHolderName?.control.markAsTouched();
-  this.accNumberInput?.control.markAsTouched();
-  this.confirmAccNumberInput?.control.markAsTouched();
-  this.bankDropdown?.control.markAsTouched();
-  this.branchDropdown?.control.markAsTouched();
-  this.financeOfficerInput?.control.markAsTouched();
-  this.oicConNum1Ref?.control.markAsTouched();
-  // this.accNumberInput?.control.accNumberInput();
+    this.accHolderName?.control.markAsTouched();
+    this.accNumberInput?.control.markAsTouched();
+    this.confirmAccNumberInput?.control.markAsTouched();
+    this.bankDropdown?.control.markAsTouched();
+    this.branchDropdown?.control.markAsTouched();
+    this.financeOfficerInput?.control.markAsTouched();
+    this.oicConNum1Ref?.control.markAsTouched();
+    // this.accNumberInput?.control.accNumberInput();
 
-  if (this.companyNameError) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Company Name Exists',
-      text: 'Please choose a different company name',
-      confirmButtonText: 'OK',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold text-lg',
-      },
-    });
-    return;
-  }
-
-  if (
-    this.companyData.oicConNum1 &&
-    this.companyData.oicConNum2 &&
-    this.companyData.oicConNum1 === this.companyData.oicConNum2 &&
-    this.companyData.oicConCode1 === this.companyData.oicConCode2
-  ) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Duplicate Numbers',
-      text: 'Contact Number - 1 and Contact Number - 2 cannot be the same',
-      confirmButtonText: 'OK',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold text-lg',
-      },
-    });
-    return;
-  }
-
-  if (this.companyData.accNumber !== this.companyData.confirmAccNumber) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Account Numbers Mismatch',
-      text: 'Account number and confirm account number do not match',
-      confirmButtonText: 'OK',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold text-lg',
-      },
-    });
-    return;
-  }
-
-  const missingFields: string[] = [];
-  if (!this.companyData.regNumber) missingFields.push('Registration Number is Required') ;
-  if (!this.companyData.companyNameEnglish) missingFields.push('Company Name (English) is Required');
-  if (!this.companyData.companyNameSinhala) missingFields.push('Company Name (Sinhala) is Required');
-  if (!this.companyData.companyNameTamil) missingFields.push('Company Name (Tamil) is Required');
-  if (!this.companyData.email) missingFields.push('Email is Required');
-  if (!this.companyData.accHolderName) missingFields.push(`Account Holder's Name is Required`);
-  if (!this.companyData.accNumber) missingFields.push('Account Number is Required');
-  if (!this.companyData.confirmAccNumber) missingFields.push('Confirm Account Number is Required');
-  if (!this.companyData.bankName) missingFields.push('Bank Name is Required');
-  if (!this.companyData.branchName) missingFields.push('Branch Name is Required');
-  if (!this.companyData.foName) missingFields.push('Finance Officer Name is Required');
-  if (!this.companyData.oicConNum1) missingFields.push('Contact Number 1 is Required');
-  if (this.companyData.oicConNum1 && !this.isValidLocalMobile(this.companyData.oicConNum1)) {
-    missingFields.push('Please enter a valid Contact Number - 1 (format: 7XXXXXXXX)');
-  }
-  if (this.companyData.oicConNum2 && !this.isValidLocalMobile(this.companyData.oicConNum2)) {
-    missingFields.push('Please enter a valid Contact Number - 2 (format: 7XXXXXXXX)');
-  }
-  if (!this.companyData.logo) missingFields.push('Company Logo (must be an image <1MB)');
-  if (!this.companyData.favicon) missingFields.push('Company Favicon (must be an image <1MB)');
-
-  if (missingFields.length > 0) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Missing Required Information',
-      html: `<div class="text-left"><p class="mb-2">Please fill in the following fields:</p><ul class="list-disc pl-5">${missingFields.map(f => `<li>${f}</li>`).join('')}</ul></div>`,
-      confirmButtonText: 'OK',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold text-lg',
-        htmlContainer: 'text-left',
-      },
-    });
-    return;
-  }
-
-  if (!this.isValidEmail(this.companyData.email)) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Invalid Email',
-      text: 'Please enter a valid email address (e.g., example@domain.com)',
-      confirmButtonText: 'OK',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold text-lg',
-      },
-    });
-    return;
-  }
-
-  this.isLoading = true;
-  const formData = new FormData();
-  Object.entries(this.companyData).forEach(([key, value]) => {
-    if (key !== 'logoFile' && key !== 'faviconFile' && value != null) {
-      formData.append(key, String(value));
-    }
-  });
-  if (this.companyData.logoFile) formData.append('logo', this.companyData.logoFile);
-  if (this.companyData.faviconFile) formData.append('favicon', this.companyData.faviconFile);
-
-  this.collectionCenterSrv.createCompany(this.companyData, this.companyType).subscribe(
-    (response) => {
-      this.isLoading = false;
-      if (response.status) {
-        Swal.fire({
-          icon: 'success',
-          title: 'Success',
-          text: 'Company created successfully',
-          timer: 2000,
-          showConfirmButton: false,
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold text-lg',
-          },
-        }).then(() => {
-          if (this.companyType === 'distribution') {
-            this.router.navigate(['/distribution-hub/action/view-companies']);
-          } else {
-            this.router.navigate(['/collection-hub/manage-company']);
-          }
-        });
-      } else {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: response.message,
-          confirmButtonText: 'OK',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold text-lg',
-          },
-        });
-      }
-    },
-    (error) => {
-      this.isLoading = false;
-      let errorMessage = 'Failed to create company. Please try again.';
-      if (error.error?.message) errorMessage = error.error.message;
-      else if (error.status === 0) errorMessage = 'Unable to connect to server. Please check your connection.';
-
+    if (this.companyNameError) {
       Swal.fire({
         icon: 'error',
-        title: 'Error',
-        text: errorMessage,
+        title: 'Company Name Exists',
+        text: 'Please choose a different company name',
         confirmButtonText: 'OK',
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
           title: 'font-semibold text-lg',
         },
       });
+      return;
     }
-  );
-}
+
+    if (
+      this.companyData.oicConNum1 &&
+      this.companyData.oicConNum2 &&
+      this.companyData.oicConNum1 === this.companyData.oicConNum2 &&
+      this.companyData.oicConCode1 === this.companyData.oicConCode2
+    ) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Duplicate Numbers',
+        text: 'Contact Number - 1 and Contact Number - 2 cannot be the same',
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+      return;
+    }
+
+    if (this.companyData.accNumber !== this.companyData.confirmAccNumber) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Account Numbers Mismatch',
+        text: 'Account number and confirm account number do not match',
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+      return;
+    }
+
+    const missingFields: string[] = [];
+    if (!this.companyData.regNumber)
+      missingFields.push('Registration Number is Required');
+    if (!this.companyData.companyNameEnglish)
+      missingFields.push('Company Name (English) is Required');
+    if (!this.companyData.companyNameSinhala)
+      missingFields.push('Company Name (Sinhala) is Required');
+    if (!this.companyData.companyNameTamil)
+      missingFields.push('Company Name (Tamil) is Required');
+    if (!this.companyData.email) missingFields.push('Email is Required');
+    if (!this.companyData.accHolderName)
+      missingFields.push(`Account Holder's Name is Required`);
+    if (!this.companyData.accNumber)
+      missingFields.push('Account Number is Required');
+    if (!this.companyData.confirmAccNumber)
+      missingFields.push('Confirm Account Number is Required');
+    if (!this.companyData.bankName) missingFields.push('Bank Name is Required');
+    if (!this.companyData.branchName)
+      missingFields.push('Branch Name is Required');
+    if (!this.companyData.foName)
+      missingFields.push('Finance Officer Name is Required');
+    if (!this.companyData.oicConNum1)
+      missingFields.push('Contact Number 1 is Required');
+    if (
+      this.companyData.oicConNum1 &&
+      !this.isValidLocalMobile(this.companyData.oicConNum1)
+    ) {
+      missingFields.push('Please enter a valid Contact Number - 1');
+    }
+    if (
+      this.companyData.oicConNum2 &&
+      !this.isValidLocalMobile(this.companyData.oicConNum2)
+    ) {
+      missingFields.push('Please enter a valid Contact Number - 2');
+    }
+    if (!this.companyData.logo)
+      missingFields.push('Company Logo (must be an image <1MB)');
+    if (!this.companyData.favicon)
+      missingFields.push('Company Favicon (must be an image <1MB)');
+
+    if (missingFields.length > 0) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Missing Required Information',
+        html: `<div class="text-left"><p class="mb-2">Please fill in the following fields:</p><ul class="list-disc pl-5">${missingFields.map((f) => `<li>${f}</li>`).join('')}</ul></div>`,
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+          htmlContainer: 'text-left',
+        },
+      });
+      return;
+    }
+
+    if (!this.isValidEmail(this.companyData.email)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Email',
+        text: 'Please enter a valid email address (e.g., example@domain.com)',
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+      return;
+    }
+
+    this.isLoading = true;
+    const formData = new FormData();
+    Object.entries(this.companyData).forEach(([key, value]) => {
+      if (key !== 'logoFile' && key !== 'faviconFile' && value != null) {
+        formData.append(key, String(value));
+      }
+    });
+    if (this.companyData.logoFile)
+      formData.append('logo', this.companyData.logoFile);
+    if (this.companyData.faviconFile)
+      formData.append('favicon', this.companyData.faviconFile);
+
+    this.collectionCenterSrv
+      .createCompany(this.companyData, this.companyType)
+      .subscribe(
+        (response) => {
+          this.isLoading = false;
+          if (response.status) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Success',
+              text: 'Company created successfully',
+              timer: 2000,
+              showConfirmButton: false,
+              customClass: {
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold text-lg',
+              },
+            }).then(() => {
+              if (this.companyType === 'distribution') {
+                this.router.navigate([
+                  '/distribution-hub/action/view-companies',
+                ]);
+              } else {
+                this.router.navigate(['/collection-hub/manage-company']);
+              }
+            });
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: response.message,
+              confirmButtonText: 'OK',
+              customClass: {
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold text-lg',
+              },
+            });
+          }
+        },
+        (error) => {
+          this.isLoading = false;
+          let errorMessage = 'Failed to create company. Please try again.';
+          if (error.error?.message) errorMessage = error.error.message;
+          else if (error.status === 0)
+            errorMessage =
+              'Unable to connect to server. Please check your connection.';
+
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: errorMessage,
+            confirmButtonText: 'OK',
+            customClass: {
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
+        },
+      );
+  }
 
   nextFormCreate(page: 'pageOne' | 'pageTwo') {
     if (page === 'pageTwo') {
@@ -953,33 +1085,47 @@ export class CreateCompanyComponent implements OnInit {
         companyNameTamil: true,
         email: true,
         logo: true,
-        favicon: true
+        favicon: true,
       };
 
       const missingFields: string[] = [];
 
-      if (!this.companyData.regNumber) missingFields.push('Company Register Number is Required');
-      if (!this.companyData.companyNameEnglish) missingFields.push('Company Name (English) is Required');
-      if (!this.companyData.companyNameSinhala) missingFields.push('Company Name (Sinhala) is Required');
-      if (!this.companyData.companyNameTamil) missingFields.push('Company Name (Tamil) is Required');
-      if (!this.companyData.email) missingFields.push('Company Email is Required');
-      if (!this.companyData.logo) missingFields.push('Company Logo is Required');
-      if (!this.companyData.favicon) missingFields.push('Company Favicon is Required');
+      if (!this.companyData.regNumber)
+        missingFields.push('Company Register Number is Required');
+      if (!this.companyData.companyNameEnglish)
+        missingFields.push('Company Name (English) is Required');
+      if (!this.companyData.companyNameSinhala)
+        missingFields.push('Company Name (Sinhala) is Required');
+      if (!this.companyData.companyNameTamil)
+        missingFields.push('Company Name (Tamil) is Required');
+      if (!this.companyData.email)
+        missingFields.push('Company Email is Required');
+      if (!this.companyData.logo)
+        missingFields.push('Company Logo is Required');
+      if (!this.companyData.favicon)
+        missingFields.push('Company Favicon is Required');
 
-      if (this.companyData.email && !this.isValidEmail(this.companyData.email)) {
+      if (
+        this.companyData.email &&
+        !this.isValidEmail(this.companyData.email)
+      ) {
         missingFields.push('Valid Email Address');
       }
 
       if (missingFields.length > 0) {
-        let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+        let errorMessage =
+          '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
 
-        missingFields.forEach(field => {
+        missingFields.forEach((field) => {
           errorMessage += `<li>${field}</li>`;
 
           if (field === 'Company Logo' || field === 'Company Favicon') {
             errorMessage += ` (must be an image less than 1MB)`;
           } else if (field === 'Valid Email Address') {
-            errorMessage = errorMessage.replace('Valid Email Address is required', 'Please enter a valid email address (e.g., example@domain.com)');
+            errorMessage = errorMessage.replace(
+              'Valid Email Address is required',
+              'Please enter a valid email address (e.g., example@domain.com)',
+            );
           }
         });
 
@@ -993,23 +1139,30 @@ export class CreateCompanyComponent implements OnInit {
           customClass: {
             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
             title: 'font-semibold text-lg',
-            htmlContainer: 'text-left'
-          }
+            htmlContainer: 'text-left',
+          },
         });
         return;
       }
 
-      if (this.englishInputError || this.sinhalaInputError || this.tamilInputError) {
+      if (
+        this.englishInputError ||
+        this.sinhalaInputError ||
+        this.tamilInputError
+      ) {
         let languageError = '';
-        if (this.englishInputError) languageError += 'English name contains invalid characters. ';
-        if (this.sinhalaInputError) languageError += 'Sinhala name contains invalid characters. ';
-        if (this.tamilInputError) languageError += 'Tamil name contains invalid characters.';
+        if (this.englishInputError)
+          languageError += 'English name contains invalid characters. ';
+        if (this.sinhalaInputError)
+          languageError += 'Sinhala name contains invalid characters. ';
+        if (this.tamilInputError)
+          languageError += 'Tamil name contains invalid characters.';
 
         Swal.fire({
           icon: 'error',
           title: 'Invalid Characters',
           text: languageError.trim(),
-          confirmButtonText: 'OK'
+          confirmButtonText: 'OK',
         });
         return;
       }
@@ -1017,8 +1170,6 @@ export class CreateCompanyComponent implements OnInit {
 
     this.selectedPage = page;
   }
-
-
 
   validateContactNumbers(): void {
     const num1 = this.companyData.oicConNum1?.toString() || '';
@@ -1036,7 +1187,6 @@ export class CreateCompanyComponent implements OnInit {
       this.contactNumberError2 = true;
     }
 
-    
     if (
       num1.length === 9 &&
       num2.length === 9 &&
@@ -1053,7 +1203,6 @@ export class CreateCompanyComponent implements OnInit {
     const key = event.key;
     const pattern = /^[a-zA-Z\s]$/;
 
-   
     if (
       key === 'Backspace' ||
       key === 'Delete' ||
@@ -1069,206 +1218,227 @@ export class CreateCompanyComponent implements OnInit {
     }
   }
 
-
- updateCompanyData() {
-  
-  if (!this.itemId) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'No company ID found for update',
-      confirmButtonText: 'OK',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold text-lg',
-      },
-    });
-    return;
-  }
-
-  
-  const missingFields: string[] = [];
-  if (!this.companyData.regNumber) missingFields.push('Registration Number is Required');
-  if (!this.companyData.companyNameEnglish) missingFields.push('Company Name (English) is Required');
-  if (!this.companyData.companyNameSinhala) missingFields.push('Company Name (Sinhala) is Required');
-  if (!this.companyData.companyNameTamil) missingFields.push('Company Name (Tamil) is Required');
-  if (!this.companyData.email) missingFields.push('Email is Required');
-  if (!this.companyData.accHolderName) missingFields.push(`Account Holder's Name is Required`);
-  if (!this.companyData.accNumber) missingFields.push('Account Number is Required');
-  if (!this.companyData.confirmAccNumber) missingFields.push('Confirm Account Number is Required');
-  if (!this.companyData.bankName) missingFields.push('Bank Name is Required');
-  if (!this.companyData.branchName) missingFields.push('Branch Name is Required');
-  if (!this.companyData.foName) missingFields.push('Finance Officer Name is Required');
-  if (!this.companyData.oicConNum1) missingFields.push('Contact Number 1 is Required');
-  if (this.companyData.oicConNum1 && !this.isValidLocalMobile(this.companyData.oicConNum1)) {
-    missingFields.push('Please enter a valid Contact Number - 1 (format: 7XXXXXXXX)');
-  }
-  if (this.companyData.oicConNum2 && !this.isValidLocalMobile(this.companyData.oicConNum2)) {
-    missingFields.push('Please enter a valid Contact Number - 2 (format: 7XXXXXXXX)');
-  }
-  if (!this.companyData.logo) missingFields.push('Company Logo is Required');
-  if (!this.companyData.favicon) missingFields.push('Company Favicon is Required');
-
-  if (missingFields.length > 0) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Missing Required Information',
-      html: `<div class="text-left"><ul class="list-disc pl-5">${missingFields
-        .map(f => `<li>${f}</li>`)
-        .join('')}</ul></div>`,
-      confirmButtonText: 'OK',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold text-lg',
-        htmlContainer: 'text-left',
-      },
-    });
-    return;
-  }
-
-  
-  if (this.companyData.email && !this.isValidEmail(this.companyData.email)) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Invalid Email',
-      text: this.emailValidationMessage || 'Please enter a valid email address (e.g., example@domain.com)',
-      confirmButtonText: 'OK',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold text-lg',
-      },
-    });
-    return;
-  }
-
-  
-  const contactNumberErrors: string[] = [];
-  if (this.isInvalidMobileNumber('oicConNum1')) {
-    contactNumberErrors.push('Please enter a valid Contact Number - 1 (format: +947XXXXXXXX)');
-  }
-  if (this.companyData.oicConNum2 && this.isInvalidMobileNumber('oicConNum2')) {
-    contactNumberErrors.push('Please enter a valid Contact Number - 2 (format: +947XXXXXXXX)');
-  }
-
-
-  if (
-    this.companyData.oicConNum1 &&
-    this.companyData.oicConNum2 &&
-    this.companyData.oicConNum1 === this.companyData.oicConNum2 &&
-    this.companyData.oicConCode1 === this.companyData.oicConCode2
-  ) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Duplicate Contact Numbers',
-      text: 'Contact Number 2 cannot be the same as Contact Number 1',
-      confirmButtonText: 'OK',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold text-lg',
-      },
-    });
-    return;
-  }
-
-  if (contactNumberErrors.length > 0) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Invalid Contact Numbers',
-      html: `<div class="text-left"><ul class="list-disc pl-5">${contactNumberErrors
-        .map(msg => `<li>${msg}</li>`)
-        .join('')}</ul></div>`,
-      confirmButtonText: 'OK',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold text-lg',
-        htmlContainer: 'text-left',
-      },
-    });
-    return;
-  }
-
-  
-  if (this.companyData.accNumber !== this.companyData.confirmAccNumber) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Account Numbers Mismatch',
-      text: 'Account number and confirm account number do not match',
-      confirmButtonText: 'OK',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold text-lg',
-      },
-    });
-    return;
-  }
-
-  
-  this.isLoading = true;
-  const formData = new FormData();
-  Object.entries(this.companyData).forEach(([key, value]) => {
-    if (key !== 'logoFile' && key !== 'faviconFile' && value != null) {
-      formData.append(key, String(value));
-    }
-  });
-  if (this.companyData.logoFile) formData.append('logo', this.companyData.logoFile);
-  if (this.companyData.faviconFile) formData.append('favicon', this.companyData.faviconFile);
-
-  
-  this.collectionCenterSrv.updateCompany(this.companyData, this.itemId!).subscribe(
-    (response) => {
-      this.isLoading = false;
-      if (response.status) {
-        Swal.fire({
-          icon: 'success',
-          title: 'Success',
-          text: 'Company Updated Successfully',
-          confirmButtonText: 'OK',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold text-lg',
-          },
-        }).then(() => {
-          if (this.companyType === 'distribution') {
-            this.router.navigate(['/distribution-hub/action/view-companies']);
-          } else {
-            this.router.navigate(['/collection-hub/manage-company']);
-          }
-        });
-      } else {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: response.message || 'Failed to update company',
-          confirmButtonText: 'OK',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold text-lg',
-          },
-        });
-      }
-    },
-    (error) => {
-      this.isLoading = false;
-      let errorMessage = 'Failed to update company. Please try again.';
-      if (error.error?.message) errorMessage = error.error.message;
-      else if (error.status === 0) errorMessage = 'Unable to connect to server. Please check your connection.';
-
+  updateCompanyData() {
+    if (!this.itemId) {
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: errorMessage,
+        text: 'No company ID found for update',
         confirmButtonText: 'OK',
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
           title: 'font-semibold text-lg',
         },
       });
+      return;
     }
-  );
-}
 
+    const missingFields: string[] = [];
+    if (!this.companyData.regNumber)
+      missingFields.push('Registration Number is Required');
+    if (!this.companyData.companyNameEnglish)
+      missingFields.push('Company Name (English) is Required');
+    if (!this.companyData.companyNameSinhala)
+      missingFields.push('Company Name (Sinhala) is Required');
+    if (!this.companyData.companyNameTamil)
+      missingFields.push('Company Name (Tamil) is Required');
+    if (!this.companyData.email) missingFields.push('Email is Required');
+    if (!this.companyData.accHolderName)
+      missingFields.push(`Account Holder's Name is Required`);
+    if (!this.companyData.accNumber)
+      missingFields.push('Account Number is Required');
+    if (!this.companyData.confirmAccNumber)
+      missingFields.push('Confirm Account Number is Required');
+    if (!this.companyData.bankName) missingFields.push('Bank Name is Required');
+    if (!this.companyData.branchName)
+      missingFields.push('Branch Name is Required');
+    if (!this.companyData.foName)
+      missingFields.push('Finance Officer Name is Required');
+    if (!this.companyData.oicConNum1)
+      missingFields.push('Contact Number 1 is Required');
+    if (
+      this.companyData.oicConNum1 &&
+      !this.isValidLocalMobile(this.companyData.oicConNum1)
+    ) {
+      missingFields.push('Please enter a valid Contact Number - 1');
+    }
+    if (
+      this.companyData.oicConNum2 &&
+      !this.isValidLocalMobile(this.companyData.oicConNum2)
+    ) {
+      missingFields.push('Please enter a valid Contact Number - 2');
+    }
+    if (!this.companyData.logo) missingFields.push('Company Logo is Required');
+    if (!this.companyData.favicon)
+      missingFields.push('Company Favicon is Required');
 
+    if (missingFields.length > 0) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Missing Required Information',
+        html: `<div class="text-left"><ul class="list-disc pl-5">${missingFields
+          .map((f) => `<li>${f}</li>`)
+          .join('')}</ul></div>`,
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+          htmlContainer: 'text-left',
+        },
+      });
+      return;
+    }
 
+    if (this.companyData.email && !this.isValidEmail(this.companyData.email)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Email',
+        text:
+          this.emailValidationMessage ||
+          'Please enter a valid email address (e.g., example@domain.com)',
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+      return;
+    }
+
+    const contactNumberErrors: string[] = [];
+    if (this.isInvalidMobileNumber('oicConNum1')) {
+      contactNumberErrors.push('Please enter a valid Contact Number - 1');
+    }
+    if (
+      this.companyData.oicConNum2 &&
+      this.isInvalidMobileNumber('oicConNum2')
+    ) {
+      contactNumberErrors.push('Please enter a valid Contact Number - 2');
+    }
+
+    if (
+      this.companyData.oicConNum1 &&
+      this.companyData.oicConNum2 &&
+      this.companyData.oicConNum1 === this.companyData.oicConNum2 &&
+      this.companyData.oicConCode1 === this.companyData.oicConCode2
+    ) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Duplicate Contact Numbers',
+        text: 'Contact Number 2 cannot be the same as Contact Number 1',
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+      return;
+    }
+
+    if (contactNumberErrors.length > 0) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Contact Numbers',
+        html: `<div class="text-left"><ul class="list-disc pl-5">${contactNumberErrors
+          .map((msg) => `<li>${msg}</li>`)
+          .join('')}</ul></div>`,
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+          htmlContainer: 'text-left',
+        },
+      });
+      return;
+    }
+
+    if (this.companyData.accNumber !== this.companyData.confirmAccNumber) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Account Numbers Mismatch',
+        text: 'Account number and confirm account number do not match',
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+      return;
+    }
+
+    this.isLoading = true;
+    const formData = new FormData();
+    Object.entries(this.companyData).forEach(([key, value]) => {
+      if (key !== 'logoFile' && key !== 'faviconFile' && value != null) {
+        formData.append(key, String(value));
+      }
+    });
+    if (this.companyData.logoFile)
+      formData.append('logo', this.companyData.logoFile);
+    if (this.companyData.faviconFile)
+      formData.append('favicon', this.companyData.faviconFile);
+
+    this.collectionCenterSrv
+      .updateCompany(this.companyData, this.itemId!)
+      .subscribe(
+        (response) => {
+          this.isLoading = false;
+          if (response.status) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Success',
+              text: 'Company Updated Successfully',
+              confirmButtonText: 'OK',
+              customClass: {
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold text-lg',
+              },
+            }).then(() => {
+              if (this.companyType === 'distribution') {
+                this.router.navigate([
+                  '/distribution-hub/action/view-companies',
+                ]);
+              } else {
+                this.router.navigate(['/collection-hub/manage-company']);
+              }
+            });
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: response.message || 'Failed to update company',
+              confirmButtonText: 'OK',
+              customClass: {
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold text-lg',
+              },
+            });
+          }
+        },
+        (error) => {
+          this.isLoading = false;
+          let errorMessage = 'Failed to update company. Please try again.';
+          if (error.error?.message) errorMessage = error.error.message;
+          else if (error.status === 0)
+            errorMessage =
+              'Unable to connect to server. Please check your connection.';
+
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: errorMessage,
+            confirmButtonText: 'OK',
+            customClass: {
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
+        },
+      );
+  }
 
   onBlur(fieldName: keyof Company): void {
     this.touchedFields[fieldName] = true;
@@ -1297,11 +1467,8 @@ export class CreateCompanyComponent implements OnInit {
     }
   }
   capitalizeFirstLetters(value: string): string {
-    return value
-      .toLowerCase()
-      .replace(/\b\w/g, (char) => char.toUpperCase());
+    return value.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase());
   }
-
 
   isFieldInvalid(fieldName: keyof Company): boolean {
     const value = this.companyData[fieldName];
@@ -1316,7 +1483,6 @@ export class CreateCompanyComponent implements OnInit {
   validateConfirmAccNumber(): void {
     this.confirmAccountNumberRequired = !this.companyData.confirmAccNumber;
 
-    
     if (this.companyData.accNumber && this.companyData.confirmAccNumber) {
       this.confirmAccountNumberError =
         this.companyData.accNumber !== this.companyData.confirmAccNumber;
@@ -1326,8 +1492,6 @@ export class CreateCompanyComponent implements OnInit {
   }
 
   validateAccNumber(): void {
-
-   
     if (this.companyData.accNumber && this.companyData.confirmAccNumber) {
       this.confirmAccountNumberError =
         this.companyData.accNumber !== this.companyData.confirmAccNumber;
@@ -1336,9 +1500,7 @@ export class CreateCompanyComponent implements OnInit {
     }
   }
 
-
   isValidEmail(email: string): boolean {
-    
     this.emailValidationMessage = '';
 
     if (!email) {
@@ -1374,13 +1536,15 @@ export class CreateCompanyComponent implements OnInit {
 
     const invalidCharRegex = /[^a-zA-Z0-9@._%+-]/;
     if (invalidCharRegex.test(trimmedEmail)) {
-      this.emailValidationMessage = 'Email contains invalid characters. Only letters, numbers, and @ . _ % + - are allowed.';
+      this.emailValidationMessage =
+        'Email contains invalid characters. Only letters, numbers, and @ . _ % + - are allowed.';
       return false;
     }
 
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailPattern.test(trimmedEmail)) {
-      this.emailValidationMessage = 'Please enter a valid email in the format: example@domain.com';
+      this.emailValidationMessage =
+        'Please enter a valid email in the format: example@domain.com';
       return false;
     }
 
@@ -1421,9 +1585,6 @@ export class CreateCompanyComponent implements OnInit {
     });
   }
 
-
-
-
   numberOnly(event: KeyboardEvent): boolean {
     const charCode = event.which ? event.which : event.keyCode;
 
@@ -1450,10 +1611,6 @@ export class CreateCompanyComponent implements OnInit {
     }
   }
 
-
-
-
-
   allowOnlyEnglishLetters(event: KeyboardEvent): void {
     const regex = /^[^\d]$/;
 
@@ -1469,14 +1626,15 @@ export class CreateCompanyComponent implements OnInit {
     }
   }
 
-  capitalizeFirstLetter(field: 'companyNameEnglish' | 'foName' | 'accHolderName'): void {
+  capitalizeFirstLetter(
+    field: 'companyNameEnglish' | 'foName' | 'accHolderName',
+  ): void {
     const currentValue = this.companyData[field];
     if (currentValue && currentValue.length > 0) {
-      this.companyData[field] = currentValue.charAt(0).toUpperCase() + currentValue.slice(1);
+      this.companyData[field] =
+        currentValue.charAt(0).toUpperCase() + currentValue.slice(1);
     }
   }
-
-
 
   allowOnlyValidNameCharacters(event: KeyboardEvent): void {
     const allowedPattern = /^[a-zA-Z\s]$/;
@@ -1516,11 +1674,9 @@ export class CreateCompanyComponent implements OnInit {
     }
   }
 
-
-
   allowOnlySinhalaLetters(event: KeyboardEvent): void {
     const charCode = event.key.charCodeAt(0);
-    if ((charCode < 0x0D80 || charCode > 0x0DFF) && event.key.length === 1) {
+    if ((charCode < 0x0d80 || charCode > 0x0dff) && event.key.length === 1) {
       event.preventDefault();
       this.sinhalaInputError = true;
 
@@ -1532,7 +1688,7 @@ export class CreateCompanyComponent implements OnInit {
 
   allowOnlyTamilLetters(event: KeyboardEvent): void {
     const charCode = event.key.charCodeAt(0);
-    if ((charCode < 0x0B80 || charCode > 0x0BFF) && event.key.length === 1) {
+    if ((charCode < 0x0b80 || charCode > 0x0bff) && event.key.length === 1) {
       event.preventDefault();
       this.tamilInputError = true;
 
@@ -1542,13 +1698,6 @@ export class CreateCompanyComponent implements OnInit {
     }
   }
 
-
-
-
-
-
-
-
   validateContactNumberss() {
     const num1 = this.companyData.oicConNum1?.toString() || '';
     const num2 = this.companyData.oicConNum2?.toString() || '';
@@ -1556,7 +1705,6 @@ export class CreateCompanyComponent implements OnInit {
     this.contactNumberError1 = num1.length !== 9 && num1.length > 0;
     this.contactNumberError2 = num2.length !== 9 && num2.length > 0;
   }
-
 
   checkCompanyName(): void {
     const companyName = this.companyData.companyNameEnglish;
@@ -1595,11 +1743,11 @@ export class CreateCompanyComponent implements OnInit {
     }
 
     if (this.isInvalidMobileNumber('oicConNum1')) {
-      return 'Please enter a valid Contact Number - 1 (format: +947XXXXXXXX)';
+      return 'Please enter a valid Contact Number - 1';
     }
 
     if (this.contactNumberError1) {
-      return 'Please enter a valid Contact Number - 1 (format: +947XXXXXXXX)';
+      return 'Please enter a valid Contact Number - 1';
     }
 
     return '';
@@ -1613,11 +1761,11 @@ export class CreateCompanyComponent implements OnInit {
     }
 
     if (this.isInvalidMobileNumber('oicConNum2')) {
-      return 'Please enter a valid Contact Number - 2 (format: +947XXXXXXXX)';
+      return 'Please enter a valid Contact Number - 2';
     }
 
     if (this.contactNumberError2) {
-      return 'Please enter a valid Contact Number - 2 (format: +947XXXXXXXX)';
+      return 'Please enter a valid Contact Number - 2';
     }
 
     if (this.sameNumberError) {
@@ -1629,18 +1777,16 @@ export class CreateCompanyComponent implements OnInit {
 
   onTrimInput(event: Event, modelRef: any, fieldName: string): void {
     const inputElement = event.target as HTMLInputElement;
-  
+
     const trimmedValue = inputElement.value.replace(/^\s+/, '');
-  
+
     modelRef[fieldName] = trimmedValue;
     inputElement.value = trimmedValue;
   }
 
   scrollToTop() {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 }
 
 class Company {

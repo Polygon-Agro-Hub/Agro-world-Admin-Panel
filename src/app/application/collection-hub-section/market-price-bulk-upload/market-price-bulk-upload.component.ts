@@ -36,8 +36,8 @@ export class MarketPriceBulkUploadComponent {
   constructor(
     private http: HttpClient,
     private marketPriceService: MarketPriceService,
-    private router: Router
-  ) { }
+    private router: Router,
+  ) {}
 
   onFileSelected(event: any): void {
     const file = event.target.files[0];
@@ -101,7 +101,8 @@ export class MarketPriceBulkUploadComponent {
             text: 'File uploaded successfully!',
             confirmButtonText: 'OK',
             customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold text-lg',
             },
           }).then((result) => {
@@ -123,7 +124,8 @@ export class MarketPriceBulkUploadComponent {
             text: this.errorMessage,
             confirmButtonText: 'OK',
             customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold text-lg',
             },
           });
@@ -148,8 +150,6 @@ export class MarketPriceBulkUploadComponent {
     }
   }
 
-
-
   onCancel() {
     Swal.fire({
       icon: 'warning',
@@ -165,11 +165,9 @@ export class MarketPriceBulkUploadComponent {
     }).then((result) => {
       if (result.isConfirmed) {
         this.router.navigate(['/collection-hub']);
-
       }
     });
   }
-
 
   back(): void {
     Swal.fire({
@@ -189,7 +187,4 @@ export class MarketPriceBulkUploadComponent {
       }
     });
   }
-
-
-
 }

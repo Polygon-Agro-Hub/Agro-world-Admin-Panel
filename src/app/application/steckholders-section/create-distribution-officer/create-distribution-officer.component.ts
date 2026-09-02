@@ -48,6 +48,7 @@ interface PhoneCode {
   templateUrl: './create-distribution-officer.component.html',
   styleUrl: './create-distribution-officer.component.css',
 })
+
 export class CreateDistributionOfficerComponent implements OnInit {
   @ViewChild('pageContainer') pageContainer!: ElementRef;
   @ViewChild('licNoInput') licNoModel!: NgModel;
@@ -866,7 +867,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
     setTimeout(() => {
       this.scrollToTop();
     }, 100);
-    
+
     if (page === 'pageTwo') {
       this.validateLanguages();
       const missingFields: string[] = [];
@@ -1105,7 +1106,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
       (data) => {
         this.allBranches = data;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -1121,7 +1122,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
           value: bank.ID,
         }));
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -1236,7 +1237,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
     fileInput?.click();
   }
 
- onFileSelected(event: any): void {
+  onFileSelected(event: any): void {
     const file: File = event.target.files[0];
     if (file) {
       if (!this.validateFile(file)) {
@@ -1278,7 +1279,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
       .then((lastID) => {
         this.personalData.empId = rolePrefix + lastID;
       })
-      .catch((error) => {});
+      .catch((error) => { });
     this.personalData.companyId = currentCompanyId;
     this.personalData.centerId = currentCenterId;
   }
@@ -1994,8 +1995,6 @@ export class CreateDistributionOfficerComponent implements OnInit {
   }
 
   changeCenter(event: any) {
-    
-    
     this.personalData.irmId = '';
     // this.centerOptions = [];
     this.getAllCollectionManagers();

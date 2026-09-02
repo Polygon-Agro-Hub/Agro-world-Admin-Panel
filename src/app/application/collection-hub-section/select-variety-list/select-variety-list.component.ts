@@ -38,14 +38,14 @@ export class SelectVarietyListComponent {
   fetchCenterCrops(
     page: number = this.page,
     limit: number = this.itemsPerPage,
-    search: string = this.searchText
+    search: string = this.searchText,
   ) {
     this.isLoading = true;
     this.TargetSrv.getCenterCrops(
       this.centerDetails.centerId,
       page,
       limit,
-      search
+      search,
     ).subscribe((res) => {
       this.isLoading = false;
       this.cropsArr = res.items;
@@ -109,7 +109,8 @@ export class SelectVarietyListComponent {
             timer: 2000,
             showConfirmButton: false,
             customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold text-lg',
             },
           });
@@ -121,7 +122,8 @@ export class SelectVarietyListComponent {
             text: res.message || 'Operation failed',
             timer: 2000,
             customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold text-lg',
             },
           });
@@ -139,7 +141,7 @@ export class SelectVarietyListComponent {
             title: 'font-semibold text-lg',
           },
         });
-      }
+      },
     );
   }
 

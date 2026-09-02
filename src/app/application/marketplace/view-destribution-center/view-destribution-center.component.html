@@ -5,222 +5,138 @@
   Back
 </button>
 
-<div
-  class="w-full mx-auto pt-6 py-6 px-12 bg-white dark:bg-tileBlack rounded-lg shadow-md"
->
+<div class="w-full mx-auto pt-6 py-6 px-12 bg-white dark:bg-tileBlack rounded-lg shadow-md">
   <h2 class="font-medium text-[#292929] mb-6 dark:text-textDark">
     View Distribution Centre
   </h2>
 
   <form [formGroup]="distributionForm">
-    <!-- Row 1 -->
     <div class="flex flex-col md:flex-row md:space-x-4 mb-6 gap-8">
       <div class="flex-1 mb-4 md:mb-0">
-        <label
-          class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-2"
-          >Distribution Centre Name</label
-        >
-        <input
-          type="text"
-          formControlName="name"
-          class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+        <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-2">Distribution Centre Name</label>
+        <input type="text" formControlName="name"
+          class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
       </div>
       <div class="flex-1 mb-4 md:mb-0"></div>
     </div>
 
     <div class="flex flex-col md:flex-row md:space-x-4 mb-4 gap-8">
       <div class="flex-1 mb-4 md:mb-0">
-  <label class="dark:text-textDark block text-sm font-medium text-[#534E4E] mb-2">
-    Company
-  </label>
-  <input
-    type="text"
-    [value]="getCompanyName()"
-    readonly
-    tabindex="-1"
-    class="no-focus no-select dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md cursor-default"
-/>
-</div>
-
-      <div class="flex-1">
-        <label
-          class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark"
-          >Distribution Centre Reg Code</label
-        >
-        <input
-          type="text"
-          formControlName="regCode"
-          class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+        <label class="dark:text-textDark block text-sm font-medium text-[#534E4E] mb-2">
+          Company
+        </label>
+        <input type="text" [value]="getCompanyName()" readonly tabindex="-1"
+          class="no-focus no-select dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md cursor-default" />
       </div>
 
-      <!-- <div class="flex-1">
-        <label
-          class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark"
-          >Officer In-Charge Name</label
-        >
-        <input
-          type="text"
-          formControlName="officerInCharge"
-          class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div> -->
+      <div class="flex-1">
+        <label class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark">Distribution Centre Reg
+          Code</label>
+        <input type="text" formControlName="regCode"
+          class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      </div>
+
     </div>
 
-    <!-- Row 2 -->
-   <div class="flex flex-col md:flex-row md:space-x-4 mb-4 gap-4">
-  <!-- Contact Number 01 -->
-  <div class="flex-1">
-    <label class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark">
-      Contact Number 01
-    </label>
-    <div class="flex gap-2">
-      <!-- Phone Code 01 -->
-      <p-dropdown
-        formControlName="phoneCode01"
-        [options]="countries"
-        optionLabel="dialCode"
-        optionValue="dialCode"
-        styleClass="border border-gray-300 rounded-l-md bg-gray-50 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown"
-        [style]="{ width: '120px' }"
-        [disabled]="true"
-      >
-        <ng-template let-country pTemplate="item">
-          <div class="flex items-center gap-2">
-            <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
-            <span>{{ country.dialCode }}</span>
-          </div>
-        </ng-template>
-        <ng-template let-country pTemplate="selectedItem">
-          <div class="flex items-center gap-2" *ngIf="country">
-            <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
-            <span>{{ country.dialCode }}</span>
-          </div>
-        </ng-template>
-      </p-dropdown>
+    <div class="flex flex-col md:flex-row md:space-x-4 mb-4 gap-4">
+      <div class="flex-1">
+        <label class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark">
+          Contact Number 01
+        </label>
+        <div class="flex gap-2">
+          <p-dropdown formControlName="phoneCode01" [options]="countries" optionLabel="dialCode" optionValue="dialCode"
+            styleClass="border border-gray-300 rounded-l-md bg-gray-50 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown"
+            [style]="{ width: '120px' }" [disabled]="true">
+            <ng-template let-country pTemplate="item">
+              <div class="flex items-center gap-2">
+                <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                <span>{{ country.dialCode }}</span>
+              </div>
+            </ng-template>
+            <ng-template let-country pTemplate="selectedItem">
+              <div class="flex items-center gap-2" *ngIf="country">
+                <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                <span>{{ country.dialCode }}</span>
+              </div>
+            </ng-template>
+          </p-dropdown>
 
-      <!-- Contact Input 01 -->
-      <input
-        type="tel"
-        formControlName="contact1"
-        placeholder="XXXXXXXXX"
-        class="flex-1 p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
+          <input type="tel" formControlName="contact1" placeholder="XXXXXXXXX"
+            class="flex-1 p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        </div>
+      </div>
+
+      <div class="flex-1">
+        <label class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark">
+          Contact Number 02
+        </label>
+        <div class="flex gap-2">
+          <p-dropdown formControlName="phoneCode02" [options]="countries" optionLabel="dialCode" optionValue="dialCode"
+            styleClass="border border-gray-300 rounded-l-md bg-gray-50 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown"
+            [style]="{ width: '140px' }" [disabled]="true">
+            <ng-template let-country pTemplate="item">
+              <div class="flex items-center gap-2">
+                <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                <span>{{ country.dialCode }}</span>
+              </div>
+            </ng-template>
+            <ng-template let-country pTemplate="selectedItem">
+              <div class="flex items-center gap-2" *ngIf="country">
+                <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                <span>{{ country.dialCode }}</span>
+              </div>
+            </ng-template>
+          </p-dropdown>
+
+          <input type="tel" formControlName="contact2" placeholder="XXXXXXXXX"
+            class="flex-1 p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        </div>
+      </div>
     </div>
-  </div>
-
-  <!-- Contact Number 02 -->
-  <div class="flex-1">
-    <label class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark">
-      Contact Number 02
-    </label>
-    <div class="flex gap-2">
-      <!-- Phone Code 02 -->
-      <p-dropdown
-        formControlName="phoneCode02"
-        [options]="countries"
-        optionLabel="dialCode"
-        optionValue="dialCode"
-        styleClass="border border-gray-300 rounded-l-md bg-gray-50 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown"
-        [style]="{ width: '140px' }"
-        [disabled]="true"
-      >
-        <ng-template let-country pTemplate="item">
-          <div class="flex items-center gap-2">
-            <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
-            <span>{{ country.dialCode }}</span>
-          </div>
-        </ng-template>
-        <ng-template let-country pTemplate="selectedItem">
-          <div class="flex items-center gap-2" *ngIf="country">
-            <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
-            <span>{{ country.dialCode }}</span>
-          </div>
-        </ng-template>
-      </p-dropdown>
-
-      <!-- Contact Input 02 -->
-      <input
-        type="tel"
-        formControlName="contact2"
-        placeholder="XXXXXXXXX"
-        class="flex-1 p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
-    </div>
-  </div>
-</div>
 
 
-    <!-- Row 3 -->
     <div class="flex flex-col md:flex-row md:space-x-4 mb-4 gap-8">
       <div class="flex-1 mb-4 md:mb-0">
-        <label
-          class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark"
-          >Email</label
-        >
-        <input
-          type="email"
-          formControlName="email"
-          class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+        <label class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark">Email</label>
+        <input type="email" formControlName="email"
+          class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
       </div>
       <div class="flex-1">
-        <label
-          class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark"
-          >Geo Location</label
-        >
-      <div class="flex items-center">
-  <div class="border border-red-600 rounded-md px-3 py-2 flex items-center bg-red-50">
-    <ng-container *ngIf="distributionForm.get('latitude')?.value && distributionForm.get('longitude')?.value; else noCoords">
-      <a
-        [href]="'https://www.google.com/maps?q=' + distributionForm.get('latitude')?.value + ',' + distributionForm.get('longitude')?.value"
-        target="_blank"
-        class="text-red-600 text-xl"
-        title="View on map"
-      >
-        <i class="fas fa-map-marker-alt"></i>
-      </a>
-    </ng-container>
-    <ng-template #noCoords>
-      <span
-        class="text-red-600 text-xl"
-        title="Coordinates not available"
-      >
-        <i class="fas fa-map-marker-alt"></i>
-      </span>
-    </ng-template>
-  </div>
-</div>
+        <label class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark">Geo Location</label>
+        <div class="flex items-center">
+          <div class="border border-red-600 rounded-md px-3 py-2 flex items-center bg-red-50">
+            <ng-container
+              *ngIf="distributionForm.get('latitude')?.value && distributionForm.get('longitude')?.value; else noCoords">
+              <a [href]="'https://www.google.com/maps?q=' + distributionForm.get('latitude')?.value + ',' + distributionForm.get('longitude')?.value"
+                target="_blank" class="text-red-600 text-xl" title="View on map">
+                <i class="fas fa-map-marker-alt"></i>
+              </a>
+            </ng-container>
+            <ng-template #noCoords>
+              <span class="text-red-600 text-xl" title="Coordinates not available">
+                <i class="fas fa-map-marker-alt"></i>
+              </span>
+            </ng-template>
+          </div>
+        </div>
 
       </div>
     </div>
 
-    <!-- Row 4 -->
     <div class="flex flex-col md:flex-row md:space-x-4 mb-4 gap-8">
       <div class="flex-1">
-        <label
-          class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark"
-          >Country</label
-        >
-        <select
-          formControlName="country"
-          class="dark:text-textDark no-arrow bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
+        <label class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark">Country</label>
+        <select formControlName="country"
+          class="dark:text-textDark no-arrow bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
           <option value="" disabled>Select Country</option>
           <option value="Sri Lanka">Sri Lanka</option>
         </select>
       </div>
 
       <div class="flex-1 mb-4 md:mb-0">
-        <label
-          class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark"
-          >Province</label
-        >
-        <select
-          formControlName="province"
-          class="dark:text-textDark no-arrow bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
+        <label class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark">Province</label>
+        <select formControlName="province"
+          class="dark:text-textDark no-arrow bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
           <option value="">Select Province</option>
           <option *ngFor="let province of provinces" [value]="province">
             {{ province }}
@@ -229,17 +145,11 @@
       </div>
     </div>
 
-    <!-- Row 5 -->
     <div class="flex flex-col md:flex-row md:space-x-4 mb-4 gap-8">
       <div class="flex-1">
-        <label
-          class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark"
-          >District</label
-        >
-        <select
-          formControlName="district"
-          class="dark:text-textDark no-arrow bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
+        <label class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark">District</label>
+        <select formControlName="district"
+          class="dark:text-textDark no-arrow bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
           <option value="" disabled>Select District</option>
           <option *ngFor="let district of getDistricts()" [value]="district">
             {{ district }}
@@ -248,15 +158,9 @@
       </div>
 
       <div class="flex-1 mb-4 md:mb-0">
-        <label
-          class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark"
-          >City</label
-        >
-        <input
-          type="text"
-          formControlName="city"
-          class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+        <label class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark">City</label>
+        <input type="text" formControlName="city"
+          class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
       </div>
     </div>
   </form>

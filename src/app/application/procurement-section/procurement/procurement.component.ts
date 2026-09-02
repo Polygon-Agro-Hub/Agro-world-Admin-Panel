@@ -36,6 +36,9 @@ export class ProcurementComponent {
   definePackages(): void {
     this.router.navigate(['/procurement/define-packages']);
   }
+  dailypackingtarget(): void {
+    this.router.navigate(['/procurement/daily-packing-target']);
+  }
 
   navigatePath(path: string) {
     this.router.navigate([path]);

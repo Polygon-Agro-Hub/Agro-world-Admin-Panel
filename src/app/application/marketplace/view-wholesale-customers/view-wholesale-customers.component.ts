@@ -288,7 +288,7 @@ export class ViewWholesaleCustomersComponent implements OnInit {
 
   openUpdateCreditPopup(customer: Customers) {
     this.selectedCustomerForCredit = customer;
-    this.newCreditLimit            = customer.creditBalance ?? null;
+    this.newCreditLimit            = customer.creditLimit ?? null;
     this.isCreditPopupOpen         = true;
   }
 
@@ -317,7 +317,7 @@ export class ViewWholesaleCustomersComponent implements OnInit {
           const target = this.customerObj.find(
             (c) => c.id === this.selectedCustomerForCredit!.id
           );
-          if (target) target.creditBalance = this.newCreditLimit!;
+          if (target) target.creditLimit = this.newCreditLimit!;
 
           this.isUpdatingCredit = false;
           this.closeUpdateCreditPopup();
@@ -325,7 +325,7 @@ export class ViewWholesaleCustomersComponent implements OnInit {
           Swal.fire({
             icon: 'success',
             title: 'Success',
-            text: 'Credit balance updated successfully!',
+            text: 'Credit limit updated successfully!',
             confirmButtonText: 'OK',
             customClass: {
               popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
@@ -408,5 +408,5 @@ class Customers {
   companyPhoneCode!: string;
   companyPhone!: string;
   rateofCus?: string; 
-  creditBalance!: number;
+  creditLimit!: number;
 }

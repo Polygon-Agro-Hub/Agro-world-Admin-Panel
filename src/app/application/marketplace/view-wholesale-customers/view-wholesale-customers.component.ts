@@ -308,9 +308,9 @@ export class ViewWholesaleCustomersComponent implements OnInit {
     this.isUpdatingCredit = true;
 
     this.marketSrv
-      .updateWholesaleCustomerCreditBalance({
+      .updateWholesaleCustomerCreditLimit({
         id: this.selectedCustomerForCredit.id,
-        creditBalance: this.newCreditLimit
+        creditLimit: this.newCreditLimit
       })
       .subscribe(
         () => {

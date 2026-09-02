@@ -93,6 +93,7 @@
                 <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">Customer Name</th>
                 <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">Company Name</th>
                 <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">Credit Limit (Rs.)</th>
+                <th class="px-3 py-3"></th>
                 <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">Created At</th>
                 <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">Contact</th>
                 <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">No. of Orders</th>
@@ -128,6 +129,13 @@
 
                 <td class="px-3 py-3 text-left dark:text-textDark whitespace-nowrap">
                   {{ item.creditBalance || '—' }}
+                </td>
+
+                <td class="px-3 py-3 text-center"
+                  *ngIf="permissionService.hasPermission('View wholesale customer orders') || tokenService.getUserDetails().role === '1'">
+                  <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]" (click)="viewOrderDetails(item.id)">
+                    <i class="fa-solid fa-pen-to-square text-xl"></i>
+                  </button>
                 </td>
 
                 <td class="px-3 py-3 text-center dark:text-textDark whitespace-nowrap">

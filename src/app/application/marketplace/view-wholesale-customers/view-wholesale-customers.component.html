@@ -421,60 +421,64 @@
 <!-- ───────── Update Credit Balance Popup ───────── -->
 <div *ngIf="isCreditPopupOpen" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50"
   (click)="closeUpdateCreditPopup()">
-  <div class="bg-white dark:bg-gray-800 rounded-[28px] shadow-lg w-[420px] max-w-[90vw] p-8 flex flex-col items-center"
+  <div class="bg-white dark:bg-gray-800 rounded-[28px] shadow-lg w-[500px] max-w-[90vw] p-8 flex flex-col items-center"
     (click)="$event.stopPropagation()">
-
-    <!-- Icon -->
-    <div class="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center mb-5">
-      <i class="fa-solid fa-wallet text-2xl text-gray-800 dark:text-gray-200"></i>
-    </div>
-
-    <h3 class="text-[20px] font-semibold text-[#000000] dark:text-white mb-6">Update Credit Balance</h3>
-
-    <!-- Customer info card -->
     <div
-      class="w-full border border-gray-300 dark:border-[#4B555A] bg-white dark:bg-[#272F45] rounded-2xl p-5 flex flex-col gap-4 mb-6">
-      <div class="flex items-center gap-3">
-        <div class="w-8 h-8 rounded-full bg-[#EFF0F1] dark:bg-gray-600 flex items-center justify-center flex-shrink-0">
-          <i class="fa-solid fa-user text-sm text-gray-700 dark:text-gray-200"></i>
-        </div>
-        <span class="text-base font-medium text-gray-900 dark:text-white leading-tight">
-          {{ selectedCustomerForCredit?.firstName }} {{ selectedCustomerForCredit?.lastName }}
-        </span>
+      class="bg-white dark:bg-gray-800 rounded-[28px] max-w-[90vw] flex flex-col items-center">
+      <!-- Icon -->
+      <div class="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center mb-5">
+        <i class="fa-solid fa-wallet text-2xl text-gray-800 dark:text-gray-200"></i>
       </div>
-      <div class="flex items-center gap-3" *ngIf="selectedCustomerForCredit?.companyName">
-        <div class="w-8 h-8 rounded-full bg-[#EFF0F1] dark:bg-gray-600 flex items-center justify-center flex-shrink-0">
-          <i class="fa-solid fa-building text-sm text-gray-700 dark:text-gray-200"></i>
-        </div>
-        <span class="text-base font-medium text-gray-900 dark:text-white">
-          {{ selectedCustomerForCredit?.companyName }}
-        </span>
-      </div>
-    </div>
 
-    <!-- Credit Limit input -->
-    <div class="w-full border border-gray-300 dark:border-[#4B555A] rounded-2xl p-4 mb-6">
-      <label class="block text-sm font-medium text-[#000000] dark:text-gray-300 mb-3">Credit Limit</label>
-      <div class="flex items-center border border-gray-300 dark:border-[#4B555A] rounded-xl py-2 px-2">
-        <span class="text-xl font-medium text-[#000000] dark:text-white">Rs.</span>
-        <div class="w-px h-6 bg-gray-300 dark:bg-gray-500 mx-2"></div>
-        <input type="number" min="2000" step="1" inputmode="numeric" [(ngModel)]="newCreditLimit"
-          (keydown)="blockInvalidCreditKeys($event)" (paste)="blockInvalidCreditPaste($event)"
-          (input)="onCreditInputChange($event)"
-          class="no-spinner flex-1 bg-transparent outline-none text-xl font-medium text-[#000000] dark:text-white" />
-      </div>
-    </div>
+      <h3 class="text-[20px] font-semibold text-[#000000] dark:text-white mb-6">Update Credit Balance</h3>
 
-    <div class="flex justify-center gap-4 w-full">
-      <button (click)="closeUpdateCreditPopup()"
-        class="flex-1 bg-[#74788D] text-[#D3D3D3] py-3 rounded-xl font-medium hover:bg-[#5f6275] transition-colors">
-        Cancel
-      </button>
-      <button (click)="submitUpdateCredit()"
-        [disabled]="newCreditLimit === null || newCreditLimit === undefined || newCreditLimit < 2000 || isUpdatingCredit"
-        class="flex-1 bg-[#3980C0] text-white py-3 rounded-xl font-medium hover:bg-[#2563eb] transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-        {{ isUpdatingCredit ? 'Updating...' : 'Update' }}
-      </button>
+      <!-- Customer info card -->
+      <div
+        class="w-full border border-gray-300 dark:border-[#4B555A] bg-white dark:bg-[#272F45] rounded-2xl p-5 flex flex-col gap-4 mb-6">
+        <div class="flex items-center gap-3">
+          <div
+            class="w-8 h-8 rounded-full bg-[#EFF0F1] dark:bg-gray-600 flex items-center justify-center flex-shrink-0">
+            <i class="fa-solid fa-user text-sm text-gray-700 dark:text-gray-200"></i>
+          </div>
+          <span class="text-base font-medium text-gray-900 dark:text-white leading-tight">
+            {{ selectedCustomerForCredit?.firstName }} {{ selectedCustomerForCredit?.lastName }}
+          </span>
+        </div>
+        <div class="flex items-center gap-3" *ngIf="selectedCustomerForCredit?.companyName">
+          <div
+            class="w-8 h-8 rounded-full bg-[#EFF0F1] dark:bg-gray-600 flex items-center justify-center flex-shrink-0">
+            <i class="fa-solid fa-building text-sm text-gray-700 dark:text-gray-200"></i>
+          </div>
+          <span class="text-base font-medium text-gray-900 dark:text-white">
+            {{ selectedCustomerForCredit?.companyName }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Credit Limit input -->
+      <div class="w-full border border-gray-300 dark:border-[#4B555A] rounded-2xl p-4 mb-6">
+        <label class="block text-sm font-medium text-[#000000] dark:text-gray-300 mb-3">Credit Limit</label>
+        <div class="flex items-center border border-gray-300 dark:border-[#4B555A] rounded-xl py-2 px-2">
+          <span class="text-xl font-medium text-[#000000] dark:text-white">Rs.</span>
+          <div class="w-px h-6 bg-gray-300 dark:bg-gray-500 mx-2"></div>
+          <input type="number" min="2000" step="1" inputmode="numeric" [(ngModel)]="newCreditLimit"
+            (keydown)="blockInvalidCreditKeys($event)" (paste)="blockInvalidCreditPaste($event)"
+            (input)="onCreditInputChange($event)"
+            class="no-spinner flex-1 bg-transparent outline-none text-xl font-medium text-[#000000] dark:text-white" />
+        </div>
+      </div>
+
+      <div class="flex justify-center gap-4 w-full">
+        <button (click)="closeUpdateCreditPopup()"
+          class="flex-1 bg-[#74788D] text-[#D3D3D3] py-3 rounded-xl font-medium hover:bg-[#5f6275] transition-colors">
+          Cancel
+        </button>
+        <button (click)="submitUpdateCredit()"
+          [disabled]="newCreditLimit === null || newCreditLimit === undefined || newCreditLimit < 2000 || isUpdatingCredit"
+          class="flex-1 bg-[#3980C0] text-white py-3 rounded-xl font-medium hover:bg-[#2563eb] transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+          {{ isUpdatingCredit ? 'Updating...' : 'Update' }}
+        </button>
+      </div>
     </div>
   </div>
 </div>

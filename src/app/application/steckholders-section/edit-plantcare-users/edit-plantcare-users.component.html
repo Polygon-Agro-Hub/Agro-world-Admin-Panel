@@ -616,41 +616,36 @@
             <!-- Bank Name Dropdown -->
             <!-- Bank Name Field (converted from dropdown) -->
             <div>
-              <label for="bankName" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-                Bank Name *
-              </label>
-              <p-dropdown formControlName="bankName" [options]="bankOptions" optionLabel="label" optionValue="value"
-                [filter]="true" filterBy="label" [showClear]="false" placeholder="Select a bank"
-                (onChange)="onBankChange()" styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
-                class="mt-1 block w-full p-dropdown-custom">
-              </p-dropdown>
-              <div *ngIf="
+  <label for="bankName" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    Bank Name *
+  </label>
+  <input formControlName="bankName" id="bankName"
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+    readonly />
+  <div *ngIf="
       userForm.get('bankName')?.invalid &&
       (userForm.get('bankName')?.dirty ||
         userForm.get('bankName')?.touched)
     " class="text-red-500 text-sm mt-1">
-                Bank name is required
-              </div>
-            </div>
+    Bank name is required
+  </div>
+</div>
 
-            <div>
-              <label for="branchName" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-                Branch Name *
-              </label>
-              <p-dropdown formControlName="branchName" [options]="branchOptions" optionLabel="label" optionValue="value"
-                [filter]="true" filterBy="label" [showClear]="false" (onChange)="onBranchChange()"
-                placeholder="Select a branch" styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
-                class="mt-1 block w-full p-dropdown-custom" readonly>
-              </p-dropdown>
-              <div *ngIf="
+<div>
+  <label for="branchName" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    Branch Name *
+  </label>
+  <input formControlName="branchName" id="branchName"
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+    readonly />
+  <div *ngIf="
       userForm.get('branchName')?.invalid &&
       (userForm.get('branchName')?.dirty ||
         userForm.get('branchName')?.touched)
     " class="text-red-500 text-sm mt-1">
-                Branch name is required
-              </div>
-
-            </div>
+    Branch name is required
+  </div>
+</div>
           </ng-container>
         </div>
       </div>

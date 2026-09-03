@@ -151,12 +151,13 @@
             </td>
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark whitespace-nowrap">
               <span class="px-2 py-1 rounded-full font-medium" [ngClass]="{
-                  'text-red-500': job.status === 'Pending' || job.status === 'Assigned',
-                  'text-green-500': job.status === 'Completed',
-                  'bg-gray-200 text-gray-800': !job.status
-                }">
-                {{ getDisplayStatus(job.status) }}
-              </span>
+    'text-red-500': job.status === 'Pending' || job.status === 'Assigned',
+    'text-orange-500': job.status === 'Ongoing',
+    'text-green-500': job.status === 'Completed',
+    'bg-gray-200 text-gray-800': !job.status
+  }">
+  {{ getDisplayStatus(job.status) }}
+</span>
             </td>
             <td
               *ngIf="permissionService.hasPermission('Assign govi link jobs assign inspectors') || tokenService.getUserDetails().role === '1'"
@@ -312,22 +313,21 @@
   </div>
 </div>
 
-<!-- Completed Job Warning Popup -->
-<div *ngIf="isCompletedJobPopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-  (click)="completedJobPopupClose()">
+<!-- Assign Blocked Warning Popup (Completed / Ongoing) -->
+<div *ngIf="isAssignBlockedPopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+  (click)="assignBlockedPopupClose()">
   <div class="bg-[#FFFFFF] dark:bg-tileBlack px-20 py-10 rounded-lg shadow-md w-96 max-h-[90vh] overflow-y-auto"
     (click)="$event.stopPropagation()">
     <!-- Warning Message -->
     <div class="mb-6">
       <p class="text-center text-textLight dark:text-textDark">
-        You can't assign an officer to the task because the task has already
-        been completed.
+        {{ assignBlockedMessage }}
       </p>
     </div>
 
     <!-- Action Button -->
     <div class="flex justify-center gap-3 mt-6">
-      <button (click)="completedJobPopupClose()"
+      <button (click)="assignBlockedPopupClose()"
         class="px-4 py-2 text-sm font-medium text-gray-500 bg-gray-100 rounded-lg hover:bg-[#2c6da3] hover:text-white transition-colors">
         Cancel
       </button>

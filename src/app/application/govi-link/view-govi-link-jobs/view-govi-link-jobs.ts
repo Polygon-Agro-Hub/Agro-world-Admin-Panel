@@ -54,7 +54,8 @@ export class ViewGoviLinkJobsComponent implements OnInit {
   // Popup state
   isOfficerPopUp = false;
   isAssignPopup = false;
-  isCompletedJobPopup = false;
+  isAssignBlockedPopup = false;   // was: isCompletedJobPopup
+  assignBlockedMessage = '';      // new
   isViewJobPopup = false;
   assignedOfficerArray: string[] = [];
 
@@ -156,25 +157,36 @@ export class ViewGoviLinkJobsComponent implements OnInit {
 
   // Handle assign status click
   onAssignStatusClick(job: any): void {
-    // Special condition: If job is completed and assigned, show warning popup
-    if (job.status === 'Completed' && job.assignStatus === 'Assigned') {
-      this.selectedJob = job;
-      this.isCompletedJobPopup = true;
-      return;
-    }
-
-    if (job.assignStatus === 'Assigned') {
-      // If already assigned, open assign popup in edit mode
-      if (job.assignedOfficerRole !== null) {
-        this.selectedOfficerRole = job.assignedOfficerRole;
-      }
-      this.openAssignPopup(job);
-      this.onOfficerRoleChange()
-    } else {
-      // If not assigned, open the assign popup in create mode
-      this.openAssignPopup(job);
-    }
+  // Block: task already completed
+  if (job.status === 'Completed' && job.assignStatus === 'Assigned') {
+    this.selectedJob = job;
+    this.assignBlockedMessage =
+      "You can't assign an officer to the task because the task has already been completed.";
+    this.isAssignBlockedPopup = true;
+    return;
   }
+
+  // Block: task already started (Ongoing)
+  if (job.status === 'Ongoing') {
+    this.selectedJob = job;
+    this.assignBlockedMessage =
+      "You can't assign or change an officer for this task because it has already started.";
+    this.isAssignBlockedPopup = true;
+    return;
+  }
+
+  if (job.assignStatus === 'Assigned') {
+    // If already assigned, open assign popup in edit mode
+    if (job.assignedOfficerRole !== null) {
+      this.selectedOfficerRole = job.assignedOfficerRole;
+    }
+    this.openAssignPopup(job);
+    this.onOfficerRoleChange();
+  } else {
+    // If not assigned, open the assign popup in create mode
+    this.openAssignPopup(job);
+  }
+}
 
   // Open assign popup
   openAssignPopup(job: any): void {
@@ -216,11 +228,12 @@ export class ViewGoviLinkJobsComponent implements OnInit {
     this.assignError = '';
   }
 
-  // Close completed job popup
-  completedJobPopupClose(): void {
-    this.isCompletedJobPopup = false;
-    this.selectedJob = null;
-  }
+  // Close assign-blocked popup (Completed / Ongoing)
+assignBlockedPopupClose(): void {
+  this.isAssignBlockedPopup = false;
+  this.assignBlockedMessage = '';
+  this.selectedJob = null;
+}
 
   // When officer role changes
   onOfficerRoleChange(): void {

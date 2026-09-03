@@ -30,7 +30,7 @@ export class EditUserStaffComponent implements OnInit {
   userForm!: FormGroup;
   ownerId!: number;
   isLoading: boolean = true;
-  roles: string[] = ['Supervisor', 'Manager', 'Laber'];
+  roles: string[] = ['Supervisor', 'Manager', 'Laborer'];
   phoneCodes: string[] = ['+94', '+91', '+1', '+44'];
   isPhoneInvalid: boolean = false;
 

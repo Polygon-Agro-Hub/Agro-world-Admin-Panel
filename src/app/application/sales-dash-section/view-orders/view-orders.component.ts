@@ -14,6 +14,7 @@ import { FinalinvoiceService } from '../../../services/invoice/finalinvoice.serv
 import { TokenService } from '../../../services/token/services/token.service';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
 import { PostinvoiceService } from '../../../services/invoice/postinvoice.service';
+import { SalesAgentsService } from '../../../services/dash/sales-agents.service';
 
 @Component({
   selector: 'app-view-orders',
@@ -79,6 +80,8 @@ export class ViewOrdersComponent implements OnInit {
   paymentMethodFilter: string = '';
   paymentStatusFilter: string = '';
   deliveryTypeFilter: string = '';
+  selectedAgentFilter: number | string = '';
+  agentFilterOptions: Array<{ label: string; value: number }> = [];
 
   constructor(
     private router: Router,
@@ -87,11 +90,13 @@ export class ViewOrdersComponent implements OnInit {
     private salesDashService: SalesDashService,
     public tokenService: TokenService,
     public permissionService: PermissionService,
-    private postInvoiceService: PostinvoiceService
+    private postInvoiceService: PostinvoiceService,
+    private salesAgentsService: SalesAgentsService,
   ) { }
 
   ngOnInit() {
     this.fetchAllOrders();
+    this.fetchApprovedAgents();
   }
 
   fetchAllOrders(
@@ -113,7 +118,8 @@ export class ViewOrdersComponent implements OnInit {
         paymentStatus,
         deliveryType,
         search,
-        this.formatDateForBackend(this.date)
+        this.formatDateForBackend(this.date),
+        this.selectedAgentFilter,
       )
       .subscribe(
         (data) => {
@@ -139,6 +145,28 @@ export class ViewOrdersComponent implements OnInit {
           }
         }
       );
+  }
+
+  fetchApprovedAgents() {
+    this.salesAgentsService.getAllSalesAgents(1, 1000, '', 'Approved').subscribe(
+      (response: any) => {
+        this.agentFilterOptions = (response.items || [])
+          .map((agent: any) => ({
+            label: agent.empId,
+            value: agent.id,
+          }))
+          .sort(
+            (
+              firstAgent: { label: string; value: number },
+              secondAgent: { label: string; value: number },
+            ) =>
+            firstAgent.label.localeCompare(secondAgent.label, undefined, {
+              numeric: true,
+            }),
+          );
+      },
+      (error) => console.error('Error fetching approved sales agents', error),
+    );
   }
 
   formatDateForBackend(date: Date | null): string {
@@ -202,6 +230,11 @@ export class ViewOrdersComponent implements OnInit {
       this.deliveryTypeFilter,
       this.searchText
     );
+  }
+
+  applyAgentFilter() {
+    this.page = 1;
+    this.fetchAllOrders(this.page, this.itemsPerPage);
   }
 
   dateFilter() {

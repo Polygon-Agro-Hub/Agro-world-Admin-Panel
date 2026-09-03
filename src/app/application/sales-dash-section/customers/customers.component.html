@@ -29,6 +29,19 @@
       </div>
 
       <div class="flex items-center gap-3">
+         <!-- Agent Filter Dropdown -->
+          
+        <p-dropdown
+          styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#D1D5DB] dark:border-[#AFAFAF]"
+          [options]="agentFilterOptions"
+          optionLabel="label"
+          optionValue="value"
+          [showClear]="!!selectedAgentFilter"
+          placeholder="Agent"
+          [(ngModel)]="selectedAgentFilter"
+          (onChange)="applyAgentFilter()"
+        ></p-dropdown>
+
         <!-- Ratings Filter Dropdown -->
         <p-dropdown
           styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#D1D5DB] dark:border-[#AFAFAF]"

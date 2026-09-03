@@ -65,7 +65,7 @@ export class ViewJobHistoryFarmerClusterAuditResponseComponent implements OnInit
         }
 
         const header = res.header;
-        const farms = res.farms;
+        const farms = (res.farms || []).slice(0, Number(header.completedFarms) || 0);
 
         this.jobData.jobId = header.jobId;
         this.jobData.certificate = `${header.srtName} for farmer cluster`;
@@ -77,7 +77,7 @@ export class ViewJobHistoryFarmerClusterAuditResponseComponent implements OnInit
             let completed = false;
 
             if (isPhoto) {
-              completed = !!q.uploadImage;
+              completed = !!(q.uploadImage || q.officerUploadImage);
             } else {
               completed = q.officerTickResult === 1;
             }
@@ -87,8 +87,8 @@ export class ViewJobHistoryFarmerClusterAuditResponseComponent implements OnInit
               type: q.type,
               question: q.qEnglish,
               status: completed ? 'Completed' : 'Incomplete',
-              hasPhoto: isPhoto && !!q.uploadImage,
-              photoUrl: q.uploadImage || '',
+              hasPhoto: isPhoto && !!(q.uploadImage || q.officerUploadImage),
+              photoUrl: q.uploadImage || q.officerUploadImage || '',
             };
           });
 
@@ -184,6 +184,7 @@ interface ApiQuestion {
   qEnglish: string;
   solution: string | null;
   uploadImage: string | null;
+  officerUploadImage: string | null;
   officerTickResult: number;
 }
 

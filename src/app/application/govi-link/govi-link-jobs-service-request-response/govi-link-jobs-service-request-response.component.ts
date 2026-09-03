@@ -74,7 +74,16 @@ export class GoviLinkJobsServiceRequestResponseComponent implements OnInit {
         this.isLoading = false;
         if (response.success) {
           this.serviceRequestResponse = response.data.auditDetails
-          this.questions = response.data.advices
+          this.questions = (response.data.advices || []).map((question: Question) => {
+            const isPhoto = (question.type || '').toLowerCase().includes('photo');
+            const photoUrl = question.image || question.officerUploadImage || question.uploadImage || '';
+
+            return {
+              ...question,
+              image: photoUrl,
+              status: isPhoto && photoUrl ? 'Completed' : question.status,
+            };
+          });
           this.problems = response.data.suggestions
           this.totalItems = response.data.length;
           this.hasData = this.totalItems > 0;
@@ -239,6 +248,7 @@ interface ApiItem {
   qEnglish: string;
   type: string;
   uploadImage: string | null;
+  officerUploadImage: string | null;
   officerTickResult: number;
   problem: string | null;
   solution: string | null;
@@ -249,6 +259,8 @@ interface Question {
   farmerFeedback: string;
   advice: string;
   image: string;
+  uploadImage?: string | null;
+  officerUploadImage?: string | null;
   type: string;
   question: string;
   status: 'Completed' | 'Incomplete';

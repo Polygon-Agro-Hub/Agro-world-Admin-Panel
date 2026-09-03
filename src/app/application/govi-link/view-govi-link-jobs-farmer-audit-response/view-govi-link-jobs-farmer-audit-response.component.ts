@@ -71,7 +71,7 @@ export class ViewGoviLinkJobsFarmerAuditResponseComponent implements OnInit {
           let completed = false;
 
           if (isPhoto) {
-            completed = !!q.uploadImage;
+            completed = !!(q.uploadImage || q.officerUploadImage);
           } else {
             completed = q.officerTickResult === 1;
           }
@@ -81,8 +81,8 @@ export class ViewGoviLinkJobsFarmerAuditResponseComponent implements OnInit {
             type: q.type,
             question: q.qEnglish,
             status: completed ? 'Completed' : 'Incomplete',
-            hasPhoto: isPhoto && !!q.uploadImage,
-            photoUrl: q.uploadImage || '',
+            hasPhoto: isPhoto && !!(q.uploadImage || q.officerUploadImage),
+            photoUrl: q.uploadImage || q.officerUploadImage || '',
           };
         });
 
@@ -157,6 +157,7 @@ interface ApiItem {
   qEnglish: string;
   type: string;
   uploadImage: string | null;
+  officerUploadImage: string | null;
   officerTickResult: number;
   problem: string | null;
   solution: string | null;

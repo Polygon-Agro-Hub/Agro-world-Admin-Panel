@@ -149,14 +149,24 @@ export class ViewJobHistoryComponent implements OnInit {
             onScreenTime: item.onScreenTime || '--',
             status: this.formatStatus(item.status),
             assignedOn: this.formatDateTime(item.assignedOn),
+            assignedOnRaw: item.assignedOn, // keep raw value for sorting
             assignedByName: item.assignedByName || '--',
             assignedOfficer: item.assignedOfficer || '--'
           }));
 
+          // Sort by Last Assigned On, most recent first
+          mappedData.sort((a: any, b: any) => {
+            const dateA = a.assignedOnRaw ? new Date(a.assignedOnRaw).getTime() : 0;
+            const dateB = b.assignedOnRaw ? new Date(b.assignedOnRaw).getTime() : 0;
+            return dateB - dateA;
+          });
+
           // Filter out records with null or empty empId
-          this.jobHistory = mappedData.filter((item: FieldAuditHistory) =>
-            item.empId && item.empId !== null && item.empId !== '--' && item.empId.trim() !== ''
-          );
+          this.jobHistory = mappedData
+            .filter((item: FieldAuditHistory & { assignedOnRaw?: string }) =>
+              item.empId && item.empId !== null && item.empId !== '--' && item.empId.trim() !== ''
+            )
+            .map(({ assignedOnRaw, ...rest }: any) => rest); 
 
           this.totalItems = this.jobHistory.length;
           this.hasData = this.totalItems > 0;

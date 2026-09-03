@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import { ProcumentsService } from '../../../services/procuments/procuments.service'; 
 
 @Component({
   selector: 'app-daily-packing-target',
@@ -11,12 +12,32 @@ import { Router } from '@angular/router';
   templateUrl: './daily-packing-target.component.html',
   styleUrl: './daily-packing-target.component.css',
 })
-export class DailyPackingTargetComponent {
+export class DailyPackingTargetComponent implements OnInit {
   currentDailyTarget: number = 0;
   newTargetValue: any = '';
   isLoading = false;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private procumentsService: ProcumentsService
+  ) {}
+
+  ngOnInit(): void {
+    this.fetchLatestTarget();
+  }
+
+  fetchLatestTarget(): void {
+    this.procumentsService.getLatestPackingTargetLimit().subscribe({
+      next: (res: any) => {
+        if (res && res.status && res.results) {
+          this.currentDailyTarget = res.results.tarValue;
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching latest packing target:', err);
+      },
+    });
+  }
 
   back(): void {
     Swal.fire({
@@ -119,20 +140,41 @@ export class DailyPackingTargetComponent {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        // TODO: connect to backend service to persist the new target
-        this.currentDailyTarget = this.newTargetValue;
-        Swal.fire({
-          title: 'Success!',
-          text: 'Daily packing target updated successfully.',
-          icon: 'success',
-          confirmButtonText: 'OK',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold',
-          },
-        });
-        this.newTargetValue = '';
-        this.isLoading = false;
+        this.procumentsService
+          .createPackingTargetLimit(this.newTargetValue)
+          .subscribe({
+            next: (res: any) => {
+              this.currentDailyTarget = this.newTargetValue;
+              Swal.fire({
+                title: 'Success!',
+                text: 'Daily packing target updated successfully.',
+                icon: 'success',
+                confirmButtonText: 'OK',
+                customClass: {
+                  popup:
+                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold',
+                },
+              });
+              this.newTargetValue = '';
+              this.isLoading = false;
+            },
+            error: (err) => {
+              console.error('Error saving packing target:', err);
+              Swal.fire({
+                title: 'Error',
+                text: 'Failed to update daily packing target. Please try again.',
+                icon: 'error',
+                confirmButtonText: 'OK',
+                customClass: {
+                  popup:
+                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold',
+                },
+              });
+              this.isLoading = false;
+            },
+          });
       } else {
         this.isLoading = false;
       }

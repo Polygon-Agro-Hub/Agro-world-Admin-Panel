@@ -16,64 +16,60 @@
 
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
           Wholesale Customers
-          ({{ totalItems === 0 ? '0' : totalItems < 10 ? '0' + totalItems : totalItems }})
-        </h2>
+          ({{ totalItems === 0 ? '0' : totalItems < 10 ? '0' + totalItems : totalItems }}) </h2>
 
-        <div class="flex items-center gap-3">
+            <div class="flex items-center gap-3">
 
-          <!-- Ratings Filter Dropdown -->
-          <p-dropdown
-            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#D1D5DB] dark:border-[#AFAFAF]"
-            [options]="ratingFilterOptions"
-            optionLabel="label"
-            optionValue="value"
-            [showClear]="!!selectedRatingFilter"
-            placeholder="Ratings"
-            [(ngModel)]="selectedRatingFilter"
-            (onChange)="applyRatingFilter()">
-            <ng-template pTemplate="selectedItem">
-              <div class="flex items-center gap-2" *ngIf="selectedRatingFilter">
-                <img [src]="getRatingIcon(selectedRatingFilter)" class="w-4 h-4 object-contain" />
-                <span class="text-sm text-textLight dark:text-textDark">{{ getRatingLabel(selectedRatingFilter) }}</span>
+              <!-- Ratings Filter Dropdown -->
+              <p-dropdown
+                styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#D1D5DB] dark:border-[#AFAFAF]"
+                [options]="ratingFilterOptions" optionLabel="label" optionValue="value"
+                [showClear]="!!selectedRatingFilter" placeholder="Ratings" [(ngModel)]="selectedRatingFilter"
+                (onChange)="applyRatingFilter()">
+                <ng-template pTemplate="selectedItem">
+                  <div class="flex items-center gap-2" *ngIf="selectedRatingFilter">
+                    <img [src]="getRatingIcon(selectedRatingFilter)" class="w-4 h-4 object-contain" />
+                    <span class="text-sm text-textLight dark:text-textDark">{{ getRatingLabel(selectedRatingFilter)
+                      }}</span>
+                  </div>
+                </ng-template>
+                <ng-template let-option pTemplate="item">
+                  <div class="flex items-center gap-2 py-1">
+                    <img [src]="option.icon" class="w-4 h-4 object-contain" />
+                    <span class="text-sm">{{ option.label }}</span>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+
+              <!-- Search Bar -->
+              <div class="w-full md:w-96 relative group">
+                <div
+                  class="absolute top-[50px] left-0 bg-gray-700 text-white text-xs rounded-md py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
+                  Search by Customer ID, Name, Phone Number
+                </div>
+                <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-full">
+                  <input type="text" placeholder="Search.." [(ngModel)]="searchText" name="searchText"
+                    class="bg-transparent outline-none w-full dark:text-textDark text-gray-600"
+                    (keyup.enter)="onSearch()" (keyup.esc)="offSearch()" (keydown)="preventLeadingSpace($event)" />
+                  <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+                    (click)="onSearch()">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                      stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
+                    </svg>
+                  </button>
+                  <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none"
+                    (click)="offSearch()">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                      stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
               </div>
-            </ng-template>
-            <ng-template let-option pTemplate="item">
-              <div class="flex items-center gap-2 py-1">
-                <img [src]="option.icon" class="w-4 h-4 object-contain" />
-                <span class="text-sm">{{ option.label }}</span>
-              </div>
-            </ng-template>
-          </p-dropdown>
 
-          <!-- Search Bar -->
-          <div class="w-full md:w-96 relative group">
-            <div class="absolute top-[50px] left-0 bg-gray-700 text-white text-xs rounded-md py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-              Search by Customer ID, Name, Phone Number
             </div>
-            <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-full">
-              <input
-                type="text"
-                placeholder="Search.."
-                [(ngModel)]="searchText"
-                name="searchText"
-                class="bg-transparent outline-none w-full dark:text-textDark text-gray-600"
-                (keyup.enter)="onSearch()"
-                (keyup.esc)="offSearch()"
-                (keydown)="preventLeadingSpace($event)" />
-              <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2" (click)="onSearch()">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
-                </svg>
-              </button>
-              <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none" (click)="offSearch()">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-          </div>
-
-        </div>
       </div>
       <!-- ── / Header row ──────────────────────────────────────────────── -->
 
@@ -89,12 +85,21 @@
           <table class="w-full divide-y divide-gray-200 dark:divide-[#4B555A]">
             <thead>
               <tr>
-                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">Customer ID</th>
-                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">Customer Name</th>
-                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">Company Name</th>
-                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">Created At</th>
-                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">Contact</th>
-                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">No. of Orders</th>
+                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">Customer
+                  ID</th>
+                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">Customer
+                  Name</th>
+                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">Company
+                  Name</th>
+                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">Credit
+                  Limit (Rs.)</th>
+                <th class="px-3 py-3"></th>
+                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">
+                  Created At</th>
+                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">
+                  Contact</th>
+                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">No. of
+                  Orders</th>
                 <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">Customer Details</th>
                 <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center"
                   *ngIf="permissionService.hasPermission('View wholesale customer orders') || tokenService.getUserDetails().role === '1'">
@@ -108,12 +113,10 @@
               </tr>
             </thead>
             <tbody>
-              <tr
-                *ngFor="
+              <tr *ngFor="
                   let item of customerObj
                     | paginate: { itemsPerPage: itemsPerPage, currentPage: page, totalItems: totalItems };
-                  let i = index"
-                class="border-b border-gray-200 dark:border-[#4B555A]">
+                  let i = index" class="border-b border-gray-200 dark:border-[#4B555A]">
 
                 <td class="px-3 py-3 dark:text-textDark">{{ item.cusId }}</td>
 
@@ -123,6 +126,18 @@
 
                 <td class="px-3 py-3 text-left dark:text-textDark whitespace-nowrap">
                   {{ item.companyName || '—' }}
+                </td>
+
+                <td class="px-3 py-3 text-left dark:text-textDark whitespace-nowrap">
+                  {{ item.creditLimit ? (item.creditLimit | number:'1.2-2') : '—' }}
+                </td>
+
+                <td class="px-3 py-3 text-left dark:text-textDark whitespace-nowrap">
+                  <div class="flex items-center gap-2">
+                    <button class="text-[#367bfa] hover:text-[#83aefd]" (click)="openUpdateCreditPopup(item)">
+                      <i class="fa-solid fa-pen-to-square text-xl"></i>
+                    </button>
+                  </div>
                 </td>
 
                 <td class="px-3 py-3 text-center dark:text-textDark whitespace-nowrap">
@@ -135,9 +150,9 @@
 
                 <td class="px-3 py-3 text-center dark:text-textDark">
                   {{ item.totalOrders === 0 ? '0' : item.totalOrders < 10 ? '0' + item.totalOrders : item.totalOrders }}
-                </td>
+                    </td>
 
-                <!-- Customer Details -->
+                    <!-- Customer Details -->
                 <td class="px-3 py-3 text-center">
                   <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd] mt-2" (click)="detailsPop(item)">
                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5">
@@ -185,11 +200,10 @@
                 <!-- Edit Ratings Column -->
                 <td class="px-3 py-3 text-center"
                   *ngIf="permissionService.hasPermission('Edit wholesale customer ratings') || tokenService.getUserDetails().role === '1'">
-                  <button
-                    class="text-[#367bfa] hover:text-[#83aefd] transition-transform hover:rotate-180 duration-300"
-                    (click)="openUpdateRatingPopup(item)"
-                    >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <button class="text-[#367bfa] hover:text-[#83aefd] transition-transform hover:rotate-180 duration-300"
+                    (click)="openUpdateRatingPopup(item)">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                      stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                     </svg>
@@ -202,13 +216,8 @@
         </div>
 
         <div class="dark:bg-[#262f45] mt-4">
-          <pagination-controls
-            (pageChange)="onPageChange($event)"
-            [responsive]="true"
-            [previousLabel]="'Previous'"
-            [nextLabel]="'Next'"
-            [screenReaderPaginationLabel]="'Pagination'"
-            [screenReaderPageLabel]="'page'"
+          <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
+            [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
             [screenReaderCurrentLabel]="'Youre on page'">
           </pagination-controls>
         </div>
@@ -219,8 +228,7 @@
 </div>
 
 <!-- ───────── Customer Details Popup ───────── -->
-<div *ngIf="isPopupOpen"
-  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+<div *ngIf="isPopupOpen" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
   (click)="isPopupOpen = false">
   <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-1/3 h-auto" (click)="$event.stopPropagation()">
     <h2 class="[font-size:16px] text-[#545454] mb-4">CUSTOMER INFO</h2>
@@ -296,28 +304,6 @@
         </div>
       </div>
 
-      <!-- <div *ngIf="cusObjDetails.buildingType === 'House'" class="mb-5 flex items-start text-textLight dark:text-textDark">
-  <div class="mr-5"><i class="fa-solid fa-location-dot"></i></div>
-  <span class="mr-2">Address :</span>
-  <div class="flex flex-col">
-    <span>{{ cusObjDetails.buildingType === 'House' ? 'Home' : cusObjDetails.buildingType }} :</span>
-    <span class="mt-3">{{ cusObjDetails.houseNo }}, {{ cusObjDetails.streetName }}, {{ cusObjDetails.city }}</span>
-  </div>
-</div>
-
-      <div *ngIf="cusObjDetails.buildingType === 'Apartment'" class="mb-5 flex items-start text-textLight dark:text-textDark">
-  <div class="mr-5"><i class="fa-solid fa-location-dot"></i></div>
-  <span class="mr-2 whitespace-nowrap">Address :</span>
-  <div class="flex flex-col">
-    <span>{{ cusObjDetails.buildingType }} :</span>
-    <span class="mt-3">
-      {{ cusObjDetails.buildingNo }} - {{ cusObjDetails.buildingName }},
-      Unit {{ cusObjDetails.unitNo }}, Floor {{ cusObjDetails.floorNo }},
-      {{ cusObjDetails.AparthouseNo }}, {{ cusObjDetails.ApartstreetName }}, {{ cusObjDetails.Apartcity }}
-    </span>
-  </div>
-</div> -->
-
       <div class="flex flex-row items-center gap-4">
         <div class="flex flex-row items-center justify-center gap-3">
           <i class="fa-solid fa-receipt text-[#727272] text-lg"></i>
@@ -343,8 +329,7 @@
     </div>
 
     <div class="pb-4 flex items-center justify-center">
-      <button (click)="isPopupOpen = false"
-        class="mt-4 bg-[#74788D] text-[#D3D3D3] px-4 py-2 rounded">
+      <button (click)="isPopupOpen = false" class="mt-4 bg-[#74788D] text-[#D3D3D3] px-4 py-2 rounded">
         Close
       </button>
     </div>
@@ -352,8 +337,7 @@
 </div>
 
 <!-- ───────── Update Ratings Popup ───────── -->
-<div *ngIf="isRatingPopupOpen"
-  class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50"
+<div *ngIf="isRatingPopupOpen" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50"
   (click)="closeUpdateRatingPopup()">
   <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-[420px] max-w-[90vw] p-8"
     (click)="$event.stopPropagation()">
@@ -363,10 +347,7 @@
     <div class="mb-6">
       <p-dropdown
         styleClass="w-full border border-1 rounded-xl bg-[#FFFFFF] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#D1D5DB] dark:border-[#AFAFAF]"
-        [options]="ratingUpdateOptions"
-        optionLabel="label"
-        optionValue="value"
-        placeholder="Select Rating"
+        [options]="ratingUpdateOptions" optionLabel="label" optionValue="value" placeholder="Select Rating"
         [(ngModel)]="selectedNewRating">
         <!-- Selected display -->
         <ng-template pTemplate="selectedItem">
@@ -418,14 +399,11 @@
     </div>
 
     <div class="flex justify-center gap-4 mt-6">
-      <button
-        (click)="closeUpdateRatingPopup()"
+      <button (click)="closeUpdateRatingPopup()"
         class="bg-[#74788D] text-[#D3D3D3] px-6 py-2 rounded-lg hover:bg-[#5f6275] transition-colors">
         Cancel
       </button>
-      <button
-        (click)="submitUpdateRating()"
-        [disabled]="!selectedNewRating || isUpdatingRating"
+      <button (click)="submitUpdateRating()" [disabled]="!selectedNewRating || isUpdatingRating"
         class="bg-[#3980C0] text-white px-6 py-2 rounded-lg hover:bg-[#2563eb] transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
         {{ isUpdatingRating ? 'Updating...' : 'Update' }}
       </button>
@@ -438,4 +416,69 @@
   class="fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity duration-300 z-50"
   role="alert" aria-live="polite">
   Rating updated successfully!
+</div>
+
+<!-- ───────── Update Credit Balance Popup ───────── -->
+<div *ngIf="isCreditPopupOpen" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50"
+  (click)="closeUpdateCreditPopup()">
+  <div class="bg-white dark:bg-gray-800 rounded-[28px] shadow-lg w-[500px] max-w-[90vw] p-8 flex flex-col items-center"
+    (click)="$event.stopPropagation()">
+    <div
+      class="bg-white dark:bg-gray-800 rounded-[28px] max-w-[90vw] flex flex-col items-center">
+      <!-- Icon -->
+      <div class="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center mb-5">
+        <i class="fa-solid fa-wallet text-2xl text-gray-800 dark:text-gray-200"></i>
+      </div>
+
+      <h3 class="text-[20px] font-semibold text-[#000000] dark:text-white mb-6">Update Credit Balance</h3>
+
+      <!-- Customer info card -->
+      <div
+        class="w-full border border-gray-300 dark:border-[#4B555A] bg-white dark:bg-[#272F45] rounded-2xl p-5 flex flex-col gap-4 mb-6">
+        <div class="flex items-center gap-3">
+          <div
+            class="w-8 h-8 rounded-full bg-[#EFF0F1] dark:bg-gray-600 flex items-center justify-center flex-shrink-0">
+            <i class="fa-solid fa-user text-sm text-gray-700 dark:text-gray-200"></i>
+          </div>
+          <span class="text-base font-medium text-gray-900 dark:text-white leading-tight">
+            {{ selectedCustomerForCredit?.firstName }} {{ selectedCustomerForCredit?.lastName }}
+          </span>
+        </div>
+        <div class="flex items-center gap-3" *ngIf="selectedCustomerForCredit?.companyName">
+          <div
+            class="w-8 h-8 rounded-full bg-[#EFF0F1] dark:bg-gray-600 flex items-center justify-center flex-shrink-0">
+            <i class="fa-solid fa-building text-sm text-gray-700 dark:text-gray-200"></i>
+          </div>
+          <span class="text-base font-medium text-gray-900 dark:text-white">
+            {{ selectedCustomerForCredit?.companyName }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Credit Limit input -->
+      <div class="w-full border border-gray-300 dark:border-[#4B555A] rounded-2xl p-4 mb-6">
+        <label class="block text-sm font-medium text-[#000000] dark:text-gray-300 mb-3">Credit Limit</label>
+        <div class="flex items-center border border-gray-300 dark:border-[#4B555A] rounded-xl py-2 px-2">
+          <span class="text-xl font-medium text-[#000000] dark:text-white">Rs.</span>
+          <div class="w-px h-6 bg-gray-300 dark:bg-gray-500 mx-2"></div>
+          <input type="number" min="2000" step="1" inputmode="numeric" [(ngModel)]="newCreditLimit"
+            (keydown)="blockInvalidCreditKeys($event)" (paste)="blockInvalidCreditPaste($event)"
+            (input)="onCreditInputChange($event)"
+            class="no-spinner flex-1 bg-transparent outline-none text-xl font-medium text-[#000000] dark:text-white" />
+        </div>
+      </div>
+
+      <div class="flex justify-center gap-4 w-full">
+        <button (click)="closeUpdateCreditPopup()"
+          class="flex-1 bg-[#74788D] text-[#D3D3D3] py-3 rounded-xl font-medium hover:bg-[#5f6275] transition-colors">
+          Cancel
+        </button>
+        <button (click)="submitUpdateCredit()"
+          [disabled]="newCreditLimit === null || newCreditLimit === undefined || newCreditLimit < 2000 || isUpdatingCredit"
+          class="flex-1 bg-[#3980C0] text-white py-3 rounded-xl font-medium hover:bg-[#2563eb] transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+          {{ isUpdatingCredit ? 'Updating...' : 'Update' }}
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

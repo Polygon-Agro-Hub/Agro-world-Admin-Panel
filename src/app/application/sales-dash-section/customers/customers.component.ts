@@ -12,6 +12,7 @@ import { Subject } from 'rxjs';
 import { TokenService } from '../../../services/token/services/token.service';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
 import { DropdownModule } from 'primeng/dropdown';
+import { SalesAgentsService } from '../../../services/dash/sales-agents.service';
 
 // ─────────────────────────────────────────────────────────────────────────────
 //  Model
@@ -83,6 +84,8 @@ export class CustomersComponent implements OnInit {
 
   // ── Rating filter (header bar) ────────────────────────────────────────────
   selectedRatingFilter = '';
+  selectedAgentFilter: number | string = '';
+  agentFilterOptions: Array<{ label: string; value: number }> = [];
 
   // ── Update-rating popup ───────────────────────────────────────────────────
   isRatingPopupOpen            = false;
@@ -115,12 +118,14 @@ export class CustomersComponent implements OnInit {
     private customerService: CustomersService,
     private http: HttpClient,
     private router: Router,
+    private salesAgentsService: SalesAgentsService,
     public tokenService: TokenService,
     public permissionService: PermissionService,
   ) {}
 
   ngOnInit() {
     this.fetchAllCustomers();
+    this.fetchApprovedAgents();
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -134,7 +139,13 @@ export class CustomersComponent implements OnInit {
     this.isLoading = true;
 
     this.customerService
-      .getCustomers(page, limit, this.searchText, this.selectedRatingFilter)
+      .getCustomers(
+        page,
+        limit,
+        this.searchText,
+        this.selectedRatingFilter,
+        this.selectedAgentFilter,
+      )
       .subscribe(
         (response: any) => {
           this.isLoading         = false;
@@ -151,6 +162,28 @@ export class CustomersComponent implements OnInit {
           this.hasData           = false;
         },
       );
+  }
+
+  fetchApprovedAgents() {
+    this.salesAgentsService.getAllSalesAgents(1, 1000, '', 'Approved').subscribe(
+      (response: any) => {
+        this.agentFilterOptions = (response.items || [])
+          .map((agent: any) => ({
+            label: `${agent.empId} - ${agent.firstName} ${agent.lastName}`,
+            value: agent.id,
+          }))
+          .sort(
+            (
+              firstAgent: { label: string; value: number },
+              secondAgent: { label: string; value: number },
+            ) =>
+            firstAgent.label.localeCompare(secondAgent.label, undefined, {
+              numeric: true,
+            }),
+          );
+      },
+      (error) => console.error('Error fetching approved sales agents', error),
+    );
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -180,6 +213,11 @@ export class CustomersComponent implements OnInit {
   }
 
   applyRatingFilter() {
+    this.page = 1;
+    this.fetchAllCustomers();
+  }
+
+  applyAgentFilter() {
     this.page = 1;
     this.fetchAllCustomers();
   }

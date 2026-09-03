@@ -51,28 +51,38 @@ export class ViewWholesaleCustomersComponent implements OnInit {
   isUpdatingRating: boolean = false;
   showRatingToast: boolean = false;
 
-    ratingFilterOptions = [
-    { label: 'X 2 Stars', value: 'VVIP', icon: 'assets/images/ratings/VIP.png' },
-    { label: 'X 1 Star',   value: 'VIP',  icon: 'assets/images/ratings/VIP.png'  },
-    { label: 'X 1 Star',   value: 'COR',  icon: 'assets/images/ratings/COR2.png' },
-    { label: 'X 1 Star',   value: 'NOR',  icon: 'assets/images/ratings/NOR.png'  },
-    { label: 'X 1 Star',   value: 'VVP',  icon: 'assets/images/ratings/vvp.png'  },
+  // ─── Update Credit Balance Popup ───
+  isCreditPopupOpen: boolean = false;
+  selectedCustomerForCredit: Customers | null = null;
+  newCreditLimit: number | null = null;
+  isUpdatingCredit: boolean = false;
+
+  ratingFilterOptions = [
+    {
+      label: 'X 2 Stars',
+      value: 'VVIP',
+      icon: 'assets/images/ratings/VIP.png',
+    },
+    { label: 'X 1 Star', value: 'VIP', icon: 'assets/images/ratings/VIP.png' },
+    { label: 'X 1 Star', value: 'COR', icon: 'assets/images/ratings/COR2.png' },
+    { label: 'X 1 Star', value: 'NOR', icon: 'assets/images/ratings/NOR.png' },
+    { label: 'X 1 Star', value: 'VVP', icon: 'assets/images/ratings/vvp.png' },
   ];
 
   /** Options shown inside the Update Ratings popup dropdown */
   ratingUpdateOptions = [
     { label: 'X 2 Stars', value: 'VVIP' },
-    { label: 'X 1 Star',   value: 'VIP'  },
-    { label: 'X 1 Star',   value: 'COR'  },
-    { label: 'X 1 Star',   value: 'NOR'  },
-    { label: 'X 1 Star',   value: 'VVP'  },
+    { label: 'X 1 Star', value: 'VIP' },
+    { label: 'X 1 Star', value: 'COR' },
+    { label: 'X 1 Star', value: 'NOR' },
+    { label: 'X 1 Star', value: 'VVP' },
   ];
 
   constructor(
     private marketSrv: MarketPlaceService,
     private router: Router,
     public permissionService: PermissionService,
-    public tokenService: TokenService
+    public tokenService: TokenService,
   ) {}
 
   ngOnInit(): void {
@@ -91,7 +101,7 @@ export class ViewWholesaleCustomersComponent implements OnInit {
     page: number = this.page,
     limit: number = this.itemsPerPage,
     searchText: string = this.searchText,
-    ratingFilter: string = this.selectedRatingFilter
+    ratingFilter: string = this.selectedRatingFilter,
   ) {
     this.isLoading = true;
     this.marketSrv
@@ -99,15 +109,15 @@ export class ViewWholesaleCustomersComponent implements OnInit {
       .subscribe(
         (res) => {
           this.customerObj = res.items;
-          this.totalItems  = res.total;
-          this.hasData     = res.items.length > 0;
-          this.isLoading   = false;
+          this.totalItems = res.total;
+          this.hasData = res.items.length > 0;
+          this.isLoading = false;
         },
         (err) => {
           console.error('Error fetching wholesale customers', err);
-          this.hasData   = false;
+          this.hasData = false;
           this.isLoading = false;
-        }
+        },
       );
   }
 
@@ -141,7 +151,7 @@ export class ViewWholesaleCustomersComponent implements OnInit {
   // ─────────────────────────────────────────
 
   detailsPop(obj: Customers) {
-    this.isPopupOpen  = true;
+    this.isPopupOpen = true;
     this.cusObjDetails = obj;
   }
 
@@ -151,65 +161,67 @@ export class ViewWholesaleCustomersComponent implements OnInit {
 
   openUpdateRatingPopup(customer: Customers) {
     this.selectedCustomerForRating = customer;
-    this.selectedNewRating         = customer.rateofCus ?? '';
-    this.isRatingPopupOpen         = true;
+    this.selectedNewRating = customer.rateofCus ?? '';
+    this.isRatingPopupOpen = true;
   }
 
   closeUpdateRatingPopup() {
-    this.isRatingPopupOpen         = false;
+    this.isRatingPopupOpen = false;
     this.selectedCustomerForRating = null;
-    this.selectedNewRating         = '';
+    this.selectedNewRating = '';
   }
 
   submitUpdateRating() {
-  if (!this.selectedCustomerForRating || !this.selectedNewRating) return;
+    if (!this.selectedCustomerForRating || !this.selectedNewRating) return;
 
-  this.isUpdatingRating = true;
+    this.isUpdatingRating = true;
 
-  this.marketSrv
-    .updateWholesaleCustomerRating(
-      this.selectedCustomerForRating.id,
-      this.selectedNewRating
-    )
-    .subscribe(
-      () => {
-        // Update the row in-place so the table refreshes instantly
-        const target = this.customerObj.find(
-          (c) => c.id === this.selectedCustomerForRating!.id
-        );
-        if (target) target.rateofCus = this.selectedNewRating;
+    this.marketSrv
+      .updateWholesaleCustomerRating(
+        this.selectedCustomerForRating.id,
+        this.selectedNewRating,
+      )
+      .subscribe(
+        () => {
+          // Update the row in-place so the table refreshes instantly
+          const target = this.customerObj.find(
+            (c) => c.id === this.selectedCustomerForRating!.id,
+          );
+          if (target) target.rateofCus = this.selectedNewRating;
 
-        this.isUpdatingRating = false;
-        this.closeUpdateRatingPopup();
+          this.isUpdatingRating = false;
+          this.closeUpdateRatingPopup();
 
-        Swal.fire({
-          icon: 'success',
-          title: 'Success',
-          text: 'Rating updated successfully!',
-          confirmButtonText: 'OK',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold text-lg',
-          },
-        });
-      },
-      (err) => {
-        console.error('Error updating rating', err);
-        this.isUpdatingRating = false;
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Rating updated successfully!',
+            confirmButtonText: 'OK',
+            customClass: {
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
+        },
+        (err) => {
+          console.error('Error updating rating', err);
+          this.isUpdatingRating = false;
 
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Failed to update rating. Please try again.',
-          confirmButtonText: 'OK',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold text-lg',
-          },
-        });
-      }
-    );
-}
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Failed to update rating. Please try again.',
+            confirmButtonText: 'OK',
+            customClass: {
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
+        },
+      );
+  }
 
   // ─────────────────────────────────────────
   //  Helpers
@@ -218,24 +230,24 @@ export class ViewWholesaleCustomersComponent implements OnInit {
   getRatingIcon(rating: string): string {
     const map: Record<string, string> = {
       VVIP: 'assets/images/ratings/VIP.png',
-      VIP:  'assets/images/ratings/VIP.png',
-      COR:  'assets/images/ratings/COR2.png',
-      NOR:  'assets/images/ratings/NOR.png',
-      VVP:  'assets/images/ratings/vvp.png',
+      VIP: 'assets/images/ratings/VIP.png',
+      COR: 'assets/images/ratings/COR2.png',
+      NOR: 'assets/images/ratings/NOR.png',
+      VVP: 'assets/images/ratings/vvp.png',
     };
     return map[rating] ?? '';
   }
 
   getRatingLabel(rating: string): string {
-  const map: Record<string, string> = {
-    VVIP: 'X 2 Stars',
-    VIP:  'X 1 Star',
-    COR:  'X 1 Star',
-    NOR:  'X 1 Star',
-    VVP:  'X 1 Star',
-  };
-  return map[rating] ?? rating;
-}
+    const map: Record<string, string> = {
+      VVIP: 'X 2 Stars',
+      VIP: 'X 1 Star',
+      COR: 'X 1 Star',
+      NOR: 'X 1 Star',
+      VVP: 'X 1 Star',
+    };
+    return map[rating] ?? rating;
+  }
 
   copyToClipboard(text: string, type: 'email' | 'phone' | 'phone1') {
     navigator.clipboard
@@ -279,6 +291,103 @@ export class ViewWholesaleCustomersComponent implements OnInit {
       event.preventDefault();
     }
   }
+
+  openUpdateCreditPopup(customer: Customers) {
+    this.selectedCustomerForCredit = customer;
+    this.newCreditLimit =
+      customer.creditLimit != null ? Math.round(customer.creditLimit) : null;
+    this.isCreditPopupOpen = true;
+  }
+
+  closeUpdateCreditPopup() {
+    this.isCreditPopupOpen = false;
+    this.selectedCustomerForCredit = null;
+    this.newCreditLimit = null;
+  }
+
+  submitUpdateCredit() {
+    if (
+      !this.selectedCustomerForCredit ||
+      this.newCreditLimit === null ||
+      this.newCreditLimit === undefined ||
+      this.newCreditLimit < 2000 ||
+      !Number.isInteger(this.newCreditLimit)
+    )
+      return;
+
+    this.isUpdatingCredit = true;
+
+    this.marketSrv
+      .updateWholesaleCustomerCreditLimit({
+        id: this.selectedCustomerForCredit.id,
+        creditLimit: this.newCreditLimit,
+      })
+      .subscribe(
+        () => {
+          const target = this.customerObj.find(
+            (c) => c.id === this.selectedCustomerForCredit!.id,
+          );
+          if (target) target.creditLimit = this.newCreditLimit!;
+
+          this.isUpdatingCredit = false;
+          this.closeUpdateCreditPopup();
+
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Credit limit updated successfully!',
+            confirmButtonText: 'OK',
+            customClass: {
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
+        },
+        (err) => {
+          console.error('Error updating credit balance', err);
+          this.isUpdatingCredit = false;
+
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Failed to update credit balance. Please try again.',
+            confirmButtonText: 'OK',
+            customClass: {
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
+        },
+      );
+  }
+
+  blockInvalidCreditKeys(event: KeyboardEvent): void {
+    const blockedKeys = ['-', '+', '.', ',', 'e', 'E'];
+    if (blockedKeys.includes(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  blockInvalidCreditPaste(event: ClipboardEvent): void {
+    const pasted = event.clipboardData?.getData('text') ?? '';
+    if (!/^\d+$/.test(pasted)) {
+      event.preventDefault();
+    }
+  }
+
+  onCreditInputChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let cleaned = input.value.replace(/[^0-9]/g, '');
+    cleaned = cleaned.replace(/^0+(?=\d)/, '');
+
+    if (cleaned !== input.value) {
+      input.value = cleaned;
+    }
+
+    this.newCreditLimit = cleaned ? parseInt(cleaned, 10) : null;
+  }
 }
 
 // ─────────────────────────────────────────
@@ -310,5 +419,6 @@ class Customers {
   companyName!: string;
   companyPhoneCode!: string;
   companyPhone!: string;
-  rateofCus?: string; 
+  rateofCus?: string;
+  creditLimit!: number;
 }

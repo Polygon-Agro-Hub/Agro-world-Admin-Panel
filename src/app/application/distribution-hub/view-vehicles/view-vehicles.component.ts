@@ -54,7 +54,7 @@ export class ViewVehiclesComponent {
 
   constructor(
     private distService: DestributionService,
-    private distHubService: DistributionHubService
+    private distHubService: DistributionHubService,
   ) {}
 
   ngOnInit(): void {
@@ -70,7 +70,7 @@ export class ViewVehiclesComponent {
             .filter((center: any) => center.centerName && center.regCode)
             .map((center: any) => ({
               label: `${center.regCode} - ${center.centerName}`,
-              value: center.centerName, 
+              value: center.centerName,
             }))
             .sort((a, b) => a.label.localeCompare(b.label));
         }
@@ -91,7 +91,7 @@ export class ViewVehiclesComponent {
         this.itemsPerPage,
         this.centerName,
         this.vehicleType,
-        this.searchText?.trim()
+        this.searchText?.trim(),
       )
       .subscribe({
         next: (res) => {

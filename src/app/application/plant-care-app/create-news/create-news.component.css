@@ -111,7 +111,7 @@ input[type="date"]::-moz-calendar-picker-indicator {
 /* Selected date - Green highlight */
 ::ng-deep .p-datepicker table td > span.p-highlight.p-highlight-selected,
 ::ng-deep .p-datepicker table td.p-datepicker-today > span.p-highlight {
-  background: #10b981 !important;
+  background: #3b82f6 !important;
   color: white !important;
   font-weight: 700 !important;
   border-radius: 50%;

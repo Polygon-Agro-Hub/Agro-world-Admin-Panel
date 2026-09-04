@@ -250,8 +250,9 @@ assignBlockedPopupClose(): void {
   loadOfficersByRole(role: string): void {
     this.isLoadingOfficers = true;
 
-    // Use the job's scheduled date and jobId when fetching available officers
-    const scheduleDate = this.selectedJob?.scheduledDate;
+    const scheduleDate = this.selectedJob?.scheduledDate
+      ? this.formatDateForBackend(new Date(this.selectedJob.scheduledDate))
+      : '';
     const jobId = this.selectedJob?.jobId;
 
     this.goviLinkService.getOfficersByJobRole(role, scheduleDate, jobId).subscribe({

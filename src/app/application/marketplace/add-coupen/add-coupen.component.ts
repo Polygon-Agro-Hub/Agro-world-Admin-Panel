@@ -378,6 +378,15 @@ export class AddCoupenComponent {
 
     return `${year}-${month}-${day}`; 
   }
+
+  blockLeadingZero(e: KeyboardEvent) {
+  const input = e.target as HTMLInputElement;
+
+  // Block '0' as the very first character typed
+  if (e.key === '0' && input.value.length === 0) {
+    e.preventDefault();
+  }
+}
 }
 
 class Coupen {

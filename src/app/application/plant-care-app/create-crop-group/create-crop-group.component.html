@@ -406,7 +406,7 @@
           Recommended NPK Ratio (kg/ha) *
         </label>
         <div class="flex items-center gap-4 mt-1 flex-wrap">
-          <span class="text-sm text-textLight dark:text-textDark"
+          <span class="text-sm text-gray-700 dark:text-textDark"
             >Nitrogen</span
           >
           <input
@@ -423,7 +423,7 @@
             autocomplete="off"
             required
           />
-          <span class="text-sm text-textLight dark:text-textDark"
+          <span class="text-sm text-gray-700 dark:text-textDark"
             >Phosphorus</span
           >
           <input
@@ -440,7 +440,7 @@
             autocomplete="off"
             required
           />
-          <span class="text-sm text-textLight dark:text-textDark"
+          <span class="text-sm text-gray-700 dark:text-textDark"
             >Potassium</span
           >
           <input
@@ -604,7 +604,7 @@
             #cropNameEnglishInput="ngModel"
             (input)="capitalizeFirstLetter($event)"
             (keydown)="preventLeadingSpace($event)"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
             required
             pattern="^(?!\d+$)[a-zA-Z0-9]*$"
           />
@@ -633,7 +633,7 @@
             [(ngModel)]="newsItems[0].cropNameSinhala"
             name="cropNameSinhala"
             (keydown)="preventLeadingSpace($event)"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
             required
             #cropNameSinhalaInput="ngModel"
             pattern="^(?!\d+$)[a-zA-Z0-9]*$"
@@ -666,7 +666,7 @@
             [(ngModel)]="newsItems[0].cropNameTamil"
             name="cropNameTamil"
             (keydown)="preventLeadingSpace($event)"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
             required
             #cropNameTamilInput="ngModel"
             pattern="^(?!\d+$)[a-zA-Z0-9]*$"
@@ -703,7 +703,7 @@
             optionValue="value"
             [filter]="true"
             showClear="false"
-            class="w-full mt-1 py-2 shadow-sm rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            class="w-full mt-1 py-2 shadow-sm rounded-md text-gray-700 dark:text-textDark bg-tileLight dark:bg-tileBlack"
             [ngClass]="{
               'border-red-500':
                 !newsItems[0].category && categoryInput?.touched,
@@ -739,7 +739,7 @@
             [(ngModel)]="newsItems[0].costFeild"
             name="costFeild"
             (keydown)="allowOnlyNumbers($event)"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
             #costperacreInputEdit="ngModel"
             pattern="^(?!0*\.?0*$)\d+(\.\d{1,2})?$"
             required
@@ -776,7 +776,7 @@
             [(ngModel)]="newsItems[0].incomeFeild"
             name="incomeFeild"
             (keydown)="allowOnlyNumbers($event)"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
             #incomeperacreInputEdit="ngModel"
             pattern="^(?!0*\.?0*$)\d+(\.\d{1,2})?$"
             required
@@ -811,7 +811,7 @@
             [(ngModel)]="newsItems[0].seedRate"
             name="seedRate"
             (keydown)="allowDecimal3Places($event)"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
             #seedRateEditInput="ngModel"
             pattern="^\d+(\.\d{1,3})?$"
             required
@@ -854,7 +854,7 @@
             [(ngModel)]="newsItems[0].rowSpace"
             name="rowSpace"
             (keydown)="allowDecimal1Place($event)"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
             #rowSpaceEditInput="ngModel"
             pattern="^\d+(\.\d{1})?$"
             required
@@ -897,7 +897,7 @@
             [(ngModel)]="newsItems[0].plantSpace"
             name="plantSpace"
             (keydown)="allowDecimal1Place($event)"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
             #plantSpaceEditInput="ngModel"
             pattern="^\d+(\.\d{1})?$"
             required
@@ -940,7 +940,7 @@
             [(ngModel)]="newsItems[0].AvgYield"
             name="AvgYield"
             (keydown)="allowDecimal3Places($event)"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
             #avgYieldEditInput="ngModel"
             pattern="^\d+(\.\d{1,3})?$"
             required
@@ -979,7 +979,7 @@
             Recommended NPK Ratio (kg/ha) *
           </label>
           <div class="flex items-center gap-4 mt-1 flex-wrap">
-            <span class="text-sm text-textLight dark:text-textDark"
+            <span class="text-sm text-gray-700 dark:text-textDark"
               >Nitrogen</span
             >
             <input
@@ -989,14 +989,14 @@
               (keydown)="allowNPKValue($event)"
               (paste)="blockDecimalPaste($event)"
               (input)="sanitizeNPKInput($event, newsItems[0], 'nitrogen')"
-              class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+              class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
               #nitrogenEditInput="ngModel"
               pattern="^(?:[0-9]|[1-9][0-9])$"
               maxlength="2"
               autocomplete="off"
               required
             />
-            <span class="text-sm text-textLight dark:text-textDark"
+            <span class="text-sm text-gray-700 dark:text-textDark"
               >Phosphorus</span
             >
             <input
@@ -1006,14 +1006,14 @@
               (keydown)="allowNPKValue($event)"
               (paste)="blockDecimalPaste($event)"
               (input)="sanitizeNPKInput($event, newsItems[0], 'phosphorus')"
-              class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+              class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
               #phosphorusEditInput="ngModel"
               pattern="^(?:[0-9]|[1-9][0-9])$"
               maxlength="2"
               autocomplete="off"
               required
             />
-            <span class="text-sm text-textLight dark:text-textDark"
+            <span class="text-sm text-gray-700 dark:text-textDark"
               >Potassium</span
             >
             <input
@@ -1070,7 +1070,7 @@
 
         <!-- Button -->
         <button
-          class="flex items-center text-textLight dark:text-textDark"
+          class="flex items-center text-gray-700 dark:text-textDark"
           (click)="triggerFileInput($event)"
         >
           Add Image *
@@ -1103,7 +1103,7 @@
         <div class="flex items-center space-x-4">
           <label
             for="bgColor"
-            class="block text-sm font-medium text-textLight dark:text-textDark pt-2"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark pt-2"
             >Color *</label
           >
 

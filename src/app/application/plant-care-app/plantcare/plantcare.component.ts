@@ -22,6 +22,7 @@ export class PlantcareComponent {
   popupVisibleFarmerClusters = false;
   popupVisibleAuditFarmers = false;
   popupVisiblePentionRequests = false;
+  popupVisiblePublicForum = false;
 
   constructor(
     private router: Router,
@@ -103,6 +104,15 @@ export class PlantcareComponent {
       this.popupVisibleFarmerClusters = false;
   }
 
+  togglePopupPublicForum(){
+    this.popupVisiblePublicForum = !this.popupVisiblePublicForum;
+    if (this.popupVisibleNews) this.popupVisibleNews = false;
+    if (this.popupVisibleMarketPrice) this.popupVisibleMarketPrice = false;
+    if (this.popupVisibleCropCalender) this.popupVisibleCropCalender = false;
+    if (this.popupVisibleCertification) this.popupVisibleCertification = false;
+
+  }
+
   navigateToCreateNews(): void {
     this.isLoading = true;
     this.router.navigate(['/plant-care/action/create-news']).then(() => {
@@ -135,6 +145,10 @@ export class PlantcareComponent {
 
   createVariety(): void {
     this.router.navigate(['/plant-care/action/create-crop-variety']);
+  }
+
+  blockWords(): void {
+    this.router.navigate(['/plant-care/action/add-block-words']);
   }
 
   downloadCropCalendarTemplate(): void {
@@ -250,6 +264,8 @@ export class PlantcareComponent {
   manageFarmerClusters(): void {
     this.router.navigate(['/plant-care/action/view-farmer-clusters']);
   }
+
+
 
   downloadFarmerClusterTemplate(): void {
     this.isLoading = true;

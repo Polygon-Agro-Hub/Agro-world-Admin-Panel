@@ -32,7 +32,7 @@
           (keydown)="preventLeadingSpace($event)"
           pattern="^(?!\d+$)[a-zA-Z\s]*$"
           required
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
         />
 
         <!-- Validation Errors -->
@@ -63,7 +63,7 @@
           [(ngModel)]="cropGroup.cropNameSinahala"
           name="cropNameSinhala"
           (keydown)="preventLeadingSpace($event)"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
           #cropSinNameInput="ngModel"
           pattern="^(?!\d+$)[\u0D80-\u0DFF\s]*$"
           required
@@ -97,7 +97,7 @@
           [(ngModel)]="cropGroup.cropNameTamil"
           name="cropNameTamil"
           (keydown)="preventLeadingSpace($event)"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
           #cropTamilNameInput="ngModel"
           pattern="^(?!\d+$)[\u0B80-\u0BFF\s]*$"
           required
@@ -135,7 +135,7 @@
     'border-red-500':
       !cropGroup.parentCategory && parentCategoryInput?.touched,
   }"
-  class="block w-full mt-2 text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack rounded-md py-2 shadow-sm p-dropdown-custom parent-category-dropdown"
+  class="block w-full mt-2 text-gray-700 dark:text-textDark bg-tileLight dark:bg-tileBlack rounded-md py-2 shadow-sm p-dropdown-custom parent-category-dropdown"
   #parentCategoryInput="ngModel"
   panelStyleClass="custom-dropdown-panel"
   styleClass="w-full"
@@ -167,7 +167,7 @@
           [(ngModel)]="cropGroup.costFeild"
           name="costFeild"
           (keydown)="allowOnlyNumbers($event)"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
           #costperacreInput="ngModel"
           pattern="^(?!0*\.?0*$)\d+(\.\d{1,2})?$"
           required
@@ -203,7 +203,7 @@
           [(ngModel)]="cropGroup.incomeFeild"
           name="incomeFeild"
           (keydown)="allowOnlyNumbers($event)"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
           #incomeperacreInput="ngModel"
           pattern="^(?!0*\.?0*$)\d+(\.\d{1,2})?$"
           required
@@ -238,7 +238,7 @@
           [(ngModel)]="cropGroup.seedRate"
           name="seedRate"
           (keydown)="allowDecimal3Places($event)"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
           #seedRateInput="ngModel"
           pattern="^\d+(\.\d{1,3})?$"
           required
@@ -281,7 +281,7 @@
           [(ngModel)]="cropGroup.rowSpace"
           name="rowSpace"
           (keydown)="allowDecimal1Place($event)"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
           #rowSpaceInput="ngModel"
           pattern="^\d+(\.\d{1})?$"
           required
@@ -324,7 +324,7 @@
           [(ngModel)]="cropGroup.plantSpace"
           name="plantSpace"
           (keydown)="allowDecimal1Place($event)"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
           #plantSpaceInput="ngModel"
           pattern="^\d+(\.\d{1})?$"
           required
@@ -367,7 +367,7 @@
           [(ngModel)]="cropGroup.AvgYield"
           name="AvgYield"
           (keydown)="allowDecimal3Places($event)"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
           #avgYieldInput="ngModel"
           pattern="^\d+(\.\d{1,3})?$"
           required
@@ -416,7 +416,7 @@
             (keydown)="allowNPKValue($event)"
             (paste)="blockDecimalPaste($event)"
             (input)="sanitizeNPKInput($event, cropGroup, 'nitrogen')"
-            class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+            class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
             #nitrogenInput="ngModel"
             pattern="^(?:[0-9]|[1-9][0-9])$"
             maxlength="2"
@@ -433,7 +433,7 @@
             (keydown)="allowNPKValue($event)"
             (paste)="blockDecimalPaste($event)"
             (input)="sanitizeNPKInput($event, cropGroup, 'phosphorus')"
-            class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+            class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
             #phosphorusInput="ngModel"
             pattern="^(?:[0-9]|[1-9][0-9])$"
             maxlength="2"
@@ -450,7 +450,7 @@
             (keydown)="allowNPKValue($event)"
             (paste)="blockDecimalPaste($event)"
             (input)="sanitizeNPKInput($event, cropGroup, 'potassium')"
-            class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+            class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
             #potassiumInput="ngModel"
             pattern="^(?:[0-9]|[1-9][0-9])$"
             maxlength="2"
@@ -491,7 +491,7 @@
 
       <!-- Button -->
       <button
-        class="flex items-center text-textLight dark:text-textDark"
+        class="flex items-center text-gray-700 dark:text-textDark"
         (click)="triggerFileInput($event)"
       >
         Add Image *
@@ -529,7 +529,7 @@
       <div class="flex items-center space-x-4">
         <label
           for="bgColor"
-          class="block text-sm font-medium text-textLight dark:text-textDark pt-2"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark pt-2"
           >Color *</label
         >
         <ngx-colors

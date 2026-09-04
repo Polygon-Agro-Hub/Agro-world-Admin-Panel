@@ -75,15 +75,15 @@
       </div>
 
       <div *ngIf="coupenObj.type === 'Fixed Amount'" class="mb-6">
-        <label class="text-[#534E4E] dark:text-textDark">Discount Amount *</label>
-        <input type="number" id="fixDiscount" name="fixDiscount" [(ngModel)]="coupenObj.fixDiscount"
-          (input)="validateDecimalInput($event, 'fixDiscount')" min="0"
-          (change)="checkFixAmountValue(coupenObj.fixDiscount)"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-        <div class="text-red-500 text-sm mt-1">
-          <div>{{ checkfixAmountValueMessage }}</div>
-        </div>
-      </div>
+  <label class="text-[#534E4E] dark:text-textDark">Discount Amount *</label>
+  <input type="number" id="fixDiscount" name="fixDiscount" [(ngModel)]="coupenObj.fixDiscount"
+    (input)="validateDecimalInput($event, 'fixDiscount')" min="0"
+    (change)="checkFixAmountValue(coupenObj.fixDiscount)" (keydown)="blockLeadingZero($event)"
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+  <div class="text-red-500 text-sm mt-1">
+    <div>{{ checkfixAmountValueMessage }}</div>
+  </div>
+</div>
 
       <div class="flex flex-row mb-6">
         <input type="checkbox" id="checkLimit" name="checkLimit" [(ngModel)]="coupenObj.checkLimit" [value]="true"

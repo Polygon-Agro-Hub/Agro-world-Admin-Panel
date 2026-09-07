@@ -85,8 +85,8 @@
         <tbody>
           <tr *ngFor="let audit of audits; let i = index" class="border-b border-gray-200 dark:border-[#4B555A]">
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{ ("0" + (i + 1)).slice(-2) }}
-            </td>
+  {{ (i + 1).toString().padStart(2, '0') }}
+</td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ getFarmerName(audit) }}
             </td>

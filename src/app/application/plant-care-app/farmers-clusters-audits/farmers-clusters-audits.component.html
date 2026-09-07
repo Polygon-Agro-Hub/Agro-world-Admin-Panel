@@ -252,15 +252,12 @@
   (click)="completedJobPopupClose()">
   <div class="bg-[#FFFFFF] dark:bg-tileBlack px-20 py-10 rounded-lg shadow-md max-w-lg max-h-[90vh] overflow-y-auto"
     (click)="$event.stopPropagation()">
-    <!-- Warning Message -->
     <div class="mb-6">
       <p class="text-center text-lg text-textLight dark:text-textDark">
-        You can't assign an officer to the task because the task has already
-        been completed.
+        {{ assignBlockedMessage }}
       </p>
     </div>
 
-    <!-- Action Button -->
     <div class="flex justify-center gap-3 mt-6">
       <button (click)="completedJobPopupClose()"
         class="px-4 py-2 text-sm font-medium text-gray-500 bg-gray-100 rounded-lg hover:bg-[#2c6da3] hover:text-white transition-colors">

@@ -95,25 +95,28 @@
       </div>
 
       <div class="mb-4">
-        <label
-          for="descriptionEnglish"
-          class="block text-sm font-medium text-textLight dark:text-textDark"
-          >Add Description (In English)
-          <span class="text-[#2E2E2E]">*</span></label
-        >
-        <div class="custom-editor">
-          <quill-editor
-            [(ngModel)]="createNewsObj.descriptionEnglish"
-            [styles]="{ height: '300px' }"
-            [modules]="quillConfig"
-            placeholder="Enter text here..."
-            class="text-textLight dark:text-textDark w-full text-lg"
-            #descriptionEnglishField="ngModel"
-            [required]="true"
-            (onEditorCreated)="onEditorCreated($event)"
-          ></quill-editor>
-        </div>
-      </div>
+  <label
+    for="descriptionEnglish"
+    class="block text-sm font-medium text-textLight dark:text-textDark"
+    >Add Description (In English)
+    <span class="text-[#2E2E2E]">*</span></label
+  >
+  <div class="custom-editor">
+    <quill-editor
+      [(ngModel)]="createNewsObj.descriptionEnglish"
+      [styles]="{ height: '300px' }"
+      [modules]="quillConfig"
+      placeholder="Enter text here..."
+      class="text-textLight dark:text-textDark w-full text-lg"
+      #descriptionEnglishField="ngModel"
+      [required]="true"
+      (onEditorCreated)="onEditorCreated($event, 'english')"
+    ></quill-editor>
+  </div>
+  <div *ngIf="blockedWordsEnglishDesc.length > 0" class="text-red-500 text-sm mt-1">
+    This description contains a word that is not allowed. Please remove it.
+  </div>
+</div>
     </div>
 
     <hr class="border-[2px] border-gray-400 my-10" />
@@ -153,9 +156,9 @@
             [modules]="quillConfig"
             placeholder="Enter text here..."
             class="text-textLight dark:text-textDark w-full"
-            #descriptionEnglishField="ngModel"
+            #descriptionSinhalaField="ngModel"
             [required]="true"
-            (onEditorCreated)="onEditorCreated($event)"
+            (onEditorCreated)="onEditorCreated($event, 'sinhala')"
           ></quill-editor>
         </div>
       </div>
@@ -200,7 +203,7 @@
             class="text-textLight dark:text-textDark w-full"
             #descriptionEnglishField="ngModel"
             [required]="true"
-            (onEditorCreated)="onEditorCreated($event)"
+            (onEditorCreated)="onEditorCreated($event, 'tamil')"
           ></quill-editor>
         </div>
       </div>
@@ -395,7 +398,7 @@
             class="text-textLight dark:text-textDark w-full"
             #descriptionEnglishField="ngModel"
             [required]="true"
-            (onEditorCreated)="onEditorCreated($event)"
+            (onEditorCreated)="onEditorCreated($event, 'tamil')"
           ></quill-editor>
         </div>
         <p
@@ -462,7 +465,7 @@
             class="text-textLight dark:text-textDark w-full"
             #descriptionSinhalaField="ngModel"
             [required]="true"
-            (onEditorCreated)="onEditorCreated($event)"
+            (onEditorCreated)="onEditorCreated($event, 'sinhala')"
           ></quill-editor>
         </div>
         <p
@@ -530,7 +533,7 @@
             class="text-textLight dark:text-textDark w-full"
             #descriptionTamilField="ngModel"
             [required]="true"
-            (onEditorCreated)="onEditorCreated($event)"
+            (onEditorCreated)="onEditorCreated($event, 'tamil')"
           ></quill-editor>
         </div>
         <p

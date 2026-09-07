@@ -18,8 +18,9 @@ export class ViewJobHistoryFarmerClusterAuditResponseComponent implements OnInit
 
   isLoading = false;
   isModalOpen = false;
-  modalImage = '';
+  modalImages: Photo[] = [];
   modalTitle = '';
+  currentIndex = 0;
   scale = 1;
   jobId!: string;
 
@@ -88,7 +89,10 @@ export class ViewJobHistoryFarmerClusterAuditResponseComponent implements OnInit
               question: q.qEnglish,
               status: completed ? 'Completed' : 'Incomplete',
               hasPhoto: isPhoto && !!(q.uploadImage || q.officerUploadImage),
-              photoUrl: q.uploadImage || q.officerUploadImage || '',
+              photoUrls: [
+                q.uploadImage ? { label: 'Farmer Photo', url: q.uploadImage } : null,
+                q.officerUploadImage ? { label: 'Officer Photo', url: q.officerUploadImage } : null,
+              ].filter((photo): photo is Photo => photo !== null),
             };
           });
 
@@ -158,15 +162,30 @@ export class ViewJobHistoryFarmerClusterAuditResponseComponent implements OnInit
     }
   }
 
-  openModal(imageUrl: string, title: string) {
-    this.modalImage = imageUrl;
+  openModal(images: Photo[], title: string) {
+    this.modalImages = images;
     this.modalTitle = title;
+    this.currentIndex = 0;
     this.isModalOpen = true;
     this.scale = 1;
   }
 
   closeModal() {
     this.isModalOpen = false;
+  }
+
+  nextImage() {
+    if (this.isModalOpen && this.modalImages.length > 0) {
+      this.currentIndex = (this.currentIndex + 1) % this.modalImages.length;
+      this.scale = 1;
+    }
+  }
+
+  prevImage() {
+    if (this.isModalOpen && this.modalImages.length > 0) {
+      this.currentIndex = (this.currentIndex - 1 + this.modalImages.length) % this.modalImages.length;
+      this.scale = 1;
+    }
   }
 
   zoomIn() {
@@ -199,7 +218,12 @@ interface Question {
   question: string;
   status: 'Completed' | 'Incomplete';
   hasPhoto: boolean;
-  photoUrl?: string;
+  photoUrls: Photo[];
+}
+
+interface Photo {
+  label: string;
+  url: string;
 }
 
 interface Problem {

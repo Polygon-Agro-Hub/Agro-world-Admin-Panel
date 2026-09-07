@@ -84,7 +84,7 @@
           </div>
 
           <div class="flex items-center gap-3">
-            <button *ngIf="question.hasPhoto" (click)="openModal(question.photoUrls, question.type)"
+            <button *ngIf="question.hasPhoto" (click)="openModal(question.photoUrl || '', question.type)"
               class="px-3 py-1.5 bg-black text-white text-xs font-medium rounded flex items-center gap-2 hover:bg-gray-800 transition">
               <i class="fa-solid fa-eye"></i>
               View Photo
@@ -155,40 +155,36 @@
 <!-- MODAL -->
 <div *ngIf="isModalOpen" class="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-50"
   (click)="closeModal()">
+
   <div (click)="$event.stopPropagation()"
     class="bg-white dark:bg-gray-800 rounded-[10px] w-[700px] h-[700px] p-6 relative flex items-center justify-center shadow-2xl">
+
     <div class="absolute top-6 left-0 w-full text-center">
-      <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Uploaded Photo</h2>
-      <p *ngIf="modalImages.length > 1" class="text-sm text-gray-500 dark:text-gray-300 mt-2">
-        {{ currentIndex + 1 }} out of {{ modalImages.length }}
-      </p>
+      <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+        Uploaded Photo
+      </h2>
     </div>
 
-    <div class="bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-[8px] w-[600px] h-[600px] flex items-center justify-center overflow-hidden relative">
-      <button *ngIf="modalImages.length > 1" (click)="prevImage()"
-        class="absolute left-2 z-10 p-1.5 rounded-full bg-white/90 dark:bg-gray-600 text-black dark:text-white text-base shadow-md flex items-center justify-center w-10 h-10"
-        aria-label="Previous image">
-        <i class="fa-solid fa-chevron-left"></i>
-      </button>
-
-      <div class="w-full h-full p-8 flex flex-col items-center justify-center gap-3">
-        <img [src]="modalImages[currentIndex]?.url" [style.transform]="'scale(' + scale + ')'"
-          class="max-w-full max-h-full object-contain transition-transform duration-200" />
-      </div>
-
-      <button *ngIf="modalImages.length > 1" (click)="nextImage()"
-        class="absolute right-2 z-10 p-1.5 rounded-full bg-white/90 dark:bg-gray-600 text-black dark:text-white text-base shadow-md flex items-center justify-center w-10 h-10"
-        aria-label="Next image">
-        <i class="fa-solid fa-chevron-right"></i>
-      </button>
+    <div
+      class="bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 top-3 rounded-[8px] w-[600px] h-[600px] flex items-center justify-center overflow-hidden relative">
+      <img [src]="modalImage" [style.transform]="'scale(' + scale + ')'"
+        class="max-w-[550px] max-h-[550px] object-contain transition-transform duration-200" />
 
       <div class="absolute right-4 bottom-4 flex flex-col gap-2">
-        <button (click)="zoomOut()" class="w-10 h-10 rounded bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 shadow text-xl text-gray-600 dark:text-white flex items-center justify-center">−</button>
-        <button (click)="zoomIn()" class="w-10 h-10 rounded bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 shadow text-xl text-gray-600 dark:text-white flex items-center justify-center">+</button>
+        <button (click)="zoomOut()"
+          class="w-10 h-10 rounded bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 shadow text-xl text-gray-600 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 flex items-center justify-center">
+          −
+        </button>
+        <button (click)="zoomIn()"
+          class="w-10 h-10 rounded bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 shadow text-xl text-gray-600 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 flex items-center justify-center">
+          +
+        </button>
       </div>
     </div>
 
     <button (click)="closeModal()"
-      class="absolute top-4 right-4 text-gray-400 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white text-2xl w-8 h-8 flex items-center justify-center">✕</button>
+      class="absolute top-4 right-4 text-gray-400 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white text-2xl w-8 h-8 flex items-center justify-center">
+      ✕
+    </button>
   </div>
 </div>

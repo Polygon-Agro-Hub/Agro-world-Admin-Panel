@@ -21,9 +21,8 @@ export class ViewGoviLinkJobsFarmerAuditResponseComponent implements OnInit {
 
   isLoading = false;
   isModalOpen = false;
-  modalImages: Photo[] = [];
+  modalImage = '';
   modalTitle = '';
-  currentIndex = 0;
   scale = 1;
 
   jobData: JobData = {
@@ -83,10 +82,7 @@ export class ViewGoviLinkJobsFarmerAuditResponseComponent implements OnInit {
             question: q.qEnglish,
             status: completed ? 'Completed' : 'Incomplete',
             hasPhoto: isPhoto && !!(q.uploadImage || q.officerUploadImage),
-            photoUrls: [
-              q.uploadImage ? { label: 'Farmer Photo', url: q.uploadImage } : null,
-              q.officerUploadImage ? { label: 'Officer Photo', url: q.officerUploadImage } : null,
-            ].filter((photo): photo is Photo => photo !== null),
+            photoUrl: q.uploadImage || q.officerUploadImage || '',
           };
         });
 
@@ -137,30 +133,15 @@ export class ViewGoviLinkJobsFarmerAuditResponseComponent implements OnInit {
     history.back();
   }
 
-  openModal(images: Photo[], title: string) {
-    this.modalImages = images;
+  openModal(imageUrl: string, title: string) {
+    this.modalImage = imageUrl;
     this.modalTitle = title;
-    this.currentIndex = 0;
     this.isModalOpen = true;
     this.scale = 1;
   }
 
   closeModal() {
     this.isModalOpen = false;
-  }
-
-  nextImage() {
-    if (this.isModalOpen && this.modalImages.length > 0) {
-      this.currentIndex = (this.currentIndex + 1) % this.modalImages.length;
-      this.scale = 1;
-    }
-  }
-
-  prevImage() {
-    if (this.isModalOpen && this.modalImages.length > 0) {
-      this.currentIndex = (this.currentIndex - 1 + this.modalImages.length) % this.modalImages.length;
-      this.scale = 1;
-    }
   }
 
   zoomIn() {
@@ -192,12 +173,7 @@ interface Question {
   question: string;
   status: 'Completed' | 'Incomplete';
   hasPhoto: boolean;
-  photoUrls: Photo[];
-}
-
-interface Photo {
-  label: string;
-  url: string;
+  photoUrl?: string;
 }
 
 interface Problem {

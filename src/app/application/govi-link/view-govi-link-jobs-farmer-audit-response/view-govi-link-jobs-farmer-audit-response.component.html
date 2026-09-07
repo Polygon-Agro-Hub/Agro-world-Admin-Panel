@@ -61,7 +61,7 @@
           </div>
 
           <div class="flex items-center gap-3">
-            <button *ngIf="question.hasPhoto" (click)="openModal(question.photoUrls, question.type)"
+            <button *ngIf="question.hasPhoto" (click)="openModal(question.photoUrl || '', question.type)"
               class="px-3 py-1.5 bg-black text-white text-xs font-medium rounded flex items-center gap-2 hover:bg-gray-800 transition shadow-md hover:shadow-lg">
               <i class="fa-solid fa-eye"></i>
               View Photo
@@ -135,29 +135,12 @@
       <h2 class="text-base font-semibold text-gray-900 dark:text-white">
         {{ modalTitle }}
       </h2>
-      <p *ngIf="modalImages.length > 1" class="text-sm text-gray-500 dark:text-gray-300 mt-2">
-        {{ currentIndex + 1 }} out of {{ modalImages.length }}
-      </p>
     </div>
 
     <div
       class="bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-[10px] w-[604px] h-[604px] flex items-center justify-center overflow-hidden relative">
-      <button *ngIf="modalImages.length > 1" (click)="prevImage()"
-        class="absolute left-2 z-10 p-1.5 rounded-full bg-white/90 dark:bg-gray-600 text-black dark:text-white text-base shadow-md hover:bg-white dark:hover:bg-gray-500 transition flex items-center justify-center w-10 h-10"
-        aria-label="Previous image">
-        <i class="fa-solid fa-chevron-left"></i>
-      </button>
-
-      <div class="w-full h-full p-8 flex flex-col items-center justify-center gap-3">
-        <img [src]="modalImages[currentIndex]?.url" [style.transform]="'scale(' + scale + ')'"
-          class="max-w-full max-h-full object-contain transition-transform duration-200" />
-      </div>
-
-      <button *ngIf="modalImages.length > 1" (click)="nextImage()"
-        class="absolute right-2 z-10 p-1.5 rounded-full bg-white/90 dark:bg-gray-600 text-black dark:text-white text-base shadow-md hover:bg-white dark:hover:bg-gray-500 transition flex items-center justify-center w-10 h-10"
-        aria-label="Next image">
-        <i class="fa-solid fa-chevron-right"></i>
-      </button>
+      <img [src]="modalImage" [style.transform]="'scale(' + scale + ')'"
+        class="max-w-[545px] max-h-[545px] object-contain transition-transform duration-200" />
 
       <div class="absolute right-4 bottom-4 flex flex-col gap-2">
         <button (click)="zoomOut()"

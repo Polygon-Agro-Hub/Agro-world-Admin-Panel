@@ -96,6 +96,13 @@ export class ViewClusterUsersComponent implements OnInit {
     );
   }
 
+  private isValidNICFormat(nic: string): boolean {
+    return (
+      (nic.length === 10 && /^\d{9}[vVxX]$/i.test(nic)) ||
+      (nic.length === 12 && /^\d{12}$/.test(nic))
+    );
+  }
+
   onNICInput(event: any): void {
     const input = event.target as HTMLInputElement;
     const value = input.value;
@@ -113,18 +120,10 @@ export class ViewClusterUsersComponent implements OnInit {
     // Real-time validation
     if (trimmedNIC.length === 0) {
       this.nicError = 'NIC is required';
-    } else if (trimmedNIC.length < 10) {
-      this.nicError = 'NIC must be at least 10 characters';
-    } else if (trimmedNIC.length === 10 && !/^\d{9}[vVxX]$/i.test(trimmedNIC)) {
-      this.nicError = 'Invalid NIC format. Old NIC should be 9 digits followed by V';
-    } else if (trimmedNIC.length === 12 && !/^\d{12}$/.test(trimmedNIC)) {
-      this.nicError = 'Invalid NIC format. New NIC should be 12 digits';
-    } else if (trimmedNIC.length === 11) {
-      this.nicError = 'Invalid NIC length';
-    } else if (trimmedNIC.length > 12) {
-      this.nicError = 'NIC cannot exceed 12 characters';
-    } else {
+    } else if (this.isValidNICFormat(trimmedNIC)) {
       this.nicError = '';
+    } else {
+      this.nicError = "NIC Number must be 9 digits followed by 'V' or 12 digits.";
     }
   }
 
@@ -140,16 +139,10 @@ export class ViewClusterUsersComponent implements OnInit {
     // Real-time validation
     if (trimmedNIC.length === 0) {
       this.nicError = 'NIC is required';
-    } else if (trimmedNIC.length < 10) {
-      this.nicError = 'NIC must be at least 10 characters';
-    } else if (trimmedNIC.length === 10 && !/^\d{9}[vVxX]$/i.test(trimmedNIC)) {
-      this.nicError = 'Invalid NIC format. Old NIC should be 9 digits followed by V';
-    } else if (trimmedNIC.length === 12 && !/^\d{12}$/.test(trimmedNIC)) {
-      this.nicError = 'Invalid NIC format. New NIC should be 12 digits';
-    } else if (trimmedNIC.length === 11) {
-      this.nicError = 'Invalid NIC length';
-    } else {
+    } else if (this.isValidNICFormat(trimmedNIC)) {
       this.nicError = '';
+    } else {
+      this.nicError = "NIC Number must be 9 digits followed by 'V' or 12 digits.";
     }
   }
 
@@ -231,11 +224,7 @@ export class ViewClusterUsersComponent implements OnInit {
   }
 
   isNICValid(): boolean {
-    const trimmedNIC = this.newFarmerNIC.trim();
-    return (
-      (trimmedNIC.length === 10 && /^\d{9}[vVxX]$/i.test(trimmedNIC)) ||
-      (trimmedNIC.length === 12 && /^\d{12}$/.test(trimmedNIC))
-    );
+    return this.isValidNICFormat(this.newFarmerNIC.trim());
   }
 
   addNew() {
@@ -273,23 +262,8 @@ export class ViewClusterUsersComponent implements OnInit {
       return;
     }
 
-    if (trimmedNIC.length < 10) {
-      this.nicError = 'NIC must be at least 10 characters';
-      return;
-    }
-
-    if (trimmedNIC.length === 10 && !/^\d{9}[vVxX]$/i.test(trimmedNIC)) {
-      this.nicError = 'Invalid NIC format. Old NIC should be 9 digits followed by V';
-      return;
-    }
-
-    if (trimmedNIC.length === 12 && !/^\d{12}$/.test(trimmedNIC)) {
-      this.nicError = 'Invalid NIC format. New NIC should be 12 digits';
-      return;
-    }
-
-    if (trimmedNIC.length === 11 || trimmedNIC.length > 12) {
-      this.nicError = 'Invalid NIC format';
+    if (!this.isValidNICFormat(trimmedNIC)) {
+      this.nicError = "NIC Number must be 9 digits followed by 'V' or 12 digits.";
       return;
     }
 

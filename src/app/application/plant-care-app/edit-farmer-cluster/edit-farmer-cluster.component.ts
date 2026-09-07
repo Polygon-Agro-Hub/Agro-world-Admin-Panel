@@ -245,134 +245,134 @@ export class EditFarmerClusterComponent implements OnInit {
   }
 
   updateCluster() {
-  this.formSubmitted = true;
-  this.nameError = '';
+    this.formSubmitted = true;
+    this.nameError = '';
 
-  // Validate required fields
-  if (!this.clusterName.trim()) {
-    this.nameError = 'Cluster name is required';
-    return;
-  }
+    // Validate required fields
+    if (!this.clusterName.trim()) {
+      this.nameError = 'Cluster name is required';
+      return;
+    }
 
-  if (!this.selectedDistrict) {
+    if (!this.selectedDistrict) {
+      Swal.fire({
+        title: 'Validation Error',
+        text: 'District is required',
+        icon: 'error',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+      return;
+    }
+
+    if (!this.selectedCertificateId) {
+      Swal.fire({
+        title: 'Validation Error',
+        text: 'Certificate selection is required',
+        icon: 'error',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+      return;
+    }
+
+    const updateData: any = {
+      clusterName: this.clusterName.trim(),
+      district: this.selectedDistrict,
+      certificateId: this.selectedCertificateId,
+    };
+
+    // Add pending farmers if any
+    if (this.pendingFarmersToAdd.length > 0) {
+      updateData.farmersToAdd = this.pendingFarmersToAdd;
+    }
+
     Swal.fire({
-      title: 'Validation Error',
-      text: 'District is required',
-      icon: 'error',
+      title: 'Are you sure?',
+      text: this.pendingFarmersToAdd.length > 0
+        ? `Do you really want to update this cluster and add ${this.pendingFarmersToAdd.length} farmer(s)?`
+        : 'Do you really want to update this cluster?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Update',
+      cancelButtonText: 'No, Cancel',
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold text-lg',
       },
-    });
-    return;
-  }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
 
-  if (!this.selectedCertificateId) {
-    Swal.fire({
-      title: 'Validation Error',
-      text: 'Certificate selection is required',
-      icon: 'error',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold text-lg',
-      },
-    });
-    return;
-  }
+        this.farmerClusterService
+          .updateFarmerCluster(this.clusterId, updateData)
+          .subscribe(
+            (response: any) => {
+              this.isLoading = false;
 
-  const updateData: any = {
-    clusterName: this.clusterName.trim(),
-    district: this.selectedDistrict,
-    certificateId: this.selectedCertificateId,
-  };
+              // Build success message
+              let successMessage = response.message || 'Cluster updated successfully';
 
-  // Add pending farmers if any
-  if (this.pendingFarmersToAdd.length > 0) {
-    updateData.farmersToAdd = this.pendingFarmersToAdd;
-  }
+              // Check for farmer errors
+              if (response.farmerErrors && response.farmerErrors.length > 0) {
+                const errorDetails = response.farmerErrors
+                  .map((err: any) => `• ${err.nic} (${err.farmId}): ${err.error}`)
+                  .join('\n');
 
-  Swal.fire({
-    title: 'Are you sure?',
-    text: this.pendingFarmersToAdd.length > 0 
-      ? `Do you really want to update this cluster and add ${this.pendingFarmersToAdd.length} farmer(s)?`
-      : 'Do you really want to update this cluster?',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Update',
-    cancelButtonText: 'No, Cancel',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold text-lg',
-    },
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.isLoading = true;
-      
-      this.farmerClusterService
-        .updateFarmerCluster(this.clusterId, updateData)
-        .subscribe(
-          (response: any) => {
-            this.isLoading = false;
-            
-            // Build success message
-            let successMessage = response.message || 'Cluster updated successfully';
-            
-            // Check for farmer errors
-            if (response.farmerErrors && response.farmerErrors.length > 0) {
-              const errorDetails = response.farmerErrors
-                .map((err: any) => `• ${err.nic} (${err.farmId}): ${err.error}`)
-                .join('\n');
-              
-              Swal.fire({
-                title: 'Partial Success',
-                html: `
+                Swal.fire({
+                  title: 'Partial Success',
+                  html: `
                   <div class="text-left">
                     <p class="mb-2">${successMessage}</p>
                     <p class="font-semibold mt-4 mb-2">Failed to add some farmers:</p>
                     <pre class="text-sm">${errorDetails}</pre>
                   </div>
                 `,
-                icon: 'warning',
-                customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                  title: 'font-semibold text-lg',
-                },
-              }).then(() => {
-                this.pendingFarmersToAdd = [];
-                this.fetchClusterUsers();
-              });
-            } else {
+                  icon: 'warning',
+                  customClass: {
+                    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                    title: 'font-semibold text-lg',
+                  },
+                }).then(() => {
+                  this.pendingFarmersToAdd = [];
+                  this.fetchClusterUsers();
+                });
+              } else {
+                Swal.fire({
+                  title: 'Success!',
+                  text: successMessage,
+                  icon: 'success',
+                  customClass: {
+                    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                    title: 'font-semibold text-lg',
+                  },
+                }).then(() => {
+                  this.pendingFarmersToAdd = [];
+                  this.goBack();
+                });
+              }
+            },
+            (error) => {
+              this.isLoading = false;
+              const errorMessage = error.error?.message || 'Failed to update cluster';
               Swal.fire({
-                title: 'Success!',
-                text: successMessage,
-                icon: 'success',
+                title: 'Error',
+                text: errorMessage,
+                icon: 'error',
                 customClass: {
                   popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                   title: 'font-semibold text-lg',
                 },
-              }).then(() => {
-                this.pendingFarmersToAdd = [];
-                this.goBack();
               });
             }
-          },
-          (error) => {
-            this.isLoading = false;
-            const errorMessage = error.error?.message || 'Failed to update cluster';
-            Swal.fire({
-              title: 'Error',
-              text: errorMessage,
-              icon: 'error',
-              customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                title: 'font-semibold text-lg',
-              },
-            });
-          }
-        );
-    }
-  });
-}
+          );
+      }
+    });
+  }
 
   addPendingFarmers() {
     const farmer = this.pendingFarmersToAdd[0]; // Get first farmer
@@ -439,28 +439,28 @@ export class EditFarmerClusterComponent implements OnInit {
   }
 
   onCancel() {
-  if (this.hasChanges()) {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'You have unsaved changes. Do you want to cancel without saving?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Cancel',
-      cancelButtonText: 'No, Continue Editing',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold text-lg',
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.pendingFarmersToAdd = []; // Clear pending farmers
-        this.goBack();
-      }
-    });
-  } else {
-    this.goBack();
+    if (this.hasChanges()) {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'You have unsaved changes. Do you want to cancel without saving?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, Cancel',
+        cancelButtonText: 'No, Continue Editing',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.pendingFarmersToAdd = []; // Clear pending farmers
+          this.goBack();
+        }
+      });
+    } else {
+      this.goBack();
+    }
   }
-}
 
   goBack() {
     this.location.back();
@@ -604,23 +604,22 @@ export class EditFarmerClusterComponent implements OnInit {
     event.preventDefault();
   }
 
+  private isValidNICFormat(nic: string): boolean {
+    return (
+      (nic.length === 10 && /^\d{9}[vVxX]$/i.test(nic)) ||
+      (nic.length === 12 && /^\d{12}$/.test(nic))
+    );
+  }
+
   onNICInput(): void {
     const trimmedNIC = this.newFarmerNIC.trim();
 
     if (trimmedNIC.length === 0) {
       this.nicError = 'NIC is required';
-    } else if (trimmedNIC.length < 10) {
-      this.nicError = 'NIC must be at least 10 characters';
-    } else if (trimmedNIC.length === 10 && !/^\d{9}[vVxX]$/i.test(trimmedNIC)) {
-      this.nicError = 'Invalid NIC format. Old NIC should be 9 digits followed by V';
-    } else if (trimmedNIC.length === 12 && !/^\d{12}$/.test(trimmedNIC)) {
-      this.nicError = 'Invalid NIC format. New NIC should be 12 digits';
-    } else if (trimmedNIC.length > 12) {
-      this.nicError = 'NIC cannot exceed 12 characters';
-    } else if (trimmedNIC.length === 11) {
-      this.nicError = 'Invalid NIC length';
-    } else {
+    } else if (this.isValidNICFormat(trimmedNIC)) {
       this.nicError = '';
+    } else {
+      this.nicError = "NIC Number must be 9 digits followed by 'V' or 12 digits.";
     }
   }
 
@@ -640,30 +639,14 @@ export class EditFarmerClusterComponent implements OnInit {
     this.farmIdError = '';
 
     // Validate NIC
-    if (!this.newFarmerNIC.trim()) {
+    const trimmedNIC = this.newFarmerNIC.trim();
+    if (!trimmedNIC) {
       this.nicError = 'NIC is required';
       return;
     }
 
-    const trimmedNIC = this.newFarmerNIC.trim();
-
-    if (trimmedNIC.length < 10) {
-      this.nicError = 'NIC must be at least 10 characters';
-      return;
-    }
-
-    if (trimmedNIC.length === 10 && !/^\d{9}[vVxX]$/i.test(trimmedNIC)) {
-      this.nicError = 'Invalid NIC format. Old NIC should be 9 digits followed by V or X';
-      return;
-    }
-
-    if (trimmedNIC.length === 12 && !/^\d{12}$/.test(trimmedNIC)) {
-      this.nicError = 'Invalid NIC format. New NIC should be 12 digits';
-      return;
-    }
-
-    if (trimmedNIC.length === 11 || trimmedNIC.length > 12) {
-      this.nicError = 'Invalid NIC format';
+    if (!this.isValidNICFormat(trimmedNIC)) {
+      this.nicError = "NIC Number must be 9 digits followed by 'V' or 12 digits.";
       return;
     }
 
@@ -672,6 +655,8 @@ export class EditFarmerClusterComponent implements OnInit {
       this.farmIdError = 'Farm ID is required';
       return;
     }
+
+    this.isLoading = true;
 
     this.isLoading = true;
 
@@ -716,7 +701,7 @@ export class EditFarmerClusterComponent implements OnInit {
             this.nicError = errorMessage;
           }
 
-          console.log('errors',  this.nicError,  this.farmIdError )
+          console.log('errors', this.nicError, this.farmIdError)
         }
       );
 
@@ -724,15 +709,11 @@ export class EditFarmerClusterComponent implements OnInit {
 
   isAddFarmerFormValid(): boolean {
     const trimmedNIC = this.newFarmerNIC.trim();
-    const isValidLength = trimmedNIC.length === 10 || trimmedNIC.length === 12;
-    const isValidFormat =
-      (trimmedNIC.length === 10 && /^\d{9}[vVxX]$/i.test(trimmedNIC)) ||
-      (trimmedNIC.length === 12 && /^\d{12}$/.test(trimmedNIC));
-
-    return isValidLength &&
-      isValidFormat &&
+    return (
+      this.isValidNICFormat(trimmedNIC) &&
       this.newFarmerFarmId.trim().length > 0 &&
-      !this.isLoading;
+      !this.isLoading
+    );
   }
 
   private showErrorPopup(title: string, message: string) {

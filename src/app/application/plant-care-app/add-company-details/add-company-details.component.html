@@ -68,8 +68,34 @@
         </div>
       </div>
 
+      <!-- Company Sector -->
+      <div class="my-3 md:col-span-2">
+        <label
+          for="companySector"
+          class="block text-sm font-medium text-textLight dark:text-textDark"
+        >
+          Company Sector *
+        </label>
+        <p-dropdown
+          inputId="companySector"
+          formControlName="companySector"
+          [options]="companySectors"
+          placeholder="--Select Company Sector--"
+          styleClass="w-full md:w-1/2 mt-1 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark border-gray-300 dark:border-gray-600"
+          [ngClass]="{
+            'border-red-500': companyForm.get('companySector')?.invalid && companyForm.get('companySector')?.touched
+          }"
+        ></p-dropdown>
+        <div
+          *ngIf="companyForm.get('companySector')?.errors?.['required'] && companyForm.get('companySector')?.touched"
+          class="text-red-500 text-sm mt-1"
+        >
+          Company Sector is Required
+        </div>
+      </div>
+
       <!-- Registration Number -->
-      <div class="my-3">
+      <div class="my-3" *ngIf="companyForm.get('companySector')?.value === 'Private Sector'">
         <label
           for="registrationNumber"
           class="block text-sm font-medium text-textLight dark:text-textDark"
@@ -98,7 +124,7 @@
       </div>
 
       <!-- Tax ID -->
-      <div class="my-3">
+      <div class="my-3" *ngIf="companyForm.get('companySector')?.value === 'Private Sector'">
         <label
           for="taxId"
           class="block text-sm font-medium text-textLight dark:text-textDark"

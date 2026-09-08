@@ -42,6 +42,7 @@ interface Customers {
   apartmentFloorNo: string;
   title?: string;
   rateofCus?: string; // 'VVIP' | 'VIP' | 'COR' | 'NOR' | 'VVP'
+  nearesCity?: string;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

@@ -189,6 +189,12 @@
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">
               Add Variety
             </th>
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">
+              Last Modified By
+            </th>
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">
+              Last Modified At
+            </th>
             <th class="px-4 py-3 font-normal"></th>
             <th class="px-4 py-3 font-normal"></th>
             <th class="px-4 py-3 font-normal"></th>
@@ -292,6 +298,21 @@
                 <i class="fa-regular fa-square-plus text-2xl"></i>
               </button>
             </td>
+
+            <td class="py-4 px-2 dark:text-textDark text-left">
+              {{ item.AdminmodifyBy || '--' }}
+            </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+  <div class="flex flex-col text-center" *ngIf="item.modifyAt; else noData">
+    <span>{{ item.modifyAt | date: 'hh:mm a' }}</span>
+    <span>{{ item.modifyAt | date: 'yyyy/MM/dd' }}</span>
+  </div>
+  <ng-template #noData>
+    <div class="flex flex-col text-center">
+      <span>--</span>
+    </div>
+  </ng-template>
+</td>
 
               <td class="py-4 px-2 dark:text-textDark text-center">
               <button

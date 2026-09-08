@@ -421,4 +421,5 @@ class Customers {
   companyPhone!: string;
   rateofCus?: string;
   creditLimit!: number;
+  nearesCity?: string;
 }

@@ -80,7 +80,7 @@
           <div
             class="absolute top-full mt-2 bg-gray-800 dark:bg-gray-700 text-white dark:text-gray-200 text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10"
           >
-            Search by Customer ID, Name, Phone Number
+            Search by Customer ID, Name, Phone Number, City
           </div>
           <input
             type="text"
@@ -171,6 +171,11 @@
               Agent ID
             </th>
             <th
+              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              Nearest City
+            </th>
+            <th
               class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
               Created At
@@ -228,6 +233,9 @@
             </td>
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
               {{ customer.empId }}
+            </td>
+            <td class="px-3 py-3 text-left text-textLight dark:text-textDark">
+              {{ customer.nearesCity }}
             </td>
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
               {{ customer.created_at | date: "d MMM, y h:mm a" }}

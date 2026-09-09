@@ -6,10 +6,10 @@
       <p class="text-lg font-[500] dark:text-white text-[#030308]">
         {{ centerDetails.regCode }} {{ centerDetails.centerName }}
       </p>
-      <p *ngIf="officerName !== null" class="text-lg text-[#898989] font-[400] dark:text-[#898989] whitespace-nowrap">
+      <!-- <p *ngIf="officerName !== null" class="text-lg text-[#898989] font-[400] dark:text-[#898989] whitespace-nowrap">
         Centre Target Last Modified By : <span class="text-lg font-[600] dark:text-white text-[#000000]">
           {{officerName}}</span>
-      </p>
+      </p> -->
     </div>
 
     <div class="flex flex-row items-center gap-5">
@@ -102,7 +102,7 @@
               <input type="number" [(ngModel)]="item.targetA" step="any" name="targetA" min="0"
                 (change)="checkNegativeValue(item, 'A')" (input)="restrictDecimal($event, item, 'A')"
                 (input)="validateForm()"
-                class="border-[#3980C0] dark:bg-[#272F45] border-[2px] border-dotted rounded-lg w-20 px-2 py-1 mr-4"
+                class="border-[#3980C0] dark:bg-[#272F45] border-[2px] border-dotted rounded-lg w-24 px-2 py-1 mr-4"
                 [ngClass]="isGradeInvalid(item, 'A') ? 'border-[#FF0000]' : 'border-[#3980C0]'"
                 [disabled]="!item.isNew && !item.editingA" />
 
@@ -148,7 +148,7 @@
               <input type="number" [(ngModel)]="item.targetB" step="any" name="targetB" min="0"
                 (change)="checkNegativeValue(item, 'B')" (input)="restrictDecimal($event, item, 'B')"
                 (input)="validateForm()"
-                class="border-[#3980C0] dark:bg-[#272F45] border-[2px] border-dotted rounded-lg w-20 px-2 py-1 mr-4"
+                class="border-[#3980C0] dark:bg-[#272F45] border-[2px] border-dotted rounded-lg w-24 px-2 py-1 mr-4"
                 [ngClass]="isGradeInvalid(item, 'B') ? 'border-[#FF0000]' : 'border-[#3980C0]'"
                 [disabled]="!item.isNew && !item.editingB" />
 
@@ -184,7 +184,7 @@
               <input type="number" [(ngModel)]="item.targetC" step="any" name="targetC" min="0"
                 (change)="checkNegativeValue(item, 'C')" (input)="restrictDecimal($event, item, 'C')"
                 (input)="validateForm()"
-                class="border-[#3980C0] dark:bg-[#272F45] border-[2px] border-dotted rounded-lg w-16 px-2 py-1 mr-4"
+                class="border-[#3980C0] dark:bg-[#272F45] border-[2px] border-dotted rounded-lg w-24 px-2 py-1 mr-4"
                 [ngClass]="isGradeInvalid(item, 'C') ? 'border-[#FF0000]' : 'border-[#3980C0]'"
                 [disabled]="!item.isNew && !item.editingC" />
 

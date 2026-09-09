@@ -79,15 +79,15 @@
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
               Contact Number 01
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center" *ngIf="
+            <th class="w-16 px-4 py-3 font-normal text-textLight dark:text-textDark text-center" *ngIf="
                   permissionService.hasPermission('View Polygon Centre Dashboard') ||
                   tokenService.getUserDetails().role === '1'
                 "></th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center" *ngIf="
+            <th class="w-16 px-4 py-3 font-normal text-textLight dark:text-textDark text-center" *ngIf="
                   permissionService.hasPermission('Edit Polygon Collection Centre') ||
                   tokenService.getUserDetails().role === '1'
                 "></th>
-            <th class="py-3 font-normal text-textLight dark:text-textDark text-left" *ngIf="
+            <th class="w-16 px-4 py-3 font-normal text-textLight dark:text-textDark text-center" *ngIf="
                   permissionService.hasPermission('Delete Polygon Collection Centre') ||
                   tokenService.getUserDetails().role === '1'
                 "></th>
@@ -127,11 +127,11 @@
               <span *ngIf="item.contact01 === null">-</span>
               <span *ngIf="item.contact01 != null">{{ item.code1 }}{{ " " + item.contact01 }}</span>
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="w-16 px-4 py-3 text-center text-textLight dark:text-textDark">
               <button *ngIf="
                   permissionService.hasPermission('View Polygon Centre Dashboard') ||
                   tokenService.getUserDetails().role === '1'
-                " class="w-6 h-6 mr-3 text-blue-500 hover:text-blue-700" (click)="
+                " class="inline-flex w-6 h-6 items-center justify-center text-blue-500 hover:text-blue-700" (click)="
                   isAgroworldPresent(item) &&
                     assignTarget(item.companies, item.id, item.regCode, item.centerName)
                 ">
@@ -142,11 +142,11 @@
                 </svg>
               </button>
             </td>
-            <td class=" text-[#367bfa] hover:text-[#83aefd]">
+            <td class="w-16 px-4 py-3 text-center text-textLight dark:text-textDark">
               <button *ngIf="
                   permissionService.hasPermission('Edit Polygon Collection Centre') ||
                   tokenService.getUserDetails().role === '1'
-                " class="text-blue-500 hover:text-blue-700 flex items-center justify-center w-6 h-6"
+                " class="inline-flex w-6 h-6 items-center justify-center text-blue-500 hover:text-blue-700"
                 (click)="navigateEdit(item.id)" [disabled]="isLoading" title="Edit Collection Centre">
                 <svg width="20" height="20" fill="currentColor" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
                   <title>Edit</title>
@@ -157,11 +157,12 @@
               </button>
             </td>
 
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="w-16 px-4 py-3 text-center text-textLight dark:text-textDark">
               <button *ngIf="
                   permissionService.hasPermission('Delete Polygon Collection Centre') ||
                   tokenService.getUserDetails().role === '1'
-                " class="text-red-500 hover:text-red-700" (click)="deleteCollectionCenter(item.id)">
+                " class="inline-flex w-6 h-6 items-center justify-center text-red-500 hover:text-red-700"
+                (click)="deleteCollectionCenter(item.id)">
                 <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                   viewBox="0 0 24 24">
                   <title>Delete</title>

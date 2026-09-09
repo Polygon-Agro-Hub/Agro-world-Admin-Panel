@@ -44,12 +44,13 @@
           Contact Number 01 *
         </label>
 
-        <div class="mt-1 flex">
+        <div class="mt-1 flex min-w-0 items-stretch gap-2">
 
-          <p-dropdown [options]="countries" [(ngModel)]="centerFetchData.code1" [optionLabel]="'dialCode'"
-            [optionValue]="'dialCode'"
-            styleClass="border border-gray-300 mr-2 rounded-md bg-white dark:bg-tileBlack text-gray-800 dark:text-white custom-dropdown"
-            [style]="{ width: '120px' }">
+          <div class="contact-code-wrapper">
+            <p-dropdown [options]="countries" [(ngModel)]="centerFetchData.code1" [optionLabel]="'dialCode'"
+              [optionValue]="'dialCode'"
+              styleClass="border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-gray-800 dark:text-white custom-dropdown"
+              [style]="{ width: '100%' }">
             <ng-template let-country pTemplate="item">
               <div class="flex items-center gap-2">
                 <img [src]="getFlagUrl(country.code)" width="24" height="18" alt="{{ country.name }}" />
@@ -63,13 +64,14 @@
                 <span>{{ country.dialCode }}</span>
               </div>
             </ng-template>
-          </p-dropdown>
+            </p-dropdown>
+          </div>
 
-          <div class="flex-1">
+          <div class="min-w-0 flex-1">
             <input type="tel" [(ngModel)]="centerFetchData.contact01" id="contact01" name="contact01"
               #contact01="ngModel" required pattern="^[0-9]{9}$" minlength="9" (keypress)="allowOnlyNumbers($event)"
               (ngModelChange)="validateSriLankanPhone($event, 'phone01')" maxlength="9"
-              class="block w-full p-2 border h-12 border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+              class="block w-full p-2 border h-12 border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
               placeholder="Enter your phone number" />
           </div>
         </div>
@@ -97,12 +99,13 @@
           Contact Number 02
         </label>
 
-        <div class="mt-1 flex">
+        <div class="mt-1 flex min-w-0 items-stretch gap-2">
 
-          <p-dropdown [options]="countries" [(ngModel)]="centerFetchData.code2" [optionLabel]="'dialCode'"
-            [optionValue]="'dialCode'"
-            styleClass="border border-gray-300 mr-2 rounded-md bg-white dark:bg-tileBlack text-gray-800 dark:text-white custom-dropdown"
-            [style]="{ width: '120px' }">
+          <div class="contact-code-wrapper">
+            <p-dropdown [options]="countries" [(ngModel)]="centerFetchData.code2" [optionLabel]="'dialCode'"
+              [optionValue]="'dialCode'"
+              styleClass="border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-gray-800 dark:text-white custom-dropdown"
+              [style]="{ width: '100%' }">
             <ng-template let-country pTemplate="item">
               <div class="flex items-center gap-2">
                 <img [src]="getFlagUrl(country.code)" width="24" height="18" alt="{{ country.name }}" />
@@ -116,12 +119,13 @@
                 <span>{{ country.dialCode }}</span>
               </div>
             </ng-template>
-          </p-dropdown>
+            </p-dropdown>
+          </div>
 
           <input type="tel" [(ngModel)]="centerFetchData.contact02" id="contact02" name="contact02" #contact02="ngModel"
             required pattern="^[0-9]{9}$" minlength="9" (keypress)="allowOnlyNumbers($event)"
             (ngModelChange)="validateSriLankanPhone($event, 'phone02')" maxlength="9"
-            class="flex-1 block p-2 border h-12 border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            class="min-w-0 flex-1 block p-2 border h-12 border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             placeholder="Enter your phone number" />
         </div>
 

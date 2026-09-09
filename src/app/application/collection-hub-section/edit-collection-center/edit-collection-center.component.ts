@@ -315,7 +315,7 @@ export class EditCollectionCenterComponent implements OnInit {
           } else {
             this.isLoading = false;
             Swal.fire('Sorry', 'Centre Data not available', 'warning');
-            this.router.navigate(['/collection-hub/view-collection-centers']);
+            this.router.navigate(['/collection-hub/agro-world-centers']);
           }
         },
         (error) => {
@@ -568,7 +568,7 @@ export class EditCollectionCenterComponent implements OnInit {
                   },
                 }).then(() => {
                   this.router.navigate([
-                    '/collection-hub/view-collection-centers',
+                    '/collection-hub/agro-world-centers',
                   ]);
                 });
               } else {

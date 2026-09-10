@@ -211,7 +211,7 @@ export class PreviewCollectionCenterComponent implements OnInit {
             this.existRegCode = this.centerFetchData.regCode;
 
             this.updateSelectedCompanies();
-            this.onProvinceChange();
+            this.setDistrictOptions();
             this.isLoading = false;
           } else {
             this.isLoading = false;
@@ -222,6 +222,14 @@ export class PreviewCollectionCenterComponent implements OnInit {
 
         (error) => console.error('Error fetching collection centre:', error),
       );
+  }
+
+  setDistrictOptions(): void {
+    const filteredProvince = this.ProvinceData.filter(
+      (item) => item.province === this.selectProvince,
+    );
+    this.selectedDistrict =
+      filteredProvince.length > 0 ? filteredProvince[0].district : [];
   }
 
   updateSelectedCompanies() {

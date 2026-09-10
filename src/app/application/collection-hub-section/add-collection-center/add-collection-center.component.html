@@ -18,10 +18,10 @@
         <input formControlName="centerName" id="centerName" name="centerName" (input)="onCenterNameInput($event)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         <div *ngIf="
-      (collectionCenterForm.get('centerName')?.dirty ||
-        collectionCenterForm.get('centerName')?.touched) &&
-      collectionCenterForm.get('centerName')?.hasError('required')
-    " class="text-red-500 text-sm mt-1">
+            (collectionCenterForm.get('centerName')?.dirty ||
+            collectionCenterForm.get('centerName')?.touched) &&
+            collectionCenterForm.get('centerName')?.hasError('required')
+          " class="text-red-500 text-sm mt-1">
           Centre Name is required
         </div>
       </div>
@@ -123,17 +123,21 @@
         </div>
 
         <div *ngIf="collectionCenterForm.get('contact02')?.touched">
-          <div *ngIf="
-      collectionCenterForm.get('contact01')?.value &&
-      collectionCenterForm.get('contact02')?.value &&
-      collectionCenterForm.get('contact01')?.value === collectionCenterForm.get('contact02')?.value"
-            class="text-red-500 text-sm mt-1">
-            Contact Number - 1 and Contact Number - 2 cannot be the same
-          </div>
+          <ng-container *ngIf="collectionCenterForm.get('contact02')?.errors?.['pattern']; else checkDuplicate">
+            <div class="text-red-500 text-sm mt-1">
+              Phone Number must be exactly 9 digits.
+            </div>
+          </ng-container>
 
-          <div *ngIf="collectionCenterForm.get('contact02')?.errors?.['pattern']" class="text-red-500 text-sm mt-1">
-            Phone Number must be exactly 9 digits.
-          </div>
+          <ng-template #checkDuplicate>
+            <div *ngIf="
+                collectionCenterForm.get('contact01')?.value &&
+                collectionCenterForm.get('contact02')?.value &&
+                collectionCenterForm.get('contact01')?.value === collectionCenterForm.get('contact02')?.value"
+              class="text-red-500 text-sm mt-1">
+              Contact Number - 1 and Contact Number - 2 cannot be the same
+            </div>
+          </ng-template>
         </div>
 
       </div>

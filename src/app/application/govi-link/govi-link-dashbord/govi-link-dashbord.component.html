@@ -2,7 +2,7 @@
 
   <!-- Use same gap so columns align perfectly -->
   <div class="grid grid-cols-3 gap-4 mb-5">
-    
+
     <!-- Col 1: 2 squares filling this column -->
     <div class="grid grid-cols-2 gap-4">
       <app-square-component [config]="squareCards[0]" class="w-full"></app-square-component>
@@ -22,17 +22,13 @@
 
   <!-- Timely row -->
   <div class="grid grid-cols-3 gap-4 mb-4">
-    <app-rectangle-component
-      *ngFor="let card of timelyCards"
-      [config]="card">
+    <app-rectangle-component *ngFor="let card of timelyCards" [config]="card">
     </app-rectangle-component>
   </div>
 
   <!-- Late row -->
   <div class="grid grid-cols-3 gap-4">
-    <app-rectangle-component
-      *ngFor="let card of lateCards"
-      [config]="card">
+    <app-rectangle-component *ngFor="let card of lateCards" [config]="card">
     </app-rectangle-component>
   </div>
 

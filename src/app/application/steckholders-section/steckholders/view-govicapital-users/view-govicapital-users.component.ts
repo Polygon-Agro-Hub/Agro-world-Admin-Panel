@@ -14,6 +14,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
   templateUrl: './view-govicapital-users.component.html',
   styleUrl: './view-govicapital-users.component.css',
 })
+
 export class ViewGovicapitalUsersComponent implements OnInit {
   isLoading = false;
   searchQuery: string = '';
@@ -21,7 +22,7 @@ export class ViewGovicapitalUsersComponent implements OnInit {
   totalUsers: number = 0;
   private searchTimeout: any;
   hasData = false;
-  
+
   // Pagination properties
   page: number = 1;
   itemsPerPage: number = 10;
@@ -30,7 +31,7 @@ export class ViewGovicapitalUsersComponent implements OnInit {
   constructor(
     private router: Router,
     private financeService: FinanceService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadUsers();
@@ -68,7 +69,7 @@ export class ViewGovicapitalUsersComponent implements OnInit {
     if (!users || !Array.isArray(users)) {
       return [];
     }
-    
+
     return users.map((user, index) => ({
       no: (index + 1).toString().padStart(2, '0'),
       investorId: user.regCode || `IR${user.id}`,
@@ -91,10 +92,10 @@ export class ViewGovicapitalUsersComponent implements OnInit {
 
   onSearchClick(): void {
     const searchTerm = this.searchQuery ? this.searchQuery.trim() : '';
-    
+
     // Reset to first page when searching
     this.page = 1;
-    
+
     // Only search if there's a term, otherwise load all
     if (searchTerm !== '') {
       this.loadUsers(searchTerm);

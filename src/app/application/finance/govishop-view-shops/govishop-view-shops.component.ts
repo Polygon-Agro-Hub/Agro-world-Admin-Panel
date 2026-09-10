@@ -40,6 +40,7 @@ interface Shop {
   templateUrl: './govishop-view-shops.component.html',
   styleUrl: './govishop-view-shops.component.css',
 })
+
 export class GovishopViewShopsComponent implements OnInit {
   shops: Shop[] = [];
   searchItem: string = '';
@@ -103,7 +104,7 @@ export class GovishopViewShopsComponent implements OnInit {
     private location: Location,
     private route: ActivatedRoute,
     private goviShopService: StakeholderService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const segments = this.router.url

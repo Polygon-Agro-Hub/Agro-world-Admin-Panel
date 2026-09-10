@@ -15,6 +15,7 @@ import { PermissionService } from '../../../services/roles-permission/permission
   templateUrl: './all-deleted-suppliers.component.html',
   styleUrl: './all-deleted-suppliers.component.css',
 })
+
 export class AllDeletedSuppliersComponent implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject<void>();
 
@@ -24,7 +25,7 @@ export class AllDeletedSuppliersComponent implements OnInit, OnDestroy {
   limit = 10;
   totalItems = 0;
 
-  itemsPerPage = 10; 
+  itemsPerPage = 10;
 
   searchItem = '';
   isLoading = false;
@@ -32,8 +33,11 @@ export class AllDeletedSuppliersComponent implements OnInit, OnDestroy {
   isReasonModalOpen = false;
   selectedReason = '';
 
-  constructor(private govishopService: GovishopService, private location: Location, public permissionService: PermissionService,
-    public tokenService: TokenService,) {}
+  constructor(
+    private govishopService: GovishopService,
+    private location: Location,
+    public permissionService: PermissionService,
+    public tokenService: TokenService,) { }
 
   ngOnInit(): void {
     this.fetchDeletedSuppliers();
@@ -136,7 +140,7 @@ export class AllDeletedSuppliersComponent implements OnInit, OnDestroy {
 export interface DeletedSupplierDeletedInfo {
   reason: string;
   ownerId: number;
-  deletedAt: string; 
+  deletedAt: string;
   deletedBy: string;
 }
 

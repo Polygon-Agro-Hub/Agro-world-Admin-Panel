@@ -243,8 +243,9 @@ export class AddFarmerClustersComponent implements OnInit {
         const worksheet = workbook.Sheets[firstSheetName];
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
-        const farmerMap = new Map();
-        const duplicates: DuplicateEntry[] = [];
+        // Pass 1: collect all rows with NIC + Farm ID and their row numbers, count occurrences
+        const allRows: { NIC: string; regCode: string; rowNumber: number }[] = [];
+        const countMap = new Map<string, number>();
 
         jsonData.forEach((row: any, index: number) => {
           const nic = this.extractNIC(row);
@@ -252,16 +253,15 @@ export class AddFarmerClustersComponent implements OnInit {
 
           if (nic && regCode) {
             const key = `${nic}-${regCode}`;
-            if (farmerMap.has(key)) {
-              duplicates.push({
-                NIC: nic,
-                regCode: regCode,
-                rowNumber: index + 2,
-              });
-            } else {
-              farmerMap.set(key, index);
-            }
+            allRows.push({ NIC: nic, regCode: regCode, rowNumber: index + 2 });
+            countMap.set(key, (countMap.get(key) || 0) + 1);
           }
+        });
+
+        // Pass 2: any row whose key count > 1 is a duplicate (including the first occurrence)
+        const duplicates: DuplicateEntry[] = allRows.filter((r) => {
+          const key = `${r.NIC}-${r.regCode}`;
+          return (countMap.get(key) || 0) > 1;
         });
 
         if (duplicates.length > 0) {
@@ -278,10 +278,7 @@ export class AddFarmerClustersComponent implements OnInit {
     };
 
     reader.onerror = () => {
-      this.showErrorPopup(
-        'File Error',
-        'Error reading the file. Please try again.'
-      );
+      this.showErrorPopup('File Error', 'Error reading the file. Please try again.');
     };
 
     reader.readAsArrayBuffer(file);
@@ -475,7 +472,7 @@ export class AddFarmerClustersComponent implements OnInit {
 
   private processUpload(): void {
     // Ensure cluster name is trimmed before validation
-    console.log("Start------------");
+
 
     if (this.clusterName) {
       this.clusterName = this.clusterName.trim();
@@ -522,7 +519,7 @@ export class AddFarmerClustersComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
     this.successMessage = '';
-    console.log("XL read start-----------------");
+
 
 
     const reader = new FileReader();
@@ -535,10 +532,8 @@ export class AddFarmerClustersComponent implements OnInit {
         const worksheet = workbook.Sheets[firstSheetName];
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
-        // Extract farmers from the file and check for duplicates
-        const farmerMap = new Map();
-        const duplicates: DuplicateEntry[] = [];
-        const farmers: FarmerDetail[] = [];
+        const allRows: { NIC: string; regCode: string; rowNumber: number }[] = [];
+        const countMap = new Map<string, number>();
 
         jsonData.forEach((row: any, index: number) => {
           const nic = this.extractNIC(row);
@@ -546,29 +541,30 @@ export class AddFarmerClustersComponent implements OnInit {
 
           if (nic && regCode) {
             const key = `${nic}-${regCode}`;
-            if (farmerMap.has(key)) {
-              // This is a duplicate
-              duplicates.push({
-                NIC: nic,
-                regCode: regCode,
-                rowNumber: index + 2,
-              });
-            } else {
-              // First time seeing this combination
-              farmerMap.set(key, index);
-              farmers.push({
-                farmerNIC: nic,
-                regCode: regCode,
-              });
-            }
+            allRows.push({ NIC: nic, regCode: regCode, rowNumber: index + 2 });
+            countMap.set(key, (countMap.get(key) || 0) + 1);
           }
         });
 
-        // CHECK FOR DUPLICATES FIRST - before showing confirmation
+        const duplicates: DuplicateEntry[] = allRows.filter(
+          (r) => (countMap.get(`${r.NIC}-${r.regCode}`) || 0) > 1
+        );
+
+        const farmers: FarmerDetail[] = [];
+        const addedKeys = new Set<string>();
+
+        allRows.forEach((r) => {
+          const key = `${r.NIC}-${r.regCode}`;
+          if ((countMap.get(key) || 0) === 1 && !addedKeys.has(key)) {
+            addedKeys.add(key);
+            farmers.push({ farmerNIC: r.NIC, regCode: r.regCode });
+          }
+        });
+
         if (duplicates.length > 0) {
           this.isLoading = false;
           this.duplicateEntries = duplicates;
-          console.log('duplicateEntries', this.duplicateEntries)
+
           this.downloadDuplicateCSV(duplicates);
           this.showDuplicateErrorPopup(duplicates);
           return;
@@ -626,7 +622,7 @@ export class AddFarmerClustersComponent implements OnInit {
     const nic =
       row['NIC'] || row['nic'] || row['NIC Number'] || row['NICNumber'];
     if (!nic) {
-      console.log('No NIC found in row:', row);
+
       return null;
     }
 
@@ -647,10 +643,10 @@ export class AddFarmerClustersComponent implements OnInit {
       row['RegCode'] ||
       row['regcode'] || row['Farm ID'] ||
       row['Registration Code'] ||
-      row['RegistrationCode'] || 
+      row['RegistrationCode'] ||
       row['Reg Code'];
     if (!regCode) {
-      console.log('No Registration Code found in row:', row);
+
       return null;
     }
 
@@ -821,7 +817,7 @@ export class AddFarmerClustersComponent implements OnInit {
         <div class="text-center mb-6">
           <div class="flex items-center justify-center mb-4">
             <h2 class="text-2xl">
-              Error : Duplicate Entries found in the CSV file!
+              Error : Duplicate Entries found in the XLSX file!
             </h2>
           </div>
           <p class="text-gray-700 dark:text-gray-300 text-lg font-semibold mb-2">
@@ -930,7 +926,7 @@ export class AddFarmerClustersComponent implements OnInit {
       <div class="text-center mb-6">
         <div class="flex items-center justify-center mb-4">
           <h2 class="text-2xl">
-            Error : Mismatching Farm IDs found in the CSV file!
+            Error : Mismatching Farm IDs found in the XLSX file!
           </h2>
         </div>
         <p class="text-gray-700 dark:text-gray-300 text-lg font-semibold mb-2">
@@ -1033,7 +1029,7 @@ export class AddFarmerClustersComponent implements OnInit {
 
   private handleError(error: any): void {
     this.isLoading = false;
-    console.log('error', error)
+
 
     let errorMessage = 'Failed to upload file. Please try again.';
 
@@ -1046,7 +1042,7 @@ export class AddFarmerClustersComponent implements OnInit {
 
     if (error.error?.missingRegCodes) {
 
-      console.log('missingRegCodeDetails', error.error?.missingRegCodes)
+
       // Handle the new response structure with missingRegCodeDetails
       const missingRegCodeDetails = error.error.missingRegCodeDetails || [];
       this.missingRegCodesP = error.error?.missingRegCodes;
@@ -1120,7 +1116,7 @@ export class AddFarmerClustersComponent implements OnInit {
       <div class="text-center mb-6">
         <div class="flex items-center justify-center mb-4">
           <h2 class="text-2xl">
-            Error : Unregistered Users found in the CSV file!
+            Error : Unregistered Users found in the XLSX file!
           </h2>
         </div>
         <p class="text-gray-700 dark:text-gray-300 text-lg font-semibold mb-2">
@@ -1248,11 +1244,11 @@ export class AddFarmerClustersComponent implements OnInit {
       <div class="text-center mb-6">
         <div class="flex items-center justify-center mb-4">
           <h2 class="text-2xl">
-            Error : Non existing Farm IDs found in the CSV file!
+            Error : Non existing Farm IDs found in the XLSX file!
           </h2>
         </div>
         <p class="text-gray-700 dark:text-gray-300 text-lg font-semibold mb-2">
-          Please Note: Cluster creation cannot proceed because the uploaded CSV file contains Farm IDs that do not exist in the system.
+          Please Note: Cluster creation cannot proceed because the uploaded XLSX file contains Farm IDs that do not exist in the system.
         </p>
       </div>
 
@@ -1322,7 +1318,7 @@ export class AddFarmerClustersComponent implements OnInit {
 
   private downloadMissingRegCodesCSV(missingRegCodes: string[]): void {
     try {
-      console.log('missingRegCodes', missingRegCodes)
+
       const headers = ['No', 'Farm ID'];
 
       // Force Excel to treat Farm ID column as text using ="value"

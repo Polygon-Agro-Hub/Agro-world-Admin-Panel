@@ -19,15 +19,16 @@
           <label for="clusterName" class="block font-[500] text-[#534E4E] dark:text-textDark mb-2">
             Full Name *
           </label>
-          <input type="text" id="fullName" [(ngModel)]="goviShopSupplierObj.fullName" name="fullName" #fullNameInput="ngModel"
-            (input)="onFormatInput2($event)"
+          <input type="text" id="fullName" [(ngModel)]="goviShopSupplierObj.fullName" name="fullName"
+            #fullNameInput="ngModel" (input)="onFormatInput2($event)"
             class="w-full px-3 py-2 h-12 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
             required />
           <div *ngIf="fullNameInput.touched && !goviShopSupplierObj.fullName" class="text-red-500 mt-1">
             <div>Full Name is required</div>
           </div>
 
-          <div *ngIf="goviShopSupplierObj.fullName && hasLeadingOrTrailingSpaces && formSubmitted" class="text-red-500 mt-1">
+          <div *ngIf="goviShopSupplierObj.fullName && hasLeadingOrTrailingSpaces && formSubmitted"
+            class="text-red-500 mt-1">
             Cluster name should not have leading or trailing spaces
           </div>
         </div>
@@ -41,16 +42,14 @@
             #mobileNumberInput="ngModel"
             class="w-full px-3 py-2 h-12 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
             placeholder="e.g. 07XXXXXXXX" required pattern="^[0-9]{10}$"
-            (keypress)="blockInvalidKeypressForPhone($event)" (paste)="blockInvalidPasteForPhone($event)" 
-            (input)="onPhoneInput($event)"
-            minlength="10"
-            maxlength="10"
-            (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"
-             />
+            (keypress)="blockInvalidKeypressForPhone($event)" (paste)="blockInvalidPasteForPhone($event)"
+            (input)="onPhoneInput($event)" minlength="10" maxlength="10"
+            (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()" />
           <div *ngIf="mobileNumberInput.touched && !goviShopSupplierObj.mobileNumber" class="text-red-500 mt-1">
             <div> Mobile Number is required</div>
           </div>
-          <div *ngIf="goviShopSupplierObj.mobileNumber && mobileNumberInput.errors?.['pattern']" class="text-red-500  mt-1">
+          <div *ngIf="goviShopSupplierObj.mobileNumber && mobileNumberInput.errors?.['pattern']"
+            class="text-red-500  mt-1">
             Please enter a valid mobile number.
           </div>
         </div>
@@ -89,7 +88,8 @@
             <div> NIC is required</div>
           </div>
 
-          <div *ngIf="nicInput.touched && nicInput.errors?.['pattern'] && goviShopSupplierObj.nic" class="text-red-500 mt-1">
+          <div *ngIf="nicInput.touched && nicInput.errors?.['pattern'] && goviShopSupplierObj.nic"
+            class="text-red-500 mt-1">
             <div>"Please enter a valid NIC number (12 digits or 10 digits followed by 'V').</div>
           </div>
         </div>
@@ -102,17 +102,13 @@
           (click)="onCancel()">
           Cancel
         </button>
-        <button
-          type="submit"
-          class="px-6 py-2 rounded-lg text-white transition-colors w-32"
-          [ngClass]="{
+        <button type="submit" class="px-6 py-2 rounded-lg text-white transition-colors w-32" [ngClass]="{
             'bg-gray-500 cursor-not-allowed hover:bg-gray-500':
               form.invalid,
 
             'bg-[#3980C0] hover:bg-[#2d6ca3]':
               form.valid
-          }"
-        >
+          }">
           <span *ngIf="!isLoading">Update</span>
           <span *ngIf="isLoading">Processing...</span>
         </button>
@@ -120,4 +116,3 @@
     </form>
   </div>
 </div>
-

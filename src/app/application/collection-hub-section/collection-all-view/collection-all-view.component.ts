@@ -46,6 +46,7 @@ interface Company {
   templateUrl: './collection-all-view.component.html',
   styleUrls: ['./collection-all-view.component.css'],
 })
+
 export class CollectionAllViewComponent implements OnInit {
   centerNameObj: CenterName = new CenterName();
   companyId!: number;
@@ -138,7 +139,7 @@ export class CollectionAllViewComponent implements OnInit {
     public tokenService: TokenService,
     public permissionService: PermissionService,
     private location: Location
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
@@ -182,54 +183,54 @@ export class CollectionAllViewComponent implements OnInit {
       );
   }
 
-deleteCollectionCenter(id: number) {
-  Swal.fire({
-    title: 'Are you sure?',
-    text: 'Do you really want to delete this Collection Centre? This action cannot be undone.',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, delete it!',
-    cancelButtonText: 'Cancel',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-    confirmButtonColor: '#2563eb',
-    cancelButtonColor: '#dc2626',
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.collectionService.deleteCollectionCenter(id).subscribe(
-        (res) => {
-          if (res) {
+  deleteCollectionCenter(id: number) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you really want to delete this Collection Centre? This action cannot be undone.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+      confirmButtonColor: '#2563eb',
+      cancelButtonColor: '#dc2626',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.collectionService.deleteCollectionCenter(id).subscribe(
+          (res) => {
+            if (res) {
+              Swal.fire({
+                title: 'Deleted!',
+                text: 'The Collection Centre has been deleted.',
+                icon: 'success',
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold',
+                },
+                confirmButtonColor: '#2563eb',
+              });
+              this.fetchAllCollectionCenter();
+            }
+          },
+          (error) => {
             Swal.fire({
-              title: 'Deleted!',
-              text: 'The Collection Centre has been deleted.',
-              icon: 'success',
+              title: 'Error!',
+              text: 'There was an error deleting the Collection Centre',
+              icon: 'error',
               customClass: {
                 popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                 title: 'font-semibold',
               },
               confirmButtonColor: '#2563eb',
             });
-            this.fetchAllCollectionCenter();
           }
-        },
-        (error) => {
-          Swal.fire({
-            title: 'Error!',
-            text: 'There was an error deleting the Collection Centre',
-            icon: 'error',
-            customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              title: 'font-semibold',
-            },
-            confirmButtonColor: '#2563eb',
-          });
-        }
-      );
-    }
-  });
-}
+        );
+      }
+    });
+  }
 
 
 

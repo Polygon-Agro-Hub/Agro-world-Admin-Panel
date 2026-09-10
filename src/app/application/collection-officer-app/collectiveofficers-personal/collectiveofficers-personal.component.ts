@@ -49,14 +49,12 @@ interface PhoneCode {
   styleUrls: ['./collectiveofficers-personal.component.css'],
 })
 
-
-
 export class CollectiveofficersPersonalComponent implements OnInit {
   @ViewChild('empTypeCtrl') empTypeCtrl!: NgModel;
   @ViewChild('languagesCtrl') languagesCtrl!: NgModel;
-   @ViewChild('topScroll') topScrollElement!: ElementRef;
+  @ViewChild('topScroll') topScrollElement!: ElementRef;
   private shouldScrollToTop = false;
-  
+
   officerId: number | null = null;
   selectedFile: File | null = null;
   languages: string[] = ['Sinhala', 'English', 'Tamil'];
@@ -97,19 +95,19 @@ export class CollectiveofficersPersonalComponent implements OnInit {
   languagesRequired: boolean = false;
 
   countries: PhoneCode[] = [
-  { code: 'LK', dialCode: '+94', name: 'Sri Lanka' },
-  { code: 'VN', dialCode: '+84', name: 'Vietnam' },
-  { code: 'KH', dialCode: '+855', name: 'Cambodia' },
-  { code: 'BD', dialCode: '+880', name: 'Bangladesh' },
-  { code: 'IN', dialCode: '+91', name: 'India' },
-  { code: 'NL', dialCode: '+31', name: 'Netherlands' },
-];
+    { code: 'LK', dialCode: '+94', name: 'Sri Lanka' },
+    { code: 'VN', dialCode: '+84', name: 'Vietnam' },
+    { code: 'KH', dialCode: '+855', name: 'Cambodia' },
+    { code: 'BD', dialCode: '+880', name: 'Bangladesh' },
+    { code: 'IN', dialCode: '+91', name: 'India' },
+    { code: 'NL', dialCode: '+31', name: 'Netherlands' },
+  ];
 
-getFlagUrl(countryCode: string): string {
-  return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
-}
+  getFlagUrl(countryCode: string): string {
+    return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
+  }
 
-dropdownOpen = false;
+  dropdownOpen = false;
 
   jobRoles = [
     'Collection Centre Manager',
@@ -161,62 +159,59 @@ dropdownOpen = false;
 
   selectedLanguages: string[] = [];
 
-markAllFieldsAsTouched(): void {
-  const requiredFields: (keyof Personal)[] = [
-    'firstNameEnglish', 'lastNameEnglish', 'firstNameSinhala', 'lastNameSinhala',
-    'firstNameTamil', 'lastNameTamil', 'phoneNumber01', 'phoneNumber02',
-    'nic', 'email', 'companyId', 'centerId', 'jobRole', 'houseNumber',
-    'streetName', 'city', 'district', 'province', 'accHolderName',
-    'accNumber', 'confirmAccNumber'
-  ];
+  markAllFieldsAsTouched(): void {
+    const requiredFields: (keyof Personal)[] = [
+      'firstNameEnglish', 'lastNameEnglish', 'firstNameSinhala', 'lastNameSinhala',
+      'firstNameTamil', 'lastNameTamil', 'phoneNumber01', 'phoneNumber02',
+      'nic', 'email', 'companyId', 'centerId', 'jobRole', 'houseNumber',
+      'streetName', 'city', 'district', 'province', 'accHolderName',
+      'accNumber', 'confirmAccNumber'
+    ];
 
-  requiredFields.forEach(field => {
-    this.touchedFields[field] = true;
-  });
+    requiredFields.forEach(field => {
+      this.touchedFields[field] = true;
+    });
 
-  this.languagesTouched = true;
-  this.empTypeTouched = true;
-}
-
-markPageOneFieldsAsTouched(): void {
-  const pageOneFields: (keyof Personal)[] = [
-    'firstNameEnglish', 'lastNameEnglish', 'firstNameSinhala', 'lastNameSinhala',
-    'firstNameTamil', 'lastNameTamil', 'phoneNumber01', 'phoneNumber02',
-    'nic', 'email', 'companyId', 'centerId', 'jobRole', 'irmId'
-  ];
-
-  pageOneFields.forEach(field => {
-    this.touchedFields[field] = true;
-  });
-
-  this.languagesTouched = true;
-  this.empTypeTouched = true;
-  this.jobRoleTouched = true;
-}
-
-toggleDropdown() {
-  this.dropdownOpen = !this.dropdownOpen;
-}
-
-closeDropdown() {
-  this.dropdownOpen = false;
-}
-
-selectjobRole(role: string) {
-
-  if (role === "Collection Centre Manager") {
-    this.personalData.jobRole = "Collection Centre Manager";
-    this.toggleDropdown()
-  } else {
-    this.personalData.jobRole = role;
-    this.toggleDropdown()
+    this.languagesTouched = true;
+    this.empTypeTouched = true;
   }
 
-  this.EpmloyeIdCreate(); 
-}
+  markPageOneFieldsAsTouched(): void {
+    const pageOneFields: (keyof Personal)[] = [
+      'firstNameEnglish', 'lastNameEnglish', 'firstNameSinhala', 'lastNameSinhala',
+      'firstNameTamil', 'lastNameTamil', 'phoneNumber01', 'phoneNumber02',
+      'nic', 'email', 'companyId', 'centerId', 'jobRole', 'irmId'
+    ];
 
+    pageOneFields.forEach(field => {
+      this.touchedFields[field] = true;
+    });
 
+    this.languagesTouched = true;
+    this.empTypeTouched = true;
+    this.jobRoleTouched = true;
+  }
 
+  toggleDropdown() {
+    this.dropdownOpen = !this.dropdownOpen;
+  }
+
+  closeDropdown() {
+    this.dropdownOpen = false;
+  }
+
+  selectjobRole(role: string) {
+
+    if (role === "Collection Centre Manager") {
+      this.personalData.jobRole = "Collection Centre Manager";
+      this.toggleDropdown()
+    } else {
+      this.personalData.jobRole = role;
+      this.toggleDropdown()
+    }
+
+    this.EpmloyeIdCreate();
+  }
 
   onCheckboxChange1(lang: string, event: any) {
     if (event.target.checked) {
@@ -239,337 +234,48 @@ selectjobRole(role: string) {
     }
   }
 
-back(): void {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: 'You may lose the added data after going back!',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Go Back',
-    cancelButtonText: 'No, Stay Here',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-    buttonsStyling: true,
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.router.navigate(['/steckholders/action/collective-officer']);
-    }
-  });
-}
-
-onJobRoleBlur(): void {
-  this.jobRoleTouched = true;
-}
-
-isJobRoleSelected(): boolean {
-  return !!this.personalData.jobRole && this.personalData.jobRole !== '';
-}
-
-
-onSubmit() {
-
-  
-  this.markAllFieldsAsTouched();
-
-  const missingFields: string[] = [];
-
-  
-  if (!this.personalData.empType) {
-    missingFields.push('Staff Employee Type is Required');
-  }
-
-  if (!this.isAtLeastOneLanguageSelected()) {
-    missingFields.push('Preferred Languages is Required');
-  }
-
-  if (!this.personalData.companyId) {
-    missingFields.push('Company Name is Required');
-  }
-
-  if (!this.personalData.centerId) {
-    missingFields.push('Collection Centre Name is Required');
-  }
-
-  if (!this.personalData.jobRole) {
-    missingFields.push('Job Role is Required');
-  }
-
-  if (this.personalData.jobRole === 'Collection Officer' && !this.personalData.irmId) {
-    missingFields.push('Manager Name is Required');
-  }
-
-  if (!this.personalData.firstNameEnglish) {
-    missingFields.push('First Name (in English) is Required');
-  }
-
-  if (!this.personalData.lastNameEnglish) {
-    missingFields.push('Last Name (in English) is Required');
-  }
-
-  if (!this.personalData.firstNameSinhala) {
-    missingFields.push('First Name (in Sinhala) is Required');
-  }
-
-  if (!this.personalData.lastNameSinhala) {
-    missingFields.push('Last Name (in Sinhala) is Required');
-  }
-
-  if (!this.personalData.firstNameTamil) {
-    missingFields.push('First Name (in Tamil) is Required');
-  }
-
-  if (!this.personalData.lastNameTamil) {
-    missingFields.push('Last Name (in Tamil) is Required');
-  }
-
-  if (!this.personalData.irmId && this.personalData.jobRole === 'Collection Officer') {
-    missingFields.push('Collection Centre Manager is Required');
-  }
-
-  if (!this.personalData.phoneNumber01) {
-    missingFields.push('Mobile Number - 01 is Required');
-  } else if (!this.isValidPhoneNumber(this.personalData.phoneNumber01)) {
-    missingFields.push('Mobile Number - 01 - Must be 9 digits');
-  }
-
-  if (this.personalData.phoneNumber02 && !this.isValidPhoneNumber(this.personalData.phoneNumber02)) {
-    missingFields.push('Mobile Number - 02 - Must be 9 digits');
-  }
-
-  if (this.areDuplicatePhoneNumbers()) {
-    missingFields.push('Mobile Number - 02 - Cannot be the same as Mobile Number - 01');
-  }
-
-  if (!this.personalData.nic) {
-    missingFields.push('NIC Number is Required');
-  } else if (!this.isValidNIC(this.personalData.nic)) {
-    missingFields.push('NIC Number - Must be 12 digits or 9 digits followed by V');
-  }
-
-  if (!this.personalData.email) {
-    missingFields.push('Email is Required');
-  } else if (!this.isValidEmail(this.personalData.email)) {
-    missingFields.push(`Email - ${this.getEmailErrorMessage(this.personalData.email)}`);
-  }
-
-  
-  if (!this.personalData.houseNumber) {
-    missingFields.push('House Number is Required');
-  }
-
-  if (!this.personalData.streetName) {
-    missingFields.push('Street Name is Required');
-  }
-
-  if (!this.personalData.city) {
-    missingFields.push('City is Required');
-  }
-
-  if (!this.personalData.district) {
-    missingFields.push('District is Required');
-  }
-
-  if (!this.personalData.province) {
-    missingFields.push('Province is Required');
-  }
-
-  if (!this.personalData.accHolderName) {
-    missingFields.push("Account Holder's Name is required.");
-  }
-
-  if (!this.personalData.accNumber) {
-    missingFields.push('Account Number is Required');
-  }
-
-  if (!this.personalData.confirmAccNumber) {
-    missingFields.push('Confirm Account Number is Required');
-  } else if (this.personalData.accNumber !== this.personalData.confirmAccNumber) {
-    missingFields.push('Confirm Account Number - Must match Account Number');
-  }
-
-  if (!this.selectedBankId) {
-    missingFields.push('Bank Name is Required');
-  }
-
-  if (!this.selectedBranchId) {
-    missingFields.push('Branch Name is Required');
-  }
-
-  
-  if (missingFields.length > 0) {
-    let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
-    missingFields.forEach((field) => {
-      errorMessage += `<li>${field}</li>`;
-    });
-    errorMessage += '</ul></div>';
-
+  back(): void {
     Swal.fire({
-      icon: 'error',
-      title: 'Missing or Invalid Information',
-      html: errorMessage,
-      confirmButtonText: 'OK',
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold text-lg',
-        htmlContainer: 'text-left',
-        confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+        title: 'font-semibold',
       },
+      buttonsStyling: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate(['/steckholders/action/collective-officer']);
+      }
     });
-    return;
   }
 
-  Swal.fire({
-    title: 'Are you sure?',
-    text: 'Do you want to create the collection officer?',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, create it!',
-    cancelButtonText: 'No, cancel',
-    reverseButtons: true,
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold text-lg',
-      htmlContainer: 'text-left',
-      confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
-    },
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.isLoading = true;
-      this.collectionOfficerService
-        .createCollectiveOfficer(this.personalData, this.selectedImage)
-        .subscribe(
-          (res: any) => {
-            this.isLoading = false;
-            this.officerId = res.officerId;
-            this.errorMessage = '';
-
-            Swal.fire({
-              icon: 'success',
-              title: 'Success',
-              text: 'Collection Officer Created Successfully',
-              confirmButtonText: 'OK',
-              customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                title: 'font-semibold text-lg',
-                htmlContainer: 'text-left',
-                confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
-              },
-            });
-            this.navigatePath('/steckholders/action/collective-officer');
-          },
-          (error: any) => {
-            this.isLoading = false;
-            let errorMessage = 'An unexpected error occurred';
-            let messages: string[] = [];
-          
-            if (error.error && Array.isArray(error.error.errors)) {
-              messages = error.error.errors.map((err: string) => {
-                switch (err) {
-                  case 'NIC':
-                    return 'The NIC number is already registered.';
-                  case 'Email':
-                    return 'Email already exists.';
-                  case 'PhoneNumber01':
-                    return 'Mobile Number 1 already exists.';
-                  case 'PhoneNumber02':
-                    return 'Mobile Number 2 already exists.';
-                  default:
-                    return 'Validation error: ' + err;
-                }
-              });
-            }
-          
-            if (messages.length > 0) {
-              errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following Duplicate field issues:</p><ul class="list-disc pl-5">';
-              messages.forEach(m => {
-                errorMessage += `<li>${m}</li>`;
-              });
-              errorMessage += '</ul></div>';
-          
-              Swal.fire({
-                icon: 'error',
-                title: 'Duplicate Information',
-                html: errorMessage,
-                confirmButtonText: 'OK',
-                customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                  title: 'font-semibold text-lg',
-                  htmlContainer: 'text-left',
-                  confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
-                },
-              });
-              return;
-            }
-          }
-          
-        );
-    } 
-  });
-}
-
-capitalizeNames() {
-  if (this.personalData.firstNameEnglish) {
-    this.personalData.firstNameEnglish = 
-      this.personalData.firstNameEnglish.charAt(0).toUpperCase() + 
-      this.personalData.firstNameEnglish.slice(1);
+  onJobRoleBlur(): void {
+    this.jobRoleTouched = true;
   }
-  if (this.personalData.lastNameEnglish) {
-    this.personalData.lastNameEnglish = 
-      this.personalData.lastNameEnglish.charAt(0).toUpperCase() + 
-      this.personalData.lastNameEnglish.slice(1);
+
+  isJobRoleSelected(): boolean {
+    return !!this.personalData.jobRole && this.personalData.jobRole !== '';
   }
-}
 
-blockSpaces(event: KeyboardEvent) {
-  if (event.key === ' ') {
-    event.preventDefault(); 
-  }
-}
-onCancel() {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: 'You may lose the added data after canceling!',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Cancel',
-    cancelButtonText: 'No, Keep Editing',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-    buttonsStyling: true,
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.navigatePath('/steckholders/action/collective-officer');
-    }
-  });
-}
-
-nextFormCreate(page: 'pageOne' | 'pageTwo') {
-  if (page === 'pageTwo') {
-    this.markPageOneFieldsAsTouched();
-
-    this.empTypeCtrl?.control.markAsTouched();
-    this.languagesCtrl?.control.markAsTouched();
-
+  onSubmit() {
+    this.markAllFieldsAsTouched();
     const missingFields: string[] = [];
-
+    
     if (!this.personalData.empType) {
       missingFields.push('Staff Employee Type is Required');
     }
 
     if (!this.isAtLeastOneLanguageSelected()) {
-      missingFields.push('Preferred Language is Required');
+      missingFields.push('Preferred Languages is Required');
     }
 
     if (!this.personalData.companyId) {
       missingFields.push('Company Name is Required');
-    }
-
-    if (!this.personalData.irmId && this.personalData.jobRole === 'Collection Officer') {
-      missingFields.push('Collection Centre Manager is Required');
     }
 
     if (!this.personalData.centerId) {
@@ -608,17 +314,21 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
       missingFields.push('Last Name (in Tamil) is Required');
     }
 
+    if (!this.personalData.irmId && this.personalData.jobRole === 'Collection Officer') {
+      missingFields.push('Collection Centre Manager is Required');
+    }
+
     if (!this.personalData.phoneNumber01) {
       missingFields.push('Mobile Number - 01 is Required');
     } else if (!this.isValidPhoneNumber(this.personalData.phoneNumber01)) {
-      missingFields.push('Mobile Number - 01 - Must be 9 digits ');
+      missingFields.push('Mobile Number - 01 - Must be 9 digits');
     }
 
     if (this.personalData.phoneNumber02 && !this.isValidPhoneNumber(this.personalData.phoneNumber02)) {
       missingFields.push('Mobile Number - 02 - Must be 9 digits');
     }
 
-    if (this.personalData.phoneNumber01 && this.personalData.phoneNumber02 && this.personalData.phoneNumber01 === this.personalData.phoneNumber02) {
+    if (this.areDuplicatePhoneNumbers()) {
       missingFields.push('Mobile Number - 02 - Cannot be the same as Mobile Number - 01');
     }
 
@@ -633,6 +343,50 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
     } else if (!this.isValidEmail(this.personalData.email)) {
       missingFields.push(`Email - ${this.getEmailErrorMessage(this.personalData.email)}`);
     }
+
+
+    if (!this.personalData.houseNumber) {
+      missingFields.push('House Number is Required');
+    }
+
+    if (!this.personalData.streetName) {
+      missingFields.push('Street Name is Required');
+    }
+
+    if (!this.personalData.city) {
+      missingFields.push('City is Required');
+    }
+
+    if (!this.personalData.district) {
+      missingFields.push('District is Required');
+    }
+
+    if (!this.personalData.province) {
+      missingFields.push('Province is Required');
+    }
+
+    if (!this.personalData.accHolderName) {
+      missingFields.push("Account Holder's Name is required.");
+    }
+
+    if (!this.personalData.accNumber) {
+      missingFields.push('Account Number is Required');
+    }
+
+    if (!this.personalData.confirmAccNumber) {
+      missingFields.push('Confirm Account Number is Required');
+    } else if (this.personalData.accNumber !== this.personalData.confirmAccNumber) {
+      missingFields.push('Confirm Account Number - Must match Account Number');
+    }
+
+    if (!this.selectedBankId) {
+      missingFields.push('Bank Name is Required');
+    }
+
+    if (!this.selectedBranchId) {
+      missingFields.push('Branch Name is Required');
+    }
+
 
     if (missingFields.length > 0) {
       let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
@@ -650,15 +404,251 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
           title: 'font-semibold text-lg',
           htmlContainer: 'text-left',
+          confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
         },
       });
       return;
     }
-    this.shouldScrollToTop = true;
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to create the collection officer?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, create it!',
+      cancelButtonText: 'No, cancel',
+      reverseButtons: true,
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+        confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+        this.collectionOfficerService
+          .createCollectiveOfficer(this.personalData, this.selectedImage)
+          .subscribe(
+            (res: any) => {
+              this.isLoading = false;
+              this.officerId = res.officerId;
+              this.errorMessage = '';
+
+              Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: 'Collection Officer Created Successfully',
+                confirmButtonText: 'OK',
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold text-lg',
+                  htmlContainer: 'text-left',
+                  confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+                },
+              });
+              this.navigatePath('/steckholders/action/collective-officer');
+            },
+            (error: any) => {
+              this.isLoading = false;
+              let errorMessage = 'An unexpected error occurred';
+              let messages: string[] = [];
+
+              if (error.error && Array.isArray(error.error.errors)) {
+                messages = error.error.errors.map((err: string) => {
+                  switch (err) {
+                    case 'NIC':
+                      return 'The NIC number is already registered.';
+                    case 'Email':
+                      return 'Email already exists.';
+                    case 'PhoneNumber01':
+                      return 'Mobile Number 1 already exists.';
+                    case 'PhoneNumber02':
+                      return 'Mobile Number 2 already exists.';
+                    default:
+                      return 'Validation error: ' + err;
+                  }
+                });
+              }
+
+              if (messages.length > 0) {
+                errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following Duplicate field issues:</p><ul class="list-disc pl-5">';
+                messages.forEach(m => {
+                  errorMessage += `<li>${m}</li>`;
+                });
+                errorMessage += '</ul></div>';
+
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Duplicate Information',
+                  html: errorMessage,
+                  confirmButtonText: 'OK',
+                  customClass: {
+                    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                    title: 'font-semibold text-lg',
+                    htmlContainer: 'text-left',
+                    confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+                  },
+                });
+                return;
+              }
+            }
+
+          );
+      }
+    });
   }
 
-  this.selectedPage = page;
-}
+  capitalizeNames() {
+    if (this.personalData.firstNameEnglish) {
+      this.personalData.firstNameEnglish =
+        this.personalData.firstNameEnglish.charAt(0).toUpperCase() +
+        this.personalData.firstNameEnglish.slice(1);
+    }
+    if (this.personalData.lastNameEnglish) {
+      this.personalData.lastNameEnglish =
+        this.personalData.lastNameEnglish.charAt(0).toUpperCase() +
+        this.personalData.lastNameEnglish.slice(1);
+    }
+  }
+
+  blockSpaces(event: KeyboardEvent) {
+    if (event.key === ' ') {
+      event.preventDefault();
+    }
+  }
+  onCancel() {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after canceling!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Keep Editing',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+      buttonsStyling: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.navigatePath('/steckholders/action/collective-officer');
+      }
+    });
+  }
+
+  nextFormCreate(page: 'pageOne' | 'pageTwo') {
+    if (page === 'pageTwo') {
+      this.markPageOneFieldsAsTouched();
+
+      this.empTypeCtrl?.control.markAsTouched();
+      this.languagesCtrl?.control.markAsTouched();
+
+      const missingFields: string[] = [];
+
+      if (!this.personalData.empType) {
+        missingFields.push('Staff Employee Type is Required');
+      }
+
+      if (!this.isAtLeastOneLanguageSelected()) {
+        missingFields.push('Preferred Language is Required');
+      }
+
+      if (!this.personalData.companyId) {
+        missingFields.push('Company Name is Required');
+      }
+
+      if (!this.personalData.irmId && this.personalData.jobRole === 'Collection Officer') {
+        missingFields.push('Collection Centre Manager is Required');
+      }
+
+      if (!this.personalData.centerId) {
+        missingFields.push('Collection Centre Name is Required');
+      }
+
+      if (!this.personalData.jobRole) {
+        missingFields.push('Job Role is Required');
+      }
+
+      if (this.personalData.jobRole === 'Collection Officer' && !this.personalData.irmId) {
+        missingFields.push('Manager Name is Required');
+      }
+
+      if (!this.personalData.firstNameEnglish) {
+        missingFields.push('First Name (in English) is Required');
+      }
+
+      if (!this.personalData.lastNameEnglish) {
+        missingFields.push('Last Name (in English) is Required');
+      }
+
+      if (!this.personalData.firstNameSinhala) {
+        missingFields.push('First Name (in Sinhala) is Required');
+      }
+
+      if (!this.personalData.lastNameSinhala) {
+        missingFields.push('Last Name (in Sinhala) is Required');
+      }
+
+      if (!this.personalData.firstNameTamil) {
+        missingFields.push('First Name (in Tamil) is Required');
+      }
+
+      if (!this.personalData.lastNameTamil) {
+        missingFields.push('Last Name (in Tamil) is Required');
+      }
+
+      if (!this.personalData.phoneNumber01) {
+        missingFields.push('Mobile Number - 01 is Required');
+      } else if (!this.isValidPhoneNumber(this.personalData.phoneNumber01)) {
+        missingFields.push('Mobile Number - 01 - Must be 9 digits ');
+      }
+
+      if (this.personalData.phoneNumber02 && !this.isValidPhoneNumber(this.personalData.phoneNumber02)) {
+        missingFields.push('Mobile Number - 02 - Must be 9 digits');
+      }
+
+      if (this.personalData.phoneNumber01 && this.personalData.phoneNumber02 && this.personalData.phoneNumber01 === this.personalData.phoneNumber02) {
+        missingFields.push('Mobile Number - 02 - Cannot be the same as Mobile Number - 01');
+      }
+
+      if (!this.personalData.nic) {
+        missingFields.push('NIC Number is Required');
+      } else if (!this.isValidNIC(this.personalData.nic)) {
+        missingFields.push('NIC Number - Must be 12 digits or 9 digits followed by V');
+      }
+
+      if (!this.personalData.email) {
+        missingFields.push('Email is Required');
+      } else if (!this.isValidEmail(this.personalData.email)) {
+        missingFields.push(`Email - ${this.getEmailErrorMessage(this.personalData.email)}`);
+      }
+
+      if (missingFields.length > 0) {
+        let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+        missingFields.forEach((field) => {
+          errorMessage += `<li>${field}</li>`;
+        });
+        errorMessage += '</ul></div>';
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Missing or Invalid Information',
+          html: errorMessage,
+          confirmButtonText: 'OK',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+            htmlContainer: 'text-left',
+          },
+        });
+        return;
+      }
+      this.shouldScrollToTop = true;
+    }
+
+    this.selectedPage = page;
+  }
 
 
   ngOnInit(): void {
@@ -732,29 +722,29 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
   }
 
   getAllCollectionCetnter(id: number) {
-  this.loaded = false;
-  this.personalData.centerId = '';
-  this.personalData.irmId = ''; 
-  this.personalData.jobRole = '';
-  this.managerOptions = []; 
-  
-  this.collectionCenterSrv.getAllCollectionCenterByCompany(id).subscribe(
-    (res) => {
-      this.collectionCenterData = res;
-      // Modify this line to include regCode in the label
-      this.centerOptions = this.collectionCenterData.map(center => ({
-        label: center.regCode ? `${center.regCode} - ${center.centerName}` : center.centerName,
-        value: center.id
-      }));
-      this.loaded = true;
-    },
-    (error) => {
-      this.collectionCenterData = [];
-      this.centerOptions = [];
-      this.loaded = true;
-    }
-  );
-}
+    this.loaded = false;
+    this.personalData.centerId = '';
+    this.personalData.irmId = '';
+    this.personalData.jobRole = '';
+    this.managerOptions = [];
+
+    this.collectionCenterSrv.getAllCollectionCenterByCompany(id).subscribe(
+      (res) => {
+        this.collectionCenterData = res;
+        // Modify this line to include regCode in the label
+        this.centerOptions = this.collectionCenterData.map(center => ({
+          label: center.regCode ? `${center.regCode} - ${center.centerName}` : center.centerName,
+          value: center.id
+        }));
+        this.loaded = true;
+      },
+      (error) => {
+        this.collectionCenterData = [];
+        this.centerOptions = [];
+        this.loaded = true;
+      }
+    );
+  }
 
   getAllCompanies() {
     this.collectionCenterSrv.getAllCompanyList().subscribe((res) => {
@@ -857,21 +847,21 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
     });
   }
 
-updateProvince(event: DropdownChangeEvent): void {
-  const selectedDistrict = event.value;
+  updateProvince(event: DropdownChangeEvent): void {
+    const selectedDistrict = event.value;
 
-  const selected = this.districts.find(
-    (district) => district.name === selectedDistrict
-  );
+    const selected = this.districts.find(
+      (district) => district.name === selectedDistrict
+    );
 
-  if (this.itemId === null) {
-    if (selected) {
-      this.personalData.province = selected.province;
-    } else {
-      this.personalData.province = '';
+    if (this.itemId === null) {
+      if (selected) {
+        this.personalData.province = selected.province;
+      } else {
+        this.personalData.province = '';
+      }
     }
   }
-}
   updateEmployeeType(selectedType: string): void {
     this.empType = selectedType;
     this.personalData.empType = selectedType;
@@ -893,33 +883,33 @@ updateProvince(event: DropdownChangeEvent): void {
       this.personalData[fieldName] = value;
     }
   }
-onLetterKeyPress(event: KeyboardEvent) {
-  const input = event.target as HTMLInputElement;
-  const char = event.key;
-  
-  if (char === ' ' && input.selectionStart === 0) {
-    event.preventDefault();
-    return;
-  }
-  
-  
-}
+  onLetterKeyPress(event: KeyboardEvent) {
+    const input = event.target as HTMLInputElement;
+    const char = event.key;
 
-onSinhalaTamilInput(event: Event, fieldName: 'firstNameSinhala' | 'lastNameSinhala' | 'firstNameTamil' | 'lastNameTamil'): void {
-  const input = event.target as HTMLInputElement;
-  let value = input.value
-  if (value.startsWith(' ')) {
-    value = value.trimStart();
-    this.personalData[fieldName] = value;
-    
-    
-    setTimeout(() => {
-      input.value = value;
-    }, 0);
-  }
-}
+    if (char === ' ' && input.selectionStart === 0) {
+      event.preventDefault();
+      return;
+    }
 
-  
+
+  }
+
+  onSinhalaTamilInput(event: Event, fieldName: 'firstNameSinhala' | 'lastNameSinhala' | 'firstNameTamil' | 'lastNameTamil'): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value
+    if (value.startsWith(' ')) {
+      value = value.trimStart();
+      this.personalData[fieldName] = value;
+
+
+      setTimeout(() => {
+        input.value = value;
+      }, 0);
+    }
+  }
+
+
   formatSinhalaName(fieldName: 'firstNameSinhala' | 'lastNameSinhala'): void {
     let value = this.personalData[fieldName];
     if (value) {
@@ -933,17 +923,17 @@ onSinhalaTamilInput(event: Event, fieldName: 'firstNameSinhala' | 'lastNameSinha
     }
   }
 
-formatTamilName(fieldName: 'firstNameTamil' | 'lastNameTamil'): void {
-  let value = this.personalData[fieldName];
-  if (value) {
-    value = value.replace(/[^\u0B80-\u0BFF ]/g, '');
-    value = value.trim().replace(/\s{2,}/g, ' ');
-    this.personalData[fieldName] = value;
+  formatTamilName(fieldName: 'firstNameTamil' | 'lastNameTamil'): void {
+    let value = this.personalData[fieldName];
+    if (value) {
+      value = value.replace(/[^\u0B80-\u0BFF ]/g, '');
+      value = value.trim().replace(/\s{2,}/g, ' ');
+      this.personalData[fieldName] = value;
+    }
   }
-}
 
 
-  
+
   formatAccountHolderName(): void {
     let value = this.personalData.accHolderName;
     if (value) {
@@ -960,7 +950,7 @@ formatTamilName(fieldName: 'firstNameTamil' | 'lastNameTamil'): void {
   }
 
   preventAccountHolderSpecialCharacters(event: KeyboardEvent): void {
-    
+
     if (!this.handleSpaceRestrictions(event)) {
       return;
     }
@@ -978,41 +968,41 @@ formatTamilName(fieldName: 'firstNameTamil' | 'lastNameTamil'): void {
 
     const char = String.fromCharCode(event.which);
     if (!/[a-zA-Z0-9\s\-\/\\#]/.test(char)) {
-    event.preventDefault();
-  }
+      event.preventDefault();
+    }
   }
 
   formatAddressField(fieldName: 'houseNumber' | 'streetName' | 'city'): void {
-  let value = this.personalData[fieldName];
-  if (value) {
-    value = value.trim().replace(/\s{2,}/g, ' ');
+    let value = this.personalData[fieldName];
+    if (value) {
+      value = value.trim().replace(/\s{2,}/g, ' ');
 
-    if (fieldName === 'streetName' || fieldName === 'city') {
-      value = value.replace(/\b\w/g, (char: string) => char.toUpperCase());
-    }
-    
-    if (fieldName === 'houseNumber' && value.length > 0) {
-      const firstChar = value.charAt(0);
-      if (/[a-zA-Z]/.test(firstChar)) {
-        value = firstChar.toUpperCase() + value.slice(1);
+      if (fieldName === 'streetName' || fieldName === 'city') {
+        value = value.replace(/\b\w/g, (char: string) => char.toUpperCase());
       }
+
+      if (fieldName === 'houseNumber' && value.length > 0) {
+        const firstChar = value.charAt(0);
+        if (/[a-zA-Z]/.test(firstChar)) {
+          value = firstChar.toUpperCase() + value.slice(1);
+        }
+      }
+
+      this.personalData[fieldName] = value;
+    }
+  }
+
+  onTrimInput(event: Event, modelRef: any, fieldName: string): void {
+    const inputElement = event.target as HTMLInputElement;
+    let trimmedValue = inputElement.value.trimStart();
+
+    if (trimmedValue.length > 0) {
+      trimmedValue = trimmedValue.charAt(0).toUpperCase() + trimmedValue.slice(1);
     }
 
-    this.personalData[fieldName] = value;
+    modelRef[fieldName] = trimmedValue;
+    inputElement.value = trimmedValue;
   }
-}
-
-onTrimInput(event: Event, modelRef: any, fieldName: string): void {
-  const inputElement = event.target as HTMLInputElement;
-  let trimmedValue = inputElement.value.trimStart();
-
-  if (trimmedValue.length > 0) {
-    trimmedValue = trimmedValue.charAt(0).toUpperCase() + trimmedValue.slice(1);
-  }
-
-  modelRef[fieldName] = trimmedValue;
-  inputElement.value = trimmedValue;
-}
   hasInvalidNameCharacters(fieldName: 'firstNameEnglish' | 'lastNameEnglish'): boolean {
     const value = this.personalData[fieldName];
     if (!value) return false;
@@ -1063,22 +1053,22 @@ onTrimInput(event: Event, modelRef: any, fieldName: string): void {
   }
 
   isValidEmail(email: string): boolean {
-  if (!email) return false;
-  
-  const emailRegex = /^[a-zA-Z0-9]+([._%+-]?[a-zA-Z0-9]+)*@[a-zA-Z0-9]+([.-]?[a-zA-Z0-9]+)*\.[a-zA-Z]{2,}$/;
-  
-  if (email.includes('..')) {
-    return false; 
+    if (!email) return false;
+
+    const emailRegex = /^[a-zA-Z0-9]+([._%+-]?[a-zA-Z0-9]+)*@[a-zA-Z0-9]+([.-]?[a-zA-Z0-9]+)*\.[a-zA-Z]{2,}$/;
+
+    if (email.includes('..')) {
+      return false;
+    }
+    if (email.startsWith('.') || email.endsWith('.')) {
+      return false;
+    }
+    if (/[!#$%^&*()=<>?\/\\]/.test(email.replace(/\+/g, ''))) {
+      return false;
+    }
+
+    return emailRegex.test(email);
   }
-  if (email.startsWith('.') || email.endsWith('.')) {
-    return false; 
-  }
-  if (/[!#$%^&*()=<>?\/\\]/.test(email.replace(/\+/g, ''))) {
-    return false; 
-  }
-  
-  return emailRegex.test(email);
-}
 
   isValidNIC(nic: string): boolean {
     if (!nic) return false;
@@ -1093,11 +1083,11 @@ onTrimInput(event: Event, modelRef: any, fieldName: string): void {
   }
 
   isValidPhoneNumber(phone: string): boolean {
-  if (!phone) return false;
-  
-  const phoneRegex = /^7\d{8}$/;
-  return phoneRegex.test(phone);
-}
+    if (!phone) return false;
+
+    const phoneRegex = /^7\d{8}$/;
+    return phoneRegex.test(phone);
+  }
 
   areDuplicatePhoneNumbers(): boolean {
     const phone1 = this.personalData.phoneNumber01;
@@ -1127,7 +1117,7 @@ onTrimInput(event: Event, modelRef: any, fieldName: string): void {
     }
   }
   validateAccNumber(): void {
-   
+
     if (this.personalData.accNumber && this.personalData.confirmAccNumber) {
       this.confirmAccountNumberError =
         this.personalData.accNumber !== this.personalData.confirmAccNumber;
@@ -1299,20 +1289,20 @@ onTrimInput(event: Event, modelRef: any, fieldName: string): void {
   }
 
 
-preventNICInvalidCharacters(event: KeyboardEvent): void {
-  const charCode = event.which ? event.which : event.keyCode;
-  const char = String.fromCharCode(charCode);
-  const currentValue = (event.target as HTMLInputElement).value;
-  
-  if (charCode === 32) {
-    event.preventDefault();
-    return;
+  preventNICInvalidCharacters(event: KeyboardEvent): void {
+    const charCode = event.which ? event.which : event.keyCode;
+    const char = String.fromCharCode(charCode);
+    const currentValue = (event.target as HTMLInputElement).value;
+
+    if (charCode === 32) {
+      event.preventDefault();
+      return;
+    }
+
+    if (!/[0-9Vv]/.test(char)) {
+      event.preventDefault();
+    }
   }
-  
-  if (!/[0-9Vv]/.test(char)) {
-    event.preventDefault();
-  }
-}
 
   formatNIC() {
     if (this.personalData.nic) {
@@ -1376,62 +1366,62 @@ preventNICInvalidCharacters(event: KeyboardEvent): void {
     }
   }
 
-preventAccountNumberInvalidCharacters(event: KeyboardEvent): void {
-  const charCode = event.which ? event.which : event.keyCode;
-  
-  
-  if (charCode === 32) {
-    event.preventDefault();
-    return;
-  }
-  
-  
-  if (charCode < 48 || charCode > 57) {
-    event.preventDefault();
-  }
-}
+  preventAccountNumberInvalidCharacters(event: KeyboardEvent): void {
+    const charCode = event.which ? event.which : event.keyCode;
 
-formatAccountNumber(fieldName: 'accNumber' | 'confirmAccNumber'): void {
-  let value = this.personalData[fieldName];
-  if (value) {
-    value = value.replace(/[^0-9]/g, '');
-    this.personalData[fieldName] = value;
-  }
-}
 
-preventEmailInvalidCharacters(event: KeyboardEvent): void {
-  const charCode = event.which ? event.which : event.keyCode;
-  const char = String.fromCharCode(charCode);
-  if (charCode === 32) {
-    event.preventDefault();
-    return;
-  }
-  if (!/[a-zA-Z0-9@.\-_+]/.test(char)) {
-    event.preventDefault();
-  }
-}
+    if (charCode === 32) {
+      event.preventDefault();
+      return;
+    }
 
-formatEmail(): void {
-  let value = this.personalData.email;
-  if (value) {
-    value = value.replace(/[^a-zA-Z0-9@.\-_]/g, '');
-    
-    value = value.toLowerCase();
-    
-    this.personalData.email = value;
-  }
-}
 
-preventSpecialCharacters(event: KeyboardEvent): void {
-  const input = event.target as HTMLInputElement;
-  const char = String.fromCharCode(event.which);
-
-  if (char === ' ' && input.selectionStart === 0) {
-    event.preventDefault();
-    return;
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+    }
   }
 
-}
+  formatAccountNumber(fieldName: 'accNumber' | 'confirmAccNumber'): void {
+    let value = this.personalData[fieldName];
+    if (value) {
+      value = value.replace(/[^0-9]/g, '');
+      this.personalData[fieldName] = value;
+    }
+  }
+
+  preventEmailInvalidCharacters(event: KeyboardEvent): void {
+    const charCode = event.which ? event.which : event.keyCode;
+    const char = String.fromCharCode(charCode);
+    if (charCode === 32) {
+      event.preventDefault();
+      return;
+    }
+    if (!/[a-zA-Z0-9@.\-_+]/.test(char)) {
+      event.preventDefault();
+    }
+  }
+
+  formatEmail(): void {
+    let value = this.personalData.email;
+    if (value) {
+      value = value.replace(/[^a-zA-Z0-9@.\-_]/g, '');
+
+      value = value.toLowerCase();
+
+      this.personalData.email = value;
+    }
+  }
+
+  preventSpecialCharacters(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement;
+    const char = String.fromCharCode(event.which);
+
+    if (char === ' ' && input.selectionStart === 0) {
+      event.preventDefault();
+      return;
+    }
+
+  }
 
 
   preventNonSinhalaCharacters(event: KeyboardEvent): void {
@@ -1455,91 +1445,91 @@ preventSpecialCharacters(event: KeyboardEvent): void {
     }
   }
   preventNonNumeric(event: KeyboardEvent, fieldName: 'phoneNumber01' | 'phoneNumber02'): void {
-  const input = event.target as HTMLInputElement;
-  const char = String.fromCharCode(event.which);
-  const currentValue = input.value;
-  const cursorPosition = input.selectionStart || 0;
-  
-  if (!/[0-9]/.test(char)) {
-    event.preventDefault();
-    return;
+    const input = event.target as HTMLInputElement;
+    const char = String.fromCharCode(event.which);
+    const currentValue = input.value;
+    const cursorPosition = input.selectionStart || 0;
+
+    if (!/[0-9]/.test(char)) {
+      event.preventDefault();
+      return;
+    }
+
+    if (cursorPosition === 0 && currentValue.length === 0 && char !== '7') {
+      event.preventDefault();
+      return;
+    }
+
+    if (cursorPosition === 0 && char !== '7') {
+      event.preventDefault();
+    }
   }
-  
-  if (cursorPosition === 0 && currentValue.length === 0 && char !== '7') {
-    event.preventDefault();
-    return;
-  }
-  
-  if (cursorPosition === 0 && char !== '7') {
-    event.preventDefault();
-  }
-}
 
   formatPhoneNumber(fieldName: 'phoneNumber01' | 'phoneNumber02'): void {
-  let value = this.personalData[fieldName];
-  if (value) {
-    value = value.replace(/[^0-9]/g, '');
-    
-    
-    if (value.length > 0 && value.charAt(0) !== '7') {
-      value = value.replace(/^[^7]*/, '');
-    }
-    
-    
-    if (value.length > 9) {
-      value = value.substring(0, 9);
-    }
-    
-    this.personalData[fieldName] = value;
-  }
-}
+    let value = this.personalData[fieldName];
+    if (value) {
+      value = value.replace(/[^0-9]/g, '');
 
-  changeCenter(event: any){
-    
+
+      if (value.length > 0 && value.charAt(0) !== '7') {
+        value = value.replace(/^[^7]*/, '');
+      }
+
+
+      if (value.length > 9) {
+        value = value.substring(0, 9);
+      }
+
+      this.personalData[fieldName] = value;
+    }
+  }
+
+  changeCenter(event: any) {
+
     this.personalData.irmId = '';
     this.getAllCollectionManagers();
   }
 
   getEmailErrorMessage(email: string): string {
-  if (!email) {
-    return 'Email is required';
-  }
-  
-  if (email.includes('..')) {
-    return 'Email cannot contain consecutive dots';
-  }
-  if (email.startsWith('.')) {
-    return 'Email cannot start with a dot';
-  }
-  if (email.endsWith('.')) {
-    return 'Email cannot end with a dot';
-  }
-  if (/[!#$%^&*()=<>?\/\\]/.test(email)) {
-    return 'Email contains invalid special characters';
-  }
-  if (!/@/.test(email)) {
-    return 'Email must contain an @ symbol';
-  }
-  if (!/\./.test(email.split('@')[1])) {
-    return 'Email domain must contain a dot (.)';
-  }
-  
-  return 'Please enter a valid email in the format: example@domain.com';
-}
+    if (!email) {
+      return 'Email is required';
+    }
 
-ngAfterViewChecked(): void {
+    if (email.includes('..')) {
+      return 'Email cannot contain consecutive dots';
+    }
+    if (email.startsWith('.')) {
+      return 'Email cannot start with a dot';
+    }
+    if (email.endsWith('.')) {
+      return 'Email cannot end with a dot';
+    }
+    if (/[!#$%^&*()=<>?\/\\]/.test(email)) {
+      return 'Email contains invalid special characters';
+    }
+    if (!/@/.test(email)) {
+      return 'Email must contain an @ symbol';
+    }
+    if (!/\./.test(email.split('@')[1])) {
+      return 'Email domain must contain a dot (.)';
+    }
+
+    return 'Please enter a valid email in the format: example@domain.com';
+  }
+
+  ngAfterViewChecked(): void {
     // Scroll to top when page changes to pageTwo
     if (this.selectedPage === 'pageTwo' && this.shouldScrollToTop && this.topScrollElement) {
       setTimeout(() => {
-        this.topScrollElement.nativeElement.scrollIntoView({ 
-          behavior: 'smooth', 
-          block: 'start' 
+        this.topScrollElement.nativeElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
         });
         this.shouldScrollToTop = false; // Reset the flag
       }, 100); // Small delay to ensure DOM is updated
     }
   }
-  
+
 }
 
 class Personal {

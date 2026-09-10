@@ -18,6 +18,7 @@ export class CustomersService {
     limit: number       = 10,
     searchText: string  = '',
     ratingFilter: string = '',
+    agentFilter: number | string = '',
   ): Observable<any> {
     const headers = new HttpHeaders({ Authorization: `Bearer ${this.token}` });
  
@@ -25,6 +26,7 @@ export class CustomersService {
  
     if (searchText)   url += `&searchText=${searchText}`;
     if (ratingFilter) url += `&ratingFilter=${ratingFilter}`;
+    if (agentFilter)  url += `&agentFilter=${agentFilter}`;
  
     return this.http.get<any>(url, { headers });
   }

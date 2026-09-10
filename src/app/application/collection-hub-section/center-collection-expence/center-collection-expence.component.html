@@ -4,10 +4,7 @@
   Back
 </button>
 
-<div
-  *ngIf="!isLoading"
-  class="w-full px-10 py-7 bg-tileLight dark:bg-[#363636] shadow-lg rounded-lg overflow-x-auto"
->
+<div *ngIf="!isLoading" class="w-full px-10 py-7 bg-tileLight dark:bg-[#363636] shadow-lg rounded-lg overflow-x-auto">
   <div class="w-full px-10 pb-7 pt-4 dark:bg-[#363636]">
     <div class="w-full dark:bg-[#363636]">
       <div class="flex flex-row items-center justify-center">
@@ -16,27 +13,17 @@
         </p>
 
         <div class="relative w-56 mr-10">
-          <p-calendar
-            [(ngModel)]="fromDate"
-            name="fromDate"
-            (onSelect)="validateFromDate()"
-            [showIcon]="true"
-            dateFormat="yy-mm-dd"
-            inputId="fromDate"
-            placeholder="--Select Date--"
-            class="w-full"
-            iconDisplay="input"
+          <p-calendar [(ngModel)]="fromDate" name="fromDate" (onSelect)="validateFromDate()" [showIcon]="true"
+            dateFormat="yy-mm-dd" inputId="fromDate" placeholder="--Select Date--" class="w-full" iconDisplay="input"
             panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
                              [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
                              [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
                              [&_.p-datepicker-header]:dark:bg-[#2d354d] 
                              [&_.p-datepicker-header]:dark:text-white
                              [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
-                             [&_.p-button:hover]:dark:bg-[#6b7280]"
-            [inputStyleClass]="
+                             [&_.p-button:hover]:dark:bg-[#6b7280]" [inputStyleClass]="
               'p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-13 pr-12'
-            "
-          >
+            ">
           </p-calendar>
         </div>
 
@@ -45,40 +32,25 @@
         </p>
 
         <div class="relative w-56 mr-6">
-          <p-calendar
-            #toDateCalendar
-            [(ngModel)]="toDate"
-            name="toDate"
-            [minDate]="fromDate"
-            (onSelect)="validateToDate()"
-            [showIcon]="true"
-            dateFormat="yy-mm-dd"
-            inputId="toDate"
-            placeholder="--Select Date--"
-            class="w-full"
-            iconDisplay="input"
-            panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+          <p-calendar #toDateCalendar [(ngModel)]="toDate" name="toDate" [minDate]="fromDate"
+            (onSelect)="validateToDate()" [showIcon]="true" dateFormat="yy-mm-dd" inputId="toDate"
+            placeholder="--Select Date--" class="w-full" iconDisplay="input" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
                              [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
                              [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
                              [&_.p-datepicker-header]:dark:bg-[#2d354d] 
                              [&_.p-datepicker-header]:dark:text-white
                              [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
-                             [&_.p-button:hover]:dark:bg-[#6b7280]"
-            [inputStyleClass]="
+                             [&_.p-button:hover]:dark:bg-[#6b7280]" [inputStyleClass]="
               'p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-13 pr-12'
-            "
-          >
+            ">
           </p-calendar>
         </div>
 
-        <button
-          *ngIf="
+        <button *ngIf="
             permissionService.hasPermission('Go Button') ||
             tokenService.getUserDetails().role === '1'
-          "
-          (click)="goBtn()"
-          class="bg-[#415CFF] text-lg text-white font-semibold px-6 py-2 rounded-lg shadow-lg ml-5 dark:text-textDark"
-        >
+          " (click)="goBtn()"
+          class="bg-[#415CFF] text-lg text-white font-semibold px-6 py-2 rounded-lg shadow-lg ml-5 dark:text-textDark">
           Go
         </button>
       </div>
@@ -98,30 +70,19 @@
       <div class="flex flex-row items-center gap-5">
 
         <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#292929]">
-          <input
-            type="text"
-            placeholder="Search By GRN No / NIC.."
-            [(ngModel)]="searchText"
-            (keyup.enter)="onSearch()"
-            (keyup.esc)="offSearch()"
-            class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
-          />
-          <button
-            type="button"
-            class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-            (click)="onSearch()"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"/>
+          <input type="text" placeholder="Search By GRN No / NIC.." [(ngModel)]="searchText" (keyup.enter)="onSearch()"
+            (keyup.esc)="offSearch()" class="bg-transparent outline-none w-full text-textLight dark:text-textDark" />
+          <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2" (click)="onSearch()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
             </svg>
           </button>
-          <button
-            type="button"
-            class="text-gray-500 hover:text-gray-700 focus:outline-none"
-            (click)="offSearch()"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none" (click)="offSearch()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
@@ -135,14 +96,11 @@
         {{ totalPaymentsAmount | number : "1.2-2" }}
       </p>
 
-      <button
-        *ngIf="
+      <button *ngIf="
           permissionService.hasPermission('Download Centre Collection Expenses') ||
           tokenService.getUserDetails().role === '1'
-        "
-        class="bg-[#415CFF] text-white shadow-md font-medium rounded-lg py-2 px-5 text-lg flex items-center"
-        (click)="downloadTemplate1()"
-      >
+        " class="bg-[#415CFF] text-white shadow-md font-medium rounded-lg py-2 px-5 text-lg flex items-center"
+        (click)="downloadTemplate1()">
         <i class="fa-solid fa-download px-2" *ngIf="!isDownloading"></i>
         <i class="fa-solid fa-spinner fa-spin px-2" *ngIf="isDownloading"></i>
         {{ isDownloading ? " Downloading..." : " Download" }}
@@ -151,20 +109,23 @@
 
     <!-- Table -->
     <div class="w-full mt-8 border-gray-100 border-[2px] rounded-lg dark:border-[#202021] overflow-hidden">
-  <table class="w-full min-w-max border-separate border-spacing-0">
-    <thead class="dark:text-gray-300 dark:bg-[#0F0F0F] text-[#4B5563]">
-      <tr>
-        <th class="px-4 py-3 text-left text-sm font-medium border-b-2 border-gray-300 dark:border-[#202021]">No</th>
-        <th class="px-3 py-3 text-left text-sm font-medium border-b-2 border-gray-300 dark:border-[#202021]">GRN No</th>
-        <th class="px-3 py-3 text-left text-sm font-medium border-b-2 border-gray-300 dark:border-[#202021]">Amount (Rs.)</th>
-        <th class="px-3 py-3 text-left text-sm font-medium border-b-2 border-gray-300 dark:border-[#202021]">Farmer NIC</th>
-        <th class="px-3 py-3 text-center text-sm font-medium border-b-2 border-gray-300 dark:border-[#202021]">Collected Time</th>
-        <th class="px-3 py-3 text-center text-sm font-medium border-b-2 border-gray-300 dark:border-[#202021]"></th>
-      </tr>
-    </thead>
-    <tbody class="bg-white text-[#000000] dark:bg-[#1D1D1F]">
-      <tr
-        *ngFor="
+      <table class="w-full min-w-max border-separate border-spacing-0">
+        <thead class="dark:text-gray-300 dark:bg-[#0F0F0F] text-[#4B5563]">
+          <tr>
+            <th class="px-4 py-3 text-left text-sm font-medium border-b-2 border-gray-300 dark:border-[#202021]">No</th>
+            <th class="px-3 py-3 text-left text-sm font-medium border-b-2 border-gray-300 dark:border-[#202021]">GRN No
+            </th>
+            <th class="px-3 py-3 text-left text-sm font-medium border-b-2 border-gray-300 dark:border-[#202021]">Amount
+              (Rs.)</th>
+            <th class="px-3 py-3 text-left text-sm font-medium border-b-2 border-gray-300 dark:border-[#202021]">Farmer
+              NIC</th>
+            <th class="px-3 py-3 text-center text-sm font-medium border-b-2 border-gray-300 dark:border-[#202021]">
+              Collected Time</th>
+            <th class="px-3 py-3 text-center text-sm font-medium border-b-2 border-gray-300 dark:border-[#202021]"></th>
+          </tr>
+        </thead>
+        <tbody class="bg-white text-[#000000] dark:bg-[#1D1D1F]">
+          <tr *ngFor="
           let item of farmerPaymentsArr
             | paginate
               : {
@@ -173,64 +134,47 @@
                   totalItems: totalItems
                 };
           let i = index
-        "
-        class="border-b border-gray-200 dark:border-[#202021] last:border-b-0"
-      >
-        <td class="px-4 py-4 text-[#000000] dark:text-gray-300">
-          {{
-            (page - 1) * itemsPerPage + i + 1 < 10
-              ? "0" + ((page - 1) * itemsPerPage + i + 1)
-              : (page - 1) * itemsPerPage + i + 1
-          }}
-        </td>
-        <td class="px-3 py-4 text-[#000000] dark:text-gray-300">
-          {{ item.invNo }}
-        </td>
-        <td class="px-3 py-4 text-[#000000] dark:text-gray-300">
-          {{ item.totalAmount | number : "1.2-2" }}
-        </td>
-        <td class="px-3 py-4 text-left text-[#000000] dark:text-gray-300">
-          {{ item.nic }}
-        </td>
-        <td class="px-3 py-4 text-center text-[#646464] dark:text-gray-300">
-          <span class="block">{{ item.createdAt | date : "MMM d, y" }}</span>
-          <span class="block">{{ item.createdAt | date : "h:mm a" }}</span>
-        </td>
-        <td
-          *ngIf="
+        " class="border-b border-gray-200 dark:border-[#202021] last:border-b-0">
+            <td class="px-4 py-4 text-[#000000] dark:text-gray-300">
+              {{
+              (page - 1) * itemsPerPage + i + 1 < 10 ? "0" + ((page - 1) * itemsPerPage + i + 1) : (page - 1) *
+                itemsPerPage + i + 1 }} </td>
+            <td class="px-3 py-4 text-[#000000] dark:text-gray-300">
+              {{ item.invNo }}
+            </td>
+            <td class="px-3 py-4 text-[#000000] dark:text-gray-300">
+              {{ item.totalAmount | number : "1.2-2" }}
+            </td>
+            <td class="px-3 py-4 text-left text-[#000000] dark:text-gray-300">
+              {{ item.nic }}
+            </td>
+            <td class="px-3 py-4 text-center text-[#646464] dark:text-gray-300">
+              <span class="block">{{ item.createdAt | date : "MMM d, y" }}</span>
+              <span class="block">{{ item.createdAt | date : "h:mm a" }}</span>
+            </td>
+            <td *ngIf="
             permissionService.hasPermission('Navigate To Farmer Report Invoice') ||
             tokenService.getUserDetails().role === '1'
-          "
-          (click)="navigateToFarmerReport(item.invNo)"
-          class="px-3 py-4 text-center dark:text-gray-300 cursor-pointer"
-        >
-          <i class="fa-solid fa-arrow-up-right-from-square text-[#415CFF]"></i>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+          " (click)="navigateToFarmerReport(item.invNo)"
+              class="px-3 py-4 text-center dark:text-gray-300 cursor-pointer">
+              <i class="fa-solid fa-arrow-up-right-from-square text-[#415CFF]"></i>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
     <!-- Pagination -->
     <div class="flex justify-end items-center my-5 pt-3 dark:bg-[#262f45] text-right">
-      <pagination-controls
-        (pageChange)="onPageChange($event)"
-        [responsive]="true"
-        [previousLabel]="'Previous'"
-        [nextLabel]="'Next'"
-        [screenReaderPaginationLabel]="'Pagination'"
-        [screenReaderPageLabel]="'page'"
-        [screenReaderCurrentLabel]="'Youre on page'"
-      >
+      <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
+        [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
+        [screenReaderCurrentLabel]="'Youre on page'">
       </pagination-controls>
     </div>
   </div>
 
   <!-- No date filter set -->
-  <div
-    *ngIf="!isDateFilterSet"
-    class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6"
-  >
+  <div *ngIf="!isDateFilterSet" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6">
     <p class="text-[#494949] my-6 dark:text-textDark">
       --Set From & To Dates first--
     </p>
@@ -251,30 +195,20 @@
         <p class="font-normal dark:text-white">Filter By</p>
 
         <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#292929]">
-          <input
-            type="text"
-            placeholder="Search..."
-            [(ngModel)]="searchText"
-            (keyup.enter)="onSearch()"
-            class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
-          />
-          <button
-            type="button"
-            class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-            (click)="onSearch()"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"/>
+          <input type="text" placeholder="Search..." [(ngModel)]="searchText" (keyup.enter)="onSearch()"
+            class="bg-transparent outline-none w-full text-textLight dark:text-textDark" />
+          <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2" (click)="onSearch()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
             </svg>
           </button>
-          <button
-            type="button"
-            class="text-gray-500 hover:text-gray-700 focus:outline-none"
-            (click)="offSearch()"
-            (keyup.esc)="offSearch()"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none" (click)="offSearch()"
+            (keyup.esc)="offSearch()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>

@@ -135,8 +135,8 @@ export class AgroWorldCentersComponent {
     private router: Router,
     private collectionService: CollectionCenterService,
     public tokenService: TokenService,
-    public permissionService: PermissionService
-  ) { }
+    public permissionService: PermissionService,
+  ) {}
 
   ngOnInit(): void {
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
@@ -159,14 +159,13 @@ export class AgroWorldCentersComponent {
     limit: number = this.itemsPerPage,
     district: string = this.selectDistrict,
     province: string = this.selectProvince,
-    searchItem: string = this.searchItem
+    searchItem: string = this.searchItem,
   ) {
     this.isLoading = true;
     this.collectionService
       .getAllCollectionCenterPageAW(page, limit, district, province, searchItem)
       .subscribe(
         (response) => {
-
           this.isLoading = false;
           this.collectionObj = response.items;
           this.hasData = this.collectionObj.length > 0;
@@ -175,7 +174,7 @@ export class AgroWorldCentersComponent {
         (error) => {
           if (error.status === 401) {
           }
-        }
+        },
       );
   }
 
@@ -191,8 +190,8 @@ export class AgroWorldCentersComponent {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold',
       },
-      confirmButtonColor: '#2563eb', 
-      cancelButtonColor: '#dc2626',  
+      confirmButtonColor: '#2563eb',
+      cancelButtonColor: '#dc2626',
     }).then((result) => {
       if (result.isConfirmed) {
         this.collectionService.deleteCollectionCenter(id).subscribe(
@@ -203,7 +202,8 @@ export class AgroWorldCentersComponent {
                 text: 'The Collection Centre has been deleted.',
                 icon: 'success',
                 customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  popup:
+                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                   title: 'font-semibold',
                 },
                 confirmButtonColor: '#2563eb',
@@ -217,12 +217,13 @@ export class AgroWorldCentersComponent {
               text: 'There was an error deleting the Collection Centres',
               icon: 'error',
               customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                 title: 'font-semibold',
               },
               confirmButtonColor: '#2563eb',
             });
-          }
+          },
         );
       }
     });
@@ -234,7 +235,7 @@ export class AgroWorldCentersComponent {
   }
 
   searchPlantCareUsers() {
-    this.searchItem = this.searchItem.trim(); 
+    this.searchItem = this.searchItem.trim();
     this.page = 1;
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
   }
@@ -247,7 +248,7 @@ export class AgroWorldCentersComponent {
   applyProvinceFilters() {
     if (this.selectProvince) {
       const selected = this.ProvinceData.find(
-        (p) => p.province === this.selectProvince
+        (p) => p.province === this.selectProvince,
       );
 
       this.districtOptions =
@@ -274,7 +275,7 @@ export class AgroWorldCentersComponent {
   applyDistrictFilters() {
     if (this.selectDistrict) {
       const matchingProvince = this.ProvinceData.find((p) =>
-        p.district.some((d) => d.districtName === this.selectDistrict)
+        p.district.some((d) => d.districtName === this.selectDistrict),
       );
 
       if (matchingProvince) {
@@ -302,7 +303,7 @@ export class AgroWorldCentersComponent {
       (d) => ({
         label: d.districtName,
         value: d.districtName,
-      })
+      }),
     );
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
   }
@@ -324,27 +325,32 @@ export class AgroWorldCentersComponent {
     items?.some((company: Company) =>
       company.companyNameEnglish === 'Polygon Holdings Private Limited'
         ? (comId = company.id)
-        : 0
+        : 0,
     );
-    this.router.navigate([`/collection-hub/collection-center-dashboard/${centerId}/${comId}/${regCode}`,],
-      { queryParams: { Cname } });
+    this.router.navigate(
+      [
+        `/collection-hub/collection-center-dashboard/${centerId}/${comId}/${regCode}`,
+      ],
+      { queryParams: { Cname } },
+    );
   }
 
   isAgroworldPresent(item: any): boolean {
     return (
       item.companies?.some(
-        (company: any) => company.companyNameEnglish === 'Polygon Holdings Private Limited'
+        (company: any) =>
+          company.companyNameEnglish === 'Polygon Holdings Private Limited',
       ) ?? false
     );
   }
   navigate() {
     this.router.navigate([`/collection-hub`]);
-
   }
 
   navigateAddTarget(item: CollectionCenter) {
     const agroworldCompany = item.companies.find(
-      (company: Company) => company.companyNameEnglish === 'Polygon Holdings Private Limited'
+      (company: Company) =>
+        company.companyNameEnglish === 'Polygon Holdings Private Limited',
     );
 
     if (!agroworldCompany) {

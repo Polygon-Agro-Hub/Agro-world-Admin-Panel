@@ -107,7 +107,7 @@ export class PreviewSalesAgentsComponent implements OnInit {
     { code: 'KH', dialCode: '+855', name: 'Cambodia' },
     { code: 'BD', dialCode: '+880', name: 'Bangladesh' },
     { code: 'IN', dialCode: '+91', name: 'India' },
-    { code: 'NL', dialCode: '+31', name: 'Netherlands' }
+    { code: 'NL', dialCode: '+31', name: 'Netherlands' },
   ];
 
   constructor(
@@ -117,11 +117,10 @@ export class PreviewSalesAgentsComponent implements OnInit {
     private router: Router,
     private collectionCenterSrv: CollectionCenterService,
     private collectionOfficerService: CollectionOfficerService,
-    private salesAgentService: SalesAgentsService
+    private salesAgentService: SalesAgentsService,
   ) {}
 
-  
- getFlagUrl(countryCode: string): string {
+  getFlagUrl(countryCode: string): string {
     return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
   }
 
@@ -196,7 +195,7 @@ export class PreviewSalesAgentsComponent implements OnInit {
       this.personalData.bankName
     ) {
       const matchedBank = this.banks.find(
-        (bank) => bank.name === this.personalData.bankName
+        (bank) => bank.name === this.personalData.bankName,
       );
 
       if (matchedBank) {
@@ -205,7 +204,7 @@ export class PreviewSalesAgentsComponent implements OnInit {
 
         if (this.personalData.branchName) {
           const matchedBranch = this.branches.find(
-            (branch) => branch.name === this.personalData.branchName
+            (branch) => branch.name === this.personalData.branchName,
           );
           if (matchedBranch) {
             this.selectedBranchId = matchedBranch.ID;
@@ -256,7 +255,7 @@ export class PreviewSalesAgentsComponent implements OnInit {
     const selectedDistrict = target.value;
 
     const selected = this.districts.find(
-      (district) => district.name === selectedDistrict
+      (district) => district.name === selectedDistrict,
     );
 
     if (this.itemId === null) {
@@ -276,14 +275,14 @@ export class PreviewSalesAgentsComponent implements OnInit {
     if (this.selectedBankId) {
       this.branches = this.allBranches[this.selectedBankId.toString()] || [];
       const selectedBank = this.banks.find(
-        (bank) => bank.ID === this.selectedBankId
+        (bank) => bank.ID === this.selectedBankId,
       );
       if (selectedBank) {
         this.personalData.bankName = selectedBank.name;
       }
 
       const currentBranch = this.branches.find(
-        (branch) => branch.ID === this.selectedBranchId
+        (branch) => branch.ID === this.selectedBranchId,
       );
       if (!currentBranch) {
         this.selectedBranchId = null;
@@ -298,7 +297,7 @@ export class PreviewSalesAgentsComponent implements OnInit {
   onBranchChange() {
     if (this.selectedBranchId) {
       const selectedBranch = this.branches.find(
-        (branch) => branch.ID === this.selectedBranchId
+        (branch) => branch.ID === this.selectedBranchId,
       );
       if (selectedBranch) {
         this.personalData.branchName = selectedBranch.name;
@@ -376,7 +375,7 @@ export class PreviewSalesAgentsComponent implements OnInit {
               Swal.fire(
                 'Success',
                 'Sales Agent Updated Successfully',
-                'success'
+                'success',
               );
               this.navigatePath('/steckholders/action/sales-agents');
             },
@@ -385,7 +384,7 @@ export class PreviewSalesAgentsComponent implements OnInit {
               this.errorMessage =
                 error.error.error || 'An unexpected error occurred';
               Swal.fire('Error', this.errorMessage, 'error');
-            }
+            },
           );
       } else {
         this.isLoading = false;

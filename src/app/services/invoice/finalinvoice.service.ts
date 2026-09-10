@@ -18,6 +18,9 @@ interface InvoiceData {
   additionalItems: any[];
   buildingType: string;
   isPaid: number;
+  isCoupon?: number | null;
+  couponType?: string | null;
+  hasFreeDeliveryCoupon?: boolean;
   creditPaid: string;
   moneyPaid: string;
   deliveryCharge?: {
@@ -111,6 +114,12 @@ export class FinalinvoiceService {
 
       const invoiceDetails = response.data?.invoice || {};
       const billingDetails = response.data?.billing || {};
+      const hasFreeDeliveryCoupon =
+        Number(invoiceDetails.isCoupon) === 1 &&
+        String(invoiceDetails.couponType || '')
+          .trim()
+          .toLowerCase()
+          .includes('free delivery');
 
       const deliveryFee =
         response.data?.deliveryCharge?.charge ||
@@ -127,6 +136,9 @@ export class FinalinvoiceService {
         grandTotal: invoiceDetails.grandTotal || '0.00',
         buildingType: invoiceDetails.buildingType || 'House',
         isPaid: invoiceDetails.isPaid || 'N/A',
+        isCoupon: invoiceDetails.isCoupon,
+        couponType: invoiceDetails.couponType,
+        hasFreeDeliveryCoupon,
         creditPaid: invoiceDetails.creditPaid || 'N/A',
         moneyPaid: invoiceDetails.moneyPaid || 'N/A',
         familyPackItems: response.data?.items?.familyPacks || [],
@@ -953,8 +965,9 @@ export class FinalinvoiceService {
     const remainingAfterCredit = finalGrandTotal - creditPaidNum;
 
     const isPickup = invoice.deliveryMethod?.toLowerCase() === 'pickup';
-    const cashLabel = isPickup ? 'Cash On Pickup' : 'Cash On Delivery'; 
-    let showDeliveryNote = false; 
+    const isFreeDeliveryCouponApplied = !!invoice.hasFreeDeliveryCoupon;
+    const cashLabel = isPickup ? 'Cash On Pickup' : 'Cash On Delivery';
+    let showDeliveryNote = false;
 
     const pushPaymentRow = (
       label: string,
@@ -996,7 +1009,9 @@ export class FinalinvoiceService {
             remainingAfterCredit,
             ORANGE_COLOR,
           );
-          showDeliveryNote = true;
+          if (!isFreeDeliveryCouponApplied) {
+            showDeliveryNote = true;
+          }
         }
       }
     } else {
@@ -1022,7 +1037,9 @@ export class FinalinvoiceService {
           finalGrandTotal,
           ORANGE_COLOR,
         );
-        showDeliveryNote = true;
+        if (!isFreeDeliveryCouponApplied) {
+          showDeliveryNote = true;
+        }
       }
     }
 

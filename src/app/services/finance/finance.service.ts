@@ -1313,5 +1313,66 @@ export class FinanceService {
     { headers }
   );
 }
+
+getAllCompletedOrders(
+  page: number,
+  limit: number,
+  startDate: string,
+  endDate: string,
+  search: string
+): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
+
+  let url = `${this.apiUrl}finance/get-all-completed-orders?page=${page}&limit=${limit}`;
+
+  if (startDate) {
+    url += `&startDate=${startDate}`;
+  }
+
+  if (endDate) {
+    url += `&endDate=${endDate}`;
+  }
+
+  if (search) {
+    url += `&search=${search}`;
+  }
+
+  return this.http.get<any>(url, { headers });
+}
+
+downloadCompletedOrders(
+  startDate: string,
+  endDate: string,
+  search: string
+): Observable<Blob> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+  });
+
+  let url = `${this.apiUrl}finance/download-completed-orders?`;
+  const queryParams: string[] = [];
+
+  if (startDate) {
+    queryParams.push(`startDate=${startDate}`);
+  }
+
+  if (endDate) {
+    queryParams.push(`endDate=${endDate}`);
+  }
+
+  if (search) {
+    queryParams.push(`search=${search}`);
+  }
+
+  url += queryParams.join('&');
+
+  return this.http.get(url, {
+    headers,
+    responseType: 'blob',
+  }) as Observable<Blob>;
+}
 }
 

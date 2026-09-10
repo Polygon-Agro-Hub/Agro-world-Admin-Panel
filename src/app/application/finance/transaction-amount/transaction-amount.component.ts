@@ -36,7 +36,7 @@ export class TransactionAmountComponent implements OnInit {
 
   ngOnInit(): void {
     this.id = Number(this.route.snapshot.paramMap.get('id'));
-    console.log('id', this.id)
+    
 
     this.getTransactionOrders();
   }

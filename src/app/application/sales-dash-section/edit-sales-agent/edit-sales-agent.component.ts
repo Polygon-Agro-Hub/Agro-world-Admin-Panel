@@ -85,7 +85,7 @@ export class EditSalesAgentComponent implements OnInit {
     { code: 'KH', dialCode: '+855', name: 'Cambodia' },
     { code: 'BD', dialCode: '+880', name: 'Bangladesh' },
     { code: 'IN', dialCode: '+91', name: 'India' },
-    { code: 'NL', dialCode: '+31', name: 'Netherlands' }
+    { code: 'NL', dialCode: '+31', name: 'Netherlands' },
   ];
 
   districts = [
@@ -123,8 +123,8 @@ export class EditSalesAgentComponent implements OnInit {
     private router: Router,
     private collectionCenterSrv: CollectionCenterService,
     private collectionOfficerService: CollectionOfficerService,
-    private salesAgentService: SalesAgentsService
-  ) { }
+    private salesAgentService: SalesAgentsService,
+  ) {}
 
   ngOnInit(): void {
     this.loadBanks();
@@ -172,7 +172,6 @@ export class EditSalesAgentComponent implements OnInit {
         this.isLoading = false;
       },
     });
-
   }
 
   getFlagUrl(countryCode: string): string {
@@ -221,7 +220,8 @@ export class EditSalesAgentComponent implements OnInit {
     }
 
     if (!emailPattern.test(email)) {
-      this.emailValidationError = 'Please enter a valid email format (example@domain.com)';
+      this.emailValidationError =
+        'Please enter a valid email format (example@domain.com)';
       return false;
     }
 
@@ -229,8 +229,6 @@ export class EditSalesAgentComponent implements OnInit {
     this.emailValidationError = '';
     return true;
   }
-
-
 
   // Add these updated methods to your component class
 
@@ -278,7 +276,9 @@ export class EditSalesAgentComponent implements OnInit {
   validateEmailOnInput(): void {
     if (this.personalData.email) {
       // Remove all spaces and trim
-      this.personalData.email = this.personalData.email.replace(/\s/g, '').trim();
+      this.personalData.email = this.personalData.email
+        .replace(/\s/g, '')
+        .trim();
 
       // Clear error when user starts correcting
       this.emailValidationError = '';
@@ -288,8 +288,13 @@ export class EditSalesAgentComponent implements OnInit {
   validateAccountHolderNameInput(event: KeyboardEvent): void {
     // Allow navigation and control keys
     const allowedKeys = [
-      'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight',
-      'Tab', 'Home', 'End'
+      'Backspace',
+      'Delete',
+      'ArrowLeft',
+      'ArrowRight',
+      'Tab',
+      'Home',
+      'End',
     ];
 
     if (allowedKeys.includes(event.key)) {
@@ -391,14 +396,12 @@ export class EditSalesAgentComponent implements OnInit {
     }
   }
 
-
-
   loadBanks() {
     this.http.get<Bank[]>('assets/json/banks.json').subscribe(
       (data) => {
         this.banks = data.sort((a, b) => a.name.localeCompare(b.name));
       },
-      (error) => { }
+      (error) => {},
     );
   }
 
@@ -410,7 +413,7 @@ export class EditSalesAgentComponent implements OnInit {
         });
         this.allBranches = data;
       },
-      (error) => { }
+      (error) => {},
     );
   }
 
@@ -422,7 +425,7 @@ export class EditSalesAgentComponent implements OnInit {
       this.personalData.bankName
     ) {
       const matchedBank = this.banks.find(
-        (bank) => bank.name === this.personalData.bankName
+        (bank) => bank.name === this.personalData.bankName,
       );
 
       if (matchedBank) {
@@ -431,7 +434,7 @@ export class EditSalesAgentComponent implements OnInit {
 
         if (this.personalData.branchName) {
           const matchedBranch = this.branches.find(
-            (branch) => branch.name === this.personalData.branchName
+            (branch) => branch.name === this.personalData.branchName,
           );
           if (matchedBranch) {
             this.selectedBranchId = matchedBranch.ID;
@@ -480,7 +483,6 @@ export class EditSalesAgentComponent implements OnInit {
     });
   }
 
-
   onFileSelected(event: any): void {
     const file: File = event.target.files[0];
     if (file) {
@@ -517,19 +519,17 @@ export class EditSalesAgentComponent implements OnInit {
     this.personalData.empType = selectedType;
   }
 
-
-
   onBankChange() {
     if (this.selectedBankId) {
       this.branches = this.allBranches[this.selectedBankId.toString()] || [];
       const selectedBank = this.banks.find(
-        (bank) => bank.ID === this.selectedBankId
+        (bank) => bank.ID === this.selectedBankId,
       );
       if (selectedBank) {
         this.personalData.bankName = selectedBank.name;
       }
       const currentBranch = this.branches.find(
-        (branch) => branch.ID === this.selectedBranchId
+        (branch) => branch.ID === this.selectedBranchId,
       );
       if (!currentBranch) {
         this.selectedBranchId = null;
@@ -544,7 +544,7 @@ export class EditSalesAgentComponent implements OnInit {
   onBranchChange() {
     if (this.selectedBranchId) {
       const selectedBranch = this.branches.find(
-        (branch) => branch.ID === this.selectedBranchId
+        (branch) => branch.ID === this.selectedBranchId,
       );
       if (selectedBranch) {
         this.personalData.branchName = selectedBranch.name;
@@ -564,7 +564,6 @@ export class EditSalesAgentComponent implements OnInit {
     }
   }
   validateAccNumber(): void {
-
     if (this.personalData.accNumber && this.confirmAccNumber) {
       this.confirmAccountNumberError =
         this.personalData.accNumber !== this.confirmAccNumber;
@@ -592,8 +591,6 @@ export class EditSalesAgentComponent implements OnInit {
 
     return !this.nicError;
   }
-
-
 
   onSubmit() {
     const missingFields: string[] = [];
@@ -624,16 +621,25 @@ export class EditSalesAgentComponent implements OnInit {
     if (!this.personalData.phoneNumber1) {
       missingFields.push('Mobile Number - 1 is Required');
     } else if (!phonePattern.test(this.personalData.phoneNumber1)) {
-      missingFields.push('Mobile Number - 1 - Must be 9 digits starting with 7 (format: 7XXXXXXXX)');
+      missingFields.push(
+        'Mobile Number - 1 - Must be 9 digits starting with 7 (format: 7XXXXXXXX)',
+      );
     }
 
     // Phone Number 2 (optional)
-    if (this.personalData.phoneNumber2 && this.personalData.phoneNumber2.trim() !== '') {
+    if (
+      this.personalData.phoneNumber2 &&
+      this.personalData.phoneNumber2.trim() !== ''
+    ) {
       if (!phonePattern.test(this.personalData.phoneNumber2)) {
-        missingFields.push('Mobile Number - 2 - Must be 9 digits starting with 7 (format: 7XXXXXXXX)');
+        missingFields.push(
+          'Mobile Number - 2 - Must be 9 digits starting with 7 (format: 7XXXXXXXX)',
+        );
       }
       if (this.personalData.phoneNumber1 === this.personalData.phoneNumber2) {
-        missingFields.push('Mobile Number - 2 - Cannot be the same as Mobile Number - 1');
+        missingFields.push(
+          'Mobile Number - 2 - Cannot be the same as Mobile Number - 1',
+        );
       }
     }
 
@@ -648,7 +654,9 @@ export class EditSalesAgentComponent implements OnInit {
     if (!this.personalData.nic) {
       missingFields.push('NIC Number is Required');
     } else if (!nicPattern.test(this.personalData.nic)) {
-      missingFields.push('NIC Number - Must be 12 digits or 9 digits followed by V');
+      missingFields.push(
+        'NIC Number - Must be 12 digits or 9 digits followed by V',
+      );
     }
 
     // Address fields
@@ -672,7 +680,9 @@ export class EditSalesAgentComponent implements OnInit {
     if (!this.personalData.accHolderName) {
       missingFields.push("Account Holder's Name is Required");
     } else if (!this.isValidName(this.personalData.accHolderName)) {
-      missingFields.push('Account Holder Name - Only letters, spaces, hyphens, and apostrophes allowed');
+      missingFields.push(
+        'Account Holder Name - Only letters, spaces, hyphens, and apostrophes allowed',
+      );
     }
 
     // Account Number
@@ -702,7 +712,8 @@ export class EditSalesAgentComponent implements OnInit {
 
     // If any errors, show them in SweetAlert and stop
     if (missingFields.length > 0) {
-      let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+      let errorMessage =
+        '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
       missingFields.forEach((field) => {
         errorMessage += `<li>${field}</li>`;
       });
@@ -734,7 +745,8 @@ export class EditSalesAgentComponent implements OnInit {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold text-lg',
         htmlContainer: 'text-left',
-        confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+        confirmButton:
+          'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
       },
       reverseButtons: true,
     }).then((result) => {
@@ -751,10 +763,12 @@ export class EditSalesAgentComponent implements OnInit {
                 text: 'Sales Agent Updated Successfully',
                 confirmButtonText: 'OK',
                 customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  popup:
+                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                   title: 'font-semibold text-lg',
                   htmlContainer: 'text-left',
-                  confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+                  confirmButton:
+                    'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
                 },
               });
               this.navigatePath('/steckholders/action/sales-agents');
@@ -782,11 +796,13 @@ export class EditSalesAgentComponent implements OnInit {
               }
 
               if (messages.length > 0) {
-                errorMessage = '<div class="text-left"><p class="mb-2">The following fields already exist in the system: </p><ul class="list-disc pl-5">';
-                messages.forEach(m => {
+                errorMessage =
+                  '<div class="text-left"><p class="mb-2">The following fields already exist in the system: </p><ul class="list-disc pl-5">';
+                messages.forEach((m) => {
                   errorMessage += `<li>${m}</li>`;
                 });
-                errorMessage += '</ul><p class="mt-2 text-sm">Please use different values for these fields.</p></div>';
+                errorMessage +=
+                  '</ul><p class="mt-2 text-sm">Please use different values for these fields.</p></div>';
 
                 Swal.fire({
                   icon: 'error',
@@ -794,15 +810,17 @@ export class EditSalesAgentComponent implements OnInit {
                   html: errorMessage,
                   confirmButtonText: 'OK',
                   customClass: {
-                    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                    popup:
+                      'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                     title: 'font-semibold text-lg',
                     htmlContainer: 'text-left',
-                    confirmButton: 'bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700',
+                    confirmButton:
+                      'bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700',
                   },
                 });
                 return;
               }
-            }
+            },
           );
       }
     });
@@ -811,18 +829,26 @@ export class EditSalesAgentComponent implements OnInit {
   navigatePath(path: string) {
     this.router.navigate([path]);
   }
-  
+
   updateProvince(event: DropdownChangeEvent): void {
     const selectedDistrict = event.value;
     const selected = this.districts.find(
-      (district) => district.name === selectedDistrict
+      (district) => district.name === selectedDistrict,
     );
 
     this.personalData.province = selected ? selected.province : '';
   }
 
   validateNameInput(event: KeyboardEvent): void {
-    const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Home', 'End'];
+    const allowedKeys = [
+      'Backspace',
+      'Delete',
+      'ArrowLeft',
+      'ArrowRight',
+      'Tab',
+      'Home',
+      'End',
+    ];
     if (allowedKeys.includes(event.key)) return;
 
     const target = event.target as HTMLInputElement;
@@ -830,7 +856,7 @@ export class EditSalesAgentComponent implements OnInit {
 
     // Block leading spaces
     if (['firstName', 'lastName'].includes(fieldName)) {
-      const currentValue = this.personalData[fieldName] as string || '';
+      const currentValue = (this.personalData[fieldName] as string) || '';
       if (event.key === ' ' && (!currentValue || target.selectionStart === 0)) {
         event.preventDefault();
         return;
@@ -850,7 +876,17 @@ export class EditSalesAgentComponent implements OnInit {
     }
   }
 
-  capitalizeFirstLetter(field: 'firstName' | 'lastName' | 'houseNumber' | 'streetName' | 'city' | 'accHolderName' | 'bankName' | 'branchName') {
+  capitalizeFirstLetter(
+    field:
+      | 'firstName'
+      | 'lastName'
+      | 'houseNumber'
+      | 'streetName'
+      | 'city'
+      | 'accHolderName'
+      | 'bankName'
+      | 'branchName',
+  ) {
     let value = this.personalData[field];
 
     if (!value) return;
@@ -928,7 +964,9 @@ export class EditSalesAgentComponent implements OnInit {
   formatNIC() {
     if (this.personalData.nic) {
       // Remove all spaces and convert to uppercase
-      this.personalData.nic = this.personalData.nic.replace(/\s/g, '').toUpperCase();
+      this.personalData.nic = this.personalData.nic
+        .replace(/\s/g, '')
+        .toUpperCase();
 
       // If it ends with 'v' (shouldn't happen due to input validation, but just in case)
       if (this.personalData.nic.endsWith('v')) {
@@ -971,7 +1009,8 @@ export class EditSalesAgentComponent implements OnInit {
 
   isFormValid(): boolean {
     // Check all required fields
-    if (!this.empType ||
+    if (
+      !this.empType ||
       !this.personalData.firstName ||
       !this.personalData.lastName ||
       !this.personalData.phoneNumber1 ||
@@ -985,30 +1024,38 @@ export class EditSalesAgentComponent implements OnInit {
       !this.personalData.accNumber ||
       !this.personalData.bankName ||
       !this.personalData.branchName ||
-      !this.confirmAccNumber) {
+      !this.confirmAccNumber
+    ) {
       return false;
     }
 
     // Check field-specific validations
-    if (!this.isValidEmail(this.personalData.email) ||
+    if (
+      !this.isValidEmail(this.personalData.email) ||
       !this.validateNIC() ||
       this.confirmAccountNumberError ||
       this.confirmAccountNumberRequired ||
-      this.nicError) {
+      this.nicError
+    ) {
       return false;
     }
 
     // Check phone number patterns
     const phonePattern = /^[0-9]{9}$/;
-    if (!phonePattern.test(this.personalData.phoneNumber1) ||
-      (this.personalData.phoneNumber2 && !phonePattern.test(this.personalData.phoneNumber2))) {
+    if (
+      !phonePattern.test(this.personalData.phoneNumber1) ||
+      (this.personalData.phoneNumber2 &&
+        !phonePattern.test(this.personalData.phoneNumber2))
+    ) {
       return false;
     }
 
     // Check account number pattern
     const accountPattern = /^[0-9]+$/;
-    if (!accountPattern.test(this.personalData.accNumber) ||
-      !accountPattern.test(this.confirmAccNumber)) {
+    if (
+      !accountPattern.test(this.personalData.accNumber) ||
+      !accountPattern.test(this.confirmAccNumber)
+    ) {
       return false;
     }
 
@@ -1018,8 +1065,10 @@ export class EditSalesAgentComponent implements OnInit {
     }
 
     // Check if phone numbers are different if both provided
-    if (this.personalData.phoneNumber2 &&
-      this.personalData.phoneNumber2 === this.personalData.phoneNumber1) {
+    if (
+      this.personalData.phoneNumber2 &&
+      this.personalData.phoneNumber2 === this.personalData.phoneNumber1
+    ) {
       return false;
     }
 
@@ -1029,8 +1078,15 @@ export class EditSalesAgentComponent implements OnInit {
   validateEnglishNameInput(event: KeyboardEvent): void {
     // Allow navigation and control keys
     const allowedKeys = [
-      'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight',
-      'Tab', 'Home', 'End', ' ', 'Spacebar'
+      'Backspace',
+      'Delete',
+      'ArrowLeft',
+      'ArrowRight',
+      'Tab',
+      'Home',
+      'End',
+      ' ',
+      'Spacebar',
     ];
 
     if (allowedKeys.includes(event.key)) {
@@ -1086,7 +1142,10 @@ export class EditSalesAgentComponent implements OnInit {
     const endPos = target.selectionEnd || 0;
 
     const currentValue = target.value;
-    target.value = currentValue.substring(0, startPos) + cleanText + currentValue.substring(endPos);
+    target.value =
+      currentValue.substring(0, startPos) +
+      cleanText +
+      currentValue.substring(endPos);
 
     // Update ngModel
     this.personalData.accHolderName = target.value;
@@ -1100,10 +1159,13 @@ export class EditSalesAgentComponent implements OnInit {
 
   preventLeadingSpace(event: KeyboardEvent, fieldName: keyof Personal): void {
     const target = event.target as HTMLInputElement;
-    const currentValue = this.personalData[fieldName] as string || '';
+    const currentValue = (this.personalData[fieldName] as string) || '';
 
     // Block space if field is empty or contains only spaces
-    if (event.key === ' ' && (!currentValue || currentValue.trim().length === 0)) {
+    if (
+      event.key === ' ' &&
+      (!currentValue || currentValue.trim().length === 0)
+    ) {
       event.preventDefault();
       return;
     }
@@ -1133,7 +1195,7 @@ export class EditSalesAgentComponent implements OnInit {
       'ArrowRight',
       'Tab',
       'Home',
-      'End'
+      'End',
     ];
 
     if (allowedKeys.includes(event.key)) {
@@ -1168,9 +1230,11 @@ export class EditSalesAgentComponent implements OnInit {
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold text-lg',
-        confirmButton: 'bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg',
-        cancelButton: 'bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg'
-      }
+        confirmButton:
+          'bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg',
+        cancelButton:
+          'bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg',
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         this.isLoading = true;
@@ -1186,7 +1250,8 @@ export class EditSalesAgentComponent implements OnInit {
                 showConfirmButton: false,
                 timer: 3000,
                 customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  popup:
+                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                   title: 'font-semibold text-lg',
                 },
               });
@@ -1199,7 +1264,8 @@ export class EditSalesAgentComponent implements OnInit {
                 showConfirmButton: false,
                 timer: 3000,
                 customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  popup:
+                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                   title: 'font-semibold text-lg',
                 },
               });
@@ -1214,16 +1280,16 @@ export class EditSalesAgentComponent implements OnInit {
               showConfirmButton: false,
               timer: 3000,
               customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                 title: 'font-semibold text-lg',
               },
             });
-          }
+          },
         );
       }
     });
   }
-
 }
 
 class Personal {

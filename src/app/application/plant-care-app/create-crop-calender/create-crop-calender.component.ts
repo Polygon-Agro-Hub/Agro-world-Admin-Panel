@@ -461,19 +461,21 @@ export class CreateCropCalenderComponent implements OnInit {
     const missingFields = this.getMissingFields();
     if (missingFields.length > 0) {
       let errorMessage =
-        'Please fill in the following required fields:<br><br>';
-      errorMessage += missingFields.map((field) => ` ${field}`).join('<br>');
+        '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+      missingFields.forEach((field) => {
+        errorMessage += `<li>${field}</li>`;
+      });
+      errorMessage += '</ul></div>';
 
       Swal.fire({
-        icon: 'warning',
-        title: 'Missing Information',
+        icon: 'error',
+        title: 'Missing or Invalid Information',
         html: errorMessage,
         confirmButtonText: 'OK',
-        focusConfirm: false,
-        allowOutsideClick: false,
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold',
+          title: 'font-semibold text-lg',
+          htmlContainer: 'text-left',
         },
       }).then(() => {
         const firstInvalidField = this.getFirstInvalidField();

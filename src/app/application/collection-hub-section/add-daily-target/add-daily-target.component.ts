@@ -40,9 +40,12 @@ export class AddDailyTargetComponent {
   isSaveButtonDisabled = false;
   iscountDown = true;
 
-  constructor(private route: ActivatedRoute, private router: Router, private location: Location,
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private location: Location,
     public tokenService: TokenService,
-    public permissionService: PermissionService
+    public permissionService: PermissionService,
   ) {}
 
   ngOnInit(): void {

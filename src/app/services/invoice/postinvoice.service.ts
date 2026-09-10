@@ -15,6 +15,9 @@ interface InvoiceData {
   paymentMethod: string;
   grandTotal: string;
   isPaid?: number | null;
+  isCoupon?: number | null;
+  couponType?: string | null;
+  hasFreeDeliveryCoupon?: boolean;
   creditPaid?: string | number | null;
   moneyPaid?: string | number | null;
   familyPackItems: any[];
@@ -111,6 +114,13 @@ export class PostinvoiceService {
         return;
       }
 
+      const hasFreeDeliveryCoupon =
+        Number(invoiceDetails.isCoupon) === 1 &&
+        String(invoiceDetails.couponType || '')
+          .trim()
+          .toLowerCase()
+          .includes('free delivery');
+
       // Calculate delivery fee based on delivery method
       let deliveryFee = '0.00';
       if (invoiceDetails.deliveryMethod === 'Pickup') {
@@ -140,6 +150,9 @@ export class PostinvoiceService {
         paymentMethod: invoiceDetails.paymentMethod || 'N/A',
         grandTotal: invoiceDetails.grandTotal || '0.00',
         isPaid: invoiceDetails.isPaid,
+        isCoupon: invoiceDetails.isCoupon,
+        couponType: invoiceDetails.couponType,
+        hasFreeDeliveryCoupon,
         creditPaid: invoiceDetails.creditPaid,
         moneyPaid: invoiceDetails.moneyPaid,
         buildingType: invoiceDetails.buildingType || 'House',
@@ -927,6 +940,7 @@ export class PostinvoiceService {
     const remainingAfterCredit = finalGrandTotal - creditPaidNum;
 
     const isPickup = invoice.deliveryMethod?.toLowerCase() === 'pickup';
+    const isFreeDeliveryCouponApplied = !!invoice.hasFreeDeliveryCoupon;
     const cashLabel = isPickup ? 'Cash On Pickup' : 'Cash On Delivery';
     let showDeliveryNote = false;
 
@@ -970,10 +984,12 @@ export class PostinvoiceService {
           remainingAfterCredit,
           ORANGE_COLOR,
         );
-      showDeliveryNote = true;
+        if (!isFreeDeliveryCouponApplied) {
+          showDeliveryNote = true;
+        }
+      }
     }
-  }
-    } else {
+  } else {
       if (isPaid) {
         if (isCardPayment) {
           pushPaymentRow(
@@ -996,7 +1012,9 @@ export class PostinvoiceService {
           finalGrandTotal,
           ORANGE_COLOR,
         );
-        showDeliveryNote = true;
+        if (!isFreeDeliveryCouponApplied) {
+          showDeliveryNote = true;
+        }
       }
     }
 

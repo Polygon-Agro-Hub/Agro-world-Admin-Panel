@@ -1,0 +1,217 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<button class="mb-4 text-textLight dark:text-textDark flex items-center gap-2 text-sm" (click)="back()">
+    <i class="fa-solid fa-arrow-left"></i>
+    Back
+</button>
+
+<div class="max-w-full mx-auto">
+    <!-- Header Card: Title + Date Filters -->
+    <div class="mb-6 p-10 w-full bg-white dark:bg-tileBlack rounded-lg shadow-md">
+        <span class="text-[20px] font-semibold text-[#000000] dark:text-textDark ">
+            Completed Orders
+        </span>
+
+        <div class="flex items-center justify-center mt-6 gap-10">
+            <!-- From Date -->
+            <div class="flex items-center gap-4">
+                <label for="fromDate"
+                    class="text-[18px] text-[#000000] font-normal dark:text-textDark whitespace-nowrap">From :</label>
+                <p-calendar id="fromDate" [(ngModel)]="fromDate" dateFormat="yy/mm/dd" placeholder="--Select Date--"
+                    [showIcon]="true" [showClear]="true" [showButtonBar]="true" [maxDate]="maxFromDate"
+                    iconDisplay="input" [style]="{ width: '15rem', height: '2.5rem' }"
+                    inputStyleClass="px-3 py-2 border border-gray-200 cursor-pointer rounded-md bg-white dark:bg-[#272F45] text-textLight dark:text-textDark w-full h-10 text-[16px]"
+                    (onSelect)="onFromDateChange()" (onClear)="onFromDateClear()" />
+            </div>
+
+            <!-- To Date -->
+            <div class="flex items-center gap-4">
+                <label for="toDate"
+                    class="text-[18px] text-[#000000] font-normal dark:text-textDark whitespace-nowrap">To :</label>
+                <p-calendar id="toDate" [(ngModel)]="toDate" dateFormat="yy/mm/dd" placeholder="--Select Date--"
+                    [showIcon]="true" [showClear]="true" [showButtonBar]="true" [minDate]="minToDate"
+                    iconDisplay="input" [style]="{ width: '15rem', height: '2.5rem' }" [disabled]="!fromDate"
+                    inputStyleClass="px-3 py-2 border border-gray-200 cursor-pointer rounded-md bg-white dark:bg-[#272F45] text-textLight dark:text-textDark w-full h-10 text-[16px]"
+                    [ngClass]="{ 'opacity-50 cursor-not-allowed': !fromDate }" (onClear)="onToDateClear()" />
+            </div>
+
+            <!-- Go Button -->
+            <button (click)="fetchAllCollectionReport()" [disabled]="!fromDate" [class.opacity-50]="!fromDate"
+                [class.cursor-not-allowed]="!fromDate"
+                class="bg-[#3980C0] text-white px-8 py-2.5 rounded-md hover:bg-blue-600 h-10 text-sm transition-all duration-200 shrink-0">
+                Go
+            </button>
+        </div>
+    </div>
+
+    <!-- Results Card -->
+    <div class="p-10 w-full bg-white dark:bg-tileBlack rounded-lg shadow-md">
+
+        <div *ngIf="hasData">
+            <!-- Top row: All + Download (left, stacked) / Search (centered) -->
+            <div class="grid grid-cols-3 items-start mb-6">
+                <div class="flex flex-col gap-3">
+                    <h3 class="text-[20px] font-semibold text-[#000000] dark:text-textDark">
+                        All ({{ totalItems.toString().padStart(2, '0') }})
+                    </h3>
+                    <button
+                        class="bg-[#3980C0] text-white text-[15px] font-medium py-1.5 px-4 rounded-md flex items-center gap-2 w-fit"
+                        (click)="downloadTemplate1()" [disabled]="isDownloading" [ngClass]="{
+                          'opacity-50 cursor-not-allowed': isDownloading
+                        }">
+                        <i class="fa-solid fa-download" *ngIf="!isDownloading"></i>
+                        <i class="fa-solid fa-spinner fa-spin" *ngIf="isDownloading"></i>
+                        {{ isDownloading ? "Downloading..." : "Download" }}
+                    </button>
+                </div>
+
+                <div class="flex justify-center">
+                    <div class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-1.5 w-80">
+                        <input type="text" placeholder="Search By Invoice No.."
+                            class="bg-transparent outline-none w-full text-sm text-gray-600 dark:text-textDark"
+                            [(ngModel)]="search" (keydown.enter)="applysearch()" (keydown)="preventLeadingSpace($event)"
+                            (input)="onSearchInput($event)" />
+                        <button type="button" class="text-gray-400 hover:text-gray-600 focus:outline-none"
+                            (click)="applysearch()">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div></div>
+            </div>
+        </div>
+
+        <!-- Data Table -->
+        <div *ngIf="hasData" class="overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full mt-4">
+            <table class="min-w-full divide-y divide-gray-100 dark:divide-gray-700 table-auto">
+                <thead>
+                    <tr>
+                        <th class="py-3 text-[16px] font-normal text-[#5C5C5C] dark:text-textDark text-left">No</th>
+                        <th
+                            class="px-4 py-3 text-[16px] font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">
+                            Invoice No</th>
+                        <th
+                            class="px-4 py-3 text-[16px] font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">
+                            Customer Name</th>
+                        <th
+                            class="px-4 py-3 text-[16px] font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">
+                            Contact No.</th>
+                        <th
+                            class="px-4 py-3 text-[16px] font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">
+                            Order Type</th>
+                        <th
+                            class="px-4 py-3 text-[16px] font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">
+                            Amount (Rs.)</th>
+                        <th
+                            class="px-4 py-3 text-[16px] font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">
+                            Cash Paid (Rs.)</th>
+                        <th
+                            class="px-4 py-3 text-[16px] font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">
+                            Card Paid (Rs.)</th>
+                        <th
+                            class="px-4 py-3 text-[16px] font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">
+                            Credit Paid (Rs.)</th>
+                        <th
+                            class="px-4 py-3 text-[16px] font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">
+                            Ordered At</th>
+                        <th
+                            class="px-4 py-3 text-[16px] font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">
+                            Completed At</th>
+                        <th
+                            class="px-4 py-3 text-[16px] font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">
+                            Platform</th>
+                        <th
+                            class="px-4 py-3 text-[16px] font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">
+                            Buyer Type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="
+              let item of purchaseReport
+                | paginate
+                  : {
+                      itemsPerPage: itemsPerPage,
+                      currentPage: page,
+                      totalItems: totalItems
+                    };
+              let i = index
+            " class="border-t border-gray-100 dark:border-gray-700">
+                        <td class="py-3 text-[16px] text-[#000000] font-normal dark:text-textDark text-left">
+                            {{ ((page - 1) * itemsPerPage + i + 1).toString().padStart(3, '0') }}
+                        </td>
+                        <td class="px-4 py-3 text-[16px] text-[#000000] font-normal dark:text-textDark text-left">{{
+                            item.invoiceNo }}
+                        </td>
+                        <td class="px-4 py-3 text-[16px] text-[#000000] font-normal dark:text-textDark text-left">{{
+                            item.customerName }}
+                        </td>
+                        <td class="px-4 py-3 text-[16px] text-[#000000] font-normal dark:text-textDark text-left">{{
+                            item.contactNo }}
+                        </td>
+                        <td
+                            class="px-4 py-3 text-[16px] text-[#000000] font-normal dark:text-textDark text-left whitespace-nowrap">
+                            {{
+                            item.orderType }}
+                        </td>
+                        <td class="px-4 py-3 text-[16px] text-[#000000] font-normal dark:text-textDark text-left">{{
+                            item.amount |
+                            number:'1.2-2' }}</td>
+                        <td class="px-4 py-3 text-[16px] text-[#000000] font-normal dark:text-textDark text-left">{{
+                            item.cashPaid |
+                            number:'1.2-2' }}</td>
+                        <td class="px-4 py-3 text-[16px] text-[#000000] font-normal dark:text-textDark text-left">{{
+                            item.cardPaid |
+                            number:'1.2-2' }}</td>
+                        <td class="px-4 py-3 text-[16px] text-[#000000] font-normal dark:text-textDark text-left">{{
+                            item.creditPaid |
+                            number:'1.2-2' }}</td>
+                        <td
+                            class="px-4 py-3 text-[16px] text-[#000000] font-normal dark:text-textDark text-left whitespace-nowrap">
+                            {{
+                            item.orderedAt }}</td>
+                        <td
+                            class="px-4 py-3 text-[16px] text-[#000000] font-normal dark:text-textDark text-left whitespace-nowrap">
+                            {{
+                            item.completedAt }}</td>
+                        <td class="px-4 py-3 text-[16px] text-[#000000] font-normal dark:text-textDark text-left">{{
+                            item.platform }}
+                        </td>
+                        <td class="px-4 py-3 text-[16px] text-[#000000] font-normal dark:text-textDark text-left">{{
+                            item.buyerType }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="mt-4">
+                <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true"
+                    [previousLabel]="'Previous'" [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'"
+                    [screenReaderPageLabel]="'page'" [screenReaderCurrentLabel]="'Youre on page'">
+                </pagination-controls>
+            </div>
+        </div>
+
+        <!-- No date selected yet -->
+        <div *ngIf="!isFromDateSelected && !hasData && !isLoading"
+            class="flex flex-col items-center justify-center w-full py-24">
+            <p class="text-gray-400 dark:text-textDark text-sm mb-6">
+                --Please select a date range first--
+            </p>
+            <img src="assets/images/NoData.png" alt="No Data" class="w-14 h-14 opacity-70" />
+        </div>
+
+        <!-- Date selected but no results -->
+        <div *ngIf="isFromDateSelected && !hasData && !isLoading"
+            class="flex flex-col items-center justify-center w-full py-24">
+            <p class="text-gray-400 dark:text-textDark text-sm mb-6">
+                --No Orders Found--
+            </p>
+            <img src="assets/images/NoData.png" alt="No Data" class="w-14 h-14 opacity-70" />
+        </div>
+    </div>
+</div>

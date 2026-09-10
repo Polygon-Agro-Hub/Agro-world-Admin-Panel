@@ -235,16 +235,18 @@
           <label for="phoneNumber01" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Mobile Number - 01 *
           </label>
-          <div class="mt-1">
-            <div class="flex">
+
+          <div class="mt-1 flex min-w-0 items-stretch gap-2">
+
+            <div class="contact-code-wrapper">
               <p-dropdown [(ngModel)]="personalData.contact1Code" [options]="countries" optionLabel="dialCode"
                 optionValue="dialCode"
-                styleClass="border border-gray-300 rounded-l-md bg-gray-50 mr-2 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown flex-shrink-0"
-                [style]="{ width: '120px' }" [ngClass]="{
-          'border-red-500': 
-            touchedFields.contact1 && 
-            !isValidPhoneNumber(personalData.contact1)
-        }">
+                styleClass="border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-gray-800 dark:text-white custom-dropdown"
+                [style]="{ width: '100%' }" [ngClass]="{
+                  'border-red-500':
+                  touchedFields.contact1 &&
+                  !isValidPhoneNumber(personalData.contact1)
+                }">
                 <ng-template let-country pTemplate="item">
                   <div class="flex items-center gap-2">
                     <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
@@ -259,27 +261,31 @@
                   </div>
                 </ng-template>
               </p-dropdown>
+            </div>
 
+            <div class="min-w-0 flex-1">
               <input type="tel" id="phoneNumber01" name="contact1" [(ngModel)]="personalData.contact1"
                 placeholder="7XXXXXXX" #phone01Input="ngModel" maxlength="9" (input)="formatPhoneNumber('contact1')"
-                (keypress)="preventNonNumeric($event, 'contact1')" (blur)="onBlur('contact1')" [class]="
-          'dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
-          (touchedFields.contact1 && !isValidPhoneNumber(personalData.contact1)
-            ? 'border-red-500'
-            : 'border-gray-300')
-        " />
+                (keypress)="preventNonNumeric($event, 'contact1')" (blur)="onBlur('contact1')"
+                class="block w-full p-2 border h-12 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack focus:outline-none focus:ring-2 focus:ring-blue-500"
+                [ngClass]="{
+                  'border-red-500':
+                  touchedFields.contact1 && !isValidPhoneNumber(personalData.contact1),
+                  'border-gray-300':
+                  !(touchedFields.contact1 && !isValidPhoneNumber(personalData.contact1))
+                }" />
             </div>
-            <div class="mt-1">
-              <span
-                *ngIf="touchedFields.contact1 && !isValidPhoneNumber(personalData.contact1) && personalData.contact1"
-                class="text-red-600 text-sm block">
-                Please enter a valid mobile number (format: +947XXXXXXXX)
-              </span>
+          </div>
 
-              <span *ngIf="!personalData.contact1 && phone01Input.touched" class="text-red-500 text-sm mt-1">
-                Mobile Number - 01 is Required.
-              </span>
-            </div>
+          <div class="mt-1">
+            <span *ngIf="touchedFields.contact1 && !isValidPhoneNumber(personalData.contact1) && personalData.contact1"
+              class="text-red-600 text-sm block">
+              Please enter a valid mobile number (format: +947XXXXXXXX)
+            </span>
+
+            <span *ngIf="!personalData.contact1 && phone01Input.touched" class="text-red-500 text-sm mt-1">
+              Mobile Number - 01 is Required.
+            </span>
           </div>
         </div>
 
@@ -287,16 +293,18 @@
           <label for="phoneNumber02" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Mobile Number - 02
           </label>
-          <div class="mt-1">
-            <div class="flex">
+
+          <div class="mt-1 flex min-w-0 items-stretch gap-2">
+
+            <div class="contact-code-wrapper">
               <p-dropdown [(ngModel)]="personalData.contact2Code" [options]="countries" optionLabel="dialCode"
                 optionValue="dialCode"
-                styleClass="border border-gray-300 rounded-l-md bg-gray-50 mr-2 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown flex-shrink-0"
-                [style]="{ width: '120px' }" [ngClass]="{
-          'border-red-500': 
-            personalData.contact2 && 
-            !isValidPhoneNumber(personalData.contact2)
-        }">
+                styleClass="border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-gray-800 dark:text-white custom-dropdown"
+                [style]="{ width: '100%' }" [ngClass]="{
+                  'border-red-500':
+                    personalData.contact2 &&
+                  !isValidPhoneNumber(personalData.contact2)
+                }">
                 <ng-template let-country pTemplate="item">
                   <div class="flex items-center gap-2">
                     <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
@@ -311,33 +319,35 @@
                   </div>
                 </ng-template>
               </p-dropdown>
+            </div>
 
-              <input type="tel" id="phoneNumber02" name="contact2" [(ngModel)]="personalData.contact2"
-                placeholder="7XXXXXXX" maxlength="9" (input)="formatPhoneNumber('contact2')"
-                (keypress)="preventNonNumeric($event, 'contact2')" (blur)="onBlur('contact2')" [class]="
-          'dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
-          (personalData.contact2 && !isValidPhoneNumber(personalData.contact2)
-            ? 'border-red-500'
-            : 'border-gray-300')
-        " />
-            </div>
-            <div class="mt-1">
-              <span *ngIf="personalData.contact2 && !isValidPhoneNumber(personalData.contact2)"
-                class="text-red-600 text-sm block">
-                Please enter a valid mobile number (format: +947XXXXXXXX)
-              </span>
-              <span *ngIf="arePhoneNumbersSame()" class="text-red-600 text-sm block">
-                Contact Number 1 and Contact Number 2 cannot be the same
-              </span>
-            </div>
+            <input type="tel" id="phoneNumber02" name="contact2" [(ngModel)]="personalData.contact2"
+              placeholder="7XXXXXXX" maxlength="9" (input)="formatPhoneNumber('contact2')"
+              (keypress)="preventNonNumeric($event, 'contact2')" (blur)="onBlur('contact2')"
+              class="min-w-0 flex-1 block p-2 border h-12 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack focus:outline-none focus:ring-2 focus:ring-blue-500"
+              [ngClass]="{
+                'border-red-500':
+                personalData.contact2 && !isValidPhoneNumber(personalData.contact2),
+                'border-gray-300':
+                !(personalData.contact2 && !isValidPhoneNumber(personalData.contact2))
+              }" />
+          </div>
+
+          <div class="mt-1">
+            <span *ngIf="personalData.contact2 && !isValidPhoneNumber(personalData.contact2)"
+              class="text-red-600 text-sm block">
+              Please enter a valid mobile number (format: +947XXXXXXXX)
+            </span>
+            <span *ngIf="arePhoneNumbersSame()" class="text-red-600 text-sm block">
+              Contact Number 1 and Contact Number 2 cannot be the same
+            </span>
           </div>
         </div>
 
         <div>
           <label for="nic" class="block text-sm font-medium text-gray-700 dark:text-textDark">NIC Number *</label>
           <input id="nic" name="nic" [(ngModel)]="personalData.nic" #nicInput="ngModel"
-            (keydown)="preventLeadingSpace($event, 'nic'); validateNICInput($event)"
-            (input)="formatNIC()"
+            (keydown)="preventLeadingSpace($event, 'nic'); validateNICInput($event)" (input)="formatNIC()"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             (blur)="onBlur('nic')" />
           <span *ngIf="touchedFields.nic && !isValidNIC(personalData.nic) && personalData.nic"

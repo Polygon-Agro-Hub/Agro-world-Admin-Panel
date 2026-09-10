@@ -12,6 +12,7 @@ import { PermissionService } from '../../../services/roles-permission/permission
   templateUrl: './govishop-action.component.html',
   styleUrl: './govishop-action.component.css'
 })
+
 export class GovishopActionComponent {
   constructor(
     private router: Router,
@@ -24,19 +25,19 @@ export class GovishopActionComponent {
   }
 
   navigateToShopRequests() {
-    this.router.navigate(['/govi-shop/action/all-shop-requests']).then(() => {});
+    this.router.navigate(['/govi-shop/action/all-shop-requests']).then(() => { });
   }
 
-    navigateToShops() {
-    this.router.navigate(['/govi-shop/action/all-govi-shops']).then(() => {});
+  navigateToShops() {
+    this.router.navigate(['/govi-shop/action/all-govi-shops']).then(() => { });
   }
 
   navigateToDeletedSuppliers() {
-    this.router.navigate(['/govi-shop/action/deleted-suppliers']).then(() => {}); 
+    this.router.navigate(['/govi-shop/action/deleted-suppliers']).then(() => { });
   }
 
   navigateToDeleteShops() {
-    this.router.navigate(['/govi-shop/action/view-delete-shops']).then(() => {}); 
+    this.router.navigate(['/govi-shop/action/view-delete-shops']).then(() => { });
   }
-  
+
 }

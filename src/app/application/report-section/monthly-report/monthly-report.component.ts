@@ -23,6 +23,7 @@ import { CalendarModule } from 'primeng/calendar';
   templateUrl: './monthly-report.component.html',
   styleUrl: './monthly-report.component.css',
 })
+
 export class MonthlyReportComponent implements OnInit {
   @ViewChild('contentToConvert', { static: false })
   contentToConvert!: ElementRef;
@@ -50,7 +51,7 @@ export class MonthlyReportComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private cdr: ChangeDetectorRef
-  ) { 
+  ) {
     this.todayDate = new Date();
   }
 
@@ -60,7 +61,7 @@ export class MonthlyReportComponent implements OnInit {
     const today = new Date();
     this.maxDate = today.toISOString().split('T')[0];
     this.visible = false;
-    
+
     // Initialize with disabled state
     this.isToDateDisabled = true;
     this.isGoButtonDisabled = true;
@@ -78,10 +79,10 @@ export class MonthlyReportComponent implements OnInit {
   onFromDateChange() {
     // Enable To date field when From date is selected
     this.isToDateDisabled = !this.fromDate;
-    
+
     // Enable Go button only when both dates are selected
     this.isGoButtonDisabled = !(this.fromDate && this.toDate);
-    
+
     // Clear data if From date is cleared
     if (!this.fromDate) {
       this.clearReportData();
@@ -91,7 +92,7 @@ export class MonthlyReportComponent implements OnInit {
   onToDateChange() {
     // Enable Go button only when both dates are selected
     this.isGoButtonDisabled = !(this.fromDate && this.toDate);
-    
+
     // Clear data if To date is cleared
     if (!this.toDate) {
       this.clearReportData();
@@ -99,169 +100,169 @@ export class MonthlyReportComponent implements OnInit {
   }
 
   async downloadReport(): Promise<void> {
-  if (this.dailyReports.length === 0) {
-    return;
-  }
+    if (this.dailyReports.length === 0) {
+      return;
+    }
 
-  this.isDownloading = true;
+    this.isDownloading = true;
 
-  setTimeout(async () => {
-    try {
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const margin = 10;
-      let y = margin;
+    setTimeout(async () => {
+      try {
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const margin = 10;
+        let y = margin;
 
-      // Title Section
-      pdf.setFontSize(16);
-      pdf.setTextColor(0, 0, 0);
-      pdf.text('Collection Officer Report', 105, y, { align: 'center' });
+        // Title Section
+        pdf.setFontSize(16);
+        pdf.setTextColor(0, 0, 0);
+        pdf.text('Collection Officer Report', 105, y, { align: 'center' });
 
-      y += 8;
-      pdf.setFontSize(12);
-      pdf.text(`ID NO : ${this.officerData.empId}`, 105, y, { align: 'center' });
+        y += 8;
+        pdf.setFontSize(12);
+        pdf.text(`ID NO : ${this.officerData.empId}`, 105, y, { align: 'center' });
 
-      y += 15;
+        y += 15;
 
-      // Info Section
-      pdf.setFontSize(10);
-      const leftDetails = [
-        { label: 'From', value: this.formatDateForDisplay(this.fromDate) },
-        { label: 'EMP ID', value: this.officerData.empId },
-        { label: 'First Name', value: this.officerData.firstNameEnglish },
-        { label: 'Weight', value: this.finalTotalWeight + ' Kg' },
-      ];
+        // Info Section
+        pdf.setFontSize(10);
+        const leftDetails = [
+          { label: 'From', value: this.formatDateForDisplay(this.fromDate) },
+          { label: 'EMP ID', value: this.officerData.empId },
+          { label: 'First Name', value: this.officerData.firstNameEnglish },
+          { label: 'Weight', value: this.finalTotalWeight + ' Kg' },
+        ];
 
-      const rightDetails = [
-        { label: 'To', value: this.formatDateForDisplay(this.toDate) },
-        { label: 'Role', value: this.officerData.jobRole },
-        { label: 'Last Name', value: this.officerData.lastNameEnglish },
-        { label: 'Collections', value: this.finalTotalFarmers.toString() },
-      ];
+        const rightDetails = [
+          { label: 'To', value: this.formatDateForDisplay(this.toDate) },
+          { label: 'Role', value: this.officerData.jobRole },
+          { label: 'Last Name', value: this.officerData.lastNameEnglish },
+          { label: 'Collections', value: this.finalTotalFarmers.toString() },
+        ];
 
-      const leftColumnX = margin;
-      const rightColumnX = pdf.internal.pageSize.getWidth() - margin - 80;
+        const leftColumnX = margin;
+        const rightColumnX = pdf.internal.pageSize.getWidth() - margin - 80;
 
-      leftDetails.forEach((detail) => {
-        pdf.text(`${detail.label} : ${detail.value}`, leftColumnX, y);
-        y += 7;
-      });
+        leftDetails.forEach((detail) => {
+          pdf.text(`${detail.label} : ${detail.value}`, leftColumnX, y);
+          y += 7;
+        });
 
-      y = margin + 23;
-      rightDetails.forEach((detail) => {
-        pdf.text(`${detail.label} : ${detail.value}`, rightColumnX, y);
-        y += 7;
-      });
+        y = margin + 23;
+        rightDetails.forEach((detail) => {
+          pdf.text(`${detail.label} : ${detail.value}`, rightColumnX, y);
+          y += 7;
+        });
 
-      y += 10;
+        y += 10;
 
-      // Table Section
-      pdf.setFontSize(12);
-      const tableHeaders = ['Date', 'Total Weight', 'Total Collections'];
-      const tableData = this.dailyReports.map((report) => [
-        this.formatDateForDisplay(report.date),
-        report.totalWeight + ' Kg',
-        report.totalPayments,
-      ]);
+        // Table Section
+        pdf.setFontSize(12);
+        const tableHeaders = ['Date', 'Total Weight', 'Total Collections'];
+        const tableData = this.dailyReports.map((report) => [
+          this.formatDateForDisplay(report.date),
+          report.totalWeight + ' Kg',
+          report.totalPayments,
+        ]);
 
-      const columnWidths = [60, 65, 65];
-      const tableX = margin;
-      const cellHeight = 10;
+        const columnWidths = [60, 65, 65];
+        const tableX = margin;
+        const cellHeight = 10;
 
-      // Draw Table Headers
-      pdf.setFillColor(230, 230, 230);
-      pdf.rect(
-        tableX,
-        y,
-        columnWidths.reduce((a, b) => a + b),
-        cellHeight,
-        'F'
-      );
+        // Draw Table Headers
+        pdf.setFillColor(230, 230, 230);
+        pdf.rect(
+          tableX,
+          y,
+          columnWidths.reduce((a, b) => a + b),
+          cellHeight,
+          'F'
+        );
 
-      tableHeaders.forEach((header, i) => {
-        const cellX = tableX + columnWidths.slice(0, i).reduce((a, b) => a + b, 0);
-        const headerWidth = pdf.getTextWidth(header);
-        const textX = cellX + (columnWidths[i] - headerWidth) / 2;
-        pdf.text(header, textX, y + 7);
-        pdf.rect(cellX, y, columnWidths[i], cellHeight);
-      });
-
-      y += cellHeight;
-
-      // Draw Table Data
-      tableData.forEach((row) => {
-        row.forEach((cell, i) => {
+        tableHeaders.forEach((header, i) => {
           const cellX = tableX + columnWidths.slice(0, i).reduce((a, b) => a + b, 0);
-          const cellContentWidth = pdf.getTextWidth(`${cell}`);
-          const textX = cellX + (columnWidths[i] - cellContentWidth) / 2;
-          pdf.text(`${cell}`, textX, y + 7);
+          const headerWidth = pdf.getTextWidth(header);
+          const textX = cellX + (columnWidths[i] - headerWidth) / 2;
+          pdf.text(header, textX, y + 7);
           pdf.rect(cellX, y, columnWidths[i], cellHeight);
         });
+
         y += cellHeight;
-      });
 
-      // Outer Border for the Table
-      pdf.rect(
-        tableX,
-        y - tableData.length * cellHeight - cellHeight,
-        columnWidths.reduce((a, b) => a + b),
-        (tableData.length + 1) * cellHeight
-      );
+        // Draw Table Data
+        tableData.forEach((row) => {
+          row.forEach((cell, i) => {
+            const cellX = tableX + columnWidths.slice(0, i).reduce((a, b) => a + b, 0);
+            const cellContentWidth = pdf.getTextWidth(`${cell}`);
+            const textX = cellX + (columnWidths[i] - cellContentWidth) / 2;
+            pdf.text(`${cell}`, textX, y + 7);
+            pdf.rect(cellX, y, columnWidths[i], cellHeight);
+          });
+          y += cellHeight;
+        });
 
-      // Footer
-      pdf.setFontSize(10);
-      pdf.setTextColor(100);
-      pdf.text(
-        `This report is generated on ${new Date().toLocaleDateString()}, at ${new Date().toLocaleTimeString()}.`,
-        margin,
-        pdf.internal.pageSize.getHeight() - margin
-      );
+        // Outer Border for the Table
+        pdf.rect(
+          tableX,
+          y - tableData.length * cellHeight - cellHeight,
+          columnWidths.reduce((a, b) => a + b),
+          (tableData.length + 1) * cellHeight
+        );
 
-      // Generate file name in the format: Monthly Report_CCM00001_2026-02-01 to 2026-03-04
-      const fileName = this.generateFileName();
-      
-      // Save the PDF with the new file name
-      pdf.save(fileName);
-    } catch (error) {
-      console.error('Error generating PDF:', error);
-    } finally {
-      this.isDownloading = false;
+        // Footer
+        pdf.setFontSize(10);
+        pdf.setTextColor(100);
+        pdf.text(
+          `This report is generated on ${new Date().toLocaleDateString()}, at ${new Date().toLocaleTimeString()}.`,
+          margin,
+          pdf.internal.pageSize.getHeight() - margin
+        );
+
+        // Generate file name in the format: Monthly Report_CCM00001_2026-02-01 to 2026-03-04
+        const fileName = this.generateFileName();
+
+        // Save the PDF with the new file name
+        pdf.save(fileName);
+      } catch (error) {
+        console.error('Error generating PDF:', error);
+      } finally {
+        this.isDownloading = false;
+      }
+    }, 0);
+  }
+
+  // Update this method to generate the file name in the new format
+  generateFileName(): string {
+    if (!this.fromDate || !this.toDate || !this.officerData?.empId) {
+      return 'Monthly_Report.pdf';
     }
-  }, 0);
-}
 
-// Update this method to generate the file name in the new format
-generateFileName(): string {
-  if (!this.fromDate || !this.toDate || !this.officerData?.empId) {
-    return 'Monthly_Report.pdf';
+    const fromDateStr = this.formatDateForFileName(this.fromDate);
+    const toDateStr = this.formatDateForFileName(this.toDate);
+
+    return `Monthly Report_${this.officerData.empId}_${fromDateStr} to ${toDateStr}.pdf`;
   }
 
-  const fromDateStr = this.formatDateForFileName(this.fromDate);
-  const toDateStr = this.formatDateForFileName(this.toDate);
-  
-  return `Monthly Report_${this.officerData.empId}_${fromDateStr} to ${toDateStr}.pdf`;
-}
+  // Update this helper method to format dates as YYYY-MM-DD for file name
+  formatDateForFileName(date: any): string {
+    if (!date) return '';
 
-// Update this helper method to format dates as YYYY-MM-DD for file name
-formatDateForFileName(date: any): string {
-  if (!date) return '';
+    let dateObj: Date;
 
-  let dateObj: Date;
+    if (date instanceof Date) {
+      dateObj = date;
+    } else if (typeof date === 'string') {
+      dateObj = new Date(date);
+      if (isNaN(dateObj.getTime())) return '';
+    } else {
+      return '';
+    }
 
-  if (date instanceof Date) {
-    dateObj = date;
-  } else if (typeof date === 'string') {
-    dateObj = new Date(date);
-    if (isNaN(dateObj.getTime())) return '';
-  } else {
-    return '';
+    const year = dateObj.getFullYear();
+    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const day = String(dateObj.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
   }
-
-  const year = dateObj.getFullYear();
-  const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-  const day = String(dateObj.getDate()).padStart(2, '0');
-
-  return `${year}-${month}-${day}`;
-}
 
   getOfficerDetails(id: number) {
     this.isLoading = true;
@@ -281,44 +282,44 @@ formatDateForFileName(date: any): string {
   }
 
   getCollectionReport(): void {
-  if (!this.fromDate || !this.toDate) {
-    return;
-  }
+    if (!this.fromDate || !this.toDate) {
+      return;
+    }
 
-  this.isLoading = true;
-  this.collectionoOfficer
-    .getCollectionReportByOfficerId(
-      this.convertToISO(this.fromDate),
-      this.convertToISO(this.toDate),
-      this.officerId
-    )
-    .subscribe(
-      (response: any) => {
-        // If response contains both dailyReports and totalCount
-        if (response.dailyReports) {
-          this.dailyReports = response.dailyReports;
-          // this.finalTotalFarmers = response.totalCount || 0;
-        } else {
-          this.dailyReports = response;
-          // Calculate based on your needs
-          // this.finalTotalFarmers = this.dailyReports.length; 
+    this.isLoading = true;
+    this.collectionoOfficer
+      .getCollectionReportByOfficerId(
+        this.convertToISO(this.fromDate),
+        this.convertToISO(this.toDate),
+        this.officerId
+      )
+      .subscribe(
+        (response: any) => {
+          // If response contains both dailyReports and totalCount
+          if (response.dailyReports) {
+            this.dailyReports = response.dailyReports;
+            // this.finalTotalFarmers = response.totalCount || 0;
+          } else {
+            this.dailyReports = response;
+            // Calculate based on your needs
+            // this.finalTotalFarmers = this.dailyReports.length; 
+          }
+
+          this.calculateTotalWeight();
+          this.calculateTotalFarmers();
+          this.go = this.dailyReports && this.dailyReports.length > 0;
+          const now = new Date();
+          this.generatedTime = now.toLocaleTimeString();
+          this.generatedDate = now.toLocaleDateString();
+          this.isLoading = false;
+        },
+        (error) => {
+          console.error('Error fetching collection report:', error);
+          this.isLoading = false;
+          this.clearReportData();
         }
-        
-        this.calculateTotalWeight();
-        this.calculateTotalFarmers();
-        this.go = this.dailyReports && this.dailyReports.length > 0;
-        const now = new Date();
-        this.generatedTime = now.toLocaleTimeString();
-        this.generatedDate = now.toLocaleDateString();
-        this.isLoading = false;
-      },
-      (error) => {
-        console.error('Error fetching collection report:', error);
-        this.isLoading = false;
-        this.clearReportData();
-      }
-    );
-}
+      );
+  }
 
   calculateTotalWeight() {
     this.finalTotalWeight = this.dailyReports.reduce((sum, report) => {

@@ -20,8 +20,7 @@
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-          Collection Centres ({{ (totalItems || 0) < 10 ? '0' + (totalItems || 0) : (totalItems || 0) }})
-        </h2>
+          Collection Centres ({{ (totalItems || 0) < 10 ? '0' + (totalItems || 0) : (totalItems || 0) }}) </h2>
       </div>
       <div class="flex items-center">
 
@@ -37,18 +36,16 @@
         <div class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="provinceOptions" optionLabel="label" optionValue="value"
-            [showClear]="!!selectProvince" placeholder="Province" [(ngModel)]="selectProvince"
-            (onChange)="applyProvinceFilters()"></p-dropdown>
+            [options]="provinceOptions" optionLabel="label" optionValue="value" [showClear]="!!selectProvince"
+            placeholder="Province" [(ngModel)]="selectProvince" (onChange)="applyProvinceFilters()"></p-dropdown>
         </div>
 
 
         <div class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="districtOptions" optionLabel="label" optionValue="value"
-            [showClear]="!!selectDistrict" placeholder="District" [(ngModel)]="selectDistrict"
-            (onChange)="applyDistrictFilters()"></p-dropdown>
+            [options]="districtOptions" optionLabel="label" optionValue="value" [showClear]="!!selectDistrict"
+            placeholder="District" [(ngModel)]="selectDistrict" (onChange)="applyDistrictFilters()"></p-dropdown>
         </div>
 
         <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
@@ -104,24 +101,21 @@
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left" style="white-space: nowrap;">
               Contact Number 01
             </th>
-            <th 
-            *ngIf="
+            <th *ngIf="
                 ( urlSegment === 'collection-hub' && permissionService.hasPermission('View Collection Center') )||
                   tokenService.getUserDetails().role === '1'
-                "
-            class="py-3 font-normal text-textLight dark:text-textDark text-left" style="white-space: nowrap;"></th>
-            <th 
-            *ngIf="
+                " class="py-3 font-normal text-textLight dark:text-textDark text-left" style="white-space: nowrap;">
+            </th>
+            <th *ngIf="
                   (urlSegment === 'collection-hub' && permissionService.hasPermission('Edit Collection Center')) || (urlSegment === 'steckholders' && permissionService.hasPermission('Manage Collection Centre')) ||
                   tokenService.getUserDetails().role === '1'
-                "
-            class="py-3 font-normal text-textLight dark:text-textDark text-left" style="white-space: nowrap;"></th>
-            <th 
-            *ngIf="
+                " class="py-3 font-normal text-textLight dark:text-textDark text-left" style="white-space: nowrap;">
+            </th>
+            <th *ngIf="
                   (urlSegment === 'collection-hub' && permissionService.hasPermission('Delete Collection Center')) || (urlSegment === 'steckholders' && permissionService.hasPermission('Delete(remove) Collection Centre')) ||
                   tokenService.getUserDetails().role === '1'
-                "
-            class="py-3 font-normal text-textLight dark:text-textDark text-left" style="white-space: nowrap;"></th>
+                " class="py-3 font-normal text-textLight dark:text-textDark text-left" style="white-space: nowrap;">
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -166,14 +160,12 @@
               <span *ngIf="item.contact01 != null">{{ item.code1 }}{{ ' ' + item.contact01 }}</span>
             </td>
 
-          
+
             <td class="px-2 py-3 text-left text-textLight dark:text-textDark">
-              <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]" 
-                *ngIf="
+              <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]" *ngIf="
                 ( urlSegment === 'collection-hub' && permissionService.hasPermission('View Collection Center') )||
                   tokenService.getUserDetails().role === '1'
-                "
-              (click)="viewCollectionCenter(item.id)">
+                " (click)="viewCollectionCenter(item.id)">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
                     d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"

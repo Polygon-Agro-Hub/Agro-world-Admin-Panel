@@ -160,12 +160,10 @@
             <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left" style="white-space: nowrap">
               Last Updated At
             </th>
-            <th 
-            *ngIf="
+            <th *ngIf="
               permissionService.hasPermission('Preview shop request') ||
               tokenService.getUserDetails().role === '1'
-            "
-            class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center" style="white-space: nowrap">
+            " class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center" style="white-space: nowrap">
               Details
             </th>
 
@@ -190,24 +188,17 @@
               {{
               ((page - 1) * itemsPerPage + i + 1) < 10 ? '0' + ((page - 1) * itemsPerPage + i + 1) : ((page - 1) *
                 itemsPerPage + i + 1) }} </td>
-                
+
             <td class="px-4 py-3 text-center whitespace-nowrap">
 
-              <img
-                *ngIf="item.logo != null"
-                [src]="item.logo"
-                alt="Logo"
-                class="w-10 h-10 rounded-full mx-auto cursor-pointer"
-                (click)="openImageInNewTab(item.logo)"
-              />
-              <div
-                *ngIf="item.logo == null"
-                class="flex items-center justify-center w-10 h-10 rounded-full bg-blue-100 text-blue-600 mx-auto cursor-pointer"
-              >
+              <img *ngIf="item.logo != null" [src]="item.logo" alt="Logo"
+                class="w-10 h-10 rounded-full mx-auto cursor-pointer" (click)="openImageInNewTab(item.logo)" />
+              <div *ngIf="item.logo == null"
+                class="flex items-center justify-center w-10 h-10 rounded-full bg-blue-100 text-blue-600 mx-auto cursor-pointer">
                 <i class="fa-solid fa-image"></i>
               </div>
             </td>
-            
+
             <td class="px-4 py-3 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
               {{ item.shopName }}
             </td>
@@ -272,12 +263,10 @@
               {{ (item.updatedAt | date: "hh:mm a, MMMM dd, YYYY") || "----" }}
             </td>
 
-            <td
-            *ngIf="
+            <td *ngIf="
               permissionService.hasPermission('Preview shop request') ||
               tokenService.getUserDetails().role === '1'
-            "
-            class="px-2 py-3 text-center text-[#000000] dark:text-textDark">
+            " class="px-2 py-3 text-center text-[#000000] dark:text-textDark">
               <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]" (click)="previewGoViShop(item.id)">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
@@ -287,12 +276,10 @@
               </button>
             </td>
 
-            <td
-            *ngIf="
+            <td *ngIf="
               permissionService.hasPermission('Edit govi shop request') ||
               tokenService.getUserDetails().role === '1'
-            "
-            class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            " class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]" (click)="navigateEdit(item.id)">
                 <svg fill="currentColor" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
                   <title>Edit</title>
@@ -331,7 +318,6 @@
     </div>
   </div>
 </div>
-
 
 <div *ngIf="showDeleteModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
   <div class="bg-white dark:bg-tileBlack rounded-2xl w-[36%] shadow-xl p-10 flex flex-col items-center">

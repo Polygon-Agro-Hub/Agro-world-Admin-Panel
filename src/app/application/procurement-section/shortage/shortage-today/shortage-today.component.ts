@@ -42,7 +42,7 @@ export class ShortageTodayComponent
   implements OnInit, AfterViewInit, OnDestroy {
   shortages: ShortageItem[] = [];
 
-  availableDate: Date = new Date('2026-06-23T18:00:00');
+  availableDate: Date = new Date();
   isWaiting = true;
   isLoading = false;
 
@@ -69,10 +69,12 @@ export class ShortageTodayComponent
   }
 
   ngOnInit(): void {
-    const now = new Date().getTime();
-    const target = this.availableDate.getTime();
+    const now = new Date();
+    const target = new Date(now);
+    target.setHours(18, 0, 0, 0);
+    this.availableDate = target;
 
-    if (now >= target) {
+    if (now.getTime() >= target.getTime()) {
       this.isWaiting = false;
       this.fetchShortageDetails();
     } else {
@@ -81,7 +83,7 @@ export class ShortageTodayComponent
         this.isWaiting = false;
         this.animationItem?.destroy();
         this.fetchShortageDetails();
-      }, target - now);
+      }, target.getTime() - now.getTime());
     }
   }
 

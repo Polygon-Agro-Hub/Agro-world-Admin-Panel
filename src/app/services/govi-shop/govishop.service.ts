@@ -7,6 +7,7 @@ import { environment } from '../../environment/environment';
 @Injectable({
   providedIn: 'root',
 })
+
 export class GovishopService {
   private apiUrl = `${environment.API_URL}shop/`;
   private token = this.tokenService.getToken();
@@ -14,7 +15,7 @@ export class GovishopService {
   constructor(
     private http: HttpClient,
     private tokenService: TokenService,
-  ) {}
+  ) { }
 
   private getHeaders(): HttpHeaders {
     const token = this.tokenService.getToken();
@@ -25,27 +26,27 @@ export class GovishopService {
   }
 
   getAllShops(
-      page: number = 1,
-      limit: number = 10,
-      accessStatus?: string,
-      approval?: string,
-      bussinessType?: string,
-      searchItem?: string,
-    ): Observable<{ results: any[]; total: number }> {
-      let params = new HttpParams()
-        .set('page', page.toString())
-        .set('limit', limit.toString());
+    page: number = 1,
+    limit: number = 10,
+    accessStatus?: string,
+    approval?: string,
+    bussinessType?: string,
+    searchItem?: string,
+  ): Observable<{ results: any[]; total: number }> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('limit', limit.toString());
 
     if (accessStatus) params = params.set('accessStatus', accessStatus);
     if (approval) params = params.set('approval', approval);
     if (bussinessType) params = params.set('bussinessType', bussinessType);
     if (searchItem) params = params.set('searchItem', searchItem);
 
-      return this.http.get<{ results: any[]; total: number }>(
-        `${this.apiUrl}get-all-shops`,
-        { headers: this.getHeaders(), params },
-      );
-    }
+    return this.http.get<{ results: any[]; total: number }>(
+      `${this.apiUrl}get-all-shops`,
+      { headers: this.getHeaders(), params },
+    );
+  }
 
   toggleShopActiveStatus(shopId: number, isActive: number): Observable<any> {
     return this.http.put<any>(
@@ -102,15 +103,15 @@ export class GovishopService {
   }
 
   getAllShopRequests(
-    
+
     filters: {
-        page?: number;
-        limit?: number;
-        approval?: string;
-        bussinessType?: string;
-        searchItem?: string;
-      } = {},
-  
+      page?: number;
+      limit?: number;
+      approval?: string;
+      bussinessType?: string;
+      searchItem?: string;
+    } = {},
+
   ): Observable<{ results: any[]; total: number }> {
     let params = new HttpParams();
     if (filters.page) params = params.set('page', filters.page.toString());
@@ -184,23 +185,23 @@ export class GovishopService {
   }
 
   // Update the method signature in your service
-getProductsByBranchId(
-  branchId: number,
-  categoryId?: string,
-  searchItem?: string
-): Observable<any> {
-  let params = new HttpParams();
+  getProductsByBranchId(
+    branchId: number,
+    categoryId?: string,
+    searchItem?: string
+  ): Observable<any> {
+    let params = new HttpParams();
 
-  if (categoryId && categoryId !== 'all') params = params.set('categoryId', categoryId);
-  if (searchItem) params = params.set('searchItem', searchItem);
+    if (categoryId && categoryId !== 'all') params = params.set('categoryId', categoryId);
+    if (searchItem) params = params.set('searchItem', searchItem);
 
-  return this.http.get<any>(
-    `${this.apiUrl}get-products/${branchId}`,
-    { headers: this.getHeaders(), params }
-  );
-}
+    return this.http.get<any>(
+      `${this.apiUrl}get-products/${branchId}`,
+      { headers: this.getHeaders(), params }
+    );
+  }
 
-getBranchForUpdate(id: number) {
+  getBranchForUpdate(id: number) {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
@@ -209,36 +210,33 @@ getBranchForUpdate(id: number) {
     });
   }
 
-
-updateBranchData(shopData: any): Observable<any> {
-
+  updateBranchData(shopData: any): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json'
     });
 
     return this.http.post(`${this.apiUrl}update-govi-shop-branch`,
-    shopData,
+      shopData,
       {
         headers
       });
-}
-getAllRemovedShops(
-  businessType?: string | null,
-  searchItem?: string | null,
-): Observable<{ results: any[]; total: number }> {
-  let params = new HttpParams();
+  }
 
-  if (businessType) params = params.set('businessType', businessType);
-  if (searchItem) params = params.set('searchItem', searchItem);
+  getAllRemovedShops(
+    businessType?: string | null,
+    searchItem?: string | null,
+  ): Observable<{ results: any[]; total: number }> {
+    let params = new HttpParams();
 
-  return this.http.get<{ results: any[]; total: number }>(
-    `${this.apiUrl}get-all-removed-shops`,
-    { headers: this.getHeaders(), params },
-  );
-}
+    if (businessType) params = params.set('businessType', businessType);
+    if (searchItem) params = params.set('searchItem', searchItem);
 
-
+    return this.http.get<{ results: any[]; total: number }>(
+      `${this.apiUrl}get-all-removed-shops`,
+      { headers: this.getHeaders(), params },
+    );
+  }
 }
 
 export interface BranchDetailsShopInfo {

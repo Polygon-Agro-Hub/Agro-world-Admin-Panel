@@ -101,7 +101,7 @@ export class ViewProductsListComponent {
       )
       .subscribe(
         (response) => {
-          console.log('this is the response', response);
+          
           this.viewProductList = response.items;
           this.hasData = this.viewProductList.length > 0;
           this.totalItems = response.total;

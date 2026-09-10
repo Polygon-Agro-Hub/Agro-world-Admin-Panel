@@ -204,12 +204,12 @@ export class AddPackageComponent implements OnInit {
   getProductTypes() {
     this.marketSrv.fetchProductTypes().subscribe((res) => {
       this.productTypeObj = res.data;
-      console.log('this is type', this.productTypeObj);
+      
       // Initialize quantities with 0 for each product type
       for (let item of this.productTypeObj) {
         this.packageObj.quantities[item.id] = 0;
       }
-      console.log('Initial quantities:', this.packageObj.quantities);
+      
     });
   }
 
@@ -219,8 +219,8 @@ export class AddPackageComponent implements OnInit {
     // Convert to number, default to 0 if invalid
     const numValue = Number(target.value) || 0;
     this.packageObj.quantities[id] = numValue;
-    console.log('Updated quantities:', this.packageObj.quantities);
-    console.log(`Product ${id} quantity: ${this.packageObj.quantities[id]}`);
+    
+    
   }
 
   async onSubmit() {
@@ -494,7 +494,7 @@ export class AddPackageComponent implements OnInit {
     this.packageObj.approximatedPrice =
       productPrice + (serviceFee + packageFee);
 
-    console.log('Approximated Price:', this.packageObj.approximatedPrice);
+    
     return this.packageObj.approximatedPrice;
   }
 

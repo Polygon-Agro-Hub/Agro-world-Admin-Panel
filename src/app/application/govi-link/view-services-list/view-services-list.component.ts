@@ -15,6 +15,7 @@ import { PermissionService } from '../../../services/roles-permission/permission
   templateUrl: './view-services-list.component.html',
   styleUrls: ['./view-services-list.component.css']
 })
+
 export class ViewServicesListComponent implements OnInit {
   officerServices: any[] = [];      // all services
   filteredServices: any[] = [];     // filtered services for display
@@ -57,7 +58,6 @@ export class ViewServicesListComponent implements OnInit {
     );
   }
 
-  // ❌ Clear search
   onClearSearch() {
     this.searchTerm = '';
     this.filteredServices = this.officerServices;
@@ -82,7 +82,6 @@ export class ViewServicesListComponent implements OnInit {
     });
   }
 
-  // 🗑 Delete with confirmation
   onDeleteService(service: any) {
     Swal.fire({
       icon: 'warning',
@@ -135,10 +134,10 @@ export class ViewServicesListComponent implements OnInit {
     });
   }
 
-formatServiceFee(fee: number | string | null | undefined): string {
-  if (!fee) return '-';
-  const numericFee = typeof fee === 'string' ? parseFloat(fee) : fee;
-  if (isNaN(numericFee)) return '-';
-  return numericFee.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-}
+  formatServiceFee(fee: number | string | null | undefined): string {
+    if (!fee) return '-';
+    const numericFee = typeof fee === 'string' ? parseFloat(fee) : fee;
+    if (isNaN(numericFee)) return '-';
+    return numericFee.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
 }

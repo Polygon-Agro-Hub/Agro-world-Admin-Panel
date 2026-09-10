@@ -25,6 +25,7 @@ import Swal from 'sweetalert2';
   templateUrl: './view-polygon-centers.component.html',
   styleUrl: './view-polygon-centers.component.css',
 })
+
 export class ViewPolygonCentersComponent implements OnInit {
   companyId!: number;
   distributionCentreObj!: DistributionCentre[];
@@ -427,9 +428,9 @@ export class ViewPolygonCentersComponent implements OnInit {
   }
 
   back() {
-    if(this.urlSegment === 'distribution-hub'){
+    if (this.urlSegment === 'distribution-hub') {
       this.router.navigate(['/distribution-hub/action']);
-    }else{
+    } else {
       this.router.navigate(['/steckholders/action']);
     }
   }

@@ -153,12 +153,6 @@
           placeholder="0" #discountedPriceField="ngModel" />
 
         <div
-          *ngIf="discountedPriceField.errors?.['required'] && (discountedPriceField.dirty || discountedPriceField.touched)"
-          class="text-red-500 text-sm mt-1">
-          Discount Percentage is required.
-        </div>
-
-        <div
           *ngIf="(discountedPriceField.dirty || discountedPriceField.touched) && productObj.discountedPrice !== null && productObj.discountedPrice < 1"
           class="text-red-500 text-sm mt-1">
           Discount Percentage must be at least 1%.

@@ -33,6 +33,7 @@ interface FieldInspector {
   templateUrl: './view-field-inspectors.component.html',
   styleUrls: ['./view-field-inspectors.component.css'],
 })
+
 export class ViewFieldInspectorsComponent implements OnInit {
   isLoading = false;
   hasData = true;

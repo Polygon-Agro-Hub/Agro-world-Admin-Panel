@@ -44,6 +44,7 @@ interface PurchaseReport {
   styleUrl: './purchase-report.component.css',
   providers: [DatePipe],
 })
+
 export class PurchaseReportComponent {
   isLoading = false;
   purchaseReport: PurchaseReport[] = [];

@@ -88,3 +88,14 @@
   padding-bottom: 0.25rem !important;
   line-height: 1.25rem !important;
 }
+
+/* Hide number input spinner arrows */
+.no-spinner::-webkit-outer-spin-button,
+.no-spinner::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.no-spinner {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}

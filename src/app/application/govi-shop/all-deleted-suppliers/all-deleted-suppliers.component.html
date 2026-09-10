@@ -61,12 +61,10 @@
                         <th
                             class="px-4 py-3 font-inter font-[400] text-[#5C5C5C] dark:text-textDark text-center whitespace-nowrap">
                             Onboard Status</th>
-                        <th
-                        *ngIf="
-              permissionService.hasPermission('View suppliers delete reason') ||
-              tokenService.getUserDetails().role === '1'
-            "
-                            class="px-4 py-3 font-inter font-[400] text-[#5C5C5C] dark:text-textDark text-center whitespace-nowrap">
+                        <th *ngIf="
+                                permissionService.hasPermission('View suppliers delete reason') ||
+                                tokenService.getUserDetails().role === '1'
+                                " class="px-4 py-3 font-inter font-[400] text-[#5C5C5C] dark:text-textDark text-center whitespace-nowrap">
                             Reason</th>
                         <th
                             class="px-4 py-3 font-inter font-[400] text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">
@@ -78,15 +76,15 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="
-              let item of suppliers
-                | paginate
-                  : {
-                      itemsPerPage: itemsPerPage,
-                      currentPage: page,
-                      totalItems: totalItems
-                    };
-              let i = index
-            ">
+                        let item of suppliers
+                            | paginate
+                        : {
+                            itemsPerPage: itemsPerPage,
+                            currentPage: page,
+                            totalItems: totalItems
+                        };
+                        let i = index
+                        ">
                         <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
                             {{ (page - 1) * itemsPerPage + i + 1 < 10 ? ('0' + ((page - 1) * itemsPerPage + i + 1)) :
                                 ((page - 1) * itemsPerPage + i + 1) }} </td>
@@ -108,12 +106,10 @@
                                 {{ item.onbordStatus }}
                             </span>
                         </td>
-                        <td
-                        *ngIf="
-              permissionService.hasPermission('View suppliers delete reason') ||
-              tokenService.getUserDetails().role === '1'
-            "
-                        class="px-2 py-3 text-center text-[#000000] dark:text-textDark">
+                        <td *ngIf="
+                            permissionService.hasPermission('View suppliers delete reason') ||
+                            tokenService.getUserDetails().role === '1'
+                            " class="px-2 py-3 text-center text-[#000000] dark:text-textDark">
                             <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
                                 (click)="openReason(item.deletedInfo.reason)">
                                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -37,7 +37,10 @@ export class ViewCurrentMarketPriceComponent implements OnInit {
   totalItems: number = 0;
   searchNIC: string = '';
 
-  constructor(private marketSrv: MarketPriceService, private router: Router) {
+  constructor(
+    private marketSrv: MarketPriceService,
+    private router: Router,
+  ) {
     this.currentDate = new Date().toLocaleDateString();
   }
 
@@ -51,7 +54,7 @@ export class ViewCurrentMarketPriceComponent implements OnInit {
     ];
   }
 
- fetchAllMarketPrices() {
+  fetchAllMarketPrices() {
     this.isLoading = true;
 
     const cropId = this.selectedCrop?.id || '';
@@ -70,13 +73,12 @@ export class ViewCurrentMarketPriceComponent implements OnInit {
         Swal.fire(
           'Error!',
           'There was an error fetching market prices.',
-          'error'
+          'error',
         );
         this.hasData = false;
-      }
+      },
     );
   }
-  
 
   getAllCrops() {
     this.marketSrv.getAllCropName().subscribe(
@@ -85,7 +87,7 @@ export class ViewCurrentMarketPriceComponent implements OnInit {
       },
       () => {
         Swal.fire('Error!', 'There was an error fetching crops.', 'error');
-      }
+      },
     );
   }
 

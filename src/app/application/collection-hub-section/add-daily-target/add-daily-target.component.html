@@ -3,36 +3,24 @@
 </button>
 
 <div
-  class=" w-full overflow-x-auto scrollbar-thin overflow-y-hidden scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
->
+  class=" w-full overflow-x-auto scrollbar-thin overflow-y-hidden scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
   <div
-    class="pt-5 pb-5 min-w-[320px] md:min-w-[768px] lg:min-w-[1024px] xl:min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg h-auto"
-  >
-    <div
-      class="flex px-3 flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
-    >
+    class="pt-5 pb-5 min-w-[320px] md:min-w-[768px] lg:min-w-[1024px] xl:min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg h-auto">
+    <div class="flex px-3 flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
       <div class="flex flex-col sm:flex-row gap-4 sm:gap-6 w-full sm:w-auto">
-        <div
-        *ngIf="
+        <div *ngIf="
           permissionService.hasPermission('Assign Centre Target') ||
           tokenService.getUserDetails().role === '1'
-        "
-          class="flex flex-row items-center gap-2 border-2 rounded-2xl px-4 py-2 dark:bg-[#1E293B] cursor-pointer transition-colors duration-200"
-          [ngClass]="{ 'text-[#415CFF] border-[#415CFF]': isAssignTarget }"
-          (click)="selectAssignTarget()"
-        >
+        " class="flex flex-row items-center gap-2 border-2 rounded-2xl px-4 py-2 dark:bg-[#1E293B] cursor-pointer transition-colors duration-200"
+          [ngClass]="{ 'text-[#415CFF] border-[#415CFF]': isAssignTarget }" (click)="selectAssignTarget()">
           <i *ngIf="isAssignTarget" class="fa-solid fa-check"></i>
           <p class="dark:text-white">Centre Target</p>
         </div>
-        <div
-        *ngIf="
+        <div *ngIf="
           permissionService.hasPermission('Select Variety') ||
           tokenService.getUserDetails().role === '1'
-        "
-          class="flex flex-row items-center gap-2 border-2 rounded-2xl px-4 py-2 dark:bg-[#1E293B] cursor-pointer transition-colors duration-200"
-          [ngClass]="{ 'text-[#415CFF] border-[#415CFF]': isVariety }"
-          (click)="selectVariety()"
-        >
+        " class="flex flex-row items-center gap-2 border-2 rounded-2xl px-4 py-2 dark:bg-[#1E293B] cursor-pointer transition-colors duration-200"
+          [ngClass]="{ 'text-[#415CFF] border-[#415CFF]': isVariety }" (click)="selectVariety()">
           <i *ngIf="isVariety" class="fa-solid fa-check"></i>
           <p class="dark:text-white">Variety List</p>
         </div>
@@ -41,16 +29,10 @@
 
     <hr class="my-6 border border-[#7F7F7F] dark:bg-[#1E293B] dark:border-[#292929]" />
 
-    <app-assign-center-target
-    *ngIf="(permissionService.hasPermission('Assign Centre Target') || tokenService.getUserDetails().role === '1') 
-          && isAssignTarget"
-      [centerDetails]="dailyTartgetObj"
-    ></app-assign-center-target>
+    <app-assign-center-target *ngIf="(permissionService.hasPermission('Assign Centre Target') || tokenService.getUserDetails().role === '1') 
+          && isAssignTarget" [centerDetails]="dailyTartgetObj"></app-assign-center-target>
 
-    <app-select-variety-list
-    *ngIf="(permissionService.hasPermission('Select Variety') || tokenService.getUserDetails().role === '1') 
-          && isVariety"
-      [centerDetails]="dailyTartgetObj"
-    ></app-select-variety-list>
+    <app-select-variety-list *ngIf="(permissionService.hasPermission('Select Variety') || tokenService.getUserDetails().role === '1') 
+          && isVariety" [centerDetails]="dailyTartgetObj"></app-select-variety-list>
   </div>
 </div>

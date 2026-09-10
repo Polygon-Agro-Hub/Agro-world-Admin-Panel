@@ -233,8 +233,8 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
 
   onSubmit() {
     // Log the entire form value and the task object
-    console.log('Form Value:', this.taskForm.value);
-    console.log('Task Object:', this.cropTaskObj);
+    
+    
     // Array to store missing or invalid field messages
     const missingFields: string[] = [];
 
@@ -246,6 +246,18 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
     // if (this.taskForm.get('startingDate')?.invalid) {
     //   missingFields.push('Starting Date is required');
     // }
+
+    if (this.taskForm.get('taskEnglish')?.invalid) {
+      missingFields.push('Task (English) is required');
+    }
+
+    if (this.taskForm.get('taskSinhala')?.invalid) {
+      missingFields.push('Task (Sinhala) is required');
+    }
+
+    if (this.taskForm.get('taskTamil')?.invalid) {
+      missingFields.push('Task (Tamil) is required');
+    }
 
     if (this.taskForm.get('taskTypeEnglish')?.invalid) {
       missingFields.push('Task Type (English) is required');
@@ -271,18 +283,6 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
       missingFields.push('Task Category (Tamil) is required');
     }
 
-    if (this.taskForm.get('taskEnglish')?.invalid) {
-      missingFields.push('Task (English) is required');
-    }
-
-    if (this.taskForm.get('taskSinhala')?.invalid) {
-      missingFields.push('Task (Sinhala) is required');
-    }
-
-    if (this.taskForm.get('taskTamil')?.invalid) {
-      missingFields.push('Task (Tamil) is required');
-    }
-
     if (this.taskForm.get('taskDescriptionEnglish')?.invalid) {
       missingFields.push('Task Description (English) is required');
     }
@@ -293,6 +293,10 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
 
     if (this.taskForm.get('taskDescriptionTamil')?.invalid) {
       missingFields.push('Task Description (Tamil) is required');
+    }
+
+    if (this.taskForm.get('days')?.invalid) {
+      missingFields.push('Number of Days are required');
     }
 
     if (this.taskForm.get('reqImages')?.invalid) {
@@ -366,7 +370,7 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
       if (result.isConfirmed) {
         this.isLoading = true;
         if (this.userId === 'null') {
-          console.log('cropTaskObj', this.cropTaskObj)
+          
           this.cropCalendarService
             .createNewCropTask(this.cropId, this.indexId, this.cropTaskObj)
             .subscribe({
@@ -421,7 +425,7 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
               },
             });
         } else {
-          console.log('cropTaskObj', this.cropTaskObj)
+          
           this.cropCalendarService
             .createNewCropTaskU(this.cropId, this.indexId, this.userId, this.cropTaskObj, this.cultivationId, this.ongCultivationId)
             .subscribe({

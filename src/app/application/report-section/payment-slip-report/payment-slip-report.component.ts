@@ -20,6 +20,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './payment-slip-report.component.html',
   styleUrl: './payment-slip-report.component.css',
 })
+
 export class PaymentSlipReportComponent {
   todayDate!: string;
   payments!: Payment[];
@@ -43,7 +44,7 @@ export class PaymentSlipReportComponent {
     private paymentSlipReportService: PaymentSlipReportService,
     private route: ActivatedRoute,
     private router: Router,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const today = new Date();

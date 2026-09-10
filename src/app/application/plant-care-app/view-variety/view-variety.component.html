@@ -72,6 +72,16 @@
             >
               Variety
             </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap"
+            >
+              Last Modified By
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Last Modified At
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -118,6 +128,15 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.varietyNameEnglish }}
             </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ item.modifyBy }}
+            </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+  <div class="flex flex-col text-center">
+    <span>{{ item.modifyAt | date: 'hh:mm a' }}</span>
+    <span>{{ item.modifyAt | date: 'yyyy/MM/dd' }}</span>
+  </div>
+</td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <button class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd]" (click)="viewVarity(item.id)" >
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -147,7 +166,7 @@
               <button
               *ngIf="permissionService.hasPermission('Delete varieties') ||
                   tokenService.getUserDetails().role === '1'"
-                class="w-6 h-6 ml-3 text-[#fc3636] hover:text-[#f38f8f]"
+                class="w-6 h-6 text-[#fc3636] hover:text-[#f38f8f]"
                 (click)="deleteCropCalender(item.id)"
               >
                 <svg

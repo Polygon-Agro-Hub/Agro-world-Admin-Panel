@@ -67,6 +67,8 @@ export class IndividualFarmersAuditsComponent implements OnInit {
   selectedScheduleDate: Date | null = null;
   minDate: Date = new Date();
 
+  assignBlockedMessage: string = '';  
+
   // Officer Role Options
   officerRoleOptions = [
     { label: 'Field Officer', value: 'Field Officer' },
@@ -174,23 +176,28 @@ export class IndividualFarmersAuditsComponent implements OnInit {
   }
 
   // Handle assign status click
-  onAssignStatusClick(audit: FieldAudit): void {
-    console.log('audit', audit)
-    // Special condition: If audit is completed and assigned, show warning popup
+    onAssignStatusClick(audit: FieldAudit): void {
+    // Completed + already assigned -> block
     if (audit.status === 'Completed' && audit.officerFirstName) {
       this.selectedAudit = audit;
+      this.assignBlockedMessage = "You can't assign an officer to the task because the task has already been completed.";
       this.isCompletedJobPopup = true;
       return;
     }
 
-    // For Pending status, always show assign popup regardless of assignment status
+    // Ongoing -> block (new)
+    if (audit.status === 'Ongoing') {
+      this.selectedAudit = audit;
+      this.assignBlockedMessage = "You can't assign an officer because the task has already started.";
+      this.isCompletedJobPopup = true;
+      return;
+    }
+
     if (audit.status === 'Pending') {
       this.openAssignPopup(audit);
     } else if (audit.officerFirstName) {
-      // For other statuses with assigned officer, show officer details popup
       this.officerPopUpOpen(audit);
     } else {
-      // For other statuses without assigned officer, open assign popup
       this.openAssignPopup(audit);
     }
   }
@@ -207,7 +214,6 @@ export class IndividualFarmersAuditsComponent implements OnInit {
 
     // Set initial schedule date from audit if available
     if (audit.sheduleDate) {
-      console.log('schedule date', audit.sheduleDate)
       this.selectedScheduleDate = new Date(audit.sheduleDate);
     } else {
       this.selectedScheduleDate = new Date(); // Default to today
@@ -251,6 +257,7 @@ export class IndividualFarmersAuditsComponent implements OnInit {
   completedJobPopupClose(): void {
     this.isCompletedJobPopup = false;
     this.selectedAudit = null;
+    this.assignBlockedMessage = '';
   }
 
   // When officer role changes
@@ -329,7 +336,6 @@ export class IndividualFarmersAuditsComponent implements OnInit {
 
   // Handle schedule date changes
   onScheduleDateChange(): void {
-    console.log(this.checkDate(this.selectedScheduleDate));
 
     if (this.checkDate(this.selectedScheduleDate)) {
       Swal.fire({

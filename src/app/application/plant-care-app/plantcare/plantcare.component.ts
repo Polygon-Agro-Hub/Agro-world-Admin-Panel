@@ -22,6 +22,7 @@ export class PlantcareComponent {
   popupVisibleFarmerClusters = false;
   popupVisibleAuditFarmers = false;
   popupVisiblePentionRequests = false;
+  popupVisiblePublicForum = false;
 
   constructor(
     private router: Router,
@@ -103,6 +104,15 @@ export class PlantcareComponent {
       this.popupVisibleFarmerClusters = false;
   }
 
+  togglePopupPublicForum(){
+    this.popupVisiblePublicForum = !this.popupVisiblePublicForum;
+    if (this.popupVisibleNews) this.popupVisibleNews = false;
+    if (this.popupVisibleMarketPrice) this.popupVisibleMarketPrice = false;
+    if (this.popupVisibleCropCalender) this.popupVisibleCropCalender = false;
+    if (this.popupVisibleCertification) this.popupVisibleCertification = false;
+
+  }
+
   navigateToCreateNews(): void {
     this.isLoading = true;
     this.router.navigate(['/plant-care/action/create-news']).then(() => {
@@ -135,6 +145,83 @@ export class PlantcareComponent {
 
   createVariety(): void {
     this.router.navigate(['/plant-care/action/create-crop-variety']);
+  }
+
+  blockWords(): void {
+    this.router.navigate(['/plant-care/action/add-block-words']);
+  }
+
+  downloadCropCalendarTemplate(): void {
+    this.isLoading = true;
+
+    const header = [
+      'Task index',
+      'Day',
+      'Task type (English)',
+      'Task type (Sinhala)',
+      'Task type (Tamil)',
+      'Task Category (English)',
+      'Task Category (Sinhala)',
+      'Task Category (Tamil)',
+      'Task (English)',
+      'Task (Sinhala)',
+      'Task (Tamil)',
+      'Task description (English)',
+      'Task description (Sinhala)',
+      'Task description (Tamil)',
+      'Image Link',
+      'Video Link English',
+      'Video Link Sinhala',
+      'Video Link Tamil',
+      'Required Images',
+    ];
+
+    const numberOfRowsToGenerate = 200;
+    const emptyRows = Array.from({ length: numberOfRowsToGenerate }, () =>
+      Array(header.length).fill(''),
+    );
+
+    const worksheetData = [header, ...emptyRows];
+    const ws = XLSX.utils.aoa_to_sheet(worksheetData);
+
+    // Apply bold style only for the first row (headers).
+    header.forEach((_, colIndex) => {
+      const headerCellAddress = XLSX.utils.encode_cell({ r: 0, c: colIndex });
+      if (!ws[headerCellAddress]) {
+        ws[headerCellAddress] = { t: 's', v: header[colIndex] };
+      }
+      ws[headerCellAddress].s = {
+        font: { bold: true },
+      };
+    });
+
+    ws['!cols'] = [
+      { wch: 12 },
+      { wch: 8 },
+      { wch: 22 },
+      { wch: 22 },
+      { wch: 22 },
+      { wch: 24 },
+      { wch: 24 },
+      { wch: 24 },
+      { wch: 18 },
+      { wch: 18 },
+      { wch: 18 },
+      { wch: 30 },
+      { wch: 30 },
+      { wch: 30 },
+      { wch: 28 },
+      { wch: 28 },
+      { wch: 28 },
+      { wch: 28 },
+      { wch: 20 },
+    ];
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'CropCalendarTemplate');
+    XLSX.writeFile(wb, 'Crop_Calendar_Template.xlsx');
+
+    this.isLoading = false;
   }
 
   publicForum(): void {
@@ -177,6 +264,8 @@ export class PlantcareComponent {
   manageFarmerClusters(): void {
     this.router.navigate(['/plant-care/action/view-farmer-clusters']);
   }
+
+
 
   downloadFarmerClusterTemplate(): void {
     this.isLoading = true;

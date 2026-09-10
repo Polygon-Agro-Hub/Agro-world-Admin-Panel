@@ -185,11 +185,17 @@
                   ">{{ item.displayType }}</span>
               </td>
               <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
-                <ng-container *ngIf="item.discount > 0; else noDiscount">
-                  {{ formatDiscountPercentage(item.discount, item.normalPrice) }}
-                </ng-container>
-                <ng-template #noDiscount>No</ng-template>
-              </td>
+  <ng-container [ngSwitch]="true">
+    <ng-container *ngSwitchCase="!item.displayType">--</ng-container>
+    <ng-container *ngSwitchCase="item.displayType === 'AP&SP'">No</ng-container>
+    <ng-container *ngSwitchDefault>
+      <ng-container *ngIf="item.discount > 0; else noDiscount">
+        {{ formatDiscountPercentage(item.discount, item.normalPrice) }}
+      </ng-container>
+      <ng-template #noDiscount>No</ng-template>
+    </ng-container>
+  </ng-container>
+</td>
 
               <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
                 {{ item.normalPrice }}

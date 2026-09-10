@@ -5,6 +5,7 @@
 </button>
 <div class="h-[20px]"></div>
 <div *ngIf="this.itemId == null" class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg">
+  <form #personalForm="ngForm">
   <div *ngIf="selectedPage === 'pageOne'">
     <!-- <div> -->
     <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
@@ -41,10 +42,10 @@
           </label>
 
           <div class="relative">
-            <p-dropdown [options]="CompanyData" [(ngModel)]="personalData.companyId" optionLabel="companyNameEnglish"
-              optionValue="id" [filter]="true" filterPlaceholder="Search company..." (onBlur)="onBlur('companyId')"
-              placeholder="Select Company" class="w-full mt-1 p-dropdown-custom">
-            </p-dropdown>
+            <p-dropdown [options]="CompanyData" [(ngModel)]="personalData.companyId" name="companyId"
+  optionLabel="companyNameEnglish" optionValue="id" [filter]="true" filterPlaceholder="Search company..."
+  (onBlur)="onBlur('companyId')" placeholder="Select Company" class="w-full mt-1 p-dropdown-custom">
+</p-dropdown>
 
             <!-- Error message right below the dropdown -->
             <span *ngIf="isFieldInvalid('companyId')" class="text-red-600 text-sm mt-1 block">
@@ -93,20 +94,23 @@
 
           <div class="flex items-center space-x-4 mt-3">
             <div class="flex items-center space-x-2">
-              <input class="w-5 h-5 cursor-pointer" type="checkbox" id="sinhala" name="languages" value="Sinhala"
-                (change)="onCheckboxChange1('Sinhala', $event)" />
-              <label for="sinhala" class="text-gray-700 dark:text-textDark cursor-pointer">Sinhala</label>
-            </div>
-            <div class="flex items-center space-x-2">
-              <input class="w-5 h-5 cursor-pointer" type="checkbox" id="english" name="languages" value="English"
-                (change)="onCheckboxChange1('English', $event)" />
-              <label for="english" class="text-gray-700 dark:text-textDark cursor-pointer">English</label>
-            </div>
-            <div class="flex items-center space-x-2">
-              <input class="w-5 h-5 cursor-pointer" type="checkbox" id="tamil" name="languages" value="Tamil"
-                (change)="onCheckboxChange1('Tamil', $event)" />
-              <label for="tamil" class="text-gray-700 dark:text-textDark cursor-pointer">Tamil</label>
-            </div>
+  <input class="w-5 h-5 cursor-pointer" type="checkbox" id="sinhala" name="languages" value="Sinhala"
+    [checked]="isLanguageSelected('Sinhala')"
+    (change)="onCheckboxChange1('Sinhala', $event)" />
+  <label for="sinhala" class="text-gray-700 dark:text-textDark cursor-pointer">Sinhala</label>
+</div>
+<div class="flex items-center space-x-2">
+  <input class="w-5 h-5 cursor-pointer" type="checkbox" id="english" name="languages" value="English"
+    [checked]="isLanguageSelected('English')"
+    (change)="onCheckboxChange1('English', $event)" />
+  <label for="english" class="text-gray-700 dark:text-textDark cursor-pointer">English</label>
+</div>
+<div class="flex items-center space-x-2">
+  <input class="w-5 h-5 cursor-pointer" type="checkbox" id="tamil" name="languages" value="Tamil"
+    [checked]="isLanguageSelected('Tamil')"
+    (change)="onCheckboxChange1('Tamil', $event)" />
+  <label for="tamil" class="text-gray-700 dark:text-textDark cursor-pointer">Tamil</label>
+</div>
           </div>
           <p *ngIf="!isAtLeastOneLanguageSelected()" class="text-red-600 text-sm mt-2">
             Please select at least one Preferred Language.
@@ -627,5 +631,5 @@
       </button>
     </div>
   </div>
-
+</form>
 </div>

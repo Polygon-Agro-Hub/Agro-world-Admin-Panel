@@ -35,8 +35,8 @@ export class MarketPriceBulkDeleteComponent {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private tokenService: TokenService
-  ) { }
+    private tokenService: TokenService,
+  ) {}
 
   ngOnInit() {
     this.fetchAllXl(this.page, this.itemsPerPage);
@@ -64,7 +64,7 @@ export class MarketPriceBulkDeleteComponent {
         total: number;
       }>(
         `${environment.API_URL}market-price/get-all-market-xlsx?page=${page}&limit=${limit}`,
-        { headers }
+        { headers },
       )
       .subscribe(
         (response) => {
@@ -75,7 +75,7 @@ export class MarketPriceBulkDeleteComponent {
         },
         (error) => {
           this.isLoading = false;
-        }
+        },
       );
   }
 
@@ -114,7 +114,8 @@ export class MarketPriceBulkDeleteComponent {
                 text: 'Sucessfully deleted the uploaded market prices',
                 confirmButtonText: 'OK',
                 customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  popup:
+                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                   title: 'font-semibold text-lg',
                 },
               });
@@ -127,11 +128,12 @@ export class MarketPriceBulkDeleteComponent {
                 text: 'There was an error deleting the news item.',
                 confirmButtonText: 'OK',
                 customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  popup:
+                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                   title: 'font-semibold text-lg',
                 },
               });
-            }
+            },
           );
       }
     });

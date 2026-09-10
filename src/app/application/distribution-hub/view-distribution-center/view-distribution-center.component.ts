@@ -114,7 +114,7 @@ export class ViewDistributionCenterComponent implements OnInit {
     private router: Router,
     private DestributionSrv: DestributionService,
     public tokenService: TokenService,
-    public permissionService: PermissionService
+    public permissionService: PermissionService,
   ) {}
 
   ngOnInit(): void {
@@ -145,7 +145,6 @@ export class ViewDistributionCenterComponent implements OnInit {
     this.isLoading = true;
     this.DestributionSrv.getCompanies().subscribe({
       next: (response) => {
-
         if (response.success && response.data) {
           this.companyOptions = response.data
             .map((company) => ({
@@ -176,7 +175,7 @@ export class ViewDistributionCenterComponent implements OnInit {
       this.selectDistrict,
       this.selectProvince,
       this.selectCompany,
-      this.searchItem
+      this.searchItem,
     );
   }
 
@@ -191,7 +190,7 @@ export class ViewDistributionCenterComponent implements OnInit {
     district: string = this.selectDistrict,
     province: string = this.selectProvince,
     company: string = this.selectCompany,
-    searchItem?: string
+    searchItem?: string,
   ) {
     this.isLoading = true;
     this.DestributionSrv.getAllDistributionCentre(
@@ -200,7 +199,7 @@ export class ViewDistributionCenterComponent implements OnInit {
       district,
       province,
       company,
-      searchItem
+      searchItem,
     ).subscribe(
       (response) => {
         this.isLoading = false;
@@ -214,7 +213,7 @@ export class ViewDistributionCenterComponent implements OnInit {
         if (error.status === 401) {
           // Unauthorized access handling
         }
-      }
+      },
     );
   }
 
@@ -235,7 +234,7 @@ export class ViewDistributionCenterComponent implements OnInit {
       this.selectDistrict,
       this.selectProvince,
       this.selectCompany,
-      this.searchItem
+      this.searchItem,
     );
   }
 
@@ -247,7 +246,7 @@ export class ViewDistributionCenterComponent implements OnInit {
   applyProvinceFilters() {
     if (this.selectProvince) {
       const selected = this.ProvinceData.find(
-        (p) => p.province === this.selectProvince
+        (p) => p.province === this.selectProvince,
       );
 
       this.districtOptions =
@@ -275,14 +274,14 @@ export class ViewDistributionCenterComponent implements OnInit {
       this.selectDistrict,
       this.selectProvince, // Make sure this is the correct format
       this.selectCompany,
-      this.searchItem
+      this.searchItem,
     );
   }
 
   applyDistrictFilters() {
     if (this.selectDistrict) {
       const matchingProvince = this.ProvinceData.find((p) =>
-        p.district.some((d) => d.districtName === this.selectDistrict)
+        p.district.some((d) => d.districtName === this.selectDistrict),
       );
 
       if (matchingProvince) {
@@ -311,7 +310,7 @@ export class ViewDistributionCenterComponent implements OnInit {
       (d) => ({
         label: d.districtName,
         value: d.districtName,
-      })
+      }),
     );
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
   }
@@ -329,62 +328,63 @@ export class ViewDistributionCenterComponent implements OnInit {
   navigateDashboard(id: number) {
     // this.router.navigate([`/collection-hub/collection-center-dashboard/${id}`]);
   }
-  
-  backnavigation(){
+
+  backnavigation() {
     this.router.navigate([`/distribution-hub/action`]);
   }
 
-deleteDistributionCenter(id: number): void {
-  Swal.fire({
-    title: 'Are you sure?',
-    text: "Do you really want to delete this Distribution Centre? This action cannot be undone.",
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, delete it!',
-    cancelButtonText: 'Cancel',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-    confirmButtonColor: '#2563eb', // Blue confirm
-    cancelButtonColor: '#dc2626',  // Red cancel
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.isLoading = true;
-      this.DestributionSrv.deleteDistributionCenter(id).subscribe({
-        next: () => {
-          Swal.fire({
-            title: 'Deleted!',
-            text: 'Distribution centre has been deleted.',
-            icon: 'success',
-            customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              title: 'font-semibold',
-            },
-            confirmButtonColor: '#2563eb',
-          });
-          // Refresh the list after deletion
-          this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
-        },
-        error: (error) => {
-          this.isLoading = false;
-          console.error('Error deleting distribution centre:', error);
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Failed to delete distribution centre',
-            customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              title: 'font-semibold',
-            },
-            confirmButtonColor: '#2563eb',
-          });
-        },
-      });
-    }
-  });
-}
-
+  deleteDistributionCenter(id: number): void {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you really want to delete this Distribution Centre? This action cannot be undone.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+      confirmButtonColor: '#2563eb', // Blue confirm
+      cancelButtonColor: '#dc2626', // Red cancel
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+        this.DestributionSrv.deleteDistributionCenter(id).subscribe({
+          next: () => {
+            Swal.fire({
+              title: 'Deleted!',
+              text: 'Distribution centre has been deleted.',
+              icon: 'success',
+              customClass: {
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+              },
+              confirmButtonColor: '#2563eb',
+            });
+            // Refresh the list after deletion
+            this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+          },
+          error: (error) => {
+            this.isLoading = false;
+            console.error('Error deleting distribution centre:', error);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Failed to delete distribution centre',
+              customClass: {
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+              },
+              confirmButtonColor: '#2563eb',
+            });
+          },
+        });
+      }
+    });
+  }
 
   preventLeadingSpace(event: KeyboardEvent): void {
     const input = event.target as HTMLInputElement;

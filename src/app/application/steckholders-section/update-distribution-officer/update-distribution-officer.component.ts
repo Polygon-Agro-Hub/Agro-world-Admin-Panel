@@ -69,6 +69,7 @@ interface DistributionOfficers {
   templateUrl: './update-distribution-officer.component.html',
   styleUrl: './update-distribution-officer.component.css',
 })
+
 export class UpdateDistributionOfficerComponent {
   @ViewChild('licNoInput') licNoModel!: NgModel;
   @ViewChild('confirmLicNoInput') confirmLicNoModel!: NgModel;
@@ -242,7 +243,7 @@ export class UpdateDistributionOfficerComponent {
     private distributionOfficerServ: DistributionHubService,
     private location: Location,
     private imageUploadService: ImageUploadService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.scrollToTop();
@@ -1261,15 +1262,15 @@ export class UpdateDistributionOfficerComponent {
       this.personalData.jobRole === 'Driver'
         ? !!this.personalData.firstNameEnglish
         : !!this.personalData.firstNameEnglish &&
-          !!this.personalData.firstNameSinhala &&
-          !!this.personalData.firstNameTamil;
+        !!this.personalData.firstNameSinhala &&
+        !!this.personalData.firstNameTamil;
 
     const isLastNameValid =
       this.personalData.jobRole === 'Driver'
         ? !!this.personalData.lastNameEnglish
         : !!this.personalData.lastNameEnglish &&
-          !!this.personalData.lastNameSinhala &&
-          !!this.personalData.lastNameTamil;
+        !!this.personalData.lastNameSinhala &&
+        !!this.personalData.lastNameTamil;
 
     const isContact1Valid = this.isValidPhoneNumber(this.personalData.contact1);
     const isEmailValid = this.isValidEmail(this.personalData.email);

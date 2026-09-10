@@ -39,6 +39,7 @@ export class EditCompanyDetailsComponent implements OnInit {
   contactNumberError1 = false;
   contactNumberError2 = false;
   logoRequiredError = false;
+  isPrivateSector = false;
 
   @ViewChild('logoInput', { static: false })
   logoInput!: ElementRef<HTMLInputElement>;
@@ -136,6 +137,10 @@ export class EditCompanyDetailsComponent implements OnInit {
       next: (res) => {
         this.isLoading = false;
         const company = res.company;
+        this.isPrivateSector =
+          company.companySector === 'Private Sector' ||
+          (!company.companySector && !!(company.regNumber || company.taxId));
+        this.setCompanyIdentifierValidators();
 
         // Handle null phoneNumber2 - convert to empty string
         const phoneNumber2 =
@@ -185,6 +190,17 @@ export class EditCompanyDetailsComponent implements OnInit {
         this.router.navigate(['/plant-care/action/view-company-list']);
       },
     });
+  }
+
+  private setCompanyIdentifierValidators(): void {
+    const validators = this.isPrivateSector ? [Validators.required] : [];
+    const registrationNumber = this.companyForm.get('registrationNumber');
+    const taxId = this.companyForm.get('taxId');
+
+    registrationNumber?.setValidators(validators);
+    taxId?.setValidators(validators);
+    registrationNumber?.updateValueAndValidity();
+    taxId?.updateValueAndValidity();
   }
 
   preventLeadingSpace(event: KeyboardEvent): void {

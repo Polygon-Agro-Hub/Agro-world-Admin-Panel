@@ -132,7 +132,7 @@
           </div>
 
           <div *ngIf="personalData.jobRole === 'Driver'">
-            
+
           </div>
 
           <div *ngIf="personalData.jobRole === 'Driver'">
@@ -239,102 +239,101 @@
 
           </div>
 
-<!-- Mobile Number - 01 -->
-<div>
-  <label for="phoneNumber01" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-    Mobile Number - 01 *
-  </label>
-  <div class="mt-1">
-    <div class="flex">
-      <p-dropdown [(ngModel)]="personalData.phoneCode01" [options]="countries" optionLabel="dialCode"
-        optionValue="dialCode"
-        styleClass="border border-gray-300 mr-2 rounded-l-md bg-white dark:bg-tileBlack text-gray-800 dark:text-textDark custom-dropdown"
-        [style]="{ width: '120px' }"
-        [ngClass]="{ 'border-red-500': touchedFields.phoneNumber01 && !isValidPhoneNumber(personalData.phoneNumber01) }">
-        <ng-template let-country pTemplate="item">
-          <div class="flex items-center gap-2">
-            <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
-            <span>{{ country.dialCode }}</span>
-          </div>
-        </ng-template>
-        <ng-template let-country pTemplate="selectedItem">
-          <div class="flex items-center gap-2" *ngIf="country">
-            <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
-            <span>{{ country.dialCode }}</span>
-          </div>
-        </ng-template>
-      </p-dropdown>
+          <!-- Mobile Number - 01 -->
+          <div>
+            <label for="phoneNumber01" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+              Mobile Number - 01 *
+            </label>
+            <div class="mt-1">
+              <div class="flex">
+                <p-dropdown [(ngModel)]="personalData.phoneCode01" [options]="countries" optionLabel="dialCode"
+                  optionValue="dialCode"
+                  styleClass="border border-gray-300 mr-2 rounded-l-md bg-white dark:bg-tileBlack text-gray-800 dark:text-textDark custom-dropdown"
+                  [style]="{ width: '120px' }"
+                  [ngClass]="{ 'border-red-500': touchedFields.phoneNumber01 && !isValidPhoneNumber(personalData.phoneNumber01) }">
+                  <ng-template let-country pTemplate="item">
+                    <div class="flex items-center gap-2">
+                      <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                      <span>{{ country.dialCode }}</span>
+                    </div>
+                  </ng-template>
+                  <ng-template let-country pTemplate="selectedItem">
+                    <div class="flex items-center gap-2" *ngIf="country">
+                      <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                      <span>{{ country.dialCode }}</span>
+                    </div>
+                  </ng-template>
+                </p-dropdown>
 
-      <input type="tel" id="phoneNumber01" name="phoneNumber01" [(ngModel)]="personalData.phoneNumber01"
-        placeholder="7XXXXXXXX" maxlength="9" (input)="formatPhoneNumber('phoneNumber01')"
-        (keypress)="preventNonNumericWith7First($event, 'phoneNumber01')" 
-        (paste)="preventInvalidPhonePaste($event, 'phoneNumber01')"
-        (blur)="onBlur('phoneNumber01')" 
-        [class]="'dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
+                <input type="tel" id="phoneNumber01" name="phoneNumber01" [(ngModel)]="personalData.phoneNumber01"
+                  placeholder="7XXXXXXXX" maxlength="9" (input)="formatPhoneNumber('phoneNumber01')"
+                  (keypress)="preventNonNumericWith7First($event, 'phoneNumber01')"
+                  (paste)="preventInvalidPhonePaste($event, 'phoneNumber01')" (blur)="onBlur('phoneNumber01')"
+                  [class]="'dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
           (touchedFields.phoneNumber01 && !isValidPhoneNumber(personalData.phoneNumber01) ? 'border-red-500' : 'border-gray-300')" />
-    </div>
-    <div class="mt-1">
-      <!-- Required message -->
-      <span *ngIf="touchedFields.phoneNumber01 && !personalData.phoneNumber01"
-        class="text-red-600 text-sm block">
-        Mobile Number - 01 is required
-      </span>
-      <!-- Format validation message -->
-      <span *ngIf="touchedFields.phoneNumber01 && personalData.phoneNumber01 && !isValidPhoneNumber(personalData.phoneNumber01)"
-        class="text-red-600 text-sm block">
-        Mobile Number - 01 - Please enter a valid mobile number (format: 7XXXXXXXX)
-      </span>
-    </div>
-  </div>
-</div>
-
-<!-- Mobile Number - 02 -->
-<div>
-  <label for="phoneNumber02" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-    Mobile Number - 02
-  </label>
-  <div class="mt-1">
-    <div class="flex">
-      <p-dropdown [(ngModel)]="personalData.phoneCode02" [options]="countries" optionLabel="dialCode"
-        optionValue="dialCode"
-        styleClass="border border-gray-300 mr-2 rounded-l-md bg-white dark:bg-tileBlack text-gray-800 dark:text-textDark custom-dropdown"
-        [style]="{ width: '120px' }"
-        [ngClass]="{ 'border-red-500': personalData.phoneNumber02 && !isValidPhoneNumber(personalData.phoneNumber02) }">
-        <ng-template let-country pTemplate="item">
-          <div class="flex items-center gap-2">
-            <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
-            <span>{{ country.dialCode }}</span>
+              </div>
+              <div class="mt-1">
+                <!-- Required message -->
+                <span *ngIf="touchedFields.phoneNumber01 && !personalData.phoneNumber01"
+                  class="text-red-600 text-sm block">
+                  Mobile Number - 01 is required
+                </span>
+                <!-- Format validation message -->
+                <span
+                  *ngIf="touchedFields.phoneNumber01 && personalData.phoneNumber01 && !isValidPhoneNumber(personalData.phoneNumber01)"
+                  class="text-red-600 text-sm block">
+                  Mobile Number - 01 - Please enter a valid mobile number (format: 7XXXXXXXX)
+                </span>
+              </div>
+            </div>
           </div>
-        </ng-template>
-        <ng-template let-country pTemplate="selectedItem">
-          <div class="flex items-center gap-2" *ngIf="country">
-            <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
-            <span>{{ country.dialCode }}</span>
-          </div>
-        </ng-template>
-      </p-dropdown>
 
-      <input type="tel" id="phoneNumber02" name="phoneNumber02" [(ngModel)]="personalData.phoneNumber02"
-        placeholder="7XXXXXXXX" maxlength="9" (input)="formatPhoneNumber('phoneNumber02')"
-        (keypress)="preventNonNumericWith7First($event, 'phoneNumber02')" 
-        (paste)="preventInvalidPhonePaste($event, 'phoneNumber02')"
-        (blur)="onBlur('phoneNumber02')" 
-        [class]="'dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
+          <!-- Mobile Number - 02 -->
+          <div>
+            <label for="phoneNumber02" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+              Mobile Number - 02
+            </label>
+            <div class="mt-1">
+              <div class="flex">
+                <p-dropdown [(ngModel)]="personalData.phoneCode02" [options]="countries" optionLabel="dialCode"
+                  optionValue="dialCode"
+                  styleClass="border border-gray-300 mr-2 rounded-l-md bg-white dark:bg-tileBlack text-gray-800 dark:text-textDark custom-dropdown"
+                  [style]="{ width: '120px' }"
+                  [ngClass]="{ 'border-red-500': personalData.phoneNumber02 && !isValidPhoneNumber(personalData.phoneNumber02) }">
+                  <ng-template let-country pTemplate="item">
+                    <div class="flex items-center gap-2">
+                      <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                      <span>{{ country.dialCode }}</span>
+                    </div>
+                  </ng-template>
+                  <ng-template let-country pTemplate="selectedItem">
+                    <div class="flex items-center gap-2" *ngIf="country">
+                      <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                      <span>{{ country.dialCode }}</span>
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+
+                <input type="tel" id="phoneNumber02" name="phoneNumber02" [(ngModel)]="personalData.phoneNumber02"
+                  placeholder="7XXXXXXXX" maxlength="9" (input)="formatPhoneNumber('phoneNumber02')"
+                  (keypress)="preventNonNumericWith7First($event, 'phoneNumber02')"
+                  (paste)="preventInvalidPhonePaste($event, 'phoneNumber02')" (blur)="onBlur('phoneNumber02')"
+                  [class]="'dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
           (personalData.phoneNumber02 && !isValidPhoneNumber(personalData.phoneNumber02) ? 'border-red-500' : 'border-gray-300')" />
-    </div>
-    <div class="mt-1">
-      <!-- Format validation message for phone 02 -->
-      <span *ngIf="personalData.phoneNumber02 && !isValidPhoneNumber(personalData.phoneNumber02)"
-        class="text-red-600 text-sm block">
-        Mobile Number - 02 - Please enter a valid mobile number (format: 7XXXXXXXX)
-      </span>
-      <!-- Duplicate validation message - only shown when both numbers are valid -->
-      <span *ngIf="shouldShowDuplicateError()" class="text-red-600 text-sm block">
-        Mobile Number - 01 and Mobile Number - 02 cannot be the same
-      </span>
-    </div>
-  </div>
-</div>
+              </div>
+              <div class="mt-1">
+                <!-- Format validation message for phone 02 -->
+                <span *ngIf="personalData.phoneNumber02 && !isValidPhoneNumber(personalData.phoneNumber02)"
+                  class="text-red-600 text-sm block">
+                  Mobile Number - 02 - Please enter a valid mobile number (format: 7XXXXXXXX)
+                </span>
+                <!-- Duplicate validation message - only shown when both numbers are valid -->
+                <span *ngIf="shouldShowDuplicateError()" class="text-red-600 text-sm block">
+                  Mobile Number - 01 and Mobile Number - 02 cannot be the same
+                </span>
+              </div>
+            </div>
+          </div>
 
           <div>
             <label for="nic" class="block text-sm font-medium text-gray-700 dark:text-textDark">NIC Number *</label>
@@ -556,12 +555,14 @@
         <label for="licNo" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Driving License ID *
         </label>
-        <input id="licNo" #licNoInput="ngModel" type="text" name="licNo" [(ngModel)]="driverObj.licNo" pattern="^([A-Z]\d{7}|\d{10,12})$"
-          (keypress)="preventSpecialcharacters($event)" (paste)="preventSpecialCharactersPaste($event)"
+        <input id="licNo" #licNoInput="ngModel" type="text" name="licNo" [(ngModel)]="driverObj.licNo"
+          pattern="^([A-Z]\d{7}|\d{10,12})$" (keypress)="preventSpecialcharacters($event)"
+          (paste)="preventSpecialCharactersPaste($event)"
           class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
         <div>
-          <span class="text-red-600 text-sm" *ngIf="licNoInput.touched && licNoInput.errors?.['pattern'] && driverObj.licNo">
+          <span class="text-red-600 text-sm"
+            *ngIf="licNoInput.touched && licNoInput.errors?.['pattern'] && driverObj.licNo">
             Please enter a valid License ID number (1 capital letter + 7 digits or 10–12 digits).
           </span>
 
@@ -575,20 +576,22 @@
         <label for="confirmLicNo" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Confirm Driving License ID *
         </label>
-        <input id="confirmLicNo" #confirmLicNoInput="ngModel" type="text" name="confirmLicNo" [(ngModel)]="driverObj.confirmLicNo"
-          (keypress)="preventSpecialcharacters($event)" (paste)="preventSpecialCharactersPaste($event)"
+        <input id="confirmLicNo" #confirmLicNoInput="ngModel" type="text" name="confirmLicNo"
+          [(ngModel)]="driverObj.confirmLicNo" (keypress)="preventSpecialcharacters($event)"
+          (paste)="preventSpecialCharactersPaste($event)"
           class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
-          <div>
-            <span class="text-red-600 text-sm" *ngIf="confirmLicNoInput.touched && (driverObj.licNo !== driverObj.confirmLicNo) && driverObj.confirmLicNo">
-              Confirm Driving License ID number should match the Driving License ID number.
-            </span>
-  
-            <span class="text-red-600 text-sm" *ngIf="confirmLicNoInput.touched && !driverObj.confirmLicNo">
-              Confirm Driving License ID number is Required.
-            </span>
-          </div>
-        
+        <div>
+          <span class="text-red-600 text-sm"
+            *ngIf="confirmLicNoInput.touched && (driverObj.licNo !== driverObj.confirmLicNo) && driverObj.confirmLicNo">
+            Confirm Driving License ID number should match the Driving License ID number.
+          </span>
+
+          <span class="text-red-600 text-sm" *ngIf="confirmLicNoInput.touched && !driverObj.confirmLicNo">
+            Confirm Driving License ID number is Required.
+          </span>
+        </div>
+
       </div>
       <!-- License Front Image -->
       <div>
@@ -645,33 +648,36 @@
         <label for="insNo" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Insurance Number *
         </label>
-        <input id="insNo" type="text" #insurenceNoInput="ngModel" name="insNo" [(ngModel)]="driverObj.insNo" [maxlength]="13"
+        <input id="insNo" type="text" #insurenceNoInput="ngModel" name="insNo" [(ngModel)]="driverObj.insNo"
+          [maxlength]="13"
           class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <div>
-            <span class="text-red-600 text-sm" *ngIf="insurenceNoInput.touched && !driverObj.insNo">
-              Insurance Number Required.
-            </span>
-          </div>
+        <div>
+          <span class="text-red-600 text-sm" *ngIf="insurenceNoInput.touched && !driverObj.insNo">
+            Insurance Number Required.
+          </span>
+        </div>
       </div>
 
       <div>
         <label for="confirmInsNo" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Confirm Insurance Number *
         </label>
-        <input id="confirmInsNo" type="text" #confirmInsurenceNoInput="ngModel" name="confirmInsNo" [(ngModel)]="driverObj.confirmInsNo"
+        <input id="confirmInsNo" type="text" #confirmInsurenceNoInput="ngModel" name="confirmInsNo"
+          [(ngModel)]="driverObj.confirmInsNo"
           class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
-          <div>
-            <span class="text-red-600 text-sm" *ngIf="confirmInsurenceNoInput.touched && (driverObj.insNo !== driverObj.confirmInsNo) && driverObj.confirmInsNo">
-              Confirm Insurance Number should match the Insurance Number.
-            </span>
-  
-            <span class="text-red-600 text-sm" *ngIf="confirmInsurenceNoInput.touched && !driverObj.confirmInsNo">
-              Confirm Insurance Number is Required.
-            </span>
-          </div>
+        <div>
+          <span class="text-red-600 text-sm"
+            *ngIf="confirmInsurenceNoInput.touched && (driverObj.insNo !== driverObj.confirmInsNo) && driverObj.confirmInsNo">
+            Confirm Insurance Number should match the Insurance Number.
+          </span>
+
+          <span class="text-red-600 text-sm" *ngIf="confirmInsurenceNoInput.touched && !driverObj.confirmInsNo">
+            Confirm Insurance Number is Required.
+          </span>
+        </div>
       </div>
-      
+
 
       <!-- Insurance Front Image -->
       <div>
@@ -721,9 +727,9 @@
         <label for="insExpDate" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Insurance Expire Date *
         </label>
-        <p-calendar id="insExpDate" [(ngModel)]="driverObj.insExpDate" [readonlyInput]="true" [showIcon]="true" [showClear]="true"
-          [showButtonBar]="false" iconDisplay="input" [minDate]="tomorrowDate" dateFormat="yy-mm-dd" placeholder="Select Expiry Date"
-          [style]="{ width: '100%' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+        <p-calendar id="insExpDate" [(ngModel)]="driverObj.insExpDate" [readonlyInput]="true" [showIcon]="true"
+          [showClear]="true" [showButtonBar]="false" iconDisplay="input" [minDate]="tomorrowDate" dateFormat="yy-mm-dd"
+          placeholder="Select Expiry Date" [style]="{ width: '100%' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
                        [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
                        [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
                        [&_.p-datepicker-header]:dark:bg-[#2d354d] 
@@ -737,7 +743,7 @@
 
     <h2 class="text-2xl mt-16 mb-6 text-textLight dark:text-textDark">
       Vehicle Details
-    </h2> 
+    </h2>
 
     <div class="grid grid-cols-1 md:grid-cols-2 md:gap-x-16 gap-x-4 my-5">
 
@@ -748,32 +754,34 @@
         <input id="vRegNo" type="text" #vRegNoInput="ngModel" name="vRegNo" [(ngModel)]="driverObj.vRegNo"
           (keypress)="preventSpecialcharacters($event)" (paste)="preventSpecialCharactersPaste($event)"
           class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          
-          <div>
-            
-            <span class="text-red-600 text-sm" *ngIf="vRegNoInput.touched && !driverObj.vRegNo">
-              Vehicle Registration Number is Required.
-            </span>
-          </div>
+
+        <div>
+
+          <span class="text-red-600 text-sm" *ngIf="vRegNoInput.touched && !driverObj.vRegNo">
+            Vehicle Registration Number is Required.
+          </span>
+        </div>
       </div>
 
       <div class="mt-2">
         <label for="confirmVRegNo" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Confirm Vehicle Registration Number *
         </label>
-        <input id="confirmVRegNo" type="text" #confirmVRegNoInput="ngModel" name="confirmVRegNo" [(ngModel)]="driverObj.confirmVRegNo"
-          (keypress)="preventSpecialcharacters($event)" (paste)="preventSpecialCharactersPaste($event)"
+        <input id="confirmVRegNo" type="text" #confirmVRegNoInput="ngModel" name="confirmVRegNo"
+          [(ngModel)]="driverObj.confirmVRegNo" (keypress)="preventSpecialcharacters($event)"
+          (paste)="preventSpecialCharactersPaste($event)"
           class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          
-          <div>
-            <span class="text-red-600 text-sm" *ngIf="confirmVRegNoInput.touched && (driverObj.vRegNo !== driverObj.confirmVRegNo) && driverObj.confirmVRegNo">
-              Confirm Vehicle Registration Number should match the Vehicle Registration Number.
-            </span>
-  
-            <span class="text-red-600 text-sm" *ngIf="confirmVRegNoInput.touched && !driverObj.confirmVRegNo">
-              Confirm Vehicle Registration Number is Required.
-            </span>
-          </div>
+
+        <div>
+          <span class="text-red-600 text-sm"
+            *ngIf="confirmVRegNoInput.touched && (driverObj.vRegNo !== driverObj.confirmVRegNo) && driverObj.confirmVRegNo">
+            Confirm Vehicle Registration Number should match the Vehicle Registration Number.
+          </span>
+
+          <span class="text-red-600 text-sm" *ngIf="confirmVRegNoInput.touched && !driverObj.confirmVRegNo">
+            Confirm Vehicle Registration Number is Required.
+          </span>
+        </div>
       </div>
       <!-- Vehicle Type Dropdown -->
       <div class="mt-2">

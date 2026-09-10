@@ -11,14 +11,15 @@ import { TokenService } from '../../../services/token/services/token.service';
   templateUrl: './report.component.html',
   styleUrl: './report.component.css',
 })
+
 export class ReportComponent {
   constructor(
     private router: Router,
     public tokenService: TokenService,
     public permissionService: PermissionService,
-  ) {}
+  ) { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   coReport(): void {
     this.router.navigate(['/reports/collective-officer-report']);

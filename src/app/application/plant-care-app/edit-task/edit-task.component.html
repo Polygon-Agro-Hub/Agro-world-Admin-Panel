@@ -1,9 +1,5 @@
 <div>
-  <button
-    (click)="back()"
-
-    class="mb-5 text-textLight dark:text-textDark"
-  >
+  <button (click)="back()" class="mb-5 text-textLight dark:text-textDark">
     <i class="fa-solid fa-arrow-left"></i>
     Back
   </button>
@@ -26,25 +22,16 @@
       </div>
       <div class="mb-6">
         <ul class="flex">
-          <li
-            class="cursor-pointer py-2 px-4 text-center border-b-2 text-textLight dark:text-textDark"
-            [ngClass]="{ 'border-[#3980C0]': selectedLanguage === 'english' }"
-            (click)="selectLanguage('english')"
-          >
+          <li class="cursor-pointer py-2 px-4 text-center border-b-2 text-textLight dark:text-textDark"
+            [ngClass]="{ 'border-[#3980C0]': selectedLanguage === 'english' }" (click)="selectLanguage('english')">
             English
           </li>
-          <li
-            class="cursor-pointer py-2 px-4 text-center border-b-2 text-textLight dark:text-textDark"
-            [ngClass]="{ 'border-[#3980C0]': selectedLanguage === 'sinhala' }"
-            (click)="selectLanguage('sinhala')"
-          >
+          <li class="cursor-pointer py-2 px-4 text-center border-b-2 text-textLight dark:text-textDark"
+            [ngClass]="{ 'border-[#3980C0]': selectedLanguage === 'sinhala' }" (click)="selectLanguage('sinhala')">
             Sinhala
           </li>
-          <li
-            class="cursor-pointer py-2 px-4 text-center border-b-2 text-textLight dark:text-textDark"
-            [ngClass]="{ 'border-[#3980C0]': selectedLanguage === 'tamil' }"
-            (click)="selectLanguage('tamil')"
-          >
+          <li class="cursor-pointer py-2 px-4 text-center border-b-2 text-textLight dark:text-textDark"
+            [ngClass]="{ 'border-[#3980C0]': selectedLanguage === 'tamil' }" (click)="selectLanguage('tamil')">
             Tamil
           </li>
         </ul>
@@ -52,82 +39,48 @@
 
       <div *ngIf="selectedLanguage === 'english'">
         <div class="mb-4">
-          <label
-            for="taskEnglish"
-            class="block text-sm font-medium text-textLight dark:text-textDark"
-          >
+          <label for="taskEnglish" class="block text-sm font-medium text-textLight dark:text-textDark">
             Task English *
           </label>
-          <input
-            type="text"
-            id="taskEnglish"
-            formControlName="taskEnglish"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
-          <div
-            *ngIf="taskForm.get('taskEnglish')?.touched && taskForm.get('taskEnglish')?.hasError('required')"
-            class="text-red-500 text-sm mt-1"
-          >
+          <input type="text" id="taskEnglish" formControlName="taskEnglish"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <div *ngIf="taskForm.get('taskEnglish')?.touched && taskForm.get('taskEnglish')?.hasError('required')"
+            class="text-red-500 text-sm mt-1">
             Task name is required.
           </div>
         </div>
         <div class="mb-4">
-          <label
-            for="taskTypeEnglish"
-            class="block text-sm font-medium text-textLight dark:text-textDark"
-          >
+          <label for="taskTypeEnglish" class="block text-sm font-medium text-textLight dark:text-textDark">
             Task Type *
           </label>
-          <input
-            type="text"
-            id="taskTypeEnglish"
-            formControlName="taskTypeEnglish"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
-          <div
-            *ngIf="taskForm.get('taskTypeEnglish')?.touched && taskForm.get('taskTypeEnglish')?.hasError('required')"
-            class="text-red-500 text-sm mt-1"
-          >
+          <input type="text" id="taskTypeEnglish" formControlName="taskTypeEnglish"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <div *ngIf="taskForm.get('taskTypeEnglish')?.touched && taskForm.get('taskTypeEnglish')?.hasError('required')"
+            class="text-red-500 text-sm mt-1">
             Task type is required.
           </div>
         </div>
         <div class="mb-4">
-          <label
-            for="taskCategoryEnglish"
-            class="block text-sm font-medium text-textLight dark:text-textDark"
-          >
+          <label for="taskCategoryEnglish" class="block text-sm font-medium text-textLight dark:text-textDark">
             Task Category *
           </label>
-          <input
-            type="text"
-            id="taskCategoryEnglish"
-            formControlName="taskCategoryEnglish"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
+          <input type="text" id="taskCategoryEnglish" formControlName="taskCategoryEnglish"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <div
             *ngIf="taskForm.get('taskCategoryEnglish')?.touched && taskForm.get('taskCategoryEnglish')?.hasError('required')"
-            class="text-red-500 text-sm mt-1"
-          >
+            class="text-red-500 text-sm mt-1">
             Task category is required.
           </div>
         </div>
         <div class="mb-4">
-          <label
-            for="taskDescriptionEnglish"
-            class="block text-sm font-medium text-textLight dark:text-textDark"
-          >
+          <label for="taskDescriptionEnglish" class="block text-sm font-medium text-textLight dark:text-textDark">
             Task Description *
           </label>
-          <input
-            type="text"
-            id="taskDescriptionEnglish"
-            formControlName="taskDescriptionEnglish"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
+          <textarea id="taskDescriptionEnglish" formControlName="taskDescriptionEnglish" rows="5"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
           <div
             *ngIf="taskForm.get('taskDescriptionEnglish')?.touched && taskForm.get('taskDescriptionEnglish')?.hasError('required')"
-            class="text-red-500 text-sm mt-1"
-          >
+            class="text-red-500 text-sm mt-1">
             Task description is required.
           </div>
         </div>
@@ -135,82 +88,48 @@
 
       <div *ngIf="selectedLanguage === 'sinhala'">
         <div class="mb-4">
-          <label
-            for="taskSinhala"
-            class="block text-sm font-medium text-textLight dark:text-textDark"
-          >
+          <label for="taskSinhala" class="block text-sm font-medium text-textLight dark:text-textDark">
             Task Sinhala *
           </label>
-          <input
-            type="text"
-            id="taskSinhala"
-            formControlName="taskSinhala"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
-          <div
-            *ngIf="taskForm.get('taskSinhala')?.touched && taskForm.get('taskSinhala')?.hasError('required')"
-            class="text-red-500 text-sm mt-1"
-          >
+          <input type="text" id="taskSinhala" formControlName="taskSinhala"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <div *ngIf="taskForm.get('taskSinhala')?.touched && taskForm.get('taskSinhala')?.hasError('required')"
+            class="text-red-500 text-sm mt-1">
             Task in Sinhala is required.
           </div>
         </div>
         <div class="mb-4">
-          <label
-            for="taskTypeSinhala"
-            class="block text-sm font-medium text-textLight dark:text-textDark"
-          >
+          <label for="taskTypeSinhala" class="block text-sm font-medium text-textLight dark:text-textDark">
             Task Type *
           </label>
-          <input
-            type="text"
-            id="taskTypeSinhala"
-            formControlName="taskTypeSinhala"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
-          <div
-            *ngIf="taskForm.get('taskTypeSinhala')?.touched && taskForm.get('taskTypeSinhala')?.hasError('required')"
-            class="text-red-500 text-sm mt-1"
-          >
+          <input type="text" id="taskTypeSinhala" formControlName="taskTypeSinhala"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <div *ngIf="taskForm.get('taskTypeSinhala')?.touched && taskForm.get('taskTypeSinhala')?.hasError('required')"
+            class="text-red-500 text-sm mt-1">
             Task Type in Sinhala is required.
           </div>
         </div>
         <div class="mb-4">
-          <label
-            for="taskCategorySinhala"
-            class="block text-sm font-medium text-textLight dark:text-textDark"
-          >
+          <label for="taskCategorySinhala" class="block text-sm font-medium text-textLight dark:text-textDark">
             Task Category *
           </label>
-          <input
-            type="text"
-            id="taskCategorySinhala"
-            formControlName="taskCategorySinhala"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
+          <input type="text" id="taskCategorySinhala" formControlName="taskCategorySinhala"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <div
             *ngIf="taskForm.get('taskCategorySinhala')?.touched && taskForm.get('taskCategorySinhala')?.hasError('required')"
-            class="text-red-500 text-sm mt-1"
-          >
+            class="text-red-500 text-sm mt-1">
             Task Category in Sinhala is required.
           </div>
         </div>
         <div class="mb-4">
-          <label
-            for="taskDescriptionSinhala"
-            class="block text-sm font-medium text-textLight dark:text-textDark"
-          >
+          <label for="taskDescriptionSinhala" class="block text-sm font-medium text-textLight dark:text-textDark">
             Task Description *
           </label>
-          <input
-            type="text"
-            id="taskDescriptionSinhala"
-            formControlName="taskDescriptionSinhala"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
+          <textarea id="taskDescriptionSinhala" formControlName="taskDescriptionSinhala" rows="5"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
           <div
             *ngIf="taskForm.get('taskDescriptionSinhala')?.touched && taskForm.get('taskDescriptionSinhala')?.hasError('required')"
-            class="text-red-500 text-sm mt-1"
-          >
+            class="text-red-500 text-sm mt-1">
             Task Description in Sinhala is required.
           </div>
         </div>
@@ -218,82 +137,48 @@
 
       <div *ngIf="selectedLanguage === 'tamil'">
         <div class="mb-4">
-          <label
-            for="taskTamil"
-            class="block text-sm font-medium text-textLight dark:text-textDark"
-          >
+          <label for="taskTamil" class="block text-sm font-medium text-textLight dark:text-textDark">
             Task Tamil *
           </label>
-          <input
-            type="text"
-            id="taskTamil"
-            formControlName="taskTamil"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
-          <div
-            *ngIf="taskForm.get('taskTamil')?.touched && taskForm.get('taskTamil')?.hasError('required')"
-            class="text-red-500 text-sm mt-1"
-          >
+          <input type="text" id="taskTamil" formControlName="taskTamil"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <div *ngIf="taskForm.get('taskTamil')?.touched && taskForm.get('taskTamil')?.hasError('required')"
+            class="text-red-500 text-sm mt-1">
             Task in Tamil is required.
           </div>
         </div>
         <div class="mb-4">
-          <label
-            for="taskTypeTamil"
-            class="block text-sm font-medium text-textLight dark:text-textDark"
-          >
+          <label for="taskTypeTamil" class="block text-sm font-medium text-textLight dark:text-textDark">
             Task Type *
           </label>
-          <input
-            type="text"
-            id="taskTypeTamil"
-            formControlName="taskTypeTamil"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
-          <div
-            *ngIf="taskForm.get('taskTypeTamil')?.touched && taskForm.get('taskTypeTamil')?.hasError('required')"
-            class="text-red-500 text-sm mt-1"
-          >
+          <input type="text" id="taskTypeTamil" formControlName="taskTypeTamil"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <div *ngIf="taskForm.get('taskTypeTamil')?.touched && taskForm.get('taskTypeTamil')?.hasError('required')"
+            class="text-red-500 text-sm mt-1">
             Task Type in Tamil is required.
           </div>
         </div>
         <div class="mb-4">
-          <label
-            for="taskCategoryTamil"
-            class="block text-sm font-medium text-textLight dark:text-textDark"
-          >
+          <label for="taskCategoryTamil" class="block text-sm font-medium text-textLight dark:text-textDark">
             Task Category *
           </label>
-          <input
-            type="text"
-            id="taskCategoryTamil"
-            formControlName="taskCategoryTamil"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
+          <input type="text" id="taskCategoryTamil" formControlName="taskCategoryTamil"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <div
             *ngIf="taskForm.get('taskCategoryTamil')?.touched && taskForm.get('taskCategoryTamil')?.hasError('required')"
-            class="text-red-500 text-sm mt-1"
-          >
+            class="text-red-500 text-sm mt-1">
             Task Category in Tamil is required.
           </div>
         </div>
         <div class="mb-4">
-          <label
-            for="taskDescriptionTamil"
-            class="block text-sm font-medium text-textLight dark:text-textDark"
-          >
+          <label for="taskDescriptionTamil" class="block text-sm font-medium text-textLight dark:text-textDark">
             Task Description *
           </label>
-          <input
-            type="text"
-            id="taskDescriptionTamil"
-            formControlName="taskDescriptionTamil"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
+          <textarea id="taskDescriptionTamil" formControlName="taskDescriptionTamil" rows="5"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
           <div
             *ngIf="taskForm.get('taskDescriptionTamil')?.touched && taskForm.get('taskDescriptionTamil')?.hasError('required')"
-            class="text-red-500 text-sm mt-1"
-          >
+            class="text-red-500 text-sm mt-1">
             Task Description in Tamil is required.
           </div>
         </div>
@@ -302,176 +187,113 @@
       <hr class="border-[2px] border-gray-400 my-10" />
 
       <div class="mb-4">
-        <label
-          for="reqImages"
-          class="block text-sm font-medium text-textLight dark:text-textDark"
-        >
+        <label for="reqImages" class="block text-sm font-medium text-textLight dark:text-textDark">
           Number of required images
         </label>
- <input
-  type="text"
-  id="reqImages"
-  formControlName="reqImages"
-  (input)="allowOnlyNumbers($event)"
-  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-/>
+        <input type="text" id="reqImages" formControlName="reqImages" (input)="allowOnlyNumbers($event)"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
-                  <!-- (keypress)="validateImagesInput($event)"
+        <!-- (keypress)="validateImagesInput($event)"
           (input)="onImagesInput($event)" -->
 
-        <div
-          *ngIf="taskForm.get('reqImages')?.touched && taskForm.get('reqImages')?.hasError('pattern')"
-          class="text-red-500 text-sm mt-1"
-        >
+        <div *ngIf="taskForm.get('reqImages')?.touched && taskForm.get('reqImages')?.hasError('pattern')"
+          class="text-red-500 text-sm mt-1">
           Please enter a valid number (no leading zeros or decimals).
         </div>
       </div>
 
       <div class="mb-4">
         <label class="block text-sm font-medium text-textLight dark:text-textDark">
-        Want to Add Images 
+          Want to Add Images
         </label>
         <div class="mt-1">
           <label class="inline-flex items-center">
-            <input
-              type="radio"
-              formControlName="hasImageLink"
-              [value]="true"
-              (change)="onImageLinkChange()"
-            />
+            <input type="radio" formControlName="hasImageLink" [value]="true" (change)="onImageLinkChange()" />
             <span class="ml-2 text-textLight dark:text-textDark">Yes</span>
           </label>
           <label class="inline-flex items-center ml-6">
-            <input
-              type="radio"
-              formControlName="hasImageLink"
-              [value]="false"
-              (change)="onImageLinkChange()"
-            />
+            <input type="radio" formControlName="hasImageLink" [value]="false" (change)="onImageLinkChange()" />
             <span class="ml-2 text-textLight dark:text-textDark">No</span>
           </label>
         </div>
       </div>
 
       <div class="mb-4" *ngIf="taskForm.get('hasImageLink')?.value">
-        <label
-          for="imageLink"
-          class="block text-sm font-medium text-textLight dark:text-textDark"
-        >
-         Link for Images *
+        <label for="imageLink" class="block text-sm font-medium text-textLight dark:text-textDark">
+          Link for Images *
         </label>
-        <input
-          type="text"
-          id="imageLink"
-          formControlName="imageLink"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        />
+        <input type="text" id="imageLink" formControlName="imageLink"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         <div
           *ngIf="taskForm.get('hasImageLink')?.value && taskForm.get('imageLink')?.touched && taskForm.get('imageLink')?.hasError('required')"
-          class="text-red-500 text-sm mt-1"
-        >
+          class="text-red-500 text-sm mt-1">
           Image Link is required when "Has Image Link" is set to Yes.
         </div>
       </div>
-<!-- Want to Add Videos -->
-<div class="mb-4">
-  <label class="block text-sm font-medium text-textLight dark:text-textDark">
-    Want to Add Videos 
-  </label>
-  <div class="mt-1">
-    <label class="inline-flex items-center">
-      <input
-        type="radio"
-        formControlName="hasVideoLink"
-        [value]="true"
-      />
-      <span class="ml-2 text-textLight dark:text-textDark">Yes</span>
-    </label>
-    <label class="inline-flex items-center ml-6">
-      <input
-        type="radio"
-        formControlName="hasVideoLink"
-        [value]="false"
-      />
-      <span class="ml-2 text-textLight dark:text-textDark">No</span>
-    </label>
-  </div>
-</div>
+      <!-- Want to Add Videos -->
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-textLight dark:text-textDark">
+          Want to Add Videos
+        </label>
+        <div class="mt-1">
+          <label class="inline-flex items-center">
+            <input type="radio" formControlName="hasVideoLink" [value]="true" />
+            <span class="ml-2 text-textLight dark:text-textDark">Yes</span>
+          </label>
+          <label class="inline-flex items-center ml-6">
+            <input type="radio" formControlName="hasVideoLink" [value]="false" />
+            <span class="ml-2 text-textLight dark:text-textDark">No</span>
+          </label>
+        </div>
+      </div>
 
-<!-- Video Links -->
-<div *ngIf="taskForm.get('hasVideoLink')?.value">
-  <div class="mb-4">
-    <label
-      for="videoLinkEnglish"
-      class="block text-sm font-medium text-textLight dark:text-textDark"
-    >
-      Video Link English *
-    </label>
-    <input
-      type="text"
-      id="videoLinkEnglish"
-      formControlName="videoLinkEnglish"
-      class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-    />
-    <div
-      *ngIf="taskForm.get('hasVideoLink')?.value && taskForm.get('videoLinkEnglish')?.touched && taskForm.get('videoLinkEnglish')?.hasError('required')"
-      class="text-red-500 text-sm mt-1"
-    >
-      Video Link (English) is required when "Want to Add Videos" is set to Yes.
-    </div>
-  </div>
-  <div class="mb-4">
-    <label
-      for="videoLinkSinhala"
-      class="block text-sm font-medium text-textLight dark:text-textDark"
-    >
-      Video Link Sinhala *
-    </label>
-    <input
-      type="text"
-      id="videoLinkSinhala"
-      formControlName="videoLinkSinhala"
-      class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-    />
-    <div
-      *ngIf="taskForm.get('hasVideoLink')?.value && taskForm.get('videoLinkSinhala')?.touched && taskForm.get('videoLinkSinhala')?.hasError('required')"
-      class="text-red-500 text-sm mt-1"
-    >
-      Video Link (Sinhala) is required when "Want to Add Videos" is set to Yes.
-    </div>
-  </div>
-  <div class="mb-4">
-    <label
-      for="videoLinkTamil"
-      class="block text-sm font-medium text-textLight dark:text-textDark"
-    >
-      Video Link Tamil *
-    </label>
-    <input
-      type="text"
-      id="videoLinkTamil"
-      formControlName="videoLinkTamil"
-      class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-    />
-    <div
-      *ngIf="taskForm.get('hasVideoLink')?.value && taskForm.get('videoLinkTamil')?.touched && taskForm.get('videoLinkTamil')?.hasError('required')"
-      class="text-red-500 text-sm mt-1"
-    >
-      Video Link (Tamil) is required when "Want to Add Videos" is set to Yes.
-    </div>
-  </div>
-</div>
+      <!-- Video Links -->
+      <div *ngIf="taskForm.get('hasVideoLink')?.value">
+        <div class="mb-4">
+          <label for="videoLinkEnglish" class="block text-sm font-medium text-textLight dark:text-textDark">
+            Video Link English *
+          </label>
+          <input type="text" id="videoLinkEnglish" formControlName="videoLinkEnglish"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <div
+            *ngIf="taskForm.get('hasVideoLink')?.value && taskForm.get('videoLinkEnglish')?.touched && taskForm.get('videoLinkEnglish')?.hasError('required')"
+            class="text-red-500 text-sm mt-1">
+            Video Link (English) is required when "Want to Add Videos" is set to Yes.
+          </div>
+        </div>
+        <div class="mb-4">
+          <label for="videoLinkSinhala" class="block text-sm font-medium text-textLight dark:text-textDark">
+            Video Link Sinhala *
+          </label>
+          <input type="text" id="videoLinkSinhala" formControlName="videoLinkSinhala"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <div
+            *ngIf="taskForm.get('hasVideoLink')?.value && taskForm.get('videoLinkSinhala')?.touched && taskForm.get('videoLinkSinhala')?.hasError('required')"
+            class="text-red-500 text-sm mt-1">
+            Video Link (Sinhala) is required when "Want to Add Videos" is set to Yes.
+          </div>
+        </div>
+        <div class="mb-4">
+          <label for="videoLinkTamil" class="block text-sm font-medium text-textLight dark:text-textDark">
+            Video Link Tamil *
+          </label>
+          <input type="text" id="videoLinkTamil" formControlName="videoLinkTamil"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <div
+            *ngIf="taskForm.get('hasVideoLink')?.value && taskForm.get('videoLinkTamil')?.touched && taskForm.get('videoLinkTamil')?.hasError('required')"
+            class="text-red-500 text-sm mt-1">
+            Video Link (Tamil) is required when "Want to Add Videos" is set to Yes.
+          </div>
+        </div>
+      </div>
       <div class="flex justify-end mt-6">
         <div class="w-[20px]"></div>
-         <button type="button" (click)="onCancel()"
+        <button type="button" (click)="onCancel()"
           class="px-4 py-2 text-sm font-medium mr-4 text-gray-700 bg-gray-200 rounded-md">Cancel</button>
         <!-- Remove the disabled attribute from the save button -->
-<button
-  type="submit"
-  class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
->
-  Save
-</button>
+        <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md">
+          Save
+        </button>
       </div>
     </div>
   </form>

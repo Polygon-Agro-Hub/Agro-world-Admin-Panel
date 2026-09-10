@@ -11,6 +11,8 @@ import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.comp
 import { finalize } from 'rxjs/operators';
 import { PermissionService } from '../../services/roles-permission/permission.service';
 import { TokenService } from '../../services/token/services/token.service';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-view-public-forum',
@@ -54,41 +56,49 @@ export class ViewPublicForumComponent implements OnInit {
   ) {}
 
   sendMessage(id: number) {
-    if (!this.replyMessage.trim()) {
+  if (!this.replyMessage.trim()) {
+    return;
+  }
+
+  const wordsToCheck = this.replyMessage
+    .trim()
+    .split(/\s+/)
+    .map((w) => w.replace(/[^a-zA-Z0-9]/g, '')) // strip punctuation
+    .filter((w) => w.length > 0);
+
+  if (wordsToCheck.length === 0) {
+    return;
+  }
+
+  this.isLoading = true;
+
+  const checks = wordsToCheck.map((word) =>
+    this.publicForumSrv.checkBlockWord(word).pipe(
+      catchError(() => of(null)) // treat errors as "no match" so it doesn't block sending
+    )
+  );
+
+  forkJoin(checks).subscribe((results) => {
+    const hasBlockedWord = results.some((res) => res && res.length > 0);
+
+    if (hasBlockedWord) {
+      this.isLoading = false;
+      Swal.fire({
+        title: 'Blocked Word Detected!',
+        text: 'Your message contains a word that is not allowed. Please edit and try again.',
+        icon: 'warning',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
       return;
     }
 
-    const replyData = {
-      id: this.postId,
-      replyMessage: this.replyMessage,
-    };
+    this.proceedSendMessage(id);
+  });
+}
 
-    this.publicForumSrv.sendMessage(id, replyData).subscribe(
-      (res) => {
-        Swal.fire({
-  title: 'Success!',
-  text: 'Your reply has been sent.',
-  icon: 'success',
-  customClass: {
-    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-    title: 'font-semibold text-lg',
-  }
-});
-        this.isPopupVisible = false;
-        this.fetchPostAllReply(this.postId);
-        this.loadPosts();
-        this.getCount();
-        this.replyMessage = '';
-      },
-      (error) => {
-        Swal.fire('Error!', 'There was an error sending your reply.', 'error');
-        this.isPopupVisible = false;
-        this.fetchPostAllReply(this.postId);
-        this.loadPosts();
-        this.getCount();
-      }
-    );
-  }
 
   ngOnInit(): void {
     this.loadPosts();
@@ -350,6 +360,41 @@ export class ViewPublicForumComponent implements OnInit {
 
   hasReplies(chatId: number): boolean {
   return this.countReply && this.countReply.some(i => i.chatId === chatId);
+}
+
+private proceedSendMessage(id: number) {
+  const replyData = {
+    id: this.postId,
+    replyMessage: this.replyMessage,
+  };
+
+  this.publicForumSrv.sendMessage(id, replyData).subscribe(
+    (res) => {
+      this.isLoading = false;
+      Swal.fire({
+        title: 'Success!',
+        text: 'Your reply has been sent.',
+        icon: 'success',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+      this.isPopupVisible = false;
+      this.fetchPostAllReply(this.postId);
+      this.loadPosts();
+      this.getCount();
+      this.replyMessage = '';
+    },
+    (error) => {
+      this.isLoading = false;
+      Swal.fire('Error!', 'There was an error sending your reply.', 'error');
+      this.isPopupVisible = false;
+      this.fetchPostAllReply(this.postId);
+      this.loadPosts();
+      this.getCount();
+    }
+  );
 }
 }
 

@@ -39,7 +39,7 @@ interface BranchesData {
     CommonModule,
     FormsModule,
     LoadingSpinnerComponent,
-    DropdownModule
+    DropdownModule,
   ],
   templateUrl: './edit-center-head.component.html',
   styleUrl: './edit-center-head.component.css',
@@ -107,7 +107,7 @@ export class EditCenterHeadComponent {
     { code: 'KH', dialCode: '+855', name: 'Cambodia' },
     { code: 'BD', dialCode: '+880', name: 'Bangladesh' },
     { code: 'IN', dialCode: '+91', name: 'India' },
-    { code: 'NL', dialCode: '+31', name: 'Netherlands' }
+    { code: 'NL', dialCode: '+31', name: 'Netherlands' },
   ];
   constructor(
     private fb: FormBuilder,
@@ -118,23 +118,22 @@ export class EditCenterHeadComponent {
     private collectionOfficerService: CollectionOfficerService,
     private location: Location,
     public emailValidationService: EmailvalidationsService,
-    private collectionService: CollectionService
-
-  ) { }
+    private collectionService: CollectionService,
+  ) {}
 
   ngOnInit(): void {
     this.loadBanks();
     this.loadBranches();
     this.itemId = this.route.snapshot.params['id'];
 
-    this.districtOptions = this.districts.map(district => ({
+    this.districtOptions = this.districts.map((district) => ({
       label: district.name,
       value: district.name,
-      province: district.province
+      province: district.province,
     }));
 
     if (this.itemId) {
-      this.fetchData()
+      this.fetchData();
     }
 
     this.getAllCompanies();
@@ -147,10 +146,8 @@ export class EditCenterHeadComponent {
         const officerData = response.officerData[0];
         this.personalData.empId = officerData.empId;
         this.personalData.jobRole = officerData.jobRole || '';
-        this.personalData.firstNameEnglish =
-          officerData.firstNameEnglish || '';
-        this.personalData.firstNameSinhala =
-          officerData.firstNameSinhala || '';
+        this.personalData.firstNameEnglish = officerData.firstNameEnglish || '';
+        this.personalData.firstNameSinhala = officerData.firstNameSinhala || '';
         this.personalData.firstNameTamil = officerData.firstNameTamil || '';
         this.personalData.lastNameEnglish = officerData.lastNameEnglish || '';
         this.personalData.lastNameSinhala = officerData.lastNameSinhala || '';
@@ -269,7 +266,6 @@ export class EditCenterHeadComponent {
     return false;
   }
 
-
   allowOnlyNumbers(event: KeyboardEvent) {
     const charCode = event.key.charCodeAt(0);
     if (charCode < 48 || charCode > 57) {
@@ -277,7 +273,11 @@ export class EditCenterHeadComponent {
     }
   }
 
-  limitPhoneLength(event: Event, maxLength: number, field: 'phoneNumber01' | 'phoneNumber02') {
+  limitPhoneLength(
+    event: Event,
+    maxLength: number,
+    field: 'phoneNumber01' | 'phoneNumber02',
+  ) {
     const input = event.target as HTMLInputElement;
     if (input.value.length > maxLength) {
       input.value = input.value.slice(0, maxLength);
@@ -305,13 +305,12 @@ export class EditCenterHeadComponent {
     }
   }
 
-
   loadBanks() {
     this.http.get<Bank[]>('assets/json/banks.json').subscribe(
       (data) => {
         this.banks = data.sort((a, b) => a.name.localeCompare(b.name));
       },
-      (error) => { }
+      (error) => {},
     );
   }
 
@@ -323,7 +322,7 @@ export class EditCenterHeadComponent {
         });
         this.allBranches = data;
       },
-      (error) => { }
+      (error) => {},
     );
   }
 
@@ -335,14 +334,14 @@ export class EditCenterHeadComponent {
       this.personalData.bankName
     ) {
       const matchedBank = this.banks.find(
-        (bank) => bank.name === this.personalData.bankName
+        (bank) => bank.name === this.personalData.bankName,
       );
       if (matchedBank) {
         this.selectedBankId = matchedBank.ID;
         this.branches = this.allBranches[this.selectedBankId.toString()] || [];
         if (this.personalData.branchName) {
           const matchedBranch = this.branches.find(
-            (branch) => branch.name === this.personalData.branchName
+            (branch) => branch.name === this.personalData.branchName,
           );
           if (matchedBranch) {
             this.selectedBranchId = matchedBranch.ID;
@@ -350,27 +349,32 @@ export class EditCenterHeadComponent {
         }
       }
     }
-}
-
-onTrimInputFirstCapital(event: Event, modelRef: any, fieldName: string): void {
-  const inputElement = event.target as HTMLInputElement;
-  let trimmedValue = inputElement.value.trimStart();
-
-  // Capitalize first letter
-  if (trimmedValue.length > 0) {
-    trimmedValue = trimmedValue.charAt(0).toUpperCase() + trimmedValue.slice(1);
   }
 
-  modelRef[fieldName] = trimmedValue;
-  inputElement.value = trimmedValue;
-}
+  onTrimInputFirstCapital(
+    event: Event,
+    modelRef: any,
+    fieldName: string,
+  ): void {
+    const inputElement = event.target as HTMLInputElement;
+    let trimmedValue = inputElement.value.trimStart();
 
-onTrimInput(event: Event, modelRef: any, fieldName: string): void {
-  const inputElement = event.target as HTMLInputElement;
-  const trimmedValue = inputElement.value.trimStart();
-  modelRef[fieldName] = trimmedValue;
-  inputElement.value = trimmedValue;
-}
+    // Capitalize first letter
+    if (trimmedValue.length > 0) {
+      trimmedValue =
+        trimmedValue.charAt(0).toUpperCase() + trimmedValue.slice(1);
+    }
+
+    modelRef[fieldName] = trimmedValue;
+    inputElement.value = trimmedValue;
+  }
+
+  onTrimInput(event: Event, modelRef: any, fieldName: string): void {
+    const inputElement = event.target as HTMLInputElement;
+    const trimmedValue = inputElement.value.trimStart();
+    modelRef[fieldName] = trimmedValue;
+    inputElement.value = trimmedValue;
+  }
 
   getAllCompanies() {
     this.collectionCenterSrv.getAllCompanyList().subscribe((res) => {
@@ -380,16 +384,19 @@ onTrimInput(event: Event, modelRef: any, fieldName: string): void {
 
   getSelectedBankName(): string {
     if (!this.selectedBankId) return '';
-    const selectedBank = this.banks.find(bank => bank.ID === this.selectedBankId);
+    const selectedBank = this.banks.find(
+      (bank) => bank.ID === this.selectedBankId,
+    );
     return selectedBank ? selectedBank.name : '';
   }
 
   getSelectedBranchName(): string {
     if (!this.selectedBranchId) return '';
-    const selectedBranch = this.branches.find(branch => branch.ID === this.selectedBranchId);
+    const selectedBranch = this.branches.find(
+      (branch) => branch.ID === this.selectedBranchId,
+    );
     return selectedBranch ? selectedBranch.name : '';
   }
-
 
   onFileSelected(event: any): void {
     const file: File = event.target.files[0];
@@ -437,7 +444,6 @@ onTrimInput(event: Event, modelRef: any, fieldName: string): void {
     this.personalData.nic = value;
   }
 
-
   triggerFileInput(event: Event): void {
     event.preventDefault();
     const fileInput = document.getElementById('imageUpload');
@@ -468,7 +474,6 @@ onTrimInput(event: Event, modelRef: any, fieldName: string): void {
       }
     });
   }
-
 
   onCheckboxChange1(lang: string, event: any) {
     if (event.target.checked) {
@@ -501,7 +506,7 @@ onTrimInput(event: Event, modelRef: any, fieldName: string): void {
       }
     } else {
       this.selectedLanguages = this.selectedLanguages.filter(
-        (lang) => lang !== language
+        (lang) => lang !== language,
       );
     }
     this.isLanguageRequired = this.selectedLanguages.length === 0;
@@ -527,7 +532,6 @@ onTrimInput(event: Event, modelRef: any, fieldName: string): void {
     });
   }
 
-
   nextFormCreate(page: 'pageOne' | 'pageTwo') {
     // Only validate when navigating to pageTwo
     if (page === 'pageTwo') {
@@ -541,7 +545,9 @@ onTrimInput(event: Event, modelRef: any, fieldName: string): void {
       }
 
       if (this.isLanguageRequired && this.selectedLanguages.length === 0) {
-        missingFields.push('Preferred Languages - At least one language must be selected');
+        missingFields.push(
+          'Preferred Languages - At least one language must be selected',
+        );
       }
 
       if (!this.personalData.companyId) {
@@ -575,28 +581,40 @@ onTrimInput(event: Event, modelRef: any, fieldName: string): void {
       if (!this.personalData.phoneNumber01) {
         missingFields.push('Phone Number - 1');
       } else if (!phonePattern.test(this.personalData.phoneNumber01)) {
-        missingFields.push('Phone Number - 1 - Must be a valid 9-digit number (e.g., 77XXXXXXX)');
+        missingFields.push(
+          'Phone Number - 1 - Must be a valid 9-digit number (e.g., 77XXXXXXX)',
+        );
       }
 
       if (this.personalData.phoneNumber02) {
         if (!phonePattern.test(this.personalData.phoneNumber02)) {
-          missingFields.push('Phone Number - 2 - Must be a valid 9-digit number (e.g., 77XXXXXXX)');
+          missingFields.push(
+            'Phone Number - 2 - Must be a valid 9-digit number (e.g., 77XXXXXXX)',
+          );
         }
-        if (this.personalData.phoneNumber01 === this.personalData.phoneNumber02) {
-          missingFields.push('Phone Number - 2 - Must be different from Phone Number - 1');
+        if (
+          this.personalData.phoneNumber01 === this.personalData.phoneNumber02
+        ) {
+          missingFields.push(
+            'Phone Number - 2 - Must be different from Phone Number - 1',
+          );
         }
       }
 
       if (!this.personalData.nic) {
         missingFields.push('NIC Number');
       } else if (!nicPattern.test(this.personalData.nic)) {
-        missingFields.push('NIC Number - Must be 9 digits followed by V or 12 digits');
+        missingFields.push(
+          'NIC Number - Must be 9 digits followed by V or 12 digits',
+        );
       }
 
       if (!this.personalData.email) {
         missingFields.push('Email');
       } else {
-        const emailValidation = this.emailValidationService.validateEmail(this.personalData.email);
+        const emailValidation = this.emailValidationService.validateEmail(
+          this.personalData.email,
+        );
         if (!emailValidation.isValid) {
           missingFields.push(`Email - ${emailValidation.errorMessage}`);
         }
@@ -604,7 +622,8 @@ onTrimInput(event: Event, modelRef: any, fieldName: string): void {
 
       // Display errors if any
       if (missingFields.length > 0) {
-        let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+        let errorMessage =
+          '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
         missingFields.forEach((field) => {
           errorMessage += `<li>${field}</li>`;
         });
@@ -629,17 +648,16 @@ onTrimInput(event: Event, modelRef: any, fieldName: string): void {
     this.selectedPage = page;
 
     setTimeout(() => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
-  }, 100);
-
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+    }, 100);
   }
   updateProvince(event: any): void {
     const selectedDistrict = event.value;
     const selected = this.districts.find(
-      (district) => district.name === selectedDistrict
+      (district) => district.name === selectedDistrict,
     );
     if (selected) {
       this.personalData.province = selected.province;
@@ -651,7 +669,9 @@ onTrimInput(event: Event, modelRef: any, fieldName: string): void {
   onBankChange() {
     if (this.selectedBankId) {
       this.branches = this.allBranches[this.selectedBankId.toString()] || [];
-      const selectedBank = this.banks.find(bank => bank.ID === this.selectedBankId);
+      const selectedBank = this.banks.find(
+        (bank) => bank.ID === this.selectedBankId,
+      );
       if (selectedBank) {
         this.personalData.bankName = selectedBank.name;
       }
@@ -668,7 +688,9 @@ onTrimInput(event: Event, modelRef: any, fieldName: string): void {
 
   onBranchChange() {
     if (this.selectedBranchId) {
-      const selectedBranch = this.branches.find(branch => branch.ID === this.selectedBranchId);
+      const selectedBranch = this.branches.find(
+        (branch) => branch.ID === this.selectedBranchId,
+      );
       if (selectedBranch) {
         this.personalData.branchName = selectedBranch.name;
       }
@@ -688,7 +710,6 @@ onTrimInput(event: Event, modelRef: any, fieldName: string): void {
   }
 
   validateAccNumber(): void {
-
     if (this.personalData.accNumber && this.confirmAccNumber) {
       this.confirmAccountNumberError =
         this.personalData.accNumber !== this.confirmAccNumber;
@@ -706,7 +727,9 @@ onTrimInput(event: Event, modelRef: any, fieldName: string): void {
     }
 
     if (this.isLanguageRequired && this.selectedLanguages.length === 0) {
-      missingFields.push('Preferred Languages - At least one language must be selected');
+      missingFields.push(
+        'Preferred Languages - At least one language must be selected',
+      );
     }
 
     if (!this.personalData.companyId) {
@@ -740,28 +763,38 @@ onTrimInput(event: Event, modelRef: any, fieldName: string): void {
     if (!this.personalData.phoneNumber01) {
       missingFields.push('Phone Number - 1');
     } else if (!/^[0-9]{9}$/.test(this.personalData.phoneNumber01)) {
-      missingFields.push('Phone Number - 1 - Must be a valid 9-digit number (e.g., 77XXXXXXX)');
+      missingFields.push(
+        'Phone Number - 1 - Must be a valid 9-digit number (e.g., 77XXXXXXX)',
+      );
     }
 
     if (this.personalData.phoneNumber02) {
       if (!/^[0-9]{9}$/.test(this.personalData.phoneNumber02)) {
-        missingFields.push('Phone Number - 2 - Must be a valid 9-digit number (e.g., 77XXXXXXX)');
+        missingFields.push(
+          'Phone Number - 2 - Must be a valid 9-digit number (e.g., 77XXXXXXX)',
+        );
       }
       if (this.personalData.phoneNumber01 === this.personalData.phoneNumber02) {
-        missingFields.push('Phone Number - 2 - Must be different from Phone Number - 1');
+        missingFields.push(
+          'Phone Number - 2 - Must be different from Phone Number - 1',
+        );
       }
     }
 
     if (!this.personalData.nic) {
       missingFields.push('NIC Number');
     } else if (!/^(\d{9}V|\d{12})$/.test(this.personalData.nic)) {
-      missingFields.push('NIC Number - Must be 9 digits followed by V or 12 digits');
+      missingFields.push(
+        'NIC Number - Must be 9 digits followed by V or 12 digits',
+      );
     }
 
     if (!this.personalData.email) {
       missingFields.push('Email');
     } else {
-      const emailValidation = this.emailValidationService.validateEmail(this.personalData.email);
+      const emailValidation = this.emailValidationService.validateEmail(
+        this.personalData.email,
+      );
       if (!emailValidation.isValid) {
         missingFields.push(`Email - ${emailValidation.errorMessage}`);
       }
@@ -801,7 +834,9 @@ onTrimInput(event: Event, modelRef: any, fieldName: string): void {
       if (!this.confirmAccNumber) {
         missingFields.push('Confirm Account Number');
       } else if (this.personalData.accNumber !== this.confirmAccNumber) {
-        missingFields.push('Confirm Account Number - Must match Account Number');
+        missingFields.push(
+          'Confirm Account Number - Must match Account Number',
+        );
       }
 
       if (!this.selectedBankId) {
@@ -815,7 +850,8 @@ onTrimInput(event: Event, modelRef: any, fieldName: string): void {
 
     // Display errors if any
     if (missingFields.length > 0) {
-      let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+      let errorMessage =
+        '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
       missingFields.forEach((field) => {
         errorMessage += `<li>${field}</li>`;
       });
@@ -849,30 +885,35 @@ onTrimInput(event: Event, modelRef: any, fieldName: string): void {
         title: 'font-semibold text-lg',
         htmlContainer: 'text-left',
       },
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.isLoading = true;
-      this.collectionOfficerService
-        .editCollectiveOfficer(this.personalData, this.itemId, this.selectedImage)
-        .subscribe({
-          next: (res: any) => {
-            this.isLoading = false;
-            Swal.fire({
-              icon: 'success',
-              title: 'Success',
-              text: 'Centre Head updated successfully',
-              confirmButtonText: 'OK',
-              customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold text-lg',
-        htmlContainer: 'text-left',
-      },
-            }).then(() => {
-              window.history.back();
-            });
-          },
-          error: (error: any) => {
-            this.isLoading = false;
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+        this.collectionOfficerService
+          .editCollectiveOfficer(
+            this.personalData,
+            this.itemId,
+            this.selectedImage,
+          )
+          .subscribe({
+            next: (res: any) => {
+              this.isLoading = false;
+              Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: 'Centre Head updated successfully',
+                confirmButtonText: 'OK',
+                customClass: {
+                  popup:
+                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold text-lg',
+                  htmlContainer: 'text-left',
+                },
+              }).then(() => {
+                window.history.back();
+              });
+            },
+            error: (error: any) => {
+              this.isLoading = false;
               let errorMessage = 'An unexpected error occurred';
               let messages: string[] = [];
 
@@ -894,11 +935,13 @@ onTrimInput(event: Event, modelRef: any, fieldName: string): void {
               }
 
               if (messages.length > 0) {
-                errorMessage = '<div class="text-left"><p class="mb-2">The following fields already exist in the system: </p><ul class="list-disc pl-5">';
-                messages.forEach(m => {
+                errorMessage =
+                  '<div class="text-left"><p class="mb-2">The following fields already exist in the system: </p><ul class="list-disc pl-5">';
+                messages.forEach((m) => {
                   errorMessage += `<li>${m}</li>`;
                 });
-                errorMessage += '</ul><p class="mt-2 text-sm">Please use different values for these fields.</p></div>';
+                errorMessage +=
+                  '</ul><p class="mt-2 text-sm">Please use different values for these fields.</p></div>';
 
                 Swal.fire({
                   icon: 'error',
@@ -906,25 +949,29 @@ onTrimInput(event: Event, modelRef: any, fieldName: string): void {
                   html: errorMessage,
                   confirmButtonText: 'OK',
                   customClass: {
-                    popup: 'bg-tileLight dark:bg-tileBlack rounded-xl text-black dark:text-white',
+                    popup:
+                      'bg-tileLight dark:bg-tileBlack rounded-xl text-black dark:text-white',
                     title: 'font-semibold text-lg',
                     htmlContainer: 'text-left',
-                    confirmButton: 'bg-red-500 rounded-lg hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700',
+                    confirmButton:
+                      'bg-red-500 rounded-lg hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700',
                   },
                 });
                 return;
               }
-          },
-        });
-    } 
-  });
-}
+            },
+          });
+      }
+    });
+  }
   navigatePath(path: string) {
     this.router.navigate([path]);
   }
 
   validateEmail(): void {
-    this.emailErrorMessage = this.emailValidationService.getErrorMessage(this.personalData.email);
+    this.emailErrorMessage = this.emailValidationService.getErrorMessage(
+      this.personalData.email,
+    );
   }
 
   resetPassword() {
@@ -940,9 +987,11 @@ onTrimInput(event: Event, modelRef: any, fieldName: string): void {
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold text-lg',
-        confirmButton: 'bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg',
-        cancelButton: 'bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg'
-      }
+        confirmButton:
+          'bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg',
+        cancelButton:
+          'bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg',
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         this.isLoading = true;
@@ -958,7 +1007,8 @@ onTrimInput(event: Event, modelRef: any, fieldName: string): void {
                 showConfirmButton: false,
                 timer: 3000,
                 customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  popup:
+                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                   title: 'font-semibold text-lg',
                 },
               });
@@ -971,7 +1021,8 @@ onTrimInput(event: Event, modelRef: any, fieldName: string): void {
                 showConfirmButton: false,
                 timer: 3000,
                 customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  popup:
+                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                   title: 'font-semibold text-lg',
                 },
               });
@@ -986,11 +1037,12 @@ onTrimInput(event: Event, modelRef: any, fieldName: string): void {
               showConfirmButton: false,
               timer: 3000,
               customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                 title: 'font-semibold text-lg',
               },
             });
-          }
+          },
         );
       }
     });

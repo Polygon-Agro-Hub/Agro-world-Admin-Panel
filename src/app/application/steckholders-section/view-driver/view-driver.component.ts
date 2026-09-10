@@ -53,6 +53,7 @@ interface JobRole {
   templateUrl: './view-driver.component.html',
   styleUrl: './view-driver.component.css'
 })
+
 export class ViewDriverComponent implements OnInit {
   @ViewChild('selectedCenterIdInput') selectedCenterIdInput!: NgModel;
   @ViewChild('selectedIrmIdInput') selectedIrmIdInput!: NgModel;

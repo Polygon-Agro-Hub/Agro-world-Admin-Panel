@@ -151,33 +151,29 @@
             </td>
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark whitespace-nowrap">
               <span class="px-2 py-1 rounded-full font-medium" [ngClass]="{
-    'text-red-500': job.status === 'Pending' || job.status === 'Assigned',
-    'text-orange-500': job.status === 'Ongoing',
-    'text-green-500': job.status === 'Completed',
-    'bg-gray-200 text-gray-800': !job.status
-  }">
-  {{ getDisplayStatus(job.status) }}
-</span>
+                'text-red-500': job.status === 'Pending' || job.status === 'Assigned' || job.status === 'Ongoing',
+                'text-green-500': job.status === 'Completed',
+                'bg-gray-200 text-gray-800': !job.status
+              }">
+                {{ getDisplayStatus(job.status) }}
+              </span>
             </td>
             <td
               *ngIf="permissionService.hasPermission('Assign govi link jobs assign inspectors') || tokenService.getUserDetails().role === '1'"
               class="px-3 py-3 text-center text-textLight dark:text-textDark cursor-pointer whitespace-nowrap w-full">
               <span
-  class="px-2 py-2 rounded-lg text-sm font-medium cursor-pointer hover:opacity-80 transition-all inline-block text-center"
-  [ngClass]="{
-      'bg-[#BBFFC6] text-[#308233] hover:bg-green-200':
-        job.assignStatus === 'Assigned',
-      'bg-[#F8FFA6] text-[#A8A100] hover:bg-yellow-200':
-        job.assignStatus === 'Not Assigned'
-    }"
-  [style.box-shadow]="job.assignStatus === 'Assigned' 
-      ? '0 4px 10px rgba(48, 130, 51, 0.35)' 
-      : '0 4px 10px rgba(168, 161, 0, 0.35)'"
-  (click)="onAssignStatusClick(job)"
-  title="Click to assign or view officer"
-  [style.min-width]="'120px'">
-  {{ job.assignStatus }}
-</span>
+                class="px-2 py-2 rounded-lg text-sm font-medium cursor-pointer hover:opacity-80 transition-all inline-block text-center"
+                [ngClass]="{
+                  'bg-[#BBFFC6] text-[#308233] hover:bg-green-200':
+                    job.assignStatus === 'Assigned',
+                  'bg-[#F8FFA6] text-[#A8A100] hover:bg-yellow-200':
+                    job.assignStatus === 'Not Assigned'
+                }" [style.box-shadow]="job.assignStatus === 'Assigned' 
+                  ? '0 4px 10px rgba(48, 130, 51, 0.35)' 
+                  : '0 4px 10px rgba(168, 161, 0, 0.35)'" (click)="onAssignStatusClick(job)"
+                title="Click to assign or view officer" [style.min-width]="'120px'">
+                {{ job.assignStatus }}
+              </span>
             </td>
             <td class="px-3 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap">
               {{ (job.scheduledDate | date : "dd/MM/yyyy") || "--" }}
@@ -288,7 +284,7 @@
         Distrct : {{ selectedJob?.district }}
       </p>
       <p class="text-sm text-textLight dark:text-textDark">
-        Count : 
+        Count :
         <span class="text-blue-500">{{
           selectedOfficerInfo.activeJobCount
           }}</span>

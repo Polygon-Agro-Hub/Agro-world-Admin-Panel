@@ -54,7 +54,7 @@
               (keyup.esc)="offSearch()" />
             <div
               class="absolute top-full mt-2 bg-gray-800 dark:bg-gray-700 text-white dark:text-gray-200 text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-              Search by Customer ID, Name, Phone Number
+              Search by Customer ID, Name, Phone Number, City
             </div>
             <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2" (click)="onSearch()">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -85,6 +85,7 @@
               <tr>
                 <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">Customer ID</th>
                 <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">Customer Name</th>
+                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">Nearest City</th>
                 <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">Created At</th>
                 <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">Contact</th>
                 <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">No. of Orders</th>
@@ -109,6 +110,7 @@
 
                 <td class="px-3 py-3 text-[#000000] dark:text-textDark">{{ item.cusId }}</td>
                 <td class="px-3 py-3 text-left text-[#000000] dark:text-textDark whitespace-nowrap">{{ item.firstName }} {{ item.lastName }}</td>
+                <td class="px-3 py-3 text-left text-[#000000] dark:text-textDark whitespace-nowrap">{{ item.nearesCity || '—' }}</td>
                 <td class="px-3 py-3 text-center text-[#000000] dark:text-textDark whitespace-nowrap">{{ item.created_at | date: "d MMM, y h:mm a" }}</td>
                 <td class="px-3 py-3 text-center text-[#000000] dark:text-textDark whitespace-nowrap">{{ item.phoneCode }} - {{ item.phoneNumber }}</td>
                 <td class="px-3 py-3 text-center text-[#000000] dark:text-textDark">

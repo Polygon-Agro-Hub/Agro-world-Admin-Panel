@@ -16,6 +16,7 @@ export class ViewCompanyDetailsComponent implements OnInit {
   isLoading = false;
   companyId!: number;
   company: any;
+  isPrivateSector = false;
 
   constructor(
     private companyService: CertificateCompanyService,
@@ -37,6 +38,9 @@ export class ViewCompanyDetailsComponent implements OnInit {
       next: (res) => {
         this.isLoading = false;
         this.company = res.company;
+        this.isPrivateSector =
+          this.hasValue(this.company.regNumber) &&
+          this.hasValue(this.company.taxId);
       },
       error: () => {
         this.isLoading = false;
@@ -47,6 +51,15 @@ export class ViewCompanyDetailsComponent implements OnInit {
 
   getFlagUrl(code: string): string {
     return `https://flagcdn.com/w20/${code.toLowerCase()}.png`;
+  }
+
+  private hasValue(value: unknown): boolean {
+    return (
+      value !== null &&
+      value !== undefined &&
+      String(value).trim() !== '' &&
+      String(value).trim().toLowerCase() !== 'null'
+    );
   }
 
     onBack(): void {

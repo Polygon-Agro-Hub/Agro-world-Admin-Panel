@@ -1093,6 +1093,10 @@ export class CreateCenterHeadComponent implements OnInit {
   this.validateEmail();
 }
 
+isLanguageSelected(lang: string): boolean {
+  return !!this.personalData.languages && this.personalData.languages.split(',').includes(lang);
+}
+
 }
 
 

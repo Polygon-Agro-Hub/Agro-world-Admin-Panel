@@ -38,7 +38,7 @@
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <!-- Registration Number -->
-    <div class="my-3">
+    <div class="my-3" *ngIf="isPrivateSector">
       <label
         class="block text-sm font-medium text-textLight dark:text-textDark"
       >
@@ -53,7 +53,7 @@
     </div>
 
     <!-- Tax ID -->
-    <div class="my-3">
+    <div class="my-3" *ngIf="isPrivateSector">
       <label
         class="block text-sm font-medium text-textLight dark:text-textDark"
       >

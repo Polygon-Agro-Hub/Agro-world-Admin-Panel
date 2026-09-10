@@ -45,7 +45,7 @@
               <div class="w-full md:w-96 relative group">
                 <div
                   class="absolute top-[50px] left-0 bg-gray-700 text-white text-xs rounded-md py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-                  Search by Customer ID, Name, Phone Number
+                  Search by Customer ID, Name, Phone Number, City
                 </div>
                 <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-full">
                   <input type="text" placeholder="Search.." [(ngModel)]="searchText" name="searchText"
@@ -89,6 +89,8 @@
                   ID</th>
                 <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">Customer
                   Name</th>
+                  <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">Nearest
+                  City</th>
                 <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">Company
                   Name</th>
                 <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">Credit
@@ -122,6 +124,10 @@
 
                 <td class="px-3 py-3 text-left dark:text-textDark whitespace-nowrap">
                   {{ item.firstName }} {{ item.lastName }}
+                </td>
+
+                <td class="px-3 py-3 text-left dark:text-textDark whitespace-nowrap">
+                  {{ item.nearesCity || '—' }}
                 </td>
 
                 <td class="px-3 py-3 text-left dark:text-textDark whitespace-nowrap">

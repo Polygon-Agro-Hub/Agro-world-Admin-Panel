@@ -208,6 +208,7 @@ class MarketPrice {
   updateAt!: string;
   updatedBy?: string;
   userName?: string;
+  averagePrice!: string;
 }
 
 class Crop {

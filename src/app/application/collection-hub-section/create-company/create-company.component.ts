@@ -90,6 +90,8 @@ export class CreateCompanyComponent implements OnInit {
   sameNumberError: boolean = false;
   emailValidationMessage: string = '';
   attemptedSubmit: boolean = false;
+  logoTypeError: boolean = false;      // NEW
+  faviconTypeError: boolean = false;   // NEW
 
   companyType: string = '';
   countries = [
@@ -612,82 +614,108 @@ export class CreateCompanyComponent implements OnInit {
   }
 
   async onLogoChange(event: Event): Promise<void> {
-    const input = event.target as HTMLInputElement;
-    this.logoSizeError = false;
+  const input = event.target as HTMLInputElement;
+  this.logoSizeError = false;
+  this.logoTypeError = false; // NEW
 
-    if (input.files && input.files[0]) {
-      const file = input.files[0];
-      const maxSize = 1024 * 1024;
+  if (input.files && input.files[0]) {
+    const file = input.files[0];
+    const maxSize = 1024 * 1024;
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png']; // NEW
 
-      if (file.size > maxSize) {
-        this.logoSizeError = true;
-        Swal.fire({
-          icon: 'error',
-          title: 'File Too Large',
-          text: 'Logo must be less than 1MB',
-        });
-        input.value = '';
-        return;
-      }
+    if (!allowedTypes.includes(file.type)) { // NEW block
+      this.logoTypeError = true;
+      Swal.fire({
+        icon: 'error',
+        title: 'Unsupported File Type',
+        text: 'Only JPG, JPEG, and PNG images are allowed for the logo.',
+      });
+      input.value = '';
+      return;
+    }
 
-      try {
-        this.isLoading = true;
-        const compressedFile = await this.compressImage(file, 800, 800, 0.7);
-        this.selectedLogoFile = compressedFile;
-        this.companyData.logoFile = compressedFile;
+    if (file.size > maxSize) {
+      this.logoSizeError = true;
+      Swal.fire({
+        icon: 'error',
+        title: 'File Too Large',
+        text: 'Logo must be less than 1MB',
+      });
+      input.value = '';
+      return;
+    }
 
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          this.companyData.logo = e.target?.result as string;
-          this.isLoading = false;
-          this.touchedFields['logo'] = true;
-        };
-        reader.readAsDataURL(this.selectedLogoFile);
-      } catch (error) {
+    try {
+      this.isLoading = true;
+      const compressedFile = await this.compressImage(file, 800, 800, 0.7);
+      this.selectedLogoFile = compressedFile;
+      this.companyData.logoFile = compressedFile;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.companyData.logo = e.target?.result as string;
         this.isLoading = false;
-        console.error('Error compressing logo:', error);
-      }
+        this.touchedFields['logo'] = true;
+      };
+      reader.readAsDataURL(this.selectedLogoFile);
+    } catch (error) {
+      this.isLoading = false;
+      console.error('Error compressing logo:', error);
     }
   }
+}
 
   async onFaviconChange(event: Event): Promise<void> {
-    const input = event.target as HTMLInputElement;
-    this.faviconSizeError = false;
+  const input = event.target as HTMLInputElement;
+  this.faviconSizeError = false;
+  this.faviconTypeError = false; // NEW
 
-    if (input.files && input.files[0]) {
-      const file = input.files[0];
-      const maxSize = 1024 * 1024;
+  if (input.files && input.files[0]) {
+    const file = input.files[0];
+    const maxSize = 1024 * 1024;
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png']; // NEW
 
-      if (file.size > maxSize) {
-        this.faviconSizeError = true;
-        Swal.fire({
-          icon: 'error',
-          title: 'File Too Large',
-          text: 'Favicon must be less than 1MB',
-        });
-        input.value = '';
-        return;
-      }
+    if (!allowedTypes.includes(file.type)) { // NEW block
+      this.faviconTypeError = true;
+      Swal.fire({
+        icon: 'error',
+        title: 'Unsupported File Type',
+        text: 'Only JPG, JPEG, and PNG images are allowed for the favicon.',
+      });
+      input.value = '';
+      return;
+    }
 
-      try {
-        this.isLoading = true;
-        const compressedFile = await this.compressImage(file, 800, 800, 0.7);
-        this.selectedFaviconFile = compressedFile;
-        this.companyData.faviconFile = compressedFile;
+    if (file.size > maxSize) {
+      this.faviconSizeError = true;
+      Swal.fire({
+        icon: 'error',
+        title: 'File Too Large',
+        text: 'Favicon must be less than 1MB',
+      });
+      input.value = '';
+      return;
+    }
 
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          this.companyData.favicon = e.target?.result as string;
-          this.isLoading = false;
-          this.touchedFields['favicon'] = true;
-        };
-        reader.readAsDataURL(this.selectedFaviconFile);
-      } catch (error) {
+    try {
+      this.isLoading = true;
+      const compressedFile = await this.compressImage(file, 800, 800, 0.7);
+      this.selectedFaviconFile = compressedFile;
+      this.companyData.faviconFile = compressedFile;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.companyData.favicon = e.target?.result as string;
         this.isLoading = false;
-        console.error('Error compressing favicon:', error);
-      }
+        this.touchedFields['favicon'] = true;
+      };
+      reader.readAsDataURL(this.selectedFaviconFile);
+    } catch (error) {
+      this.isLoading = false;
+      console.error('Error compressing favicon:', error);
     }
   }
+}
 
   removeLogo(event: Event): void {
     event.stopPropagation();

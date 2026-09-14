@@ -6,7 +6,6 @@
 <div class="h-[20px]"></div>
 <div *ngIf="this.itemId == null" class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg">
   <div *ngIf="selectedPage === 'pageOne'">
-    <!-- <div> -->
     <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
       Add Personal Details
     </h2>
@@ -15,13 +14,11 @@
         <div class="relative">
           <input type="file" id="imageUpload" accept="image/*" class="hidden" (change)="onFileSelected($event)" />
 
-          <!-- Display default image if no file is selected -->
           <div *ngIf="!selectedImage"
             class="flex rounded-full border-solid border-2 justify-center items-center w-36 h-36">
             <i class="fa-regular fa-user text-7xl dark:text-textDark"></i>
           </div>
 
-          <!-- Display the selected image if available -->
           <img *ngIf="selectedImage" class="rounded-full w-36 h-36 object-cover" [src]="selectedImage"
             alt="Profile Picture" />
           <span (click)="triggerFileInput($event)"
@@ -45,20 +42,7 @@
           </div>
         </div>
 
-        <div>
-          <!-- <label class="block text-sm font-medium text-gray-700 dark:text-textDark">EMP ID / User name</label>
-          <div class="flex mt-1">
-            <span
-              class="inline-flex items-center px-3 py-3 text-sm text-gray-900 bg-gray-200 border border-e-0 border-gray-300 rounded-s-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-              <p *ngIf="personalData.jobRole === 'Distribution Centre Head'">
-                DCH
-              </p>
-            </span>
-            <input type="text" [value]="lastID" name="empId"
-              class="rounded-none rounded-e-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm pl-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              disabled />
-          </div> -->
-        </div>
+        <div></div>
 
         <div>
           <label for="enpType" class="block text-sm font-medium text-gray-700 dark:text-textDark">
@@ -81,7 +65,8 @@
               </label>
             </div>
           </div>
-          <p *ngIf="!isEmpTypeSelected() && empTypeCtrl.touched" class="text-red-600 text-sm mt-2">
+          <p *ngIf="!isEmpTypeSelected() && (touchedFields['empType'] || empTypeCtrl.touched)"
+            class="text-red-600 text-sm mt-2">
             Please select an employee type.
           </p>
         </div>
@@ -116,7 +101,8 @@
 
           </div>
 
-          <p *ngIf="!isAtLeastOneLanguageSelected() && languagesCtrl.touched" class="text-red-600 text-sm mt-2">
+          <p *ngIf="!isAtLeastOneLanguageSelected() && (touchedFields['languages'] || languagesCtrl.touched)"
+            class="text-red-600 text-sm mt-2">
             Please select at least one preferred language.
           </p>
         </div>
@@ -133,10 +119,12 @@
                 {{ center.firstNameEnglish + " " + center.lastNameEnglish }}
               </option>
             </select>
-            <!-- FontAwesome Down Arrow Icon -->
             <i
               class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 pointer-events-none"></i>
           </div>
+          <span *ngIf="touchedFields['irmId'] && !personalData.irmId" class="text-red-600 text-sm">
+            Manager Name is required.
+          </span>
         </div>
 
         <div *ngIf="personalData.jobRole === 'Collection Officer'"></div>
@@ -148,17 +136,17 @@
           <input id="firstNameEnglish" name="firstNameEnglish" required [(ngModel)]="personalData.firstNameEnglish"
             #firstNameEnglishRef="ngModel" pattern="^[A-Z][a-zA-Z ]*$"
             (input)="onTrimInputFirstCapital($event, personalData, 'firstNameEnglish')"
+            (blur)="onBlur('firstNameEnglish')"
             class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <span *ngIf=" (firstNameEnglishRef.dirty || firstNameEnglishRef.touched)" class="text-red-600 text-sm">
-            <ng-container *ngIf="firstNameEnglishRef.errors?.['required']">
+          <span *ngIf="touchedFields['firstNameEnglish']" class="text-red-600 text-sm">
+            <ng-container *ngIf="!personalData.firstNameEnglish">
               First Name is required.
             </ng-container>
-
+            <ng-container *ngIf="personalData.firstNameEnglish && firstNameEnglishRef.errors?.['pattern']">
+              First Name must start with a capital letter and contain only letters.
+            </ng-container>
           </span>
         </div>
-
-
-
 
         <div>
           <label for="lastNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">
@@ -167,17 +155,17 @@
           <input id="lastNameEnglish" name="lastNameEnglish" required [(ngModel)]="personalData.lastNameEnglish"
             #lastNameEnglishRef="ngModel" pattern="^[A-Z][a-zA-Z ]*$"
             (input)="onTrimInputFirstCapital($event, personalData, 'lastNameEnglish')"
+            (blur)="onBlur('lastNameEnglish')"
             class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <span *ngIf="lastNameEnglishRef.invalid && (lastNameEnglishRef.dirty || lastNameEnglishRef.touched)"
-            class="text-red-600 text-sm">
-            <ng-container *ngIf="lastNameEnglishRef.errors?.['required']">
+          <span *ngIf="touchedFields['lastNameEnglish']" class="text-red-600 text-sm">
+            <ng-container *ngIf="!personalData.lastNameEnglish">
               Last Name is required.
             </ng-container>
-
+            <ng-container *ngIf="personalData.lastNameEnglish && lastNameEnglishRef.errors?.['pattern']">
+              Last Name must start with a capital letter and contain only letters.
+            </ng-container>
           </span>
         </div>
-
-
 
         <div>
           <label for="phoneNumber01" class="block text-sm font-medium text-gray-700 dark:text-textDark">
@@ -189,8 +177,7 @@
                 optionValue="dialCode"
                 styleClass="border border-gray-300 mr-2 rounded-l-md bg-white dark:bg-tileBlack text-gray-800 dark:text-textDark custom-dropdown"
                 [style]="{ width: '130px' }"
-                [ngClass]="{ 'border-red-500': touchedFields.phoneNumber01 && !isValidPhoneNumber(personalData.phoneNumber01) }">
-                <!-- Dropdown items -->
+                [ngClass]="{ 'border-red-500': touchedFields['phoneNumber01'] && !isValidPhoneNumber(personalData.phoneNumber01) }">
                 <ng-template let-country pTemplate="item">
                   <div class="flex items-center gap-2">
                     <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
@@ -198,7 +185,6 @@
                   </div>
                 </ng-template>
 
-                <!-- Selected item -->
                 <ng-template let-country pTemplate="selectedItem">
                   <div class="flex items-center gap-2" *ngIf="country">
                     <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
@@ -213,7 +199,6 @@
                 (input)="checkDuplicatePhoneNumbers(); enforcePhoneLength($event, 'phoneNumber01')" />
             </div>
 
-            <!-- Single validation message container with priority logic -->
             <div class="mt-1 flex flex-col w-full">
               <span *ngIf="getPhoneValidationMessage('phoneNumber01')" class="text-red-600 text-sm">
                 {{ getPhone1ValidationMessage('phoneNumber01') }}
@@ -222,19 +207,17 @@
           </div>
         </div>
 
-        <!-- Mobile Number - 2 -->
         <div>
           <label for="phoNumTwo" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Mobile Number - 2
           </label>
 
           <div class="mt-1 flex">
-            <p-dropdown [(ngModel)]="personalData.phoneCode01" [options]="countries" optionLabel="dialCode"
+            <p-dropdown [(ngModel)]="personalData.phoneCode02" [options]="countries" optionLabel="dialCode"
               optionValue="dialCode"
               styleClass="border border-gray-300 mr-2 rounded-l-md bg-white dark:bg-tileBlack text-gray-800 dark:text-textDark custom-dropdown"
               [style]="{ width: '130px' }"
-              [ngClass]="{ 'border-red-500': touchedFields.phoneNumber01 && !isValidPhoneNumber(personalData.phoneNumber01) }">
-              <!-- Dropdown items -->
+              [ngClass]="{ 'border-red-500': touchedFields['phoneNumber02'] && personalData.phoneNumber02 && !isValidPhoneNumber(personalData.phoneNumber02, personalData.phoneCode02) }">
               <ng-template let-country pTemplate="item">
                 <div class="flex items-center gap-2">
                   <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
@@ -242,7 +225,6 @@
                 </div>
               </ng-template>
 
-              <!-- Selected item -->
               <ng-template let-country pTemplate="selectedItem">
                 <div class="flex items-center gap-2" *ngIf="country">
                   <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
@@ -258,14 +240,12 @@
               (input)="checkDuplicatePhoneNumbers(); enforcePhoneLength($event, 'phoneNumber02')" />
           </div>
 
-          <!-- Single validation message container with priority logic -->
           <div class="mt-1 flex flex-col w-full">
             <span *ngIf="getPhoneValidationMessage('phoneNumber02')" class="text-red-600 text-sm">
               {{ getPhoneValidationMessage('phoneNumber02') }}
             </span>
           </div>
         </div>
-
 
         <div>
           <label for="nic" class="block text-sm font-medium text-gray-700 dark:text-textDark">
@@ -277,16 +257,14 @@
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             maxlength="12" />
 
-          <!-- Validation messages -->
-          <span *ngIf="touchedFields.nic && personalData.nic && !isValidNIC(personalData.nic)"
+          <span *ngIf="touchedFields['nic'] && personalData.nic && !isValidNIC(personalData.nic)"
             class="text-red-600 text-sm block mt-1">
             Please enter a valid NIC number (12 digits or 9 digits followed by 'V')
           </span>
-          <span *ngIf="isFieldInvalid('nic') && !personalData.nic" class="text-red-600 text-sm block mt-1">
+          <span *ngIf="touchedFields['nic'] && !personalData.nic" class="text-red-600 text-sm block mt-1">
             NIC is a required field.
           </span>
         </div>
-
 
         <div>
           <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Email *</label>
@@ -294,13 +272,12 @@
             (input)="onTrimInput($event, personalData, 'email')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
-          <!-- Show detailed error messages from service -->
-          <span *ngIf="touchedFields.email && personalData.email && !isValidEmail(personalData.email)"
+          <span *ngIf="touchedFields['email'] && personalData.email && !isValidEmail(personalData.email)"
             class="text-red-600 text-sm">
             {{ getEmailErrorMessage(personalData.email) }}
           </span>
 
-          <span *ngIf="isFieldInvalid('email') && !personalData.email" class="text-red-600 text-sm">
+          <span *ngIf="touchedFields['email'] && !personalData.email" class="text-red-600 text-sm">
             Email is a required field.
           </span>
         </div>
@@ -318,7 +295,6 @@
   </div>
 
   <div *ngIf="selectedPage === 'pageTwo'">
-    <!-- <div> -->
     <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
       Residential Details
     </h2>
@@ -328,48 +304,48 @@
           <label for="house" class="block text-sm font-medium text-gray-700 dark:text-textDark">House / Plot
             Number *</label>
           <input (blur)="onBlur('houseNumber')" id="houseNumber" name="houseNumber"
-            [(ngModel)]="personalData.houseNumber" (keydown)="blockLeadingSpace($event, 'houseNumber')"
+            [(ngModel)]="personalData['houseNumber']" (keydown)="blockLeadingSpace($event, 'houseNumber')"
             (input)="capitalizeWhileTyping('houseNumber')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <span *ngIf="isFieldInvalid('houseNumber')" class="text-red-600 text-sm">House Number is required.</span>
+          <span *ngIf="touchedFields['houseNumber'] && !personalData['houseNumber']" class="text-red-600 text-sm">House
+            Number is required.</span>
         </div>
 
         <div class="pb-6">
           <label for="street" class="block text-sm font-medium text-gray-700 dark:text-textDark">Street Name *</label>
           <input type="text" (blur)="onBlur('streetName')" id="streetName" name="streetName"
-            [(ngModel)]="personalData.streetName" (keydown)="blockLeadingSpace($event, 'streetName')
-          " (input)="capitalizeWhileTyping('streetName')"
+            [(ngModel)]="personalData['streetName']" (keydown)="blockLeadingSpace($event, 'streetName')"
+            (input)="capitalizeWhileTyping('streetName')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <span *ngIf="isFieldInvalid('streetName')" class="text-red-600 text-sm">Street Name is required.</span>
+          <span *ngIf="touchedFields['streetName'] && !personalData['streetName']" class="text-red-600 text-sm">Street
+            Name is required.</span>
         </div>
 
         <div class="pb-6">
           <label for="city" class="block text-sm font-medium text-gray-700 dark:text-textDark">City *</label>
-          <input (blur)="onBlur('city')" id="city" name="city" [(ngModel)]="personalData.city"
+          <input (blur)="onBlur('city')" id="city" name="city" [(ngModel)]="personalData['city']"
             (keydown)="blockLeadingSpace($event, 'city')" (input)="capitalizeWhileTyping('city')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
-          <span *ngIf="isFieldInvalid('city')" class="text-red-600 text-sm">City is required.</span>
+          <span *ngIf="touchedFields['city'] && !personalData['city']" class="text-red-600 text-sm">City is
+            required.</span>
         </div>
         <div class="pb-6">
           <label for="districtDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             District *
           </label>
 
-          <p-dropdown id="districtDropdown" name="district" [(ngModel)]="personalData.district" #districtModel="ngModel"
-            required (onChange)="updateProvince($event)" [options]="districts" optionLabel="name" optionValue="name"
-            placeholder="Select a district" [filter]="true" filterPlaceholder="Search district" class="w-full"
-            [ngClass]="{
-      'p-invalid': isFieldInvalid('district')
-    }">
+          <p-dropdown id="districtDropdown" name="district" [(ngModel)]="personalData['district']"
+            #districtModel="ngModel" required (onChange)="updateProvince($event)" (onHide)="onBlur('district')"
+            [options]="districts" optionLabel="name" optionValue="name" placeholder="Select a district" [filter]="true"
+            filterPlaceholder="Search district" class="w-full"
+            [ngClass]="{ 'p-invalid': touchedFields['district'] && !personalData['district'] }">
           </p-dropdown>
 
-          <span *ngIf="districtModel.invalid && districtModel.touched" class="text-red-600 text-sm">
+          <span *ngIf="touchedFields['district'] && !personalData['district']" class="text-red-600 text-sm">
             District is required.
           </span>
         </div>
-
-
 
         <div class="pb-6">
           <label for="province" class="block text-sm font-medium text-gray-700 dark:text-textDark">
@@ -390,7 +366,6 @@
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         </div>
 
-
       </div>
     </div>
     <div>
@@ -399,24 +374,22 @@
       </h2>
       <div class="pb-6">
         <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-          Account Holder’s Name *
+          Account Holder's Name *
         </label>
         <input maxlength="50" id="accHolderName" name="accHolderName" [(ngModel)]="personalData.accHolderName"
           (input)="onTrimInput($event, personalData, 'accHolderName'); validateNameInput($event)"
           #accHolderNameRef="ngModel" required pattern="^[A-Za-z\s]+$" (blur)="onBlur('accHolderName')"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          [class.border-red-500]="accHolderNameRef.invalid && (accHolderNameRef.dirty || accHolderNameRef.touched)" />
-        <span *ngIf="accHolderNameRef.invalid && (accHolderNameRef.dirty || accHolderNameRef.touched)"
-          class="text-red-600 text-sm">
-          <ng-container *ngIf="accHolderNameRef.errors?.['required']">
+          [class.border-red-500]="touchedFields['accHolderName'] && (!personalData.accHolderName || accHolderNameRef.errors?.['pattern'])" />
+        <span *ngIf="touchedFields['accHolderName']" class="text-red-600 text-sm">
+          <ng-container *ngIf="!personalData.accHolderName">
             Account Holder's Name is required.
           </ng-container>
-          <ng-container *ngIf="accHolderNameRef.errors?.['pattern']">
+          <ng-container *ngIf="personalData.accHolderName && accHolderNameRef.errors?.['pattern']">
             Account Holder's Name can only contain letters and spaces. Numbers and special characters are not allowed.
           </ng-container>
         </span>
       </div>
-
 
       <div class="pb-6">
         <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Number
@@ -424,18 +397,15 @@
         <input id="accNumber" name="accNumber" [(ngModel)]="personalData.accNumber"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           #accNumberInput="ngModel" required pattern="^[0-9]+$" (keypress)="allowOnlyNumbers($event)"
-          (ngModelChange)="validateAccNumber()" />
-        <div *ngIf="accNumberInput.touched && !personalData.accNumber" class="text-red-500 text-sm mt-1">
+          (ngModelChange)="validateAccNumber()" (blur)="onBlur('accNumber')" />
+        <div *ngIf="touchedFields['accNumber'] && !personalData.accNumber" class="text-red-500 text-sm mt-1">
           <div>Account Number is required</div>
         </div>
-        <div *ngIf="accNumberInput.touched && personalData.accNumber && accNumberInput.errors?.['pattern']"
+        <div *ngIf="touchedFields['accNumber'] && personalData.accNumber && accNumberInput.errors?.['pattern']"
           class="text-red-500 text-sm mt-1">
           <div>Account Number cannot contain special characters</div>
         </div>
       </div>
-
-
-
 
       <div class="pb-6">
         <label for="confirmAccNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
@@ -444,23 +414,24 @@
         <input #confirmAccNumberInput="ngModel" id="confirmAccNumber" name="confirmAccNumber"
           [(ngModel)]="personalData.confirmAccNumber" (ngModelChange)="validateConfirmAccNumber()" pattern="^[0-9]+$"
           (keypress)="allowOnlyNumbers($event)" (keydown)="blockLeadingSpace($event, 'confirmAccNumber')"
+          (blur)="onBlur('confirmAccNumber')"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
-        <span *ngIf="confirmAccountNumberRequired" class="text-red-600 text-sm">
+        <span *ngIf="touchedFields['confirmAccNumber'] && confirmAccountNumberRequired" class="text-red-600 text-sm">
           Confirm Account Number is required.
         </span>
 
-        <span *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired" class="text-red-600 text-sm">
+        <span *ngIf="touchedFields['confirmAccNumber'] && confirmAccountNumberError && !confirmAccountNumberRequired"
+          class="text-red-600 text-sm">
           Account Numbers do not match.
         </span>
 
         <span
-          *ngIf="confirmAccNumberInput.touched && this.personalData.confirmAccNumber && !confirmAccountNumberError && confirmAccNumberInput.errors?.['pattern']"
+          *ngIf="touchedFields['confirmAccNumber'] && personalData.confirmAccNumber && !confirmAccountNumberError && confirmAccNumberInput.errors?.['pattern']"
           class="text-red-500 text-sm mt-1">
           <div>Account Number cannot contain special characters</div>
         </span>
       </div>
-
 
       <div class="pb-6">
         <label for="bankDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">
@@ -468,19 +439,15 @@
         </label>
 
         <p-dropdown id="bankDropdown" name="bankName" [(ngModel)]="selectedBankId" #bankModel="ngModel" required
-          (onChange)="onBankChange()" [options]="banks" optionLabel="name" optionValue="ID" [filter]="true"
-          filterBy="name" placeholder="Select a bank" [showClear]="false" class="w-full" [ngClass]="{
-      'p-invalid': isFieldInvalid('bankName')
-    }">
+          (onChange)="onBankChange()" (onHide)="onBlur('bankId')" [options]="banks" optionLabel="name" optionValue="ID"
+          [filter]="true" filterBy="name" placeholder="Select a bank" [showClear]="false" class="w-full"
+          [ngClass]="{ 'p-invalid': touchedFields['bankId'] && !selectedBankId }">
         </p-dropdown>
 
-        <span *ngIf="bankModel.invalid && bankModel.touched" class="text-red-600 text-sm">
+        <span *ngIf="touchedFields['bankId'] && !selectedBankId" class="text-red-600 text-sm">
           Bank Name is required.
         </span>
       </div>
-
-
-
 
       <div class="pb-6">
         <label for="branchDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">
@@ -488,17 +455,16 @@
         </label>
 
         <p-dropdown id="branchDropdown" name="branchDropdown" [(ngModel)]="selectedBranchId" #branchModel="ngModel"
-          required (onChange)="onBranchChange()" [options]="branches" optionLabel="name" optionValue="ID"
-          [disabled]="!selectedBankId" placeholder="Select a branch" [filter]="true" filterPlaceholder="Search branch"
-          class="w-full" [ngClass]="{ 'p-invalid': branchModel.invalid && branchModel.touched }">
+          required (onChange)="onBranchChange()" (onHide)="onBlur('branchId')" [options]="branches" optionLabel="name"
+          optionValue="ID" [disabled]="!selectedBankId" placeholder="Select a branch" [filter]="true"
+          filterPlaceholder="Search branch" class="w-full"
+          [ngClass]="{ 'p-invalid': touchedFields['branchId'] && !selectedBranchId }">
         </p-dropdown>
 
-        <span *ngIf="branchModel.invalid && branchModel.touched" class="text-red-600 text-sm">
+        <span *ngIf="touchedFields['branchId'] && !selectedBranchId" class="text-red-600 text-sm">
           Branch Name is required.
         </span>
       </div>
-
-
 
       <div class="flex justify-end my-10 ml-10 mr-0">
         <button (click)="nextFormCreate('pageOne')" type="button"
@@ -511,3 +477,4 @@
       </div>
     </div>
   </div>
+</div>

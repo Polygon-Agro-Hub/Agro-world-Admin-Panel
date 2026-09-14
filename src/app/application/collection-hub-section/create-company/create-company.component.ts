@@ -1529,69 +1529,86 @@ export class CreateCompanyComponent implements OnInit {
   }
 
   isValidEmail(email: string): boolean {
-    this.emailValidationMessage = '';
+  this.emailValidationMessage = '';
 
-    if (!email) {
-      return false;
-    }
-
-    const trimmedEmail = email.trim();
-
-    if (trimmedEmail === '') {
-      this.emailValidationMessage = 'Email is required.';
-      return false;
-    }
-
-    if (trimmedEmail.includes('..')) {
-      this.emailValidationMessage = 'Email cannot contain consecutive dots.';
-      return false;
-    }
-
-    if (trimmedEmail.startsWith('.')) {
-      this.emailValidationMessage = 'Email cannot start with a dot.';
-      return false;
-    }
-
-    if (trimmedEmail.endsWith('.')) {
-      this.emailValidationMessage = 'Email cannot end with a dot.';
-      return false;
-    }
-
-    if (trimmedEmail.endsWith('.@')) {
-      this.emailValidationMessage = 'Email cannot end with a dot.@';
-      return false;
-    }
-
-    const invalidCharRegex = /[^a-zA-Z0-9@._%+-]/;
-    if (invalidCharRegex.test(trimmedEmail)) {
-      this.emailValidationMessage =
-        'Email contains invalid characters. Only letters, numbers, and @ . _ % + - are allowed.';
-      return false;
-    }
-
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!emailPattern.test(trimmedEmail)) {
-      this.emailValidationMessage =
-        'Please enter a valid email in the format: example@domain.com';
-      return false;
-    }
-
-    const domainPart = trimmedEmail.split('@')[1];
-    if (!domainPart || domainPart.indexOf('.') === -1) {
-      this.emailValidationMessage = 'Please enter a valid email domain.';
-      return false;
-    }
-
-    const tld = domainPart.split('.').pop()?.toLowerCase();
-    const allowedTlds = ['com', 'lk'];
-
-    if (!tld || !allowedTlds.includes(tld)) {
-      this.emailValidationMessage = 'Only .com and .lk domains are allowed.';
-      return false;
-    }
-
-    return true;
+  if (!email) {
+    return false;
   }
+
+  const trimmedEmail = email.trim();
+
+  if (trimmedEmail === '') {
+    this.emailValidationMessage = 'Email is required.';
+    return false;
+  }
+
+  if (trimmedEmail.includes('..')) {
+    this.emailValidationMessage = 'Email cannot contain consecutive dots.';
+    return false;
+  }
+
+  if (trimmedEmail.startsWith('.')) {
+    this.emailValidationMessage = 'Email cannot start with a dot.';
+    return false;
+  }
+
+  if (trimmedEmail.endsWith('.')) {
+    this.emailValidationMessage = 'Email cannot end with a dot.';
+    return false;
+  }
+
+  const invalidCharRegex = /[^a-zA-Z0-9@._%+-]/;
+  if (invalidCharRegex.test(trimmedEmail)) {
+    this.emailValidationMessage =
+      'Email contains invalid characters. Only letters, numbers, and @ . _ % + - are allowed.';
+    return false;
+  }
+
+  const atParts = trimmedEmail.split('@');
+  if (atParts.length !== 2 || !atParts[0] || !atParts[1]) {
+    this.emailValidationMessage = 'Please enter a valid email address.';
+    return false;
+  }
+
+  const domainPart = atParts[1];
+
+  // NEW: catches "bbg@.gmail.com" and similar
+  if (domainPart.startsWith('.') || domainPart.startsWith('-')) {
+    this.emailValidationMessage = 'Email domain cannot start with a dot or hyphen.';
+    return false;
+  }
+
+  if (domainPart.endsWith('.') || domainPart.endsWith('-')) {
+    this.emailValidationMessage = 'Email domain cannot end with a dot or hyphen.';
+    return false;
+  }
+
+  // NEW: each label between dots must be non-empty and valid (no ".." holes, no leading/trailing hyphen per label)
+  const domainLabels = domainPart.split('.');
+  const validLabel = /^[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?$/;
+  if (domainLabels.length < 2 || domainLabels.some(label => !validLabel.test(label))) {
+    this.emailValidationMessage = 'Please enter a valid email domain.';
+    return false;
+  }
+
+  // Tightened: domain segments can no longer start/end with '.' or '-'
+  const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)+$/;
+  if (!emailPattern.test(trimmedEmail)) {
+    this.emailValidationMessage =
+      'Please enter a valid email in the format: example@domain.com';
+    return false;
+  }
+
+  const tld = domainLabels[domainLabels.length - 1].toLowerCase();
+  const allowedTlds = ['com', 'lk'];
+
+  if (!allowedTlds.includes(tld)) {
+    this.emailValidationMessage = 'Only .com and .lk domains are allowed.';
+    return false;
+  }
+
+  return true;
+}
 
   onCancel() {
     Swal.fire({

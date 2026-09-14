@@ -82,4 +82,18 @@ export class OutForDeliveryTodaysDeleveriesComponent implements OnChanges {
       return scheduleTime;
     }
   }
+
+  formatOutTime(time: string): string {
+    if (!time) return '';
+
+    const match = time.match(/^(\d{1,2}):(\d{2})(?::\d{2})?$/);
+    if (!match) return time;
+
+    const hours = Number(match[1]);
+    const minutes = match[2];
+    const period = hours >= 12 ? 'PM' : 'AM';
+    const displayHours = hours % 12 || 12;
+
+    return `${String(displayHours).padStart(2, '0')}.${minutes} ${period}`;
+  }
 }

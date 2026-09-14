@@ -11,6 +11,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { ImageUploadService } from '../../../services/image-upload-service/image-upload.service';
 import { forkJoin, of, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import VehicleTypesData from '../../../data/vehicleTypes.json';
 
 interface Bank {
   ID: number;
@@ -145,11 +146,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
   uploadedImageUrl: string | null = null;
   isImageUploading: boolean = false;
 
-  VehicleTypes = [
-    { name: 'Mahindra Bollero', capacity: 272 },
-    { name: 'Dimo Batta', capacity: 750 },
-    { name: 'Three Wheeler', capacity: 100 },
-  ];
+  VehicleTypes = VehicleTypesData;
 
   jobRoleOptions: any[] = [
     {

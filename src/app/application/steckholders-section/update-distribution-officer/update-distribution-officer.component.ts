@@ -16,6 +16,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { ImageUploadService } from '../../../services/image-upload-service/image-upload.service';
 import { forkJoin, of, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import VehicleTypesData from '../../../data/vehicleTypes.json';
 
 interface Bank {
   ID: number;
@@ -176,11 +177,7 @@ export class UpdateDistributionOfficerComponent {
 
   selectVehicletype: any = { name: '', capacity: '' };
 
-  VehicleTypes = [
-    { name: 'Mahindra Bollero', capacity: 272 },
-    { name: 'Dimo Batta', capacity: 750 },
-    { name: 'Three Wheeler', capacity: 100 },
-  ];
+  VehicleTypes = VehicleTypesData;
 
   districts = [
     { name: 'Ampara', province: 'Eastern' },

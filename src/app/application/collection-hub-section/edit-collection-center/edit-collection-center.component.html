@@ -33,7 +33,7 @@
         <p-multiSelect #companiesMultiSelect [options]="CompanyData" [(ngModel)]="selectedCompaniesIds"
           (onChange)="onCompanyChange($event)" optionLabel="companyNameEnglish" optionValue="id" [filter]="true"
           filterPlaceholder="Search company..." [showClear]="true" placeholder="Select companies"
-          [styleClass]="'w-full mt-1 flex items-center text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800'"
+          [styleClass]="'company-multiselect w-full mt-1 flex items-center text-textLight dark:text-textDark border border-gray-300 dark:border-gray-600 rounded-md'"
           [ngModelOptions]="{standalone: true}">
         </p-multiSelect>
 

@@ -138,8 +138,31 @@
     /* gray-300 */
     border-radius: 0.375rem;
     /* p-2 */
-    color: var(--text-textLight);
+  color: #000;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 400;
     background-color: var(--tile-tileLight);
+}
+
+:host ::ng-deep .p-dropdown .p-dropdown-label,
+:host ::ng-deep .custom-dropdown .p-dropdown-label {
+  color: #000;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+:host ::ng-deep .p-dropdown .p-dropdown-label span,
+:host ::ng-deep .custom-dropdown .p-dropdown-label span {
+  font: inherit;
+  color: inherit;
+}
+
+:host ::ng-deep .p-dropdown-item {
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 400;
 }
 
 :host ::ng-deep .dark .p-dropdown {
@@ -148,6 +171,11 @@
     border-color: #4b5563;
     /* dark border color */
 }
+
+  :host ::ng-deep .dark .p-dropdown .p-dropdown-label,
+  :host ::ng-deep .dark .custom-dropdown .p-dropdown-label {
+    color: var(--text-textDark);
+  }
 
 :host ::ng-deep .p-dropdown.p-invalid {
     border-color: #dc2626;

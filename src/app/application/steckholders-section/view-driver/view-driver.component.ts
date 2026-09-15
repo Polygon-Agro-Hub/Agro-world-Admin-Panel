@@ -12,6 +12,7 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
 import { TokenService } from '../../../services/token/services/token.service';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
 import { CollectionOfficerService } from '../../../services/collection-officer/collection-officer.service';
+import DriverJobRoles from '../../../../assets/json/driverJobRoles.json';
 
 interface CollectionOfficers {
   id: number;
@@ -105,6 +106,9 @@ export class ViewDriverComponent implements OnInit {
 
   centerId: number | null = null;
   Cname: string = '';
+
+  readonly LIGHT_WEIGHT_DRIVER = DriverJobRoles.LIGHT_WEIGHT_DRIVER;
+  readonly HEAVY_WEIGHT_DRIVER = DriverJobRoles.HEAVY_WEIGHT_DRIVER;
 
   constructor(
     private router: Router,
@@ -665,7 +669,7 @@ export class ViewDriverComponent implements OnInit {
       managerControl.control.markAsTouched();
     }
 
-    if (this.selectedOfficer?.jobRole === 'Driver') {
+    if (this.selectedOfficer?.jobRole === this.LIGHT_WEIGHT_DRIVER || this.selectedOfficer?.jobRole === this.HEAVY_WEIGHT_DRIVER) {
       if (!this.selectedCenterId || !this.selectedIrmId) {
         return;
       }

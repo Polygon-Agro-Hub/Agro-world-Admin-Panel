@@ -16,7 +16,8 @@ import { CalendarModule } from 'primeng/calendar';
 import { ImageUploadService } from '../../../services/image-upload-service/image-upload.service';
 import { forkJoin, of, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import VehicleTypesData from '../../../data/vehicleTypes.json';
+import VehicleTypesData from '../../../../assets/json/vehicleTypes.json';
+import DriverJobRoles from '../../../../assets/json/driverJobRoles.json';
 
 interface Bank {
   ID: number;
@@ -179,6 +180,9 @@ export class UpdateDistributionOfficerComponent {
 
   VehicleTypes = VehicleTypesData;
 
+  readonly LIGHT_WEIGHT_DRIVER = DriverJobRoles.LIGHT_WEIGHT_DRIVER;
+  readonly HEAVY_WEIGHT_DRIVER = DriverJobRoles.HEAVY_WEIGHT_DRIVER;
+
   districts = [
     { name: 'Ampara', province: 'Eastern' },
     { name: 'Anuradhapura', province: 'North Central' },
@@ -310,7 +314,8 @@ export class UpdateDistributionOfficerComponent {
         this.personalData.status = officerData.status || '';
 
         if (
-          officerData.jobRole === 'Driver' &&
+          (officerData.jobRole === this.LIGHT_WEIGHT_DRIVER ||
+            officerData.jobRole === this.HEAVY_WEIGHT_DRIVER) &&
           response.driverData &&
           response.driverData.length > 0
         ) {
@@ -1256,14 +1261,14 @@ export class UpdateDistributionOfficerComponent {
 
   checkFormValidity(): boolean {
     const isFirstNameValid =
-      this.personalData.jobRole === 'Driver'
+      (this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER || this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER)
         ? !!this.personalData.firstNameEnglish
         : !!this.personalData.firstNameEnglish &&
         !!this.personalData.firstNameSinhala &&
         !!this.personalData.firstNameTamil;
 
     const isLastNameValid =
-      this.personalData.jobRole === 'Driver'
+      (this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER || this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER)
         ? !!this.personalData.lastNameEnglish
         : !!this.personalData.lastNameEnglish &&
         !!this.personalData.lastNameSinhala &&
@@ -1413,6 +1418,9 @@ export class UpdateDistributionOfficerComponent {
     const rolePrefixes: { [key: string]: string } = {
       'Distribution Centre Manager': 'DCM',
       'Distribution Officer': 'DIO',
+      [this.LIGHT_WEIGHT_DRIVER]: 'DRV',
+      [this.HEAVY_WEIGHT_DRIVER]: 'DRV'
+
     };
 
     rolePrefix = rolePrefixes[this.personalData.jobRole];
@@ -1461,6 +1469,7 @@ export class UpdateDistributionOfficerComponent {
   }
 
   nextFormCreate(page: 'pageOne' | 'pageTwo' | 'pageThree') {
+        console.log('test data', this.personalData)
     if (page === 'pageTwo') {
       const missingFields: string[] = [];
 
@@ -1485,7 +1494,7 @@ export class UpdateDistributionOfficerComponent {
       }
 
       if (
-        this.personalData.jobRole === 'Driver' &&
+        (this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER || this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER) &&
         !this.personalData.driverCatId
       ) {
         missingFields.push('Driver Category is Required');
@@ -1493,7 +1502,7 @@ export class UpdateDistributionOfficerComponent {
 
       if (
         (this.personalData.jobRole === 'Distribution Officer' ||
-          this.personalData.jobRole === 'Driver') &&
+          this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER || this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER) &&
         !this.personalData.irmId
       ) {
         missingFields.push('Manager Name is Required');
@@ -1507,7 +1516,7 @@ export class UpdateDistributionOfficerComponent {
         missingFields.push('Last Name (in English) is Required');
       }
 
-      if (this.personalData.jobRole !== 'Driver') {
+      if (this.personalData.jobRole !== this.LIGHT_WEIGHT_DRIVER && this.personalData.jobRole !== this.HEAVY_WEIGHT_DRIVER) {
         if (!this.personalData.firstNameSinhala) {
           missingFields.push('First Name (in Sinhala) is Required');
         }
@@ -1774,7 +1783,7 @@ export class UpdateDistributionOfficerComponent {
       files.push(this.selectedFile);
     }
 
-    if (this.personalData.jobRole === 'Driver') {
+    if (this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER || this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER) {
       if (this.licenseFrontImageUpdated && this.licenseFrontImageFile) {
         order.push('licFront');
         files.push(this.licenseFrontImageFile);
@@ -1829,7 +1838,8 @@ export class UpdateDistributionOfficerComponent {
   }
 
   onSubmit() {
-    if (this.personalData.jobRole === 'Driver') {
+    console.log('test data', this.personalData)
+    if (this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER || this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER) {
       this.licNoModel.control.markAsTouched();
       this.confirmLicNoModel.control.markAsTouched();
       this.insurenceNoModel.control.markAsTouched();
@@ -1869,7 +1879,7 @@ export class UpdateDistributionOfficerComponent {
     }
 
     if (
-      this.personalData.jobRole === 'Driver' &&
+      (this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER || this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER) &&
       !this.personalData.driverCatId
     ) {
       missingFields.push('Driver Category is Required');
@@ -1890,7 +1900,7 @@ export class UpdateDistributionOfficerComponent {
       missingFields.push('Last Name (in English) is Required');
     }
 
-    if (this.personalData.jobRole !== 'Driver') {
+    if (this.personalData.jobRole !== this.LIGHT_WEIGHT_DRIVER && this.personalData.jobRole !== this.HEAVY_WEIGHT_DRIVER) {
       if (!this.personalData.firstNameSinhala) {
         missingFields.push('First Name (in Sinhala) is Required');
       }
@@ -1989,7 +1999,7 @@ export class UpdateDistributionOfficerComponent {
       missingFields.push('Branch Name is Required');
     }
 
-    if (this.personalData.jobRole === 'Driver') {
+    if (this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER || this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER) {
       if (!this.driverObj.licNo) {
         missingFields.push('Driving License ID number is Required');
       } else if (!/^([A-Z]\d{7}|\d{10,12})$/.test(this.driverObj.licNo)) {
@@ -2090,7 +2100,10 @@ export class UpdateDistributionOfficerComponent {
 
     let successMessage = '';
     switch (this.personalData.jobRole) {
-      case 'Driver':
+      case this.LIGHT_WEIGHT_DRIVER:
+        successMessage = 'Do you want to update the Driver ?';
+        break;
+      case this.HEAVY_WEIGHT_DRIVER:
         successMessage = 'Do you want to update the Driver ?';
         break;
       case 'Distribution Officer':
@@ -2139,7 +2152,7 @@ export class UpdateDistributionOfficerComponent {
             };
 
             let driverDataToSend = null;
-            if (this.personalData.jobRole === 'Driver') {
+            if (this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER || this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER) {
               driverDataToSend = {
                 ...this.driverObj,
                 insExpDate: this.formatDateForDatabase(
@@ -2174,10 +2187,12 @@ export class UpdateDistributionOfficerComponent {
               .subscribe(
                 (res: any) => {
                   this.isLoading = false;
-
                   let successMessage = '';
                   switch (this.personalData.jobRole) {
-                    case 'Driver':
+                    case this.LIGHT_WEIGHT_DRIVER:
+                      successMessage = 'Driver Updated Successfully';
+                      break;
+                    case this.HEAVY_WEIGHT_DRIVER:
                       successMessage = 'Driver Updated Successfully';
                       break;
                     case 'Distribution Officer':
@@ -2587,7 +2602,10 @@ export class UpdateDistributionOfficerComponent {
 
   chooseJobRole() {
     if (this.urlSegment === 'edit-driver') {
-      this.jobRoleOptions = [{ label: 'Driver', value: 'Driver' }];
+      this.jobRoleOptions = [
+        { label: this.LIGHT_WEIGHT_DRIVER, value: this.LIGHT_WEIGHT_DRIVER },
+        { label: this.HEAVY_WEIGHT_DRIVER, value: this.HEAVY_WEIGHT_DRIVER },
+      ];
     } else {
       this.jobRoleOptions = [
         {

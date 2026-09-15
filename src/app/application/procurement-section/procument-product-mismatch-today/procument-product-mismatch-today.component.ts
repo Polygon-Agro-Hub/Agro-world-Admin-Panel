@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 interface MismatchItem {
   id: number;
@@ -30,7 +31,7 @@ interface MismatchHeader {
 @Component({
   selector: 'app-procument-product-mismatch-today',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './procument-product-mismatch-today.component.html',
   styleUrl: './procument-product-mismatch-today.component.css',
 })
@@ -75,6 +76,11 @@ export class ProcumentProductMismatchTodayComponent {
     },
   ];
 
+  // Modal state
+  showApproveModal = false;
+  recommendation = '';
+  isSubmitting = false;
+
   back(): void {
     // navigation logic
   }
@@ -84,6 +90,38 @@ export class ProcumentProductMismatchTodayComponent {
   }
 
   sendToApprove(): void {
-    // approval logic
+    this.showApproveModal = true;
+    this.recommendation = '';
+  }
+
+  closeApproveModal(): void {
+    if (this.isSubmitting) return;
+    this.showApproveModal = false;
+    this.recommendation = '';
+  }
+
+  submitApproval(): void {
+    if (!this.recommendation.trim() || this.isSubmitting) return;
+
+    this.isSubmitting = true;
+
+    // TODO: replace with actual API call
+    // this.mismatchService.sendToApprove(this.mismatch.id, this.recommendation).subscribe({
+    //   next: () => {
+    //     this.isSubmitting = false;
+    //     this.closeApproveModal();
+    //   },
+    //   error: () => {
+    //     this.isSubmitting = false;
+    //   }
+    // });
+
+    console.log('Approval submitted:', {
+      mismatchId: this.mismatch.id,
+      recommendation: this.recommendation,
+    });
+
+    this.isSubmitting = false;
+    this.closeApproveModal();
   }
 }

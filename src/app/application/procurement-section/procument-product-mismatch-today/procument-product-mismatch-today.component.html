@@ -156,4 +156,42 @@
             </table>
         </div>
     </div>
+
+    <!-- Send to Approve Modal -->
+    @if (showApproveModal) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-[2px]"
+        (click)="closeApproveModal()">
+        <div (click)="$event.stopPropagation()"
+            class="w-[90%] max-w-[520px] bg-white dark:bg-tileBlack rounded-3xl shadow-2xl p-10 flex flex-col gap-5">
+
+            <!-- Title -->
+            <h2 class="text-center text-[18px] font-semibold text-[#000000] dark:text-textDark">
+                Send to Approve
+            </h2>
+
+            <!-- Subtitle -->
+            <p class="text-[16px] font-normal text-[#000000] dark:text-textDark">
+                Please mention your recommendation to this situation.
+            </p>
+
+            <!-- Textarea -->
+            <textarea [(ngModel)]="recommendation" rows="6" placeholder="Mention Your Recommendation.."
+                class="w-full resize-none rounded-xl border border-gray-300 dark:border-[#4B555A] px-4 py-3 text-[14px] text-[#000000] dark:text-textDark placeholder-[#8A8A8A] focus:outline-none focus:ring-2 focus:ring-[#3980C0]">
+            </textarea>
+
+            <!-- Actions -->
+            <div class="flex items-center gap-32 mt-2">
+                <button type="button" (click)="closeApproveModal()"
+                    class="flex-1 bg-[#74788D] hover:bg-[#4a5870] text-white text-[16px] font-medium py-3 rounded-xl transition duration-200 ease-in-out">
+                    Cancel
+                </button>
+                <button type="button" (click)="submitApproval()" [disabled]="!recommendation.trim() || isSubmitting"
+                    class="flex-1 text-white text-[16px] font-medium py-3 rounded-xl transition duration-200 ease-in-out"
+                    [ngClass]="(!recommendation.trim() || isSubmitting) ? 'bg-[#C1C1C1] cursor-not-allowed' : 'bg-[#3980C0] hover:bg-blue-600'">
+                    Send
+                </button>
+            </div>
+        </div>
+    </div>
+    }
 </div>

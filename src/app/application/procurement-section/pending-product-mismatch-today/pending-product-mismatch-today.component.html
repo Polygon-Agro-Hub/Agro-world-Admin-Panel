@@ -1,0 +1,124 @@
+<button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+
+<div
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
+>
+  <div
+    class="pt-5 pr-8 pl-8 pb-5 bg-white dark:bg-tileBlack shadow-lg rounded-lg relative"
+  >
+    <h4 class="text-lg font-medium text-[#292929] dark:text-textDark mb-5">
+      Load Mismatching Reports Today ({{
+        totalReports === 0
+          ? "00"
+          : totalReports < 10
+            ? "0" + totalReports
+            : totalReports
+      }})
+    </h4>
+
+    <hr class="border-t border-gray-200 dark:border-gray-700 mb-5" />
+
+    <div class="flex flex-col gap-4" *ngIf="reports.length > 0">
+      <div
+        *ngFor="let report of reports; let i = index"
+        class="flex items-center justify-between min-h-[74px] border border-gray-200 dark:border-gray-700 rounded-lg px-5 py-3"
+      >
+        <div class="flex items-center gap-6 flex-wrap">
+          <span
+            class="flex items-center justify-center w-8 h-8 rounded-full border  bg-[#F6F6F6] dark:bg-[#272F45] text-[#000000] dark:text-textDark font-semibold text-sm"
+          >
+            {{ i + 1 < 10 ? "0" + (i + 1) : i + 1 }}
+          </span>
+
+          <span class="text-[#000000] font-semibold dark:text-textDark whitespace-nowrap">
+            {{ report.driverId }}
+          </span>
+
+          <div
+            class="flex flex-col items-start justify-center bg-[#E1ECFF] dark:bg-[#272F45] text-sm px-3 py-1.5 rounded-md whitespace-nowrap leading-tight"
+          >
+            <span class="text-black text-xs dark:text-blue-300">Loaded</span>
+            <span class="text-black dark:text-blue-300 font-semibold"
+              >{{ report.loaded.toFixed(2) }} kg</span
+            >
+          </div>
+
+          <div
+            class="flex flex-col items-start justify-center bg-[#FEF7EF] dark:bg-[#272F45] text-sm px-3 py-1.5 rounded-md whitespace-nowrap leading-tight"
+          >
+            <span class="text-black text-xs dark:text-orange-300"
+              >Unloaded</span
+            >
+            <span class="text-black dark:text-orange-300 font-semibold"
+              >{{ report.unloaded.toFixed(2) }} kg</span
+            >
+          </div>
+
+          <div
+            class="flex flex-col items-start justify-center bg-[#FFE5E5] dark:bg-[#272F45] text-sm px-3 py-1.5 rounded-md whitespace-nowrap leading-tight"
+          >
+            <span class="text-black text-xs dark:text-red-300">Missing</span>
+            <span class="text-black dark:text-red-300 font-semibold"
+              >{{ report.missing.toFixed(2) }} kg</span
+            >
+          </div>
+
+          <div
+            class="flex flex-col items-start justify-center bg-[#FFE5E5] dark:bg-[#272F45] text-sm px-3 py-1.5 rounded-md whitespace-nowrap leading-tight"
+          >
+            <span class="text-black text-xs dark:text-gray-300">Crates</span>
+            <span class="text-black dark:text-gray-300 font-semibold">{{
+              report.crates
+            }}</span>
+          </div>
+
+          <div class="flex flex-col whitespace-nowrap">
+            <span class="text-xs text-black dark:text-gray-400"
+              >Distribution Centre</span
+            >
+            <span class="text-[#000000] dark:text-textDark font-semibold">{{
+              report.distributionCentre
+            }}</span>
+          </div>
+
+          <div class="flex flex-col whitespace-nowrap">
+            <span class="text-xs text-black dark:text-gray-400"
+              >Reported At</span
+            >
+            <span class="text-[#000000] dark:text-textDark font-semibold">{{
+              report.reportedAt
+            }}</span>
+          </div>
+        </div>
+
+        <button
+          (click)="onView(report)"
+          style="
+            width: 93px;
+            height: 50px;
+            border-radius: 5px;
+            background-color: #3980c0;
+            box-shadow: 1px 1px 4px 0px rgba(0, 0, 0, 0.25);
+          "
+          class="text-white font-medium text-sm hover:opacity-90 flex-shrink-0"
+        >
+          View
+        </button>
+      </div>
+    </div>
+
+    <!-- No Data Message -->
+    <div
+      *ngIf="reports.length === 0"
+      class="flex flex-col items-center w-full px-10 py-7 mt-6"
+    >
+      <p class="text-[#494949] my-6 dark:text-textDark">
+        --No Data Available--
+      </p>
+      <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+    </div>
+  </div>
+</div>

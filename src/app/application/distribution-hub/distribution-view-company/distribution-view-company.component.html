@@ -115,22 +115,18 @@
               {{ item.email }}
             </td>
             <td class="px-4 py-3 text-center">
-  <div>
-    <span
-      [ngClass]="{
+              <div>
+                <span [ngClass]="{
         'bg-[#F8FFA6] text-[#A8A100] dark:text-[#A8A100]': item.status === 'Not Approved',
         'bg-[#BBFFC6] text-[#308233] dark:text-[#308233]': item.status === 'Approved',
         'bg-[#FFB9B7] text-[#D16D6A] dark:text-[#D16D6A]': item.status === 'Rejected'
-      }"
-      class="inline-flex items-center justify-center font-bold rounded-lg px-4 py-1.5 text-xs text-center w-[130px] whitespace-nowrap"
-      [class.cursor-pointer]="canApproveReject"
-      [class.cursor-not-allowed]="!canApproveReject"
-      [class.opacity-50]="!canApproveReject"
-      (click)="canApproveReject ? openPopup(item) : null">
-      {{ item.status }}
-    </span>
-  </div>
-</td>
+      }" class="inline-flex items-center justify-center font-bold rounded-lg px-4 py-1.5 text-xs text-center w-[130px] whitespace-nowrap"
+                  [class.cursor-pointer]="canApproveReject" [class.cursor-not-allowed]="!canApproveReject"
+                  [class.opacity-50]="!canApproveReject" (click)="canApproveReject ? openPopup(item) : null">
+                  {{ item.status }}
+                </span>
+              </div>
+            </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <!-- {{ item.phoneCode01 + "" + item.phoneNumber01 }} -->
               <span *ngIf="item.phoneNumber01 === null">-</span>

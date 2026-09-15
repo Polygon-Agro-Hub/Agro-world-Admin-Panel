@@ -1,15 +1,11 @@
-<button (click)="back()" class="mb-5 text-textLight dark:text-textDark">
-    <i class="fa-solid fa-arrow-left"></i> Back
-</button>
-
 <div class="flex flex-col w-full bg-white dark:bg-tileBlack shadow-lg rounded-lg">
     <!-- Header -->
     <div class="flex items-center justify-between px-12 pt-5 pb-4 border-b border-gray-200 dark:border-[#4B555A]">
-        <h2 class="text-[16px] font-semibold text-[#292929] dark:text-textDark">
+        <span class="text-[16px] font-semibold text-[#000000] dark:text-textDark">
             {{ mismatch.id }}
-        </h2>
+        </span>
         <button type="button" (click)="sendToApprove()"
-            class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition duration-200 ease-in-out">
+            class="bg-[#3980C0] hover:bg-blue-600 text-white text-[16px] font-medium px-6 py-2 rounded-lg transition duration-200 ease-in-out">
             Send to Approve
         </button>
     </div>
@@ -20,8 +16,8 @@
             class="grid grid-cols-5 divide-x divide-gray-200 dark:divide-[#4B555A] border border-gray-200 dark:border-[#4B555A] rounded-xl">
             <!-- Loaded From -->
             <div class="flex flex-col gap-1 px-4 py-3">
-                <span class="flex items-center gap-2 text-[#8A8A8A] dark:text-[#AFAFAF] text-xs">
-                    <i class="fa-solid fa-location-dot"></i> Loaded From
+                <span class="flex items-center gap-2 text-[#8A8A8A] dark:text-[#AFAFAF] text-[12px]">
+                    <i class="fa-solid fa-building"></i> Loaded From
                 </span>
                 <span class="text-[#292929] dark:text-textDark font-semibold text-sm">
                     {{ mismatch.loadedFrom }}
@@ -30,7 +26,7 @@
 
             <!-- Loaded Time -->
             <div class="flex flex-col gap-1 px-4 py-3">
-                <span class="flex items-center gap-2 text-[#8A8A8A] dark:text-[#AFAFAF] text-xs">
+                <span class="flex items-center gap-2 text-[#627189] font-normal dark:text-[#AFAFAF] text-[12px]">
                     <i class="fa-regular fa-clock"></i> Loaded Time
                 </span>
                 <span class="text-[#292929] dark:text-textDark font-semibold text-sm">
@@ -40,7 +36,7 @@
 
             <!-- Driver -->
             <div class="flex flex-col gap-1 px-4 py-3">
-                <span class="flex items-center gap-2 text-[#8A8A8A] dark:text-[#AFAFAF] text-xs">
+                <span class="flex items-center gap-2 text-[#627189] font-normal dark:text-[#AFAFAF] text-[12px]">
                     <i class="fa-solid fa-user"></i> Driver
                 </span>
                 <span class="text-[#292929] dark:text-textDark font-semibold text-sm">
@@ -62,7 +58,7 @@
 
             <!-- Unloaded Time -->
             <div class="flex flex-col gap-1 px-4 py-3">
-                <span class="flex items-center gap-2 text-[#8A8A8A] dark:text-[#AFAFAF] text-xs">
+                <span class="flex items-center gap-2 text-[#627189] font-normal dark:text-[#AFAFAF] text-[12px]">
                     <i class="fa-regular fa-clock"></i> Unloaded Time
                 </span>
                 <span class="text-[#292929] dark:text-textDark font-semibold text-sm">
@@ -72,7 +68,7 @@
 
             <!-- Unloaded Distribution Officer -->
             <div class="flex flex-col gap-1 px-4 py-3">
-                <span class="flex items-center gap-2 text-[#8A8A8A] dark:text-[#AFAFAF] text-xs">
+                <span class="flex items-center gap-2 text-[#627189] font-normal dark:text-[#AFAFAF] text-[12px]">
                     <i class="fa-solid fa-user"></i> Unloaded Distribution Officer
                 </span>
                 <span class="text-[#292929] dark:text-textDark font-semibold text-sm">

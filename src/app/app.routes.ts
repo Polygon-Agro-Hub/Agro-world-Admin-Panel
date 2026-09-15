@@ -318,6 +318,7 @@ import { SalesComponent } from './application/finance/sales/sales/sales.componen
 import { CompletedViewAllOdersComponent } from './application/finance/sales/completed-view-all-oders/completed-view-all-oders.component';
 import { DailyPackingTargetComponent } from './application/procurement-section/daily-packing-target/daily-packing-target.component';
 import { ProcumentProductMismatchTodayComponent } from './application/procurement-section/procument-product-mismatch-today/procument-product-mismatch-today.component';
+import { PendingProductMismatchTodayComponent } from './application/procurement-section/pending-product-mismatch-today/pending-product-mismatch-today.component';
 
 export const routes: Routes = [
   {
@@ -1579,6 +1580,10 @@ export const routes: Routes = [
           {
             path: 'procurement-product-mismatch-today',
             component: ProcumentProductMismatchTodayComponent
+          },
+          {
+            path: 'pending-procurement-product-mismatch-today',
+            component: PendingProductMismatchTodayComponent
           }
 
         ],

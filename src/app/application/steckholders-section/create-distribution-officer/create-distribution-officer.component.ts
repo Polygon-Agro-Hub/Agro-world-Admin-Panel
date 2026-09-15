@@ -11,7 +11,8 @@ import { CalendarModule } from 'primeng/calendar';
 import { ImageUploadService } from '../../../services/image-upload-service/image-upload.service';
 import { forkJoin, of, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import VehicleTypesData from '../../../data/vehicleTypes.json';
+import VehicleTypesData from '../../../../assets/json/vehicleTypes.json';
+import DriverJobRoles from '../../../../assets/json/driverJobRoles.json';
 
 interface Bank {
   ID: number;
@@ -148,6 +149,9 @@ export class CreateDistributionOfficerComponent implements OnInit {
 
   VehicleTypes = VehicleTypesData;
 
+  readonly LIGHT_WEIGHT_DRIVER = DriverJobRoles.LIGHT_WEIGHT_DRIVER;
+  readonly HEAVY_WEIGHT_DRIVER = DriverJobRoles.HEAVY_WEIGHT_DRIVER;
+
   jobRoleOptions: any[] = [
     {
       label: 'Distribution Centre Manager',
@@ -283,8 +287,9 @@ export class CreateDistributionOfficerComponent implements OnInit {
       order.push('profile');
       files.push(this.selectedFile);
     }
+    
 
-    if (this.personalData.jobRole === 'Driver') {
+    if (this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER || this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER) {
       if (this.licenseFrontImageFile) {
         order.push('licFront');
         files.push(this.licenseFrontImageFile);
@@ -342,7 +347,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
     const missingFields: string[] = [];
 
     // Only mark driver fields as touched if they exist (driver role)
-    if (this.personalData.jobRole === 'Driver') {
+    if (this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER || this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER) {
       this.licNoModel?.control.markAsTouched();
       this.confirmLicNoModel?.control.markAsTouched();
       this.insurenceNoModel?.control.markAsTouched();
@@ -373,7 +378,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
     }
 
     if (
-      this.personalData.jobRole === 'Driver' &&
+      (this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER || this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER) &&
       !this.personalData.driverCatId
     ) {
       missingFields.push('Driver Category is Required');
@@ -494,7 +499,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
       missingFields.push('Branch Name is Required');
     }
 
-    if (this.personalData.jobRole === 'Driver') {
+    if (this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER || this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER) {
       if (!this.driverObj.licNo) {
         missingFields.push('Driving License ID number is Required');
       } else if (!/^([A-Z]\d{7}|\d{10,12})$/.test(this.driverObj.licNo)) {
@@ -597,7 +602,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
       this.invalidFields.add('branchName');
 
       // Mark driver-specific fields as touched if driver role
-      if (this.personalData.jobRole === 'Driver') {
+      if (this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER || this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER) {
         this.licNoModel?.control.markAsTouched();
         this.confirmLicNoModel?.control.markAsTouched();
         this.insurenceNoModel?.control.markAsTouched();
@@ -648,7 +653,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
 
         this.uploadAllImages().subscribe({
           next: (urls) => {
-            if (this.personalData.jobRole === 'Driver') {
+            if (this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER || this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER) {
               const formattedDriverObj = {
                 ...this.driverObj,
                 insExpDate: this.formatDateForDatabase(
@@ -728,7 +733,8 @@ export class CreateDistributionOfficerComponent implements OnInit {
 
   private getRoleDisplayName(jobRole: string): string {
     const roleMapping: { [key: string]: string } = {
-      Driver: 'Driver',
+      [this.LIGHT_WEIGHT_DRIVER]: this.LIGHT_WEIGHT_DRIVER,
+      [this.HEAVY_WEIGHT_DRIVER]: this.HEAVY_WEIGHT_DRIVER,
       'Distribution Officer': 'Distribution Officer',
       'Distribution Centre Manager': 'Distribution Centre Manager',
     };
@@ -859,6 +865,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
   }
 
   nextFormCreate(page: 'pageOne' | 'pageTwo' | 'pageThree') {
+    console.log('pedata', this.personalData)
     // this.selectedPage = page;
     // Scroll to top after page change
     setTimeout(() => {
@@ -908,7 +915,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
       }
 
       if (
-        this.personalData.jobRole === 'Driver' &&
+        (this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER || this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER) &&
         !this.personalData.driverCatId
       ) {
         missingFields.push('Driver Category is Required');
@@ -916,7 +923,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
 
       if (
         (this.personalData.jobRole === 'Distribution Officer' ||
-          this.personalData.jobRole === 'Driver') &&
+          this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER || this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER) &&
         !this.personalData.irmId
       ) {
         missingFields.push('Manager Name is Required');
@@ -1089,7 +1096,10 @@ export class CreateDistributionOfficerComponent implements OnInit {
 
     if (currentRoute.includes('drivers/add-driver')) {
       this.isDriverRoute = true;
-      this.jobRoleOptions = [{ label: 'Driver', value: 'Driver' }];
+      this.jobRoleOptions = [
+        { label: this.LIGHT_WEIGHT_DRIVER, value: this.LIGHT_WEIGHT_DRIVER },
+        { label: this.HEAVY_WEIGHT_DRIVER, value: this.HEAVY_WEIGHT_DRIVER },
+      ];
     }
     this.loadBanks();
     this.loadBranches();

@@ -33,9 +33,10 @@
             Centre Name is required
           </div>
         </div>
+        
 
         <!-- Select Manager (conditionally shown) -->
-        <div *ngIf="selectedOfficer?.jobRole === 'Driver'" class="w-full">
+        <div *ngIf="selectedOfficer?.jobRole === LIGHT_WEIGHT_DRIVER || selectedOfficer?.jobRole === HEAVY_WEIGHT_DRIVER" class="w-full">
           <p-dropdown [options]="collectionCenterManagerNames" optionLabel="displayLabel" optionValue="id"
             placeholder="Select Manager" [(ngModel)]="selectedIrmId" #selectedIrmIdInput="ngModel" name="selectedIrmId"
             required panelStyleClass="custom-dropdown-panel" [filter]="true"

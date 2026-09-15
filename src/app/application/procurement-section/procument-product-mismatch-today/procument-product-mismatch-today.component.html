@@ -1,0 +1,161 @@
+<button (click)="back()" class="mb-5 text-textLight dark:text-textDark">
+    <i class="fa-solid fa-arrow-left"></i> Back
+</button>
+
+<div class="flex flex-col w-full bg-white dark:bg-tileBlack shadow-lg rounded-lg">
+    <!-- Header -->
+    <div class="flex items-center justify-between px-12 pt-5 pb-4 border-b border-gray-200 dark:border-[#4B555A]">
+        <h2 class="text-[16px] font-semibold text-[#292929] dark:text-textDark">
+            {{ mismatch.id }}
+        </h2>
+        <button type="button" (click)="sendToApprove()"
+            class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition duration-200 ease-in-out">
+            Send to Approve
+        </button>
+    </div>
+
+    <!-- Info Row -->
+    <div class="px-12 pt-5">
+        <div
+            class="grid grid-cols-5 divide-x divide-gray-200 dark:divide-[#4B555A] border border-gray-200 dark:border-[#4B555A] rounded-lg">
+            <!-- Loaded From -->
+            <div class="flex flex-col gap-1 px-4 py-3">
+                <span class="flex items-center gap-2 text-[#8A8A8A] dark:text-[#AFAFAF] text-xs">
+                    <i class="fa-solid fa-location-dot"></i> Loaded From
+                </span>
+                <span class="text-[#292929] dark:text-textDark font-semibold text-sm">
+                    {{ mismatch.loadedFrom }}
+                </span>
+            </div>
+
+            <!-- Loaded Time -->
+            <div class="flex flex-col gap-1 px-4 py-3">
+                <span class="flex items-center gap-2 text-[#8A8A8A] dark:text-[#AFAFAF] text-xs">
+                    <i class="fa-regular fa-clock"></i> Loaded Time
+                </span>
+                <span class="text-[#292929] dark:text-textDark font-semibold text-sm">
+                    {{ mismatch.loadedTime }}
+                </span>
+            </div>
+
+            <!-- Driver -->
+            <div class="flex flex-col gap-1 px-4 py-3">
+                <span class="flex items-center gap-2 text-[#8A8A8A] dark:text-[#AFAFAF] text-xs">
+                    <i class="fa-solid fa-user"></i> Driver
+                </span>
+                <span class="text-[#292929] dark:text-textDark font-semibold text-sm">
+                    {{ mismatch.driver.id }}
+                </span>
+                <span class="text-[#292929] dark:text-textDark text-sm">
+                    {{ mismatch.driver.name }}
+                </span>
+                <div class="flex items-center gap-2">
+                    <span class="text-[#292929] dark:text-textDark text-sm">{{
+                        mismatch.driver.phone
+                        }}</span>
+                    <button (click)="call(mismatch.driver.phone)"
+                        class="flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white text-xs px-3 py-1 rounded-full">
+                        <i class="fa-solid fa-phone"></i> Call
+                    </button>
+                </div>
+            </div>
+
+            <!-- Unloaded Time -->
+            <div class="flex flex-col gap-1 px-4 py-3">
+                <span class="flex items-center gap-2 text-[#8A8A8A] dark:text-[#AFAFAF] text-xs">
+                    <i class="fa-regular fa-clock"></i> Unloaded Time
+                </span>
+                <span class="text-[#292929] dark:text-textDark font-semibold text-sm">
+                    {{ mismatch.unloadedTime }}
+                </span>
+            </div>
+
+            <!-- Unloaded Distribution Officer -->
+            <div class="flex flex-col gap-1 px-4 py-3">
+                <span class="flex items-center gap-2 text-[#8A8A8A] dark:text-[#AFAFAF] text-xs">
+                    <i class="fa-solid fa-user"></i> Unloaded Distribution Officer
+                </span>
+                <span class="text-[#292929] dark:text-textDark font-semibold text-sm">
+                    {{ mismatch.officer.id }}
+                </span>
+                <span class="text-[#292929] dark:text-textDark text-sm">
+                    {{ mismatch.officer.name }}
+                </span>
+                <div class="flex items-center gap-2">
+                    <span class="text-[#292929] dark:text-textDark text-sm">{{
+                        mismatch.officer.phone
+                        }}</span>
+                    <button (click)="call(mismatch.officer.phone)"
+                        class="flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white text-xs px-3 py-1 rounded-full">
+                        <i class="fa-solid fa-phone"></i> Call
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="px-12 py-5">
+        <table class="w-full border border-gray-200 dark:border-[#4B555A] rounded-lg">
+            <thead>
+                <tr class="border-b border-gray-200 dark:border-[#4B555A]">
+                    <th
+                        class="text-left text-[#292929] dark:text-textDark font-semibold text-sm px-4 py-3 border-r border-gray-200 dark:border-[#4B555A] w-[30%]">
+                        Missing Weight ({{ mismatchItems.length | number: '2.0' }})
+                    </th>
+                    <th
+                        class="text-center text-[#292929] dark:text-textDark font-semibold text-sm px-4 py-3 border-r border-gray-200 dark:border-[#4B555A]">
+                        Total Loaded Crates
+                    </th>
+                    <th
+                        class="text-center text-[#292929] dark:text-textDark font-semibold text-sm px-4 py-3 border-r border-gray-200 dark:border-[#4B555A]">
+                        Total Unloaded Crates
+                    </th>
+                    <th
+                        class="text-center text-[#292929] dark:text-textDark font-semibold text-sm px-4 py-3 border-r border-gray-200 dark:border-[#4B555A]">
+                        Total Loaded Weight
+                    </th>
+                    <th class="text-center text-[#292929] dark:text-textDark font-semibold text-sm px-4 py-3">
+                        Total Unloaded Weight
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (item of mismatchItems; track item.id; let last = $last) {
+                <tr [class.border-b]="!last" class="border-gray-200 dark:border-[#4B555A]">
+                    <td class="px-4 py-3 border-r border-gray-200 dark:border-[#4B555A]">
+                        <div class="flex items-center gap-3">
+                            <img [src]="item.image" [alt]="item.name"
+                                class="w-12 h-12 rounded-md object-cover bg-gray-100" />
+                            <div class="flex flex-col gap-1">
+                                <span class="text-[#292929] dark:text-textDark font-semibold text-sm">
+                                    {{ item.name }}
+                                </span>
+                                <span
+                                    class="inline-block w-fit text-xs font-medium px-2 py-0.5 rounded-full bg-green-100 text-green-700">
+                                    Grade {{ item.grade }}
+                                </span>
+                            </div>
+                        </div>
+                    </td>
+                    <td
+                        class="text-center text-[22px] font-bold text-[#292929] dark:text-textDark px-4 py-3 border-r border-gray-200 dark:border-[#4B555A]">
+                        {{ item.loadedCrates }}
+                    </td>
+                    <td
+                        class="text-center text-[22px] font-bold text-[#292929] dark:text-textDark px-4 py-3 border-r border-gray-200 dark:border-[#4B555A]">
+                        {{ item.unloadedCrates }}
+                    </td>
+                    <td
+                        class="text-center text-[22px] font-bold text-[#292929] dark:text-textDark px-4 py-3 border-r border-gray-200 dark:border-[#4B555A]">
+                        {{ item.loadedWeight | number: '1.2-2' }} kg
+                    </td>
+                    <td class="text-center text-[22px] font-bold text-[#292929] dark:text-textDark px-4 py-3">
+                        {{ item.unloadedWeight | number: '1.2-2' }} kg
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

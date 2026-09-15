@@ -317,6 +317,7 @@ import { ViewCopTransactionsDocumentComponent } from './application/finance/dist
 import { SalesComponent } from './application/finance/sales/sales/sales.component';
 import { CompletedViewAllOdersComponent } from './application/finance/sales/completed-view-all-oders/completed-view-all-oders.component';
 import { DailyPackingTargetComponent } from './application/procurement-section/daily-packing-target/daily-packing-target.component';
+import { ProcumentProductMismatchTodayComponent } from './application/procurement-section/procument-product-mismatch-today/procument-product-mismatch-today.component';
 
 export const routes: Routes = [
   {
@@ -1574,6 +1575,10 @@ export const routes: Routes = [
           {
             path: 'daily-packing-target',
             component: DailyPackingTargetComponent
+          },
+          {
+            path: 'procurement-product-mismatch-today',
+            component: ProcumentProductMismatchTodayComponent
           }
 
         ],

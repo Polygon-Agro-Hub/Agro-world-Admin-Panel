@@ -103,27 +103,27 @@
 </div>
 
 <div
-  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
-  <div class="pt-5 px-12 pb-5 min-w-[1650px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+  class="fixed-width-container w-full max-w-full min-w-0 overflow-x-auto box-border scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+  <div class="pt-5 px-12 pb-5 w-max min-w-[1500px] box-border bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
 
     <div *ngIf="Cname" class="flex items-center my-5">
       <h2 class="text-xl font-normal text-textLight dark:text-textDark">
         Centre: {{Cname}}
       </h2>
     </div>
-    <div class="flex justify-between items-center mb-8">
-      <div *ngIf="!Cname" class="flex items-center">
+    <div class="flex justify-between items-start gap-6 mb-8 min-w-0">
+      <div *ngIf="!Cname" class="flex items-center shrink-0">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
           Drivers ({{ this.totalItems < 10 ? '0' + this.totalItems : this.totalItems }}) </h2>
       </div>
 
-      <div *ngIf="Cname" class="flex items-center">
+      <div *ngIf="Cname" class="flex items-center shrink-0">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
           All ({{ this.totalItems }})
         </h2>
       </div>
 
-      <div class="flex items-center mr-5">
+      <div class="flex flex-nowrap items-center justify-end mr-5">
         <i class="mr-6 w-6 h-6 fill-current text-textLight dark:text-textDark">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
             <path
@@ -132,6 +132,15 @@
 
         </i>
         <p class="text-textLight dark:text-textDark mr-6">Filter By</p>
+
+        <div class="mr-5">
+          <p-dropdown
+            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] custom-top-dropdown"
+            [options]="driverRoleOptions" [checkmark]="false" optionLabel="label" optionValue="value"
+            [showClear]="selectDriverRole != null && selectDriverRole !== ''" placeholder="Driver Role"
+            [(ngModel)]="selectDriverRole" (onChange)="applyStatusFilters()"
+            panelStyleClass="custom-top-dropdown"></p-dropdown>
+        </div>
 
         <div class="mr-5">
           <p-dropdown
@@ -215,6 +224,9 @@
               Last Name
             </th>
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+              Driver Role
+            </th>
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
               Driver Category
             </th>
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
@@ -276,6 +288,9 @@
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.lastNameEnglish }}
+            </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap">
+              {{ item.jobRole || '--' }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.slvCatName || '--' }}

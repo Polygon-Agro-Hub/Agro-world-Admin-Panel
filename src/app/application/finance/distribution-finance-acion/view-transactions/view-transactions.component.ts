@@ -69,7 +69,7 @@ export class ViewTransactionsComponent implements OnInit {
     private financeService: FinanceService,
     public tokenService: TokenService,
     public permissionService: PermissionService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadTransactions();
@@ -129,8 +129,16 @@ export class ViewTransactionsComponent implements OnInit {
   }
 
   searchSubmissions(): void {
+    this.searchItem = this.searchItem.trim();
     this.page = 1;
     this.loadTransactions();
+  }
+
+  onSearchInput(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    const trimmedValue = inputElement.value.trimStart();
+    this.searchItem = trimmedValue;
+    inputElement.value = trimmedValue;
   }
 
   clearSearch(): void {

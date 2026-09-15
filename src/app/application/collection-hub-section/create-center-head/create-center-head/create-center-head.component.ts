@@ -84,6 +84,8 @@ export class CreateCenterHeadComponent implements OnInit {
   emailErrorMessage: string = '';
   isEmailTouched: boolean = false;
   districtOptions: any[] = [];
+  empTypeTouched: boolean = false;
+  languagesTouched: boolean = false;
 
   allowedPrefixes = ['70', '71', '72', '75', '76', '77', '78'];
   isPhoneInvalidMap: { [key: string]: boolean } = {
@@ -112,9 +114,6 @@ export class CreateCenterHeadComponent implements OnInit {
     firstNameTamil: false,
     lastNameTamil: false
   };
-
-
-
 
   districts = [
     { name: 'Ampara', province: 'Eastern' },
@@ -161,14 +160,11 @@ export class CreateCenterHeadComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     this.route.queryParams.subscribe((params) => {
       this.companyId = params['companyId'] ? +params['companyId'] : null;
-
     });
 
     this.personalData.companyId = this.companyId
-    
 
     this.getAllCompanies();
     this.EpmloyeIdCreate();
@@ -192,8 +188,6 @@ export class CreateCenterHeadComponent implements OnInit {
       this.personalData.phoneNumber01 === this.personalData.phoneNumber02
     );
   }
-
-
 
   back(): void {
     Swal.fire({
@@ -544,9 +538,11 @@ export class CreateCenterHeadComponent implements OnInit {
   updateEmployeeType(selectedType: string): void {
     this.empType = selectedType;
     this.personalData.empType = selectedType;
+    this.empTypeTouched = true;
   }
 
   onCheckboxChange1(lang: string, event: any) {
+    this.languagesTouched = true;
     if (event.target.checked) {
       if (this.personalData.languages) {
         if (!this.personalData.languages.includes(lang)) {
@@ -928,11 +924,11 @@ export class CreateCenterHeadComponent implements OnInit {
   }
 
   handleNextClick(): void {
-  this.markAllFieldsTouched();
-  if (this.checkFormValidity()) {
-    this.navigateToPage('pageTwo');
+    this.markAllFieldsTouched();
+    if (this.checkFormValidity()) {
+      this.navigateToPage('pageTwo');
+    }
   }
-}
 
   checkFormValidity(): boolean {
     const missingFields: string[] = [];
@@ -1008,7 +1004,7 @@ export class CreateCenterHeadComponent implements OnInit {
 
   navigateToPage(page: 'pageOne' | 'pageTwo'): void {
     this.selectedPage = page;
-     this.scrollToTop();
+    this.scrollToTop();
   }
 
 
@@ -1070,32 +1066,35 @@ export class CreateCenterHeadComponent implements OnInit {
   }
 
   private markAllFieldsTouched(): void {
-  // Covers every #xInput="ngModel" in the template automatically
-  if (this.personalForm) {
-    this.personalForm.form.markAllAsTouched();
+    // Covers every #xInput="ngModel" in the template automatically
+    if (this.personalForm) {
+      this.personalForm.form.markAllAsTouched();
+    }
+
+    // These use your own touchedFields object, not ngModel.touched,
+    // so they need to be set manually
+    this.touchedFields = {
+      ...this.touchedFields,
+      companyId: true,
+      district: true,
+      houseNumber: true,
+      streetName: true,
+      city: true,
+      accHolderName: true,
+      accNumber: true,
+      confirmAccNumber: true,
+    };
+
+    this.empTypeTouched = true;
+    this.languagesTouched = true;
+
+    this.isEmailTouched = true;
+    this.validateEmail();
   }
 
-  // These use your own touchedFields object, not ngModel.touched,
-  // so they need to be set manually
-  this.touchedFields = {
-    ...this.touchedFields,
-    companyId: true,
-    district: true,
-    houseNumber: true,
-    streetName: true,
-    city: true,
-    accHolderName: true,
-    accNumber: true,
-    confirmAccNumber: true,
-  };
-
-  this.isEmailTouched = true;
-  this.validateEmail();
-}
-
-isLanguageSelected(lang: string): boolean {
-  return !!this.personalData.languages && this.personalData.languages.split(',').includes(lang);
-}
+  isLanguageSelected(lang: string): boolean {
+    return !!this.personalData.languages && this.personalData.languages.split(',').includes(lang);
+  }
 
 }
 

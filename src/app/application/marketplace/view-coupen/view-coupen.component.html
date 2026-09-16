@@ -208,8 +208,7 @@
             {{ item.type }}
           </td>
           <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-            <div *ngIf="item.percentage > 0">{{ item.percentage }}</div>
-            <div *ngIf="!(item.percentage > 0)">Free</div>
+            {{ getDiscountValue(item) }}
           </td>
           <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
             <div

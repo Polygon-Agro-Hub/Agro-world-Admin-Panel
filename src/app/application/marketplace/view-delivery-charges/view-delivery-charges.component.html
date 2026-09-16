@@ -23,7 +23,7 @@
 
 <div
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
-  <div class="pt-8 pr-10 pl-12 pb-5 w-[75%] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+  <div class="pt-8 pr-10 pl-12 pb-5 w-full bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
@@ -66,7 +66,7 @@
     <div *ngIf="errorMessage" class="text-red-500 mb-4">{{ errorMessage }}</div>
 
     <div class="w-full py-4">
-      <table class="min-w-full w-[75%] divide-y divide-gray-200 dark:divide-[#4B555A] table-fixed">
+      <table class="min-w-full w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-fixed">
         <thead *ngIf="deliveryCharges.length > 0 || isLoading">
           <tr>
             <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left w-[8%]">No</th>

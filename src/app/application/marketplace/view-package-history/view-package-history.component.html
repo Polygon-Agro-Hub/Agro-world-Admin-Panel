@@ -6,8 +6,6 @@
 </button>
 <p class="text-xl font-medium mb-4 text-[#292929] dark:text-textDark">History Log</p>
 
-
-
 <div
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
   <div
@@ -19,23 +17,18 @@
       </p>
     </div>
 
-
-
-
-
-
     <!-- To Date Input -->
-    <div class="ml-auto">
+    <div class="ml-auto flex-shrink-0">
       <p-calendar id="toDate" [(ngModel)]="toDate" [maxDate]="maxDate" placeholder="----/--/--" [showIcon]="true"
-        [showClear]="false" [showButtonBar]="true" iconDisplay="input" [style]="{ width: '22rem' }"
-        styleClass="calendar-popup-small" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600
-    [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568]
-    [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
-    [&_.p-datepicker-header]:dark:bg-[#2d354d]
-    [&_.p-datepicker-header]:dark:text-white
-    [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
-    [&_.p-button:hover]:dark:bg-[#6b7280]"
-        inputStyleClass="p-2 border cursor-pointer rounded-md bg-white dark:bg-[#1F2937] text-gray-800 dark:text-white border-gray-300 dark:border-gray-600 w-[350px] h-10 pr-12"
+        [showClear]="false" [showButtonBar]="true" iconDisplay="input" [style]="{ width: '330px' }"
+        styleClass="calendar-compact dark-calendar calendar-popup-small" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600
+        [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568]
+        [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+        [&_.p-datepicker-header]:dark:bg-[#2d354d]
+        [&_.p-datepicker-header]:dark:text-white
+        [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+        [&_.p-button:hover]:dark:bg-[#6b7280]"
+        inputStyleClass="p-2 border cursor-pointer rounded-md bg-white dark:bg-[#1F2937] text-gray-800 dark:text-white border-gray-300 dark:border-gray-600 w-full h-10 pr-12"
         [appendTo]="'body'" ariaLabel="Select date to view package history" />
     </div>
 
@@ -81,7 +74,8 @@
             <tr *ngFor="let item of packageData" class="bg-white dark:bg-gray-800 dark:border-gray-700">
               <td class="px-10 py-4">{{ item.productType }}</td>
               <td class="px-8 py-4">{{ item.product && item.product !== '-' ? item.product : '---' }}</td>
-<td class="px-8 py-4">{{ item.quantity && item.quantity !== '-' ? (item.quantity | number: '1.2-2') : '---' }}</td>
+              <td class="px-8 py-4">{{ item.quantity && item.quantity !== '-' ? (item.quantity | number: '1.2-2') :
+                '---' }}</td>
             </tr>
             <tr *ngIf="!packageData.length" class="bg-white dark:bg-gray-800 dark:border-gray-700">
               <td colspan="3" class="px-6 py-4 text-center dark:text-textDark">No data available for the selected date

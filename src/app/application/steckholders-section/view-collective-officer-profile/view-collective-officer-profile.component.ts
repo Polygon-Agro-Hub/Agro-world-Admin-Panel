@@ -12,6 +12,7 @@ import Swal from 'sweetalert2';
 import { Location } from '@angular/common';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
 import { TokenService } from '../../../services/token/services/token.service';
+import DriverJobRoles from '../../../../assets/json/driverJobRoles.json';
 
 @Component({
   selector: 'app-view-collective-officer-profile',
@@ -34,6 +35,9 @@ export class ViewCollectiveOfficerProfileComponent {
   empHeader: string = '';
   isGeneratingPDF = false;
   urlSegment: string = '';
+
+  readonly LIGHT_WEIGHT_DRIVER = DriverJobRoles.LIGHT_WEIGHT_DRIVER;
+  readonly HEAVY_WEIGHT_DRIVER = DriverJobRoles.HEAVY_WEIGHT_DRIVER;
 
   constructor(
     private route: ActivatedRoute,
@@ -83,7 +87,8 @@ export class ViewCollectiveOfficerProfileComponent {
       case 'Distribution Officer':
         this.empHeader = 'DIO';
         break;
-      case 'Driver':
+      case this.LIGHT_WEIGHT_DRIVER:
+      case this.HEAVY_WEIGHT_DRIVER:
         this.empHeader = 'DVR';
         break;
       default:
@@ -325,8 +330,12 @@ export class ViewCollectiveOfficerProfileComponent {
         empType = 'Collection Officer';
         empCode = 'COO';
         break;
-      case 'Driver':
-        empType = 'Driver';
+      case this.LIGHT_WEIGHT_DRIVER:
+        empType = this.LIGHT_WEIGHT_DRIVER;
+        empCode = 'DVR';
+        break;
+      case this.HEAVY_WEIGHT_DRIVER:
+        empType = this.HEAVY_WEIGHT_DRIVER;
         empCode = 'DVR';
         break;
       case 'Distribution Centre Head':
@@ -373,7 +382,8 @@ export class ViewCollectiveOfficerProfileComponent {
       'Distribution Centre Manager',
       'Distribution Centre Head',
       'Distribution Officer',
-      'Driver'
+      this.LIGHT_WEIGHT_DRIVER,
+      this.HEAVY_WEIGHT_DRIVER,
     ];
 
     if (ccRoles.includes(this.officerObj.jobRole)) {
@@ -550,7 +560,7 @@ export class ViewCollectiveOfficerProfileComponent {
     doc.text(getValueOrNA(this.officerObj.branchName), 100, startY + 152);
 
     // Only include driver-related sections if the job role is "Driver"
-    if (this.officerObj.jobRole === 'Driver') {
+    if (this.officerObj.jobRole === this.LIGHT_WEIGHT_DRIVER || this.officerObj.jobRole === this.HEAVY_WEIGHT_DRIVER) {
 
       // Add new page for Driver Details
       doc.addPage();
@@ -851,7 +861,7 @@ export class ViewCollectiveOfficerProfileComponent {
   }
 
   editOfficer(id: number, jobRole: string) {
-    if (jobRole === 'Driver') {
+    if (jobRole === this.LIGHT_WEIGHT_DRIVER || jobRole === this.HEAVY_WEIGHT_DRIVER) {
       this.router.navigate([`/steckholders/action/drivers/edit-driver/${id}`]);
     }
   }

@@ -9,7 +9,7 @@ export class EmailvalidationsService {
     required: 'Email is required',
     invalidFormat: 'Please enter a valid email in the format: example@domain.com',
     consecutiveDots: 'Email cannot contain consecutive dots',
-    leadingDot: 'Email cannot start with a dot',
+    leadingDot: 'Please enter a valid email address.',
     trailingDot: 'Email cannot end with a dot',
     invalidCharacters: 'Email contains invalid characters. Only letters, numbers, and + . - _ are allowed',
     noAtSymbol: 'Email must contain @ symbol',

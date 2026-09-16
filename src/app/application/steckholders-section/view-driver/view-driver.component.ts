@@ -12,6 +12,7 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
 import { TokenService } from '../../../services/token/services/token.service';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
 import { CollectionOfficerService } from '../../../services/collection-officer/collection-officer.service';
+import DriverJobRoles from '../../../../assets/json/driverJobRoles.json';
 
 interface CollectionOfficers {
   id: number;
@@ -84,6 +85,7 @@ export class ViewDriverComponent implements OnInit {
   selectCenterStatus: string = '';
   selectStatus: string = '';
   selectCategory: string = '';
+  selectDriverRole: string = '';
   isSteckholdersRoute: boolean = false;
 
   hasData: boolean = false;
@@ -100,11 +102,19 @@ export class ViewDriverComponent implements OnInit {
     { label: 'Rejected', value: 'Rejected' },
   ];
 
+  driverRoleOptions = [
+    { label: 'Light Weight Driver', value: 'Light Weight Driver' },
+    { label: 'Heavy Weight Driver', value: 'Heavy Weight Driver' },
+  ];
+
   centerOptions: CenterOptions[] = [];
   categoryOptions: CategoryOptions[] = [];
 
   centerId: number | null = null;
   Cname: string = '';
+
+  readonly LIGHT_WEIGHT_DRIVER = DriverJobRoles.LIGHT_WEIGHT_DRIVER;
+  readonly HEAVY_WEIGHT_DRIVER = DriverJobRoles.HEAVY_WEIGHT_DRIVER;
 
   constructor(
     private router: Router,
@@ -134,7 +144,8 @@ export class ViewDriverComponent implements OnInit {
     status: string = this.selectStatus,
     searchNIC: string = this.searchNIC,
     centerId: number | null = this.cId,
-    driverCatId: string | null = this.selectCategory || null
+    driverCatId: string | null = this.selectCategory || null,
+    driverRole: string = this.selectDriverRole
   ) {
     this.isLoading = true;
     this.collectionService
@@ -145,7 +156,8 @@ export class ViewDriverComponent implements OnInit {
         status,
         searchNIC,
         centerId,
-        driverCatId ? Number(driverCatId) : null
+        driverCatId ? Number(driverCatId) : null,
+        driverRole
       )
       .subscribe(
         (response) => {
@@ -665,7 +677,7 @@ export class ViewDriverComponent implements OnInit {
       managerControl.control.markAsTouched();
     }
 
-    if (this.selectedOfficer?.jobRole === 'Driver') {
+    if (this.selectedOfficer?.jobRole === this.LIGHT_WEIGHT_DRIVER || this.selectedOfficer?.jobRole === this.HEAVY_WEIGHT_DRIVER) {
       if (!this.selectedCenterId || !this.selectedIrmId) {
         return;
       }

@@ -62,24 +62,24 @@
       </div>
 
       <div *ngIf="coupenObj.type === 'Percentage'" class="mb-6">
-        <label class="text-[#534E4E] dark:text-textDark">Discount Percentage *</label>
-        <input type="number" id="percentage" name="percentage" [(ngModel)]="coupenObj.percentage"
-          #percentageInput="ngModel" required min="1" max="99" maxlength="2"
-          (input)="validateDecimalInput($event, 'percentage')" (change)="checkPrecentageValue(coupenObj.percentage)"
-          (keydown)="preventNegative($event)"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-        <div *ngIf="percentageInput.touched && percentageInput.errors?.['required']" class="text-red-500 text-sm mt-1">
-          Discount percentage is required.
-        </div>
-        <div class="text-red-500 text-sm mt-1">{{ checkPrecentageValueMessage }}</div>
-      </div>
+  <label class="text-[#534E4E] dark:text-textDark">Discount Percentage *</label>
+  <input type="number" id="percentage" name="percentage" [(ngModel)]="coupenObj.percentage"
+    #percentageInput="ngModel" required min="1" max="99" maxlength="2"
+    (input)="validateDecimalInput($event, 'percentage')" (change)="checkPrecentageValue(coupenObj.percentage)"
+    (keydown)="preventNegative($event)"
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack no-spinner" />
+  <div *ngIf="percentageInput.touched && percentageInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+    Discount percentage is required.
+  </div>
+  <div class="text-red-500 text-sm mt-1">{{ checkPrecentageValueMessage }}</div>
+</div>
 
       <div *ngIf="coupenObj.type === 'Fixed Amount'" class="mb-6">
   <label class="text-[#534E4E] dark:text-textDark">Discount Amount *</label>
   <input type="number" id="fixDiscount" name="fixDiscount" [(ngModel)]="coupenObj.fixDiscount"
-    (input)="validateDecimalInput($event, 'fixDiscount')" min="0"
-    (change)="checkFixAmountValue(coupenObj.fixDiscount)" (keydown)="blockLeadingZero($event)"
-    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+  (input)="validateDecimalInput($event, 'fixDiscount')" min="0"
+  (change)="checkFixAmountValue(coupenObj.fixDiscount)" (keydown)="blockLeadingZero($event)"
+  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack no-spinner" />
   <div class="text-red-500 text-sm mt-1">
     <div>{{ checkfixAmountValueMessage }}</div>
   </div>

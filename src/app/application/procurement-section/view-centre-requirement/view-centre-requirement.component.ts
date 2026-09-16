@@ -86,7 +86,13 @@ export class ViewCentreRequirementComponent implements OnInit {
     this.procumentsService.getAllCenters().subscribe({
       next: (response) => {
         if (response.success) {
-          this.centers = response.data;
+          this.centers = [...response.data].sort((firstCenter, secondCenter) =>
+            firstCenter.centerName.split(' - ').pop()!.localeCompare(
+              secondCenter.centerName.split(' - ').pop()!,
+              undefined,
+              { sensitivity: 'base' }
+            )
+          );
         }
       },
       error: (error) => {
@@ -184,7 +190,7 @@ downloadTemplate1(): void {
       yPos += 5;
     }
     if (this.selectedCenter) {
-      doc.text(`Center: ${this.selectedCenter.centerName}`, 14, yPos);
+      doc.text(`Centre: ${this.selectedCenter.centerName}`, 14, yPos);
       yPos += 5;
     }
     if (this.search) {

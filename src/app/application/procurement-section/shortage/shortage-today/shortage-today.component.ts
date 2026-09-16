@@ -13,6 +13,7 @@ import { ProcumentsService } from '../../../../services/procuments/procuments.se
 import { LoadingSpinnerComponent } from "../../../../components/loading-spinner/loading-spinner.component"; // adjust path/name as needed
 import { TokenService } from '../../../../services/token/services/token.service';
 import { PermissionService } from '../../../../services/roles-permission/permission.service';
+import blueLoadingAnimation from '../../../../../assets/json/blue_loading.json';
 // adjust path/name as needed
 
 interface AssignmentRecord {
@@ -47,7 +48,7 @@ export class ShortageTodayComponent
   isLoading = false;
 
   loadingOptions: any = {
-    path: '/assets/json/blue_loading.json',
+    animationData: blueLoadingAnimation,
     loop: true,
     autoplay: true,
   };
@@ -118,7 +119,7 @@ export class ShortageTodayComponent
         renderer: 'svg',
         loop: this.loadingOptions.loop,
         autoplay: this.loadingOptions.autoplay,
-        path: this.loadingOptions.path,
+        animationData: this.loadingOptions.animationData,
       });
     }
   }

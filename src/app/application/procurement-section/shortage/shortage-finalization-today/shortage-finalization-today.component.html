@@ -27,7 +27,7 @@
         <!-- No Data -->
         <div *ngIf="shortageItems.length === 0 && !isLoading"
             class="flex flex-col items-center justify-center w-full py-20">
-            <p class="text-[#494949] my-6 dark:text-textDark text-lg">-- No Data Available --</p>
+            <p class="text-[#494949] my-6 dark:text-textDark text-[16px]">-- No Data Available --</p>
             <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 opacity-80" />
         </div>
 
@@ -62,7 +62,8 @@
                     <!-- Distribution Center Dropdown -->
                     <div class="w-52 shrink-0 mr-3">
                         <p-dropdown [options]="item.distributionCenters" [(ngModel)]="item.selectedDC"
-                            optionLabel="label" placeholder="Select Distribution Centre"
+                            optionLabel="label" placeholder="Select Distribution Centre" [filter]="true"
+                            filterBy="label" filterPlaceholder="Search centre..."
                             styleClass="w-full h-10 shortage-centre-dropdown text-sm font-semibold text-textLight dark:text-textDark"
                             [panelStyleClass]="'shortage-centre-panel'">
                         </p-dropdown>

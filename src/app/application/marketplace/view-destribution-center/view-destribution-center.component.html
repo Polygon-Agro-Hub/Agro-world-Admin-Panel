@@ -45,7 +45,7 @@
         </label>
         <div class="flex gap-2">
           <p-dropdown formControlName="phoneCode01" [options]="countries" optionLabel="dialCode" optionValue="dialCode"
-            styleClass="border border-gray-300 rounded-l-md bg-gray-50 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown"
+            styleClass="border border-gray-300 rounded-l-md bg-gray-50 text-black dark:text-textDark dark:bg-tileBlack custom-dropdown"
             [style]="{ width: '120px' }" [disabled]="true">
             <ng-template let-country pTemplate="item">
               <div class="flex items-center gap-2">
@@ -62,7 +62,7 @@
           </p-dropdown>
 
           <input type="tel" formControlName="contact1" placeholder="XXXXXXXXX"
-            class="flex-1 p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            class="flex-1 p-2 border border-gray-300 rounded-r-md text-black dark:text-textDark bg-tileLight dark:bg-tileBlack focus:outline-none focus:ring-2 focus:ring-blue-500" />
         </div>
       </div>
 
@@ -72,7 +72,7 @@
         </label>
         <div class="flex gap-2">
           <p-dropdown formControlName="phoneCode02" [options]="countries" optionLabel="dialCode" optionValue="dialCode"
-            styleClass="border border-gray-300 rounded-l-md bg-gray-50 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown"
+            styleClass="border border-gray-300 rounded-l-md bg-gray-50 text-black dark:text-textDark dark:bg-tileBlack custom-dropdown"
             [style]="{ width: '140px' }" [disabled]="true">
             <ng-template let-country pTemplate="item">
               <div class="flex items-center gap-2">
@@ -89,7 +89,7 @@
           </p-dropdown>
 
           <input type="tel" formControlName="contact2" placeholder="XXXXXXXXX"
-            class="flex-1 p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            class="flex-1 p-2 border border-gray-300 rounded-r-md text-black dark:text-textDark bg-tileLight dark:bg-tileBlack focus:outline-none focus:ring-2 focus:ring-blue-500" />
         </div>
       </div>
     </div>
@@ -127,18 +127,18 @@
       <div class="flex-1">
         <label class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark">Country</label>
         <select formControlName="country"
-          class="dark:text-textDark no-arrow bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+          class="text-black dark:text-textDark no-arrow bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
           <option value="" disabled>Select Country</option>
-          <option value="Sri Lanka">Sri Lanka</option>
+          <option class="text-black dark:text-white" value="Sri Lanka">Sri Lanka</option>
         </select>
       </div>
 
       <div class="flex-1 mb-4 md:mb-0">
         <label class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark">Province</label>
         <select formControlName="province"
-          class="dark:text-textDark no-arrow bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+          class="text-black dark:text-textDark no-arrow bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
           <option value="">Select Province</option>
-          <option *ngFor="let province of provinces" [value]="province">
+          <option class="text-black dark:text-white" *ngFor="let province of provinces" [value]="province">
             {{ province }}
           </option>
         </select>
@@ -149,9 +149,9 @@
       <div class="flex-1">
         <label class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark">District</label>
         <select formControlName="district"
-          class="dark:text-textDark no-arrow bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+          class="text-black dark:text-textDark no-arrow bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
           <option value="" disabled>Select District</option>
-          <option *ngFor="let district of getDistricts()" [value]="district">
+          <option class="text-black dark:text-white" *ngFor="let district of getDistricts()" [value]="district">
             {{ district }}
           </option>
         </select>

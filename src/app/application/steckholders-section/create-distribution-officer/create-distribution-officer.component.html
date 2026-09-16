@@ -131,11 +131,10 @@
             <span *ngIf="isFieldInvalid('jobRole')" class="text-red-600 text-sm">Job Role is a required field</span>
           </div>
 
-          <div *ngIf="personalData.jobRole === 'Driver'">
-
+          <div *ngIf="personalData.jobRole === LIGHT_WEIGHT_DRIVER || personalData.jobRole === HEAVY_WEIGHT_DRIVER">
           </div>
 
-          <div *ngIf="personalData.jobRole === 'Driver'">
+          <div *ngIf="personalData.jobRole === LIGHT_WEIGHT_DRIVER || personalData.jobRole === HEAVY_WEIGHT_DRIVER">
             <label for="driverCatId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
               Driver Category *
             </label>
@@ -148,7 +147,7 @@
               field</span>
           </div>
 
-          <div *ngIf="personalData.jobRole === 'Distribution Officer' || personalData.jobRole === 'Driver'">
+          <div *ngIf="personalData.jobRole === 'Distribution Officer' || personalData.jobRole === LIGHT_WEIGHT_DRIVER || personalData.jobRole === HEAVY_WEIGHT_DRIVER">
             <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
               Manager Name *
             </label>
@@ -531,12 +530,12 @@
         </button>
 
         <!-- Conditional buttons based on job role -->
-        <button *ngIf="personalData.jobRole === 'Driver'" type="button"
+        <button *ngIf="personalData.jobRole === LIGHT_WEIGHT_DRIVER || personalData.jobRole === HEAVY_WEIGHT_DRIVER" type="button"
           class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="nextFormCreate('pageThree')">
           Next
         </button>
 
-        <button *ngIf="personalData.jobRole !== 'Driver'" type="button"
+        <button *ngIf="personalData.jobRole !== LIGHT_WEIGHT_DRIVER && personalData.jobRole !== HEAVY_WEIGHT_DRIVER" type="button"
           class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="onSubmit()">
           Send to Approve
         </button>

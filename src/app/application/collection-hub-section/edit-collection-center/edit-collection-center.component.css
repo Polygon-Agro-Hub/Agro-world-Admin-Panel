@@ -137,6 +137,38 @@
   padding: 0 !important;
 }
 
+:host ::ng-deep .company-multiselect.p-multiselect {
+  background-color: #ffffff !important;
+  color: var(--text-textLight) !important;
+}
+
+:host ::ng-deep .company-multiselect .p-multiselect-label-container,
+:host ::ng-deep .company-multiselect .p-multiselect-label {
+  background-color: transparent !important;
+  color: #534e4e !important;
+}
+
+:host ::ng-deep .company-multiselect .p-multiselect-label * {
+  color: #534e4e !important;
+  font-family: inherit !important;
+  font-size: 1rem !important;
+  font-weight: 400 !important;
+}
+
+:host-context(.dark) ::ng-deep .company-multiselect.p-multiselect {
+  background-color: #061e2c !important;
+  color: #c4c4c4 !important;
+}
+
+:host-context(.dark) ::ng-deep .company-multiselect .p-multiselect-label-container,
+:host-context(.dark) ::ng-deep .company-multiselect .p-multiselect-label {
+  color: #c4c4c4 !important;
+}
+
+:host-context(.dark) ::ng-deep .company-multiselect .p-multiselect-label * {
+  color: #c4c4c4 !important;
+}
+
 ::ng-deep .p-dropdown-custom .p-dropdown {
   width: 100%;
   height: 42px;

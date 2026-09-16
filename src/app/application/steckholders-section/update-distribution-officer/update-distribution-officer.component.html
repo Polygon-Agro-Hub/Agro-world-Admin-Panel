@@ -136,11 +136,11 @@
           </div>
         </div>
 
-        <div *ngIf="personalData.jobRole === 'Driver'">
+        <div *ngIf="personalData.jobRole === LIGHT_WEIGHT_DRIVER || personalData.jobRole === HEAVY_WEIGHT_DRIVER">
 
         </div>
 
-        <div *ngIf="personalData.jobRole === 'Driver'">
+        <div *ngIf="personalData.jobRole === LIGHT_WEIGHT_DRIVER || personalData.jobRole === HEAVY_WEIGHT_DRIVER">
           <label for="driverCatId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Driver Category *
           </label>
@@ -157,7 +157,7 @@
         <div>
           <div *ngIf="
               personalData.jobRole === 'Distribution Officer' ||
-              personalData.jobRole === 'Driver'
+              personalData.jobRole === LIGHT_WEIGHT_DRIVER || personalData.jobRole === HEAVY_WEIGHT_DRIVER
             ">
             <label for="managerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
               Manager Name *
@@ -203,7 +203,7 @@
           </span>
         </div>
 
-        <div *ngIf="personalData.jobRole !== 'Driver'">
+        <div *ngIf="personalData.jobRole !== LIGHT_WEIGHT_DRIVER && personalData.jobRole !== HEAVY_WEIGHT_DRIVER">
           <label for="crop" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name (in Sinhala)
             *</label>
           <input id="firstName" name="firstNameSinhala" [(ngModel)]="personalData.firstNameSinhala"
@@ -217,7 +217,7 @@
           </div>
         </div>
 
-        <div *ngIf="personalData.jobRole !== 'Driver'">
+        <div *ngIf="personalData.jobRole !== LIGHT_WEIGHT_DRIVER && personalData.jobRole !== HEAVY_WEIGHT_DRIVER">
           <label for="variety" class="block text-sm font-medium text-gray-700 dark:text-textDark">Last Name (in Sinhala)
             *</label>
           <input id="lastName" name="lastNameSinhala" [(ngModel)]="personalData.lastNameSinhala"
@@ -231,7 +231,7 @@
           </div>
         </div>
 
-        <div *ngIf="personalData.jobRole !== 'Driver'">
+        <div *ngIf="personalData.jobRole !== LIGHT_WEIGHT_DRIVER && personalData.jobRole !== HEAVY_WEIGHT_DRIVER">
           <label for="crop" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name (in Tamil)
             *</label>
           <input id="firstName" name="firstNameTamil" [(ngModel)]="personalData.firstNameTamil"
@@ -243,7 +243,7 @@
           </div>
         </div>
 
-        <div *ngIf="personalData.jobRole !== 'Driver'">
+        <div *ngIf="personalData.jobRole !== LIGHT_WEIGHT_DRIVER && personalData.jobRole !== HEAVY_WEIGHT_DRIVER">
           <label for="variety" class="block text-sm font-medium text-gray-700 dark:text-textDark">Last Name (in Tamil)
             *</label>
           <input id="lastName" name="lastNameTamil" [(ngModel)]="personalData.lastNameTamil"
@@ -564,12 +564,12 @@
           Back
         </button>
 
-        <button *ngIf="personalData.jobRole === 'Driver'" type="button"
+        <button *ngIf="personalData.jobRole === LIGHT_WEIGHT_DRIVER || personalData.jobRole === HEAVY_WEIGHT_DRIVER" type="button"
           class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="nextFormCreate('pageThree')">
           Next
         </button>
 
-        <button *ngIf="personalData.jobRole !== 'Driver'" type="submit"
+        <button *ngIf="personalData.jobRole !== LIGHT_WEIGHT_DRIVER && personalData.jobRole !== HEAVY_WEIGHT_DRIVER" type="submit"
           class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="onSubmit()">
           Submit
         </button>

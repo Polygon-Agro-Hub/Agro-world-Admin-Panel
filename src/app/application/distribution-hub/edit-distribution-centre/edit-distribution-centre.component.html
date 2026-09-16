@@ -72,9 +72,9 @@
 
           <input type="tel" formControlName="contact1" placeholder="7XXXXXXXX" maxlength="9"
             (input)="onPhoneInputChange($event, 'contact1')" [class]="
-        'dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
-        (isFieldInvalid('contact1') ? 'border-red-500' : 'border-gray-300')
-      " />
+              'dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
+              (isFieldInvalid('contact1') ? 'border-red-500' : 'border-gray-300')
+            " />
         </div>
         <div *ngIf="isFieldInvalid('contact1')" class="text-red-500 text-sm mt-1">
           <!-- Show only one error at a time with priority -->
@@ -118,9 +118,9 @@
 
           <input type="tel" formControlName="contact2" placeholder="7XXXXXXXX" maxlength="9"
             (input)="onPhoneInputChange($event, 'contact2')" [class]="
-        'dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
-        (isFieldInvalid('contact2') ? 'border-red-500' : 'border-gray-300')
-      " />
+              'dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
+              (isFieldInvalid('contact2') ? 'border-red-500' : 'border-gray-300')
+            " />
         </div>
         <div *ngIf="isFieldInvalid('contact2')" class="text-red-500 text-sm mt-1">
           <!-- Show only one error at a time with priority -->
@@ -147,9 +147,9 @@
         </label>
         <input type="text" formControlName="latitude" placeholder="e.g., 6.9271"
           (input)="onInputChangeCor($event, 'coordinates')" (blur)="onInputBlurCor($event, 'coordinates')" [class]="
-  'dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
-  (isFieldInvalid('latitude') ? 'border-red-500' : 'border-gray-300')
-" />
+            'dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
+            (isFieldInvalid('latitude') ? 'border-red-500' : 'border-gray-300')
+          " />
         <div *ngIf="isFieldInvalid('latitude')" class="text-red-500 text-sm mt-1">
           {{ getFieldError("latitude") }}
         </div>
@@ -161,9 +161,9 @@
         </label>
         <input type="text" formControlName="longitude" placeholder="e.g., 79.8612"
           (input)="onInputChangeCor($event, 'coordinates')" (blur)="onInputBlurCor($event, 'coordinates')" [class]="
-  'dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
-  (isFieldInvalid('longitude') ? 'border-red-500' : 'border-gray-300')
-" />
+            'dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
+            (isFieldInvalid('longitude') ? 'border-red-500' : 'border-gray-300')
+          " />
         <div *ngIf="isFieldInvalid('longitude')" class="text-red-500 text-sm mt-1">
           {{ getFieldError("longitude") }}
         </div>
@@ -197,7 +197,7 @@
           Country *
         </label>
         <input type="text" formControlName="country" readonly
-          class="dark:text-textDark bg-gray-100 dark:bg-gray-700 w-full px-3 py-2 border border-gray-300 rounded-md cursor-not-allowed opacity-75" />
+          class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-not-allowed" />
         <div *ngIf="isFieldInvalid('country')" class="text-red-500 text-sm mt-1">
           {{ getFieldError("country") }}
         </div>
@@ -245,9 +245,9 @@
           City *
         </label>
         <input type="text" formControlName="city" (input)="onInputChange($event, 'text'); onCityChange()" [class]="
-  'dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
-  (isFieldInvalid('city') ? 'border-red-500' : 'border-gray-300')
-" />
+          'dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
+          (isFieldInvalid('city') ? 'border-red-500' : 'border-gray-300')
+        " />
         <div *ngIf="isFieldInvalid('city')" class="text-red-500 text-sm mt-1">
           {{ getFieldError("city") }}
         </div>
@@ -256,7 +256,7 @@
         <label class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark">Distribution Centre Registration
           Code</label>
         <input type="text" formControlName="regCode"
-          class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-not-allowed"
           [ngClass]="{'border-red-500': isFieldInvalid('regCode')}" readonly />
         <div *ngIf="isFieldInvalid('regCode')" class="text-red-500 text-sm mt-1">
           <span *ngIf="distributionForm.get('regCode')?.errors?.['required']">
@@ -268,9 +268,6 @@
         </div>
       </div>
     </div>
-
-
-
 
     <!-- Buttons -->
     <div class="flex justify-end space-x-4 pt-6">

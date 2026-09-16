@@ -308,6 +308,7 @@ export class CollectionService {
     searchNIC: string = '',
     centerId: number | null = null,
     driverCatId: number | null = null,
+    driverRole: string = '',
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -321,6 +322,10 @@ export class CollectionService {
 
     if (driverCatId) {
       url += `&driverCatId=${driverCatId}`;
+    }
+
+    if (driverRole) {
+      url += `&driverRole=${encodeURIComponent(driverRole)}`;
     }
 
     if (centerStatus) {

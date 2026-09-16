@@ -1578,7 +1578,7 @@ export const routes: Routes = [
             component: DailyPackingTargetComponent
           },
           {
-            path: 'procurement-product-mismatch-today',
+            path: 'procurement-product-mismatch-today/:loadedItemId',
             component: ProcumentProductMismatchTodayComponent
           },
           {

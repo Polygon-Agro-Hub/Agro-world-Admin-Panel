@@ -672,6 +672,47 @@ createPackingTargetLimit(tarValue: number): Observable<any> {
         })
       );
   }
+
+  getTransportLoadFullDetails(loadedItemId: number | string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http
+      .get(`${this.apiUrl}procument/get-transport-load-full-details/${loadedItemId}`, {
+        headers,
+      })
+      .pipe(
+        catchError((error) => {
+          console.error('Error in getTransportLoadFullDetails:', error);
+          return throwError(() => new Error(error));
+        })
+      );
+  }
+
+  updateTransportLoadRecommendation(transportId: number | string, recomandation: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const body = {
+      transportId,
+      recomandation,
+    };
+
+    return this.http
+      .put(`${this.apiUrl}procument/transport-load/update-recommendation`, body, {
+        headers,
+      })
+      .pipe(
+        catchError((error) => {
+          console.error('Error in updateTransportLoadRecommendation:', error);
+          return throwError(() => new Error(error));
+        })
+      );
+  }
   
 }
 

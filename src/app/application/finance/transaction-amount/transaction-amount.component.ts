@@ -48,7 +48,7 @@ export class TransactionAmountComponent implements OnInit {
       .subscribe(
         (response) => {
           this.isLoading = false;
-          this.total = response.total
+          this.total = response.total;
           this.orders = response.orders;
           this.hasData = this.orders.length > 0;
           this.totalItems = this.orders.length;

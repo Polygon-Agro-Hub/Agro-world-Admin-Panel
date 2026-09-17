@@ -181,7 +181,12 @@ export class WholesaleComplaintsComponent implements OnInit {
     return status;
   }
 
-  applyFilters(): void {
+  private readonly FILTER_LOADING_DELAY = 300;
+
+applyFilters(): void {
+  this.isLoading = true;
+
+  setTimeout(() => {
     const txt = this.searchText.trim().toLowerCase();
 
     this.filteredComplaints = this.complaints
@@ -212,23 +217,25 @@ export class WholesaleComplaintsComponent implements OnInit {
     this.totalItems = this.filteredComplaints.length;
     this.page = 1;
     this.hasData = this.filteredComplaints.length > 0;
-  }
+    this.isLoading = false;
+  }, this.FILTER_LOADING_DELAY);
+}
 
   searchComplain(): void {
-    this.applyFilters();
-  }
+  this.applyFilters();
+}
 
   clearSearch(): void {
-    this.searchText = '';
-    this.rpst = null;
-    this.filterComCategory = null;
-    this.filterStatus = null;
-    this.applyFilters();
-  }
+  this.searchText = '';
+  this.rpst = null;
+  this.filterComCategory = null;
+  this.filterStatus = null;
+  this.applyFilters();
+}
 
   regStatusFil(): void {
-    this.applyFilters();
-  }
+  this.applyFilters();
+}
 
   onPageChange(p: number): void {
     this.page = p;

@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ProcumentsService, MismatchReport } from '../../../services/procuments/procuments.service'; 
@@ -17,6 +17,7 @@ export class PendingProductMismatchTodayComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private location: Location,
     private procumentsService: ProcumentsService
   ) {}
 
@@ -49,7 +50,11 @@ export class PendingProductMismatchTodayComponent implements OnInit {
   }
 
   onView(report: MismatchReport): void {
-    this.router.navigate(['/procurement/load-mismatch-details', report.id]);
+    const url = this.router.serializeUrl(
+      this.router.createUrlTree(['/procurement/procurement-product-mismatch-today', report.id])
+    );
+    const externalUrl = this.location.prepareExternalUrl(url);
+    window.open(externalUrl, '_blank', 'noopener');
   }
 
   isAllFound(crates: string): boolean {

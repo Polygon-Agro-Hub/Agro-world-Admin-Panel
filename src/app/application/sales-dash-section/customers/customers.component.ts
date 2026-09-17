@@ -93,7 +93,6 @@ export class CustomersComponent implements OnInit {
   selectedCustomerForRating: Customers | null = null;
   selectedNewRating            = '';
   isUpdatingRating             = false;
-  showRatingToast              = false;
 
     /** Options shown in the filter dropdown (header bar) */
   ratingFilterOptions = [
@@ -254,35 +253,51 @@ export class CustomersComponent implements OnInit {
   }
 
   submitUpdateRating() {
-    if (!this.selectedCustomerForRating || !this.selectedNewRating) return;
+  if (!this.selectedCustomerForRating || !this.selectedNewRating) return;
 
-    this.isUpdatingRating = true;
+  this.isUpdatingRating = true;
 
-    this.customerService
-      .updateDashCustomerRating(
-        this.selectedCustomerForRating.id,
-        this.selectedNewRating,
-      )
-      .subscribe(
-        () => {
-          // Update the row in-place so the table refreshes instantly
-          const target = this.filteredCustomers.find(
-            (c) => c.id === this.selectedCustomerForRating!.id,
-          );
-          if (target) target.rateofCus = this.selectedNewRating;
+  this.customerService
+    .updateDashCustomerRating(
+      this.selectedCustomerForRating.id,
+      this.selectedNewRating,
+    )
+    .subscribe(
+      () => {
+        // Update the row in-place so the table refreshes instantly
+        const target = this.filteredCustomers.find(
+          (c) => c.id === this.selectedCustomerForRating!.id,
+        );
+        if (target) target.rateofCus = this.selectedNewRating;
 
-          this.isUpdatingRating = false;
-          this.closeUpdateRatingPopup();
+        this.isUpdatingRating = false;
+        this.closeUpdateRatingPopup();
 
-          this.showRatingToast = true;
-          setTimeout(() => (this.showRatingToast = false), 3000);
-        },
-        (err) => {
-          console.error('Error updating rating', err);
-          this.isUpdatingRating = false;
-        },
-      );
-  }
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Rating updated successfully!',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+          },
+        });
+      },
+      (err) => {
+        console.error('Error updating rating', err);
+        this.isUpdatingRating = false;
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to update rating. Please try again.',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+          },
+        });
+      },
+    );
+}
 
   // ─────────────────────────────────────────────────────────────────────────
   //  Helpers

@@ -1,63 +1,47 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-
-interface MismatchReport {
-  id: number;
-  driverId: string;
-  loaded: number;
-  unloaded: number;
-  missing: number;
-  crates: string; // e.g. "1 Missing", "All Found", "2 Missing"
-  distributionCentre: string;
-  reportedAt: string;
-}
+import { ProcumentsService, MismatchReport } from '../../../services/procuments/procuments.service'; 
 
 @Component({
   selector: 'app-pending-product-mismatch-today',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './pending-product-mismatch-today.component.html',
-  styleUrl: './pending-product-mismatch-today.component.css'
+  styleUrl: './pending-product-mismatch-today.component.css',
 })
-export class PendingProductMismatchTodayComponent {
-  reports: MismatchReport[] = [
-    {
-      id: 1,
-      driverId: 'L-DRV0001260913001',
-      loaded: 20.0,
-      unloaded: 10.0,
-      missing: 10.0,
-      crates: '1 Missing',
-      distributionCentre: 'D-WPCK-01',
-      reportedAt: '06:00 AM'
-    },
-    {
-      id: 2,
-      driverId: 'L-DRV0001260913001',
-      loaded: 50.0,
-      unloaded: 45.0,
-      missing: 5.0,
-      crates: 'All Found',
-      distributionCentre: 'D-WPCK-01',
-      reportedAt: '06:01 AM'
-    },
-    {
-      id: 3,
-      driverId: 'L-DRV0001260913001',
-      loaded: 100.0,
-      unloaded: 10.0,
-      missing: 90.0,
-      crates: '2 Missing',
-      distributionCentre: 'D-WPCK-01',
-      reportedAt: '06:02 AM'
-    }
-  ];
+export class PendingProductMismatchTodayComponent implements OnInit {
+  reports: MismatchReport[] = [];
+  isLoading = false;
+  errorMessage = '';
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private procumentsService: ProcumentsService
+  ) {}
+
+  ngOnInit(): void {
+    this.loadReports();
+  }
 
   get totalReports(): number {
     return this.reports.length;
+  }
+
+  loadReports(): void {
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    this.procumentsService.getLoadMismatchReportsToday().subscribe({
+      next: (data) => {
+        this.reports = data;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        this.errorMessage = err.message || 'Failed to load reports';
+        this.isLoading = false;
+      },
+    });
   }
 
   back(): void {
@@ -65,8 +49,7 @@ export class PendingProductMismatchTodayComponent {
   }
 
   onView(report: MismatchReport): void {
-    // Placeholder - hook up navigation/modal later
-    console.log('View report:', report);
+    this.router.navigate(['/procurement/load-mismatch-details', report.id]);
   }
 
   isAllFound(crates: string): boolean {

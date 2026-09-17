@@ -49,7 +49,7 @@ export class PendingProductMismatchTodayComponent implements OnInit {
   }
 
   onView(report: MismatchReport): void {
-    this.router.navigate(['/procurement/load-mismatch-details', report.id]);
+    this.router.navigate(['/procurement/procurement-product-mismatch-today', report.id]);
   }
 
   isAllFound(crates: string): boolean {

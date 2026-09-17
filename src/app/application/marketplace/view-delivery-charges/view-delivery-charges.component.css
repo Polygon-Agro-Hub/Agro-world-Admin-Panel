@@ -1,0 +1,71 @@
+/* Dropdown — matched to match the plain inputs exactly */
+::ng-deep .p-dropdown-custom {
+  width: 100%;
+}
+
+::ng-deep .p-dropdown-custom .p-dropdown {
+  width: 100%;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  padding: 0 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem; /* rounded-lg, matches the image */
+  background-color: #ffffff;
+  box-sizing: border-box;
+}
+
+::ng-deep .dark .p-dropdown-custom .p-dropdown {
+  background-color: #061e2c;
+  border-color: #4b5563;
+}
+
+::ng-deep .p-dropdown-custom .p-dropdown-label {
+  padding: 0 !important;
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  color: #374151;
+}
+
+::ng-deep .dark .p-dropdown-custom .p-dropdown-label {
+  color: #f9fafb;
+}
+
+::ng-deep .p-dropdown-custom .p-dropdown-label.p-placeholder {
+  color: #9ca3af; /* gray-400, matches unfilled state look */
+}
+
+::ng-deep .p-dropdown-custom .p-dropdown-trigger {
+  width: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+}
+
+::ng-deep .p-dropdown-custom.p-disabled {
+  opacity: 0.6;
+  background-color: #f3f4f6;
+}
+
+::ng-deep .custom-dropdown-panel {
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+::ng-deep .dark .custom-dropdown-panel {
+  background-color: #374151;
+  border-color: #6b7280;
+}
+
+::ng-deep .custom-dropdown-panel .p-dropdown-filter-container {
+  padding: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+::ng-deep .dark .custom-dropdown-panel .p-dropdown-filter-container {
+  border-bottom-color: #6b7280;
+}

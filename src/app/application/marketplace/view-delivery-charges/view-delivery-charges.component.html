@@ -138,6 +138,29 @@
         </h3>
 
         <form #editForm="ngForm" (ngSubmit)="updateDeliveryCharge()">
+
+          <div class="mb-4 flex items-center">
+            <label class="flex-shrink-0 text-sm font-medium text-gray-700 dark:text-gray-300 w-48">
+              Province
+            </label>
+            <p-dropdown [(ngModel)]="editData.province" [options]="provinceOptions" optionLabel="label"
+              optionValue="value" [filter]="true" filterBy="label" [showClear]="false" (onChange)="onProvinceChange()"
+              name="province" placeholder="Select Province" styleClass="w-full mt-1"
+              panelStyleClass="custom-dropdown-panel" class="mt-1 block w-full p-dropdown-custom" required>
+            </p-dropdown>
+          </div>
+
+          <div class="mb-4 flex items-center">
+            <label class="flex-shrink-0 text-sm font-medium text-gray-700 dark:text-gray-300 w-48">
+              District
+            </label>
+            <p-dropdown [(ngModel)]="editData.district" [options]="availableDistrictOptions" optionLabel="label"
+              optionValue="value" [filter]="true" filterBy="label" [showClear]="false" name="district"
+              placeholder="Select District" styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
+              class="mt-1 block w-full p-dropdown-custom" [disabled]="!editData.province" required>
+            </p-dropdown>
+          </div>
+
           <div class="mb-4 flex items-center">
             <label class="flex-shrink-0 text-sm font-medium text-gray-700 dark:text-gray-300 w-48">
               City Name

@@ -16,9 +16,12 @@ interface Order {
   invNo: string;
   sheduleType: string;
   sheduleDate: string;
+  deliveryMethod: string;
   paymentMethod: string;
   isPaid: number;
-  fullTotal: number;
+  creditPaid: number | string;
+  moneyPaid: number | string;
+  fullTotal: number | string;
   status: string;
   createdAt: string;
 }
@@ -129,26 +132,45 @@ export class ViewCustomerOrdersComponent implements OnInit {
       });
   }
 
-  getPaymentStatusClass(paymentMethod: string, isPaid: number): string {
-    if (isPaid === 1) {
-      if (paymentMethod?.toLowerCase() === 'card' || paymentMethod?.toLowerCase() === 'debit/credit') {
-        return 'bg-[#BBFFC6] text-[#308233] rounded-xl px-7 py-2';
-      } else if (paymentMethod?.toLowerCase() === 'cash' || paymentMethod?.toLowerCase() === 'cash on delivery') {
-        return 'bg-[#F5FF85] text-[#878216] rounded-xl px-5 py-2';
-      }
+  getPaymentLabel(order: Order): string {
+    if (this.isFullCreditPayment(order)) {
+      return 'Only Credit Paid';
+    }
+
+    if (order.paymentMethod?.toLowerCase() === 'card' || order.paymentMethod?.toLowerCase() === 'debit/credit') {
+      return 'Debit/Credit';
+    }
+
+    return order.deliveryMethod?.toLowerCase() === 'pickup'
+      ? 'Cash on Pickup'
+      : 'Cash on Delivery';
+  }
+
+  getPaymentStatusClass(order: Order): string {
+    if (this.getPaymentStatusText(order) === 'Paid') {
+      return 'bg-[#BBFFC6] text-[#308233] rounded-xl px-7 py-2';
+    }
+    if (this.getPaymentStatusText(order) === 'Received') {
+      return 'bg-[#F5FF85] text-[#878216] rounded-xl px-5 py-2';
     }
     return 'bg-[#DFDFDF] text-[#5C5C5C] rounded-xl px-4 py-2';
   }
 
-  getPaymentStatusText(paymentMethod: string, isPaid: number): string {
-    if (isPaid === 1) {
-      if (paymentMethod?.toLowerCase() === 'card' || paymentMethod?.toLowerCase() === 'debit/credit') {
-        return 'Paid';
-      } else if (paymentMethod?.toLowerCase() === 'cash' || paymentMethod?.toLowerCase() === 'cash on delivery') {
-        return 'Received';
-      }
+  getPaymentStatusText(order: Order): string {
+    if (this.isFullCreditPayment(order)) {
+      return 'Paid';
+    }
+    if (this.getPaymentLabel(order) === 'Cash on Pickup') {
+      return 'Received';
+    }
+    if (order.isPaid === 1) {
+      return this.getPaymentLabel(order) === 'Debit/Credit' ? 'Paid' : 'Received';
     }
     return 'Pending';
+  }
+
+  private isFullCreditPayment(order: Order): boolean {
+    return Number(order.creditPaid) > 0 && Number(order.creditPaid) === Number(order.fullTotal);
   }
 
   downloadInvoice(id: number, tableInvoiceNo: string): void {

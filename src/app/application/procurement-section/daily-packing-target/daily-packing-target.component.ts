@@ -53,7 +53,7 @@ export class DailyPackingTargetComponent implements OnInit {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        this.router.navigate(['/sales-dash']);
+        this.router.navigate(['/procurement']);
       }
     });
   }

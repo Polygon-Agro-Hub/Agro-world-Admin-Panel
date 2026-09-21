@@ -1,0 +1,8 @@
+[
+  { "name": "Three Wheeler", "capacity": 100, "category": "Light Weight Driver" },
+  { "name": "Mahindra Bollero", "capacity": 272, "category": "Light Weight Driver" },
+  { "name": "Dimo Batta", "capacity": 750, "category": "Light Weight Driver" },
+  { "name": "Double Cab Pickup (4x4)", "capacity": 900, "category": "Heavy Weight Driver" },
+  { "name": "Isuzu Elf / Canter Lorry", "capacity": 3000, "category": "Heavy Weight Driver" },
+  { "name": "Lorry (6-8 Ton)", "capacity": 7500, "category": "Heavy Weight Driver" }
+]

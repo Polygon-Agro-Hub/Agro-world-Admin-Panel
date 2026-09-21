@@ -47,7 +47,7 @@
         <div class="flex">
           <p-dropdown formControlName="contact1Code" [options]="countries" optionLabel="dialCode" optionValue="dialCode"
             styleClass="border border-gray-300 mr-2 rounded-l-md bg-white dark:bg-tileBlack text-gray-800 dark:text-textDark custom-dropdown"
-            [style]="{ width: '120px' }" [ngClass]="{ 'border-red-500': isFieldInvalid('contact1Code') }">
+            [style]="{ width: '130px' }" [ngClass]="{ 'border-red-500': isFieldInvalid('contact1Code') }">
             <!-- Dropdown items -->
             <ng-template let-country pTemplate="item">
               <div class="flex items-center gap-2">
@@ -83,7 +83,7 @@
         <div class="flex">
           <p-dropdown formControlName="contact2Code" [options]="countries" optionLabel="dialCode" optionValue="dialCode"
             styleClass="border border-gray-300 mr-2 rounded-l-md bg-white dark:bg-tileBlack text-gray-800 dark:text-textDark custom-dropdown"
-            [style]="{ width: '120px' }" [ngClass]="{ 'border-red-500': isFieldInvalid('contact2Code') }">
+            [style]="{ width: '130px' }" [ngClass]="{ 'border-red-500': isFieldInvalid('contact2Code') }">
             <!-- Dropdown items -->
             <ng-template let-country pTemplate="item">
               <div class="flex items-center gap-2">
@@ -174,7 +174,7 @@
       <div class="flex-1">
         <label class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark">Country *</label>
         <input type="text" formControlName="country" readonly
-          class="dark:text-textDark bg-gray-100 dark:bg-gray-700 w-full px-3 py-2 border border-gray-300 rounded-md cursor-not-allowed opacity-75" />
+  class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border border-gray-300 rounded-md" />
         <div *ngIf="isFieldInvalid('country')" class="text-red-500 text-sm mt-1">
           {{ getFieldError("country") }}
         </div>
@@ -227,7 +227,7 @@
           *</label>
         <div class="relative">
           <input type="text" formControlName="regCode" readonly
-            class="dark:text-textDark bg-gray-100 dark:bg-gray-700 w-full px-3 py-2 border border-gray-300 rounded-md cursor-not-allowed opacity-75" />
+  class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border border-gray-300 rounded-md" />
           <div *ngIf="isLoadingregcode" class="absolute inset-y-0 right-0 flex items-center pr-3">
             <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
           </div>

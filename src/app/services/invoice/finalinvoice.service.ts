@@ -957,6 +957,7 @@ export class FinalinvoiceService {
 
     const isPaid = Number(invoice.isPaid) === 1;
     const isCardPayment = invoice.paymentMethod === 'Card';
+    const isOnlineTransfer = invoice.paymentMethod === 'Online Transfer'; // ✅ ADDED — confirm this string matches your actual paymentMethod value
     const creditPaidNum = parseNum(invoice.creditPaid as any);
     const hasCreditPaid =
       invoice.creditPaid !== null &&
@@ -1003,6 +1004,13 @@ export class FinalinvoiceService {
             remainingAfterCredit,
             ORANGE_COLOR,
           );
+        } else if (isOnlineTransfer) {
+          // ✅ ADDED BRANCH
+          pushPaymentRow(
+            'Online Transferred Amount (Pending)',
+            remainingAfterCredit,
+            ORANGE_COLOR,
+          );
         } else {
           pushPaymentRow(
             'Cash On Delivery (Pending)',
@@ -1028,6 +1036,13 @@ export class FinalinvoiceService {
       } else if (isPickup) {
         pushPaymentRow(
           'Cash On Pickup (Pending)',
+          finalGrandTotal,
+          ORANGE_COLOR,
+        );
+      } else if (isOnlineTransfer) {
+        // ✅ ADDED BRANCH
+        pushPaymentRow(
+          'Online Transferred Amount (Pending)',
           finalGrandTotal,
           ORANGE_COLOR,
         );

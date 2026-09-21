@@ -16,6 +16,8 @@ import { CalendarModule } from 'primeng/calendar';
 import { ImageUploadService } from '../../../services/image-upload-service/image-upload.service';
 import { forkJoin, of, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import VehicleTypesData from '../../../../assets/json/vehicleTypes.json';
+import DriverJobRoles from '../../../../assets/json/driverJobRoles.json';
 
 interface Bank {
   ID: number;
@@ -176,11 +178,10 @@ export class UpdateDistributionOfficerComponent {
 
   selectVehicletype: any = { name: '', capacity: '' };
 
-  VehicleTypes = [
-    { name: 'Mahindra Bollero', capacity: 272 },
-    { name: 'Dimo Batta', capacity: 750 },
-    { name: 'Three Wheeler', capacity: 100 },
-  ];
+  VehicleTypes = VehicleTypesData;
+
+  readonly LIGHT_WEIGHT_DRIVER = DriverJobRoles.LIGHT_WEIGHT_DRIVER;
+  readonly HEAVY_WEIGHT_DRIVER = DriverJobRoles.HEAVY_WEIGHT_DRIVER;
 
   districts = [
     { name: 'Ampara', province: 'Eastern' },
@@ -235,6 +236,17 @@ export class UpdateDistributionOfficerComponent {
   minInsuranceDate: Date = new Date(
     new Date().setDate(new Date().getDate() + 1),
   );
+
+  private isFutureInsuranceDate(date: Date | string): boolean {
+    const selectedDate = new Date(date);
+    selectedDate.setHours(0, 0, 0, 0);
+
+    const tomorrow = new Date();
+    tomorrow.setHours(0, 0, 0, 0);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    return selectedDate >= tomorrow;
+  }
 
   constructor(
     private http: HttpClient,
@@ -313,7 +325,8 @@ export class UpdateDistributionOfficerComponent {
         this.personalData.status = officerData.status || '';
 
         if (
-          officerData.jobRole === 'Driver' &&
+          (officerData.jobRole === this.LIGHT_WEIGHT_DRIVER ||
+            officerData.jobRole === this.HEAVY_WEIGHT_DRIVER) &&
           response.driverData &&
           response.driverData.length > 0
         ) {
@@ -545,17 +558,9 @@ export class UpdateDistributionOfficerComponent {
         return;
       }
 
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-      if (!allowedTypes.includes(file.type)) {
-        Swal.fire({
-          title: 'Error',
-          text: 'License image must be JPEG, JPG or PNG format',
-          icon: 'error',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold text-lg',
-          },
-        });
+      const imageValidation = this.isValidImageFile(file);
+      if (!imageValidation.valid) {
+        this.showInvalidFileError(imageValidation.message!);
         return;
       }
 
@@ -598,17 +603,9 @@ export class UpdateDistributionOfficerComponent {
         return;
       }
 
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-      if (!allowedTypes.includes(file.type)) {
-        Swal.fire({
-          title: 'Error',
-          text: 'License image must be JPEG, JPG or PNG format',
-          icon: 'error',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold text-lg',
-          },
-        });
+      const imageValidation = this.isValidImageFile(file);
+      if (!imageValidation.valid) {
+        this.showInvalidFileError(imageValidation.message!);
         return;
       }
 
@@ -651,17 +648,9 @@ export class UpdateDistributionOfficerComponent {
         return;
       }
 
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-      if (!allowedTypes.includes(file.type)) {
-        Swal.fire({
-          title: 'Error',
-          text: 'Insurance image must be JPEG, JPG or PNG format',
-          icon: 'error',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold text-lg',
-          },
-        });
+      const imageValidation = this.isValidImageFile(file);
+      if (!imageValidation.valid) {
+        this.showInvalidFileError(imageValidation.message!);
         return;
       }
 
@@ -704,17 +693,9 @@ export class UpdateDistributionOfficerComponent {
         return;
       }
 
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-      if (!allowedTypes.includes(file.type)) {
-        Swal.fire({
-          title: 'Error',
-          text: 'Insurance image must be JPEG, JPG or PNG format',
-          icon: 'error',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold text-lg',
-          },
-        });
+      const imageValidation = this.isValidImageFile(file);
+      if (!imageValidation.valid) {
+        this.showInvalidFileError(imageValidation.message!);
         return;
       }
 
@@ -757,17 +738,9 @@ export class UpdateDistributionOfficerComponent {
         return;
       }
 
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-      if (!allowedTypes.includes(file.type)) {
-        Swal.fire({
-          title: 'Error',
-          text: 'Vehicle image must be JPEG, JPG or PNG format',
-          icon: 'error',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold text-lg',
-          },
-        });
+      const imageValidation = this.isValidImageFile(file);
+      if (!imageValidation.valid) {
+        this.showInvalidFileError(imageValidation.message!);
         return;
       }
 
@@ -810,17 +783,9 @@ export class UpdateDistributionOfficerComponent {
         return;
       }
 
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-      if (!allowedTypes.includes(file.type)) {
-        Swal.fire({
-          title: 'Error',
-          text: 'Vehicle image must be JPEG, JPG or PNG format',
-          icon: 'error',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold text-lg',
-          },
-        });
+      const imageValidation = this.isValidImageFile(file);
+      if (!imageValidation.valid) {
+        this.showInvalidFileError(imageValidation.message!);
         return;
       }
 
@@ -863,17 +828,9 @@ export class UpdateDistributionOfficerComponent {
         return;
       }
 
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-      if (!allowedTypes.includes(file.type)) {
-        Swal.fire({
-          title: 'Error',
-          text: 'Vehicle image must be JPEG, JPG or PNG format',
-          icon: 'error',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold text-lg',
-          },
-        });
+      const imageValidation = this.isValidImageFile(file);
+      if (!imageValidation.valid) {
+        this.showInvalidFileError(imageValidation.message!);
         return;
       }
 
@@ -916,17 +873,9 @@ export class UpdateDistributionOfficerComponent {
         return;
       }
 
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-      if (!allowedTypes.includes(file.type)) {
-        Swal.fire({
-          title: 'Error',
-          text: 'Vehicle image must be JPEG, JPG or PNG format',
-          icon: 'error',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold text-lg',
-          },
-        });
+      const imageValidation = this.isValidImageFile(file);
+      if (!imageValidation.valid) {
+        this.showInvalidFileError(imageValidation.message!);
         return;
       }
 
@@ -1172,6 +1121,10 @@ export class UpdateDistributionOfficerComponent {
 
       if (fieldName === 'firstNameEnglish' || fieldName === 'lastNameEnglish') {
         value = value.replace(/[^a-zA-Z\s]/g, '');
+        // Capitalize first letter only
+        if (value.length > 0) {
+          value = value.charAt(0).toUpperCase() + value.slice(1);
+        }
       }
 
       value = value.replace(/\s{2,}/g, ' ');
@@ -1259,14 +1212,14 @@ export class UpdateDistributionOfficerComponent {
 
   checkFormValidity(): boolean {
     const isFirstNameValid =
-      this.personalData.jobRole === 'Driver'
+      (this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER || this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER)
         ? !!this.personalData.firstNameEnglish
         : !!this.personalData.firstNameEnglish &&
         !!this.personalData.firstNameSinhala &&
         !!this.personalData.firstNameTamil;
 
     const isLastNameValid =
-      this.personalData.jobRole === 'Driver'
+      (this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER || this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER)
         ? !!this.personalData.lastNameEnglish
         : !!this.personalData.lastNameEnglish &&
         !!this.personalData.lastNameSinhala &&
@@ -1361,9 +1314,9 @@ export class UpdateDistributionOfficerComponent {
         return;
       }
 
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-      if (!allowedTypes.includes(file.type)) {
-        Swal.fire('Error', 'Only JPEG, JPG and PNG files are allowed', 'error');
+      const imageValidation = this.isValidImageFile(file);
+      if (!imageValidation.valid) {
+        this.showInvalidFileError(imageValidation.message!);
         return;
       }
 
@@ -1411,11 +1364,20 @@ export class UpdateDistributionOfficerComponent {
   }
 
   EpmloyeIdCreate() {
+    if (this.personalData.jobRole !== this.initiateJobRole) {
+      this.selectVehicletype = { name: '', capacity: '' };
+      this.driverObj.vType = '';
+      this.driverObj.vCapacity = '';
+    }
+
     let rolePrefix: string | undefined;
 
     const rolePrefixes: { [key: string]: string } = {
       'Distribution Centre Manager': 'DCM',
       'Distribution Officer': 'DIO',
+      [this.LIGHT_WEIGHT_DRIVER]: 'DRV',
+      [this.HEAVY_WEIGHT_DRIVER]: 'DRV'
+
     };
 
     rolePrefix = rolePrefixes[this.personalData.jobRole];
@@ -1464,6 +1426,7 @@ export class UpdateDistributionOfficerComponent {
   }
 
   nextFormCreate(page: 'pageOne' | 'pageTwo' | 'pageThree') {
+    console.log('test data', this.personalData)
     if (page === 'pageTwo') {
       const missingFields: string[] = [];
 
@@ -1488,7 +1451,7 @@ export class UpdateDistributionOfficerComponent {
       }
 
       if (
-        this.personalData.jobRole === 'Driver' &&
+        (this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER || this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER) &&
         !this.personalData.driverCatId
       ) {
         missingFields.push('Driver Category is Required');
@@ -1496,7 +1459,7 @@ export class UpdateDistributionOfficerComponent {
 
       if (
         (this.personalData.jobRole === 'Distribution Officer' ||
-          this.personalData.jobRole === 'Driver') &&
+          this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER || this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER) &&
         !this.personalData.irmId
       ) {
         missingFields.push('Manager Name is Required');
@@ -1510,7 +1473,7 @@ export class UpdateDistributionOfficerComponent {
         missingFields.push('Last Name (in English) is Required');
       }
 
-      if (this.personalData.jobRole !== 'Driver') {
+      if (this.personalData.jobRole !== this.LIGHT_WEIGHT_DRIVER && this.personalData.jobRole !== this.HEAVY_WEIGHT_DRIVER) {
         if (!this.personalData.firstNameSinhala) {
           missingFields.push('First Name (in Sinhala) is Required');
         }
@@ -1777,7 +1740,7 @@ export class UpdateDistributionOfficerComponent {
       files.push(this.selectedFile);
     }
 
-    if (this.personalData.jobRole === 'Driver') {
+    if (this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER || this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER) {
       if (this.licenseFrontImageUpdated && this.licenseFrontImageFile) {
         order.push('licFront');
         files.push(this.licenseFrontImageFile);
@@ -1832,7 +1795,8 @@ export class UpdateDistributionOfficerComponent {
   }
 
   onSubmit() {
-    if (this.personalData.jobRole === 'Driver') {
+    console.log('test data', this.personalData)
+    if (this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER || this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER) {
       this.licNoModel.control.markAsTouched();
       this.confirmLicNoModel.control.markAsTouched();
       this.insurenceNoModel.control.markAsTouched();
@@ -1872,7 +1836,7 @@ export class UpdateDistributionOfficerComponent {
     }
 
     if (
-      this.personalData.jobRole === 'Driver' &&
+      (this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER || this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER) &&
       !this.personalData.driverCatId
     ) {
       missingFields.push('Driver Category is Required');
@@ -1893,7 +1857,7 @@ export class UpdateDistributionOfficerComponent {
       missingFields.push('Last Name (in English) is Required');
     }
 
-    if (this.personalData.jobRole !== 'Driver') {
+    if (this.personalData.jobRole !== this.LIGHT_WEIGHT_DRIVER && this.personalData.jobRole !== this.HEAVY_WEIGHT_DRIVER) {
       if (!this.personalData.firstNameSinhala) {
         missingFields.push('First Name (in Sinhala) is Required');
       }
@@ -1992,7 +1956,7 @@ export class UpdateDistributionOfficerComponent {
       missingFields.push('Branch Name is Required');
     }
 
-    if (this.personalData.jobRole === 'Driver') {
+    if (this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER || this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER) {
       if (!this.driverObj.licNo) {
         missingFields.push('Driving License ID number is Required');
       } else if (!/^([A-Z]\d{7}|\d{10,12})$/.test(this.driverObj.licNo)) {
@@ -2041,6 +2005,8 @@ export class UpdateDistributionOfficerComponent {
 
       if (!this.driverObj.insExpDate) {
         missingFields.push('Insurance Expire Date is Required');
+      } else if (!this.isFutureInsuranceDate(this.driverObj.insExpDate)) {
+        missingFields.push('Insurance Expire Date must be after today');
       }
       if (!this.insurenceFrontImageFileName) {
         missingFields.push("Insurance's Front Image is Required");
@@ -2093,8 +2059,11 @@ export class UpdateDistributionOfficerComponent {
 
     let successMessage = '';
     switch (this.personalData.jobRole) {
-      case 'Driver':
-        successMessage = 'Do you want to update the Driver ?';
+      case this.LIGHT_WEIGHT_DRIVER:
+        successMessage = 'Do you want to update the Light Weight Driver?';
+        break;
+      case this.HEAVY_WEIGHT_DRIVER:
+        successMessage = 'Do you want to update the Heavy Weight Driver?';
         break;
       case 'Distribution Officer':
         successMessage = 'Do you want to update the distribution officer?';
@@ -2142,7 +2111,7 @@ export class UpdateDistributionOfficerComponent {
             };
 
             let driverDataToSend = null;
-            if (this.personalData.jobRole === 'Driver') {
+            if (this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER || this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER) {
               driverDataToSend = {
                 ...this.driverObj,
                 insExpDate: this.formatDateForDatabase(
@@ -2177,11 +2146,13 @@ export class UpdateDistributionOfficerComponent {
               .subscribe(
                 (res: any) => {
                   this.isLoading = false;
-
                   let successMessage = '';
                   switch (this.personalData.jobRole) {
-                    case 'Driver':
-                      successMessage = 'Driver Updated Successfully';
+                    case this.LIGHT_WEIGHT_DRIVER:
+                      successMessage = 'Light Weight Driver Updated Successfully';
+                      break;
+                    case this.HEAVY_WEIGHT_DRIVER:
+                      successMessage = 'Heavy Weight Driver Updated Successfully';
                       break;
                     case 'Distribution Officer':
                       successMessage =
@@ -2228,7 +2199,7 @@ export class UpdateDistributionOfficerComponent {
                         case 'PhoneNumber02':
                           return 'Mobile Number 2 already exists.';
                         default:
-                          return 'Validation error: ' + err;
+                          return err.replace(/^Validation error:\s*/i, '');
                       }
                     });
                   }
@@ -2363,6 +2334,37 @@ export class UpdateDistributionOfficerComponent {
     if (!allowedPattern.test(pastedText)) {
       event.preventDefault();
     }
+  }
+
+  private isValidImageFile(file: File): { valid: boolean; message?: string } {
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+    const allowedExtensions = ['jpg', 'jpeg', 'png'];
+    const fileExtension = file.name.split('.').pop()?.toLowerCase() || '';
+
+    const isValidType = allowedTypes.includes(file.type);
+    const isValidExtension = allowedExtensions.includes(fileExtension);
+
+    if (!isValidType || !isValidExtension) {
+      return {
+        valid: false,
+        message: `"${file.name}" is not a supported file type. Only PNG, JPG, and JPEG files are allowed.`,
+      };
+    }
+    return { valid: true };
+  }
+
+  private showInvalidFileError(message: string): void {
+    Swal.fire({
+      icon: 'error',
+      title: 'Invalid File Format',
+      html: `<div class="text-left"><p>${message}</p></div>`,
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
+    });
   }
 
   openPopup(item: any) {
@@ -2590,7 +2592,10 @@ export class UpdateDistributionOfficerComponent {
 
   chooseJobRole() {
     if (this.urlSegment === 'edit-driver') {
-      this.jobRoleOptions = [{ label: 'Driver', value: 'Driver' }];
+      this.jobRoleOptions = [
+        { label: this.LIGHT_WEIGHT_DRIVER, value: this.LIGHT_WEIGHT_DRIVER },
+        { label: this.HEAVY_WEIGHT_DRIVER, value: this.HEAVY_WEIGHT_DRIVER },
+      ];
     } else {
       this.jobRoleOptions = [
         {
@@ -2641,6 +2646,14 @@ export class UpdateDistributionOfficerComponent {
       }
     }
   }
+
+  get filteredVehicleTypes(): any[] {
+    if (!this.personalData.jobRole) return [];
+    return this.VehicleTypes.filter(
+      (v: any) => v.category === this.personalData.jobRole
+    );
+  }
+
 }
 
 class Personal {

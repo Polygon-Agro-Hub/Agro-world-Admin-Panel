@@ -1,7 +1,7 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
 <div class="fixed-width-container w-full">
-  <button class="mb-5 text-textLight dark:text-textDark" onclick="history.back()"
+  <button class="mb-5 text-textLight dark:text-textDark" (click)="back()"
     class="mb-5 text-textLight dark:text-textDark">
     <i class="fa-solid fa-arrow-left"></i>
     Back

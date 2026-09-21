@@ -37,7 +37,7 @@ export class AddEditDriverCategoryComponent implements OnInit {
     private route: ActivatedRoute,
     private location: Location,
     private collectionOfficerService: CollectionOfficerService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -113,34 +113,34 @@ export class AddEditDriverCategoryComponent implements OnInit {
   }
 
   onNameInput(event: Event): void {
-  const input = event.target as HTMLInputElement;
-  const cursorPos = input.selectionStart ?? 0;
-  let value = input.value;
+    const input = event.target as HTMLInputElement;
+    const cursorPos = input.selectionStart ?? 0;
+    let value = input.value;
 
-  const leadingSpaces = value.length - value.trimStart().length;
+    const leadingSpaces = value.length - value.trimStart().length;
 
-  // Strip leading spaces
-  value = value.trimStart();
+    // Strip leading spaces
+    value = value.trimStart();
 
-  // Capitalize first character
-  if (value.length > 0) {
-    value = value.charAt(0).toUpperCase() + value.slice(1);
+    // Capitalize first character
+    if (value.length > 0) {
+      value = value.charAt(0).toUpperCase() + value.slice(1);
+    }
+
+    this.form.get('driverCategoryName')?.setValue(value);
+
+    // Adjust cursor position for removed leading spaces
+    const newCursorPos = Math.max(cursorPos - leadingSpaces, 0);
+
+    setTimeout(() => input.setSelectionRange(newCursorPos, newCursorPos));
   }
 
-  this.form.get('driverCategoryName')?.setValue(value);
-
-  // Adjust cursor position for removed leading spaces
-  const newCursorPos = Math.max(cursorPos - leadingSpaces, 0);
-
-  setTimeout(() => input.setSelectionRange(newCursorPos, newCursorPos));
-}
-
-onNameKeydown(event: KeyboardEvent): void {
-  const input = event.target as HTMLInputElement;
-  if (event.key === ' ' && input.selectionStart === 0 && input.value.length === 0) {
-    event.preventDefault();
+  onNameKeydown(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement;
+    if (event.key === ' ' && input.selectionStart === 0 && input.value.length === 0) {
+      event.preventDefault();
+    }
   }
-}
 
   get isActionDisabled(): boolean {
     if (!this.form) {
@@ -319,6 +319,20 @@ onNameKeydown(event: KeyboardEvent): void {
       input.value === '0'
     ) {
       event.preventDefault();
+      return;
+    }
+
+    const decimalIndex = input.value.indexOf('.');
+    if (
+      decimalIndex !== -1 &&
+      event.key >= '0' &&
+      event.key <= '9' &&
+      input.selectionStart !== null &&
+      input.selectionStart > decimalIndex &&
+      input.value.length - decimalIndex - 1 >= 2 &&
+      input.selectionStart === input.value.length 
+    ) {
+      event.preventDefault();
     }
   }
 
@@ -326,9 +340,22 @@ onNameKeydown(event: KeyboardEvent): void {
     const input = event.target as HTMLInputElement;
     let value = input.value;
 
-    // Strip any minus sign that slipped through (e.g. via paste)
     if (value.includes('-')) {
       value = value.replace(/-/g, '');
+    }
+
+    const decimalMatch = value.match(/^(\d*)\.(\d{0,2})/);
+    if (decimalMatch) {
+      value = decimalMatch[2].length < (value.split('.')[1]?.length ?? 0)
+        ? `${decimalMatch[1]}.${decimalMatch[2]}`
+        : value;
+    }
+    if (/\.\d{3,}/.test(input.value)) {
+      const parts = input.value.split('.');
+      value = `${parts[0]}.${parts[1].slice(0, 2)}`;
+    }
+
+    if (value !== input.value) {
       input.value = value;
       this.form.get('payoutPerOrder')?.setValue(value, { emitEvent: false });
     }

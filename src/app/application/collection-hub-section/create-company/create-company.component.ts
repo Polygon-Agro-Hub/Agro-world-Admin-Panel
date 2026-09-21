@@ -90,6 +90,8 @@ export class CreateCompanyComponent implements OnInit {
   sameNumberError: boolean = false;
   emailValidationMessage: string = '';
   attemptedSubmit: boolean = false;
+  logoTypeError: boolean = false;      // NEW
+  faviconTypeError: boolean = false;   // NEW
 
   companyType: string = '';
   countries = [
@@ -612,82 +614,108 @@ export class CreateCompanyComponent implements OnInit {
   }
 
   async onLogoChange(event: Event): Promise<void> {
-    const input = event.target as HTMLInputElement;
-    this.logoSizeError = false;
+  const input = event.target as HTMLInputElement;
+  this.logoSizeError = false;
+  this.logoTypeError = false; // NEW
 
-    if (input.files && input.files[0]) {
-      const file = input.files[0];
-      const maxSize = 1024 * 1024;
+  if (input.files && input.files[0]) {
+    const file = input.files[0];
+    const maxSize = 1024 * 1024;
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png']; // NEW
 
-      if (file.size > maxSize) {
-        this.logoSizeError = true;
-        Swal.fire({
-          icon: 'error',
-          title: 'File Too Large',
-          text: 'Logo must be less than 1MB',
-        });
-        input.value = '';
-        return;
-      }
+    if (!allowedTypes.includes(file.type)) { // NEW block
+      this.logoTypeError = true;
+      Swal.fire({
+        icon: 'error',
+        title: 'Unsupported File Type',
+        text: 'Only JPG, JPEG, and PNG images are allowed for the logo.',
+      });
+      input.value = '';
+      return;
+    }
 
-      try {
-        this.isLoading = true;
-        const compressedFile = await this.compressImage(file, 800, 800, 0.7);
-        this.selectedLogoFile = compressedFile;
-        this.companyData.logoFile = compressedFile;
+    if (file.size > maxSize) {
+      this.logoSizeError = true;
+      Swal.fire({
+        icon: 'error',
+        title: 'File Too Large',
+        text: 'Logo must be less than 1MB',
+      });
+      input.value = '';
+      return;
+    }
 
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          this.companyData.logo = e.target?.result as string;
-          this.isLoading = false;
-          this.touchedFields['logo'] = true;
-        };
-        reader.readAsDataURL(this.selectedLogoFile);
-      } catch (error) {
+    try {
+      this.isLoading = true;
+      const compressedFile = await this.compressImage(file, 800, 800, 0.7);
+      this.selectedLogoFile = compressedFile;
+      this.companyData.logoFile = compressedFile;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.companyData.logo = e.target?.result as string;
         this.isLoading = false;
-        console.error('Error compressing logo:', error);
-      }
+        this.touchedFields['logo'] = true;
+      };
+      reader.readAsDataURL(this.selectedLogoFile);
+    } catch (error) {
+      this.isLoading = false;
+      console.error('Error compressing logo:', error);
     }
   }
+}
 
   async onFaviconChange(event: Event): Promise<void> {
-    const input = event.target as HTMLInputElement;
-    this.faviconSizeError = false;
+  const input = event.target as HTMLInputElement;
+  this.faviconSizeError = false;
+  this.faviconTypeError = false; // NEW
 
-    if (input.files && input.files[0]) {
-      const file = input.files[0];
-      const maxSize = 1024 * 1024;
+  if (input.files && input.files[0]) {
+    const file = input.files[0];
+    const maxSize = 1024 * 1024;
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png']; // NEW
 
-      if (file.size > maxSize) {
-        this.faviconSizeError = true;
-        Swal.fire({
-          icon: 'error',
-          title: 'File Too Large',
-          text: 'Favicon must be less than 1MB',
-        });
-        input.value = '';
-        return;
-      }
+    if (!allowedTypes.includes(file.type)) { // NEW block
+      this.faviconTypeError = true;
+      Swal.fire({
+        icon: 'error',
+        title: 'Unsupported File Type',
+        text: 'Only JPG, JPEG, and PNG images are allowed for the favicon.',
+      });
+      input.value = '';
+      return;
+    }
 
-      try {
-        this.isLoading = true;
-        const compressedFile = await this.compressImage(file, 800, 800, 0.7);
-        this.selectedFaviconFile = compressedFile;
-        this.companyData.faviconFile = compressedFile;
+    if (file.size > maxSize) {
+      this.faviconSizeError = true;
+      Swal.fire({
+        icon: 'error',
+        title: 'File Too Large',
+        text: 'Favicon must be less than 1MB',
+      });
+      input.value = '';
+      return;
+    }
 
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          this.companyData.favicon = e.target?.result as string;
-          this.isLoading = false;
-          this.touchedFields['favicon'] = true;
-        };
-        reader.readAsDataURL(this.selectedFaviconFile);
-      } catch (error) {
+    try {
+      this.isLoading = true;
+      const compressedFile = await this.compressImage(file, 800, 800, 0.7);
+      this.selectedFaviconFile = compressedFile;
+      this.companyData.faviconFile = compressedFile;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.companyData.favicon = e.target?.result as string;
         this.isLoading = false;
-        console.error('Error compressing favicon:', error);
-      }
+        this.touchedFields['favicon'] = true;
+      };
+      reader.readAsDataURL(this.selectedFaviconFile);
+    } catch (error) {
+      this.isLoading = false;
+      console.error('Error compressing favicon:', error);
     }
   }
+}
 
   removeLogo(event: Event): void {
     event.stopPropagation();
@@ -1501,69 +1529,86 @@ export class CreateCompanyComponent implements OnInit {
   }
 
   isValidEmail(email: string): boolean {
-    this.emailValidationMessage = '';
+  this.emailValidationMessage = '';
 
-    if (!email) {
-      return false;
-    }
-
-    const trimmedEmail = email.trim();
-
-    if (trimmedEmail === '') {
-      this.emailValidationMessage = 'Email is required.';
-      return false;
-    }
-
-    if (trimmedEmail.includes('..')) {
-      this.emailValidationMessage = 'Email cannot contain consecutive dots.';
-      return false;
-    }
-
-    if (trimmedEmail.startsWith('.')) {
-      this.emailValidationMessage = 'Email cannot start with a dot.';
-      return false;
-    }
-
-    if (trimmedEmail.endsWith('.')) {
-      this.emailValidationMessage = 'Email cannot end with a dot.';
-      return false;
-    }
-
-    if (trimmedEmail.endsWith('.@')) {
-      this.emailValidationMessage = 'Email cannot end with a dot.@';
-      return false;
-    }
-
-    const invalidCharRegex = /[^a-zA-Z0-9@._%+-]/;
-    if (invalidCharRegex.test(trimmedEmail)) {
-      this.emailValidationMessage =
-        'Email contains invalid characters. Only letters, numbers, and @ . _ % + - are allowed.';
-      return false;
-    }
-
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!emailPattern.test(trimmedEmail)) {
-      this.emailValidationMessage =
-        'Please enter a valid email in the format: example@domain.com';
-      return false;
-    }
-
-    const domainPart = trimmedEmail.split('@')[1];
-    if (!domainPart || domainPart.indexOf('.') === -1) {
-      this.emailValidationMessage = 'Please enter a valid email domain.';
-      return false;
-    }
-
-    const tld = domainPart.split('.').pop()?.toLowerCase();
-    const allowedTlds = ['com', 'lk'];
-
-    if (!tld || !allowedTlds.includes(tld)) {
-      this.emailValidationMessage = 'Only .com and .lk domains are allowed.';
-      return false;
-    }
-
-    return true;
+  if (!email) {
+    return false;
   }
+
+  const trimmedEmail = email.trim();
+
+  if (trimmedEmail === '') {
+    this.emailValidationMessage = 'Email is required.';
+    return false;
+  }
+
+  if (trimmedEmail.includes('..')) {
+    this.emailValidationMessage = 'Email cannot contain consecutive dots.';
+    return false;
+  }
+
+  if (trimmedEmail.startsWith('.')) {
+    this.emailValidationMessage = 'Email cannot start with a dot.';
+    return false;
+  }
+
+  if (trimmedEmail.endsWith('.')) {
+    this.emailValidationMessage = 'Email cannot end with a dot.';
+    return false;
+  }
+
+  const invalidCharRegex = /[^a-zA-Z0-9@._%+-]/;
+  if (invalidCharRegex.test(trimmedEmail)) {
+    this.emailValidationMessage =
+      'Email contains invalid characters. Only letters, numbers, and @ . _ % + - are allowed.';
+    return false;
+  }
+
+  const atParts = trimmedEmail.split('@');
+  if (atParts.length !== 2 || !atParts[0] || !atParts[1]) {
+    this.emailValidationMessage = 'Please enter a valid email address.';
+    return false;
+  }
+
+  const domainPart = atParts[1];
+
+  // NEW: catches "bbg@.gmail.com" and similar
+  if (domainPart.startsWith('.') || domainPart.startsWith('-')) {
+    this.emailValidationMessage = 'Email domain cannot start with a dot or hyphen.';
+    return false;
+  }
+
+  if (domainPart.endsWith('.') || domainPart.endsWith('-')) {
+    this.emailValidationMessage = 'Email domain cannot end with a dot or hyphen.';
+    return false;
+  }
+
+  // NEW: each label between dots must be non-empty and valid (no ".." holes, no leading/trailing hyphen per label)
+  const domainLabels = domainPart.split('.');
+  const validLabel = /^[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?$/;
+  if (domainLabels.length < 2 || domainLabels.some(label => !validLabel.test(label))) {
+    this.emailValidationMessage = 'Please enter a valid email domain.';
+    return false;
+  }
+
+  // Tightened: domain segments can no longer start/end with '.' or '-'
+  const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)+$/;
+  if (!emailPattern.test(trimmedEmail)) {
+    this.emailValidationMessage =
+      'Please enter a valid email in the format: example@domain.com';
+    return false;
+  }
+
+  const tld = domainLabels[domainLabels.length - 1].toLowerCase();
+  const allowedTlds = ['com', 'lk'];
+
+  if (!allowedTlds.includes(tld)) {
+    this.emailValidationMessage = 'Only .com and .lk domains are allowed.';
+    return false;
+  }
+
+  return true;
+}
 
   onCancel() {
     Swal.fire({

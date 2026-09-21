@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { TokenService } from '../token/services/token.service';
 import { environment } from '../../environment/environment';
 import { catchError, Observable, throwError } from 'rxjs';
+import DriverJobRoles from '../../../assets/json/driverJobRoles.json';
 
 export interface DistributionDashboardData {
   // Stat cards
@@ -351,7 +352,7 @@ export class DistributionHubService {
       profileImageUrl: profileImageUrl || null,
     };
 
-    if (person.jobRole === 'Driver' && driver) {
+    if ((person.jobRole === DriverJobRoles.LIGHT_WEIGHT_DRIVER || person.jobRole === DriverJobRoles.HEAVY_WEIGHT_DRIVER) && driver) {
       body.driverData = driver;
       body.licFrontUrl = licFrontUrl || null;
       body.licBackUrl = licBackUrl || null;
@@ -474,7 +475,7 @@ export class DistributionHubService {
       body.profileImageUrl = profileImageUrl;
     }
 
-    if (person.jobRole === 'Driver' && driver) {
+    if ((person.jobRole === DriverJobRoles.LIGHT_WEIGHT_DRIVER || person.jobRole === DriverJobRoles.HEAVY_WEIGHT_DRIVER) && driver) {
       body.driverData = driver;
       if (licFrontUrl) body.licFrontUrl = licFrontUrl;
       if (licBackUrl) body.licBackUrl = licBackUrl;

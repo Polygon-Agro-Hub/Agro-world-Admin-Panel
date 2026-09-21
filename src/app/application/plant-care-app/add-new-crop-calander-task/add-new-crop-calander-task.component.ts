@@ -15,6 +15,7 @@ import { CropCalendarService } from '../../../services/plant-care/crop-calendar.
 import Swal from 'sweetalert2';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { Location } from '@angular/common';
+
 @Component({
   selector: 'app-add-new-crop-calander-task',
   standalone: true,
@@ -30,6 +31,7 @@ import { Location } from '@angular/common';
   templateUrl: './add-new-crop-calander-task.component.html',
   styleUrl: './add-new-crop-calander-task.component.css',
 })
+
 export class AddNewCropCalanderTaskComponent implements OnInit {
   cultivationId: any | null = null;
   userName: string = '';
@@ -45,6 +47,7 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
   requireImageLink: string = 'no';
   requireVideoLink: string = 'no';
   ongCultivationId: number | null = null;
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -76,6 +79,7 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
       images: [''],
     });
   }
+
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
       this.cultivationId = params['cultivationId'] ? +params['cultivationId'] : null;
@@ -139,6 +143,15 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
     });
   }
 
+  blockLeadingSpace(event: KeyboardEvent): void {
+    if (event.key !== ' ') return;
+    const input = event.target as HTMLInputElement | HTMLTextAreaElement;
+    if (input instanceof HTMLInputElement && input.type === 'radio') return;
+    const cursorPos = input.selectionStart ?? 0;
+    if (input.value.substring(0, cursorPos).trim().length === 0) {
+      event.preventDefault();
+    }
+  }
 
   allowOnlyEnglishLetters(event: KeyboardEvent): void {
     const allowedControlKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'];
@@ -206,9 +219,16 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
 
   // This handles pasting with leading space
   removeLeadingSpace(event: ClipboardEvent): void {
-    const input = event.target as HTMLInputElement;
+    const input = event.target as HTMLInputElement | HTMLTextAreaElement;
     setTimeout(() => {
-      input.value = input.value.trimStart();
+      const trimmedValue = input.value.replace(/^\s+/, '');
+      if (input.value === trimmedValue) return;
+
+      input.value = trimmedValue;
+      const controlName = input.getAttribute('formcontrolname');
+      if (controlName) {
+        this.taskForm.get(controlName)?.setValue(trimmedValue);
+      }
     }, 0); // Wait for paste to complete
   }
 
@@ -233,8 +253,8 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
 
   onSubmit() {
     // Log the entire form value and the task object
-    
-    
+
+
     // Array to store missing or invalid field messages
     const missingFields: string[] = [];
 
@@ -370,7 +390,7 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
       if (result.isConfirmed) {
         this.isLoading = true;
         if (this.userId === 'null') {
-          
+
           this.cropCalendarService
             .createNewCropTask(this.cropId, this.indexId, this.cropTaskObj)
             .subscribe({
@@ -425,7 +445,7 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
               },
             });
         } else {
-          
+
           this.cropCalendarService
             .createNewCropTaskU(this.cropId, this.indexId, this.userId, this.cropTaskObj, this.cultivationId, this.ongCultivationId)
             .subscribe({

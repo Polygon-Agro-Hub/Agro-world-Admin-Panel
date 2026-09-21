@@ -363,6 +363,10 @@ toggleStatus(item: ProductList): void {
     this.showStatusConfirm = false;
     this.pendingToggleItem = null;
   }
+
+  back() {
+    this.router.navigate(['/market/action']);
+  }
 }
 
 class ProductList {

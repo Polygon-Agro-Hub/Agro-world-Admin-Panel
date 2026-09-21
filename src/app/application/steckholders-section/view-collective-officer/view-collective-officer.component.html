@@ -117,10 +117,10 @@
     </div>
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
-  <h2 class="text-[20px]font-normal text-textLight dark:text-textDark">
+  <span class="text-[20px] font-normal text-textLight dark:text-textDark">
     {{ Cname ? 'All' : 'Collection Officers' }}
     ({{ (totalItems || 0) < 10 ? '0' + (totalItems || 0) : (totalItems || 0) }})
-  </h2>
+  </span>
 </div>
 
       <div class="flex items-center mr-5" *ngIf="

@@ -61,6 +61,17 @@ export interface FinalizeShortagePayload {
   ceilingPercent: number;
 }
 
+export interface MismatchReport {
+  id: number;
+  driverId: string;
+  loaded: number;
+  unloaded: number;
+  missing: number;
+  crates: string;
+  distributionCentre: string;
+  reportedAt: string;
+}
+
 
 @Injectable({
   providedIn: 'root',
@@ -668,6 +679,79 @@ createPackingTargetLimit(tarValue: number): Observable<any> {
       .pipe(
         catchError((error) => {
           console.error('Error in getLatestPackingTargetLimit:', error);
+          return throwError(() => new Error(error));
+        })
+      );
+  }
+
+  getLoadMismatchReportsToday(): Observable<MismatchReport[]> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}procument/get-load-mismatch-reports-today`;
+
+    return this.http
+      .get<{ success: boolean; total: number; data: MismatchReport[] }>(url, {
+        headers,
+      })
+      .pipe(
+        map((response) => {
+          if (response.success) {
+            return response.data;
+          }
+          throw new Error('Failed to fetch load mismatch reports');
+        }),
+        catchError((error) => {
+          console.error('Error fetching load mismatch reports:', error);
+          return throwError(
+            () =>
+              new Error(
+                error.error?.message ||
+                  'An error occurred while fetching load mismatch reports'
+              )
+          );
+        })
+      );
+  }
+
+  getTransportLoadFullDetails(loadedItemId: number | string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http
+      .get(`${this.apiUrl}procument/get-transport-load-full-details/${loadedItemId}`, {
+        headers,
+      })
+      .pipe(
+        catchError((error) => {
+          console.error('Error in getTransportLoadFullDetails:', error);
+          return throwError(() => new Error(error));
+        })
+      );
+  }
+
+  updateTransportLoadRecommendation(transportId: number | string, recomandation: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const body = {
+      transportId,
+      recomandation,
+    };
+
+    return this.http
+      .put(`${this.apiUrl}procument/transport-load/update-recommendation`, body, {
+        headers,
+      })
+      .pipe(
+        catchError((error) => {
+          console.error('Error in updateTransportLoadRecommendation:', error);
           return throwError(() => new Error(error));
         })
       );

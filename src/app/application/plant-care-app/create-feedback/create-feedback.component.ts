@@ -4,10 +4,11 @@ import {
   HttpClientModule,
   HttpHeaders,
 } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormsModule,
+  NgForm,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -24,7 +25,6 @@ import {
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
 import { TokenService } from '../../../services/token/services/token.service';
-import { title } from 'node:process';
 
 @Component({
   selector: 'app-create-feedback',
@@ -43,6 +43,7 @@ import { title } from 'node:process';
   styleUrl: './create-feedback.component.css',
 })
 export class CreateFeedbackComponent {
+  @ViewChild('feedbackForm') feedbackForm?: NgForm;
   isLoading = false;
   feebackList: any[] = [];
   bgColor: any = '#ffffff';
@@ -212,6 +213,7 @@ export class CreateFeedbackComponent {
           this.feedback.feedbackEnglish = '';
           this.feedback.feedbackSinahala = '';
           this.feedback.feedbackTamil = '';
+          this.feedbackForm?.resetForm(this.feedback);
           this.loadNextNumber();
           this.getAllFeedbacks();
         } else {
@@ -303,8 +305,15 @@ export class CreateFeedbackComponent {
   }
 
   preventLeadingSpace(event: KeyboardEvent, currentValue: string | number): void {
-    const value = String(currentValue || '').trim();
-    if (value.length === 0 && event.key === ' ') {
+    if (event.key !== ' ') {
+      return;
+    }
+    const target = event.target as HTMLInputElement | HTMLTextAreaElement;
+    const cursorPosition = target.selectionStart ?? 0;
+    const value = String(currentValue ?? '');
+    const textBeforeCursor = value.substring(0, cursorPosition);
+
+    if (textBeforeCursor.trim().length === 0) {
       event.preventDefault();
     }
   }
@@ -335,22 +344,23 @@ export class CreateFeedbackComponent {
     const pastedText = event.clipboardData?.getData('text') || '';
     const englishAlphanumericRegex = /[a-zA-Z0-9\s.,!?()-]/g;
 
-    // Filter out invalid characters, keeping only valid ones
-    const filteredText = pastedText.match(englishAlphanumericRegex)?.join('') || '';
+    let filteredText = pastedText.match(englishAlphanumericRegex)?.join('') || '';
 
-    // Insert the filtered text at cursor position
     const target = event.target as HTMLInputElement | HTMLTextAreaElement;
     const start = target.selectionStart || 0;
     const end = target.selectionEnd || 0;
     const currentValue = target.value;
 
+    const textBeforeCursor = currentValue.substring(0, start);
+    if (textBeforeCursor.trim().length === 0) {
+      filteredText = filteredText.replace(/^\s+/, '');
+    }
+
     target.value = currentValue.substring(0, start) + filteredText + currentValue.substring(end);
 
-    // Set cursor position after inserted text
     const newPosition = start + filteredText.length;
     target.setSelectionRange(newPosition, newPosition);
 
-    // Trigger input event for Angular form validation
     target.dispatchEvent(new Event('input', { bubbles: true }));
   }
 

@@ -390,7 +390,7 @@
           id="price"
           type="text"
           formControlName="price"
-          (input)="trimLeadingSpaces($event, 'price')"
+          (input)="formatPriceInput($event)"
           (keypress)="allowDecimalInput($event)"
           class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [ngClass]="{

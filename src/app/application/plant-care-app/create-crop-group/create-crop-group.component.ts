@@ -45,6 +45,8 @@ interface NewsItem {
 export class CreateCropGroupComponent {
   @ViewChild('cropForm') cropForm!: NgForm;
 
+  costFeildDisplay = '';
+  incomeFeildDisplay = '';
   imageTouched = false;
 
   allowOnlyEnglish(event: KeyboardEvent): void {
@@ -385,7 +387,7 @@ export class CreateCropGroupComponent {
     });
   }
 
-  onCancel() {
+      onCancel() {
     Swal.fire({
       icon: 'warning',
       title: 'Are you sure?',
@@ -402,6 +404,8 @@ export class CreateCropGroupComponent {
         this.selectedFile = null;
         this.selectedImage = null;
         this.imageTouched = false;
+        this.costFeildDisplay = '';
+        this.incomeFeildDisplay = '';
         this.cropGroup = {
           cropNameEnglish: '',
           cropNameSinahala: '',
@@ -691,7 +695,7 @@ export class CreateCropGroupComponent {
     }
   }
 
-  allowOnlyNumbers(event: KeyboardEvent): void {
+    allowOnlyNumbers(event: KeyboardEvent): void {
     const input = event.target as HTMLInputElement;
     const char = event.key;
 
@@ -700,13 +704,26 @@ export class CreateCropGroupComponent {
       return;
     }
 
-    const allowedKeys = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter'];
+    // allow copy / paste / select all etc.
+    if (event.ctrlKey || event.metaKey) return;
 
-    if (char === '.' && !input.value.includes('.')) {
-      return;
-    }
+    const allowedKeys = [
+      'Backspace',
+      'Delete',
+      'Tab',
+      'Escape',
+      'Enter',
+      'ArrowLeft',
+      'ArrowRight',
+      'Home',
+      'End',
+    ];
 
-    if (!/^\d$/.test(char) && !allowedKeys.includes(char)) {
+    if (allowedKeys.includes(char)) return;
+
+    if (char === '.' && !input.value.includes('.')) return;
+
+    if (!/^\d$/.test(char)) {
       event.preventDefault();
     }
   }
@@ -921,5 +938,58 @@ export class CreateCropGroupComponent {
       return '';
     }
     return num.toString();
+  }
+
+  onCostFieldChange(value: string, input: HTMLInputElement): void {
+    const { formatted, raw } = this.formatCommaInput(value, input);
+    this.cropGroup.costFeild = raw;
+    this.costFeildDisplay = formatted;
+  }
+
+  onIncomeFieldChange(value: string, input: HTMLInputElement): void {
+    const { formatted, raw } = this.formatCommaInput(value, input);
+    this.cropGroup.incomeFeild = raw;
+    this.incomeFeildDisplay = formatted;
+  }
+
+  private formatCommaInput(
+    value: string,
+    input: HTMLInputElement,
+  ): { formatted: string; raw: string } {
+    const typed = value ?? '';
+    const cursor = input.selectionStart ?? typed.length;
+    const charsBeforeCursor = typed
+      .slice(0, cursor)
+      .replace(/[^\d.]/g, '').length;
+
+    // keep digits and only the first dot
+    const cleaned = typed.replace(/[^\d.]/g, '');
+    const dotIndex = cleaned.indexOf('.');
+    let intPart = dotIndex === -1 ? cleaned : cleaned.slice(0, dotIndex);
+    const decPart =
+      dotIndex === -1
+        ? null
+        : cleaned
+            .slice(dotIndex + 1)
+            .replace(/\./g, '')
+            .slice(0, 2);
+
+    intPart = intPart.replace(/^0+(?=\d)/, '');
+    const formattedInt = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    const formatted =
+      decPart === null ? formattedInt : `${formattedInt}.${decPart}`;
+
+    // write formatted value and restore the cursor position
+    input.value = formatted;
+    let pos = 0;
+    let count = 0;
+    while (pos < formatted.length && count < charsBeforeCursor) {
+      if (formatted[pos] !== ',') count++;
+      pos++;
+    }
+    input.setSelectionRange(pos, pos);
+
+    // raw value (no commas) is what gets stored in the model and submitted
+    return { formatted, raw: formatted.replace(/,/g, '') };
   }
 }

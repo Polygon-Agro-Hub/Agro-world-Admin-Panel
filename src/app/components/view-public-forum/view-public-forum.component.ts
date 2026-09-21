@@ -37,7 +37,12 @@ export class ViewPublicForumComponent implements OnInit {
   isDeleteVisible = false;
   post: any;
   userPrifile: any;
-  replyMessage: string = '';
+
+  // Per-post reply text (inline textareas), keyed by post id
+  replyMessages: { [postId: number]: string } = {};
+  // Reply text for the popup textarea
+  popupReplyMessage: string = '';
+
   @Input() chatId!: number;
   count!: any;
   countReply!: ReplyCount[];
@@ -52,53 +57,52 @@ export class ViewPublicForumComponent implements OnInit {
     private router: Router,
     private publicForumSrv: PublicForumService,
     public permissionService: PermissionService,
-    public tokenService: TokenService
+    public tokenService: TokenService,
   ) {}
 
-  sendMessage(id: number) {
-  if (!this.replyMessage.trim()) {
-    return;
-  }
-
-  const wordsToCheck = this.replyMessage
-    .trim()
-    .split(/\s+/)
-    .map((w) => w.replace(/[^a-zA-Z0-9]/g, '')) // strip punctuation
-    .filter((w) => w.length > 0);
-
-  if (wordsToCheck.length === 0) {
-    return;
-  }
-
-  this.isLoading = true;
-
-  const checks = wordsToCheck.map((word) =>
-    this.publicForumSrv.checkBlockWord(word).pipe(
-      catchError(() => of(null)) // treat errors as "no match" so it doesn't block sending
-    )
-  );
-
-  forkJoin(checks).subscribe((results) => {
-    const hasBlockedWord = results.some((res) => res && res.length > 0);
-
-    if (hasBlockedWord) {
-      this.isLoading = false;
-      Swal.fire({
-        title: 'Blocked Word Detected!',
-        text: 'Your message contains a word that is not allowed. Please edit and try again.',
-        icon: 'warning',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold text-lg',
-        },
-      });
+  sendMessage(id: number, message: string, fromPopup: boolean = false) {
+    if (!message || !message.trim()) {
       return;
     }
 
-    this.proceedSendMessage(id);
-  });
-}
+    const wordsToCheck = message
+      .trim()
+      .split(/\s+/)
+      .map((w) => w.replace(/[^a-zA-Z0-9]/g, '')) // strip punctuation
+      .filter((w) => w.length > 0);
 
+    if (wordsToCheck.length === 0) {
+      return;
+    }
+
+    this.isLoading = true;
+
+    const checks = wordsToCheck.map((word) =>
+      this.publicForumSrv.checkBlockWord(word).pipe(
+        catchError(() => of(null)), // treat errors as "no match" so it doesn't block sending
+      ),
+    );
+
+    forkJoin(checks).subscribe((results) => {
+      const hasBlockedWord = results.some((res) => res && res.length > 0);
+
+      if (hasBlockedWord) {
+        this.isLoading = false;
+        Swal.fire({
+          title: 'Blocked Word Detected!',
+          text: 'Your message contains a word that is not allowed. Please edit and try again.',
+          icon: 'warning',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
+        return;
+      }
+
+      this.proceedSendMessage(id, message, fromPopup);
+    });
+  }
 
   ngOnInit(): void {
     this.loadPosts();
@@ -119,7 +123,7 @@ export class ViewPublicForumComponent implements OnInit {
       },
       (error) => {
         this.isLoading = false;
-      }
+      },
     );
   }
 
@@ -140,6 +144,7 @@ export class ViewPublicForumComponent implements OnInit {
   openPopup(id: number) {
     this.isPopupVisible = true;
     this.publiForum = [];
+    this.popupReplyMessage = '';
     this.fetchPostAllReply(id);
     this.selectPostId = id;
   }
@@ -176,124 +181,137 @@ export class ViewPublicForumComponent implements OnInit {
             return reply;
           });
         },
-        (error) => {}
+        (error) => {},
       );
   }
 
   deletePost(id: number) {
-  this.activeDeleteMenu = null;
+    this.activeDeleteMenu = null;
 
-  Swal.fire({
-    title: 'Are you sure?',
-    text: 'Do you really want to delete this post? This action cannot be undone.',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Yes, delete it!',
-    cancelButtonText: 'Cancel',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold text-lg',
-      htmlContainer: 'text-left',
-    },
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.isLoading = true;
-      this.publicForumSrv.deletePublicForumPost(id).subscribe(
-        (res: any) => {
-          if (res && res.status) {
-            Swal.fire({
-              title: 'Deleted!',
-              text: 'The post has been deleted.',
-              icon: 'success',
-              customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                title: 'font-semibold text-lg',
-                htmlContainer: 'text-left',
-              },
-            });
-
-            // Optimistically remove the post from local state right away
-            this.post = this.post.filter((p: any) => p.id !== id);
-            this.hasData = this.post.length > 0;
-            this.isPopupVisible = false;
-
-            // Then resync with server for counts etc.
-            this.loadPosts();
-            this.getCount();
-          } else {
-            this.isLoading = false;
-            Swal.fire('Error!', 'There was an error deleting the post.', 'error');
-          }
-        },
-        (error) => {
-          this.isLoading = false;
-          Swal.fire('Error!', 'There was an error deleting the post.', 'error');
-        }
-      );
-    } else if (result.dismiss === Swal.DismissReason.cancel) {
-      location.reload();
-    }
-  });
-}
-
-  deleteReply(id: number) {
-
-  Swal.fire({
-    title: 'Are you sure?',
-    text: 'Do you really want to delete this reply message? This action cannot be undone.',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Yes, delete it!',
-    cancelButtonText: 'Cancel',
-    customClass: {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you really want to delete this post? This action cannot be undone.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+      customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold text-lg',
         htmlContainer: 'text-left',
       },
-}).then((result) => {
-    if (result.isConfirmed) {
-        this.publicForumSrv.deleteReply(id).subscribe(
-            (res: any) => {
-                if (res) {
-                    Swal.fire({
-    title: 'Deleted!',
-    text: 'The Reply has been deleted.',
-    icon: 'success',
-    customClass: {
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+        this.publicForumSrv.deletePublicForumPost(id).subscribe(
+          (res: any) => {
+            if (res && res.status) {
+              Swal.fire({
+                title: 'Deleted!',
+                text: 'The post has been deleted.',
+                icon: 'success',
+                customClass: {
+                  popup:
+                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold text-lg',
+                  htmlContainer: 'text-left',
+                },
+              });
+
+              // Optimistically remove the post from local state right away
+              this.post = this.post.filter((p: any) => p.id !== id);
+              delete this.replyMessages[id];
+              this.hasData = this.post.length > 0;
+              this.isPopupVisible = false;
+
+              // Then resync with server for counts etc.
+              this.loadPosts();
+              this.getCount();
+            } else {
+              this.isLoading = false;
+              Swal.fire(
+                'Error!',
+                'There was an error deleting the post.',
+                'error',
+              );
+            }
+          },
+          (error) => {
+            this.isLoading = false;
+            Swal.fire(
+              'Error!',
+              'There was an error deleting the post.',
+              'error',
+            );
+          },
+        );
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        location.reload();
+      }
+    });
+  }
+
+  deleteReply(id: number) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you really want to delete this reply message? This action cannot be undone.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+      customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold text-lg',
         htmlContainer: 'text-left',
-    }
-}).then(() => {
-    // Refresh the page after the success alert is closed
-    location.reload();
-});
-                }
-            },
-            (error) => {
-                Swal.fire(
-                    'Error!',
-                    'There was an error deleting the crop calendar.',
-                    'error'
-                );
-                this.isPopupVisible = false;
-                this.fetchPostAllReply(this.postId);
-                this.loadPosts();
-                this.getCount();
-                this.isLoading = false;
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.publicForumSrv.deleteReply(id).subscribe(
+          (res: any) => {
+            if (res) {
+              Swal.fire({
+                title: 'Deleted!',
+                text: 'The Reply has been deleted.',
+                icon: 'success',
+                customClass: {
+                  popup:
+                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold text-lg',
+                  htmlContainer: 'text-left',
+                },
+              });
+
+              // Stay on the same screen: close the small delete menu,
+              // then refresh the replies in the open popup and the counts.
+              this.activeDeleteMenu = null;
+              this.fetchPostAllReply(this.selectPostId);
+              this.getCount();
             }
+          },
+          (error) => {
+            Swal.fire(
+              'Error!',
+              'There was an error deleting the reply.',
+              'error',
+            );
+            // Keep the popup open and just resync its content
+            this.activeDeleteMenu = null;
+            this.fetchPostAllReply(this.selectPostId);
+            this.getCount();
+            this.isLoading = false;
+          },
         );
-    } else if (result.dismiss === Swal.DismissReason.cancel) {
-        // Simply do nothing - the popup will close automatically
-        // No need for location.reload() here
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        // Nothing to do - the user stays on the same screen
+        this.activeDeleteMenu = null;
         this.isLoading = false; // Ensure loading state is reset
-    }
-});
-}
+      }
+    });
+  }
 
   getCount() {
     this.publicForumSrv.getreplyCount().subscribe((data: any) => {
@@ -305,7 +323,7 @@ export class ViewPublicForumComponent implements OnInit {
     const now = new Date();
     const postTime = new Date(createdAt);
     const diffInSeconds = Math.floor(
-      (now.getTime() - postTime.getTime()) / 1000
+      (now.getTime() - postTime.getTime()) / 1000,
     );
 
     if (diffInSeconds < 60) {
@@ -323,20 +341,27 @@ export class ViewPublicForumComponent implements OnInit {
     this.router.navigate(['/plant-care/action']);
   }
 
-  onReplyMassageInput(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const original = input.value;
+  // Removes leading spaces and capitalizes the first letter
+  private formatReplyInput(event: Event): string {
+    const input = event.target as HTMLTextAreaElement;
+    let trimmed = input.value.replace(/^\s+/, '');
 
-    // Remove leading spaces
-    let trimmed = original.replace(/^\s+/, '');
-
-    // Capitalize first letter if there's any input
     if (trimmed.length > 0) {
       trimmed = trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
     }
 
     input.value = trimmed; // Update input display
-    this.replyMessage = trimmed; // Update model
+    return trimmed;
+  }
+
+  // Inline textarea (one per post)
+  onReplyMassageInput(event: Event, postId: number): void {
+    this.replyMessages[postId] = this.formatReplyInput(event);
+  }
+
+  // Popup textarea
+  onPopupReplyInput(event: Event): void {
+    this.popupReplyMessage = this.formatReplyInput(event);
   }
 
   @HostListener('document:click', ['$event'])
@@ -359,43 +384,54 @@ export class ViewPublicForumComponent implements OnInit {
   }
 
   hasReplies(chatId: number): boolean {
-  return this.countReply && this.countReply.some(i => i.chatId === chatId);
-}
+    return this.countReply && this.countReply.some((i) => i.chatId === chatId);
+  }
 
-private proceedSendMessage(id: number) {
-  const replyData = {
-    id: this.postId,
-    replyMessage: this.replyMessage,
-  };
+    hasReplyText(postId: number): boolean {
+    return (this.replyMessages[postId] || '').trim().length > 0;
+  }
+  
+  private proceedSendMessage(id: number, message: string, fromPopup: boolean) {
+    const replyData = {
+      id: id,
+      replyMessage: message,
+    };
 
-  this.publicForumSrv.sendMessage(id, replyData).subscribe(
-    (res) => {
-      this.isLoading = false;
-      Swal.fire({
-        title: 'Success!',
-        text: 'Your reply has been sent.',
-        icon: 'success',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold text-lg',
-        },
-      });
-      this.isPopupVisible = false;
-      this.fetchPostAllReply(this.postId);
-      this.loadPosts();
-      this.getCount();
-      this.replyMessage = '';
-    },
-    (error) => {
-      this.isLoading = false;
-      Swal.fire('Error!', 'There was an error sending your reply.', 'error');
-      this.isPopupVisible = false;
-      this.fetchPostAllReply(this.postId);
-      this.loadPosts();
-      this.getCount();
-    }
-  );
-}
+    this.publicForumSrv.sendMessage(id, replyData).subscribe(
+      (res) => {
+        this.isLoading = false;
+        Swal.fire({
+          title: 'Success!',
+          text: 'Your reply has been sent.',
+          icon: 'success',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
+
+        // Clear only the textarea the message came from
+        if (fromPopup) {
+          this.popupReplyMessage = '';
+        } else {
+          this.replyMessages[id] = '';
+        }
+
+        this.isPopupVisible = false;
+        this.fetchPostAllReply(id);
+        this.loadPosts();
+        this.getCount();
+      },
+      (error) => {
+        this.isLoading = false;
+        Swal.fire('Error!', 'There was an error sending your reply.', 'error');
+        this.isPopupVisible = false;
+        this.fetchPostAllReply(id);
+        this.loadPosts();
+        this.getCount();
+      },
+    );
+  }
 }
 
 class PublicForum {

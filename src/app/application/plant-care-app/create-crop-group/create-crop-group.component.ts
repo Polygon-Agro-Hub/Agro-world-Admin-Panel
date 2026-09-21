@@ -46,6 +46,7 @@ export class CreateCropGroupComponent {
   @ViewChild('cropForm') cropForm!: NgForm;
 
   costFeildDisplay = '';
+  incomeFeildDisplay = '';
   imageTouched = false;
 
   allowOnlyEnglish(event: KeyboardEvent): void {
@@ -386,7 +387,7 @@ export class CreateCropGroupComponent {
     });
   }
 
-    onCancel() {
+      onCancel() {
     Swal.fire({
       icon: 'warning',
       title: 'Are you sure?',
@@ -404,6 +405,7 @@ export class CreateCropGroupComponent {
         this.selectedImage = null;
         this.imageTouched = false;
         this.costFeildDisplay = '';
+        this.incomeFeildDisplay = '';
         this.cropGroup = {
           cropNameEnglish: '',
           cropNameSinahala: '',
@@ -939,6 +941,21 @@ export class CreateCropGroupComponent {
   }
 
   onCostFieldChange(value: string, input: HTMLInputElement): void {
+    const { formatted, raw } = this.formatCommaInput(value, input);
+    this.cropGroup.costFeild = raw;
+    this.costFeildDisplay = formatted;
+  }
+
+  onIncomeFieldChange(value: string, input: HTMLInputElement): void {
+    const { formatted, raw } = this.formatCommaInput(value, input);
+    this.cropGroup.incomeFeild = raw;
+    this.incomeFeildDisplay = formatted;
+  }
+
+  private formatCommaInput(
+    value: string,
+    input: HTMLInputElement,
+  ): { formatted: string; raw: string } {
     const typed = value ?? '';
     const cursor = input.selectionStart ?? typed.length;
     const charsBeforeCursor = typed
@@ -962,10 +979,6 @@ export class CreateCropGroupComponent {
     const formatted =
       decPart === null ? formattedInt : `${formattedInt}.${decPart}`;
 
-    // raw value (no commas) goes to the model used on submit
-    this.cropGroup.costFeild = formatted.replace(/,/g, '');
-    this.costFeildDisplay = formatted;
-
     // write formatted value and restore the cursor position
     input.value = formatted;
     let pos = 0;
@@ -975,5 +988,8 @@ export class CreateCropGroupComponent {
       pos++;
     }
     input.setSelectionRange(pos, pos);
+
+    // raw value (no commas) is what gets stored in the model and submitted
+    return { formatted, raw: formatted.replace(/,/g, '') };
   }
 }

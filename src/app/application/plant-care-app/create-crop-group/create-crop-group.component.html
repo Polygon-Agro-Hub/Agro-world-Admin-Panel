@@ -193,7 +193,7 @@
         </div>
       </div>
 
-      <div>
+            <div>
         <label
           for="incomePerAcre"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
@@ -201,14 +201,17 @@
           Income per acre field (Rs.) *
         </label>
         <input
+          #incomeInput
           type="text"
+          inputmode="decimal"
           id="incomePerAcre"
-          [(ngModel)]="cropGroup.incomeFeild"
           name="incomeFeild"
+          [ngModel]="incomeFeildDisplay"
+          (ngModelChange)="onIncomeFieldChange($event, incomeInput)"
           (keydown)="allowOnlyNumbers($event)"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
           #incomeperacreInput="ngModel"
-          pattern="^(?!0*\.?0*$)\d+(\.\d{1,2})?$"
+          pattern="^(?![0,]*\.?0*$)\d{1,3}(,\d{3})*(\.\d{1,2})?$"
           required
         />
 

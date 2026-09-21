@@ -287,7 +287,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
       order.push('profile');
       files.push(this.selectedFile);
     }
-    
+
 
     if (this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER || this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER) {
       if (this.licenseFrontImageFile) {
@@ -370,7 +370,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
     }
 
     if (!this.personalData.centerId) {
-      missingFields.push('Collection Centre Name is Required');
+      missingFields.push('Distribution Centre Name is Required');
     }
 
     if (!this.personalData.jobRole) {
@@ -907,7 +907,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
       }
 
       if (!this.personalData.centerId) {
-        missingFields.push('Collection Centre Name is Required');
+        missingFields.push('Distribution Centre Name is Required');
       }
 
       if (!this.personalData.jobRole) {
@@ -2470,6 +2470,13 @@ export class CreateDistributionOfficerComponent implements OnInit {
       return false;
 
     return phone1 === phone2;
+  }
+
+  capitalizeFirstLetterOnly(fieldName: 'firstNameEnglish' | 'lastNameEnglish'): void {
+    const value = this.personalData[fieldName];
+    if (value && value.length > 0) {
+      this.personalData[fieldName] = value.charAt(0).toUpperCase() + value.slice(1);
+    }
   }
 }
 

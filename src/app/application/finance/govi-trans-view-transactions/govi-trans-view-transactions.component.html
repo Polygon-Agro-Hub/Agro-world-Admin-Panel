@@ -32,7 +32,7 @@
 
         <div class="flex items-center gap-2 h-8 ml-2 mr-5">
           <p-calendar id="purchasedDate" [(ngModel)]="date" (onSelect)="dateFilter()" (onClear)="onDateClear()"
-            placeholder="Purchased Date" [showIcon]="true" [showClear]="true" iconDisplay="input"
+            placeholder="Submission Date" [showIcon]="true" [showClear]="true" iconDisplay="input"
             [style]="{ width: '16rem', height: '2rem' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
                 [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
                 [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
@@ -105,13 +105,13 @@
             <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left" style="white-space: nowrap">
               View Documents
             </th>
-            <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left" style="white-space: nowrap">
+            <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center" style="white-space: nowrap">
               Submitted At
             </th>
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left" style="white-space: nowrap">
               Last Update By
             </th>
-            <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left" style="white-space: nowrap">
+            <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center" style="white-space: nowrap">
               Last Update At
             </th>
           </tr>

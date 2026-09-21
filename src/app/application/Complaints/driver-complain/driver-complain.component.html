@@ -47,7 +47,7 @@
             >Complainant</label
           >
           <label class="block text-gray-700 dark:text-textDark mb-2">
-            ({{ complain.JobRole === "Driver" ? "DRV" : "" }})
+            ({{ (complain.JobRole === LIGHT_WEIGHT_DRIVER || complain.JobRole === HEAVY_WEIGHT_DRIVER ) ? "DRV" : "" }})
           </label>
         </div>
         <input
@@ -62,7 +62,7 @@
         <div class="flex flex-col">
           <label class="block text-gray-700 dark:text-textDark">Contact</label>
           <label class="block text-gray-700 dark:text-textDark">
-            ({{ complain.JobRole === "Driver" ? "DRV" : "" }})
+            ({{ (complain.JobRole === LIGHT_WEIGHT_DRIVER || complain.JobRole === HEAVY_WEIGHT_DRIVER ) ? "DRV" : "" }})
           </label>
         </div>
         <input

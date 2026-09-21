@@ -1,12 +1,12 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-<button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
+<!-- <button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
   <i class="fa-solid fa-arrow-left"></i>
   Back
-</button>
+</button> -->
 
 <div
-  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
+  class="max-w-[75%] overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
   <div class="pt-5 pr-12 pl-12 pb-5 min-w-max bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="mb-1">
       <h2 class="text-xl font-normal text-[#292929] dark:text-textDark">
@@ -37,9 +37,9 @@
             <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left" style="white-space: nowrap">
               Order Value (Rs.)
             </th>
-            <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left" style="white-space: nowrap">
+            <!-- <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left" style="white-space: nowrap">
               To Receive (Rs.)
-            </th>
+            </th> -->
           </tr>
         </thead>
         <tbody>
@@ -53,9 +53,9 @@
             <td class="px-4 py-3 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
               {{ order.amount | number: "1.2-2" }}
             </td>
-            <td class="px-4 py-3 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
+            <!-- <td class="px-4 py-3 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
               {{ order.toReceive | number: "1.2-2" }}
-            </td>
+            </td> -->
           </tr>
         </tbody>
       </table>

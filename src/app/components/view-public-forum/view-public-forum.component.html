@@ -87,9 +87,9 @@
           class="flex-grow bg-transparent border-none focus:outline-none px-2 h-36 dark:text-textDark"></textarea>
         <input id="file-upload " type="file " class="hidden" />
       </div>
-      <button class="ml-2 text-[#3980C0] hover:cursor-pointer disabled:text-gray-400 disabled:cursor-not-allowed"
+            <button class="ml-2 text-[#3980C0] hover:cursor-pointer disabled:text-gray-400 disabled:cursor-not-allowed"
         (click)="sendMessage(postRcord.id, replyMessages[postRcord.id])"
-        [disabled]="!replyMessages[postRcord.id]?.trim()">
+        [disabled]="!hasReplyText(postRcord.id)">
         <i class="material-icons" style="font-size: 36px">send</i>
       </button>
     </div>

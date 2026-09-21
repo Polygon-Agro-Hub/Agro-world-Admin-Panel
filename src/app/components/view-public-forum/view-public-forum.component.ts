@@ -283,27 +283,31 @@ export class ViewPublicForumComponent implements OnInit {
                   title: 'font-semibold text-lg',
                   htmlContainer: 'text-left',
                 },
-              }).then(() => {
-                // Refresh the page after the success alert is closed
-                location.reload();
               });
+
+              // Stay on the same screen: close the small delete menu,
+              // then refresh the replies in the open popup and the counts.
+              this.activeDeleteMenu = null;
+              this.fetchPostAllReply(this.selectPostId);
+              this.getCount();
             }
           },
           (error) => {
             Swal.fire(
               'Error!',
-              'There was an error deleting the crop calendar.',
+              'There was an error deleting the reply.',
               'error',
             );
-            this.isPopupVisible = false;
-            this.fetchPostAllReply(this.postId);
-            this.loadPosts();
+            // Keep the popup open and just resync its content
+            this.activeDeleteMenu = null;
+            this.fetchPostAllReply(this.selectPostId);
             this.getCount();
             this.isLoading = false;
           },
         );
       } else if (result.dismiss === Swal.DismissReason.cancel) {
-        // Simply do nothing - the popup will close automatically
+        // Nothing to do - the user stays on the same screen
+        this.activeDeleteMenu = null;
         this.isLoading = false; // Ensure loading state is reset
       }
     });
@@ -383,6 +387,10 @@ export class ViewPublicForumComponent implements OnInit {
     return this.countReply && this.countReply.some((i) => i.chatId === chatId);
   }
 
+    hasReplyText(postId: number): boolean {
+    return (this.replyMessages[postId] || '').trim().length > 0;
+  }
+  
   private proceedSendMessage(id: number, message: string, fromPopup: boolean) {
     const replyData = {
       id: id,

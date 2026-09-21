@@ -72,9 +72,6 @@
               <p *ngIf="i.chatId === postRcord.id">{{ i.replyCount }} {{ i.replyCount > 1 ? 'Replies' : 'Reply' }}</p>
             </div>
             <p *ngIf="!hasReplies(postRcord.id)">0 Reply</p>
-            <!-- <button class="ml-2">
-
-            </button> -->
           </span>
         </div>
       </div>
@@ -85,18 +82,14 @@
         tokenService.getUserDetails().role === '1'
       " class="p-10 flex items-center space-x-2 w-full">
       <div class="flex items-center border border-gray-300 rounded-lg p-2 w-full dark:bg-[#272F45] dark:border-none">
-        <textarea [(ngModel)]="replyMessage" type="text " placeholder="Write your message here... "
-          (input)="onReplyMassageInput($event)"
+        <textarea [(ngModel)]="replyMessages[postRcord.id]" placeholder="Write your message here... "
+          (input)="onReplyMassageInput($event, postRcord.id)"
           class="flex-grow bg-transparent border-none focus:outline-none px-2 h-36 dark:text-textDark"></textarea>
-        <!-- <button
-          class="text-gray-500 hover:text-gray-600 p-2"
-          id="file-upload-btn "
-        >
-          <i class="fa fa-paperclip" style="font-size: 25px"></i>
-        </button> -->
         <input id="file-upload " type="file " class="hidden" />
       </div>
-      <button class="ml-2 text-[#3980C0] hover:cursor-pointer" (click)="sendMessage(postRcord.id)">
+      <button class="ml-2 text-[#3980C0] hover:cursor-pointer disabled:text-gray-400 disabled:cursor-not-allowed"
+        (click)="sendMessage(postRcord.id, replyMessages[postRcord.id])"
+        [disabled]="!replyMessages[postRcord.id]?.trim()">
         <i class="material-icons" style="font-size: 36px">send</i>
       </button>
     </div>
@@ -145,7 +138,7 @@
               </div>
             </div>
           </div>
-         
+
         </div>
       </div>
     </div>
@@ -156,17 +149,16 @@
         permissionService.hasPermission('Reply for each post') ||
         tokenService.getUserDetails().role === '1'
       " class="px-12 pb-4">
-      <!-- Added pb-4 for bottom padding -->
       <div class="flex flex-row border-t-gray-600">
         <div class="flex flex-row w-full">
           <div class="flex relative w-full">
-            <textarea [(ngModel)]="replyMessage" (input)="onReplyMassageInput($event)" rows="4" cols="5"
+            <textarea [(ngModel)]="popupReplyMessage" (input)="onPopupReplyInput($event)" rows="4" cols="5"
               placeholder="Comment here..."
               class="w-full px-4 py-2 pr-12 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-tileBlack dark:text-textDark"></textarea>
           </div>
         </div>
         <button class="ml-2 text-[#3980C0] hover:cursor-pointer disabled:text-gray-400 disabled:cursor-not-allowed"
-          (click)="sendMessage(selectPostId)" [disabled]="!replyMessage.trim()">
+          (click)="sendMessage(selectPostId, popupReplyMessage, true)" [disabled]="!popupReplyMessage.trim()">
           <i class="material-icons" style="font-size: 36px">send</i>
         </button>
       </div>

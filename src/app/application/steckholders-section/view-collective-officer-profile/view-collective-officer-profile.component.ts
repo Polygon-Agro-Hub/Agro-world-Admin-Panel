@@ -312,6 +312,7 @@ export class ViewCollectiveOfficerProfileComponent {
 
     let empType = '';
     let empCode = '';
+    let isDriver = false;
 
     switch (this.officerObj.jobRole) {
       case 'Customer Officer':
@@ -331,12 +332,9 @@ export class ViewCollectiveOfficerProfileComponent {
         empCode = 'COO';
         break;
       case this.LIGHT_WEIGHT_DRIVER:
-        empType = this.LIGHT_WEIGHT_DRIVER;
-        empCode = 'DVR';
-        break;
       case this.HEAVY_WEIGHT_DRIVER:
-        empType = this.HEAVY_WEIGHT_DRIVER;
         empCode = 'DVR';
+        isDriver = true;
         break;
       case 'Distribution Centre Head':
         empType = 'Distribution Centre Head';
@@ -358,15 +356,25 @@ export class ViewCollectiveOfficerProfileComponent {
 
     // Set font and print empTypeText
     doc.setFont("Inter", "normal");
-    let empTypeText = `${getValueOrNA(empType)} - `;
-    doc.text(empTypeText, startX, 22);
 
-    // Measure the width of empTypeText for proper alignment
-    let textWidth = doc.getTextWidth(empTypeText);
+    if (isDriver) {
+      doc.setFont("Inter", "bold");
+      doc.text(getValueOrNA(empCodeText), startX, 22);
+      let textWidth = doc.getTextWidth(getValueOrNA(empCodeText));
 
-    // Apply bold font for empCode + empId and print it right after empTypeText
-    doc.setFont("Inter", "bold");
-    doc.text(getValueOrNA(empCodeText), startX + textWidth, 22);
+      doc.setFont("Inter", "normal");
+      const driverExtra = ` | ${getValueOrNA(this.officerObj.jobRole)} | ${getValueOrNA(this.officerObj.slvCatName)}`;
+      doc.text(driverExtra, startX + textWidth, 22);
+    } else {
+      // Non-driver format: EmpType - EMPCODEEMPID
+      let empTypeText = `${getValueOrNA(empType)} - `;
+      doc.text(empTypeText, startX, 22);
+
+      let textWidth = doc.getTextWidth(empTypeText);
+
+      doc.setFont("Inter", "bold");
+      doc.text(getValueOrNA(empCodeText), startX + textWidth, 22);
+    }
 
     // Generate center text
     let centerText = 'Officer has been disclaimed - No Assigned Centre';

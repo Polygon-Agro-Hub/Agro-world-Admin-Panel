@@ -651,8 +651,7 @@
           Insurance Number *
         </label>
         <input id="insNo" type="text" #insurenceNoInput="ngModel" name="insNo" [(ngModel)]="driverObj.insNo"
-          [maxlength]="13"
-          (keypress)="handleSpaceRestrictions($event)"
+          [maxlength]="13" (keypress)="handleSpaceRestrictions($event)"
           class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         <div>
           <span class="text-red-600 text-sm" *ngIf="insurenceNoInput.touched && !driverObj.insNo">
@@ -666,8 +665,7 @@
           Confirm Insurance Number *
         </label>
         <input id="confirmInsNo" type="text" #confirmInsurenceNoInput="ngModel" name="confirmInsNo"
-          [(ngModel)]="driverObj.confirmInsNo"
-          (keypress)="handleSpaceRestrictions($event)"
+          [(ngModel)]="driverObj.confirmInsNo" (keypress)="handleSpaceRestrictions($event)"
           class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
         <div>
@@ -792,8 +790,8 @@
         <label for="selectVehicletype" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Vehicle Type *
         </label>
-        <p-dropdown id="selectVehicletype" [(ngModel)]="selectVehicletype" [options]="VehicleTypes" optionLabel="name"
-          placeholder="Select Vehicle Type" (onChange)="vehicleChange()" styleClass="w-full mt-1"
+        <p-dropdown id="selectVehicletype" [(ngModel)]="selectVehicletype" [options]="filteredVehicleTypes"
+          optionLabel="name" placeholder="Select Vehicle Type" (onChange)="vehicleChange()" styleClass="w-full mt-1"
           panelStyleClass="custom-dropdown-panel" class="mt-1 block w-full p-dropdown-custom">
         </p-dropdown>
       </div>

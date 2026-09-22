@@ -1574,12 +1574,12 @@ export class CreateCompanyComponent implements OnInit {
 
   // NEW: catches "bbg@.gmail.com" and similar
   if (domainPart.startsWith('.') || domainPart.startsWith('-')) {
-    this.emailValidationMessage = 'Email domain cannot start with a dot or hyphen.';
+    this.emailValidationMessage = 'Please enter a valid email address.';
     return false;
   }
 
   if (domainPart.endsWith('.') || domainPart.endsWith('-')) {
-    this.emailValidationMessage = 'Email domain cannot end with a dot or hyphen.';
+    this.emailValidationMessage = 'Please enter a valid email address.';
     return false;
   }
 

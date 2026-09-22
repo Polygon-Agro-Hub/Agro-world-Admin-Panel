@@ -379,8 +379,7 @@
         <input maxlength="50" id="accHolderName" name="accHolderName" [(ngModel)]="personalData.accHolderName"
           (input)="onTrimInput($event, personalData, 'accHolderName'); validateNameInput($event)"
           #accHolderNameRef="ngModel" required pattern="^[A-Za-z\s]+$" (blur)="onBlur('accHolderName')"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          [class.border-red-500]="touchedFields['accHolderName'] && (!personalData.accHolderName || accHolderNameRef.errors?.['pattern'])" />
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         <span *ngIf="touchedFields['accHolderName']" class="text-red-600 text-sm">
           <ng-container *ngIf="!personalData.accHolderName">
             Account Holder's Name is required.

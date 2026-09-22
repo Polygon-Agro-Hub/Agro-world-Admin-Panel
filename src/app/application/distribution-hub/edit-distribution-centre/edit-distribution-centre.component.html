@@ -49,10 +49,11 @@
         <label class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark">
           Contact Number 01 *
         </label>
-        <div class="flex">
-          <p-dropdown formControlName="contact1Code" [options]="countries" optionLabel="dialCode" optionValue="dialCode"
-            styleClass="border border-gray-300 mr-2 rounded-l-md bg-white dark:bg-tileBlack text-gray-800 dark:text-textDark custom-dropdown"
-            [style]="{ width: '120px' }" [ngClass]="{ 'border-red-500': isFieldInvalid('contact1Code') }">
+        <div class="flex min-w-0 items-stretch gap-2">
+          <div class="contact-code-wrapper">
+            <p-dropdown formControlName="contact1Code" [options]="countries" optionLabel="dialCode" optionValue="dialCode"
+              styleClass="border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-gray-800 dark:text-white custom-dropdown"
+              [ngClass]="{ 'border-red-500': isFieldInvalid('contact1Code') }">
             <!-- Dropdown items -->
             <ng-template let-country pTemplate="item">
               <div class="flex items-center gap-2">
@@ -68,11 +69,12 @@
                 <span>{{ country.dialCode }}</span>
               </div>
             </ng-template>
-          </p-dropdown>
+            </p-dropdown>
+          </div>
 
           <input type="tel" formControlName="contact1" placeholder="7XXXXXXXX" maxlength="9"
             (input)="onPhoneInputChange($event, 'contact1')" [class]="
-              'dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
+              'dark:text-textDark bg-tileLight dark:bg-tileBlack min-w-0 flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
               (isFieldInvalid('contact1') ? 'border-red-500' : 'border-gray-300')
             " />
         </div>
@@ -95,10 +97,11 @@
         <label class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark">
           Contact Number 02
         </label>
-        <div class="flex">
-          <p-dropdown formControlName="contact2Code" [options]="countries" optionLabel="dialCode" optionValue="dialCode"
-            styleClass="border border-gray-300 mr-2 rounded-l-md bg-white dark:bg-tileBlack text-gray-800 dark:text-textDark custom-dropdown"
-            [style]="{ width: '120px' }" [ngClass]="{ 'border-red-500': isFieldInvalid('contact2Code') }">
+        <div class="flex min-w-0 items-stretch gap-2">
+          <div class="contact-code-wrapper">
+            <p-dropdown formControlName="contact2Code" [options]="countries" optionLabel="dialCode" optionValue="dialCode"
+              styleClass="border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-gray-800 dark:text-textDark custom-dropdown"
+              [ngClass]="{ 'border-red-500': isFieldInvalid('contact2Code') }">
             <!-- Dropdown items -->
             <ng-template let-country pTemplate="item">
               <div class="flex items-center gap-2">
@@ -114,11 +117,12 @@
                 <span>{{ country.dialCode }}</span>
               </div>
             </ng-template>
-          </p-dropdown>
+            </p-dropdown>
+          </div>
 
           <input type="tel" formControlName="contact2" placeholder="7XXXXXXXX" maxlength="9"
             (input)="onPhoneInputChange($event, 'contact2')" [class]="
-              'dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
+              'dark:text-textDark bg-tileLight dark:bg-tileBlack min-w-0 flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
               (isFieldInvalid('contact2') ? 'border-red-500' : 'border-gray-300')
             " />
         </div>

@@ -29,8 +29,7 @@
         <label class="dark:text-textDark block text-sm font-medium text-[#534E4E] mb-2">Company *</label>
         <p-dropdown formControlName="company" [options]="companyOptions" optionLabel="label" optionValue="value"
           [filter]="true" filterBy="label" [showClear]="false" placeholder="Select a company" styleClass="w-full"
-          panelStyleClass="custom-dropdown-panel" class="block w-full p-dropdown-custom"
-          [class.border-red-500]="isFieldInvalid('company')">
+          panelStyleClass="custom-dropdown-panel" class="block w-full p-dropdown-custom">
         </p-dropdown>
         <div *ngIf="isFieldInvalid('company')" class="text-red-500 text-sm mt-1">
           {{ getFieldError("company") }}
@@ -47,7 +46,7 @@
         <div class="flex">
           <p-dropdown formControlName="contact1Code" [options]="countries" optionLabel="dialCode" optionValue="dialCode"
             styleClass="border border-gray-300 mr-2 rounded-l-md bg-white dark:bg-tileBlack text-gray-800 dark:text-textDark custom-dropdown"
-            [style]="{ width: '130px' }" [ngClass]="{ 'border-red-500': isFieldInvalid('contact1Code') }">
+            [style]="{ width: '130px' }">
             <!-- Dropdown items -->
             <ng-template let-country pTemplate="item">
               <div class="flex items-center gap-2">
@@ -66,10 +65,8 @@
           </p-dropdown>
 
           <input type="tel" formControlName="contact1" placeholder="7XXXXXXXX" maxlength="9"
-            (input)="onInputChange($event, 'phone')" [class]="
-          'dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
-          (isFieldInvalid('contact1') ? 'border-red-500' : 'border-gray-300')
-        " />
+            (input)="onInputChange($event, 'phone')"
+            class="dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border border-gray-300 rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
         </div>
         <div *ngIf="isFieldInvalid('contact1')" class="text-red-500 text-sm mt-1">
           {{ getFieldError("contact1") }}
@@ -83,7 +80,7 @@
         <div class="flex">
           <p-dropdown formControlName="contact2Code" [options]="countries" optionLabel="dialCode" optionValue="dialCode"
             styleClass="border border-gray-300 mr-2 rounded-l-md bg-white dark:bg-tileBlack text-gray-800 dark:text-textDark custom-dropdown"
-            [style]="{ width: '130px' }" [ngClass]="{ 'border-red-500': isFieldInvalid('contact2Code') }">
+            [style]="{ width: '130px' }">
             <!-- Dropdown items -->
             <ng-template let-country pTemplate="item">
               <div class="flex items-center gap-2">
@@ -102,10 +99,8 @@
           </p-dropdown>
 
           <input type="tel" formControlName="contact2" placeholder="7XXXXXXXX" maxlength="9"
-            (input)="onInputChange($event, 'phone')" [class]="
-          'dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
-          (isFieldInvalid('contact2') ? 'border-red-500' : 'border-gray-300')
-        " />
+            (input)="onInputChange($event, 'phone')"
+            class="dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border border-gray-300 rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
         </div>
         <div *ngIf="isFieldInvalid('contact2')" class="text-red-500 text-sm mt-1">
           {{ getFieldError("contact2") }}
@@ -118,28 +113,20 @@
       <!-- Updated Longitude input -->
       <div class="flex-1">
         <label class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark">Longitude *</label>
-        <input type="text" formControlName="longitude" placeholder="e.g., 79.8612" [class]="
-      ' dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
-      (isFieldInvalid('longitude') ? 'border-red-500' : 'border-gray-300')
-    " />
+        <input type="text" formControlName="longitude" placeholder="e.g., 79.8612"
+          class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
         <div *ngIf="isFieldInvalid('longitude')" class="text-red-500 text-sm mt-1">
           {{ getFieldError("longitude") }}
         </div>
       </div>
       <div class="flex-1 mb-4 md:mb-0">
         <label class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark">Latitude *</label>
-        <input type="text" formControlName="latitude" placeholder="e.g., 6.9271" [class]="
-      ' dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
-      (isFieldInvalid('latitude') ? 'border-red-500' : 'border-gray-300')
-      
-    " />
+        <input type="text" formControlName="latitude" placeholder="e.g., 6.9271"
+          class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
         <div *ngIf="isFieldInvalid('latitude')" class="text-red-500 text-sm mt-1">
           {{ getFieldError("latitude") }}
         </div>
       </div>
-
-
-
     </div>
 
     <!-- Row 4 -->
@@ -149,12 +136,8 @@
           Email *
         </label>
 
-        <input type="email" formControlName="email" (input)="onInputChange($event, 'email')" [ngClass]="
-      'dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
-      (distributionForm.get('email')?.value && !isValidGmail(distributionForm.get('email')?.value) 
-        ? 'border-red-500' 
-        : 'border-gray-300')
-    " />
+        <input type="email" formControlName="email" (input)="onInputChange($event, 'email')"
+          class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
         <!-- Only show required error when field is touched/dirty and empty -->
         <div *ngIf="distributionForm.get('email')?.touched && distributionForm.get('email')?.hasError('required')"
@@ -169,12 +152,10 @@
         </div>
       </div>
 
-
-
       <div class="flex-1">
         <label class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark">Country *</label>
         <input type="text" formControlName="country" readonly
-  class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border border-gray-300 rounded-md" />
+          class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border border-gray-300 rounded-md" />
         <div *ngIf="isFieldInvalid('country')" class="text-red-500 text-sm mt-1">
           {{ getFieldError("country") }}
         </div>
@@ -188,7 +169,7 @@
         <p-dropdown formControlName="province" [options]="provinceOptions" optionLabel="label" optionValue="value"
           [filter]="true" filterBy="label" [showClear]="false" placeholder="Select Province"
           (onChange)="onProvinceChange()" styleClass="w-full" panelStyleClass="custom-dropdown-panel"
-          class="block w-full p-dropdown-custom" [class.border-red-500]="isFieldInvalid('province')">
+          class="block w-full p-dropdown-custom">
         </p-dropdown>
         <div *ngIf="isFieldInvalid('province')" class="text-red-500 text-sm mt-1">
           {{ getFieldError("province") }}
@@ -201,8 +182,7 @@
         <p-dropdown formControlName="district" [options]="districtOptions" optionLabel="label" optionValue="value"
           [filter]="true" filterBy="label" [showClear]="false" [disabled]="!distributionForm.get('province')?.value"
           placeholder="Select District" (onChange)="onDistrictChange()" styleClass="w-full"
-          panelStyleClass="custom-dropdown-panel" class="block w-full p-dropdown-custom"
-          [class.border-red-500]="isFieldInvalid('district')">
+          panelStyleClass="custom-dropdown-panel" class="block w-full p-dropdown-custom">
         </p-dropdown>
         <div *ngIf="isFieldInvalid('district')" class="text-red-500 text-sm mt-1">
           {{ getFieldError("district") }}
@@ -214,10 +194,8 @@
     <div class="flex flex-col md:flex-row md:space-x-4 mb-6 gap-8">
       <div class="flex-1 mb-4 md:mb-0">
         <label class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark">City *</label>
-        <input type="text" formControlName="city" (input)="onInputChange($event, 'city')" [class]="
-      ' dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
-      (isFieldInvalid('city') ? 'border-red-500' : 'border-gray-300')
-    " />
+        <input type="text" formControlName="city" (input)="onInputChange($event, 'city')"
+          class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
         <div *ngIf="isFieldInvalid('city')" class="text-red-500 text-sm mt-1">
           {{ getFieldError("city") }}
         </div>
@@ -227,7 +205,7 @@
           *</label>
         <div class="relative">
           <input type="text" formControlName="regCode" readonly
-  class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border border-gray-300 rounded-md" />
+            class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border border-gray-300 rounded-md" />
           <div *ngIf="isLoadingregcode" class="absolute inset-y-0 right-0 flex items-center pr-3">
             <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
           </div>

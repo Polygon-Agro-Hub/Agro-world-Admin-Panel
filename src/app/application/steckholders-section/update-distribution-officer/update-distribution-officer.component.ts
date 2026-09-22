@@ -1364,35 +1364,37 @@ export class UpdateDistributionOfficerComponent {
   }
 
   EpmloyeIdCreate() {
-    if (this.personalData.jobRole !== this.initiateJobRole) {
-      this.selectVehicletype = { name: '', capacity: '' };
-      this.driverObj.vType = '';
-      this.driverObj.vCapacity = '';
-    }
-
-    let rolePrefix: string | undefined;
-
     const rolePrefixes: { [key: string]: string } = {
       'Distribution Centre Manager': 'DCM',
       'Distribution Officer': 'DIO',
       [this.LIGHT_WEIGHT_DRIVER]: 'DRV',
       [this.HEAVY_WEIGHT_DRIVER]: 'DRV'
-
     };
 
-    rolePrefix = rolePrefixes[this.personalData.jobRole];
+    const newRolePrefix = rolePrefixes[this.personalData.jobRole];
+    const initialRolePrefix = rolePrefixes[this.initiateJobRole];
 
-    if (this.personalData.jobRole === this.initiateJobRole) {
-      this.lastID = this.initiateId;
-    } else {
-      if (!rolePrefix) {
-        return;
-      }
-
-      this.getLastID(rolePrefix).then((lastID) => {
-        this.personalData.empId = rolePrefix + lastID;
-      });
+    if (newRolePrefix !== initialRolePrefix) {
+      this.selectVehicletype = { name: '', capacity: '' };
+      this.driverObj.vType = '';
+      this.driverObj.vCapacity = '';
     }
+
+    if (newRolePrefix === initialRolePrefix) {
+      this.lastID = this.initiateId;
+      this.personalData.empId = this.initiateJobRole
+        ? this.personalData.empId
+        : this.personalData.empId;
+      return;
+    }
+
+    if (!newRolePrefix) {
+      return;
+    }
+
+    this.getLastID(newRolePrefix).then((lastID) => {
+      this.personalData.empId = newRolePrefix + lastID;
+    });
   }
 
   getLastID(role: string): Promise<string> {
@@ -2096,7 +2098,6 @@ export class UpdateDistributionOfficerComponent {
       if (result.isConfirmed) {
         this.isLoading = true;
 
-        // ⬇️ Submit කරන්න කලින්, change කරපු images විතරක් R2 ට batch upload කරනවා
         this.uploadChangedImages().subscribe({
           next: (urls) => {
             const payload = {
@@ -2132,7 +2133,7 @@ export class UpdateDistributionOfficerComponent {
               .editDistributionOfficer(
                 payload,
                 this.itemId,
-                urls['profile'] || null, // ⬅ අලුතෙන් upload වුණොත් URL, නැත්නම් null
+                urls['profile'] || null,
                 driverDataToSend,
                 urls['licFront'] || null,
                 urls['licBack'] || null,
@@ -2229,7 +2230,6 @@ export class UpdateDistributionOfficerComponent {
                     return;
                   }
 
-                  // ⬇️ messages array එක empty උනත් (validation errors නැති server error එකක්) - generic error එක පෙන්නනවා
                   Swal.fire({
                     icon: 'error',
                     title: 'Error',

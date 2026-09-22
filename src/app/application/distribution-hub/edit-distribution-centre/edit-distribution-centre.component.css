@@ -73,7 +73,7 @@
 
 :host ::ng-deep .contact-code-wrapper .p-dropdown-trigger-icon {
   display: block;
-  margin-right: 0;
+  margin-right: 20px;
 }
 
 ::ng-deep .p-dropdown-filter-container {

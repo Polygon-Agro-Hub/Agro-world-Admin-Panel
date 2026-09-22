@@ -33,6 +33,14 @@
   white-space: nowrap;
 }
 
+:host ::ng-deep .p-dropdown .p-dropdown-label:not(.p-placeholder) {
+  color: #111827 !important;
+}
+
+:host ::ng-deep .dark .p-dropdown .p-dropdown-label:not(.p-placeholder) {
+  color: #f9fafb !important;
+}
+
 ::ng-deep .p-dropdown-panel {
   z-index: 1000 !important;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);

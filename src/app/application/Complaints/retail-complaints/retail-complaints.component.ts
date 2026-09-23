@@ -55,6 +55,7 @@ interface ApiResponse {
   styleUrls: ['./retail-complaints.component.css'],
   providers: [DatePipe],
 })
+
 export class RetailComplaintsComponent implements OnInit {
   complaints: Complaint[] = [];
   filteredComplaints: Complaint[] = [];

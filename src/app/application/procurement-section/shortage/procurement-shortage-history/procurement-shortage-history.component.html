@@ -169,23 +169,29 @@
               </p>
             </div>
 
-            <div class="mr-8">
-              <p class="text-xs text-[#000000] dark:text-textDark mb-1">
-                1st Assigned By
-              </p>
-              <p class="font-semibold text-[#292929] dark:text-textDark">
-                {{ item.firstAssignedBy || "----" }}
-              </p>
-            </div>
+            <div class="mr-8 max-w-[100px]">
+  <p class="text-xs text-[#000000] dark:text-textDark mb-1">
+    1st Assigned By
+  </p>
+  <p
+    class="font-semibold text-[#292929] dark:text-textDark truncate"
+    [title]="item.firstAssignedBy || '----'"
+  >
+    {{ item.firstAssignedBy || "----" }}
+  </p>
+</div>
 
-            <div>
-              <p class="text-xs text-[#000000] dark:text-textDark mb-1">
-                Finalized By
-              </p>
-              <p class="font-semibold text-[#292929] dark:text-textDark">
-                {{ item.finalizedBy || "----" }}
-              </p>
-            </div>
+<div class="max-w-[100px]">
+  <p class="text-xs text-[#000000] dark:text-textDark mb-1">
+    Finalized By
+  </p>
+  <p
+    class="font-semibold text-[#292929] dark:text-textDark truncate"
+    [title]="item.finalizedBy || '----'"
+  >
+    {{ item.finalizedBy || "----" }}
+  </p>
+</div>
           </div>
         </div>
       </div>

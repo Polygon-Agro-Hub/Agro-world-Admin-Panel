@@ -1131,29 +1131,30 @@ export class UpdateDistributionOfficerComponent {
     }
 
     if (fieldName === 'email') {
-      const charCode = event.which ? event.which : event.keyCode;
-
       if (
         event.ctrlKey ||
         event.metaKey ||
-        charCode === 8 ||
-        charCode === 9 ||
-        charCode === 13 ||
-        charCode === 27 ||
-        charCode === 46 ||
-        (charCode >= 35 && charCode <= 40)
+        event.key === 'Backspace' ||
+        event.key === 'Tab' ||
+        event.key === 'Enter' ||
+        event.key === 'Escape' ||
+        event.key === 'Delete' ||
+        event.key === 'ArrowLeft' ||
+        event.key === 'ArrowRight' ||
+        event.key === 'ArrowUp' ||
+        event.key === 'ArrowDown' ||
+        event.key === 'Home' ||
+        event.key === 'End'
       ) {
         return;
       }
 
-      const char = String.fromCharCode(charCode);
-
-      if (charCode === 32) {
+      if (event.key === ' ') {
         event.preventDefault();
         return;
       }
 
-      if (!/[a-zA-Z0-9@.\-_+]/.test(char)) {
+      if (event.key.length === 1 && !/[a-zA-Z0-9@.\-_+]/.test(event.key)) {
         event.preventDefault();
         return;
       }

@@ -73,6 +73,7 @@ interface DistributionOfficers {
 })
 
 export class UpdateDistributionOfficerComponent {
+  @ViewChild('insExpDate') insuranceCalendar: any;
   @ViewChild('licNoInput') licNoModel!: NgModel;
   @ViewChild('confirmLicNoInput') confirmLicNoModel!: NgModel;
   @ViewChild('insurenceNoInput') insurenceNoModel!: NgModel;
@@ -236,6 +237,12 @@ export class UpdateDistributionOfficerComponent {
   minInsuranceDate: Date = new Date(
     new Date().setDate(new Date().getDate() + 1),
   );
+  insuranceCalendarDefaultDate: Date = new Date();
+  disabledInsuranceDates: Date[] = [];
+  insuranceDateBeforeCalendarOpen: Date | string | null = null;
+  lastInsuranceExpiryDate: Date | null = null;
+  insuranceCalendarValue: Date | string = '';
+  insuranceDateSelected = false;
 
   private isFutureInsuranceDate(date: Date | string): boolean {
     const selectedDate = new Date(date);
@@ -246,6 +253,55 @@ export class UpdateDistributionOfficerComponent {
     tomorrow.setDate(tomorrow.getDate() + 1);
 
     return selectedDate >= tomorrow;
+  }
+
+  private setDisabledInsuranceDates(today: Date): void {
+    const date = new Date(1970, 0, 1);
+    while (date <= today) {
+      this.disabledInsuranceDates.push(new Date(date));
+      date.setDate(date.getDate() + 1);
+    }
+  }
+
+  openInsuranceCalendarAtToday(): void {
+    const today = new Date();
+    this.insuranceDateBeforeCalendarOpen = this.driverObj.insExpDate
+      ? new Date(this.driverObj.insExpDate)
+      : null;
+    this.insuranceDateSelected = false;
+
+    setTimeout(() => {
+      this.insuranceCalendar.currentMonth = today.getMonth();
+      this.insuranceCalendar.currentYear = today.getFullYear();
+      this.insuranceCalendar.createMonths(today.getMonth(), today.getFullYear());
+      this.insuranceCalendar.updateFocus();
+    });
+  }
+
+  onInsuranceCalendarValueChange(value: Date | string): void {
+    if (!(value instanceof Date) || Number.isNaN(value.getTime())) {
+      return;
+    }
+
+    if (!this.isFutureInsuranceDate(value)) {
+      this.insuranceDateSelected = false;
+      this.insuranceCalendarValue = this.lastInsuranceExpiryDate ??
+        this.insuranceDateBeforeCalendarOpen ?? '';
+      return;
+    }
+
+    this.insuranceDateSelected = true;
+    this.lastInsuranceExpiryDate = new Date(value);
+    this.driverObj.insExpDate = new Date(value);
+  }
+
+  restoreInsuranceDateOnCalendarClose(): void {
+    if (!this.insuranceDateSelected) {
+      const dateToRestore =
+        this.lastInsuranceExpiryDate ?? this.insuranceDateBeforeCalendarOpen;
+      this.insuranceCalendarValue = dateToRestore === null ? '' : dateToRestore;
+      this.driverObj.insExpDate = this.insuranceCalendarValue;
+    }
   }
 
   constructor(
@@ -266,6 +322,8 @@ export class UpdateDistributionOfficerComponent {
     tomorrow.setDate(tomorrow.getDate() + 1);
 
     this.minInsuranceDate = tomorrow;
+    this.insuranceCalendarDefaultDate = today;
+    this.setDisabledInsuranceDates(today);
 
     this.loadBanks();
     this.loadBranches();
@@ -324,18 +382,27 @@ export class UpdateDistributionOfficerComponent {
         this.personalData.image = officerData.image || '';
         this.personalData.status = officerData.status || '';
 
+        const driverData = Array.isArray(response.driverData)
+          ? response.driverData[0]
+          : response.driverData;
+        const insuranceExpireDate =
+          driverData?.insExpDate ?? officerData.insExpDate;
+        if (insuranceExpireDate) {
+          const parsedInsuranceDate = new Date(insuranceExpireDate);
+          if (!Number.isNaN(parsedInsuranceDate.getTime())) {
+            this.driverObj.insExpDate = parsedInsuranceDate;
+            this.lastInsuranceExpiryDate = new Date(parsedInsuranceDate);
+            this.insuranceCalendarValue = new Date(parsedInsuranceDate);
+          }
+        }
+
         if (
           (officerData.jobRole === this.LIGHT_WEIGHT_DRIVER ||
             officerData.jobRole === this.HEAVY_WEIGHT_DRIVER) &&
-          response.driverData &&
-          response.driverData.length > 0
+          driverData
         ) {
-          const driverData = response.driverData[0];
           this.driverObj.licNo = driverData.licNo || '';
           this.driverObj.insNo = driverData.insNo || '';
-          this.driverObj.insExpDate = driverData.insExpDate
-            ? new Date(driverData.insExpDate)
-            : '';
           this.driverObj.vType = driverData.vType || '';
           this.driverObj.vCapacity = driverData.vCapacity || '';
           this.driverObj.vRegNo = driverData.vRegNo || '';

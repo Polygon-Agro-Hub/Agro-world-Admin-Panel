@@ -416,16 +416,13 @@
         </label>
         <input id="accNumber" name="accNumber" [(ngModel)]="personalData.accNumber" (blur)="onBlur('accNumber')"
           (ngModelChange)="validateAccNumber()" (keypress)="allowOnlyAlphanumeric($event)" #accNumberInput="ngModel"
-          required
+          required pattern="^[a-zA-Z0-9]+$"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
-        <!-- <span *ngIf="isFieldInvalid('accNumber')" class="text-red-600 text-sm">
-          Account Number is required.
-        </span> -->
-        <div *ngIf="accNumberInput.touched && !personalData.accNumber" class="text-red-500 text-sm mt-1">
+        <div *ngIf="touchedFields.accNumber && !personalData.accNumber" class="text-red-500 text-sm mt-1">
           <div>Account Number is required</div>
         </div>
-        <div *ngIf="accNumberInput.touched && personalData.accNumber && accNumberInput.errors?.['pattern']"
+        <div *ngIf="touchedFields.accNumber && personalData.accNumber && accNumberInput.errors?.['pattern']"
           class="text-red-500 text-sm mt-1">
           <div>Account Number cannot contain special characters</div>
         </div>
@@ -437,21 +434,22 @@
         </label>
         <input id="confirmAccNumber" name="confirmAccNumber" [(ngModel)]="personalData.confirmAccNumber"
           (blur)="onBlur('confirmAccNumber')" (keypress)="allowOnlyAlphanumeric($event)"
-          #confirmAccNumberInput="ngModel" required (ngModelChange)="validateConfirmAccNumber()"
+          #confirmAccNumberInput="ngModel" required pattern="^[a-zA-Z0-9]+$"
+          (ngModelChange)="validateConfirmAccNumber()"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
         <!-- Required validation message -->
-        <span *ngIf="confirmAccountNumberRequired" class="text-red-600 text-sm">
+        <span *ngIf="touchedFields.confirmAccNumber && !personalData.confirmAccNumber" class="text-red-600 text-sm">
           Confirm Account Number is required.
         </span>
 
         <!-- Mismatch validation message -->
-        <span *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired" class="text-red-600 text-sm">
+        <span *ngIf="touchedFields.confirmAccNumber && confirmAccountNumberError" class="text-red-600 text-sm">
           Account Numbers do not match.
         </span>
 
         <span
-          *ngIf="confirmAccNumberInput.touched && personalData.confirmAccNumber && !confirmAccountNumberError && confirmAccNumberInput.errors?.['pattern']"
+          *ngIf="touchedFields.confirmAccNumber && personalData.confirmAccNumber && confirmAccNumberInput.errors?.['pattern']"
           class="text-red-500 text-sm mt-1">
           <div>Account Number cannot contain special characters</div>
         </span>

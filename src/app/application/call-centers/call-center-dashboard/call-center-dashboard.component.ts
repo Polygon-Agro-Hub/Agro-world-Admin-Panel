@@ -6,7 +6,7 @@ import { LeftColumnComponent } from './left-column/left-column.component';
 @Component({
   selector: 'app-call-center-dashboard',
   standalone: true,
-  imports: [RowOneComponent, ColumRightComponentLeftColumnComponent],
+  imports: [RowOneComponent, ColumRightComponent, LeftColumnComponent, LeftColumnComponent, ColumRightComponent],
   templateUrl: './call-center-dashboard.component.html',
   styleUrl: './call-center-dashboard.component.css',
 })

@@ -62,32 +62,32 @@
     <div class="bg-white rounded-2xl p-5 shadow-sm">
         <div class="flex items-start justify-between mb-4">
             <div class="flex items-start gap-2">
-                <svg class="h-5 w-5 text-emerald-500 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                <svg class="h-5 w-5 text-[#00685C] mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
                 </svg>
                 <div>
-                    <h2 class="text-lg font-bold text-slate-800">Service Quality</h2>
-                    <p class="text-sm text-slate-400 mt-0.5">
+                    <h2 class="text-[18px] font-bold text-[#121D24]">Service Quality</h2>
+                    <p class="text-[11px] font-medium text-[#6E7A76] mt-0.5">
                         Quick view of answer rate, wait time, and call quality metrics.
                     </p>
                 </div>
             </div>
-            <span class="h-2.5 w-2.5 rounded-full bg-emerald-700 mt-1 flex-shrink-0"></span>
+            <span class="h-2.5 w-2.5 rounded-full bg-[#00685C] mt-1 flex-shrink-0"></span>
         </div>
 
         <div class="grid grid-cols-2 gap-3">
             <div *ngFor="let stat of serviceQualityStats" [ngClass]="stat.bgClass" class="rounded-xl p-4">
-                <p class="text-[11px] font-bold tracking-wide" [ngClass]="stat.labelClass">{{ stat.label }}</p>
-                <p class="text-3xl font-bold mt-1" [ngClass]="stat.valueClass">{{ stat.value }}</p>
-                <p class="text-xs text-slate-400 mt-1">{{ stat.subtext }}</p>
+                <p class="text-[10px] font-semibold tracking-wide" [ngClass]="stat.labelClass">{{ stat.label }}</p>
+                <p class="text-[24px] font-semibold mt-1" [ngClass]="stat.valueClass">{{ stat.value }}</p>
+                <p class="text-[11px] font-medium text-[#3E4946] mt-1">{{ stat.subtext }}</p>
             </div>
         </div>
 
         <div class="grid grid-cols-4 gap-2 mt-3">
-            <div *ngFor="let q of queueStats" class="bg-slate-100/80 rounded-lg py-2.5 text-center">
-                <p class="text-xs text-slate-400">{{ q.label }}</p>
-                <p class="text-sm font-bold text-slate-800 mt-0.5">{{ q.value }}</p>
+            <div *ngFor="let q of queueStats" class="bg-[#E9F5FF] rounded-lg py-2.5 text-center">
+                <p class="text-[10px] font-semibold text-[#6E7A76]">{{ q.label }}</p>
+                <p class="text-[15px] font-semibold text-slate-800 mt-0.5">{{ q.value }}</p>
             </div>
         </div>
     </div>

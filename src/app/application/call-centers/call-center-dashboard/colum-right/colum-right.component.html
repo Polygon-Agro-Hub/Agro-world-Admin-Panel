@@ -5,7 +5,8 @@
         <div class="flex items-start justify-between mb-4">
             <div>
                 <h2 class="text-lg font-bold text-slate-800">Call Summary</h2>
-                <p class="text-sm text-slate-400 mt-0.5">Inbound, outbound, outcomes, and handoff activity for today.
+                <p class="text-sm text-slate-400 mt-0.5">
+                    Inbound, outbound, outcomes, and handoff activity for today.
                 </p>
             </div>
             <div class="h-9 w-9 rounded-full bg-slate-100 flex items-center justify-center flex-shrink-0">
@@ -18,25 +19,10 @@
         </div>
 
         <div class="grid grid-cols-2 gap-3">
-            <div class="bg-slate-100/80 rounded-xl p-4">
-                <p class="text-[11px] font-bold text-slate-500 tracking-wide">INBOUND CALLS</p>
-                <p class="text-4xl font-bold text-slate-800 mt-1">0</p>
-                <p class="text-xs text-slate-400 mt-1">0% of all calls today</p>
-            </div>
-            <div class="bg-slate-100/80 rounded-xl p-4">
-                <p class="text-[11px] font-bold text-slate-500 tracking-wide">OUTBOUND CALLS</p>
-                <p class="text-4xl font-bold text-slate-800 mt-1">0</p>
-                <p class="text-xs text-slate-400 mt-1">0% of all calls today</p>
-            </div>
-            <div class="bg-slate-100/80 rounded-xl p-4">
-                <p class="text-[11px] font-bold text-slate-500 tracking-wide">VOICEMAIL OUTCOMES</p>
-                <p class="text-4xl font-bold text-slate-800 mt-1">0</p>
-                <p class="text-xs text-slate-400 mt-1">0 voicemail outcomes</p>
-            </div>
-            <div class="bg-slate-100/80 rounded-xl p-4">
-                <p class="text-[11px] font-bold text-slate-500 tracking-wide">TRANSFERS + CONF</p>
-                <p class="text-4xl font-bold text-slate-800 mt-1">0</p>
-                <p class="text-xs text-slate-400 mt-1">0 handoff events</p>
+            <div *ngFor="let stat of callSummaryStats" [ngClass]="stat.bgClass" class="rounded-xl p-4">
+                <p class="text-[11px] font-bold tracking-wide" [ngClass]="stat.labelClass">{{ stat.label }}</p>
+                <p class="text-4xl font-bold mt-1" [ngClass]="stat.valueClass">{{ stat.value }}</p>
+                <p class="text-xs text-slate-400 mt-1">{{ stat.subtext }}</p>
             </div>
         </div>
     </div>
@@ -52,85 +38,27 @@
                 </svg>
                 <h3 class="text-white font-bold text-[15px] tracking-wide">SELECTED HOUR MIX</h3>
             </div>
-            <span class="bg-slate-700 text-slate-200 text-xs font-mono px-2.5 py-1 rounded-full">22:05</span>
+            <span class="bg-slate-700 text-slate-200 text-xs font-mono px-2.5 py-1 rounded-full">
+                {{ selectedHour }}
+            </span>
         </div>
 
         <div class="flex flex-col divide-y divide-slate-700/60">
-            <div class="flex items-center justify-between py-2.5">
+            <div *ngFor="let item of hourMix" class="flex items-center justify-between py-2.5">
                 <div class="flex items-center gap-2.5">
-                    <span class="h-2.5 w-2.5 rounded-full bg-blue-500"></span>
-                    <span class="text-slate-200 text-sm">Incoming</span>
+                    <span class="h-2.5 w-2.5 rounded-full" [ngClass]="item.dotClass"></span>
+                    <span class="text-slate-200 text-sm">{{ item.label }}</span>
                 </div>
                 <div class="flex items-center gap-2">
-                    <span class="text-white font-semibold text-sm">0</span>
-                    <span class="text-slate-400 text-xs w-8 text-right">0%</span>
-                </div>
-            </div>
-            <div class="flex items-center justify-between py-2.5">
-                <div class="flex items-center gap-2.5">
-                    <span class="h-2.5 w-2.5 rounded-full bg-emerald-300"></span>
-                    <span class="text-slate-200 text-sm">Answered</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <span class="text-white font-semibold text-sm">0</span>
-                    <span class="text-slate-400 text-xs w-8 text-right">0%</span>
-                </div>
-            </div>
-            <div class="flex items-center justify-between py-2.5">
-                <div class="flex items-center gap-2.5">
-                    <span class="h-2.5 w-2.5 rounded-full bg-slate-300"></span>
-                    <span class="text-slate-200 text-sm">Outgoing</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <span class="text-white font-semibold text-sm">0</span>
-                    <span class="text-slate-400 text-xs w-8 text-right">0%</span>
-                </div>
-            </div>
-            <div class="flex items-center justify-between py-2.5">
-                <div class="flex items-center gap-2.5">
-                    <span class="h-2.5 w-2.5 rounded-full bg-red-500"></span>
-                    <span class="text-slate-200 text-sm">Failed</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <span class="text-white font-semibold text-sm">0</span>
-                    <span class="text-slate-400 text-xs w-8 text-right">0%</span>
-                </div>
-            </div>
-            <div class="flex items-center justify-between py-2.5">
-                <div class="flex items-center gap-2.5">
-                    <span class="h-2.5 w-2.5 rounded-full bg-amber-400"></span>
-                    <span class="text-slate-200 text-sm">Voicemail</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <span class="text-white font-semibold text-sm">0</span>
-                    <span class="text-slate-400 text-xs w-8 text-right">0%</span>
-                </div>
-            </div>
-            <div class="flex items-center justify-between py-2.5">
-                <div class="flex items-center gap-2.5">
-                    <span class="h-2.5 w-2.5 rounded-full bg-orange-300"></span>
-                    <span class="text-slate-200 text-sm">Transfer</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <span class="text-white font-semibold text-sm">0</span>
-                    <span class="text-slate-400 text-xs w-8 text-right">0%</span>
-                </div>
-            </div>
-            <div class="flex items-center justify-between py-2.5">
-                <div class="flex items-center gap-2.5">
-                    <span class="h-2.5 w-2.5 rounded-full bg-slate-400"></span>
-                    <span class="text-slate-200 text-sm">Conference</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <span class="text-white font-semibold text-sm">0</span>
-                    <span class="text-slate-400 text-xs w-8 text-right">0%</span>
+                    <span class="text-white font-semibold text-sm">{{ item.value }}</span>
+                    <span class="text-slate-400 text-xs w-8 text-right">{{ item.percent }}%</span>
                 </div>
             </div>
         </div>
 
         <div class="flex items-center justify-between pt-3 mt-1 border-t border-slate-700/60">
-            <span class="text-slate-400 text-xs">Active PBX Trunks: 24</span>
-            <span class="text-emerald-400 text-xs font-semibold">Engine Online</span>
+            <span class="text-slate-400 text-xs">Active PBX Trunks: {{ activeTrunks }}</span>
+            <span class="text-emerald-400 text-xs font-semibold">{{ engineStatus }}</span>
         </div>
     </div>
 
@@ -144,62 +72,26 @@
                 </svg>
                 <div>
                     <h2 class="text-lg font-bold text-slate-800">Service Quality</h2>
-                    <p class="text-sm text-slate-400 mt-0.5">Quick view of answer rate, wait time, and call quality
-                        metrics.</p>
+                    <p class="text-sm text-slate-400 mt-0.5">
+                        Quick view of answer rate, wait time, and call quality metrics.
+                    </p>
                 </div>
             </div>
             <span class="h-2.5 w-2.5 rounded-full bg-emerald-700 mt-1 flex-shrink-0"></span>
         </div>
 
         <div class="grid grid-cols-2 gap-3">
-            <div class="bg-emerald-50 rounded-xl p-4">
-                <p class="text-[11px] font-bold text-emerald-700 tracking-wide">ANSWER RATE</p>
-                <p class="text-3xl font-bold text-emerald-600 mt-1">0%</p>
-                <p class="text-xs text-slate-400 mt-1">0 calls answered</p>
-            </div>
-            <div class="bg-red-50 rounded-xl p-4">
-                <p class="text-[11px] font-bold text-red-600 tracking-wide">FAILURE RATE</p>
-                <p class="text-3xl font-bold text-red-500 mt-1">0%</p>
-                <p class="text-xs text-slate-400 mt-1">0 calls failed</p>
-            </div>
-            <div class="bg-amber-50 rounded-xl p-4">
-                <p class="text-[11px] font-bold text-amber-700 tracking-wide">AVG WAIT</p>
-                <p class="text-3xl font-bold text-amber-700 mt-1">0s</p>
-                <p class="text-xs text-slate-400 mt-1">Avg customer queue</p>
-            </div>
-            <div class="bg-slate-100/80 rounded-xl p-4">
-                <p class="text-[11px] font-bold text-blue-600 tracking-wide">RING-TO-CONNECT</p>
-                <p class="text-3xl font-bold text-blue-600 mt-1">0s</p>
-                <p class="text-xs text-slate-400 mt-1">Avg ring before answer</p>
-            </div>
-            <div class="bg-slate-100/80 rounded-xl p-4">
-                <p class="text-[11px] font-bold text-slate-500 tracking-wide">AVG HANDLE TIME</p>
-                <p class="text-3xl font-bold text-slate-800 mt-1">0s</p>
-                <p class="text-xs text-slate-400 mt-1">Call duration average</p>
-            </div>
-            <div class="bg-slate-100/80 rounded-xl p-4">
-                <p class="text-[11px] font-bold text-slate-500 tracking-wide">BUSIEST HOUR</p>
-                <p class="text-3xl font-bold text-slate-800 mt-1">8 AM</p>
-                <p class="text-xs text-slate-400 mt-1">0 calls in peak hour</p>
+            <div *ngFor="let stat of serviceQualityStats" [ngClass]="stat.bgClass" class="rounded-xl p-4">
+                <p class="text-[11px] font-bold tracking-wide" [ngClass]="stat.labelClass">{{ stat.label }}</p>
+                <p class="text-3xl font-bold mt-1" [ngClass]="stat.valueClass">{{ stat.value }}</p>
+                <p class="text-xs text-slate-400 mt-1">{{ stat.subtext }}</p>
             </div>
         </div>
 
         <div class="grid grid-cols-4 gap-2 mt-3">
-            <div class="bg-slate-100/80 rounded-lg py-2.5 text-center">
-                <p class="text-xs text-slate-400">Queue</p>
-                <p class="text-sm font-bold text-slate-800 mt-0.5">0</p>
-            </div>
-            <div class="bg-slate-100/80 rounded-lg py-2.5 text-center">
-                <p class="text-xs text-slate-400">Voicemail</p>
-                <p class="text-sm font-bold text-slate-800 mt-0.5">0</p>
-            </div>
-            <div class="bg-slate-100/80 rounded-lg py-2.5 text-center">
-                <p class="text-xs text-slate-400">Transfers</p>
-                <p class="text-sm font-bold text-slate-800 mt-0.5">0</p>
-            </div>
-            <div class="bg-slate-100/80 rounded-lg py-2.5 text-center">
-                <p class="text-xs text-slate-400">Conf</p>
-                <p class="text-sm font-bold text-slate-800 mt-0.5">0</p>
+            <div *ngFor="let q of queueStats" class="bg-slate-100/80 rounded-lg py-2.5 text-center">
+                <p class="text-xs text-slate-400">{{ q.label }}</p>
+                <p class="text-sm font-bold text-slate-800 mt-0.5">{{ q.value }}</p>
             </div>
         </div>
     </div>

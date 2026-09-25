@@ -271,3 +271,10 @@
   text-align: center !important;
   margin: 0 auto !important;
 }
+
+::ng-deep .compact-dropdown-panel {
+  .p-dropdown-item {
+    padding: 0.4rem 0.75rem !important;
+    min-height: unset !important;
+  }
+}

@@ -44,34 +44,34 @@
 
         <!-- Ratings Filter Dropdown -->
         <p-dropdown
-          styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#D1D5DB] dark:border-[#AFAFAF]"
-          [options]="ratingFilterOptions"
-          [checkmark]="true"
-          optionLabel="label"
-          optionValue="value"
-          [showClear]="!!selectedRatingFilter"
-          placeholder="Ratings"
-          [(ngModel)]="selectedRatingFilter"
-          (onChange)="applyRatingFilter()"
-        >
-          <ng-template pTemplate="selectedItem">
-            <div class="flex items-center gap-2" *ngIf="selectedRatingFilter">
-              <img
-                [src]="getRatingIcon(selectedRatingFilter)"
-                class="w-4 h-4 object-contain"
-              />
-              <span class="text-sm text-textLight dark:text-textDark">{{
-                getRatingLabel(selectedRatingFilter)
-              }}</span>
-            </div>
-          </ng-template>
-          <ng-template let-option pTemplate="item">
-            <div class="flex items-center gap-2 py-1">
-              <img [src]="option.icon" class="w-4 h-4 object-contain" />
-              <span class="text-sm">{{ option.label }}</span>
-            </div>
-          </ng-template>
-        </p-dropdown>
+  styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#D1D5DB] dark:border-[#AFAFAF]"
+  panelStyleClass="compact-dropdown-panel"
+  [options]="ratingFilterOptions"
+  optionLabel="label"
+  optionValue="value"
+  [showClear]="!!selectedRatingFilter"
+  placeholder="Ratings"
+  [(ngModel)]="selectedRatingFilter"
+  (onChange)="applyRatingFilter()"
+>
+  <ng-template pTemplate="selectedItem">
+    <div class="flex items-center gap-2" *ngIf="selectedRatingFilter">
+      <img
+        [src]="getRatingIcon(selectedRatingFilter)"
+        class="w-4 h-4 object-contain"
+      />
+      <span class="text-sm text-textLight dark:text-textDark">{{
+        getRatingLabel(selectedRatingFilter)
+      }}</span>
+    </div>
+  </ng-template>
+  <ng-template let-option pTemplate="item">
+    <div class="flex items-center gap-2">
+      <img [src]="option.icon" class="w-4 h-4 object-contain" />
+      <span class="text-sm">{{ option.label }}</span>
+    </div>
+  </ng-template>
+</p-dropdown>
 
         <!-- Search Bar -->
         <div

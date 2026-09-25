@@ -46,7 +46,7 @@ export class ColumRightComponent {
       subtext: '0% of all calls today',
       labelClass: 'text-slate-500',
       valueClass: 'text-slate-800',
-      bgClass: 'bg-slate-100/80',
+      bgClass: 'bg-[#E9F5FF]',
     },
     {
       label: 'OUTBOUND CALLS',
@@ -54,7 +54,7 @@ export class ColumRightComponent {
       subtext: '0% of all calls today',
       labelClass: 'text-slate-500',
       valueClass: 'text-slate-800',
-      bgClass: 'bg-slate-100/80',
+      bgClass: 'bg-[#E9F5FF]',
     },
     {
       label: 'VOICEMAIL OUTCOMES',
@@ -62,7 +62,7 @@ export class ColumRightComponent {
       subtext: '0 voicemail outcomes',
       labelClass: 'text-slate-500',
       valueClass: 'text-slate-800',
-      bgClass: 'bg-slate-100/80',
+      bgClass: 'bg-[#E9F5FF]',
     },
     {
       label: 'TRANSFERS + CONF',
@@ -70,7 +70,7 @@ export class ColumRightComponent {
       subtext: '0 handoff events',
       labelClass: 'text-slate-500',
       valueClass: 'text-slate-800',
-      bgClass: 'bg-slate-100/80',
+      bgClass: 'bg-[#E9F5FF]',
     },
   ];
 

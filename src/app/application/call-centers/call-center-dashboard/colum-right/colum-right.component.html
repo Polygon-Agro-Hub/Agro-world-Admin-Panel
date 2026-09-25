@@ -4,21 +4,21 @@
     <div class="bg-white rounded-2xl p-5 shadow-sm">
         <div class="flex items-start justify-between mb-4">
             <div>
-                <h2 class="text-lg font-bold text-slate-800">Call Summary</h2>
-                <p class="text-sm text-slate-400 mt-0.5">
+                <h2 class="text-[15px] font-semibold text-[#121D24]">Call Summary</h2>
+                <p class="text-[11px] font-medium text-[#6E7A76] mt-0.5">
                     Inbound, outbound, outcomes, and handoff activity for today.
                 </p>
             </div>
-            <div class="h-9 w-9 rounded-full bg-slate-100 flex items-center justify-center flex-shrink-0">
+            <div class="h-9 w-9 rounded-full bg-[#E4EFF9] flex items-center justify-center flex-shrink-0">
                 <i class="fa-solid fa-arrow-trend-up"></i>
             </div>
         </div>
 
         <div class="grid grid-cols-2 gap-3">
             <div *ngFor="let stat of callSummaryStats" [ngClass]="stat.bgClass" class="rounded-xl p-4">
-                <p class="text-[11px] font-bold tracking-wide" [ngClass]="stat.labelClass">{{ stat.label }}</p>
-                <p class="text-4xl font-bold mt-1" [ngClass]="stat.valueClass">{{ stat.value }}</p>
-                <p class="text-xs text-slate-400 mt-1">{{ stat.subtext }}</p>
+                <p class="text-[10px] font-semibold text-[#6E7A76] tracking-wide" [ngClass]="stat.labelClass">{{ stat.label }}</p>
+                <p class="text-[32px] font-bold mt-1 text-[#121D24]" [ngClass]="stat.valueClass">{{ stat.value }}</p>
+                <p class="text-[11px] font-medium text-[#6E7A76] mt-1">{{ stat.subtext }}</p>
             </div>
         </div>
     </div>

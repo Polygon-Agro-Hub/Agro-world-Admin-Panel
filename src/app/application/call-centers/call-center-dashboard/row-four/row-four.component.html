@@ -1,0 +1,22 @@
+<div class="w-full bg-white rounded-2xl shadow-sm p-6">
+  <div class="flex flex-wrap items-start justify-between gap-3">
+    <div>
+      <h3 class="flex items-center gap-2 text-xl font-bold text-gray-900">
+        <i class="fa-solid fa-table-cells-large text-blue-600"></i>Monthly Overview
+      </h3>
+      <p class="text-sm text-gray-500">Monthly call totals to spot growth patterns and seasonality fluctuations.</p>
+    </div>
+    <div class="flex items-center gap-4 text-[11px] text-gray-500">
+      @for (m of months; track m.label) {
+        <span class="flex items-center gap-1.5">
+          <span class="w-3 h-3 rounded-sm" [style.background]="m.color"></span>{{ m.label }} ({{ m.calls }} calls)
+        </span>
+      }
+    </div>
+  </div>
+
+  <div class="mt-4 rounded-xl bg-sky-50/60 p-2 h-72 relative">
+    <canvas #monthlyCanvas></canvas>
+  </div>
+  <p class="text-center text-xs text-gray-400 mt-2">Aggregated Telephony Volume &middot; 2026 Fiscal Cycle</p>
+</div>

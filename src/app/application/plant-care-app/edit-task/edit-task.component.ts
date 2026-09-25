@@ -120,6 +120,31 @@ ngOnInit() {
     this.selectedLanguage = lang;
   }
 
+  blockLeadingSpace(event: KeyboardEvent): void {
+    if (event.key !== ' ') return;
+
+    const input = event.target as HTMLInputElement | HTMLTextAreaElement;
+    if (input instanceof HTMLInputElement && input.type === 'radio') return;
+    const cursorPosition = input.selectionStart ?? 0;
+    if (input.value.substring(0, cursorPosition).trim().length === 0) {
+      event.preventDefault();
+    }
+  }
+
+  removeLeadingSpace(event: ClipboardEvent): void {
+    const input = event.target as HTMLInputElement | HTMLTextAreaElement;
+    setTimeout(() => {
+      const trimmedValue = input.value.replace(/^\s+/, '');
+      if (input.value === trimmedValue) return;
+
+      input.value = trimmedValue;
+      const controlName = input.getAttribute('formcontrolname');
+      if (controlName) {
+        this.taskForm.get(controlName)?.setValue(trimmedValue);
+      }
+    }, 0);
+  }
+
   allowOnlyEnglishLetters(event: KeyboardEvent): void {
     const allowedControlKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'];
     if (allowedControlKeys.includes(event.key)) return;

@@ -287,7 +287,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
       order.push('profile');
       files.push(this.selectedFile);
     }
-    
+
 
     if (this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER || this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER) {
       if (this.licenseFrontImageFile) {
@@ -370,7 +370,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
     }
 
     if (!this.personalData.centerId) {
-      missingFields.push('Collection Centre Name is Required');
+      missingFields.push('Distribution Centre Name is Required');
     }
 
     if (!this.personalData.jobRole) {
@@ -811,7 +811,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
           case 'phoneNumber02':
             return 'Mobile Number 2 already exists.';
           default:
-            return 'Validation error: ' + err;
+            return err.replace(/^Validation error:\s*/i, '');
         }
       });
     }
@@ -907,7 +907,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
       }
 
       if (!this.personalData.centerId) {
-        missingFields.push('Collection Centre Name is Required');
+        missingFields.push('Distribution Centre Name is Required');
       }
 
       if (!this.personalData.jobRole) {
@@ -1265,6 +1265,10 @@ export class CreateDistributionOfficerComponent implements OnInit {
   }
 
   EpmloyeIdCreate() {
+    this.selectVehicletype = { name: '', capacity: '' };
+    this.driverObj.vType = '';
+    this.driverObj.vCapacity = '';
+
     const currentCompanyId = this.personalData.companyId;
     const currentCenterId = this.personalData.centerId;
 
@@ -1655,14 +1659,25 @@ export class CreateDistributionOfficerComponent implements OnInit {
     }
 
     const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-    if (!allowedTypes.includes(file.type)) {
+    const allowedExtensions = ['jpg', 'jpeg', 'png'];
+
+    const fileExtension = file.name.split('.').pop()?.toLowerCase() || '';
+    const isValidType = allowedTypes.includes(file.type);
+    const isValidExtension = allowedExtensions.includes(fileExtension);
+
+    if (!isValidType || !isValidExtension) {
       Swal.fire({
-        title: 'Error',
-        text: 'Only JPEG, JPG and PNG files are allowed',
         icon: 'error',
+        title: 'Invalid File Format',
+        html: `<div class="text-left">
+               <p class="mb-2">"<b>${file.name}</b>" is not a supported file type.</p>
+               <p>Only <b>PNG</b>, <b>JPG</b>, and <b>JPEG</b> files are allowed.</p>
+             </div>`,
+        confirmButtonText: 'OK',
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
           title: 'font-semibold text-lg',
+          htmlContainer: 'text-left',
         },
       });
       return false;
@@ -2470,6 +2485,20 @@ export class CreateDistributionOfficerComponent implements OnInit {
       return false;
 
     return phone1 === phone2;
+  }
+
+  capitalizeFirstLetterOnly(fieldName: 'firstNameEnglish' | 'lastNameEnglish'): void {
+    const value = this.personalData[fieldName];
+    if (value && value.length > 0) {
+      this.personalData[fieldName] = value.charAt(0).toUpperCase() + value.slice(1);
+    }
+  }
+
+  get filteredVehicleTypes(): any[] {
+    if (!this.personalData.jobRole) return [];
+    return this.VehicleTypes.filter(
+      (v: any) => v.category === this.personalData.jobRole
+    );
   }
 }
 

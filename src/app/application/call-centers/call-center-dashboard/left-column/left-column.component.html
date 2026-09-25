@@ -1,0 +1,137 @@
+<div class="w-full space-y-4 text-gray-800">
+  <!-- Header -->
+  <div class="flex items-center justify-between bg-white rounded-xl shadow-sm p-4">
+    <div class="flex items-center gap-3">
+      <div class="w-12 h-12 rounded-xl bg-[#0283741A] flex items-center justify-center">
+        <i class="fa-solid fa-clock text-[#00685C] text-2xl"></i>
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h2 class="font-semibold text-[#121D24] text-lg">Today's Call Timeline</h2>
+          <span class="text-[10px] px-2 py-1 rounded-xl bg-[#00685C1A] text-[#00685C] font-[600]">PBX Realtime</span>
+        </div>
+        <p class="text-[13px] font-[500] text-[#3E4946]">Simple hour-by-hour view for today's call volume.</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-2 border rounded-lg px-2 py-1">
+      <button type="button" class="px- text-gray-500" (click)="shiftTime(-1)">&lsaquo;</button>
+      <span class="flex items-center gap-1 bg-blue-700 text-white text-xs rounded-full px-3 py-1">
+        <span class="w-1.5 h-1.5 rounded-full bg-white"></span>{{ selectedTime }}
+      </span>
+      <button type="button" class="px-2 text-gray-500" (click)="shiftTime(1)">&rsaquo;</button>
+    </div>
+  </div>
+
+  <!-- Selected window -->
+  <div class="flex items-center justify-between bg-slate-900 text-white rounded-xl p-4">
+    <div class="flex items-center gap-3">
+      <div class="w-11 h-11 rounded-lg bg-[#028374] flex items-center justify-center">
+        <i class="fa-regular fa-clock"></i>
+      </div>
+      <div>
+        <div class="text-[10px] tracking-widest font-semibold text-[#74D8C6]">SELECTED WINDOW</div>
+        <div class="text-[24px] text-[#FFFFFF] font-semibold">{{ selectedTime }}</div>
+      </div>
+    </div>
+    <div class="text-[11px] font-[500] rounded-md bg-[#D8E4EE33] text-[#D0DCE5] px-3 py-1.5 flex items-center gap-2">
+      <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>Historical metrics loaded for review.
+    </div>
+
+  </div>
+
+  <!-- Stat cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+    @for (s of stats; track s.label) {
+      <div class="bg-white rounded-xl shadow-sm p-4 flex items-center justify-between border-l-4" [style.border-left-color]="s.color">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center" [style.background]="s.bg" [style.color]="s.color">
+            <i class="fa-solid" [class]="s.icon"></i>
+          </div>
+          <div>
+            <div class="text-[10px] font-[600] tracking-widest text-[#6E7A76] uppercase">{{ s.label }}</div>
+            <div class="text-[24px] font-semibold" [style.color]="s.label === 'Answered' || s.label === 'Failed' ? s.color : ''">{{ s.value }}</div>
+          </div>
+        </div>
+        <span class="text-[11px] px-2 py-1 rounded-full bg-[#E4EFF9] text-[#BDC9C5]">0% of hr</span>
+      </div>
+    }
+    <div class="bg-white rounded-xl shadow-sm p-4 flex items-center justify-between border-l-4 border-slate-500 sm:col-span-2">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center">
+          <i class="fa-solid fa-users"></i>
+        </div>
+        <div>
+          <div class="text-[10px] font-[600] tracking-widest text-[#6E7A76] uppercase">Conference Sessions</div>
+          <div class="text-[24px] text-[#121D24] font-[600]">{{ conferenceSessions }}</div>
+        </div>
+      </div>
+      <span class="text-[11px] px-2 py-1 rounded-full bg-[#E4EFF9] text-[#BDC9C5]">0% of hr</span>
+    </div>
+  </div>
+
+  <!-- Hourly distribution -->
+  <div class="bg-white rounded-xl shadow-sm p-5">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="font-[600] text-[#121D24] text-[15px]">
+        Hourly Timeline Distribution
+        <span class="text-[11px] text-[#6E7A76] font-[500] ml-1">{{ hours.length }} of {{ totalHours }} hours shown</span>
+      </h3>
+      <button type="button" class="text-[12px] text-[#00685C] font-[500]">Show full timeline &nearr;</button>
+    </div>
+    <div class="space-y-4">
+      @for (h of hours; track h.label) {
+        <div class="flex items-center gap-4">
+          <span class="w-12 text-[#121D24] text-[12px] font-[600]">{{ h.label }}</span>
+          <div class="flex-1 h-2.5 rounded-full bg-blue-100 overflow-hidden">
+            <div class="h-full rounded-full bg-emerald-700 min-w-[6px]" [style.width.%]="barWidth(h.calls)"></div>
+          </div>
+          <div class="w-16 text-right text-[12px] font-[500] text-[#121D24] leading-tight">
+            <div class="font-medium">{{ h.calls }} calls</div>
+            <div class="text-[#6E7A76] text-[11px] font-[500]">{{ peakPercent(h.calls) }}% peak</div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Call trends -->
+  <div class="bg-white rounded-xl shadow-sm p-5">
+    <div class="flex flex-wrap items-start justify-between gap-3 mb-4">
+      <div>
+      <h3 class="font-[700] text-[18px] text-[#121D24]">Call Trends</h3>
+       <p class="text-[11px] font-[500] text-[#6E7A76] max-w-xs">See call patterns over time by week or month.</p>
+      </div>
+      <div class="flex bg-[#E9F5FF] rounded-md p-0.5 text-xs">
+        @for (r of ranges; track r.label) {
+          <button type="button" class="px-3 py-1.5 rounded leading-tight"
+            [class]="r === selectedRange ? 'bg-emerald-800 text-white font-semibold' : 'text-gray-600'"
+            (click)="selectRange(r)">
+            {{ r.label.split(' ')[0] }}<br />{{ r.sub }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <div class="grid grid-cols-3 gap-3 mb-4">
+      <div class="bg-[#E9F5FF] rounded-lg p-3">
+        <div class="text-[10px] font-[600] tracking-widest text-[#6E7A76]">TIME RANGE</div>
+        <div class="text-[18px] text-[#121D24] font-[700] mt-1">{{ selectedRange.title }}</div>
+        <div class="text-[11px] text-[#6E7A76] font-[500] mt-1">{{ selectedRange.view }}</div>
+      </div>
+      <div class="bg-[#E9F5FF] rounded-lg p-3">
+        <div class="text-[10px] font-[600] tracking-widest text-[#6E7A76]">CALLS IN RANGE</div>
+        <div class="text-[32px] font-[700] text-[#00685C]">{{ rangeTotal }}</div>
+        <div class="text-[11px] text-[#6E7A76] font-[500] mt-1">{{ rangeAverage }} avg per bucket</div>
+      </div>
+      <div class="bg-[#E9F5FF] rounded-lg p-3">
+        <div class="text-[10px] font-[600] tracking-widest text-[#6E7A76]">BUSIEST PERIOD</div>
+        <div class="text-[15px] font-[600] text-[#121D24] mt-1">{{ busiest.label }}</div>
+        <div class="text-[11px] text-[#6E7A76] font-[500] mt-1">{{ busiest.calls }} peak calls</div>
+      </div>
+    </div>
+
+    <div class="h-64 relative">
+      <canvas #trendCanvas></canvas>
+    </div>
+  </div>
+</div>

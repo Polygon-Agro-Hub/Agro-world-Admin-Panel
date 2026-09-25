@@ -33,6 +33,7 @@ import {
   templateUrl: './add-certificate-details.component.html',
   styleUrls: ['./add-certificate-details.component.css'],
 })
+
 export class AddCertificateDetailsComponent implements OnInit {
   certificateForm!: FormGroup;
   isLoading = false;
@@ -97,7 +98,7 @@ export class AddCertificateDetailsComponent implements OnInit {
     private router: Router,
     private cropCalendarService: CropCalendarService,
     private certificateCompanyService: CertificateCompanyService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.certificateForm = this.fb.group({
@@ -576,8 +577,8 @@ export class AddCertificateDetailsComponent implements OnInit {
     // Service areas as JSON string
     const serviceAreas = Array.isArray(formValue.serviceAreas)
       ? formValue.serviceAreas.map((area: any) =>
-          typeof area === 'object' ? area.value : area,
-        )
+        typeof area === 'object' ? area.value : area,
+      )
       : [];
     formData.append('serviceAreas', JSON.stringify(serviceAreas));
 
@@ -854,7 +855,7 @@ export class AddCertificateDetailsComponent implements OnInit {
     if (charCode < '0' || charCode > '9') {
       event.preventDefault();
       return;
-    } 
+    }
 
     const selectionStart = input.selectionStart ?? currentValue.length;
     const selectionEnd = input.selectionEnd ?? currentValue.length;
@@ -872,5 +873,39 @@ export class AddCertificateDetailsComponent implements OnInit {
     if (!isNaN(numericValue) && numericValue > 99) {
       event.preventDefault();
     }
+  }
+
+  formatPriceInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value;
+
+    value = value.replace(/[^0-9.]/g, '');
+
+    const firstDotIndex = value.indexOf('.');
+    if (firstDotIndex !== -1) {
+      value =
+        value.substring(0, firstDotIndex + 1) +
+        value.substring(firstDotIndex + 1).replace(/\./g, '');
+    }
+
+    const [integerPartRaw, decimalPartRaw] = value.split('.');
+    const integerPart = integerPartRaw || '';
+    const decimalPart = decimalPartRaw !== undefined ? decimalPartRaw.slice(0, 2) : undefined;
+
+    const rawValue =
+      decimalPart !== undefined ? `${integerPart}.${decimalPart}` : integerPart;
+
+    const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    const displayValue =
+      decimalPart !== undefined ? `${formattedInteger}.${decimalPart}` : formattedInteger;
+
+    input.value = displayValue;
+
+    const control = this.certificateForm.get('price');
+    control?.setValue(rawValue, { emitEvent: false, emitModelToViewChange: false });
+    control?.markAsTouched();
+
+    const cursorPos = displayValue.length;
+    input.setSelectionRange(cursorPos, cursorPos);
   }
 }

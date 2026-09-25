@@ -104,6 +104,11 @@
                 </tr>
               </thead>
               <tbody>
+                <tr *ngIf="packageItems.length === 0" class="bg-white dark:bg-gray-800 dark:border-gray-700">
+                  <td colspan="4" class="px-8 py-4 text-center text-gray-500 dark:text-gray-400">
+                    --Not Defined Yet--
+                  </td>
+                </tr>
                 <tr *ngFor="let item of packageItems" class="bg-white dark:bg-gray-800 dark:border-gray-700">
                   <td class="px-8 py-4">{{ item.productType }}</td>
                   <td class="px-8 py-4">{{ item.productName }}</td>

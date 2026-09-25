@@ -14,6 +14,7 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
   templateUrl: './view-package-details.component.html',
   styleUrls: ['./view-package-details.component.css'],
 })
+
 export class ViewPackageDetailsComponent implements OnInit {
   package: Package | null = null;
   packageDetails: PackageDetails[] = [];

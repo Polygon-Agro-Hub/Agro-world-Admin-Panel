@@ -10,17 +10,59 @@
 /* ===== Dropdown Panel Styling ===== */
 ::ng-deep .p-dropdown-panel {
   max-width: 100%;
-  overflow-x: auto;
+  overflow-x: hidden;
   border-radius: 6px !important;
   padding: 0;
   font-size: 1rem; 
 }
 
+::ng-deep .p-dropdown-panel .p-dropdown-items-wrapper {
+  max-width: 100%;
+  overflow-x: hidden !important;
+  overflow-y: auto;
+}
+
+::ng-deep .p-dropdown-panel .p-dropdown-items {
+  width: 100%;
+  min-width: 0;
+}
+
+::ng-deep .vehicle-type-panel {
+  width: max-content !important;
+  min-width: 100% !important;
+  max-width: calc(100vw - 2rem);
+  overflow-x: hidden !important;
+}
+
+::ng-deep .vehicle-type-panel .p-dropdown-items-wrapper,
+::ng-deep .vehicle-type-panel .p-dropdown-items {
+  width: max-content;
+  min-width: 100%;
+  max-width: none;
+}
+
+::ng-deep .vehicle-type-panel .p-scroller,
+::ng-deep .vehicle-type-panel .p-virtualscroller,
+::ng-deep .vehicle-type-panel .p-virtualscroller-content {
+  max-width: 100%;
+  overflow-x: hidden !important;
+}
+
 /* Dropdown items */
 ::ng-deep .p-dropdown-item {
   white-space: nowrap;
-  min-width: max-content;
+  min-width: 0;
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
   padding: 0.5rem 1rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+::ng-deep .vehicle-type-panel .p-dropdown-item {
+  width: auto;
+  max-width: none;
 }
 
 /* ===== Dark Mode Dropdown ===== */
@@ -80,12 +122,3 @@
   background-color: #4b5563 !important;
 }
 
-/* Scrollbar styling (for horizontal overflow) */
-::ng-deep .p-dropdown-panel::-webkit-scrollbar {
-  height: 6px;
-}
-
-::ng-deep .p-dropdown-panel::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.2);
-  border-radius: 3px;
-}

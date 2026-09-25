@@ -48,8 +48,11 @@ export class ViewVehiclesComponent {
 
   vehicleTypeOptions = [
     { label: 'Dimo Batta', value: 'Dimo Batta' },
-    { label: 'Mahindra Bolero', value: 'Mahindra Bolero' },
+    { label: 'Mahindra Bollero', value: 'Mahindra Bollero' },
     { label: 'Three Wheeler', value: 'Three Wheeler' },
+    { label: 'Double Cab Pickup (4x4)', value: 'Double Cab Pickup (4x4)' },
+    { label: 'Isuzu Elf / Canter Lorry', value: 'Isuzu Elf / Canter Lorry' },
+    { label: 'Lorry (6-8 Ton)', value: 'Lorry (6-8 Ton)' },
   ];
 
   constructor(

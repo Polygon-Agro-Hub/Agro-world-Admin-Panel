@@ -15,7 +15,7 @@
     <div>
       <div class="flex justify-center pt-3 pb-9">
         <div class="relative">
-          <input type="file" id="imageUpload" accept="image/*" class="hidden" (change)="onFileSelected($event)" />
+          <input type="file" id="imageUpload" accept=".png,.jpg,.jpeg,image/png,image/jpeg" class="hidden" (change)="onFileSelected($event)" />
 
           <img *ngIf="!selectedImage && personalData.image" class="rounded-full w-40 h-40 object-cover"
             [src]="personalData.image" alt="Profile Picture" />
@@ -115,7 +115,7 @@
           <p-dropdown [(ngModel)]="personalData.centerId" #centerNameInput="ngModel" [options]="centerOptions"
             optionLabel="label" optionValue="value" [filter]="true" filterBy="label" [showClear]="false"
             placeholder="Select a collection centre" styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
-            class="mt-1 block w-full p-dropdown-custom" (onChange)="getAllCollectionManagers()">
+            class="mt-1 block w-full p-dropdown-custom" (onChange)="onCenterChange()">
           </p-dropdown>
 
           <div *ngIf="centerNameInput.touched && !personalData.centerId" class="text-red-500 text-sm mt-1">
@@ -472,7 +472,7 @@
         </div>
       </div>
     </div>
-    <div *ngIf="personalData.companyId == 2">
+    <div>
       <h2 class="text-2xl mt-10 mb-6 text-textLight dark:text-textDark">
         Add Bank Details
       </h2>
@@ -564,13 +564,13 @@
           Back
         </button>
 
-        <button *ngIf="personalData.jobRole === LIGHT_WEIGHT_DRIVER || personalData.jobRole === HEAVY_WEIGHT_DRIVER" type="button"
-          class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="nextFormCreate('pageThree')">
+        <button *ngIf="personalData.jobRole === LIGHT_WEIGHT_DRIVER || personalData.jobRole === HEAVY_WEIGHT_DRIVER"
+          type="button" class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="nextFormCreate('pageThree')">
           Next
         </button>
 
-        <button *ngIf="personalData.jobRole !== LIGHT_WEIGHT_DRIVER && personalData.jobRole !== HEAVY_WEIGHT_DRIVER" type="submit"
-          class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="onSubmit()">
+        <button *ngIf="personalData.jobRole !== LIGHT_WEIGHT_DRIVER && personalData.jobRole !== HEAVY_WEIGHT_DRIVER"
+          type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="onSubmit()">
           Submit
         </button>
       </div>
@@ -636,7 +636,7 @@
         <label class="block text-sm font-medium text-gray-700 dark:text-textDark my-2">
           License's Front Image *
         </label>
-        <input id="licenseFrontImageUpload" type="file" accept="image/*" (change)="onLicenseFrontImageSelected($event)"
+        <input id="licenseFrontImageUpload" type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg" (change)="onLicenseFrontImageSelected($event)"
           class="hidden" />
         <div (click)="triggerFileInputForDriver($event, 'licenseFrontImageUpload')"
           class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-3 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
@@ -675,7 +675,7 @@
         <label class="block text-sm font-medium text-gray-700 dark:text-textDark my-2">
           License's Back Image *
         </label>
-        <input id="licenseBackImageUpload" type="file" accept="image/*" (change)="onLicenseBackImageSelected($event)"
+        <input id="licenseBackImageUpload" type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg" (change)="onLicenseBackImageSelected($event)"
           class="hidden" />
         <div (click)="triggerFileInputForDriver($event, 'licenseBackImageUpload')"
           class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-3 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
@@ -721,7 +721,7 @@
           Insurance Number *
         </label>
         <input id="insNo" type="text" #insurenceNoInput="ngModel" maxlength="13" name="insNo"
-          [(ngModel)]="driverObj.insNo"
+          [(ngModel)]="driverObj.insNo" (keydown)="preventLeadingSpace($event, 'insNo')"
           class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         <div>
           <span class="text-red-600 text-sm" *ngIf="insurenceNoInput.touched && !driverObj.insNo">
@@ -735,7 +735,7 @@
           Confirm Insurance Number *
         </label>
         <input id="insNo" type="text" #confirmInsurenceNoInput="ngModel" maxlength="13" name="insNo"
-          [(ngModel)]="driverObj.confirmInsNo"
+          [(ngModel)]="driverObj.confirmInsNo" (keydown)="preventLeadingSpace($event, 'confirmInsNo')"
           class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
         <div>
@@ -757,7 +757,7 @@
         <label class="block text-sm font-medium text-gray-700 dark:text-textDark my-2">
           Insurance's Front Image *
         </label>
-        <input id="insurenceFrontImageUpload" type="file" accept="image/*"
+        <input id="insurenceFrontImageUpload" type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg"
           (change)="onInsurenceFrontImageSelected($event)" class="hidden" />
         <div (click)="
             triggerFileInputForDriver($event, 'insurenceFrontImageUpload')
@@ -801,7 +801,7 @@
         <label class="block text-sm font-medium text-gray-700 dark:text-textDark my-2">
           Insurance's Back Image *
         </label>
-        <input id="insuranceBackImageUpload" type="file" accept="image/*"
+        <input id="insuranceBackImageUpload" type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg"
           (change)="onInsurenceBackImageSelected($event)" class="hidden" />
         <div (click)="
             triggerFileInputForDriver($event, 'insuranceBackImageUpload')
@@ -843,8 +843,13 @@
         <label for="insExpDate" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Insurance Expire Date *
         </label>
-        <p-calendar id="insExpDate" [(ngModel)]="driverObj.insExpDate" [showIcon]="true" [showClear]="false"
-          [showButtonBar]="false" [minDate]="minInsuranceDate" [readonlyInput]="true" [selectOtherMonths]="false"
+        <p-calendar #insExpDate id="insExpDate" [(ngModel)]="insuranceCalendarValue" [showIcon]="true" [showClear]="false"
+          (ngModelChange)="onInsuranceCalendarValueChange($event)"
+          (onShow)="openInsuranceCalendarAtToday()"
+          (onHide)="restoreInsuranceDateOnCalendarClose()"
+          [showButtonBar]="false" [disabledDates]="disabledInsuranceDates"
+          [defaultDate]="insuranceCalendarDefaultDate"
+          [readonlyInput]="true" [selectOtherMonths]="false"
           [showOtherMonths]="false" iconDisplay="input" dateFormat="yy-mm-dd" placeholder="Select Expiry Date"
           [style]="{ width: '100%' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
                      [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
@@ -906,8 +911,8 @@
         <label for="selectVehicletype" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Vehicle Type *
         </label>
-        <p-dropdown id="selectVehicletype" [(ngModel)]="selectVehicletype" [options]="VehicleTypes" optionLabel="name"
-          placeholder="Select Vehicle Type" (onChange)="vehicleChange()" styleClass="w-full mt-1"
+        <p-dropdown id="selectVehicletype" [(ngModel)]="selectVehicletype" [options]="filteredVehicleTypes"
+          optionLabel="name" placeholder="Select Vehicle Type" (onChange)="vehicleChange()" styleClass="w-full mt-1"
           panelStyleClass="custom-dropdown-panel" class="mt-1 block w-full p-dropdown-custom">
         </p-dropdown>
       </div>
@@ -925,7 +930,7 @@
         <label class="block text-sm font-medium text-gray-700 dark:text-textDark my-2">
           Vehicle's Front Image *
         </label>
-        <input id="vehicleFrontImageUpload" type="file" accept="image/*" (change)="onVehicleFrontImageSelected($event)"
+        <input id="vehicleFrontImageUpload" type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg" (change)="onVehicleFrontImageSelected($event)"
           class="hidden" />
         <div (click)="triggerFileInputForDriver($event, 'vehicleFrontImageUpload')"
           class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-3 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
@@ -965,7 +970,7 @@
         <label class="block text-sm font-medium text-gray-700 dark:text-textDark my-2">
           Vehicle's Back Image *
         </label>
-        <input id="vehicleBackImageUpload" type="file" accept="image/*" (change)="onVehicleBackImageSelected($event)"
+        <input id="vehicleBackImageUpload" type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg" (change)="onVehicleBackImageSelected($event)"
           class="hidden" />
         <div (click)="triggerFileInputForDriver($event, 'vehicleBackImageUpload')"
           class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-3 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
@@ -1004,7 +1009,7 @@
         <label class="block text-sm font-medium text-gray-700 dark:text-textDark my-2">
           Vehicle's Side Image - 1 *
         </label>
-        <input id="vehicleSideAImageUpload" type="file" accept="image/*" (change)="onVehicleSideAImageSelected($event)"
+        <input id="vehicleSideAImageUpload" type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg" (change)="onVehicleSideAImageSelected($event)"
           class="hidden" />
         <div (click)="triggerFileInputForDriver($event, 'vehicleSideAImageUpload')"
           class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-3 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
@@ -1041,7 +1046,7 @@
         <label class="block text-sm font-medium text-gray-700 dark:text-textDark my-2">
           Vehicle's Side Image - 2 *
         </label>
-        <input id="vehicleSideBImageUpload" type="file" accept="image/*" (change)="onVehicleSideBImageSelected($event)"
+        <input id="vehicleSideBImageUpload" type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg" (change)="onVehicleSideBImageSelected($event)"
           class="hidden" />
         <div (click)="triggerFileInputForDriver($event, 'vehicleSideBImageUpload')"
           class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-3 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">

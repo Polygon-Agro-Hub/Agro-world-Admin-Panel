@@ -35,7 +35,7 @@ export class DistributionFinanceComponent implements OnInit {
 
   loadShortageSubmissionsCount(): void {
     this.financeService
-      .getAllShortageSubmissions(1, 1, '', '', '')
+      .getAllShortageSubmissions(1, 1, 'Pending', '', '')
       .subscribe({
         next: (res) => {
           this.shortageSubmissionsCount = res.total || 0;

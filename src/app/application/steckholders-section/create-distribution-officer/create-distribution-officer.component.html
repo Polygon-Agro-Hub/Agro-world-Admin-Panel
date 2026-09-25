@@ -147,7 +147,8 @@
               field</span>
           </div>
 
-          <div *ngIf="personalData.jobRole === 'Distribution Officer' || personalData.jobRole === LIGHT_WEIGHT_DRIVER || personalData.jobRole === HEAVY_WEIGHT_DRIVER">
+          <div
+            *ngIf="personalData.jobRole === 'Distribution Officer' || personalData.jobRole === LIGHT_WEIGHT_DRIVER || personalData.jobRole === HEAVY_WEIGHT_DRIVER">
             <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
               Manager Name *
             </label>
@@ -169,6 +170,7 @@
               (in English) *</label>
             <input id="firstNameEnglish" [(ngModel)]="personalData.firstNameEnglish" name="firstNameEnglish"
               (blur)="onBlur('firstNameEnglish')" (keypress)="preventSpecialCharacters($event)"
+              (input)="capitalizeFirstLetterOnly('firstNameEnglish')"
               class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
             <span *ngIf="isFieldInvalid('firstNameEnglish')" class="text-red-600 text-sm">First Name (in English) is
               required</span>
@@ -182,6 +184,7 @@
               English) *</label>
             <input id="lastNameEnglish" name="lastNameEnglish" [(ngModel)]="personalData.lastNameEnglish"
               (blur)="onBlur('lastNameEnglish')" (keypress)="preventSpecialCharacters($event)"
+              (input)="capitalizeFirstLetterOnly('lastNameEnglish')"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
             <span *ngIf="isFieldInvalid('lastNameEnglish')" class="text-red-600 text-sm">Last Name (in English) is
               required</span>
@@ -530,13 +533,13 @@
         </button>
 
         <!-- Conditional buttons based on job role -->
-        <button *ngIf="personalData.jobRole === LIGHT_WEIGHT_DRIVER || personalData.jobRole === HEAVY_WEIGHT_DRIVER" type="button"
-          class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="nextFormCreate('pageThree')">
+        <button *ngIf="personalData.jobRole === LIGHT_WEIGHT_DRIVER || personalData.jobRole === HEAVY_WEIGHT_DRIVER"
+          type="button" class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="nextFormCreate('pageThree')">
           Next
         </button>
 
-        <button *ngIf="personalData.jobRole !== LIGHT_WEIGHT_DRIVER && personalData.jobRole !== HEAVY_WEIGHT_DRIVER" type="button"
-          class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="onSubmit()">
+        <button *ngIf="personalData.jobRole !== LIGHT_WEIGHT_DRIVER && personalData.jobRole !== HEAVY_WEIGHT_DRIVER"
+          type="button" class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="onSubmit()">
           Send to Approve
         </button>
       </div>
@@ -648,7 +651,7 @@
           Insurance Number *
         </label>
         <input id="insNo" type="text" #insurenceNoInput="ngModel" name="insNo" [(ngModel)]="driverObj.insNo"
-          [maxlength]="13"
+          [maxlength]="13" (keypress)="handleSpaceRestrictions($event)"
           class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         <div>
           <span class="text-red-600 text-sm" *ngIf="insurenceNoInput.touched && !driverObj.insNo">
@@ -662,7 +665,7 @@
           Confirm Insurance Number *
         </label>
         <input id="confirmInsNo" type="text" #confirmInsurenceNoInput="ngModel" name="confirmInsNo"
-          [(ngModel)]="driverObj.confirmInsNo"
+          [(ngModel)]="driverObj.confirmInsNo" (keypress)="handleSpaceRestrictions($event)"
           class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
         <div>
@@ -787,8 +790,8 @@
         <label for="selectVehicletype" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Vehicle Type *
         </label>
-        <p-dropdown id="selectVehicletype" [(ngModel)]="selectVehicletype" [options]="VehicleTypes" optionLabel="name"
-          placeholder="Select Vehicle Type" (onChange)="vehicleChange()" styleClass="w-full mt-1"
+        <p-dropdown id="selectVehicletype" [(ngModel)]="selectVehicletype" [options]="filteredVehicleTypes"
+          optionLabel="name" placeholder="Select Vehicle Type" (onChange)="vehicleChange()" styleClass="w-full mt-1"
           panelStyleClass="custom-dropdown-panel" class="mt-1 block w-full p-dropdown-custom">
         </p-dropdown>
       </div>

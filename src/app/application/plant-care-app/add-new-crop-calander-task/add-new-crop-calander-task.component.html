@@ -28,7 +28,8 @@
       </ul>
     </div>
 
-    <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" (keydown)="blockLeadingSpace($event)"
+      (paste)="removeLeadingSpace($event)">
       <div class="px-12" *ngIf="selectedLanguage === 'english'">
         <div class="my-3">
           <label for="taskEnglish" class="block text-sm font-medium text-textLight dark:text-textDark">Task *

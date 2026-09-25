@@ -81,11 +81,10 @@ export class AddBlockWordsComponent implements OnInit {
   get filteredWords(): BlockWord[] {
   let words = [...this.blockWords];
 
-  // Full-word match (word boundaries), case-insensitive
+  // Partial (substring) match, case-insensitive — also matches full text naturally
   if (this.searchTerm.trim()) {
-    const escaped = this.searchTerm.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const wordRegex = new RegExp(`\\b${escaped}\\b`, 'i');
-    words = words.filter(w => wordRegex.test(w.word));
+    const term = this.searchTerm.trim().toLowerCase();
+    words = words.filter(w => w.word.toLowerCase().includes(term));
   }
 
   // Sort

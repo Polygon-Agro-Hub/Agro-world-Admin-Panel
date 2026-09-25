@@ -209,11 +209,15 @@ export class CustomerOrdersComponent implements OnInit {
     return enabledStatuses.includes(status);
   }
 
-  downloadPostInvoice(id: number, tableInvoiceNo: string): void {
+  downloadPostInvoice(
+    id: number,
+    tableInvoiceNo: string,
+    orderStatus: string,
+  ): void {
     this.isLoading = true;
 
     this.postInvoiceService
-      .generateAndDownloadInvoice(id, tableInvoiceNo)
+      .generateAndDownloadInvoice(id, tableInvoiceNo, orderStatus)
       .then(() => {
       })
       .catch((error) => {

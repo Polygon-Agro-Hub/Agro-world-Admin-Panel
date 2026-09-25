@@ -13,6 +13,7 @@ interface InvoiceData {
   invoiceDate: string;
   scheduledDate: string;
   paymentMethod: string;
+  status?: string;
   grandTotal: string;
   isPaid?: number | null;
   isCoupon?: number | null;
@@ -85,6 +86,7 @@ export class PostinvoiceService {
   async generateAndDownloadInvoice(
     processOrderId: number,
     tableInvoiceNo: string,
+    orderStatus?: string,
   ): Promise<void> {
     try {
       const response =
@@ -148,6 +150,12 @@ export class PostinvoiceService {
         invoiceDate: invoiceDetails.invoiceDate || 'N/A',
         scheduledDate: invoiceDetails.scheduledDate || 'N/A',
         paymentMethod: invoiceDetails.paymentMethod || 'N/A',
+        status:
+          orderStatus ||
+          invoiceDetails.status ||
+          invoiceDetails.orderStatus ||
+          response.data?.status ||
+          '',
         grandTotal: invoiceDetails.grandTotal || '0.00',
         isPaid: invoiceDetails.isPaid,
         isCoupon: invoiceDetails.isCoupon,
@@ -941,7 +949,13 @@ export class PostinvoiceService {
 
     const isPickup = invoice.deliveryMethod?.toLowerCase() === 'pickup';
     const isFreeDeliveryCouponApplied = !!invoice.hasFreeDeliveryCoupon;
-    const cashLabel = isPickup ? 'Cash On Pickup' : 'Cash On Delivery';
+    const invoiceStatus = String(invoice.status || '').trim().toLowerCase();
+    const isDelivered = invoiceStatus === 'delivered';
+    const cashLabel = isPickup
+      ? 'Cash On Pickup'
+      : isDelivered
+        ? 'Cash On Delivery'
+        : 'Cash On Delivery (Pending)';
     let showDeliveryNote = false;
 
     const pushPaymentRow = (
@@ -980,7 +994,7 @@ export class PostinvoiceService {
         );
       } else {
         pushPaymentRow(
-          'Cash On Delivery',
+          cashLabel,
           remainingAfterCredit,
           ORANGE_COLOR,
         );
@@ -1008,7 +1022,7 @@ export class PostinvoiceService {
         );
       } else {
         pushPaymentRow(
-          'Cash On Delivery',
+          cashLabel,
           finalGrandTotal,
           ORANGE_COLOR,
         );

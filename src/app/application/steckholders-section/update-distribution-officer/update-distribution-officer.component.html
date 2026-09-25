@@ -115,7 +115,7 @@
           <p-dropdown [(ngModel)]="personalData.centerId" #centerNameInput="ngModel" [options]="centerOptions"
             optionLabel="label" optionValue="value" [filter]="true" filterBy="label" [showClear]="false"
             placeholder="Select a collection centre" styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
-            class="mt-1 block w-full p-dropdown-custom" (onChange)="getAllCollectionManagers()">
+            class="mt-1 block w-full p-dropdown-custom" (onChange)="onCenterChange()">
           </p-dropdown>
 
           <div *ngIf="centerNameInput.touched && !personalData.centerId" class="text-red-500 text-sm mt-1">

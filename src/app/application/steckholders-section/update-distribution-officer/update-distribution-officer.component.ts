@@ -1513,7 +1513,7 @@ export class UpdateDistributionOfficerComponent {
       }
 
       if (!this.personalData.centerId) {
-        missingFields.push('Collection Centre Name is Required');
+        missingFields.push('Distribution Centre Name is Required');
       }
 
       if (!this.personalData.jobRole) {
@@ -1764,6 +1764,12 @@ export class UpdateDistributionOfficerComponent {
       });
   }
 
+  onCenterChange() {
+    this.personalData.irmId = null;
+    this.managerOptions = [];
+    this.getAllCollectionManagers();
+  }
+
   getAllCollectionManagers() {
     this.distributionOfficerServ
       .getAllManagerList(
@@ -1898,7 +1904,7 @@ export class UpdateDistributionOfficerComponent {
     }
 
     if (!this.personalData.centerId) {
-      missingFields.push('Collection Centre Name is Required');
+      missingFields.push('Distribution Centre Name is Required');
     }
 
     if (!this.personalData.jobRole) {

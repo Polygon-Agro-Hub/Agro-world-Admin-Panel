@@ -10,7 +10,9 @@ import { RowFourComponent } from './row-four/row-four.component';
   selector: 'app-call-center-dashboard',
   standalone: true,
   imports: [
-    RowFourComponent, RowTwoComponent, RowOneComponent,
+    RowFourComponent,
+    RowTwoComponent,
+    RowOneComponent,
     ColumRightComponent,
     LeftColumnComponent,
     LeftColumnComponent,

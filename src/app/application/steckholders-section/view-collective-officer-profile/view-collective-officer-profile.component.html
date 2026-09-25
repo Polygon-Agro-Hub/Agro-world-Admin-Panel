@@ -21,8 +21,17 @@
             {{ officerObj.firstNameEnglish }} {{ officerObj.lastNameEnglish }}
           </p>
           <p>
-            <span class="text-[#627189] dark:text-[#a6aebb]">{{ officerObj.jobRole }} </span>-
-              <span class="text-black dark:text-[#a6aebb]">{{ this.empHeader }}{{ officerObj.empId }}<span *ngIf="officerObj.jobRole === 'Driver'"> | {{officerObj.slvCatName}}</span></span>
+            <span class="text-[#627189] dark:text-[#a6aebb]">
+              {{ (officerObj.jobRole === LIGHT_WEIGHT_DRIVER || officerObj.jobRole === HEAVY_WEIGHT_DRIVER) ? 'Driver' :
+              officerObj.jobRole }}
+            </span>
+            -
+            <span class="text-black dark:text-[#a6aebb]">
+              {{ this.empHeader }}{{ officerObj.empId }}
+              <span *ngIf="officerObj.jobRole === LIGHT_WEIGHT_DRIVER || officerObj.jobRole === HEAVY_WEIGHT_DRIVER">
+                &nbsp;|&nbsp;{{ officerObj.jobRole }}&nbsp;|&nbsp;{{ officerObj.slvCatName }}
+              </span>
+            </span>
           </p>
 
           <!-- collection officer -->
@@ -40,9 +49,9 @@
       </div>
 
       <div class="flex flex-col gap-y-6">
-        <div class="flex flex-row gap-4 justify-between" *ngIf="officerObj.jobRole === 'Driver'">
-          <div class="flex flex-row justify-center min-w-24"
-            *ngIf="
+        <div class="flex flex-row gap-4 justify-between"
+          *ngIf="officerObj.jobRole === LIGHT_WEIGHT_DRIVER || officerObj.jobRole === HEAVY_WEIGHT_DRIVER">
+          <div class="flex flex-row justify-center min-w-24" *ngIf="
             ( urlSegment === 'steckholders' && permissionService.hasPermission('Stakeholder delete driver') || tokenService.getUserDetails().role === '1') ||
             ( urlSegment === 'distribution-hub' && permissionService.hasPermission('Polygon center delete driver') || tokenService.getUserDetails().role === '1') 
             ">
@@ -54,8 +63,7 @@
             </button>
           </div>
 
-          <div class="flex flex-row justify-center "
-            *ngIf="
+          <div class="flex flex-row justify-center " *ngIf="
               (urlSegment === 'steckholders' && permissionService.hasPermission('Stakeholder edit driver') ) ||
               (urlSegment === 'distribution-hub' && permissionService.hasPermission('Polygon center edit driver')) ||
               tokenService.getUserDetails().role === '1'
@@ -71,12 +79,13 @@
         </div>
 
         <div class="flex">
-          <button *ngIf="(
+          <button
+            *ngIf="(
           (urlSegment === 'steckholders' && (officerObj.jobRole === 'Collection Officer' || officerObj.jobRole === 'Collection Centre Manager' || officerObj.jobRole === 'Collection Centre Head') && permissionService.hasPermission('Stakeholder claim or disclaim collection officer')) ||
           (urlSegment === 'distribution-hub' && (officerObj.jobRole === 'Distribution Officer' || officerObj.jobRole === 'Distribution Centre Manager' || officerObj.jobRole === 'Distribution Centre Head') && permissionService.hasPermission('Distribution hub claim or disclaim officer')) ||
           (urlSegment === 'steckholders' && (officerObj.jobRole === 'Distribution Officer' || officerObj.jobRole === 'Distribution Centre Manager' || officerObj.jobRole === 'Distribution Centre Head') && permissionService.hasPermission('Stakeholder claim or disclaim distribution officer')) ||
-          (urlSegment === 'steckholders' && officerObj.jobRole === 'Driver' && permissionService.hasPermission('Driver claim or disclaim')) ||
-          tokenService.getUserDetails().role === '1') &&  officerObj.jobRole !== 'Driver'"
+          (urlSegment === 'steckholders' && (officerObj.jobRole === LIGHT_WEIGHT_DRIVER || officerObj.jobRole === HEAVY_WEIGHT_DRIVER) && permissionService.hasPermission('Driver claim or disclaim')) ||
+          tokenService.getUserDetails().role === '1') &&  (officerObj.jobRole !== LIGHT_WEIGHT_DRIVER && officerObj.jobRole !== HEAVY_WEIGHT_DRIVER)"
             class="bg-[#E20000] text-white font-semibold rounded-lg shadow-md px-5 py-2 mr-2"
             (click)="toggleDisclaimView()" [disabled]="officerObj.claimStatus == 0" [ngClass]="{
             'bg-[#E20000]': officerObj.claimStatus !== 0,
@@ -105,8 +114,8 @@
           (urlSegment === 'steckholders' && (officerObj.jobRole === 'Collection Officer' || officerObj.jobRole === 'Collection Centre Manager' || officerObj.jobRole === 'Collection Centre Head') && permissionService.hasPermission('Stakeholder collection officer download pdf')) ||
           (urlSegment === 'distribution-hub' && (officerObj.jobRole === 'Distribution Officer' || officerObj.jobRole === 'Distribution Centre Manager' || officerObj.jobRole === 'Distribution Centre Head') && permissionService.hasPermission('Distribution hub officer download pdf')) ||
           (urlSegment === 'steckholders' && (officerObj.jobRole === 'Distribution Officer' || officerObj.jobRole === 'Distribution Centre Manager' || officerObj.jobRole === 'Distribution Centre Head') && permissionService.hasPermission('Stakeholder distribution officer download pdf')) ||
-          (urlSegment === 'steckholders' && officerObj.jobRole === 'Driver' && permissionService.hasPermission('Driver download pdf')) ||
-          (urlSegment === 'distribution-hub' && officerObj.jobRole === 'Driver' && permissionService.hasPermission('Polygon center drivers details download')) ||
+          (urlSegment === 'steckholders' && (officerObj.jobRole === LIGHT_WEIGHT_DRIVER || officerObj.jobRole === HEAVY_WEIGHT_DRIVER) && permissionService.hasPermission('Driver download pdf')) ||
+          (urlSegment === 'distribution-hub' && (officerObj.jobRole === LIGHT_WEIGHT_DRIVER || officerObj.jobRole === HEAVY_WEIGHT_DRIVER) && permissionService.hasPermission('Polygon center drivers details download')) ||
           tokenService.getUserDetails().role === '1')"
           class="bg-[#415CFF] text-white px-6 py-1 text-xl rounded-lg shadow-md" (click)="generatePDF()"
           [disabled]="isGeneratingPDF">
@@ -159,12 +168,12 @@
           </ng-template>
         </div>
 
-        <div *ngIf="officerObj.jobRole === 'Driver'">
+        <div *ngIf="officerObj.jobRole === LIGHT_WEIGHT_DRIVER || officerObj.jobRole === HEAVY_WEIGHT_DRIVER">
           <p class="text-[#627189]">Distribution Centre Manager</p>
           <p class="text-[#030308] dark:text-[#ffffff]">
             {{ officerObj.manageName || '--'}}
           </p>
-          
+
         </div>
       </div>
     </div>
@@ -252,7 +261,8 @@
     </div>
 
 
-    <div *ngIf="officerObj.jobRole === 'Driver'" class="border-[#F1F7FA] border-[0.25px] rounded-lg shadowmd p-6">
+    <div *ngIf="officerObj.jobRole === LIGHT_WEIGHT_DRIVER || officerObj.jobRole === HEAVY_WEIGHT_DRIVER"
+      class="border-[#F1F7FA] border-[0.25px] rounded-lg shadowmd p-6">
       <p class="text-[#030308] dark:text-[#ffffff] text-lg font-[500]">Driving Details</p>
 
       <div class="grid grid-cols-2 gap-4 text-[#627189] my-4">
@@ -282,7 +292,8 @@
 
     </div>
 
-    <div *ngIf="officerObj.jobRole === 'Driver'" class="border-[#F1F7FA] border-[0.25px] rounded-lg shadowmd p-6">
+    <div *ngIf="officerObj.jobRole === LIGHT_WEIGHT_DRIVER || officerObj.jobRole === HEAVY_WEIGHT_DRIVER"
+      class="border-[#F1F7FA] border-[0.25px] rounded-lg shadowmd p-6">
       <p class="text-[#030308] dark:text-[#ffffff] text-lg font-[500]">Vehicle Insurance Details</p>
 
 
@@ -317,7 +328,8 @@
 
     </div>
 
-    <div *ngIf="officerObj.jobRole === 'Driver'" class="border-[#F1F7FA] border-[0.25px] rounded-lg shadowmd p-6">
+    <div *ngIf="officerObj.jobRole === LIGHT_WEIGHT_DRIVER || officerObj.jobRole === HEAVY_WEIGHT_DRIVER"
+      class="border-[#F1F7FA] border-[0.25px] rounded-lg shadowmd p-6">
       <p class="text-[#030308] dark:text-[#ffffff] text-lg font-[500]">Vehicle Details</p>
 
       <div class="grid grid-cols-2 gap-4 text-[#627189] my-4">

@@ -117,13 +117,10 @@
             <td class="px-4 py-3 text-center">
               <div>
                 <span [ngClass]="{
-                  'font-bold px-3 py-1 text-sm bg-[#F8FFA6] text-[#A8A100] dark:text-[#A8A100] rounded-lg':
-                    item.status === 'Not Approved',
-                  'font-bold px-3 py-1 text-sm bg-[#BBFFC6] text-[#308233] dark:text-[#308233] rounded-lg':
-                    item.status === 'Approved',
-                  'font-bold px-3 py-1 text-sm bg-[#FFB9B7] text-[#D16D6A] dark:text-[#D16D6A] rounded-lg':
-                    item.status === 'Rejected'
-                }" class="inline-block font-medium rounded-md px-4 py-2 text-xs text-center min-w-[100px]"
+        'bg-[#F8FFA6] text-[#A8A100] dark:text-[#A8A100]': item.status === 'Not Approved',
+        'bg-[#BBFFC6] text-[#308233] dark:text-[#308233]': item.status === 'Approved',
+        'bg-[#FFB9B7] text-[#D16D6A] dark:text-[#D16D6A]': item.status === 'Rejected'
+      }" class="inline-flex items-center justify-center font-bold rounded-lg px-4 py-1.5 text-xs text-center w-[130px] whitespace-nowrap"
                   [class.cursor-pointer]="canApproveReject" [class.cursor-not-allowed]="!canApproveReject"
                   [class.opacity-50]="!canApproveReject" (click)="canApproveReject ? openPopup(item) : null">
                   {{ item.status }}

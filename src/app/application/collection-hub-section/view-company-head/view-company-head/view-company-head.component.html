@@ -4,12 +4,10 @@
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
-<button class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
-      *ngIf="
+<button class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center" *ngIf="
         permissionService.hasPermission('Create Company Head') ||
         tokenService.getUserDetails().role === '1'
-      "
-  (click)="navigatePath('/collection-hub/create-center-head')">
+      " (click)="navigatePath('/collection-hub/create-center-head')">
   <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M4 12H20M12 4V20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
   </svg>
@@ -27,8 +25,9 @@
       <div
         class="flex items-center rounded-full mr-56 px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark">
 
-        <input type="text" placeholder="Search by EMP ID, First / Last Name..." title="Search By EMP ID, First Name / Last Name & Email"
-          [(ngModel)]="searchText" (keydown)="handleSearchKeydown($event)"
+        <input type="text" placeholder="Search by EMP ID, First / Last Name..."
+          title="Search By EMP ID, First Name / Last Name & Email" [(ngModel)]="searchText"
+          (keydown)="handleSearchKeydown($event)"
           class="bg-transparent outline-none w-full text-textLight dark:text-textDark" />
 
         <!-- Search button with negative left margin -->
@@ -70,12 +69,10 @@
             <th class="px-4 py-3 m-y-5 font-normal text-textLight dark:text-textDark text-left">
               Email
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
-            *ngIf="
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center" *ngIf="
               permissionService.hasPermission('Approve Or Reject Company Head') ||
               tokenService.getUserDetails().role === '1'
-            "
-              >
+            ">
               Status
             </th>
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
@@ -118,12 +115,10 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.email }}
             </td>
-            <td 
-            *ngIf="
+            <td *ngIf="
               permissionService.hasPermission('Approve Or Reject Company Head') ||
               tokenService.getUserDetails().role === '1'
-            "
-            class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            " class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <div class="cursor-pointer">
                 <span [ngClass]="{
     'font-bold px-3 py-1 text-sm bg-[#F8FFA6] text-[#A8A100] rounded-lg':
@@ -132,9 +127,7 @@
                       item.status === 'Approved',
                     'font-bold px-3 py-1 text-sm bg-red-100 text-[#D16D6A] rounded-lg':
                       item.status === 'Rejected'
-  }" class="inline-block font-medium rounded-md px-4 py-2 text-xs text-center w-32" (click)="openPopup(item)"
-  
-  >
+  }" class="inline-block font-medium rounded-md px-4 py-2 text-xs text-center w-32" (click)="openPopup(item)">
                   {{ item.status }}
                 </span>
               </div>
@@ -154,12 +147,10 @@
               {{ item.createdAtFormatted }}
             </td>
 
-            <td class="px-3 py-3 text-center text-textLight dark:text-textDark" 
-            *ngIf="
+            <td class="px-3 py-3 text-center text-textLight dark:text-textDark" *ngIf="
                   permissionService.hasPermission('View Company Head') ||
                   tokenService.getUserDetails().role === '1'
-                "
-            (click)="viewCompanyHead(item.id)">
+                " (click)="viewCompanyHead(item.id)">
               <button class="w-5 h-5 text-blue-500 hover:text-blue-700 mr-2">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
@@ -170,12 +161,10 @@
             </td>
 
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
-              <button class="w-6 h-6 mr-2 ml-2 text-[#367bfa] hover:text-[#83aefd]" 
-              *ngIf="
+              <button class="w-6 h-6 mr-2 ml-2 text-[#367bfa] hover:text-[#83aefd]" *ngIf="
                   permissionService.hasPermission('Edit Company Head') ||
                   tokenService.getUserDetails().role === '1'
-                "
-              (click)="editCompanyHead(item.id)">
+                " (click)="editCompanyHead(item.id)">
                 <svg fill="currentColor" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
                   <title>click to edit profile</title>
                   <path
@@ -186,12 +175,10 @@
             </td>
 
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
-              <button class="w-6 h-6 ml-2 mr-2 text-[#fc3636] hover:text-[#f38f8f]"
-                *ngIf="
+              <button class="w-6 h-6 ml-2 mr-2 text-[#fc3636] hover:text-[#f38f8f]" *ngIf="
                   permissionService.hasPermission('Delete Company Head') ||
                   tokenService.getUserDetails().role === '1'
-                "
-                (click)="deleteCompanyHead(item.id)">
+                " (click)="deleteCompanyHead(item.id)">
                 <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                   viewBox="0 0 24 24">
                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

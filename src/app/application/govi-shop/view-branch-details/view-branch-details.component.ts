@@ -59,7 +59,7 @@ export class ViewBranchDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private sanitizer: DomSanitizer,
     private govishopService: GovishopService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
@@ -96,7 +96,7 @@ export class ViewBranchDetailsComponent implements OnInit {
           email: r.shopInfo?.email,
           joinedDate: r.shopInfo?.createdAt,
           phoneNumber: r.shopInfo?.phone,
-        
+
           address: r.shopInfo?.address,
           businessType: r.shopInfo?.shopType,
           image: r.shopInfo?.logo,

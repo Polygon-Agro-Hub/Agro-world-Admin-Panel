@@ -21,6 +21,13 @@ export class ProcurementComponent {
     public permissionService: PermissionService
   ) { }
 
+  istogglePopupLoadMismatchView = false;
+  pendingLoadAlertsCount = 3; // replace with real value from your service later
+
+  togglePopupLoadMismatch() {
+    this.istogglePopupLoadMismatchView = !this.istogglePopupLoadMismatchView;
+  }
+
   togglePopupProductStorage(): void {
     this.istogglePopupProductStorageView = !this.istogglePopupProductStorageView;
   }
@@ -35,6 +42,13 @@ export class ProcurementComponent {
 
   definePackages(): void {
     this.router.navigate(['/procurement/define-packages']);
+  }
+  dailypackingtarget(): void {
+    this.router.navigate(['/procurement/daily-packing-target']);
+  }
+
+    loadmismatch(): void {
+    this.router.navigate(['/procurement/pending-procurement-product-mismatch-today']);
   }
 
   navigatePath(path: string) {

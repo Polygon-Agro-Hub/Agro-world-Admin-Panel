@@ -10,7 +10,6 @@
 <div class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg">
 
   <div *ngIf="selectedPage === 'pageOne'">
-    <!-- <div> -->
     <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
       Edit Centre Head Details
     </h2>
@@ -19,7 +18,6 @@
         <div class="relative">
           <input type="file" id="imageUpload" accept="image/*" class="hidden" (change)="onFileSelected($event)" />
 
-          <!-- Display default image if no file is selected -->
           <img *ngIf="!selectedImage && personalData.image" class="rounded-full w-40 h-40" [src]="personalData.image"
             alt="Profile Picture" />
 
@@ -28,7 +26,6 @@
             <i class="fa-regular fa-user text-6xl dark:text-textDark"></i>
           </div>
 
-          <!-- Display the selected image if available -->
           <img *ngIf="selectedImage" class="rounded-full w-60 h-60" [src]="selectedImage" alt="Profile Picture" />
 
 
@@ -41,13 +38,10 @@
       </div>
 
       <div class="h-[20px]"></div>
-            <button (click)="resetPassword()"
+      <button (click)="resetPassword()"
         class="bg-[#FF0000] text-white font-semibold px-4 py-2 my-3 rounded-lg shadow-md">Reset Password</button>
 
-
-
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-        
 
         <div class="mb-4">
           <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
@@ -67,7 +61,6 @@
         </div>
 
         <div></div>
-
 
         <div>
           <label for="enpType" class="block text-sm font-medium text-gray-700 dark:text-textDark">
@@ -91,13 +84,11 @@
             </div>
           </div>
 
-          <!-- Validation Message -->
           <div *ngIf="empTypeInput.touched && !empType" class="text-red-500 text-sm mt-1">
             <div>Employee Type is required</div>
           </div>
 
         </div>
-
 
         <div>
           <label for="languages" class="block text-sm font-medium text-gray-700 dark:text-textDark">
@@ -122,20 +113,18 @@
             </div>
           </div>
 
-          <!-- Required Validation Message -->
           <div *ngIf="isLanguageRequired && selectedLanguages.length === 0" class="text-red-500 text-sm mt-1">
             <div>Please select at least one language</div>
           </div>
         </div>
-
-
 
         <div>
           <label for="firstNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name
             (in English) *</label>
           <input id="firstNameEnglish" [(ngModel)]="personalData.firstNameEnglish" name="firstNameEnglish"
             class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            #firstNameEnglishInput="ngModel" required (input)="onTrimInputFirstCapital($event, personalData, 'firstNameEnglish')"/>
+            #firstNameEnglishInput="ngModel" required
+            (input)="onTrimInputFirstCapital($event, personalData, 'firstNameEnglish')" />
           <div *ngIf="firstNameEnglishInput.touched && !personalData.firstNameEnglish"
             class="text-red-500 text-sm mt-1">
             <div>First Name (in English) is required</div>
@@ -147,7 +136,8 @@
             English) *</label>
           <input id="lastName" name="lastNameEnglish" [(ngModel)]="personalData.lastNameEnglish"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            #lastNameEnglishInput="ngModel" required (input)="onTrimInputFirstCapital($event, personalData, 'lastNameEnglish')"/>
+            #lastNameEnglishInput="ngModel" required
+            (input)="onTrimInputFirstCapital($event, personalData, 'lastNameEnglish')" />
           <div *ngIf="lastNameEnglishInput.touched && !personalData.lastNameEnglish" class="text-red-500 text-sm mt-1">
             <div>Last Name (in English) is required</div>
           </div>
@@ -158,7 +148,8 @@
             Sinhala) *</label>
           <input id="firstName" name="firstNameSinhala" [(ngModel)]="personalData.firstNameSinhala"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            #firstNameSinhalaInput="ngModel" required (input)="onTrimInputFirstCapital($event, personalData, 'firstNameSinhala')"/>
+            #firstNameSinhalaInput="ngModel" required
+            (input)="onTrimInputFirstCapital($event, personalData, 'firstNameSinhala')" />
           <div *ngIf="firstNameSinhalaInput.touched && !personalData.firstNameSinhala"
             class="text-red-500 text-sm mt-1">
             <div>First Name (in Sinhala) is required</div>
@@ -170,7 +161,8 @@
             Sinhala) *</label>
           <input id="lastName" name="lastNameSinhala" [(ngModel)]="personalData.lastNameSinhala"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            #lastNameSinhalaInput="ngModel" required (input)="onTrimInputFirstCapital($event, personalData, 'lastNameSinhala')"/>
+            #lastNameSinhalaInput="ngModel" required
+            (input)="onTrimInputFirstCapital($event, personalData, 'lastNameSinhala')" />
           <div *ngIf="lastNameSinhalaInput.touched && !personalData.lastNameSinhala" class="text-red-500 text-sm mt-1">
             <div>Last Name (in Sinhala) is required</div>
           </div>
@@ -181,7 +173,8 @@
             Tamil) *</label>
           <input id="firstName" name="firstNameTamil" [(ngModel)]="personalData.firstNameTamil"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            #firstNameTamilInput="ngModel" required (input)="onTrimInputFirstCapital($event, personalData, 'firstNameTamil')"/>
+            #firstNameTamilInput="ngModel" required
+            (input)="onTrimInputFirstCapital($event, personalData, 'firstNameTamil')" />
           <div *ngIf="firstNameTamilInput.touched && !personalData.firstNameTamil" class="text-red-500 text-sm mt-1">
             <div>First Name (in Tamil) is required</div>
           </div>
@@ -192,7 +185,8 @@
             Tamil) *</label>
           <input id="lastName" name="lastNameTamil" [(ngModel)]="personalData.lastNameTamil"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            #lastNameTamilInput="ngModel" required (input)="onTrimInputFirstCapital($event, personalData, 'lastNameTamil')"/>
+            #lastNameTamilInput="ngModel" required
+            (input)="onTrimInputFirstCapital($event, personalData, 'lastNameTamil')" />
           <div *ngIf="lastNameTamilInput.touched && !personalData.lastNameTamil" class="text-red-500 text-sm mt-1">
             <div>Last Name (in Tamil) is required</div>
           </div>
@@ -207,7 +201,6 @@
               optionValue="dialCode"
               styleClass="border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown flex-shrink-0"
               [style]="{ width: '140px' }">
-              <!-- Dropdown items with flags -->
               <ng-template let-country pTemplate="item">
                 <div class="flex items-center gap-2">
                   <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
@@ -215,7 +208,6 @@
                 </div>
               </ng-template>
 
-              <!-- Selected item with flag -->
               <ng-template let-country pTemplate="selectedItem">
                 <div class="flex items-center gap-2" *ngIf="country">
                   <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
@@ -230,19 +222,11 @@
               (input)="validatePhoneFormat('phoneNumber01')" />
           </div>
 
-          <!-- Required Validation -->
           <div *ngIf="phoneNumber01Input.touched && phoneNumber01Input.errors?.['required']"
             class="text-red-500 text-sm mt-1">
             Mobile Number - 01 is required.
           </div>
 
-          <!-- Duplicate Number Validation -->
-          <!-- <div *ngIf="personalData.phoneNumber02 === personalData.phoneNumber01 && phoneNumber02Input.touched"
-     class="text-red-500 text-sm mt-1">
-  Mobile Number - 02 cannot be the same as Mobile Number - 01
-</div> -->
-
-          <!-- Format Validation -->
           <div
             *ngIf="phoneNumber01Input.touched && personalData.phoneNumber01 && !isValidPhone(personalData.phoneNumber01)"
             class="text-red-500 text-sm mt-1">
@@ -251,41 +235,6 @@
 
         </div>
 
-
-        <!-- <div>
-            <label for="phoNumTwo" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-              Mobile Number - 02
-            </label>
-            <div class="mt-1 flex">
-              <select id="phoneNumber02Code" name="phoneNumber02Code" [(ngModel)]="personalData.phoneCode02"
-                class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack">
-                <option value="+94">+94 (LK)</option>
-                <option value="+1">+1 (US)</option>
-                <option value="+44">+44 (UK)</option>
-                <option value="+91">+91 (India)</option>
-              </select>
-              <input id="phoneNumber02" name="phoneNumber02" type="text" [(ngModel)]="personalData.phoneNumber02"
-    class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-    placeholder="Enter your phone number" #phoneNumber02Input="ngModel"
-    minlength="9" maxlength="9" pattern="^[0-9]{9}$"
-    (keypress)="allowOnlyNumbers($event)"
-    (input)="limitPhoneLength($event, 9, 'phoneNumber02')" />
-            </div>
-            <div *ngIf="phoneNumber02Input.touched && phoneNumber02Input.errors?.['maxlength']"
-              class="text-red-500 text-sm mt-1">
-              <div>Mobile Number must be exactly 9 digits</div>
-            </div>
-   <div *ngIf="phoneNumber02Input.touched && !isValidPhone(personalData.phoneNumber02)" class="text-red-500 text-sm mt-1">
-Please enter a valid mobile number (format: +947XXXXXXXX)
-  </div>
-            <!-- Pattern Validation (Ensuring Only Numbers) -->
-        <!-- <div *ngIf="phoneNumber02Input.touched && phoneNumber02Input.errors?.['pattern']"
-              class="text-red-500 text-sm mt-1">
-              <div>Please enter a valid mobile number (format: +947XXXXXXXX)</div>
-            </div> -->
-        <!-- </div> -->
-
-        <!-- Mobile Number - 02 with flags -->
         <div>
           <label for="phoneNumber02" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Mobile Number - 02
@@ -295,7 +244,6 @@ Please enter a valid mobile number (format: +947XXXXXXXX)
               optionValue="dialCode"
               styleClass="border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown flex-shrink-0"
               [style]="{ width: '140px' }">
-              <!-- Dropdown items with flag -->
               <ng-template let-country pTemplate="item">
                 <div class="flex items-center gap-2">
                   <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
@@ -303,7 +251,6 @@ Please enter a valid mobile number (format: +947XXXXXXXX)
                 </div>
               </ng-template>
 
-              <!-- Selected item with flag -->
               <ng-template let-country pTemplate="selectedItem">
                 <div class="flex items-center gap-2" *ngIf="country">
                   <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
@@ -318,24 +265,18 @@ Please enter a valid mobile number (format: +947XXXXXXXX)
               (input)="validatePhoneFormat('phoneNumber02')" />
           </div>
 
-
           <div *ngIf="phoneNumber02Input.touched && personalData.phoneNumber02">
-            <!-- Show format error only if there's input AND it's invalid -->
             <div *ngIf="!isValidPhone(personalData.phoneNumber02)" class="text-red-500 text-sm mt-1">
               Please enter a valid mobile number (format: +947XXXXXXXX)
             </div>
 
-            <!-- Show duplicate error only if format is valid -->
             <div
               *ngIf="isValidPhone(personalData.phoneNumber02) && personalData.phoneNumber02 === personalData.phoneNumber01"
               class="text-red-500 text-sm mt-1">
               Mobile Number - 02 cannot be the same as Mobile Number - 01
             </div>
           </div>
-
-
         </div>
-
 
         <div>
           <label for="nic" class="block text-sm font-medium text-gray-700 dark:text-textDark">NIC Number *</label>
@@ -343,26 +284,19 @@ Please enter a valid mobile number (format: +947XXXXXXXX)
             pattern="^(\d{9}V|\d{12})$" (input)="formatNIC($event)" (input)="validateNIC($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
-          <!-- Required Validation -->
-          <!-- Required Validation -->
           <div *ngIf="nicInput.touched && nicInput.errors?.['required']" class="text-red-500 text-sm mt-1">
             NIC Number is required
           </div>
 
-          <!-- Pattern Validation -->
           <div *ngIf="nicInput.touched && isNICInvalid" class="text-red-500 text-sm mt-1">
             Please enter a valid NIC number (12 digits or 10 digits ending with 'V').
           </div>
-
-
-
         </div>
-
 
         <div>
           <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Email *</label>
           <input type="email" id="email" name="email" [(ngModel)]="personalData.email" (blur)="validateEmail()"
-          (input)="onTrimInput($event, personalData, 'email'); validateEmail()"
+            (input)="onTrimInput($event, personalData, 'email'); validateEmail()"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             #emailInput="ngModel" required />
 
@@ -370,9 +304,6 @@ Please enter a valid mobile number (format: +947XXXXXXXX)
             <div>{{ emailValidationService.validationMessages.required }}</div>
           </div>
 
-          <!-- <div *ngIf="emailErrorMessage" class="text-red-500 text-sm mt-1">
-    <div>{{ emailErrorMessage }}</div>
-  </div> -->
         </div>
       </div>
 
@@ -388,7 +319,6 @@ Please enter a valid mobile number (format: +947XXXXXXXX)
   </div>
 
   <div *ngIf="selectedPage === 'pageTwo'">
-    <!-- <div> -->
     <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
       Residential Details
     </h2>
@@ -399,7 +329,8 @@ Please enter a valid mobile number (format: +947XXXXXXXX)
           <label for="house" class="block text-sm font-medium text-gray-700 dark:text-textDark">House / Plot
             Number *</label>
           <input id="houseNumber" name="houseNumber" [(ngModel)]="personalData.houseNumber" #houseNumberInput="ngModel"
-          (input)="onTrimInputFirstCapital($event, personalData, 'houseNumber')" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+            (input)="onTrimInputFirstCapital($event, personalData, 'houseNumber')"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
           <div *ngIf="houseNumberInput.touched && !personalData.houseNumber" class="text-red-500 text-sm mt-1">
             <div>House Number is required</div>
@@ -410,18 +341,19 @@ Please enter a valid mobile number (format: +947XXXXXXXX)
         <div class="pb-6">
           <label for="street" class="block text-sm font-medium text-gray-700 dark:text-textDark">Street Name *</label>
           <input id="streetName" name="streetName" [(ngModel)]="personalData.streetName" #streetNameInput="ngModel"
-            required (input)="onTrimInputFirstCapital($event, personalData, 'streetName')" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+            required (input)="onTrimInputFirstCapital($event, personalData, 'streetName')"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
           <div *ngIf="streetNameInput.touched && !personalData.streetName" class="text-red-500 text-sm mt-1">
             <div>Street Name is required</div>
           </div>
         </div>
 
-
-
         <div class="pb-6">
           <label for="city" class="block text-sm font-medium text-gray-700 dark:text-textDark">City *</label>
-          <input id="city" name="city" [(ngModel)]="personalData.city" #cityInput="ngModel" required (input)="onTrimInputFirstCapital($event, personalData, 'city')" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <input id="city" name="city" [(ngModel)]="personalData.city" #cityInput="ngModel" required
+            (input)="onTrimInputFirstCapital($event, personalData, 'city')"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
           <div *ngIf="cityInput.touched && !personalData.city" class="text-red-500 text-sm mt-1">
             <div>City is required</div>
@@ -461,12 +393,8 @@ Please enter a valid mobile number (format: +947XXXXXXXX)
         </div>
       </div>
 
-
-
-
-
     </div>
-    <div >
+    <div>
       <h2 class="text-2xl mt-10 mb-6 text-textLight dark:text-textDark">
         Add Bank Details
       </h2>
@@ -483,7 +411,8 @@ Please enter a valid mobile number (format: +947XXXXXXXX)
       </div>
 
       <div class="pb-6">
-        <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Number *</label>
+        <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Number
+          *</label>
         <input id="accNumber" name="accNumber" type="number" [(ngModel)]="personalData.accNumber"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           #accNumberInput="ngModel" required pattern="^[0-9]+$" (ngModelChange)="validateAccNumber()" />
@@ -495,7 +424,6 @@ Please enter a valid mobile number (format: +947XXXXXXXX)
           <div>Account Number cannot contain special characters</div>
         </div>
       </div>
-
 
       <div class="pb-6">
         <label for="confirmAccNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
@@ -532,7 +460,6 @@ Please enter a valid mobile number (format: +947XXXXXXXX)
           </ng-template>
         </p-dropdown>
       </div>
-
 
       <div class="pb-6">
         <label for="branchDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">Branch

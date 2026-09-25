@@ -56,7 +56,7 @@ export class GoviTransViewTransactionsComponent implements OnInit {
   centerId!: number;
 
   selectedStatus: string = '';
-  date: Date = new Date();
+  date: Date | null = new Date();
 
   id!: number;
   name!: string;
@@ -91,7 +91,7 @@ export class GoviTransViewTransactionsComponent implements OnInit {
     page: number = this.page,
     limit: number = this.itemsPerPage,
     status: string = this.selectedStatus,
-    date: Date = this.date,
+    date: Date | null = this.date,
     searchItem: string = this.searchItem,
   ) {
     this.isLoading = true;
@@ -214,11 +214,16 @@ export class GoviTransViewTransactionsComponent implements OnInit {
   }
 
   onDateClear() {
-    this.date = new Date();
+    this.date = null;
+    this.page = 1;
     this.getAllTransactions();
   }
 
-  formatDate(date: Date): string {
+  formatDate(date: Date | null): string {
+    if (!date) {
+      return '';
+    }
+
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');

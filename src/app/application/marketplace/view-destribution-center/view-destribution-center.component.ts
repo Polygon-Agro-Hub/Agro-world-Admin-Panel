@@ -17,7 +17,6 @@ interface PhoneCode {
   code: string;
   dialCode: string;
   name: string;
-
 }
 interface DistributionCenter {
   id: number;
@@ -42,7 +41,12 @@ interface DistributionCenter {
 @Component({
   selector: 'app-view-destribution-center',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, DropdownModule, LoadingSpinnerComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    DropdownModule,
+    LoadingSpinnerComponent,
+  ],
   templateUrl: './view-destribution-center.component.html',
   styleUrl: './view-destribution-center.component.css',
 })
@@ -79,7 +83,7 @@ export class ViewDestributionCenterComponent implements OnInit {
     { code: 'IN', dialCode: '+91', name: 'India' },
     { code: 'NL', dialCode: '+31', name: 'Netherlands' },
     { code: 'UK', dialCode: '+44', name: 'United Kingdom' },
-    { code: 'US', dialCode: '+1', name: 'United States' }
+    { code: 'US', dialCode: '+1', name: 'United States' },
   ];
 
   getFlagUrl(countryCode: string): string {
@@ -103,7 +107,7 @@ export class ViewDestributionCenterComponent implements OnInit {
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private distributionService: DestributionService,
-    private location: Location
+    private location: Location,
   ) {
     this.initializeForm();
   }
@@ -155,18 +159,15 @@ export class ViewDestributionCenterComponent implements OnInit {
       (error) => {
         console.error('Error fetching companies:', error);
         this.showErrorAlert('Failed to load companies');
-      }
+      },
     );
   }
 
   fetchDistributionCenterById(id: number) {
-    
     this.isLoading = true;
 
     this.distributionService.getDistributionCentreById(id).subscribe(
       (response: DistributionCenter) => {
-        
-
         this.isLoading = false;
         this.distributionCenterDetails = response;
         this.hasData = !!response;
@@ -186,16 +187,20 @@ export class ViewDestributionCenterComponent implements OnInit {
         } else {
           this.showErrorAlert('Failed to load distribution centre details');
         }
-      }
+      },
     );
   }
 
   getCompanyNameById(id: string | number | null): string | undefined {
-    return this.companyList?.find(company => company.id === id)?.companyNameEnglish;
+    return this.companyList?.find((company) => company.id === id)
+      ?.companyNameEnglish;
   }
 
   getCompanyName(): string {
-    if (!this.distributionCenterDetails || !this.distributionCenterDetails.company) {
+    if (
+      !this.distributionCenterDetails ||
+      !this.distributionCenterDetails.company
+    ) {
       return 'Loading...';
     }
 
@@ -206,14 +211,14 @@ export class ViewDestributionCenterComponent implements OnInit {
 
     // If company is an ID, find the company name from companyList
     const companyId = this.distributionCenterDetails.company;
-    const company = this.companyList.find(c => c.id === companyId);
+    const company = this.companyList.find((c) => c.id === companyId);
     return company ? company.companyNameEnglish : 'Company not found';
   }
 
   populateForm(data: DistributionCenter): void {
     // Find the company ID that matches the company name from the response
     const matchingCompany = this.companyList.find(
-      (company) => company.companyNameEnglish === data.company
+      (company) => company.companyNameEnglish === data.company,
     );
 
     this.distributionForm.patchValue({
@@ -256,8 +261,8 @@ export class ViewDestributionCenterComponent implements OnInit {
     this.isLoading = true;
     this.distributionService.getCompanies().subscribe({
       next: (response) => {
-         // Add this line
-         // Check the data structure
+        // Add this line
+        // Check the data structure
 
         if (response.success && response.data) {
           this.companyOptions = response.data

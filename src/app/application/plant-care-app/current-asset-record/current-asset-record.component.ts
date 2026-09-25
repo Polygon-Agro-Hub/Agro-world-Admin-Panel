@@ -63,7 +63,6 @@ export class CurrentAssetRecordComponent {
     this.assetService.getAllCurrentAssetRecord(id).subscribe(
       (data) => {
         this.isLoading = false;
-        console.log('Received items:', data);
         this.currentAssetRecord = data;
         this.hasData = this.currentAssetRecord.length > 0;
       },

@@ -301,7 +301,7 @@ export class MarketAddProductComponent implements OnInit {
 
     // Check for empty required fields - INCLUDING ALL QUANTITY SECTION FIELDS
     const emptyFields = [];
-    console.log(this.productObj);
+    
 
     // Basic product information fields
     if (!this.productObj.category) emptyFields.push('Category');
@@ -639,7 +639,7 @@ if (this.productObj.promo) {
     }
 
     event.chipInput!.clear();
-    console.log('tags', this.productObj.tags);
+    
   }
 
   removeTemplateKeyword(keyword: string) {
@@ -894,7 +894,7 @@ if (this.productObj.promo) {
   }
 
   onUnitTypeChange(): void {
-    console.log('chanegs');
+    
     if (this.productObj.unitType === 'g') {
       this.isunitTypeKg = false;
       this.text = 'g';
@@ -902,7 +902,7 @@ if (this.productObj.promo) {
       this.text = 'Kg';
       this.isunitTypeKg = true;
     }
-    console.log('Unit Type changed:', this.isunitTypeKg);
+    
   }
 
   validateCompetitorPrice() {

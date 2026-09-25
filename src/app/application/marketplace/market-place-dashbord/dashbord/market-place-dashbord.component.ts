@@ -46,7 +46,7 @@ export class MarketPlaceDashbordComponent implements OnInit {
     this.isLoading = true;
     this.marketSrv.getMarketPlaceDashbordDetails().subscribe((res) => {
       this.isLoading = false;
-      console.log(res);
+      
       this.responceData = res;
     });
   }

@@ -35,6 +35,7 @@ export class AddCompanyDetailsComponent implements OnInit {
   contactNumberError1 = false;
   contactNumberError2 = false;
   logoRequiredError = false;
+  companySectors = ['Government Sector', 'Private Sector'];
 
   // Logo related
   @ViewChild('logoInput', { static: false })
@@ -80,14 +81,32 @@ export class AddCompanyDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.companyForm = this.fb.group({
-      registrationNumber: ['', [Validators.required]],
-      taxId: ['', [Validators.required]],
+      companySector: ['', [Validators.required]],
+      registrationNumber: [''],
+      taxId: [''],
       companyName: ['', [Validators.required]],
       phoneCode1: ['+94', [Validators.required]],
       phone1: ['', [Validators.required]],
       phoneCode2: ['+94'],
       phone2: [''],
       address: ['', [Validators.required]],
+    });
+
+    this.companyForm.get('companySector')?.valueChanges.subscribe((sector) => {
+      const privateSector = sector === 'Private Sector';
+      const registrationNumber = this.companyForm.get('registrationNumber');
+      const taxId = this.companyForm.get('taxId');
+
+      if (privateSector) {
+        registrationNumber?.setValidators([Validators.required]);
+        taxId?.setValidators([Validators.required]);
+      } else {
+        registrationNumber?.clearValidators();
+        taxId?.clearValidators();
+      }
+
+      registrationNumber?.updateValueAndValidity();
+      taxId?.updateValueAndValidity();
     });
 
     // Dynamic phone validation for phone1
@@ -318,6 +337,14 @@ export class AddCompanyDetailsComponent implements OnInit {
       });
     }
 
+    const companySectorControl = this.companyForm.get('companySector');
+    if (companySectorControl?.errors?.['required'] && companySectorControl.touched) {
+      errors.push({
+        field: 'Company Sector',
+        message: 'Company Sector is required',
+      });
+    }
+
     // Registration Number
     const regNumberControl = this.companyForm.get('registrationNumber');
     if (regNumberControl?.errors?.['required'] && regNumberControl.touched) {
@@ -454,8 +481,10 @@ export class AddCompanyDetailsComponent implements OnInit {
 
         const formData = new FormData();
         formData.append('companyName', formValue.companyName);
-        formData.append('regNumber', formValue.registrationNumber);
-        formData.append('taxId', formValue.taxId);
+        if (formValue.companySector === 'Private Sector') {
+          formData.append('regNumber', formValue.registrationNumber);
+          formData.append('taxId', formValue.taxId);
+        }
         formData.append('phoneCode1', formValue.phoneCode1);
         formData.append('phoneNumber1', formValue.phone1);
         formData.append('phoneCode2', formValue.phoneCode2 || '');

@@ -20,23 +20,22 @@
             <label class="block mb-2 text-sm font-medium text-[#534E4E] dark:text-textDark">
                 Driver Category Name *
             </label>
-            <input type="text" formControlName="driverCategoryName" (input)="onNameInput($event)" 
-    (keydown)="onNameKeydown($event)"
-                placeholder="Enter driver category name" class="w-full border rounded-lg px-4 py-2.5 bg-transparent text-black dark:text-white
+            <input type="text" formControlName="driverCategoryName" (input)="onNameInput($event)"
+                (keydown)="onNameKeydown($event)" placeholder="Enter driver category name" class="w-full border rounded-lg px-4 py-2.5 bg-transparent text-black dark:text-white
                border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-[#3980C0]"
                 [class.border-red-500]="
-          form.get('driverCategoryName')?.touched && form.get('driverCategoryName')?.invalid
-        " />
+                form.get('driverCategoryName')?.touched && form.get('driverCategoryName')?.invalid
+            " />
             <p *ngIf="
-          form.get('driverCategoryName')?.touched &&
-          form.get('driverCategoryName')?.hasError('required')
-        " class="text-red-500 text-xs mt-1">
+                form.get('driverCategoryName')?.touched &&
+                form.get('driverCategoryName')?.hasError('required')
+                " class="text-red-500 text-xs mt-1">
                 Driver category name is required.
             </p>
             <p *ngIf="
-          form.get('driverCategoryName')?.touched &&
-          form.get('driverCategoryName')?.hasError('duplicate')
-        " class="text-red-500 text-xs mt-1">
+                    form.get('driverCategoryName')?.touched &&
+                    form.get('driverCategoryName')?.hasError('duplicate')
+                    " class="text-red-500 text-xs mt-1">
                 This driver category name already exists.
             </p>
         </div>
@@ -49,17 +48,17 @@
                 step="0.01" (keydown)="onPayoutKeydown($event)" (input)="onPayoutInput($event)" class="w-full border rounded-lg px-4 py-2.5 bg-transparent text-black dark:text-white
                 border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-[#3980C0]"
                 [class.border-red-500]="
-      form.get('payoutPerOrder')?.touched && form.get('payoutPerOrder')?.invalid
-    " />
+                form.get('payoutPerOrder')?.touched && form.get('payoutPerOrder')?.invalid
+            " />
             <p *ngIf="
-          form.get('payoutPerOrder')?.touched && form.get('payoutPerOrder')?.hasError('required')
-        " class="text-red-500 text-xs mt-1">
+                form.get('payoutPerOrder')?.touched && form.get('payoutPerOrder')?.hasError('required')
+                " class="text-red-500 text-xs mt-1">
                 Payout per order is required.
             </p>
             <p *ngIf="
-          form.get('payoutPerOrder')?.touched &&
-          form.get('payoutPerOrder')?.hasError('invalidPayout')
-        " class="text-red-500 text-xs mt-1">
+                form.get('payoutPerOrder')?.touched &&
+                form.get('payoutPerOrder')?.hasError('invalidPayout')
+                " class="text-red-500 text-xs mt-1">
                 Payout per order cannot be 0 or negative.
             </p>
         </div>

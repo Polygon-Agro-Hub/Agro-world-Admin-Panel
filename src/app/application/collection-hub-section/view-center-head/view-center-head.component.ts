@@ -40,7 +40,7 @@ interface PhoneCode {
     LoadingSpinnerComponent,
   ],
   templateUrl: './view-center-head.component.html',
-  styleUrl: './view-center-head.component.css'
+  styleUrl: './view-center-head.component.css',
 })
 export class ViewCenterHeadComponent {
   itemId!: number;
@@ -69,20 +69,20 @@ export class ViewCenterHeadComponent {
   invalidFields: Set<string> = new Set();
   confirmAccountNumberError: boolean = false;
   confirmAccountNumberRequired: boolean = false;
-    countries: PhoneCode[] = [
-  { code: 'LK', dialCode: '+94', name: 'Sri Lanka' },
-  { code: 'VN', dialCode: '+84', name: 'Vietnam' },
-  { code: 'KH', dialCode: '+855', name: 'Cambodia' },
-  { code: 'BD', dialCode: '+880', name: 'Bangladesh' },
-  { code: 'IN', dialCode: '+91', name: 'India' },
-  { code: 'NL', dialCode: '+31', name: 'Netherlands' },
-  { code: 'UK', dialCode: '+44', name: 'United Kingdom' },
-  { code: 'US', dialCode: '+1', name: 'United States' }
-];
+  countries: PhoneCode[] = [
+    { code: 'LK', dialCode: '+94', name: 'Sri Lanka' },
+    { code: 'VN', dialCode: '+84', name: 'Vietnam' },
+    { code: 'KH', dialCode: '+855', name: 'Cambodia' },
+    { code: 'BD', dialCode: '+880', name: 'Bangladesh' },
+    { code: 'IN', dialCode: '+91', name: 'India' },
+    { code: 'NL', dialCode: '+31', name: 'Netherlands' },
+    { code: 'UK', dialCode: '+44', name: 'United Kingdom' },
+    { code: 'US', dialCode: '+1', name: 'United States' },
+  ];
 
-getFlagUrl(countryCode: string): string {
-  return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
-}
+  getFlagUrl(countryCode: string): string {
+    return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
+  }
   districts = [
     { name: 'Ampara', province: 'Eastern' },
     { name: 'Anuradhapura', province: 'North Central' },
@@ -116,8 +116,8 @@ getFlagUrl(countryCode: string): string {
     private route: ActivatedRoute,
     private router: Router,
     private collectionCenterSrv: CollectionCenterService,
-    private collectionOfficerService: CollectionOfficerService
-  ) { }
+    private collectionOfficerService: CollectionOfficerService,
+  ) {}
 
   ngOnInit(): void {
     this.loadBanks();
@@ -183,7 +183,7 @@ getFlagUrl(countryCode: string): string {
       (data) => {
         this.banks = data.sort((a, b) => a.name.localeCompare(b.name));
       },
-      (error) => { }
+      (error) => {},
     );
   }
 
@@ -195,7 +195,7 @@ getFlagUrl(countryCode: string): string {
         });
         this.allBranches = data;
       },
-      (error) => { }
+      (error) => {},
     );
   }
 
@@ -207,14 +207,14 @@ getFlagUrl(countryCode: string): string {
       this.personalData.bankName
     ) {
       const matchedBank = this.banks.find(
-        (bank) => bank.name === this.personalData.bankName
+        (bank) => bank.name === this.personalData.bankName,
       );
       if (matchedBank) {
         this.selectedBankId = matchedBank.ID;
         this.branches = this.allBranches[this.selectedBankId.toString()] || [];
         if (this.personalData.branchName) {
           const matchedBranch = this.branches.find(
-            (branch) => branch.name === this.personalData.branchName
+            (branch) => branch.name === this.personalData.branchName,
           );
           if (matchedBranch) {
             this.selectedBranchId = matchedBranch.ID;
@@ -296,7 +296,7 @@ getFlagUrl(countryCode: string): string {
       }
     } else {
       this.selectedLanguages = this.selectedLanguages.filter(
-        (lang) => lang !== language
+        (lang) => lang !== language,
       );
     }
     this.isLanguageRequired = this.selectedLanguages.length === 0;
@@ -325,7 +325,7 @@ getFlagUrl(countryCode: string): string {
     const target = event.target as HTMLSelectElement;
     const selectedDistrict = target.value;
     const selected = this.districts.find(
-      (district) => district.name === selectedDistrict
+      (district) => district.name === selectedDistrict,
     );
     if (this.itemId === null) {
       if (selected) {
@@ -344,13 +344,13 @@ getFlagUrl(countryCode: string): string {
     if (this.selectedBankId) {
       this.branches = this.allBranches[this.selectedBankId.toString()] || [];
       const selectedBank = this.banks.find(
-        (bank) => bank.ID === this.selectedBankId
+        (bank) => bank.ID === this.selectedBankId,
       );
       if (selectedBank) {
         this.personalData.bankName = selectedBank.name;
       }
       const currentBranch = this.branches.find(
-        (branch) => branch.ID === this.selectedBranchId
+        (branch) => branch.ID === this.selectedBranchId,
       );
       if (!currentBranch) {
         this.selectedBranchId = null;
@@ -365,7 +365,7 @@ getFlagUrl(countryCode: string): string {
   onBranchChange() {
     if (this.selectedBranchId) {
       const selectedBranch = this.branches.find(
-        (branch) => branch.ID === this.selectedBranchId
+        (branch) => branch.ID === this.selectedBranchId,
       );
       if (selectedBranch) {
         this.personalData.branchName = selectedBranch.name;
@@ -385,7 +385,6 @@ getFlagUrl(countryCode: string): string {
     }
   }
 
- 
   navigatePath(path: string) {
     this.router.navigate([path]);
   }

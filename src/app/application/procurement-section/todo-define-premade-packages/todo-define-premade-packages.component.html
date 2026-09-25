@@ -179,7 +179,12 @@
           this.totalPackagePrice * 1.08 | number : "1.2-2"
           }}
         </div>
-        <div *ngIf="!isWithinLimit" class="text-xs text-[#E11E21] dark:text-red-400 mt-1 italic">
+        <div *ngIf="!isWithinLimit && isBelowMinimumLimit" class="text-xs text-[#E11E21] dark:text-red-400 mt-1 italic">
+          The calculated price is below the minimum limit of Rs.{{
+          totalPackagePrice | number : "1.2-2"
+          }}. To save the order, the calculated price must be equal to or within 8% above the target price.
+        </div>
+        <div *ngIf="!isWithinLimit && !isBelowMinimumLimit" class="text-xs text-[#E11E21] dark:text-red-400 mt-1 italic">
           Calculated price exceeds the allowed limit ({{
           totalPackagePrice | number : "1.2-2"
           }}

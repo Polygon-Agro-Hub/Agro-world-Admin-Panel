@@ -51,12 +51,6 @@ export class AddCollectionCenterComponent implements OnInit {
   searchQuery: string = '';
   filteredCompanies: Company[] = [];
 
-  allowedPrefixes = ['70', '71', '72', '75', '76', '77', '78'];
-  isPhoneInvalidMap: { [key: string]: boolean } = {
-    phone01: false,
-    phone02: false,
-  };
-
   countries: Country[] = COUNTRIES;
   selectedCountry1: Country | null = null;
   selectedCountry2: Country | null = null;
@@ -68,17 +62,17 @@ export class AddCollectionCenterComponent implements OnInit {
     private fb: FormBuilder,
     private collectionCenterService: CollectionCenterService,
     private router: Router,
-    private location: Location
+    private location: Location,
   ) {
     this.collectionCenterForm = this.fb.group({
       regCode: ['', [Validators.required, Validators.pattern(/^[^\d]*$/)]],
       centerName: ['', [Validators.required, this.noNumbersValidator]],
       contact01: [
         '',
-        [Validators.required, Validators.pattern(/^[7][0-9]{8}$/)],
+        [Validators.required, Validators.pattern(/^[1-9][0-9]{8}$/)],
       ],
       contact01Code: ['+94', Validators.required],
-      contact02: ['', [Validators.pattern(/^[7][0-9]{8}$/)]],
+      contact02: ['', [Validators.pattern(/^[1-9][0-9]{8}$/)]],
       contact02Code: ['+94'],
       buildingNumber: ['', Validators.required],
       street: ['', [Validators.required, this.noNumbersValidator]],
@@ -99,16 +93,18 @@ export class AddCollectionCenterComponent implements OnInit {
     const input = (event.target as HTMLInputElement).value.toLowerCase().trim();
 
     this.filteredCompanies = this.CompanyData.filter((company) =>
-      company.companyNameEnglish.toLowerCase().includes(input)
+      company.companyNameEnglish.toLowerCase().includes(input),
     );
   }
 
   onCompanyChange(event: any): void {
     this.selectedCompaniesIds = event.value;
-    this.collectionCenterForm.get('companies')?.setValue(this.selectedCompaniesIds);
+    this.collectionCenterForm
+      .get('companies')
+      ?.setValue(this.selectedCompaniesIds);
     this.collectionCenterForm.get('companies')?.markAsTouched();
+    this.companyTouched = true;
   }
-
 
   onCompanyInputClick(): void {
     this.dropdownOpen = !this.dropdownOpen;
@@ -117,7 +113,7 @@ export class AddCollectionCenterComponent implements OnInit {
     this.filteredCompanies = [...this.CompanyData];
 
     const inputElement = document.querySelector(
-      '#companySearchInput'
+      '#companySearchInput',
     ) as HTMLInputElement;
     if (inputElement) {
       inputElement.value = '';
@@ -132,35 +128,6 @@ export class AddCollectionCenterComponent implements OnInit {
       return false;
     }
     return true;
-  }
-
-  validateSriLankanPhone(input: string, key: string): void {
-    if (!input) {
-      this.isPhoneInvalidMap[key] = false;
-      return;
-    }
-
-    const firstDigit = input.charAt(0);
-    const prefix = input.substring(0, 2);
-    const isValidPrefix = this.allowedPrefixes.includes(prefix);
-    const isValidLength = input.length === 9;
-
-    if (firstDigit !== '7') {
-      this.isPhoneInvalidMap[key] = true;
-      return;
-    }
-
-    if (!isValidPrefix && input.length >= 2) {
-      this.isPhoneInvalidMap[key] = true;
-      return;
-    }
-
-    if (input.length === 9 && isValidPrefix) {
-      this.isPhoneInvalidMap[key] = false;
-      return;
-    }
-
-    this.isPhoneInvalidMap[key] = false;
   }
 
   ngOnInit() {
@@ -178,32 +145,36 @@ export class AddCollectionCenterComponent implements OnInit {
   }
 
   private initializeDropdownOptions(): void {
+    this.provinceOptions = this.ProvinceData.map((province) => ({
+      label: province.province,
+      value: province.province,
+    }));
 
-  this.provinceOptions = this.ProvinceData.map(province => ({
-    label: province.province,
-    value: province.province
-  }));
-
-  this.updateDistrictOptions();
-}
-
-private updateDistrictOptions(): void {
-  const selectedProvince = this.collectionCenterForm.get('province')?.value;
-  if (selectedProvince) {
-    const province = this.ProvinceData.find(p => p.province === selectedProvince);
-    this.districtOptions = province?.district.map(d => ({
-      label: d.districtName,
-      value: d.districtName
-    })) || [];
-  } else {
-    this.districtOptions = [];
+    this.updateDistrictOptions();
   }
-}
 
-isFieldInvalid(field: string): boolean {
-  const formControl = this.collectionCenterForm.get(field);
-  return formControl ? formControl.invalid && (formControl.dirty || formControl.touched) : false;
-}
+  private updateDistrictOptions(): void {
+    const selectedProvince = this.collectionCenterForm.get('province')?.value;
+    if (selectedProvince) {
+      const province = this.ProvinceData.find(
+        (p) => p.province === selectedProvince,
+      );
+      this.districtOptions =
+        province?.district.map((d) => ({
+          label: d.districtName,
+          value: d.districtName,
+        })) || [];
+    } else {
+      this.districtOptions = [];
+    }
+  }
+
+  isFieldInvalid(field: string): boolean {
+    const formControl = this.collectionCenterForm.get(field);
+    return formControl
+      ? formControl.invalid && (formControl.dirty || formControl.touched)
+      : false;
+  }
 
   getFlagUrl(code: string): string {
     return `https://flagcdn.com/24x18/${code}.png`;
@@ -228,61 +199,26 @@ isFieldInvalid(field: string): boolean {
   }
 
   onProvinceChange() {
-  this.updateDistrictOptions();
-  
-  
-  this.collectionCenterForm.get('district')?.reset();
-  
-  
-  const control = this.collectionCenterForm.get('city');
-  if (control) {
-    const value = control.value || '';
-    control.setValue(value.replace(/^\s+/, ''), { emitEvent: false });
+    this.updateDistrictOptions();
+    this.collectionCenterForm.get('district')?.reset();
+
+    const control = this.collectionCenterForm.get('city');
+    if (control) {
+      const value = control.value || '';
+      control.setValue(value.replace(/^\s+/, ''), { emitEvent: false });
+    }
+
+    this.selectProvince = this.collectionCenterForm.get('province')?.value;
+    this.refreshRegCode();
   }
-
-  const selectedProvince = this.collectionCenterForm.get('province')?.value;
-  const selectedDistrict = this.collectionCenterForm.get('district')?.value;
-  const selectedCity = this.collectionCenterForm.get('city')?.value;
-
-  this.selectProvince = selectedProvince;
-  this.updateRegCode();
-
-  if (selectedProvince && selectedDistrict && selectedCity) {
-    this.isLoadingregcode = true;
-    this.collectionCenterService
-      .generateRegCode(selectedProvince, selectedDistrict, selectedCity)
-      .subscribe((response) => {
-        this.collectionCenterForm.patchValue({ regCode: response.regCode });
-        this.isLoadingregcode = false;
-      });
-  }
-}
-
 
   onDistrictChange() {
-    const selectedProvince = this.collectionCenterForm.get('province')?.value;
-    const selectedDistrict = this.collectionCenterForm.get('district')?.value;
-    const selectedCity = this.collectionCenterForm.get('city')?.value;
-
-    if (selectedProvince && selectedDistrict && selectedCity) {
-      this.isLoadingregcode = true;
-      this.collectionCenterService
-        .generateRegCode(selectedProvince, selectedDistrict, selectedCity)
-        .subscribe(
-          (response) => {
-            this.collectionCenterForm.patchValue({ regCode: response.regCode });
-            this.isLoadingregcode = false;
-          },
-          () => {
-            this.isLoadingregcode = false;
-          }
-        );
-    }
+    this.refreshRegCode();
   }
 
   onCityChange() {
     this.city = this.collectionCenterForm.get('city')?.value;
-    this.updateRegCode();
+    this.refreshRegCode();
   }
 
   updateRegCode() {
@@ -298,218 +234,251 @@ isFieldInvalid(field: string): boolean {
     }
   }
 
- onSubmit() {
-  
-  this.collectionCenterForm.markAllAsTouched();
+  onSubmit() {
+    this.collectionCenterForm.markAllAsTouched();
+    this.companyTouched = true;
 
-  const missingFields: string[] = [];
+    const missingFields: string[] = [];
 
-  
-  if (!this.collectionCenterForm.get('centerName')?.value || this.collectionCenterForm.get('centerName')?.value.trim() === '') {
-    missingFields.push('Collection Centre Name is Required');
-  }
-
-  if (!this.selectedCompaniesIds || this.selectedCompaniesIds.length === 0) {
-    missingFields.push('Companies - At least one company must be selected');
-  }
-
-  if (!this.collectionCenterForm.get('contact01')?.value) {
-    missingFields.push('Contact Number - 1 is Required');
-  } else if (!/^[0-9]{9}$/.test(this.collectionCenterForm.get('contact01')?.value) || this.isPhoneInvalidMap['phone01']) {
-    missingFields.push('Contact Number - 1 - Must be a valid 9-digit number (e.g., 77XXXXXXX)');
-  }
-
-  if (this.collectionCenterForm.get('contact02')?.value) {
-    if (!/^[0-9]{9}$/.test(this.collectionCenterForm.get('contact02')?.value) || this.isPhoneInvalidMap['phone02']) {
-      missingFields.push('Contact Number - 2 - Must be a valid 9-digit number (e.g., 77XXXXXXX)');
+    if (
+      !this.collectionCenterForm.get('centerName')?.value ||
+      this.collectionCenterForm.get('centerName')?.value.trim() === ''
+    ) {
+      missingFields.push('Collection Centre Name is Required');
     }
-    if (this.collectionCenterForm.get('contact01')?.value === this.collectionCenterForm.get('contact02')?.value) {
-      missingFields.push('Contact Number - 1 and Contact Number - 2 cannot be the same');
+
+    if (!this.selectedCompaniesIds || this.selectedCompaniesIds.length === 0) {
+      missingFields.push('Companies - At least one company must be selected');
     }
-  }
 
-  if (!this.collectionCenterForm.get('buildingNumber')?.value || this.collectionCenterForm.get('buildingNumber')?.value.trim() === '') {
-    missingFields.push('Building Number  is Required');
-  }
+    if (!this.collectionCenterForm.get('contact01')?.value) {
+      missingFields.push('Contact Number - 1 is Required');
+    } else if (
+      !/^[0-9]{9}$/.test(this.collectionCenterForm.get('contact01')?.value)
+    ) {
+      missingFields.push('Contact Number - 1 - Must be a valid 9-digit number');
+    }
 
-  if (!this.collectionCenterForm.get('street')?.value || this.collectionCenterForm.get('street')?.value.trim() === '') {
-    missingFields.push('Street Name is Required');
-  }
+    if (this.collectionCenterForm.get('contact02')?.value) {
+      if (
+        !/^[0-9]{9}$/.test(this.collectionCenterForm.get('contact02')?.value)
+      ) {
+        missingFields.push(
+          'Contact Number - 2 - Must be a valid 9-digit number',
+        );
+      }
+      if (
+        this.collectionCenterForm.get('contact01')?.value ===
+        this.collectionCenterForm.get('contact02')?.value
+      ) {
+        missingFields.push(
+          'Contact Number - 1 and Contact Number - 2 cannot be the same',
+        );
+      }
+    }
 
-  if (!this.collectionCenterForm.get('city')?.value || this.collectionCenterForm.get('city')?.value.trim() === '') {
-    missingFields.push('City is Required');
-  }
+    if (
+      !this.collectionCenterForm.get('buildingNumber')?.value ||
+      this.collectionCenterForm.get('buildingNumber')?.value.trim() === ''
+    ) {
+      missingFields.push('Building Number  is Required');
+    }
 
-  if (!this.collectionCenterForm.get('province')?.value) {
-    missingFields.push('Province is Required');
-  }
+    if (
+      !this.collectionCenterForm.get('street')?.value ||
+      this.collectionCenterForm.get('street')?.value.trim() === ''
+    ) {
+      missingFields.push('Street Name is Required');
+    }
 
-  if (!this.collectionCenterForm.get('district')?.value) {
-    missingFields.push('District is Required');
-  }
+    if (
+      !this.collectionCenterForm.get('city')?.value ||
+      this.collectionCenterForm.get('city')?.value.trim() === ''
+    ) {
+      missingFields.push('City is Required');
+    }
 
-  if (!this.collectionCenterForm.get('country')?.value) {
-    missingFields.push('Country is Required');
-  }
+    if (!this.collectionCenterForm.get('province')?.value) {
+      missingFields.push('Province is Required');
+    }
 
-  if (!this.collectionCenterForm.get('regCode')?.value) {
-    missingFields.push('Collection Centre Reg Code is Required');
-  }
+    if (!this.collectionCenterForm.get('district')?.value) {
+      missingFields.push('District is Required');
+    }
 
-  // Display validation errors if any
-  if (missingFields.length > 0) {
-    let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
-    missingFields.forEach((field) => {
-      errorMessage += `<li>${field}</li>`;
-    });
-    errorMessage += '</ul></div>';
+    if (!this.collectionCenterForm.get('country')?.value) {
+      missingFields.push('Country is Required');
+    }
+
+    if (!this.collectionCenterForm.get('regCode')?.value) {
+      missingFields.push('Collection Centre Reg Code is Required');
+    }
+
+    // Display validation errors if any
+    if (missingFields.length > 0) {
+      let errorMessage =
+        '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+      missingFields.forEach((field) => {
+        errorMessage += `<li>${field}</li>`;
+      });
+      errorMessage += '</ul></div>';
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Missing or Invalid Information',
+        html: errorMessage,
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+          htmlContainer: 'text-left',
+        },
+      });
+      return;
+    }
 
     Swal.fire({
-      icon: 'error',
-      title: 'Missing or Invalid Information',
-      html: errorMessage,
-      confirmButtonText: 'OK',
+      title: 'Are you sure?',
+      text: 'Do you want to create this Collection Centre?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, create it!',
+      cancelButtonText: 'No, cancel',
+      reverseButtons: true,
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold text-lg',
-        htmlContainer: 'text-left',
       },
-    });
-    return;
-  }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
 
-  Swal.fire({
-    title: 'Are you sure?',
-    text: 'Do you want to create this Collection Centre?',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, create it!',
-    cancelButtonText: 'No, cancel',
-    reverseButtons: true,
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold text-lg',
-    },
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.isLoading = true;
+        const formData = {
+          centerName: this.collectionCenterForm.get('centerName')?.value.trim(),
+          companyIds: this.selectedCompaniesIds,
+          contact01Code: this.collectionCenterForm.get('contact01Code')?.value,
+          contact01: this.collectionCenterForm.get('contact01')?.value,
+          contact02Code:
+            this.collectionCenterForm.get('contact02Code')?.value || null,
+          contact02: this.collectionCenterForm.get('contact02')?.value || null,
+          buildingNumber: this.collectionCenterForm
+            .get('buildingNumber')
+            ?.value.trim(),
+          street: this.collectionCenterForm.get('street')?.value.trim(),
+          city: this.collectionCenterForm.get('city')?.value.trim(),
+          province: this.collectionCenterForm.get('province')?.value,
+          district: this.collectionCenterForm.get('district')?.value,
+          country: this.collectionCenterForm.get('country')?.value,
+          regCode: this.collectionCenterForm.get('regCode')?.value,
+        };
 
-      const formData = {
-        centerName: this.collectionCenterForm.get('centerName')?.value.trim(),
-        companyIds: this.selectedCompaniesIds,
-        contact01Code: this.collectionCenterForm.get('contact01Code')?.value,
-        contact01: this.collectionCenterForm.get('contact01')?.value,
-        contact02Code: this.collectionCenterForm.get('contact02Code')?.value || null,
-        contact02: this.collectionCenterForm.get('contact02')?.value || null,
-        buildingNumber: this.collectionCenterForm.get('buildingNumber')?.value.trim(),
-        street: this.collectionCenterForm.get('street')?.value.trim(),
-        city: this.collectionCenterForm.get('city')?.value.trim(),
-        province: this.collectionCenterForm.get('province')?.value,
-        district: this.collectionCenterForm.get('district')?.value,
-        country: this.collectionCenterForm.get('country')?.value,
-        regCode: this.collectionCenterForm.get('regCode')?.value,
-      };
-
-      this.collectionCenterService.createCollectionCenter(formData, this.selectedCompaniesIds).subscribe({
-        next: (res: any) => {
-          this.isLoading = false;
-          if (res.status) {
-            Swal.fire({
-              icon: 'success',
-              title: 'Success',
-              text: 'Collection Centre created successfully!',
-              confirmButtonText: 'OK',
-              customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                title: 'font-semibold text-lg',
-              },
-            }).then(() => {
-              this.router.navigate(['/collection-hub/view-collection-centers']);
-            });
-          } else {
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: res.message === 'This RegCode already exists!' 
-                ? 'The registration code is already in use.' 
-                : 'Something went wrong while creating the Collection Centre.',
-              confirmButtonText: 'OK',
-              customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                title: 'font-semibold text-lg',
-              },
-            });
-          }
-        },
-        error: (error: any) => {
-          this.isLoading = false;
-          let errorMessage = 'An unexpected error occurred';
-          if (error.error && error.error.error) {
-            switch (error.error.error) {
-              case 'Duplicate reg code':
-                errorMessage = 'The registration code is already in use.';
-                break;
-              case 'Duplicate contact number':
-                errorMessage = 'The contact number is already registered.';
-                break;
-              case 'Invalid company selection':
-                errorMessage = 'One or more selected companies are invalid.';
-                break;
-              default:
-                errorMessage = error.error.error || 'An unexpected error occurred';
-            }
-          }
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: errorMessage,
-            confirmButtonText: 'OK',
-            customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              title: 'font-semibold text-lg',
+        this.collectionCenterService
+          .createCollectionCenter(formData, this.selectedCompaniesIds)
+          .subscribe({
+            next: (res: any) => {
+              this.isLoading = false;
+              if (res.status) {
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Success',
+                  text: 'Collection Centre created successfully!',
+                  confirmButtonText: 'OK',
+                  customClass: {
+                    popup:
+                      'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                    title: 'font-semibold text-lg',
+                  },
+                }).then(() => {
+                  this.router.navigate([
+                    '/collection-hub/view-collection-centers',
+                  ]);
+                });
+              } else {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Error',
+                  text:
+                    res.message === 'This RegCode already exists!'
+                      ? 'The registration code is already in use.'
+                      : 'Something went wrong while creating the Collection Centre.',
+                  confirmButtonText: 'OK',
+                  customClass: {
+                    popup:
+                      'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                    title: 'font-semibold text-lg',
+                  },
+                });
+              }
+            },
+            error: (error: any) => {
+              this.isLoading = false;
+              let errorMessage = 'An unexpected error occurred';
+              if (error.error && error.error.error) {
+                switch (error.error.error) {
+                  case 'Duplicate reg code':
+                    errorMessage = 'The registration code is already in use.';
+                    break;
+                  case 'Duplicate contact number':
+                    errorMessage = 'The contact number is already registered.';
+                    break;
+                  case 'Invalid company selection':
+                    errorMessage =
+                      'One or more selected companies are invalid.';
+                    break;
+                  default:
+                    errorMessage =
+                      error.error.error || 'An unexpected error occurred';
+                }
+              }
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: errorMessage,
+                confirmButtonText: 'OK',
+                customClass: {
+                  popup:
+                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold text-lg',
+                },
+              });
             },
           });
-        },
-      });
-    }
-  });
-}
+      }
+    });
+  }
 
-onCancel() {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: 'You may lose the added data after canceling!',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Cancel',
-    cancelButtonText: 'No, Keep Editing',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.location.back(); 
-    }
-  });
-}
+  onCancel() {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after canceling!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Keep Editing',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.location.back();
+      }
+    });
+  }
 
+  getAllCompanies() {
+    this.collectionCenterService.getAllCompanyList().subscribe((res) => {
+      this.CompanyData = res;
 
-getAllCompanies() {
-  this.collectionCenterService.getAllCompanyList().subscribe((res) => {
-    this.CompanyData = res;
-
- 
-
-    this.filteredCompanies = this.CompanyData.filter(
-      (item) => item.id != null && item.companyNameEnglish
-    );
-    this.filteredCompanies = this.filteredCompanies.filter(
-      (item, index, self) => index === self.findIndex(i => i.id === item.id)
-    );
-  });
-}
-
+      this.filteredCompanies = this.CompanyData.filter(
+        (item) => item.id != null && item.companyNameEnglish,
+      );
+      this.filteredCompanies = this.filteredCompanies.filter(
+        (item, index, self) =>
+          index === self.findIndex((i) => i.id === item.id),
+      );
+    });
+  }
 
   noNumbersValidator(control: any) {
     const regex = /^[A-Za-z\s]*$/;
@@ -519,26 +488,24 @@ getAllCompanies() {
     return null;
   }
 
-
   back(): void {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: 'You may lose the added data after going back!',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Go Back',
-    cancelButtonText: 'No, Stay Here',
-        customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-  }).then((result) => {
-    if (result.isConfirmed) {
-    this.router.navigate(['/collection-hub']);
-    }
-  });
-}
-
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate(['/collection-hub']);
+      }
+    });
+  }
 
   ProvinceData = [
     {
@@ -605,34 +572,34 @@ getAllCompanies() {
   ];
 
   trimBuildingNumber(): void {
-  const control = this.collectionCenterForm.get('buildingNumber');
-  if (control) {
-    let value = control.value || '';
-    value = value.replace(/^\s+/, '');
-    value = this.capitalizeFirstLetter(value);
-    control.setValue(value, { emitEvent: false });
+    const control = this.collectionCenterForm.get('buildingNumber');
+    if (control) {
+      let value = control.value || '';
+      value = value.replace(/^\s+/, '');
+      value = this.capitalizeFirstLetter(value);
+      control.setValue(value, { emitEvent: false });
+    }
   }
-}
 
   trimCity(): void {
-  const control = this.collectionCenterForm.get('city');
-  if (control) {
-    let value = control.value || '';
-    value = value.replace(/^\s+/, '');
-    value = this.capitalizeFirstLetter(value);
-    control.setValue(value, { emitEvent: false });
+    const control = this.collectionCenterForm.get('city');
+    if (control) {
+      let value = control.value || '';
+      value = value.replace(/^\s+/, '');
+      value = this.capitalizeFirstLetter(value);
+      control.setValue(value, { emitEvent: false });
+    }
   }
-}
 
   trimStreetName(): void {
-  const control = this.collectionCenterForm.get('street');
-  if (control) {
-    let value = control.value || '';
-    value = value.replace(/^\s+/, '');
-    value = this.capitalizeFirstLetter(value);
-    control.setValue(value, { emitEvent: false });
+    const control = this.collectionCenterForm.get('street');
+    if (control) {
+      let value = control.value || '';
+      value = value.replace(/^\s+/, '');
+      value = this.capitalizeFirstLetter(value);
+      control.setValue(value, { emitEvent: false });
+    }
   }
-}
 
   onCenterNameInput(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
@@ -646,11 +613,13 @@ getAllCompanies() {
       input = input.trimStart();
     }
 
-   
-  const filteredInput = input.replace(/[^A-Za-z\u0D80-\u0DFF\u0B80-\u0BFF ]/g, '');
-  if (filteredInput !== input) {
-    this.specialCharOrNumberError = true;
-  }
+    const filteredInput = input.replace(
+      /[^A-Za-z\u0D80-\u0DFF\u0B80-\u0BFF ]/g,
+      '',
+    );
+    if (filteredInput !== input) {
+      this.specialCharOrNumberError = true;
+    }
 
     const capitalizedInput =
       filteredInput.length > 0
@@ -665,9 +634,51 @@ getAllCompanies() {
   }
 
   capitalizeFirstLetter(input: string): string {
-  if (!input) return '';
-  return input.charAt(0).toUpperCase() + input.slice(1);
-}
+    if (!input) return '';
+    return input.charAt(0).toUpperCase() + input.slice(1);
+  }
+
+  // Replace updateRegCode() with a single source of truth:
+  private refreshRegCode(): void {
+    const province = this.collectionCenterForm.get('province')?.value;
+    const district = this.collectionCenterForm.get('district')?.value;
+    const city = this.collectionCenterForm.get('city')?.value;
+
+    if (province && district && city) {
+      this.isLoadingregcode = true;
+      this.collectionCenterService
+        .generateRegCode(province, district, city)
+        .subscribe({
+          next: (response) => {
+            this.collectionCenterForm.patchValue(
+              { regCode: response.regCode },
+              { emitEvent: false },
+            );
+            this.isLoadingregcode = false;
+          },
+          error: () => {
+            this.isLoadingregcode = false;
+          },
+        });
+    } else {
+      this.collectionCenterForm.patchValue(
+        { regCode: '' },
+        { emitEvent: false },
+      );
+    }
+  }
+
+  stripLeadingZero(controlName: string): void {
+    const control = this.collectionCenterForm.get(controlName);
+    if (!control) return;
+
+    let value: string = control.value || '';
+
+    // Remove a leading zero (or multiple leading zeros) as the user types
+    value = value.replace(/^0+/, '');
+
+    control.setValue(value, { emitEvent: false });
+  }
 }
 
 class CollectionCenter {

@@ -1,7 +1,17 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  HttpClient,
+  HttpClientModule,
+  HttpHeaders,
+} from '@angular/common/http';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import Swal from 'sweetalert2';
 import { environment } from '../../../environment/environment';
 import { CommonModule } from '@angular/common';
@@ -86,13 +96,19 @@ export class EditPlantcareUsersComponent implements OnInit {
     private http: HttpClient,
     private route: ActivatedRoute,
     private tokenService: TokenService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {
     this.userForm = this.fb.group({
       firstName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]],
       lastName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]],
-      phoneNumber: ['', [Validators.required, Validators.pattern(/^\+947\d{8}$/)]],
-      NICnumber: ['', [Validators.required, Validators.pattern(/^(\d{12}|\d{9}[Vv])$/)]],
+      phoneNumber: [
+        '',
+        [Validators.required, Validators.pattern(/^\+947\d{8}$/)],
+      ],
+      NICnumber: [
+        '',
+        [Validators.required, Validators.pattern(/^(\d{12}|\d{9}[Vv])$/)],
+      ],
       district: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]],
       membership: ['', Validators.required],
       language: ['', Validators.required],
@@ -132,10 +148,7 @@ export class EditPlantcareUsersComponent implements OnInit {
     { districtName: 'Kegalle' },
   ];
 
-  membership = [
-    { membershipName: 'Basic' },
-    { membershipName: 'Pro' },
-  ];
+  membership = [{ membershipName: 'Basic' }, { membershipName: 'Pro' }];
 
   language = [
     { languageName: 'Sinhala' },
@@ -191,13 +204,13 @@ export class EditPlantcareUsersComponent implements OnInit {
     this.isLoading = true;
     forkJoin({
       banks: this.http.get<Bank[]>('assets/json/banks.json'),
-      branches: this.http.get<BranchesData>('assets/json/branches.json')
+      branches: this.http.get<BranchesData>('assets/json/branches.json'),
     }).subscribe(
       ({ banks, branches }) => {
         this.banks = banks.sort((a, b) => a.name.localeCompare(b.name));
-        this.bankOptions = this.banks.map(bank => ({
+        this.bankOptions = this.banks.map((bank) => ({
           label: bank.name,
-          value: bank.name
+          value: bank.name,
         }));
         this.allBranches = branches;
 
@@ -213,33 +226,33 @@ export class EditPlantcareUsersComponent implements OnInit {
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: "Failed to load bank or branch data",
+          text: 'Failed to load bank or branch data',
           customClass: {
             popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
             title: 'dark:text-white',
-          }
+          },
         });
         // Swal.fire('Error', 'Failed to load bank or branch data', 'error');
         this.cdr.detectChanges();
-      }
+      },
     );
   }
 
   setupDropdownOptions() {
     this.district = this.district.sort((a, b) =>
-      a.districtName.localeCompare(b.districtName)
+      a.districtName.localeCompare(b.districtName),
     );
-    this.districtOptions = this.district.map(district => ({
+    this.districtOptions = this.district.map((district) => ({
       label: district.districtName,
-      value: district.districtName
+      value: district.districtName,
     }));
-    this.membershipOptions = this.membership.map(m => ({
+    this.membershipOptions = this.membership.map((m) => ({
       label: m.membershipName,
-      value: m.membershipName
+      value: m.membershipName,
     }));
-    this.languageOptions = this.language.map(l => ({
+    this.languageOptions = this.language.map((l) => ({
       label: l.languageName,
-      value: l.languageName
+      value: l.languageName,
     }));
   }
 
@@ -249,11 +262,11 @@ export class EditPlantcareUsersComponent implements OnInit {
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: "Authentication token not found",
+        text: 'Authentication token not found',
         customClass: {
           popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
           title: 'dark:text-white',
-        }
+        },
       });
       // Swal.fire('Error', 'Authentication token not found', 'error');
       return;
@@ -280,16 +293,20 @@ export class EditPlantcareUsersComponent implements OnInit {
             if (bank) {
               this.selectedBankId = bank.ID;
               this.userForm.get('bankName')?.setValue(data.bankName);
-              this.branches = (this.allBranches[this.selectedBankId.toString()] || []).slice().sort(
-                (a, b) => a.name.localeCompare(b.name)
-              );
-              this.branchOptions = this.branches.map(branch => ({
+              this.branches = (
+                this.allBranches[this.selectedBankId.toString()] || []
+              )
+                .slice()
+                .sort((a, b) => a.name.localeCompare(b.name));
+              this.branchOptions = this.branches.map((branch) => ({
                 label: branch.name,
-                value: branch.name
+                value: branch.name,
               }));
               if (data.branchName) {
                 this.userForm.get('branchName')?.setValue(data.branchName);
-                this.selectedBranchId = this.branches.find((b) => b.name === data.branchName)?.ID || null;
+                this.selectedBranchId =
+                  this.branches.find((b) => b.name === data.branchName)?.ID ||
+                  null;
               }
             }
           }
@@ -301,30 +318,32 @@ export class EditPlantcareUsersComponent implements OnInit {
           Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: "Failed to load user data",
+            text: 'Failed to load user data',
             customClass: {
               popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
               title: 'dark:text-white',
-            }
+            },
           });
           // Swal.fire('Error', 'Failed to load user data', 'error');
           this.cdr.detectChanges();
-        }
+        },
       );
   }
 
   onBankChange() {
     const selectedBankName = this.userForm.get('bankName')?.value;
     if (selectedBankName) {
-      const selectedBank = this.banks.find((bank) => bank.name === selectedBankName);
+      const selectedBank = this.banks.find(
+        (bank) => bank.name === selectedBankName,
+      );
       if (selectedBank) {
         this.selectedBankId = selectedBank.ID;
-        this.branches = (this.allBranches[this.selectedBankId.toString()] || []).slice().sort(
-          (a, b) => a.name.localeCompare(b.name)
-        );
-        this.branchOptions = this.branches.map(branch => ({
+        this.branches = (this.allBranches[this.selectedBankId.toString()] || [])
+          .slice()
+          .sort((a, b) => a.name.localeCompare(b.name));
+        this.branchOptions = this.branches.map((branch) => ({
           label: branch.name,
-          value: branch.name
+          value: branch.name,
         }));
         this.userForm.get('branchName')?.setValue('');
       } else {
@@ -345,7 +364,9 @@ export class EditPlantcareUsersComponent implements OnInit {
   onBranchChange() {
     const selectedBranchName = this.userForm.get('branchName')?.value;
     if (selectedBranchName) {
-      const selectedBranch = this.branches.find((branch) => branch.name === selectedBranchName);
+      const selectedBranch = this.branches.find(
+        (branch) => branch.name === selectedBranchName,
+      );
       if (selectedBranch) {
         this.selectedBranchId = selectedBranch.ID;
       }
@@ -369,7 +390,11 @@ export class EditPlantcareUsersComponent implements OnInit {
     const currentValue = (event.target as HTMLInputElement).value;
 
     if (charCode === 32) {
-      if (currentValue.length === 0 || !/[a-zA-Z]/.test(currentValue) || currentValue.charAt(currentValue.length - 1) === ' ') {
+      if (
+        currentValue.length === 0 ||
+        !/[a-zA-Z]/.test(currentValue) ||
+        currentValue.charAt(currentValue.length - 1) === ' '
+      ) {
         event.preventDefault();
         return false;
       }
@@ -423,7 +448,10 @@ export class EditPlantcareUsersComponent implements OnInit {
 
   onAccountHolderNameInput(event: any): void {
     let value = event.target.value;
-    value = value.replace(/[^a-zA-Z\s]/g, '').replace(/^\s+/, '').replace(/\s{2,}/g, ' ');
+    value = value
+      .replace(/[^a-zA-Z\s]/g, '')
+      .replace(/^\s+/, '')
+      .replace(/\s{2,}/g, ' ');
     value = value.replace(/\b\w/g, (char: string) => char.toUpperCase());
     this.userForm.get('accHolderName')?.setValue(value, { emitEvent: false });
     event.target.value = value;
@@ -508,8 +536,6 @@ export class EditPlantcareUsersComponent implements OnInit {
     });
   }
 
-
-
   triggerFileInput(event: Event): void {
     event.preventDefault();
     const fileInput = document.getElementById('imageUpload');
@@ -523,24 +549,29 @@ export class EditPlantcareUsersComponent implements OnInit {
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: "File size should not exceed 5MB",
+          text: 'File size should not exceed 5MB',
           customClass: {
             popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
             title: 'dark:text-white',
-          }
+          },
         });
         return;
       }
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+      const allowedTypes = [
+        'image/jpeg',
+        'image/png',
+        'image/jpg',
+        'image/gif',
+      ];
       if (!allowedTypes.includes(file.type)) {
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: "Only JPEG, JPG, PNG, and GIF files are allowed",
+          text: 'Only JPEG, JPG, PNG, and GIF files are allowed',
           customClass: {
             popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
             title: 'dark:text-white',
-          }
+          },
         });
         return;
       }
@@ -555,9 +586,7 @@ export class EditPlantcareUsersComponent implements OnInit {
     }
   }
 
-
   onSubmitCreate() {
-
     const missingFields: string[] = [];
 
     // Validate form fields
@@ -585,7 +614,9 @@ export class EditPlantcareUsersComponent implements OnInit {
       if (this.userForm.get('NICnumber')?.errors?.['required']) {
         missingFields.push('NIC Number is Required');
       } else if (this.userForm.get('NICnumber')?.errors?.['pattern']) {
-        missingFields.push('NIC Number - Must be 12 digits or 9 digits followed by V');
+        missingFields.push(
+          'NIC Number - Must be 12 digits or 9 digits followed by V',
+        );
       }
     }
 
@@ -625,7 +656,9 @@ export class EditPlantcareUsersComponent implements OnInit {
     if (this.selectedImage) {
       const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
       if (!validImageTypes.includes(this.selectedImage.type)) {
-        missingFields.push('Profile Image - Must be a valid image file (jpg, png, gif)');
+        missingFields.push(
+          'Profile Image - Must be a valid image file (jpg, png, gif)',
+        );
       }
       if (this.selectedImage.size > 5000000) {
         missingFields.push('Profile Image - File size must not exceed 5MB');
@@ -634,7 +667,8 @@ export class EditPlantcareUsersComponent implements OnInit {
 
     // If errors, show popup and stop submission
     if (missingFields.length > 0) {
-      let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+      let errorMessage =
+        '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
       missingFields.forEach((field) => {
         errorMessage += `<li>${field}</li>`;
       });
@@ -667,11 +701,11 @@ export class EditPlantcareUsersComponent implements OnInit {
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: "Authentication token not found.",
+        text: 'Authentication token not found.',
         customClass: {
           popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
           title: 'dark:text-white',
-        }
+        },
       });
       return;
     }
@@ -688,7 +722,7 @@ export class EditPlantcareUsersComponent implements OnInit {
       customClass: {
         popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
         title: 'dark:text-white',
-      }
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         const headers = new HttpHeaders({
@@ -696,17 +730,38 @@ export class EditPlantcareUsersComponent implements OnInit {
         });
 
         const formData = new FormData();
-        formData.append('firstName', this.userForm.get('firstName')?.value || '');
+        formData.append(
+          'firstName',
+          this.userForm.get('firstName')?.value || '',
+        );
         formData.append('lastName', this.userForm.get('lastName')?.value || '');
-        formData.append('phoneNumber', this.userForm.get('phoneNumber')?.value || '');
-        formData.append('NICnumber', this.userForm.get('NICnumber')?.value || '');
+        formData.append(
+          'phoneNumber',
+          this.userForm.get('phoneNumber')?.value || '',
+        );
+        formData.append(
+          'NICnumber',
+          this.userForm.get('NICnumber')?.value || '',
+        );
         formData.append('district', this.userForm.get('district')?.value || '');
-        formData.append('membership', this.userForm.get('membership')?.value || '');
+        formData.append(
+          'membership',
+          this.userForm.get('membership')?.value || '',
+        );
         formData.append('language', this.userForm.get('language')?.value || '');
-        formData.append('accHolderName', this.userForm.get('accHolderName')?.value || '');
-        formData.append('accNumber', this.userForm.get('accNumber')?.value || '');
+        formData.append(
+          'accHolderName',
+          this.userForm.get('accHolderName')?.value || '',
+        );
+        formData.append(
+          'accNumber',
+          this.userForm.get('accNumber')?.value || '',
+        );
         formData.append('bankName', this.userForm.get('bankName')?.value || '');
-        formData.append('branchName', this.userForm.get('branchName')?.value || '');
+        formData.append(
+          'branchName',
+          this.userForm.get('branchName')?.value || '',
+        );
 
         if (this.selectedImage) {
           formData.append('image', this.selectedImage);
@@ -714,18 +769,21 @@ export class EditPlantcareUsersComponent implements OnInit {
 
         this.isLoading = true;
         this.http
-          .post(`${environment.API_URL}auth/create-plant-care-user`, formData, { headers })
+          .post(`${environment.API_URL}auth/create-plant-care-user`, formData, {
+            headers,
+          })
           .subscribe(
             (response: any) => {
               this.isLoading = false;
               Swal.fire({
                 icon: 'success',
                 title: 'Created!',
-                text: "A new GoVi Care user has been created.",
+                text: 'A new GoVi Care user has been created.',
                 customClass: {
-                  popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+                  popup:
+                    'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
                   title: 'dark:text-white',
-                }
+                },
               }).then(() => {
                 this.router.navigate(['/steckholders/action/farmers']);
               });
@@ -736,7 +794,8 @@ export class EditPlantcareUsersComponent implements OnInit {
             },
             (error) => {
               this.isLoading = false;
-              let errorMessage = 'There was an error creating the GoVi Care user.';
+              let errorMessage =
+                'There was an error creating the GoVi Care user.';
               if (error.error?.error) {
                 errorMessage = error.error.error;
               } else if (error.status === 400) {
@@ -747,11 +806,12 @@ export class EditPlantcareUsersComponent implements OnInit {
                 title: 'Error',
                 text: errorMessage,
                 customClass: {
-                  popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+                  popup:
+                    'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
                   title: 'dark:text-white',
-                }
+                },
               });
-            }
+            },
           );
       } else {
         this.isLoading = false;
@@ -759,7 +819,6 @@ export class EditPlantcareUsersComponent implements OnInit {
     });
   }
   onSubmit() {
-
     const missingFields: string[] = [];
 
     // Validate form fields
@@ -787,7 +846,9 @@ export class EditPlantcareUsersComponent implements OnInit {
       if (this.userForm.get('NICnumber')?.errors?.['required']) {
         missingFields.push('NIC Number is Required');
       } else if (this.userForm.get('NICnumber')?.errors?.['pattern']) {
-        missingFields.push('NIC Number - Must be 12 digits or 9 digits followed by V');
+        missingFields.push(
+          'NIC Number - Must be 12 digits or 9 digits followed by V',
+        );
       }
     }
 
@@ -829,7 +890,9 @@ export class EditPlantcareUsersComponent implements OnInit {
     if (this.selectedImage) {
       const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
       if (!validImageTypes.includes(this.selectedImage.type)) {
-        missingFields.push('Profile Image - Must be a valid image file (jpg, png, gif)');
+        missingFields.push(
+          'Profile Image - Must be a valid image file (jpg, png, gif)',
+        );
       }
       if (this.selectedImage.size > 5000000) {
         missingFields.push('Profile Image - File size must not exceed 5MB');
@@ -838,7 +901,8 @@ export class EditPlantcareUsersComponent implements OnInit {
 
     // If errors, show popup and stop submission
     if (missingFields.length > 0) {
-      let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+      let errorMessage =
+        '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
       missingFields.forEach((field) => {
         errorMessage += `<li>${field}</li>`;
       });
@@ -875,7 +939,7 @@ export class EditPlantcareUsersComponent implements OnInit {
         customClass: {
           popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
           title: 'dark:text-white',
-        }
+        },
       });
       return;
     }
@@ -892,7 +956,7 @@ export class EditPlantcareUsersComponent implements OnInit {
       customClass: {
         popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
         title: 'dark:text-white',
-      }
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         const headers = new HttpHeaders({
@@ -900,17 +964,38 @@ export class EditPlantcareUsersComponent implements OnInit {
         });
 
         const formData = new FormData();
-        formData.append('firstName', this.userForm.get('firstName')?.value || '');
+        formData.append(
+          'firstName',
+          this.userForm.get('firstName')?.value || '',
+        );
         formData.append('lastName', this.userForm.get('lastName')?.value || '');
-        formData.append('phoneNumber', this.userForm.get('phoneNumber')?.value || '');
-        formData.append('NICnumber', this.userForm.get('NICnumber')?.value || '');
+        formData.append(
+          'phoneNumber',
+          this.userForm.get('phoneNumber')?.value || '',
+        );
+        formData.append(
+          'NICnumber',
+          this.userForm.get('NICnumber')?.value || '',
+        );
         formData.append('district', this.userForm.get('district')?.value || '');
-        formData.append('membership', this.userForm.get('membership')?.value || '');
+        formData.append(
+          'membership',
+          this.userForm.get('membership')?.value || '',
+        );
         formData.append('language', this.userForm.get('language')?.value || '');
-        formData.append('accHolderName', this.userForm.get('accHolderName')?.value || '');
-        formData.append('accNumber', this.userForm.get('accNumber')?.value || '');
+        formData.append(
+          'accHolderName',
+          this.userForm.get('accHolderName')?.value || '',
+        );
+        formData.append(
+          'accNumber',
+          this.userForm.get('accNumber')?.value || '',
+        );
         formData.append('bankName', this.userForm.get('bankName')?.value || '');
-        formData.append('branchName', this.userForm.get('branchName')?.value || '');
+        formData.append(
+          'branchName',
+          this.userForm.get('branchName')?.value || '',
+        );
 
         if (this.selectedImage) {
           formData.append('image', this.selectedImage);
@@ -918,7 +1003,11 @@ export class EditPlantcareUsersComponent implements OnInit {
 
         this.isLoading = true;
         this.http
-          .put(`${environment.API_URL}auth/update-plant-care-user/${this.itemId}`, formData, { headers })
+          .put(
+            `${environment.API_URL}auth/update-plant-care-user/${this.itemId}`,
+            formData,
+            { headers },
+          )
           .subscribe(
             (data: any) => {
               this.isLoading = false;
@@ -928,9 +1017,10 @@ export class EditPlantcareUsersComponent implements OnInit {
                 title: 'Updated!',
                 text: 'GoVi Care user has been updated.',
                 customClass: {
-                  popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+                  popup:
+                    'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
                   title: 'dark:text-white',
-                }
+                },
               }).then(() => {
                 this.router.navigate(['/steckholders/action/farmers']);
               });
@@ -938,24 +1028,27 @@ export class EditPlantcareUsersComponent implements OnInit {
             },
             (error) => {
               this.isLoading = false;
-              let errorMessage = 'There was an error updating the GoVi Care user.';
+              let errorMessage =
+                'There was an error updating the GoVi Care user.';
               if (error.error?.error) {
                 errorMessage = error.error.error;
               } else if (error.error?.message) {
                 errorMessage = error.error.message;
               } else if (error.status === 400) {
-                errorMessage = 'Invalid data sent to server. Please check your inputs.';
+                errorMessage =
+                  'Invalid data sent to server. Please check your inputs.';
               }
               Swal.fire({
                 icon: 'error',
                 title: 'Error!',
                 text: errorMessage,
                 customClass: {
-                  popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+                  popup:
+                    'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
                   title: 'dark:text-white',
-                }
+                },
               });
-            }
+            },
           );
       } else {
         this.isLoading = false;
@@ -981,6 +1074,4 @@ export class EditPlantcareUsersComponent implements OnInit {
       }
     });
   }
-
-
 }

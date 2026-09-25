@@ -141,7 +141,7 @@ export class MarketEditProductComponent implements OnInit {
 
   getProduct() {
     this.marketSrv.getProductById(this.productId).subscribe((res) => {
-      console.log('product:', res);
+      
       this.storedDisplayType = res.displaytype;
       this.productObj = res;
       this.productObj.productTypeId = res.productTypeId;
@@ -212,28 +212,28 @@ export class MarketEditProductComponent implements OnInit {
     this.marketSrv.getCropVerity().subscribe(
       (res) => {
         this.cropsObj = res;
-        console.log('Crops fetched successfully:', res);
+        
       },
       (error) => {
-        console.log('Error: Crop variety fetching issue', error);
+        
       },
     );
   }
 
   onCropChange() {
-    console.log('onCropChange selectId:', this.productObj.selectId);
+    
     const sample = this.cropsObj.filter(
       (crop) => crop.cropId === +this.productObj.selectId,
     );
-    console.log('Filtered crops:', sample);
+    
     if (sample.length > 0) {
       this.selectedVarieties = sample[0].variety;
       this.isVerityVisible = true;
-      console.log('Selected crop varieties:', this.selectedVarieties);
+      
     } else {
       this.selectedVarieties = [];
       this.isVerityVisible = false;
-      console.log('No crop found with selectId:', this.productObj.selectId);
+      
     }
     // Update the selected image after changing varieties
     this.selectVerityImage();
@@ -242,7 +242,7 @@ export class MarketEditProductComponent implements OnInit {
   selectVerityImage() {
     if (!this.productObj.varietyId) {
       this.selectedImage = null;
-      console.log('No varietyId selected');
+      
       return;
     }
 
@@ -250,11 +250,11 @@ export class MarketEditProductComponent implements OnInit {
       (v) => v.id === Number(this.productObj.varietyId),
     );
     this.selectedImage = selectedVariety ? selectedVariety.image : null;
-    console.log('Selected Image:', this.selectedImage);
+    
   }
 
   onCancel() {
-    console.log('pob', this.productObj);
+    
     Swal.fire({
       icon: 'warning',
       title: 'Are you sure?',
@@ -294,7 +294,7 @@ export class MarketEditProductComponent implements OnInit {
 
   onSubmit() {
     this.updateTags();
-    console.log(this.productObj.promo);
+    
 
     if (
       this.productObj.category === 'WholeSale' &&
@@ -456,7 +456,7 @@ if (this.productObj.comPrice <= salePriceForComparison) {
       },
     );
 
-    console.log('Form submitted:', this.productObj);
+    
   }
 
   updateTags() {
@@ -494,7 +494,7 @@ if (this.productObj.comPrice <= salePriceForComparison) {
   applyDiscount() {
     this.isNoDiscount = false;
     this.productObj.displaytype = this.storedDisplayType;
-    console.log('discounted price', this.productObj.discountedPrice);
+    
 
     if (this.productObj.discountedPrice === 0) {
       this.productObj.discountedPrice = this.storedDiscountPercentage;
@@ -505,9 +505,9 @@ if (this.productObj.comPrice <= salePriceForComparison) {
       this.productObj.discount =
         (this.productObj.normalPrice * this.productObj.discountedPrice) / 100;
     }
-    console.log('object', this.productObj);
+    
 
-    console.log('store', this.storedDisplayType);
+    
   }
 
   announceTagAdded(event: any) {

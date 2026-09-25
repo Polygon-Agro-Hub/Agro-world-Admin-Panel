@@ -65,7 +65,6 @@ export class CurrentAssetsViewComponent {
     this.assetService.getAllCurrentAsset(userId, category,farmId).subscribe(
       (data) => {
         this.isLoading = false;
-        console.log('Received items:', data);
         this.currentAsset = data;
         this.hasData = this.currentAsset.length > 0;
       },

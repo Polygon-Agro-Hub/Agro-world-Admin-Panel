@@ -105,4 +105,11 @@ export class NewsService {
       { headers },
     );
   }
+
+  checkBlockWord(word: string): Observable<any[]> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.get<any[]>(`${this.apiUrl}auth/check-block-word/${word}`, { headers });
+  }
 }

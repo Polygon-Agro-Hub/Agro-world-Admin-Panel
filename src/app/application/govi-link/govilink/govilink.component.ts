@@ -12,6 +12,7 @@ import { PermissionService } from '../../../services/roles-permission/permission
   templateUrl: './govilink.component.html',
   styleUrl: './govilink.component.css',
 })
+
 export class GovilinkComponent {
   popupVisibleCollectionCenter = false;
   popupVisibleComplains = false;
@@ -23,7 +24,7 @@ export class GovilinkComponent {
     private router: Router,
     public tokenService: TokenService,
     public permissionService: PermissionService
-  ) {}
+  ) { }
 
   togglePopupCollectionCenter() {
     this.popupVisibleCollectionCenter = !this.popupVisibleCollectionCenter;

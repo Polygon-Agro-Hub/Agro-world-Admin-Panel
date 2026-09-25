@@ -12,6 +12,7 @@ import { Subject } from 'rxjs';
 import { TokenService } from '../../../services/token/services/token.service';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
 import { DropdownModule } from 'primeng/dropdown';
+import { SalesAgentsService } from '../../../services/dash/sales-agents.service';
 
 // ─────────────────────────────────────────────────────────────────────────────
 //  Model
@@ -41,6 +42,7 @@ interface Customers {
   apartmentFloorNo: string;
   title?: string;
   rateofCus?: string; // 'VVIP' | 'VIP' | 'COR' | 'NOR' | 'VVP'
+  nearesCity?: string;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -83,13 +85,14 @@ export class CustomersComponent implements OnInit {
 
   // ── Rating filter (header bar) ────────────────────────────────────────────
   selectedRatingFilter = '';
+  selectedAgentFilter: number | string = '';
+  agentFilterOptions: Array<{ label: string; value: number }> = [];
 
   // ── Update-rating popup ───────────────────────────────────────────────────
   isRatingPopupOpen            = false;
   selectedCustomerForRating: Customers | null = null;
   selectedNewRating            = '';
   isUpdatingRating             = false;
-  showRatingToast              = false;
 
     /** Options shown in the filter dropdown (header bar) */
   ratingFilterOptions = [
@@ -115,12 +118,14 @@ export class CustomersComponent implements OnInit {
     private customerService: CustomersService,
     private http: HttpClient,
     private router: Router,
+    private salesAgentsService: SalesAgentsService,
     public tokenService: TokenService,
     public permissionService: PermissionService,
   ) {}
 
   ngOnInit() {
     this.fetchAllCustomers();
+    this.fetchApprovedAgents();
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -134,7 +139,13 @@ export class CustomersComponent implements OnInit {
     this.isLoading = true;
 
     this.customerService
-      .getCustomers(page, limit, this.searchText, this.selectedRatingFilter)
+      .getCustomers(
+        page,
+        limit,
+        this.searchText,
+        this.selectedRatingFilter,
+        this.selectedAgentFilter,
+      )
       .subscribe(
         (response: any) => {
           this.isLoading         = false;
@@ -151,6 +162,28 @@ export class CustomersComponent implements OnInit {
           this.hasData           = false;
         },
       );
+  }
+
+  fetchApprovedAgents() {
+    this.salesAgentsService.getAllSalesAgents(1, 1000, '', 'Approved').subscribe(
+      (response: any) => {
+        this.agentFilterOptions = (response.items || [])
+          .map((agent: any) => ({
+            label: `${agent.empId} - ${agent.firstName} ${agent.lastName}`,
+            value: agent.id,
+          }))
+          .sort(
+            (
+              firstAgent: { label: string; value: number },
+              secondAgent: { label: string; value: number },
+            ) =>
+            firstAgent.label.localeCompare(secondAgent.label, undefined, {
+              numeric: true,
+            }),
+          );
+      },
+      (error) => console.error('Error fetching approved sales agents', error),
+    );
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -180,6 +213,11 @@ export class CustomersComponent implements OnInit {
   }
 
   applyRatingFilter() {
+    this.page = 1;
+    this.fetchAllCustomers();
+  }
+
+  applyAgentFilter() {
     this.page = 1;
     this.fetchAllCustomers();
   }
@@ -215,35 +253,51 @@ export class CustomersComponent implements OnInit {
   }
 
   submitUpdateRating() {
-    if (!this.selectedCustomerForRating || !this.selectedNewRating) return;
+  if (!this.selectedCustomerForRating || !this.selectedNewRating) return;
 
-    this.isUpdatingRating = true;
+  this.isUpdatingRating = true;
 
-    this.customerService
-      .updateDashCustomerRating(
-        this.selectedCustomerForRating.id,
-        this.selectedNewRating,
-      )
-      .subscribe(
-        () => {
-          // Update the row in-place so the table refreshes instantly
-          const target = this.filteredCustomers.find(
-            (c) => c.id === this.selectedCustomerForRating!.id,
-          );
-          if (target) target.rateofCus = this.selectedNewRating;
+  this.customerService
+    .updateDashCustomerRating(
+      this.selectedCustomerForRating.id,
+      this.selectedNewRating,
+    )
+    .subscribe(
+      () => {
+        // Update the row in-place so the table refreshes instantly
+        const target = this.filteredCustomers.find(
+          (c) => c.id === this.selectedCustomerForRating!.id,
+        );
+        if (target) target.rateofCus = this.selectedNewRating;
 
-          this.isUpdatingRating = false;
-          this.closeUpdateRatingPopup();
+        this.isUpdatingRating = false;
+        this.closeUpdateRatingPopup();
 
-          this.showRatingToast = true;
-          setTimeout(() => (this.showRatingToast = false), 3000);
-        },
-        (err) => {
-          console.error('Error updating rating', err);
-          this.isUpdatingRating = false;
-        },
-      );
-  }
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Rating updated successfully!',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+          },
+        });
+      },
+      (err) => {
+        console.error('Error updating rating', err);
+        this.isUpdatingRating = false;
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to update rating. Please try again.',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+          },
+        });
+      },
+    );
+}
 
   // ─────────────────────────────────────────────────────────────────────────
   //  Helpers
@@ -260,7 +314,7 @@ export class CustomersComponent implements OnInit {
   /** Returns the star-icon asset path for a given rating code */
   getRatingIcon(rating: string): string {
     const map: Record<string, string> = {
-      VVIP: 'assets/images/ratings/VVIP.png',
+      VVIP: 'assets/images/ratings/VIP.png',
       VIP:  'assets/images/ratings/VIP.png',
       COR:  'assets/images/ratings/COR2.png',
       NOR:  'assets/images/ratings/NOR.png',

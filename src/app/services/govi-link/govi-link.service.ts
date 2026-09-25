@@ -7,6 +7,7 @@ import { environment } from '../../environment/environment';
 @Injectable({
   providedIn: 'root',
 })
+
 export class GoviLinkService {
   private apiUrl = `${environment.API_URL}govi-link/`;
   private authUrl = `${environment.API_URL}auth/`;
@@ -15,7 +16,7 @@ export class GoviLinkService {
   constructor(
     private http: HttpClient,
     private tokenService: TokenService,
-  ) {}
+  ) { }
 
   saveOfficerService(data: {
     englishName: string;
@@ -51,8 +52,6 @@ export class GoviLinkService {
 
     const modifyBy = localStorage.getItem('AdminUserId');
     const payload = { ...data, modifyBy };
-
-    console.log('Payload being sent:', payload);
 
     return this.http.put(
       this.apiUrl + `update-officer-service/${id}`,
@@ -293,8 +292,6 @@ export class GoviLinkService {
       Authorization: `Bearer ${token}`,
     });
 
-    console.log('fetchiing');
-
     return this.http.get<any>(
       `${this.apiUrl}get-service-request-response/${jobId}`,
       {
@@ -323,8 +320,8 @@ export class GoviLinkService {
       Authorization: `Bearer ${token}`,
     });
 
-    return this.http.get<any>(`${this.apiUrl}govilink-dashbord`, 
-      {headers},
+    return this.http.get<any>(`${this.apiUrl}govilink-dashbord`,
+      { headers },
     );
   }
 }

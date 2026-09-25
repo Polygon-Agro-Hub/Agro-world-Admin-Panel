@@ -45,7 +45,8 @@
           <div class="px-20 py-6 bg-white dark:bg-[#1e1e2f] rounded-lg shadow-lg w-[30rem] max-w-full">
             <h2 class="flex justify-center text-xl mb-5 dark:text-white">Select Filter</h2>
             <p-dropdown [(ngModel)]="selectedFilterType" [options]="filterTypes" optionLabel="display"
-              placeholder="--Filter By--" [showClear]="true" styleClass="w-full mb-5 cursor-pointer dark:bg-[#272F45] border border-gray-300 "
+              placeholder="--Filter By--" [showClear]="true"
+              styleClass="w-full mb-5 cursor-pointer dark:bg-[#272F45] border border-gray-300 "
               panelStyleClass="cursor-pointer ">
             </p-dropdown>
 
@@ -87,7 +88,7 @@
 
           <input type="text" placeholder="Search by Crop & Variety..."
             class="bg-transparent outline-none w-full text-gray-600 dark:text-gray-300" [(ngModel)]="search"
-            (keydown.enter)="applysearch()" />
+            (input)="onSearchInput($event)" (keydown.enter)="applysearch()" />
 
           <!-- Tooltip -->
           <div class="absolute top-full mt-2 

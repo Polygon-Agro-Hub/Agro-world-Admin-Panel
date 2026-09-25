@@ -65,7 +65,7 @@ export class GovicapitalFinanceComponent implements OnInit {
     private router: Router,
     public tokenService: TokenService,
     public permissionService: PermissionService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadRejectedRequests();
@@ -141,6 +141,29 @@ export class GovicapitalFinanceComponent implements OnInit {
       });
 
       return `${time} on ${formattedDate}`;
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return 'N/A';
+    }
+  }
+
+  formatDateOnly(dateString: string): string {
+    if (!dateString) return 'N/A';
+
+    try {
+      const date = new Date(dateString);
+
+      if (isNaN(date.getTime())) {
+        return 'Invalid Date';
+      }
+
+      const formattedDate = date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: '2-digit',
+      });
+
+      return formattedDate;
     } catch (error) {
       console.error('Error formatting date:', error);
       return 'N/A';

@@ -29,66 +29,64 @@ export class AssignCenterTargetComponent {
 
   isDateSelected: boolean = true;
 
-dateError: boolean = false;
+  dateError: boolean = false;
   selectDate: Date | null = new Date();
 
   constructor(private TargetSrv: TargetService) {}
 
   ngOnInit(): void {
-  const today = new Date();
-  const tomorrow = new Date(today);
+    const today = new Date();
+    const tomorrow = new Date(today);
 
-  tomorrow.setDate(today.getDate() + 1);
+    tomorrow.setDate(today.getDate() + 1);
 
-  this.selectDate = tomorrow;
+    this.selectDate = tomorrow;
 
-  this.fetchSavedCenterCrops();
-}
-
-onDateChange(event: any) {
-  if (!event) {
-    
-    this.selectDate = null; 
-    this.isDateSelected = false;
-    this.dateError = true;
-    this.fetchSavedCenterCrops();
-  } else {
-    this.isDateSelected = true;
-    this.dateError = false;
     this.fetchSavedCenterCrops();
   }
-}
 
-
-checkDateSelection() {
-  if (!this.selectDate) {
-    this.dateError = true;
-  } else {
-    this.dateError = false;
+  onDateChange(event: any) {
+    if (!event) {
+      this.selectDate = null;
+      this.isDateSelected = false;
+      this.dateError = true;
+      this.fetchSavedCenterCrops();
+    } else {
+      this.isDateSelected = true;
+      this.dateError = false;
+      this.fetchSavedCenterCrops();
+    }
   }
-}
+
+  checkDateSelection() {
+    if (!this.selectDate) {
+      this.dateError = true;
+    } else {
+      this.dateError = false;
+    }
+  }
   fetchSavedCenterCrops() {
     this.isLoading = true;
-  
+
     this.isDateValid = true;
     const formattedDate = this.formatDate(this.selectDate);
-  
+
     this.TargetSrv.getSavedCenterCrops(
       this.centerDetails.centerId,
       formattedDate,
-      this.searchText
+      this.searchText,
     ).subscribe((res) => {
       this.isLoading = false;
-  
+
       this.assignCropsArr = res.products.map((p: AssignCrops) => ({
-          ...p,
-          originalTotal: (p.targetA || 0) + (p.targetB || 0) + (p.targetC || 0)
-        }));
+        ...p,
+        originalTotal: (p.targetA || 0) + (p.targetB || 0) + (p.targetC || 0),
+      }));
       this.officerName = res.officerName;
-      this.countCrops = res.products.length
-        this.companyCenterId = res.companyCenterId
+      this.countCrops = res.products.length;
+      this.companyCenterId = res.companyCenterId;
       this.hasData = res.products.length > 0;
-              this.validateForm();
+      this.validateForm();
     });
   }
 
@@ -96,13 +94,12 @@ checkDateSelection() {
     if (!date) {
       return '';
     }
-  
+
     const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0'); 
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const day = date.getDate().toString().padStart(2, '0');
     return `${year}-${month}-${day}`;
   }
-  
 
   onSearch() {
     if (this.searchText) {
@@ -116,7 +113,6 @@ checkDateSelection() {
     this.fetchSavedCenterCrops();
   }
 
-
   saveGrade(grade: string, item: any, qty: number, editId: number | null) {
     this.isLoading = true;
     if (grade === 'A') {
@@ -127,7 +123,8 @@ checkDateSelection() {
           html: 'Updated target cannot be less than the initially added target',
           confirmButtonText: 'OK',
           customClass: {
-            popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
+            popup:
+              'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
             title: 'font-semibold text-lg',
             htmlContainer: 'text-left',
           },
@@ -135,8 +132,6 @@ checkDateSelection() {
         this.isLoading = false;
         return;
       }
-      
-
     } else if (grade === 'B') {
       Swal.fire({
         icon: 'error',
@@ -159,7 +154,8 @@ checkDateSelection() {
           html: 'Updated target cannot be less than the initially added target',
           confirmButtonText: 'OK',
           customClass: {
-            popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
+            popup:
+              'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
             title: 'font-semibold text-lg',
             htmlContainer: 'text-left',
           },
@@ -169,21 +165,21 @@ checkDateSelection() {
       }
     }
 
-        if (this.isQtyExceeded(item)) {
+    if (this.isQtyExceeded(item)) {
       Swal.fire({
-          icon: 'error',
-          title: 'Invalid Input',
-          html: 'Updated target cannot be less than the initially added target',
-          confirmButtonText: 'OK',
-          customClass: {
-            popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
-            title: 'font-semibold text-lg',
-            htmlContainer: 'text-left',
-          },
-        });
-        this.isLoading = false;
-        return;
-      }
+        icon: 'error',
+        title: 'Invalid Input',
+        html: 'Updated target cannot be less than the initially added target',
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
+          title: 'font-semibold text-lg',
+          htmlContainer: 'text-left',
+        },
+      });
+      this.isLoading = false;
+      return;
+    }
 
     let data = {
       id: editId,
@@ -205,7 +201,8 @@ checkDateSelection() {
             timer: 2000,
             showConfirmButton: false,
             customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold text-lg',
             },
           });
@@ -219,7 +216,8 @@ checkDateSelection() {
             title: 'Error',
             text: 'Failed to save grade',
             customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold text-lg',
             },
           });
@@ -236,57 +234,63 @@ checkDateSelection() {
           },
         });
         console.error('Error saving grade:', error);
-      }
+      },
     );
   }
 
   allowOnlyDigits(event: KeyboardEvent): void {
-  const key = event.key;
-  const input = event.target as HTMLInputElement;
+    const key = event.key;
+    const input = event.target as HTMLInputElement;
 
-  // Allow navigation/editing keys (Backspace, Delete, Tab, arrows, etc.)
-  if (key.length > 1) {
-    return;
-  }
-
-  // Allow a single decimal point
-  if (key === '.') {
-    if (input.value.includes('.')) {
-      event.preventDefault(); // already has one, block a second
+    // Allow navigation/editing keys (Backspace, Delete, Tab, arrows, etc.)
+    if (key.length > 1) {
+      return;
     }
-    return;
-  }
 
-  // Only allow digits 0-9
-  if (!/^[0-9]$/.test(key)) {
-    event.preventDefault();
-    return;
-  }
+    // Allow a single decimal point
+    if (key === '.') {
+      if (input.value.includes('.')) {
+        event.preventDefault(); // already has one, block a second
+      }
+      return;
+    }
 
-  // Limit to 3 digits after the decimal point
-  const dotIndex = input.value.indexOf('.');
-  if (dotIndex !== -1) {
-    const cursorPos = input.selectionStart ?? input.value.length;
-    const decimalPart = input.value.slice(dotIndex + 1);
-
-    // Only block if the cursor is positioned after the dot (typing a decimal digit)
-    if (cursorPos > dotIndex && decimalPart.length >= 3) {
+    // Only allow digits 0-9
+    if (!/^[0-9]$/.test(key)) {
       event.preventDefault();
+      return;
+    }
+
+    // Limit to 3 digits after the decimal point
+    const dotIndex = input.value.indexOf('.');
+    if (dotIndex !== -1) {
+      const cursorPos = input.selectionStart ?? input.value.length;
+      const decimalPart = input.value.slice(dotIndex + 1);
+
+      // Only block if the cursor is positioned after the dot (typing a decimal digit)
+      if (cursorPos > dotIndex && decimalPart.length >= 3) {
+        event.preventDefault();
+      }
     }
   }
-}
-  
-  removeLeadingZeros(item: any): void {
-  if (item.targetB) {
-    // Only strip zeros that are followed by another digit (not by "." or end of string)
-    item.targetB = item.targetB.replace(/^0+(?=\d)/, '');
-  }
-}
 
-    validateForm() {
-    this.isFormValid = this.assignCropsArr.some(crop =>
-      crop.isNew && (crop.targetA > 0 || crop.targetB > 0 || crop.targetC > 0)
-    ) && !this.assignCropsArr.some(crop => crop.isNew && this.isQtyExceeded(crop));
+  removeLeadingZeros(item: any): void {
+    if (item.targetB) {
+      // Only strip zeros that are followed by another digit (not by "." or end of string)
+      item.targetB = item.targetB.replace(/^0+(?=\d)/, '');
+    }
+  }
+
+  validateForm() {
+    this.isFormValid =
+      this.assignCropsArr.some(
+        (crop) =>
+          crop.isNew &&
+          (crop.targetA > 0 || crop.targetB > 0 || crop.targetC > 0),
+      ) &&
+      !this.assignCropsArr.some(
+        (crop) => crop.isNew && this.isQtyExceeded(crop),
+      );
   }
 
   pressEditIcon(item: AssignCrops, grade: string) {
@@ -345,7 +349,8 @@ checkDateSelection() {
             timer: 2000,
             showConfirmButton: false,
             customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold text-lg',
             },
           }).then(() => {
@@ -357,7 +362,8 @@ checkDateSelection() {
             title: 'Failed',
             text: res.message || 'Failed to assign target',
             customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold text-lg',
             },
           });
@@ -374,12 +380,11 @@ checkDateSelection() {
           },
         });
         console.error('Error assigning target:', error);
-      }
+      },
     );
   }
 
-
-    get systemAppearDate(): string {
+  get systemAppearDate(): string {
     return this.formatDayMonth(this.offsetSelectDate(-1));
   }
 
@@ -391,11 +396,11 @@ checkDateSelection() {
     return this.formatDayMonth(this.offsetSelectDate(1));
   }
 
-private offsetSelectDate(offsetDays: number): Date {
-  const d = new Date(this.selectDate!);
-  d.setDate(d.getDate() + offsetDays);
-  return d;
-}
+  private offsetSelectDate(offsetDays: number): Date {
+    const d = new Date(this.selectDate!);
+    d.setDate(d.getDate() + offsetDays);
+    return d;
+  }
 
   private formatDayMonth(d: Date): string {
     const day = d.getDate();
@@ -443,25 +448,47 @@ private offsetSelectDate(offsetDays: number): Date {
 
   isQtyExceeded(item: AssignCrops): boolean {
     if (item.isNew) {
-      const total = (item.targetA || 0) + (item.targetB || 0) + (item.targetC || 0);
+      const total =
+        (item.targetA || 0) + (item.targetB || 0) + (item.targetC || 0);
       return total > item.remaining;
     }
 
-    const addedA = item.editingA ? (item.targetA || 0) - (item.preValueA || 0) : 0;
-    const addedB = item.editingB ? (item.targetB || 0) - (item.preValueB || 0) : 0;
-    const addedC = item.editingC ? (item.targetC || 0) - (item.preValueC || 0) : 0;
+    const addedA = item.editingA
+      ? (item.targetA || 0) - (item.preValueA || 0)
+      : 0;
+    const addedB = item.editingB
+      ? (item.targetB || 0) - (item.preValueB || 0)
+      : 0;
+    const addedC = item.editingC
+      ? (item.targetC || 0) - (item.preValueC || 0)
+      : 0;
 
-    return (addedA + addedB + addedC) > item.remaining;
+    return addedA + addedB + addedC > item.remaining;
   }
 
   maxQty(item: AssignCrops): number {
-    return Math.round((item.remaining * 1.02) * 100) / 100;
+    return Math.round(item.remaining * 1.02 * 100) / 100;
   }
 
   isGradeInvalid(item: AssignCrops, grade: string): boolean {
-    const target = grade === 'A' ? item.targetA : grade === 'B' ? item.targetB : item.targetC;
-    const preValue = grade === 'A' ? item.preValueA : grade === 'B' ? item.preValueB : item.preValueC;
-    const isEditingGrade = grade === 'A' ? item.editingA : grade === 'B' ? item.editingB : item.editingC;
+    const target =
+      grade === 'A'
+        ? item.targetA
+        : grade === 'B'
+          ? item.targetB
+          : item.targetC;
+    const preValue =
+      grade === 'A'
+        ? item.preValueA
+        : grade === 'B'
+          ? item.preValueB
+          : item.preValueC;
+    const isEditingGrade =
+      grade === 'A'
+        ? item.editingA
+        : grade === 'B'
+          ? item.editingB
+          : item.editingC;
 
     if (target < 0) return true;
 
@@ -470,8 +497,8 @@ private offsetSelectDate(offsetDays: number): Date {
     return (item.isNew || isEditingGrade) && this.isQtyExceeded(item);
   }
 
-    get hasNewItems(): boolean {
-    return this.assignCropsArr.some(crop => crop.isNew);
+  get hasNewItems(): boolean {
+    return this.assignCropsArr.some((crop) => crop.isNew);
   }
 
   get isSelectedDatePast(): boolean {
@@ -493,15 +520,15 @@ class CenterDetails {
 }
 
 class AssignCrops {
-  cropNameEnglish!: string
-  varietyNameEnglish!: string
+  cropNameEnglish!: string;
+  varietyNameEnglish!: string;
   isNew: boolean = true;
   qty: number = 0;
   unitType: string = '';
   lastEditedGrade: string | null = null;
-  targetA: number = 0.00
-  targetB: number = 0.00
-  targetC: number = 0.00
+  targetA: number = 0.0;
+  targetB: number = 0.0;
+  targetC: number = 0.0;
   editingA: boolean = false;
   editingB: boolean = false;
   editingC: boolean = false;

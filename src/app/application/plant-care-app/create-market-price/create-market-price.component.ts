@@ -70,7 +70,7 @@ export class CreateMarketPriceComponent {
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
       this.itemId = params["id"] ? +params["id"] : null;
-      console.log("Received item ID:", this.itemId);
+      
     });
     this.getMarketPrice(this.itemId);
   }
@@ -92,7 +92,7 @@ export class CreateMarketPriceComponent {
       .subscribe(
         (data) => {
           this.newsItems = data;
-          console.log(this.newsItems);
+          
         },
         (error) => {
           console.error("Error fetching news:", error);
@@ -111,7 +111,7 @@ export class CreateMarketPriceComponent {
   onFileSelected(event: any): void {
     const file: File = event.target.files[0];
     if (file) {
-      console.log("Selected file:", file);
+      
       this.selectedFile = file; // Save the file to the component property
       this.selectedFileName = file.name;
 
@@ -169,8 +169,8 @@ export class CreateMarketPriceComponent {
   }
 
   createMarketPrice() {
-    console.log("clicked");
-    console.log(this.createMarketObj);
+    
+    
 
     const token = this.tokenService.getToken();
 
@@ -222,7 +222,7 @@ export class CreateMarketPriceComponent {
         )
         .subscribe(
           (res: any) => {
-            console.log("News created successfully", res);
+            
             this.isLoading = false;
             Swal.fire({
               icon: "success",
@@ -269,7 +269,7 @@ export class CreateMarketPriceComponent {
   //     // createdBy: this.createNewsObj.createdBy,
   //   };
 
-  //   console.log('News Data:', newsData); // Logging the JSON data
+  //    // Logging the JSON data
 
   //   const headers = new HttpHeaders({
   //     'Authorization': `Bearer ${token}`,
@@ -278,7 +278,7 @@ export class CreateMarketPriceComponent {
 
   //     .subscribe(
   //       (res: any) => {
-  //         console.log('News updated successfully', res);
+  //         
   //         Swal.fire({
   //           icon: 'success',
   //           title: 'Success',
@@ -339,7 +339,7 @@ export class CreateMarketPriceComponent {
       )
       .subscribe(
         (res: any) => {
-          console.log("Market Price updated successfully", res);
+          
           this.isLoading = false;
           Swal.fire({
             icon: "success",
@@ -364,7 +364,7 @@ export class CreateMarketPriceComponent {
     this.createMarketObj = new CreateMarket(); // Reset the object to clear the form fields
     this.selectedFile = null; // Reset file input
     this.selectedLanguage = "english"; // Optionally reset language selection to default
-    console.log("Form cleared");
+    
     Swal.fire("Form cleared", "", "info");
   }
 

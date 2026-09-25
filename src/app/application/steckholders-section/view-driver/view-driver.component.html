@@ -4,7 +4,8 @@
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
-<button *ngIf="permissionService.hasPermission('Stakeholder add driver') || tokenService.getUserDetails().role === '1'" class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
+<button *ngIf="permissionService.hasPermission('Stakeholder add driver') || tokenService.getUserDetails().role === '1'"
+  class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
   (click)="navigatePath('/steckholders/action/drivers/add-driver')">
   <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M4 12H20M12 4V20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
@@ -22,27 +23,24 @@
       <div class="space-y-6">
         <!-- Select Centre -->
         <div class="w-full">
-          <p-dropdown [options]="centerOptions" optionLabel="label" optionValue="value" 
-            placeholder="Select Distribution Centre"
-            [(ngModel)]="selectedCenterId" #selectedCenterIdInput="ngModel" (onChange)="onCenterChange()"
-            name="selectedCenterId" required
+          <p-dropdown [options]="centerOptions" optionLabel="label" optionValue="value"
+            placeholder="Select Distribution Centre" [(ngModel)]="selectedCenterId" #selectedCenterIdInput="ngModel"
+            (onChange)="onCenterChange()" name="selectedCenterId" required
             [styleClass]="'w-full border border-gray-300 dark:border-gray-600 rounded-xl dark:bg-gray-700 dark:text-white'"
-            panelStyleClass="custom-dropdown-panel"
-            [filter]="true" 
-            filterBy="label"
-            [showClear]="true">
-</p-dropdown>
+            panelStyleClass="custom-dropdown-panel" [filter]="true" filterBy="label" [showClear]="true">
+          </p-dropdown>
           <div *ngIf="selectedCenterIdInput.touched && !selectedCenterId" class="text-red-500 text-sm mt-1 ml-1">
             Centre Name is required
           </div>
         </div>
+        
 
         <!-- Select Manager (conditionally shown) -->
-        <div *ngIf="selectedOfficer?.jobRole === 'Driver'" class="w-full">
+        <div *ngIf="selectedOfficer?.jobRole === LIGHT_WEIGHT_DRIVER || selectedOfficer?.jobRole === HEAVY_WEIGHT_DRIVER" class="w-full">
           <p-dropdown [options]="collectionCenterManagerNames" optionLabel="displayLabel" optionValue="id"
-            placeholder="Select Manager" [(ngModel)]="selectedIrmId" #selectedIrmIdInput="ngModel"
-            name="selectedIrmId" required panelStyleClass="custom-dropdown-panel"
-             [filter]="true" filterBy="empId,firstNameEnglish,lastNameEnglish"
+            placeholder="Select Manager" [(ngModel)]="selectedIrmId" #selectedIrmIdInput="ngModel" name="selectedIrmId"
+            required panelStyleClass="custom-dropdown-panel" [filter]="true"
+            filterBy="empId,firstNameEnglish,lastNameEnglish"
             [styleClass]="'w-full border border-gray-300 dark:border-gray-600 rounded-xl dark:bg-gray-700 dark:text-white'">
           </p-dropdown>
           <div *ngIf="selectedIrmIdInput.touched && !selectedIrmId" class="text-red-500 text-sm mt-1 ml-1">
@@ -90,11 +88,13 @@
 
       <!-- Buttons -->
       <div class="flex justify-center gap-4 mt-8">
-        <button class="px-8 py-3 bg-gray-400 hover:bg-gray-500 text-white font-medium rounded-xl transition duration-200 min-w-[140px]"
+        <button
+          class="px-8 py-3 bg-gray-400 hover:bg-gray-500 text-white font-medium rounded-xl transition duration-200 min-w-[140px]"
           (click)="closeDisclaimView()">
           No, Go Back
         </button>
-        <button class="px-8 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-xl transition duration-200 min-w-[140px]"
+        <button
+          class="px-8 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-xl transition duration-200 min-w-[140px]"
           (click)="confirmDisclaim()">
           Yes, Disclaim
         </button>
@@ -104,27 +104,27 @@
 </div>
 
 <div
-  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
-  <div class="pt-5 px-12 pb-5 min-w-[1650px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+  class="fixed-width-container w-full max-w-full min-w-0 overflow-x-auto box-border scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+  <div class="pt-5 px-12 pb-5 w-max min-w-[1500px] box-border bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
 
     <div *ngIf="Cname" class="flex items-center my-5">
       <h2 class="text-xl font-normal text-textLight dark:text-textDark">
         Centre: {{Cname}}
       </h2>
     </div>
-    <div class="flex justify-between items-center mb-8">
-      <div *ngIf="!Cname" class="flex items-center">
+    <div class="flex justify-between items-start gap-6 mb-8 min-w-0">
+      <div *ngIf="!Cname" class="flex items-center shrink-0">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
           Drivers ({{ this.totalItems < 10 ? '0' + this.totalItems : this.totalItems }}) </h2>
       </div>
 
-      <div *ngIf="Cname" class="flex items-center">
+      <div *ngIf="Cname" class="flex items-center shrink-0">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
           All ({{ this.totalItems }})
         </h2>
       </div>
 
-      <div class="flex items-center mr-5">
+      <div class="flex flex-nowrap items-center justify-end mr-5">
         <i class="mr-6 w-6 h-6 fill-current text-textLight dark:text-textDark">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
             <path
@@ -137,9 +137,19 @@
         <div class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] custom-top-dropdown"
+            [options]="driverRoleOptions" [checkmark]="false" optionLabel="label" optionValue="value"
+            [showClear]="selectDriverRole != null && selectDriverRole !== ''" placeholder="Driver Role"
+            [(ngModel)]="selectDriverRole" (onChange)="applyStatusFilters()"
+            panelStyleClass="custom-top-dropdown"></p-dropdown>
+        </div>
+
+        <div class="mr-5">
+          <p-dropdown
+            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] custom-top-dropdown"
             [options]="categoryOptions" [checkmark]="false" optionLabel="label" optionValue="value"
-            [showClear]="selectCategory != null && selectCategory !== ''" placeholder="Category" [(ngModel)]="selectCategory"
-            (onChange)="applyStatusFilters()" panelStyleClass="custom-top-dropdown"></p-dropdown>
+            [showClear]="selectCategory != null && selectCategory !== ''" placeholder="Category"
+            [(ngModel)]="selectCategory" (onChange)="applyStatusFilters()"
+            panelStyleClass="custom-top-dropdown"></p-dropdown>
         </div>
 
         <div class="mr-5">
@@ -215,6 +225,9 @@
               Last Name
             </th>
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+              Driver Role
+            </th>
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
               Driver Category
             </th>
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
@@ -276,6 +289,9 @@
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.lastNameEnglish }}
+            </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap">
+              {{ item.jobRole || '--' }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.slvCatName || '--' }}

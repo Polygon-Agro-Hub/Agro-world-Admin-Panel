@@ -5,6 +5,7 @@ import { GoviLinkService } from '../../../services/govi-link/govi-link.service';
 import Swal from 'sweetalert2';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import DriverJobRoles from '../../../../assets/json/driverJobRoles.json';
 
 @Component({
   selector: 'app-driver-complain',
@@ -36,11 +37,15 @@ export class DriverComplainComponent {
   selectedLanguage: string = 'English';
   selectedOfficerName: string = '';
 
+  readonly LIGHT_WEIGHT_DRIVER = DriverJobRoles.LIGHT_WEIGHT_DRIVER;
+  readonly HEAVY_WEIGHT_DRIVER = DriverJobRoles.HEAVY_WEIGHT_DRIVER;
+
+
   constructor(
     private goviLinkService: GoviLinkService,
     private location: Location,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.complainId = this.route.snapshot.params['id'];

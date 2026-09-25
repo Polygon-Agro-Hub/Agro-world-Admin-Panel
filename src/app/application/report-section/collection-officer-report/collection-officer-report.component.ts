@@ -45,6 +45,7 @@ interface OngoingCultivationItem {
   templateUrl: './collection-officer-report.component.html',
   styleUrls: ['./collection-officer-report.component.css'],
 })
+
 export class CollectionOfficerReportComponent implements OnInit {
   ongoingCultivation: OngoingCultivationItem[] = [];
   centers: Center[] = [];
@@ -61,7 +62,7 @@ export class CollectionOfficerReportComponent implements OnInit {
     private router: Router,
     public tokenService: TokenService,
     public permissionService: PermissionService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.fetchCenters();

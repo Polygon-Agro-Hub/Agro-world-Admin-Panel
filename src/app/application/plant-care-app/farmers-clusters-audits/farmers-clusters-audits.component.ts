@@ -42,6 +42,7 @@ export class FarmersClustersAuditsComponent implements OnInit {
   isOfficerPopUp = false;
   isAssignPopup = false;
   isCompletedJobPopup = false;
+  assignBlockedMessage = '';
   assignedOfficerArray: string[] = [];
 
   // Assign popup state
@@ -139,24 +140,35 @@ export class FarmersClustersAuditsComponent implements OnInit {
 
   // Handle assign status click
   onAssignStatusClick(audit: FarmerClusterAudit): void {
-    // Special condition: If audit is completed and assigned, show warning popup
-    if (audit.status === 'Completed' && audit.officerFirstName) {
-      this.selectedAudit = audit;
-      this.isCompletedJobPopup = true;
-      return;
-    }
-
-    // For Pending status, always show assign popup regardless of assignment status
-    if (audit.status === 'Pending') {
-      this.openAssignPopup(audit);
-    } else if (audit.officerFirstName) {
-      // For other statuses with assigned officer, show officer details popup
-      this.officerPopUpOpen(audit);
-    } else {
-      // For other statuses without assigned officer, open assign popup
-      this.openAssignPopup(audit);
-    }
+  // Completed + assigned -> block
+  if (audit.status === 'Completed' && audit.officerFirstName) {
+    this.selectedAudit = audit;
+    this.assignBlockedMessage =
+      "You can't assign an officer to the task because the task has already been completed.";
+    this.isCompletedJobPopup = true;
+    return;
   }
+
+  // Ongoing -> block (task already started)
+  if (audit.status === 'Ongoing') {
+    this.selectedAudit = audit;
+    this.assignBlockedMessage =
+      "You can't assign an officer because the task has already started.";
+    this.isCompletedJobPopup = true;
+    return;
+  }
+
+  // For Pending status, always show assign popup regardless of assignment status
+  if (audit.status === 'Pending') {
+    this.openAssignPopup(audit);
+  } else if (audit.officerFirstName) {
+    // For other statuses with assigned officer, show officer details popup
+    this.officerPopUpOpen(audit);
+  } else {
+    // For other statuses without assigned officer, open assign popup
+    this.openAssignPopup(audit);
+  }
+}
 
   // Open assign popup
   openAssignPopup(audit: FarmerClusterAudit): void {
@@ -213,6 +225,7 @@ export class FarmersClustersAuditsComponent implements OnInit {
   completedJobPopupClose(): void {
     this.isCompletedJobPopup = false;
     this.selectedAudit = null;
+    this.assignBlockedMessage = '';
   }
 
   // When officer role changes

@@ -79,16 +79,22 @@ export class AddBlockWordsComponent implements OnInit {
   }
 
   get filteredWords(): BlockWord[] {
-    let words = [...this.blockWords];
+  let words = [...this.blockWords];
 
-    // Sort
-    words.sort((a, b) => {
-      const comparison = a.word.localeCompare(b.word);
-      return this.sortOrder === 'asc' ? comparison : -comparison;
-    });
-
-    return words;
+  // Partial (substring) match, case-insensitive — also matches full text naturally
+  if (this.searchTerm.trim()) {
+    const term = this.searchTerm.trim().toLowerCase();
+    words = words.filter(w => w.word.toLowerCase().includes(term));
   }
+
+  // Sort
+  words.sort((a, b) => {
+    const comparison = a.word.localeCompare(b.word);
+    return this.sortOrder === 'asc' ? comparison : -comparison;
+  });
+
+  return words;
+}
 
   get totalPages(): number {
     return Math.max(1, Math.ceil(this.totalItems / this.itemsPerPage));
@@ -230,7 +236,7 @@ export class AddBlockWordsComponent implements OnInit {
 
   onSearchChange(): void {
     this.currentPage = 1;
-    this.loadBlockWords();
+    // this.loadBlockWords();
   }
 
   toggleSortMenu(): void {

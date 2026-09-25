@@ -13,8 +13,12 @@ interface InvoiceData {
   invoiceDate: string;
   scheduledDate: string;
   paymentMethod: string;
+  status?: string;
   grandTotal: string;
   isPaid?: number | null;
+  isCoupon?: number | null;
+  couponType?: string | null;
+  hasFreeDeliveryCoupon?: boolean;
   creditPaid?: string | number | null;
   moneyPaid?: string | number | null;
   familyPackItems: any[];
@@ -82,6 +86,7 @@ export class PostinvoiceService {
   async generateAndDownloadInvoice(
     processOrderId: number,
     tableInvoiceNo: string,
+    orderStatus?: string,
   ): Promise<void> {
     try {
       const response =
@@ -111,6 +116,13 @@ export class PostinvoiceService {
         return;
       }
 
+      const hasFreeDeliveryCoupon =
+        Number(invoiceDetails.isCoupon) === 1 &&
+        String(invoiceDetails.couponType || '')
+          .trim()
+          .toLowerCase()
+          .includes('free delivery');
+
       // Calculate delivery fee based on delivery method
       let deliveryFee = '0.00';
       if (invoiceDetails.deliveryMethod === 'Pickup') {
@@ -138,8 +150,17 @@ export class PostinvoiceService {
         invoiceDate: invoiceDetails.invoiceDate || 'N/A',
         scheduledDate: invoiceDetails.scheduledDate || 'N/A',
         paymentMethod: invoiceDetails.paymentMethod || 'N/A',
+        status:
+          orderStatus ||
+          invoiceDetails.status ||
+          invoiceDetails.orderStatus ||
+          response.data?.status ||
+          '',
         grandTotal: invoiceDetails.grandTotal || '0.00',
         isPaid: invoiceDetails.isPaid,
+        isCoupon: invoiceDetails.isCoupon,
+        couponType: invoiceDetails.couponType,
+        hasFreeDeliveryCoupon,
         creditPaid: invoiceDetails.creditPaid,
         moneyPaid: invoiceDetails.moneyPaid,
         buildingType: invoiceDetails.buildingType || 'House',
@@ -927,7 +948,14 @@ export class PostinvoiceService {
     const remainingAfterCredit = finalGrandTotal - creditPaidNum;
 
     const isPickup = invoice.deliveryMethod?.toLowerCase() === 'pickup';
-    const cashLabel = isPickup ? 'Cash On Pickup' : 'Cash On Delivery';
+    const isFreeDeliveryCouponApplied = !!invoice.hasFreeDeliveryCoupon;
+    const invoiceStatus = String(invoice.status || '').trim().toLowerCase();
+    const isDelivered = invoiceStatus === 'delivered';
+    const cashLabel = isPickup
+      ? 'Cash On Pickup'
+      : isDelivered
+        ? 'Cash On Delivery'
+        : 'Cash On Delivery (Pending)';
     let showDeliveryNote = false;
 
     const pushPaymentRow = (
@@ -966,14 +994,16 @@ export class PostinvoiceService {
         );
       } else {
         pushPaymentRow(
-          'Cash On Delivery',
+          cashLabel,
           remainingAfterCredit,
           ORANGE_COLOR,
         );
-      showDeliveryNote = true;
+        if (!isFreeDeliveryCouponApplied) {
+          showDeliveryNote = true;
+        }
+      }
     }
-  }
-    } else {
+  } else {
       if (isPaid) {
         if (isCardPayment) {
           pushPaymentRow(
@@ -992,11 +1022,13 @@ export class PostinvoiceService {
         );
       } else {
         pushPaymentRow(
-          'Cash On Delivery',
+          cashLabel,
           finalGrandTotal,
           ORANGE_COLOR,
         );
-        showDeliveryNote = true;
+        if (!isFreeDeliveryCouponApplied) {
+          showDeliveryNote = true;
+        }
       }
     }
 

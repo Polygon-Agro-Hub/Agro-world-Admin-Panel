@@ -48,13 +48,16 @@ export class ViewVehiclesComponent {
 
   vehicleTypeOptions = [
     { label: 'Dimo Batta', value: 'Dimo Batta' },
-    { label: 'Mahindra Bolero', value: 'Mahindra Bolero' },
+    { label: 'Mahindra Bollero', value: 'Mahindra Bollero' },
     { label: 'Three Wheeler', value: 'Three Wheeler' },
+    { label: 'Double Cab Pickup (4x4)', value: 'Double Cab Pickup (4x4)' },
+    { label: 'Isuzu Elf / Canter Lorry', value: 'Isuzu Elf / Canter Lorry' },
+    { label: 'Lorry (6-8 Ton)', value: 'Lorry (6-8 Ton)' },
   ];
 
   constructor(
     private distService: DestributionService,
-    private distHubService: DistributionHubService
+    private distHubService: DistributionHubService,
   ) {}
 
   ngOnInit(): void {
@@ -70,7 +73,7 @@ export class ViewVehiclesComponent {
             .filter((center: any) => center.centerName && center.regCode)
             .map((center: any) => ({
               label: `${center.regCode} - ${center.centerName}`,
-              value: center.centerName, 
+              value: center.centerName,
             }))
             .sort((a, b) => a.label.localeCompare(b.label));
         }
@@ -91,7 +94,7 @@ export class ViewVehiclesComponent {
         this.itemsPerPage,
         this.centerName,
         this.vehicleType,
-        this.searchText?.trim()
+        this.searchText?.trim(),
       )
       .subscribe({
         next: (res) => {

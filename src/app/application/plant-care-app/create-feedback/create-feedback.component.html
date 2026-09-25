@@ -10,6 +10,7 @@
       Add Feedback Option
     </h2>
 
+    <form #feedbackForm="ngForm" (ngSubmit)="onSubmit()">
     <div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
@@ -97,10 +98,11 @@
         class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md mr-3">
         Cancel
       </button>
-      <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="onSubmit()">
+      <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md">
         Save
       </button>
     </div>
+    </form>
   </div>
 </div>
 

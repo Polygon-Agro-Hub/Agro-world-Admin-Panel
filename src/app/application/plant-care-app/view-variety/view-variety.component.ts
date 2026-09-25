@@ -21,6 +21,8 @@ interface NewCropGroup {
   image: string;
   bgColor: string;
   createdAt: string;
+  modifyBy?: string;
+  modifyAt?: string;
 }
 
 @Component({

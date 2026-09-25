@@ -299,4 +299,5 @@ class Customers {
   ApartstreetName!: string;
   Apartcity!: string;
   rateofCus?: string;   // 'VVIP' | 'VIP' | 'COR' | 'NOR' | 'VVP'
+  nearesCity?: string;
 }

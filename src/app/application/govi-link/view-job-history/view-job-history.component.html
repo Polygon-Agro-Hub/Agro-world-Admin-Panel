@@ -103,7 +103,9 @@
                 Scheduled Date</th>
               <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">
                 Completed Date</th>
-              <th *ngIf="permissionService.hasPermission('GoVi Link view jobs history view response') || tokenService.getUserDetails().role === '1'" class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">Response
+              <th
+                *ngIf="permissionService.hasPermission('GoVi Link view jobs history view response') || tokenService.getUserDetails().role === '1'"
+                class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">Response
               </th>
               <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-left whitespace-nowrap">Farmer
                 NIC</th>
@@ -153,7 +155,9 @@
               <td class="px-6 py-3 text-[#000000] dark:text-textDark text-center whitespace-nowrap">
                 {{ item.completedDate || '--' }}
               </td>
-              <td *ngIf="permissionService.hasPermission('GoVi Link view jobs history view response') || tokenService.getUserDetails().role === '1'" class="px-3 py-3 text-center whitespace-nowrap">
+              <td
+                *ngIf="permissionService.hasPermission('GoVi Link view jobs history view response') || tokenService.getUserDetails().role === '1'"
+                class="px-3 py-3 text-center whitespace-nowrap">
                 <button class="w-6 h-6 inline-flex items-center justify-center" [ngClass]="{
                        'text-blue-500 hover:text-blue-700': item.status !== 'Pending' && item.status !== 'Ongoing',
                        'text-gray-400 cursor-not-allowed': item.status === 'Pending' || item.status === 'Ongoing'

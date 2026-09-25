@@ -7,7 +7,7 @@
 
 <div
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
-  <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1400px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+  <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1600px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex justify-between items-center mb-4">
       <h2 class="text-[20px] md:text-[24px] font-normal text-gray-900 dark:text-gray-100">
         Complaint List ({{ totalItems < 10 ? '0' + totalItems : totalItems }}) </h2>
@@ -19,10 +19,22 @@
               </svg>
 
             </i>
-            <p-dropdown
+            <p-dropdown panelStyleClass="w-64"
               styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF]"
               [options]="comCategories" [(ngModel)]="filterComCategory" optionLabel="label" optionValue="value"
-              [showClear]="true" placeholder="Category" (onChange)="applyFilters()"></p-dropdown>
+              [showClear]="true" placeholder="Category" (onChange)="applyFilters()">
+              <ng-template let-selected pTemplate="selectedItem">
+                <span class="block truncate max-w-[150px]" title="{{ selected?.label }}">
+                  {{ selected?.label }}
+                </span>
+              </ng-template>
+
+              <ng-template let-category pTemplate="item">
+                <div class="truncate max-w-[220px]" title="{{ category.label }}">
+                  {{ category.label }}
+                </div>
+              </ng-template>
+            </p-dropdown>
 
             <p-dropdown
               styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF]"
@@ -40,7 +52,7 @@
                 Search by RefNo, Category, Name, Phone Number
               </div>
               <input type="text" placeholder="Search by RefNo, Category, Name, Phone..." [(ngModel)]="searchText"
-                (keyup.enter)="searchComplain()" (ngModelChange)="onSearchTextChange($event)"
+                (keyup.enter)="searchComplain()"
                 class="bg-transparent outline-none w-full text-gray-900 dark:text-gray-100" />
               <button type="button" (click)="searchComplain()" aria-label="Search"
                 class="text-gray-500 hover:text-gray-700 focus:outline-none mr-1">
@@ -68,7 +80,7 @@
       <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 dark:text-textDark" />
     </div>
 
-    <div class="overflow-x-auto" *ngIf="filteredComplaints.length">
+    <div *ngIf="filteredComplaints.length">
       <table class="min-w-full divide-y divide-gray-200 mt-6 dark:divide-[#4B555A] table-auto">
         <thead class="bg-white dark:bg-gray-800">
           <tr>
@@ -215,14 +227,14 @@
 <div *ngIf="display" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
   <div class="bg-white dark:bg-tileBlack rounded-[20px] w-[600px] max-h-[90vh] flex flex-col p-4">
     <div class="dialog-header text-center flex-shrink-0">
-      <i class="fa-regular fa-envelope"
-        style="font-size: 1.5rem; color: #999"></i>
+      <i class="fa-regular fa-envelope" style="font-size: 1.5rem; color: #999"></i>
       <h3 class="text-[16px] md:text-[18px] font-semibold mt-3 text-[#000000] dark:text-white">
         Reply as Polygon
       </h3>
     </div>
 
-    <div class="dialog-content text-[16px] md:text-[18px] border rounded-[20px] border-gray-300 text-[#000000] dark:text-white mt-5 mx-4 mb-5 overflow-y-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full flex-1">
+    <div
+      class="dialog-content text-[16px] md:text-[18px] border rounded-[20px] border-gray-300 text-[#000000] dark:text-white mt-5 mx-4 mb-5 overflow-y-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full flex-1">
       <div class="p-5">
         <div class="reply-header">
           <span>Dear {{ selectedComplaint.firstName }} {{ selectedComplaint.lastName }},</span>

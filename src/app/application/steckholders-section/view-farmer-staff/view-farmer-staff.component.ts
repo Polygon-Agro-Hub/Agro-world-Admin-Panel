@@ -13,14 +13,9 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-view-farmer-staff',
   standalone: true,
-  imports: [
-    FormsModule,
-    CommonModule,
-    LoadingSpinnerComponent,
-    DropdownModule
-  ],
+  imports: [FormsModule, CommonModule, LoadingSpinnerComponent, DropdownModule],
   templateUrl: './view-farmer-staff.component.html',
-  styleUrl: './view-farmer-staff.component.css'
+  styleUrl: './view-farmer-staff.component.css',
 })
 export class ViewFarmerStaffComponent implements OnInit {
   staffArr!: Staff[];
@@ -44,8 +39,8 @@ export class ViewFarmerStaffComponent implements OnInit {
     private http: HttpClient,
     private router: Router,
     private route: ActivatedRoute,
-    public permissionService: PermissionService
-  ) { }
+    public permissionService: PermissionService,
+  ) {}
   ngOnInit(): void {
     this.farmerId = this.route.snapshot.params['id'];
     this.farmerName = this.route.snapshot.queryParams['fname'];
@@ -55,51 +50,55 @@ export class ViewFarmerStaffComponent implements OnInit {
 
   fetchData() {
     this.isLoading = true;
-    this.searchText = this.searchText.trim()
-    this.plantcareService.getAllFarmerStaff(this.farmerId, this.selectedRole, this.searchText).subscribe(
-      (res) => {
-        
-        // Map API response to Staff objects
-        this.staffArr = res.result.map((item: any) => {
-          const staff = new Staff();
-          staff.id = item.id;
-          staff.firstName = item.firstName;
-          staff.lastName = item.lastName;
-          staff.phoneCode = item.phoneCode;
-          staff.phoneNumber = item.phoneNumber;
-          staff.role = item.role;
-          staff.nic = item.nic;
-          staff.image = item.image;
-          staff.modifyBy = item.modifyBy;
-          staff.modifiedByUserName = item.modifiedByUserName;
-          return staff;
-        });
-        this.hasData = this.staffArr.length > 0;
-        this.isLoading = false;
-      },
-      (err) => {
-        console.error(err);
-        this.isLoading = false;
-      }
-    );
+    this.searchText = this.searchText.trim();
+    this.plantcareService
+      .getAllFarmerStaff(this.farmerId, this.selectedRole, this.searchText)
+      .subscribe(
+        (res) => {
+          // Map API response to Staff objects
+          this.staffArr = res.result.map((item: any) => {
+            const staff = new Staff();
+            staff.id = item.id;
+            staff.firstName = item.firstName;
+            staff.lastName = item.lastName;
+            staff.phoneCode = item.phoneCode;
+            staff.phoneNumber = item.phoneNumber;
+            staff.role = item.role;
+            staff.nic = item.nic;
+            staff.image = item.image;
+            staff.modifyBy = item.modifyBy;
+            staff.modifiedByUserName = item.modifiedByUserName;
+            return staff;
+          });
+          this.hasData = this.staffArr.length > 0;
+          this.isLoading = false;
+        },
+        (err) => {
+          console.error(err);
+          this.isLoading = false;
+        },
+      );
   }
 
   onKeydown(event: KeyboardEvent) {
-  // Check if the pressed key is space and cursor is at the beginning
-  if (event.key === ' ' || event.keyCode === 32) {
-    const input = event.target as HTMLInputElement;
-    
-    // Check if cursor is at the beginning or if input is empty
-    if (input.selectionStart === 0 && input.selectionEnd === 0) {
-      event.preventDefault();
-      return false;
+    // Check if the pressed key is space and cursor is at the beginning
+    if (event.key === ' ' || event.keyCode === 32) {
+      const input = event.target as HTMLInputElement;
+
+      // Check if cursor is at the beginning or if input is empty
+      if (input.selectionStart === 0 && input.selectionEnd === 0) {
+        event.preventDefault();
+        return false;
+      }
     }
+    return true;
   }
-  return true;
-}
 
   viewFarmerStaff(id: number) {
-    this.router.navigate(['/steckholders/action/farmers/view-farmer-owner', id]);
+    this.router.navigate([
+      '/steckholders/action/farmers/view-farmer-owner',
+      id,
+    ]);
   }
 
   editFarmerStaff(id: number) {
@@ -123,9 +122,11 @@ export class ViewFarmerStaffComponent implements OnInit {
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold text-lg',
-        confirmButton: 'bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg',
-        cancelButton: 'bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg'
-      }
+        confirmButton:
+          'bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg',
+        cancelButton:
+          'bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg',
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         this.executeDeleteFarmStaff(id);
@@ -144,7 +145,8 @@ export class ViewFarmerStaffComponent implements OnInit {
             text: 'Staff member has been deleted.',
             confirmButtonText: 'OK',
             customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold text-lg',
             },
           });
@@ -156,7 +158,8 @@ export class ViewFarmerStaffComponent implements OnInit {
             text: res.message,
             confirmButtonText: 'OK',
             customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold text-lg',
             },
           });
@@ -175,7 +178,7 @@ export class ViewFarmerStaffComponent implements OnInit {
             title: 'font-semibold text-lg',
           },
         });
-      }
+      },
     );
   }
 
@@ -183,7 +186,6 @@ export class ViewFarmerStaffComponent implements OnInit {
     this.searchText = '';
     this.fetchData();
   }
-
 }
 
 class Staff {
@@ -198,4 +200,3 @@ class Staff {
   modifyBy!: number | null;
   modifiedByUserName!: string | null;
 }
-

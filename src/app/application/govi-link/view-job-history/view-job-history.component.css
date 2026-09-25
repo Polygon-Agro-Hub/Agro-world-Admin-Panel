@@ -78,6 +78,16 @@
   height: 1.75rem !important;
 }
 
+::ng-deep .p-datepicker-title {
+  display: flex !important;
+  gap: 0.35rem !important;
+}
+
+::ng-deep .p-datepicker-title .p-datepicker-month,
+::ng-deep .p-datepicker-title .p-datepicker-year {
+  margin: 0 !important;
+}
+
 /* Hides clear icon when dropdown has no selected value */
 ::ng-deep .p-dropdown .p-dropdown-clear {
   display: none;
@@ -171,4 +181,28 @@
 
 ::ng-deep .dark .p-dropdown-header {
   background-color: #4b5563;
+}
+
+/* Reserve space for the filter icon so text doesn't go behind it */
+::ng-deep .p-dropdown-filter-container {
+  position: relative !important;
+}
+
+::ng-deep .p-dropdown-filter {
+  padding-right: 2.25rem !important;
+  box-sizing: border-box !important;
+}
+
+/* Pin the search/clear icon to a fixed spot inside the container */
+::ng-deep .p-dropdown-filter-icon {
+  position: absolute !important;
+  right: 0.75rem !important;
+  top: 80% !important;
+  transform: translateY(-50%) !important;
+  pointer-events: none;
+}
+
+/* Dark mode: keep it consistent */
+::ng-deep .dark .p-dropdown-filter-icon {
+  color: #9ca3af !important;
 }

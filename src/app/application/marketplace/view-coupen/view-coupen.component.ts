@@ -117,6 +117,22 @@ export class ViewCoupenComponent implements OnInit {
     this.fetchAllCoupon(this.page, this.itemsPerPage);
   }
 
+  getDiscountValue(item: Coupen): number | string {
+    if (item.type === 'Fixed Amount') {
+      if (item.fixDiscount === null || item.fixDiscount === undefined || item.fixDiscount === '') {
+        return '--';
+      }
+
+      return Number(item.fixDiscount);
+    }
+
+    if (item.type === 'Percentage') {
+      return item.percentage ?? '--';
+    }
+
+    return '--';
+  }
+
   deleteCoupon(id: number) {
     Swal.fire({
       title: 'Are you sure?',
@@ -237,6 +253,7 @@ class Coupen {
   code!: string;
   type!: string;
   percentage!: number;
+  fixDiscount!: number | string | null;
   status!: string;
   checkLimit!: string;
   startDate!: string;

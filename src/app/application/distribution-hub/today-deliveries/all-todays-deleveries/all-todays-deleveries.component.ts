@@ -54,7 +54,7 @@ export class AllTodaysDeleveriesComponent implements OnChanges {
     //   this.filterDeliveries();
     // }
     this.filterDeliveries();
-    console.log(this.deliveries);
+    
 
   }
 

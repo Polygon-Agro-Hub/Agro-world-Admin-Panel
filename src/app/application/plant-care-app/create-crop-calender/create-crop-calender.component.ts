@@ -461,19 +461,21 @@ export class CreateCropCalenderComponent implements OnInit {
     const missingFields = this.getMissingFields();
     if (missingFields.length > 0) {
       let errorMessage =
-        'Please fill in the following required fields:<br><br>';
-      errorMessage += missingFields.map((field) => ` ${field}`).join('<br>');
+        '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+      missingFields.forEach((field) => {
+        errorMessage += `<li>${field}</li>`;
+      });
+      errorMessage += '</ul></div>';
 
       Swal.fire({
-        icon: 'warning',
-        title: 'Missing Information',
+        icon: 'error',
+        title: 'Missing or Invalid Information',
         html: errorMessage,
         confirmButtonText: 'OK',
-        focusConfirm: false,
-        allowOutsideClick: false,
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold',
+          title: 'font-semibold text-lg',
+          htmlContainer: 'text-left',
         },
       }).then(() => {
         const firstInvalidField = this.getFirstInvalidField();
@@ -488,13 +490,13 @@ export class CreateCropCalenderComponent implements OnInit {
     const missingFields: string[] = [];
     const controls = this.cropForm.controls;
     const fieldLabels: { [key: string]: string } = {
-      groupId: 'Crop Name',
-      varietyId: 'Variety Name',
-      cultivationMethod: 'Cultivation Method',
-      natureOfCultivation: 'Nature of Cultivation',
-      cropDuration: 'Crop Duration',
-      suitableAreas: 'Suitable Areas',
-      specialNotes: 'Special Notes',
+      groupId: 'Crop Name is Required',
+      varietyId: 'Variety Name is Required',
+      cultivationMethod: 'Cultivation Method is Required',
+      natureOfCultivation: 'Nature of Cultivation is Required',
+      cropDuration: 'Crop Duration is Required',
+      suitableAreas: 'Suitable Areas are Required',
+      specialNotes: 'Special Notes is Required',
     };
 
     for (const controlName in controls) {

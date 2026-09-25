@@ -2,7 +2,6 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-
 import { NgxPaginationModule } from 'ngx-pagination';
 import { Dropdown, DropdownModule } from 'primeng/dropdown';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
@@ -46,7 +45,6 @@ export class CollectionCenterViewComplainComponent implements OnInit {
   selectedLanguage: string = 'English';
   selectedOfficerName: string = '';
 
-
   rpst: string = '';
   replyStatus = [
     { status: 'Yes', value: 'Yes' },
@@ -64,12 +62,7 @@ export class CollectionCenterViewComplainComponent implements OnInit {
     public permissionService: PermissionService
   ) { }
 
-
-
-
   ngOnInit(): void {
-
-
     this.status = [
       { id: 1, type: "Assigned" },
       { id: 2, type: "Pending" },
@@ -177,8 +170,6 @@ export class CollectionCenterViewComplainComponent implements OnInit {
     this.isPopUpVisible = true;
   }
 
-
-
   submitComplaint(id: any) {
     const token = this.tokenService.getToken();
     if (!token) {
@@ -220,11 +211,6 @@ export class CollectionCenterViewComplainComponent implements OnInit {
         },
       );
   }
-
-
-
-
-
 
   getAllComplainCategories() {
 
@@ -296,7 +282,13 @@ export class CollectionCenterViewComplainComponent implements OnInit {
       })
       .subscribe(
         (response) => {
-          this.company = response;
+          this.company = [...response].sort((firstCompany, secondCompany) =>
+            firstCompany.companyNameEnglish.localeCompare(
+              secondCompany.companyNameEnglish,
+              undefined,
+              { sensitivity: 'base' }
+            )
+          );
         },
         (error) => {
           console.error('Error fetching news:', error);

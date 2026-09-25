@@ -12,6 +12,7 @@ import Swal from 'sweetalert2';
 import { Location } from '@angular/common';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
 import { TokenService } from '../../../services/token/services/token.service';
+import DriverJobRoles from '../../../../assets/json/driverJobRoles.json';
 
 @Component({
   selector: 'app-view-collective-officer-profile',
@@ -25,6 +26,7 @@ import { TokenService } from '../../../services/token/services/token.service';
   templateUrl: './view-collective-officer-profile.component.html',
   styleUrl: './view-collective-officer-profile.component.css',
 })
+
 export class ViewCollectiveOfficerProfileComponent {
   officerObj: CollectionOfficer = new CollectionOfficer();
   officerId!: number;
@@ -33,6 +35,9 @@ export class ViewCollectiveOfficerProfileComponent {
   empHeader: string = '';
   isGeneratingPDF = false;
   urlSegment: string = '';
+
+  readonly LIGHT_WEIGHT_DRIVER = DriverJobRoles.LIGHT_WEIGHT_DRIVER;
+  readonly HEAVY_WEIGHT_DRIVER = DriverJobRoles.HEAVY_WEIGHT_DRIVER;
 
   constructor(
     private route: ActivatedRoute,
@@ -82,7 +87,8 @@ export class ViewCollectiveOfficerProfileComponent {
       case 'Distribution Officer':
         this.empHeader = 'DIO';
         break;
-      case 'Driver':
+      case this.LIGHT_WEIGHT_DRIVER:
+      case this.HEAVY_WEIGHT_DRIVER:
         this.empHeader = 'DVR';
         break;
       default:
@@ -95,12 +101,12 @@ export class ViewCollectiveOfficerProfileComponent {
     this.collectionService
       .fetchAllCollectionOfficerProfile(id)
       .subscribe((res: any) => {
-        
+
 
         this.isLoading = false;
         this.officerObj = res.officerData.collectionOfficer;
 
-        
+
 
         this.officerObj.claimStatus = this.officerObj.claimStatus;
         this.getRoleHeading();
@@ -276,7 +282,7 @@ export class ViewCollectiveOfficerProfileComponent {
     const imageboxY = 8; // Start from top margin
     const imageboxWidth = 190;
     const imageboxHeight = hasImage ? 44 : 30; // Adjust height based on image presence
-    
+
     // Draw rounded border for top section
     doc.setDrawColor(241, 247, 250);
     doc.setLineWidth(0.5);
@@ -285,13 +291,13 @@ export class ViewCollectiveOfficerProfileComponent {
     // Title - Personal Information
     doc.setFontSize(16);
     doc.setFont("Inter", "bold");
-    
+
     // Fix for Personal Information section border
     const personalboxX = 10;
     const personalboxY = startY - 6;
     const personalboxWidth = 190;
     const personalboxHeight = 57; // Fixed height for personal info section
-    
+
     // Draw rounded border for personal info section
     doc.setDrawColor(241, 247, 250);
     doc.setLineWidth(0.5);
@@ -306,6 +312,7 @@ export class ViewCollectiveOfficerProfileComponent {
 
     let empType = '';
     let empCode = '';
+    let isDriver = false;
 
     switch (this.officerObj.jobRole) {
       case 'Customer Officer':
@@ -324,9 +331,10 @@ export class ViewCollectiveOfficerProfileComponent {
         empType = 'Collection Officer';
         empCode = 'COO';
         break;
-      case 'Driver':
-        empType = 'Driver';
-        empCode = 'DVR'; 
+      case this.LIGHT_WEIGHT_DRIVER:
+      case this.HEAVY_WEIGHT_DRIVER:
+        empCode = 'DVR';
+        isDriver = true;
         break;
       case 'Distribution Centre Head':
         empType = 'Distribution Centre Head';
@@ -348,15 +356,25 @@ export class ViewCollectiveOfficerProfileComponent {
 
     // Set font and print empTypeText
     doc.setFont("Inter", "normal");
-    let empTypeText = `${getValueOrNA(empType)} - `;
-    doc.text(empTypeText, startX, 22);
 
-    // Measure the width of empTypeText for proper alignment
-    let textWidth = doc.getTextWidth(empTypeText);
+    if (isDriver) {
+      doc.setFont("Inter", "bold");
+      doc.text(getValueOrNA(empCodeText), startX, 22);
+      let textWidth = doc.getTextWidth(getValueOrNA(empCodeText));
 
-    // Apply bold font for empCode + empId and print it right after empTypeText
-    doc.setFont("Inter", "bold");
-    doc.text(getValueOrNA(empCodeText), startX + textWidth, 22);
+      doc.setFont("Inter", "normal");
+      const driverExtra = ` | ${getValueOrNA(this.officerObj.jobRole)} | ${getValueOrNA(this.officerObj.slvCatName)}`;
+      doc.text(driverExtra, startX + textWidth, 22);
+    } else {
+      // Non-driver format: EmpType - EMPCODEEMPID
+      let empTypeText = `${getValueOrNA(empType)} - `;
+      doc.text(empTypeText, startX, 22);
+
+      let textWidth = doc.getTextWidth(empTypeText);
+
+      doc.setFont("Inter", "bold");
+      doc.text(getValueOrNA(empCodeText), startX + textWidth, 22);
+    }
 
     // Generate center text
     let centerText = 'Officer has been disclaimed - No Assigned Centre';
@@ -372,7 +390,8 @@ export class ViewCollectiveOfficerProfileComponent {
       'Distribution Centre Manager',
       'Distribution Centre Head',
       'Distribution Officer',
-      'Driver'
+      this.LIGHT_WEIGHT_DRIVER,
+      this.HEAVY_WEIGHT_DRIVER,
     ];
 
     if (ccRoles.includes(this.officerObj.jobRole)) {
@@ -392,7 +411,7 @@ export class ViewCollectiveOfficerProfileComponent {
     doc.text(getValueOrNA(this.officerObj.companyNameEnglish), startX, 36);
 
     doc.text(getValueOrNA(this.officerObj.companyNameEnglish), startX, 36);
-  
+
     doc.setFontSize(12);
     doc.setFont("Inter", "normal");
 
@@ -549,18 +568,18 @@ export class ViewCollectiveOfficerProfileComponent {
     doc.text(getValueOrNA(this.officerObj.branchName), 100, startY + 152);
 
     // Only include driver-related sections if the job role is "Driver"
-    if (this.officerObj.jobRole === 'Driver') {
-      
+    if (this.officerObj.jobRole === this.LIGHT_WEIGHT_DRIVER || this.officerObj.jobRole === this.HEAVY_WEIGHT_DRIVER) {
+
       // Add new page for Driver Details
       doc.addPage();
-      
+
       // Set background for new page
       doc.setFillColor(colors.background);
       doc.rect(0, 0, pageWidth, pageHeight, 'F');
-      
+
       // Reset Y position for new page
       const driverStartY = 10;
-      
+
       // Driving Details Section
       const DdetailsX = 10;
       const DdetailsY = driverStartY;
@@ -850,7 +869,7 @@ export class ViewCollectiveOfficerProfileComponent {
   }
 
   editOfficer(id: number, jobRole: string) {
-    if (jobRole === 'Driver') {
+    if (jobRole === this.LIGHT_WEIGHT_DRIVER || jobRole === this.HEAVY_WEIGHT_DRIVER) {
       this.router.navigate([`/steckholders/action/drivers/edit-driver/${id}`]);
     }
   }
@@ -901,6 +920,6 @@ class CollectionOfficer {
   fullEmpId!: string;
   centerRegCode!: string;
   insExpDate!: string;
-  manageName!:string;
-  slvCatName!:string; 
+  manageName!: string;
+  slvCatName!: string;
 }

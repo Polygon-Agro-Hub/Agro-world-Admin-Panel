@@ -9,6 +9,7 @@ import * as XLSX from 'xlsx';
 import Swal from 'sweetalert2';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
 import { TokenService } from '../../../services/token/services/token.service';
+import { DropdownModule } from 'primeng/dropdown';
 
 interface DeliveryCharge {
   id: number;
@@ -27,6 +28,11 @@ interface ApiResponse {
   items?: DeliveryCharge[];
 }
 
+interface DropdownOption {
+  label: string;
+  value: string;
+}
+
 @Component({
   selector: 'app-view-delivery-charges',
   standalone: true,
@@ -35,6 +41,7 @@ interface ApiResponse {
     CommonModule,
     FormsModule,
     LoadingSpinnerComponent,
+    DropdownModule,
   ],
   templateUrl: './view-delivery-charges.component.html',
   styleUrl: './view-delivery-charges.component.css',
@@ -52,7 +59,28 @@ export class ViewDeliveryChargesComponent implements OnInit {
     city: '',
     charge: null,
     id: null,
+    province: '',
+    district: '',
   };
+
+  // Sri Lanka provinces and their districts
+  provinceDistrictMap: { [key: string]: string[] } = {
+    Western: ['Colombo', 'Gampaha', 'Kalutara'],
+    Central: ['Kandy', 'Matale', 'Nuwara Eliya'],
+    Southern: ['Galle', 'Matara', 'Hambantota'],
+    Northern: ['Jaffna', 'Kilinochchi', 'Mannar', 'Vavuniya', 'Mullaitivu'],
+    Eastern: ['Trincomalee', 'Batticaloa', 'Ampara'],
+    'North Western': ['Kurunegala', 'Puttalam'],
+    'North Central': ['Anuradhapura', 'Polonnaruwa'],
+    Uva: ['Badulla', 'Monaragala'],
+    Sabaragamuwa: ['Ratnapura', 'Kegalle'],
+  };
+
+  provinceOptions: DropdownOption[] = Object.keys(this.provinceDistrictMap).map(
+    (p) => ({ label: p, value: p })
+  );
+
+  availableDistrictOptions: DropdownOption[] = [];
 
   constructor(
     private router: Router,
@@ -64,7 +92,6 @@ export class ViewDeliveryChargesComponent implements OnInit {
   ngOnInit(): void {
     this.loadDeliveryCharges();
   }
-
 
   loadDeliveryCharges(): void {
     this.isLoading = true;
@@ -116,7 +143,7 @@ export class ViewDeliveryChargesComponent implements OnInit {
 
           Swal.fire({
             title: 'Success!',
-            text: 'Template with database data downloaded successfully',
+            text: 'Delivery Charge Template downloaded successfully',
             icon: 'success',
             confirmButtonText: 'OK',
             timer: 3000,
@@ -163,7 +190,18 @@ export class ViewDeliveryChargesComponent implements OnInit {
       city: data.city,
       charge: data.charge,
       id: data.id,
+      province: data.province || '',
+      district: data.district || '',
     };
+
+    // Populate district options for the province already set on this record
+    this.availableDistrictOptions = this.editData.province
+      ? (this.provinceDistrictMap[this.editData.province] || []).map((d) => ({
+        label: d,
+        value: d,
+      }))
+      : [];
+
     this.showEditModal = true;
   }
 
@@ -173,35 +211,49 @@ export class ViewDeliveryChargesComponent implements OnInit {
       city: '',
       charge: null,
       id: null,
+      province: '',
+      district: '',
     };
+    this.availableDistrictOptions = [];
   }
+
+  onProvinceChange(): void {
+    this.availableDistrictOptions = this.editData.province
+      ? (this.provinceDistrictMap[this.editData.province] || []).map((d) => ({
+        label: d,
+        value: d,
+      }))
+      : [];
+
+    // Reset district if it no longer belongs to the newly selected province
+    const validValues = this.availableDistrictOptions.map((d) => d.value);
+    if (!validValues.includes(this.editData.district)) {
+      this.editData.district = '';
+    }
+  }
+
   onChargeInput(event: Event) {
     const input = event.target as HTMLInputElement;
     let value = input.value;
     const selectionStart = input.selectionStart ?? 0;
     const selectionEnd = input.selectionEnd ?? 0;
 
-
     value = value.replace(/[^0-9.]/g, '');
-
 
     const parts = value.split('.');
     if (parts.length > 2) {
       value = parts[0] + '.' + parts[1];
     }
 
-
     if (parts[1]?.length > 2) {
       parts[1] = parts[1].substring(0, 2);
       value = parts[0] + '.' + parts[1];
     }
 
-
     if (input.value !== value) {
       input.value = value;
 
       let newPos = selectionStart;
-
 
       if (value.endsWith('.') && selectionStart === value.length - 1) {
         newPos = value.length;
@@ -213,13 +265,10 @@ export class ViewDeliveryChargesComponent implements OnInit {
     }
 
     this.editData.charge = value ? parseFloat(parseFloat(value).toFixed(2)) : null;
-
   }
 
-
-
   updateDeliveryCharge(): void {
-    if (!this.editData.id || this.editData.charge === null) {
+    if (!this.editData.id || this.editData.charge === null || !this.editData.province || !this.editData.district) {
       Swal.fire({
         title: 'Error!',
         text: 'Invalid data for update',
@@ -239,13 +288,14 @@ export class ViewDeliveryChargesComponent implements OnInit {
     const updateData = {
       city: this.editData.city,
       charge: this.editData.charge,
+      province: this.editData.province,
+      district: this.editData.district,
     };
 
     this.deliveryChargeService
       .updateDeliveryCharge(updateData, this.editData.id)
       .subscribe({
         next: (response) => {
-          this.isLoading = false;
           Swal.fire({
             title: 'Success!',
             text: 'Delivery charge updated successfully',
@@ -259,14 +309,7 @@ export class ViewDeliveryChargesComponent implements OnInit {
             },
           });
 
-          const index = this.deliveryCharges.findIndex(
-            (item) => item.id === this.editData.id
-          );
-          if (index !== -1) {
-            this.deliveryCharges[index].charge = this.editData.charge;
-
-            this.deliveryCharges[index].city = this.editData.city;
-          }
+          this.loadDeliveryCharges();
 
           this.closeEditModal();
         },
@@ -292,7 +335,6 @@ export class ViewDeliveryChargesComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     const currentValue = input.value;
 
-
     if (currentValue.length === 0 && event.key === ' ') {
       event.preventDefault();
     }
@@ -304,7 +346,6 @@ export class ViewDeliveryChargesComponent implements OnInit {
 
     if (value.startsWith(' ')) {
       this.searchCity = value.trimStart();
-
       input.value = this.searchCity;
     }
   }
@@ -312,7 +353,6 @@ export class ViewDeliveryChargesComponent implements OnInit {
   onSearchInput(event: Event): void {
     const input = event.target as HTMLInputElement;
     let value = input.value;
-
 
     value = value.trimStart();
 

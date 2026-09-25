@@ -32,7 +32,7 @@
           (keydown)="preventLeadingSpace($event)"
           pattern="^(?!\d+$)[a-zA-Z\s]*$"
           required
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
         />
 
         <!-- Validation Errors -->
@@ -63,7 +63,7 @@
           [(ngModel)]="cropGroup.cropNameSinahala"
           name="cropNameSinhala"
           (keydown)="preventLeadingSpace($event)"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
           #cropSinNameInput="ngModel"
           pattern="^(?!\d+$)[\u0D80-\u0DFF\s]*$"
           required
@@ -97,7 +97,7 @@
           [(ngModel)]="cropGroup.cropNameTamil"
           name="cropNameTamil"
           (keydown)="preventLeadingSpace($event)"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
           #cropTamilNameInput="ngModel"
           pattern="^(?!\d+$)[\u0B80-\u0BFF\s]*$"
           required
@@ -135,7 +135,7 @@
     'border-red-500':
       !cropGroup.parentCategory && parentCategoryInput?.touched,
   }"
-  class="block w-full mt-2 text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack rounded-md py-2 shadow-sm p-dropdown-custom parent-category-dropdown"
+  class="block w-full mt-2 text-gray-700 dark:text-textDark bg-tileLight dark:bg-tileBlack rounded-md py-2 shadow-sm p-dropdown-custom parent-category-dropdown"
   #parentCategoryInput="ngModel"
   panelStyleClass="custom-dropdown-panel"
   styleClass="w-full"
@@ -154,7 +154,7 @@
         </div>
       </div>
 
-      <div>
+            <div>
         <label
           for="costPerAcre"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
@@ -162,14 +162,17 @@
           Cost per acre field (Rs.) *
         </label>
         <input
+          #costInput
           type="text"
+          inputmode="decimal"
           id="costPerAcre"
-          [(ngModel)]="cropGroup.costFeild"
           name="costFeild"
+          [ngModel]="costFeildDisplay"
+          (ngModelChange)="onCostFieldChange($event, costInput)"
           (keydown)="allowOnlyNumbers($event)"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
           #costperacreInput="ngModel"
-          pattern="^(?!0*\.?0*$)\d+(\.\d{1,2})?$"
+          pattern="^(?![0,]*\.?0*$)\d{1,3}(,\d{3})*(\.\d{1,2})?$"
           required
         />
 
@@ -190,7 +193,7 @@
         </div>
       </div>
 
-      <div>
+            <div>
         <label
           for="incomePerAcre"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
@@ -198,14 +201,17 @@
           Income per acre field (Rs.) *
         </label>
         <input
+          #incomeInput
           type="text"
+          inputmode="decimal"
           id="incomePerAcre"
-          [(ngModel)]="cropGroup.incomeFeild"
           name="incomeFeild"
+          [ngModel]="incomeFeildDisplay"
+          (ngModelChange)="onIncomeFieldChange($event, incomeInput)"
           (keydown)="allowOnlyNumbers($event)"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
           #incomeperacreInput="ngModel"
-          pattern="^(?!0*\.?0*$)\d+(\.\d{1,2})?$"
+          pattern="^(?![0,]*\.?0*$)\d{1,3}(,\d{3})*(\.\d{1,2})?$"
           required
         />
 
@@ -238,7 +244,7 @@
           [(ngModel)]="cropGroup.seedRate"
           name="seedRate"
           (keydown)="allowDecimal3Places($event)"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
           #seedRateInput="ngModel"
           pattern="^\d+(\.\d{1,3})?$"
           required
@@ -281,7 +287,7 @@
           [(ngModel)]="cropGroup.rowSpace"
           name="rowSpace"
           (keydown)="allowDecimal1Place($event)"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
           #rowSpaceInput="ngModel"
           pattern="^\d+(\.\d{1})?$"
           required
@@ -324,7 +330,7 @@
           [(ngModel)]="cropGroup.plantSpace"
           name="plantSpace"
           (keydown)="allowDecimal1Place($event)"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
           #plantSpaceInput="ngModel"
           pattern="^\d+(\.\d{1})?$"
           required
@@ -367,7 +373,7 @@
           [(ngModel)]="cropGroup.AvgYield"
           name="AvgYield"
           (keydown)="allowDecimal3Places($event)"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
           #avgYieldInput="ngModel"
           pattern="^\d+(\.\d{1,3})?$"
           required
@@ -406,43 +412,55 @@
           Recommended NPK Ratio (kg/ha) *
         </label>
         <div class="flex items-center gap-4 mt-1 flex-wrap">
-          <span class="text-sm text-textLight dark:text-textDark"
+          <span class="text-sm text-gray-700 dark:text-textDark"
             >Nitrogen</span
           >
           <input
             type="text"
             [(ngModel)]="cropGroup.nitrogen"
             name="nitrogen"
-            (keydown)="allowDecimal2Places($event)"
-            class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+            (keydown)="allowNPKValue($event)"
+            (paste)="blockDecimalPaste($event)"
+            (input)="sanitizeNPKInput($event, cropGroup, 'nitrogen')"
+            class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
             #nitrogenInput="ngModel"
-            pattern="^\d+(\.\d{1,2})?$"
+            pattern="^(?:[0-9]|[1-9][0-9])$"
+            maxlength="2"
+            autocomplete="off"
             required
           />
-          <span class="text-sm text-textLight dark:text-textDark"
+          <span class="text-sm text-gray-700 dark:text-textDark"
             >Phosphorus</span
           >
           <input
             type="text"
             [(ngModel)]="cropGroup.phosphorus"
             name="phosphorus"
-            (keydown)="allowDecimal2Places($event)"
-            class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+            (keydown)="allowNPKValue($event)"
+            (paste)="blockDecimalPaste($event)"
+            (input)="sanitizeNPKInput($event, cropGroup, 'phosphorus')"
+            class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
             #phosphorusInput="ngModel"
-            pattern="^\d+(\.\d{1,2})?$"
+            pattern="^(?:[0-9]|[1-9][0-9])$"
+            maxlength="2"
+            autocomplete="off"
             required
           />
-          <span class="text-sm text-textLight dark:text-textDark"
+          <span class="text-sm text-gray-700 dark:text-textDark"
             >Potassium</span
           >
           <input
             type="text"
             [(ngModel)]="cropGroup.potassium"
             name="potassium"
-            (keydown)="allowDecimal2Places($event)"
-            class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+            (keydown)="allowNPKValue($event)"
+            (paste)="blockDecimalPaste($event)"
+            (input)="sanitizeNPKInput($event, cropGroup, 'potassium')"
+            class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
             #potassiumInput="ngModel"
-            pattern="^\d+(\.\d{1,2})?$"
+            pattern="^(?:[0-9]|[1-9][0-9])$"
+            maxlength="2"
+            autocomplete="off"
             required
           />
         </div>
@@ -464,7 +482,7 @@
           "
           class="text-red-500 text-sm mt-1"
         >
-          Please enter a valid number (whole number or up to 2 decimal places) for NPK values
+          NPK values must be whole numbers between 0 and 99
         </div>
       </div>
 
@@ -479,7 +497,7 @@
 
       <!-- Button -->
       <button
-        class="flex items-center text-textLight dark:text-textDark"
+        class="flex items-center text-gray-700 dark:text-textDark"
         (click)="triggerFileInput($event)"
       >
         Add Image *
@@ -517,7 +535,7 @@
       <div class="flex items-center space-x-4">
         <label
           for="bgColor"
-          class="block text-sm font-medium text-textLight dark:text-textDark pt-2"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark pt-2"
           >Color *</label
         >
         <ngx-colors
@@ -592,7 +610,7 @@
             #cropNameEnglishInput="ngModel"
             (input)="capitalizeFirstLetter($event)"
             (keydown)="preventLeadingSpace($event)"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
             required
             pattern="^(?!\d+$)[a-zA-Z0-9]*$"
           />
@@ -621,7 +639,7 @@
             [(ngModel)]="newsItems[0].cropNameSinhala"
             name="cropNameSinhala"
             (keydown)="preventLeadingSpace($event)"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
             required
             #cropNameSinhalaInput="ngModel"
             pattern="^(?!\d+$)[a-zA-Z0-9]*$"
@@ -654,7 +672,7 @@
             [(ngModel)]="newsItems[0].cropNameTamil"
             name="cropNameTamil"
             (keydown)="preventLeadingSpace($event)"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
             required
             #cropNameTamilInput="ngModel"
             pattern="^(?!\d+$)[a-zA-Z0-9]*$"
@@ -691,7 +709,7 @@
             optionValue="value"
             [filter]="true"
             showClear="false"
-            class="w-full mt-1 py-2 shadow-sm rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            class="w-full mt-1 py-2 shadow-sm rounded-md text-gray-700 dark:text-textDark bg-tileLight dark:bg-tileBlack"
             [ngClass]="{
               'border-red-500':
                 !newsItems[0].category && categoryInput?.touched,
@@ -727,7 +745,7 @@
             [(ngModel)]="newsItems[0].costFeild"
             name="costFeild"
             (keydown)="allowOnlyNumbers($event)"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
             #costperacreInputEdit="ngModel"
             pattern="^(?!0*\.?0*$)\d+(\.\d{1,2})?$"
             required
@@ -764,7 +782,7 @@
             [(ngModel)]="newsItems[0].incomeFeild"
             name="incomeFeild"
             (keydown)="allowOnlyNumbers($event)"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
             #incomeperacreInputEdit="ngModel"
             pattern="^(?!0*\.?0*$)\d+(\.\d{1,2})?$"
             required
@@ -799,7 +817,7 @@
             [(ngModel)]="newsItems[0].seedRate"
             name="seedRate"
             (keydown)="allowDecimal3Places($event)"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
             #seedRateEditInput="ngModel"
             pattern="^\d+(\.\d{1,3})?$"
             required
@@ -842,7 +860,7 @@
             [(ngModel)]="newsItems[0].rowSpace"
             name="rowSpace"
             (keydown)="allowDecimal1Place($event)"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
             #rowSpaceEditInput="ngModel"
             pattern="^\d+(\.\d{1})?$"
             required
@@ -885,7 +903,7 @@
             [(ngModel)]="newsItems[0].plantSpace"
             name="plantSpace"
             (keydown)="allowDecimal1Place($event)"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
             #plantSpaceEditInput="ngModel"
             pattern="^\d+(\.\d{1})?$"
             required
@@ -928,7 +946,7 @@
             [(ngModel)]="newsItems[0].AvgYield"
             name="AvgYield"
             (keydown)="allowDecimal3Places($event)"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
             #avgYieldEditInput="ngModel"
             pattern="^\d+(\.\d{1,3})?$"
             required
@@ -967,43 +985,55 @@
             Recommended NPK Ratio (kg/ha) *
           </label>
           <div class="flex items-center gap-4 mt-1 flex-wrap">
-            <span class="text-sm text-textLight dark:text-textDark"
+            <span class="text-sm text-gray-700 dark:text-textDark"
               >Nitrogen</span
             >
             <input
               type="text"
               [(ngModel)]="newsItems[0].nitrogen"
               name="nitrogen"
-              (keydown)="allowDecimal2Places($event)"
-              class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+              (keydown)="allowNPKValue($event)"
+              (paste)="blockDecimalPaste($event)"
+              (input)="sanitizeNPKInput($event, newsItems[0], 'nitrogen')"
+              class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
               #nitrogenEditInput="ngModel"
-              pattern="^\d+(\.\d{1,2})?$"
+              pattern="^(?:[0-9]|[1-9][0-9])$"
+              maxlength="2"
+              autocomplete="off"
               required
             />
-            <span class="text-sm text-textLight dark:text-textDark"
+            <span class="text-sm text-gray-700 dark:text-textDark"
               >Phosphorus</span
             >
             <input
               type="text"
               [(ngModel)]="newsItems[0].phosphorus"
               name="phosphorus"
-              (keydown)="allowDecimal2Places($event)"
-              class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+              (keydown)="allowNPKValue($event)"
+              (paste)="blockDecimalPaste($event)"
+              (input)="sanitizeNPKInput($event, newsItems[0], 'phosphorus')"
+              class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
               #phosphorusEditInput="ngModel"
-              pattern="^\d+(\.\d{1,2})?$"
+              pattern="^(?:[0-9]|[1-9][0-9])$"
+              maxlength="2"
+              autocomplete="off"
               required
             />
-            <span class="text-sm text-textLight dark:text-textDark"
+            <span class="text-sm text-gray-700 dark:text-textDark"
               >Potassium</span
             >
             <input
               type="text"
               [(ngModel)]="newsItems[0].potassium"
               name="potassium"
-              (keydown)="allowDecimal2Places($event)"
+              (keydown)="allowNPKValue($event)"
+              (paste)="blockDecimalPaste($event)"
+              (input)="sanitizeNPKInput($event, newsItems[0], 'potassium')"
               class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
               #potassiumEditInput="ngModel"
-              pattern="^\d+(\.\d{1,2})?$"
+              pattern="^(?:[0-9]|[1-9][0-9])$"
+              maxlength="2"
+              autocomplete="off"
               required
             />
           </div>
@@ -1031,7 +1061,7 @@
             "
             class="text-red-500 text-sm mt-1"
           >
-            Please enter a valid number (whole number or up to 2 decimal places) for NPK values
+            NPK values must be whole numbers between 0 and 99
           </div>
         </div>
 
@@ -1046,7 +1076,7 @@
 
         <!-- Button -->
         <button
-          class="flex items-center text-textLight dark:text-textDark"
+          class="flex items-center text-gray-700 dark:text-textDark"
           (click)="triggerFileInput($event)"
         >
           Add Image *
@@ -1079,7 +1109,7 @@
         <div class="flex items-center space-x-4">
           <label
             for="bgColor"
-            class="block text-sm font-medium text-textLight dark:text-textDark pt-2"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark pt-2"
             >Color *</label
           >
 

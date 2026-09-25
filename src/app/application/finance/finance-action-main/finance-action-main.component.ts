@@ -93,4 +93,8 @@ export class FinanceActionMainComponent {
   ViewDistributionFinance(): void {
     this.router.navigate(['/finance/action/distribution-finance']);
   }
+
+  ViewSales(): void {
+    this.router.navigate(['/finance/action/finance-sales/sales']);
+  }
 }

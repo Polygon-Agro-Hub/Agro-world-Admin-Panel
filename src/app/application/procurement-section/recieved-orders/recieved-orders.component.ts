@@ -149,6 +149,13 @@ export class RecievedOrdersComponent {
     this.fetchAllPurchaseReport();
   }
 
+  onSearchInput(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    const trimmedValue = inputElement.value.trimStart();
+    this.search = trimmedValue;
+    inputElement.value = trimmedValue;
+  }
+
   back(): void {
     this.router.navigate(['/procurement']);
   }
@@ -202,6 +209,7 @@ export class RecievedOrdersComponent {
 
   downloadTemplate1() {
     this.isDownloading = true;
+    this.search = this.search ? this.search.trim() : '';
 
     // Get all data without pagination for aggregation
     this.procumentService
@@ -304,7 +312,7 @@ export class RecievedOrdersComponent {
   private saveAsExcelFile(buffer: any, fileName: string): void {
     const data: Blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
 
- 
+
     let finalFileName = fileName;
     if (this.filterType) {
       switch (this.filterType) {
@@ -317,7 +325,7 @@ export class RecievedOrdersComponent {
         case 'toDispatchCenter':
           finalFileName += `_To_Dispatch_Center_Date`;
           break;
-      
+
         // other cases if needed
       }
     }

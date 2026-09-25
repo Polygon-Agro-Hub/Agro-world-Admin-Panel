@@ -18,13 +18,12 @@ import { DropdownModule } from 'primeng/dropdown';
     FormsModule,
     NgxPaginationModule,
     DropdownModule,
-    LoadingSpinnerComponent
+    LoadingSpinnerComponent,
   ],
   templateUrl: './view-current-center-target.component.html',
-  styleUrl: './view-current-center-target.component.css'
+  styleUrl: './view-current-center-target.component.css',
 })
 export class ViewCurrentCenterTargetComponent implements OnInit {
-
   centerId!: number;
 
   targetArr!: DailyTargets[];
@@ -40,7 +39,6 @@ export class ViewCurrentCenterTargetComponent implements OnInit {
   page: number = 1;
   totalItems: number = 0;
   itemsPerPage: number = 10;
-
 
   isLoading: boolean = false;
 
@@ -67,9 +65,8 @@ export class ViewCurrentCenterTargetComponent implements OnInit {
     private route: ActivatedRoute,
     private collectionCenterSrv: CollectionCenterService,
     public tokenService: TokenService,
-    public permissionService: PermissionService
-
-  ) { }
+    public permissionService: PermissionService,
+  ) {}
 
   ngOnInit(): void {
     this.centerId = this.route.snapshot.params['centerId'];
@@ -80,25 +77,33 @@ export class ViewCurrentCenterTargetComponent implements OnInit {
     this.today = `${year}/${month}/${day}`;
 
     this.fetchAllTarget();
-
   }
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
-    const statusDropdownElement = document.querySelector('.custom-status-dropdown-container');
-    const statusDropdownClickedInside = statusDropdownElement?.contains(event.target as Node);
+    const statusDropdownElement = document.querySelector(
+      '.custom-status-dropdown-container',
+    );
+    const statusDropdownClickedInside = statusDropdownElement?.contains(
+      event.target as Node,
+    );
 
     if (!statusDropdownClickedInside && this.isStatusDropdownOpen) {
       this.isStatusDropdownOpen = false;
     }
-
   }
 
-  fetchAllTarget(centerId: number = this.centerId, page: number = 1, limit: number = this.itemsPerPage, status: string = this.selectStatus, search: string = this.searchText) {
-    console.log('status', status)
+  fetchAllTarget(
+    centerId: number = this.centerId,
+    page: number = 1,
+    limit: number = this.itemsPerPage,
+    status: string = this.selectStatus,
+    search: string = this.searchText,
+  ) {
     this.isLoading = true;
-    this.collectionCenterSrv.getAllCenterDailyTarget(centerId, page, limit, status, search).subscribe(
-      (res) => {
+    this.collectionCenterSrv
+      .getAllCenterDailyTarget(centerId, page, limit, status, search)
+      .subscribe((res) => {
         this.targetArr = res.items;
         if (res.items.length > 0) {
           this.hasData = true;
@@ -106,9 +111,7 @@ export class ViewCurrentCenterTargetComponent implements OnInit {
           this.hasData = false;
         }
         this.isLoading = false;
-
-      }
-    );
+      });
   }
 
   onSearch() {
@@ -119,7 +122,7 @@ export class ViewCurrentCenterTargetComponent implements OnInit {
   }
   offSearch() {
     this.searchText = '';
-    this.fetchAllTarget()
+    this.fetchAllTarget();
   }
 
   filterStatus() {
@@ -128,12 +131,11 @@ export class ViewCurrentCenterTargetComponent implements OnInit {
 
   cancelStatus(event?: MouseEvent) {
     if (event) {
-      event.stopPropagation(); 
+      event.stopPropagation();
     }
     this.selectStatus = '';
     this.fetchAllTarget();
   }
-
 
   getTimeRemaining(toDate: string, toTime: string): string {
     const [day, month, year] = toDate.split('/').map(Number);
@@ -148,7 +150,9 @@ export class ViewCurrentCenterTargetComponent implements OnInit {
     const timeDiff = targetDateTime.getTime() - currentDate.getTime();
 
     const daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-    const hoursDiff = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const hoursDiff = Math.floor(
+      (timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+    );
     const minutesDiff = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
 
     if (daysDiff > 0) {
@@ -164,22 +168,18 @@ export class ViewCurrentCenterTargetComponent implements OnInit {
     return 'Expired';
   }
 
-
   cancelValidity() {
     this.selectValidity = '';
     this.fetchAllTarget();
   }
 
-
   onPageChange(event: number) {
     this.page = event;
     this.fetchAllTarget(this.page, this.itemsPerPage);
-
   }
   navigate(path: string) {
     this.router.navigate([path]);
   }
-
 
   navigateToAssignTarget(id: number) {
     this.router.navigate([`/target/assing-target/${id}`]);
@@ -192,53 +192,57 @@ export class ViewCurrentCenterTargetComponent implements OnInit {
   formatTime(time: string): string {
     const [hoursStr, minutesStr] = time.split(':');
     let hours = parseInt(hoursStr, 10);
-    const minutes = minutesStr; 
+    const minutes = minutesStr;
     const period = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12 || 12; 
+    hours = hours % 12 || 12;
     return `${hours}:${minutes} ${period}`;
   }
 
   navigateToCenters() {
-    this.router.navigate(['/centers']); 
+    this.router.navigate(['/centers']);
   }
 
   downloadTemplate1() {
     this.isDownloading = true;
 
-    this.collectionCenterSrv.downloadCurrentTargetReport(this.centerId, this.selectStatus, this.searchText).subscribe({
+    this.collectionCenterSrv
+      .downloadCurrentTargetReport(
+        this.centerId,
+        this.selectStatus,
+        this.searchText,
+      )
+      .subscribe({
         next: (blob) => {
           const url = window.URL.createObjectURL(blob);
-          const a = document.createElement("a");
+          const a = document.createElement('a');
           a.href = url;
           a.download = `Current Centre Target Report For ${this.today}.xlsx`;
           a.click();
           window.URL.revokeObjectURL(url);
           Swal.fire({
-            icon: "success",
-            title: "Downloaded",
-            text: "Please check your downloads folder",
+            icon: 'success',
+            title: 'Downloaded',
+            text: 'Please check your downloads folder',
             customClass: {
-              popup: 'bg-white dark:bg-[#363636]', 
-              title: 'text-gray-800 dark:text-textDark', 
-              htmlContainer: 'text-gray-600 dark:text-white', 
-            }
+              popup: 'bg-white dark:bg-[#363636]',
+              title: 'text-gray-800 dark:text-textDark',
+              htmlContainer: 'text-gray-600 dark:text-white',
+            },
           });
 
           this.isDownloading = false;
         },
         error: (error) => {
           Swal.fire({
-            icon: "error",
-            title: "Download Failed",
+            icon: 'error',
+            title: 'Download Failed',
             text: error.message,
           });
           this.isDownloading = false;
-        }
+        },
       });
   }
-
 }
-
 
 class DailyTargets {
   id!: number;

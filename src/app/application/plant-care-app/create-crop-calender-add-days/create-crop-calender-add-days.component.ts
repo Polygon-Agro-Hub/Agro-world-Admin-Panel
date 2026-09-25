@@ -64,7 +64,7 @@ export class CreateCropCalenderAddDaysComponent implements AfterViewInit {
 
   save() {
     this.collectFormData();
-    console.log("Form data array:", this.formDataArray);
+    
 
     const token = this.tokenService.getToken();
 
@@ -91,9 +91,9 @@ export class CreateCropCalenderAddDaysComponent implements AfterViewInit {
       )
       .subscribe(
         (res: any) => {
-          console.log("Data saved successfully", res);
+          
           alert("Data saved successfully");
-          console.log("cropId from 2nd page", this.cropId);
+          
           // Reset form or perform other actions as needed
         },
         (error: any) => {

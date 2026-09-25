@@ -314,6 +314,11 @@ import { ViewSubmissionDocumentComponent } from './application/finance/distribut
 import { TestComponentComponent } from './application/steckholders-section/test-component/test-component.component';
 import { ViewTransactionAllOrdersComponent } from './application/finance/distribution-finance-acion/view-transaction-all-orders/view-transaction-all-orders.component';
 import { ViewCopTransactionsDocumentComponent } from './application/finance/distribution-finance-acion/view-cop-transactions-document/view-cop-transactions-document.component';
+import { SalesComponent } from './application/finance/sales/sales/sales.component';
+import { CompletedViewAllOdersComponent } from './application/finance/sales/completed-view-all-oders/completed-view-all-oders.component';
+import { DailyPackingTargetComponent } from './application/procurement-section/daily-packing-target/daily-packing-target.component';
+import { ProcumentProductMismatchTodayComponent } from './application/procurement-section/procument-product-mismatch-today/procument-product-mismatch-today.component';
+import { PendingProductMismatchTodayComponent } from './application/procurement-section/pending-product-mismatch-today/pending-product-mismatch-today.component';
 
 export const routes: Routes = [
   {
@@ -727,7 +732,19 @@ export const routes: Routes = [
                 canActivate: [PermissionGuard],
                 data: { permission: 'Finance Payment History' },
               },
-
+              {
+                path: 'finance-sales',
+                children: [
+                  {
+                    path: 'sales',
+                    component: SalesComponent
+                  },
+                  {
+                    path: 'view-all-orders',
+                    component: CompletedViewAllOdersComponent,
+                  }
+                ]
+              },
               {
                 path: 'finance-govicapital',
                 children: [
@@ -851,9 +868,9 @@ export const routes: Routes = [
               },
               {
                 path: 'govi-trans-finance',
-                children:[
-                  {path:'', component: GoviTransFinanceComponent},
-                  {path: 'view-driver-categories', component: ViewDriverCategoriesComponent},
+                children: [
+                  { path: '', component: GoviTransFinanceComponent },
+                  { path: 'view-driver-categories', component: ViewDriverCategoriesComponent },
                   {
                     path: 'add-driver-category',
                     component: AddEditDriverCategoryComponent,
@@ -1548,13 +1565,27 @@ export const routes: Routes = [
             path: 'view-shortage-today',
             component: ShortageTodayComponent
           },
-          { path: 'shortage-assign/:id', 
-            component: ShortageAssignComponent 
+          {
+            path: 'shortage-assign/:id',
+            component: ShortageAssignComponent
           },
           {
             path: 'view-shortage-finalization-today',
             component: ShortageFinalizationTodayComponent
+          },
+          {
+            path: 'daily-packing-target',
+            component: DailyPackingTargetComponent
+          },
+          {
+            path: 'procurement-product-mismatch-today/:loadedItemId',
+            component: ProcumentProductMismatchTodayComponent
+          },
+          {
+            path: 'pending-procurement-product-mismatch-today',
+            component: PendingProductMismatchTodayComponent
           }
+
         ],
       },
 
@@ -2238,7 +2269,7 @@ export const routes: Routes = [
                 canActivate: [PermissionGuard],
                 data: { permission: 'View All Govi Shops' },
                 component: ViewAllShopsComponent,
-                
+
               },
 
               {
@@ -2292,8 +2323,9 @@ export const routes: Routes = [
                 path: 'edit-branch/:branchId',
                 component: EditBranchComponent,
               },
-              
-              { path: 'view-delete-shops',
+
+              {
+                path: 'view-delete-shops',
                 component: ViewDeleteShopsComponent,
               },
               {
@@ -2313,4 +2345,4 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

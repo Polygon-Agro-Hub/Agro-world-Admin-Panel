@@ -37,6 +37,7 @@ interface BranchesData {
   templateUrl: './edit-fieald-officer.component.html',
   styleUrl: './edit-fieald-officer.component.css'
 })
+
 export class EditFiealdOfficerComponent implements OnInit {
 
   isLoading = false;
@@ -115,9 +116,9 @@ export class EditFiealdOfficerComponent implements OnInit {
   ) { }
 
   jobRoles = [
-  { label: 'Field Officer', value: 'Field Officer' },
-  { label: 'Chief Field Officer', value: 'Chief Field Officer' }
-];
+    { label: 'Field Officer', value: 'Field Officer' },
+    { label: 'Chief Field Officer', value: 'Chief Field Officer' }
+  ];
 
   districts = [
     { name: 'Ampara', province: 'Eastern' },
@@ -164,51 +165,51 @@ export class EditFiealdOfficerComponent implements OnInit {
   initializeProvinces(): void {
     const uniqueProvinces = [...new Set(this.allDistricts.map(district => district.province))];
     this.provinces = uniqueProvinces.map(province => ({ name: province }));
-    
+
     // If editing, filter districts based on existing province
     if (this.personalData.province) {
       this.filterDistrictsByProvince(this.personalData.province);
     }
   }
-  
-  isValidUrl(value: string): boolean {
-  if (!value) return false;
-  try {
-    const url = new URL(value);
-    return url.protocol === 'http:' || url.protocol === 'https:';
-  } catch {
-    return false;
-  }
-}
 
-getFileName(value: string): string {
-  if (!value) return '';
-  
-  // If it's a URL, extract the filename
-  if (this.isValidUrl(value)) {
+  isValidUrl(value: string): boolean {
+    if (!value) return false;
     try {
       const url = new URL(value);
-      const pathname = url.pathname;
-      const filename = pathname.substring(pathname.lastIndexOf('/') + 1);
-    
-      return decodeURIComponent(filename);
+      return url.protocol === 'http:' || url.protocol === 'https:';
     } catch {
-      return value;
+      return false;
     }
   }
-  
-  // If it's just a filename, return it as-is
-  return value;
-}
+
+  getFileName(value: string): string {
+    if (!value) return '';
+
+    // If it's a URL, extract the filename
+    if (this.isValidUrl(value)) {
+      try {
+        const url = new URL(value);
+        const pathname = url.pathname;
+        const filename = pathname.substring(pathname.lastIndexOf('/') + 1);
+
+        return decodeURIComponent(filename);
+      } catch {
+        return value;
+      }
+    }
+
+    // If it's just a filename, return it as-is
+    return value;
+  }
 
   // Handle province change
   onProvinceChange(event: DropdownChangeEvent): void {
     const selectedProvince = event.value;
     this.personalData.province = selectedProvince;
-    
+
     // Filter districts based on selected province
     this.filterDistrictsByProvince(selectedProvince);
-    
+
     // Clear district selection when province changes
     this.personalData.distrct = '';
   }
@@ -232,7 +233,7 @@ getFileName(value: string): string {
   onCommissionAmountInput(event: Event): void {
     const input = event.target as HTMLInputElement;
     let value = input.value;
-    
+
     // Ensure proper decimal formatting
     if (value.includes('.')) {
       const parts = value.split('.');
@@ -250,7 +251,7 @@ getFileName(value: string): string {
     const input = event.target as HTMLInputElement;
     const char = String.fromCharCode(event.which);
     const currentValue = input.value;
-    
+
     // Allow control keys: backspace, delete, tab, escape, enter
     if ([8, 9, 27, 13, 46].indexOf(event.keyCode) !== -1 ||
       // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
@@ -265,7 +266,7 @@ getFileName(value: string): string {
 
     // Allow numbers (0-9)
     if ((event.keyCode >= 48 && event.keyCode <= 57) ||
-        (event.keyCode >= 96 && event.keyCode <= 105)) {
+      (event.keyCode >= 96 && event.keyCode <= 105)) {
       return;
     }
 
@@ -291,10 +292,10 @@ getFileName(value: string): string {
   // Update the validation method for commission amount
   isValidCommissionAmount(): boolean {
     const amount = this.personalData.comAmount;
-    return amount !== null && 
-           amount !== undefined && 
-           amount >= 0 && 
-           amount <= 100;
+    return amount !== null &&
+      amount !== undefined &&
+      amount >= 0 &&
+      amount <= 100;
   }
 
   back(): void {
@@ -312,7 +313,7 @@ getFileName(value: string): string {
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-         this.location.back();
+        this.location.back();
       }
     });
   }
@@ -398,62 +399,62 @@ getFileName(value: string): string {
 
   isFieldInvalid(fieldName: keyof Personal): boolean {
     const value = this.personalData[fieldName];
-    
+
     if (fieldName === 'assignDistrict') {
       // For arrays, check if it's empty or null/undefined
       return !!this.touchedFields[fieldName] && (!value || (Array.isArray(value) && value.length === 0));
     }
-    
+
     return !!this.touchedFields[fieldName] && !value;
   }
 
   EpmloyeIdCreate() {
-  if (!this.personalData.jobRole) {
-    return;
+    if (!this.personalData.jobRole) {
+      return;
+    }
+
+    let rolePrefix: string | undefined;
+
+    const rolePrefixes: { [key: string]: string } = {
+      'Field Officer': 'FIO',
+      'Chief Field Officer': 'CFO',
+    };
+
+    rolePrefix = rolePrefixes[this.personalData.jobRole];
+
+    if (!rolePrefix) {
+      return;
+    }
+
+    this.getLastID(rolePrefix)
+      .then((lastID) => {
+        this.personalData.empId = rolePrefix + lastID;
+      })
+      .catch((error) => { });
   }
-
-  let rolePrefix: string | undefined;
-
-  const rolePrefixes: { [key: string]: string } = {
-    'Field Officer': 'FIO',
-    'Chief Field Officer': 'CFO',
-  };
-
-  rolePrefix = rolePrefixes[this.personalData.jobRole];
-
-  if (!rolePrefix) {
-    return;
-  }
-
-  this.getLastID(rolePrefix)
-    .then((lastID) => {
-      this.personalData.empId = rolePrefix + lastID;
-    })
-    .catch((error) => { });
-}
 
   getAllCollectionManagers() {
-  this.stakeHolderSrv
-    .getAllManagerList()
-    .subscribe((res) => {
-      this.fiealdManagerData = res;
-      // Convert to dropdown options format
-      this.managerOptions = this.fiealdManagerData.map((manager) => ({
-        label: manager.empId + ' - ' + manager.firstName + ' ' + manager.lastName,
-        value: manager.id,
-      }));
+    this.stakeHolderSrv
+      .getAllManagerList()
+      .subscribe((res) => {
+        this.fiealdManagerData = res;
+        // Convert to dropdown options format
+        this.managerOptions = this.fiealdManagerData.map((manager) => ({
+          label: manager.empId + ' - ' + manager.firstName + ' ' + manager.lastName,
+          value: manager.id,
+        }));
 
-      // Debug log to verify managers are loaded
-      
-      
-      
-      // Check if the selected manager exists in the options
-      if (this.personalData.irmId) {
-        const selectedManager = this.managerOptions.find(option => option.value == this.personalData.irmId);
-        
-      }
-    });
-}
+        // Debug log to verify managers are loaded
+
+
+
+        // Check if the selected manager exists in the options
+        if (this.personalData.irmId) {
+          const selectedManager = this.managerOptions.find(option => option.value == this.personalData.irmId);
+
+        }
+      });
+  }
 
   getLastID(role: string): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -737,13 +738,13 @@ getFileName(value: string): string {
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-       this.location.back();
+        this.location.back();
       }
     });
   }
 
   nextFormCreate(page: 'pageOne' | 'pageTwo' | 'pageThree') {
-    
+
     if (page === 'pageTwo') {
       // Mark page one fields as touched to show validation messages
       this.markPageOneFieldsAsTouched();
@@ -866,12 +867,12 @@ getFileName(value: string): string {
     this.selectedPage = page;
 
     setTimeout(() => {
-    this.scrollToTop();
-  }, 0);
+      this.scrollToTop();
+    }, 0);
   }
 
   nextFormCreate2(page: 'pageOne' | 'pageTwo' | 'pageThree') {
-    
+
 
     if (page === 'pageThree') {
       // Mark page two fields as touched to show validation messages
@@ -915,8 +916,8 @@ getFileName(value: string): string {
     this.selectedPage = page;
 
     setTimeout(() => {
-    this.scrollToTop();
-  }, 0);
+      this.scrollToTop();
+    }, 0);
   }
 
   markPageOneFieldsAsTouched(): void {
@@ -1110,7 +1111,7 @@ getFileName(value: string): string {
     this.loadBanks();
     this.loadBranches();
     this.initializeProvinces();
-    
+
     // Get the ID from route parameters
     this.route.params.subscribe(params => {
       this.itemId = +params['id']; // Convert to number
@@ -1121,163 +1122,163 @@ getFileName(value: string): string {
         this.EpmloyeIdCreate();
       }
     });
-    
+
     // Pre-fill country with Sri Lanka
     this.personalData.country = 'Sri Lanka';
   }
 
   // Add this method to load field officer data
   loadFieldOfficerData(id: number): void {
-  this.isLoading = true;
-  this.stakeHolderSrv.getFiealdOfficerById(id).subscribe(
-    (response: any) => {
-      this.isLoading = false;
-       // Debug log
-      
-      if (response && response.officerData) {
-        // Try different possible response structures
-        const officerData = response.officerData.fieldOfficer || response.officerData;
-        
-        if (officerData) {
-          this.populateFormData(officerData);
-          
-          // Small delay to ensure dropdown is properly initialized
-          setTimeout(() => {
-            
-            
-          }, 500);
+    this.isLoading = true;
+    this.stakeHolderSrv.getFiealdOfficerById(id).subscribe(
+      (response: any) => {
+        this.isLoading = false;
+        // Debug log
+
+        if (response && response.officerData) {
+          // Try different possible response structures
+          const officerData = response.officerData.fieldOfficer || response.officerData;
+
+          if (officerData) {
+            this.populateFormData(officerData);
+
+            // Small delay to ensure dropdown is properly initialized
+            setTimeout(() => {
+
+
+            }, 500);
+          } else {
+            this.showErrorAndRedirect('Field officer data not found in response');
+          }
         } else {
-          this.showErrorAndRedirect('Field officer data not found in response');
+          this.showErrorAndRedirect('Invalid response structure');
         }
-      } else {
-        this.showErrorAndRedirect('Invalid response structure');
+      },
+      (error) => {
+        this.isLoading = false;
+        this.showErrorAndRedirect('Failed to load field officer data');
+        console.error('Error loading field officer:', error);
       }
-    },
-    (error) => {
-      this.isLoading = false;
-      this.showErrorAndRedirect('Failed to load field officer data');
-      console.error('Error loading field officer:', error);
-    }
-  );
-}
-
-// Helper method for error handling
-private showErrorAndRedirect(message: string): void {
-  Swal.fire({
-    icon: 'error',
-    title: 'Error',
-    text: message,
-    confirmButtonText: 'OK',
-  });
-  this.router.navigate(['/steckholders/action/field-inspectors']);
-}
-
-  // Add this method to populate form with existing data
-  // Add this method to populate form with existing data
-populateFormData(officerData: any): void {
-  // Personal Details
-  this.personalData.id = officerData.id;
-  this.personalData.firstName = officerData.firstName;
-  this.personalData.lastName = officerData.lastName;
-  this.personalData.status = officerData.status;
-  
-  // FIXED: Check for different possible field names for Sinhala and Tamil names
-  this.personalData.firstNameSinhala = officerData.firstNameSinhala || officerData.firstnameSinhala || officerData.first_name_sinhala || '';
-  this.personalData.lastNameSinhala = officerData.lastNameSinhala || officerData.lastnameSinhala || officerData.last_name_sinhala || '';
-  this.personalData.firstNameTamil = officerData.firstNameTamil || officerData.firstnameTamil || officerData.first_name_tamil || '';
-  this.personalData.lastNameTamil = officerData.lastNameTamil || officerData.lastnameTamil || officerData.last_name_tamil || '';
-  
-  // Contact Details
-  this.personalData.phoneNumber1 = officerData.phoneNumber01 || officerData.phoneNumber1;
-  this.personalData.phoneNumber2 = officerData.phoneNumber02 || officerData.phoneNumber2;
-  this.personalData.phoneCode1 = officerData.phoneCode01 || officerData.phoneCode1 || '+94';
-  this.personalData.phoneCode2 = officerData.phoneCode02 || officerData.phoneCode2 || '+94';
-  this.personalData.nic = officerData.nic;
-  this.personalData.email = officerData.email;
-  
-  // Employment Details
-  this.empType = officerData.employeeType || officerData.empType;
-  this.personalData.empType = officerData.employeeType || officerData.empType;
-  this.personalData.jobRole = officerData.jobRole;
-  this.personalData.empId = officerData.empId;
-  
-  // FIXED: Set Chief Field Officer ID - Check multiple possible field names
-  this.personalData.irmId = officerData.irmId || officerData.chiefFieldOfficerId || officerData.managerId || null;
-  
-  // Languages
-  if (officerData.language) {
-    this.personalData.language = officerData.language;
+    );
   }
-  
-  // Residential Details
-  this.personalData.house = officerData.houseNumber || officerData.house;
-  this.personalData.street = officerData.streetName || officerData.street;
-  this.personalData.city = officerData.city;
-  this.personalData.distrct = officerData.district || officerData.distrct;
-  this.personalData.province = officerData.province;
-  this.personalData.country = officerData.country || 'Sri Lanka';
-  
-  // Bank Details
-  this.personalData.comAmount = officerData.comAmount ? parseFloat(officerData.comAmount) : 0;
-  this.personalData.accName = officerData.accHolderName || officerData.accName;
-  this.personalData.accNumber = officerData.accNumber;
-  this.personalData.bank = officerData.bankName || officerData.bank;
-  this.personalData.branch = officerData.branchName || officerData.branch;
-  
-  // Assign Districts
-  if (officerData.assignDistricts || officerData.assignDistrict) {
-    const districtsData = officerData.assignDistricts || officerData.assignDistrict;
-    
-    if (Array.isArray(districtsData)) {
-      this.personalData.assignDistrict = districtsData
-        .map((districtName: string) => 
-          this.districts.find(d => d.name === districtName)
-        )
-        .filter((d: any) => d !== undefined);
-    } else if (typeof districtsData === 'string') {
-      this.personalData.assignDistrict = districtsData
-        .split(',')
-        .map((districtName: string) => districtName.trim())
-        .filter((districtName: string) => districtName.length > 0)
-        .map((districtName: string) => 
-          this.districts.find(d => d.name === districtName)
-        )
-        .filter((d: any) => d !== undefined);
+
+  // Helper method for error handling
+  private showErrorAndRedirect(message: string): void {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: message,
+      confirmButtonText: 'OK',
+    });
+    this.router.navigate(['/steckholders/action/field-inspectors']);
+  }
+
+  // Add this method to populate form with existing data
+  // Add this method to populate form with existing data
+  populateFormData(officerData: any): void {
+    // Personal Details
+    this.personalData.id = officerData.id;
+    this.personalData.firstName = officerData.firstName;
+    this.personalData.lastName = officerData.lastName;
+    this.personalData.status = officerData.status;
+
+    // FIXED: Check for different possible field names for Sinhala and Tamil names
+    this.personalData.firstNameSinhala = officerData.firstNameSinhala || officerData.firstnameSinhala || officerData.first_name_sinhala || '';
+    this.personalData.lastNameSinhala = officerData.lastNameSinhala || officerData.lastnameSinhala || officerData.last_name_sinhala || '';
+    this.personalData.firstNameTamil = officerData.firstNameTamil || officerData.firstnameTamil || officerData.first_name_tamil || '';
+    this.personalData.lastNameTamil = officerData.lastNameTamil || officerData.lastnameTamil || officerData.last_name_tamil || '';
+
+    // Contact Details
+    this.personalData.phoneNumber1 = officerData.phoneNumber01 || officerData.phoneNumber1;
+    this.personalData.phoneNumber2 = officerData.phoneNumber02 || officerData.phoneNumber2;
+    this.personalData.phoneCode1 = officerData.phoneCode01 || officerData.phoneCode1 || '+94';
+    this.personalData.phoneCode2 = officerData.phoneCode02 || officerData.phoneCode2 || '+94';
+    this.personalData.nic = officerData.nic;
+    this.personalData.email = officerData.email;
+
+    // Employment Details
+    this.empType = officerData.employeeType || officerData.empType;
+    this.personalData.empType = officerData.employeeType || officerData.empType;
+    this.personalData.jobRole = officerData.jobRole;
+    this.personalData.empId = officerData.empId;
+
+    // FIXED: Set Chief Field Officer ID - Check multiple possible field names
+    this.personalData.irmId = officerData.irmId || officerData.chiefFieldOfficerId || officerData.managerId || null;
+
+    // Languages
+    if (officerData.language) {
+      this.personalData.language = officerData.language;
+    }
+
+    // Residential Details
+    this.personalData.house = officerData.houseNumber || officerData.house;
+    this.personalData.street = officerData.streetName || officerData.street;
+    this.personalData.city = officerData.city;
+    this.personalData.distrct = officerData.district || officerData.distrct;
+    this.personalData.province = officerData.province;
+    this.personalData.country = officerData.country || 'Sri Lanka';
+
+    // Bank Details
+    this.personalData.comAmount = officerData.comAmount ? parseFloat(officerData.comAmount) : 0;
+    this.personalData.accName = officerData.accHolderName || officerData.accName;
+    this.personalData.accNumber = officerData.accNumber;
+    this.personalData.bank = officerData.bankName || officerData.bank;
+    this.personalData.branch = officerData.branchName || officerData.branch;
+
+    // Assign Districts
+    if (officerData.assignDistricts || officerData.assignDistrict) {
+      const districtsData = officerData.assignDistricts || officerData.assignDistrict;
+
+      if (Array.isArray(districtsData)) {
+        this.personalData.assignDistrict = districtsData
+          .map((districtName: string) =>
+            this.districts.find(d => d.name === districtName)
+          )
+          .filter((d: any) => d !== undefined);
+      } else if (typeof districtsData === 'string') {
+        this.personalData.assignDistrict = districtsData
+          .split(',')
+          .map((districtName: string) => districtName.trim())
+          .filter((districtName: string) => districtName.length > 0)
+          .map((districtName: string) =>
+            this.districts.find(d => d.name === districtName)
+          )
+          .filter((d: any) => d !== undefined);
+      } else {
+        this.personalData.assignDistrict = [];
+      }
     } else {
       this.personalData.assignDistrict = [];
     }
-  } else {
-    this.personalData.assignDistrict = [];
-  }
-  
-  // Load images if available
-  this.loadExistingImages(officerData);
-  
-  // Set bank and branch dropdowns
-  this.setBankAndBranch(
-    officerData.bankName || officerData.bank, 
-    officerData.branchName || officerData.branch
-  );
-  
-  // FIXED: Load managers first, then set the selected value
-  this.getAllCollectionManagers();
-  
-  // Set profile image if available
-  if (officerData.image || officerData.profile) {
-    this.selectedImage = officerData.image || officerData.profile;
-  }
 
-  // Filter districts based on the loaded province
-  setTimeout(() => {
-    if (this.personalData.province) {
-      this.filterDistrictsByProvince(this.personalData.province);
+    // Load images if available
+    this.loadExistingImages(officerData);
+
+    // Set bank and branch dropdowns
+    this.setBankAndBranch(
+      officerData.bankName || officerData.bank,
+      officerData.branchName || officerData.branch
+    );
+
+    // FIXED: Load managers first, then set the selected value
+    this.getAllCollectionManagers();
+
+    // Set profile image if available
+    if (officerData.image || officerData.profile) {
+      this.selectedImage = officerData.image || officerData.profile;
     }
-  }, 100);
 
-  // Debug log to verify data
-  
-  
-}
+    // Filter districts based on the loaded province
+    setTimeout(() => {
+      if (this.personalData.province) {
+        this.filterDistrictsByProvince(this.personalData.province);
+      }
+    }, 100);
+
+    // Debug log to verify data
+
+
+  }
 
   // Add method to load existing images
   loadExistingImages(officerData: any): void {
@@ -1304,7 +1305,7 @@ populateFormData(officerData: any): void {
     if (bank) {
       this.selectedBankId = bank.ID;
       this.onBankChange();
-      
+
       // After banks are loaded, find and select the branch
       setTimeout(() => {
         const branch = this.branches.find(b => b.name === branchName);
@@ -1439,62 +1440,62 @@ populateFormData(officerData: any): void {
   }
 
   handleFileUpload(file: File, fileType: 'frontNic' | 'backNic' | 'passbook' | 'contract'): void {
-  // Validate file size (5MB limit)
-  if (file.size > 5000000) {
-    Swal.fire('Error', 'File size should not exceed 5MB', 'error');
-    return;
-  }
+    // Validate file size (5MB limit)
+    if (file.size > 5000000) {
+      Swal.fire('Error', 'File size should not exceed 5MB', 'error');
+      return;
+    }
 
-  // Validate file type
-  const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-  if (!allowedTypes.includes(file.type)) {
-    Swal.fire('Error', 'Only JPEG, JPG and PNG files are allowed', 'error');
-    return;
-  }
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+    if (!allowedTypes.includes(file.type)) {
+      Swal.fire('Error', 'Only JPEG, JPG and PNG files are allowed', 'error');
+      return;
+    }
 
-  // Mark field as touched
-  this.touchedDocumentFields[fileType] = true;
+    // Mark field as touched
+    this.touchedDocumentFields[fileType] = true;
 
-  // Set the file and file name based on type
-  switch (fileType) {
-    case 'frontNic':
-      this.selectedFrontNicFile = file;
-      this.personalData.frontNic = file.name;
-      break;
-    case 'backNic':
-      this.selectedBackNicFile = file;
-      this.personalData.backNic = file.name;
-      break;
-    case 'passbook':
-      this.selectedPassbookFile = file;
-      this.personalData.backPassbook = file.name;
-      break;
-    case 'contract':
-      this.selectedContractFile = file;
-      this.personalData.contract = file.name;
-      break;
-  }
-
-  // Preview the image
-  const reader = new FileReader();
-  reader.onload = (e: any) => {
+    // Set the file and file name based on type
     switch (fileType) {
       case 'frontNic':
-        this.selectedFrontNicImage = e.target.result;
+        this.selectedFrontNicFile = file;
+        this.personalData.frontNic = file.name;
         break;
       case 'backNic':
-        this.selectedBackNicImage = e.target.result;
+        this.selectedBackNicFile = file;
+        this.personalData.backNic = file.name;
         break;
       case 'passbook':
-        this.selectedPassbookImage = e.target.result;
+        this.selectedPassbookFile = file;
+        this.personalData.backPassbook = file.name;
         break;
       case 'contract':
-        this.selectedContractImage = e.target.result;
+        this.selectedContractFile = file;
+        this.personalData.contract = file.name;
         break;
     }
-  };
-  reader.readAsDataURL(file);
-}
+
+    // Preview the image
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      switch (fileType) {
+        case 'frontNic':
+          this.selectedFrontNicImage = e.target.result;
+          break;
+        case 'backNic':
+          this.selectedBackNicImage = e.target.result;
+          break;
+        case 'passbook':
+          this.selectedPassbookImage = e.target.result;
+          break;
+        case 'contract':
+          this.selectedContractImage = e.target.result;
+          break;
+      }
+    };
+    reader.readAsDataURL(file);
+  }
 
   getFileTypeLabel(fileType: string): string {
     const labels: { [key: string]: string } = {
@@ -1507,367 +1508,367 @@ populateFormData(officerData: any): void {
   }
 
   removeUploadedFile(fileType: 'frontNic' | 'backNic' | 'passbook' | 'contract'): void {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: 'You will need to upload this file again',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Remove',
-    cancelButtonText: 'Cancel',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-  }).then((result) => {
-    if (result.isConfirmed) {
-      // Mark field as touched
-      this.touchedDocumentFields[fileType] = true;
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You will need to upload this file again',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Remove',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Mark field as touched
+        this.touchedDocumentFields[fileType] = true;
 
-      switch (fileType) {
-        case 'frontNic':
-          this.selectedFrontNicFile = null;
-          this.selectedFrontNicImage = null;
-          this.personalData.frontNic = '';
-          break;
-        case 'backNic':
-          this.selectedBackNicFile = null;
-          this.selectedBackNicImage = null;
-          this.personalData.backNic = '';
-          break;
-        case 'passbook':
-          this.selectedPassbookFile = null;
-          this.selectedPassbookImage = null;
-          this.personalData.backPassbook = '';
-          break;
-        case 'contract':
-          this.selectedContractFile = null;
-          this.selectedContractImage = null;
-          this.personalData.contract = '';
-          break;
+        switch (fileType) {
+          case 'frontNic':
+            this.selectedFrontNicFile = null;
+            this.selectedFrontNicImage = null;
+            this.personalData.frontNic = '';
+            break;
+          case 'backNic':
+            this.selectedBackNicFile = null;
+            this.selectedBackNicImage = null;
+            this.personalData.backNic = '';
+            break;
+          case 'passbook':
+            this.selectedPassbookFile = null;
+            this.selectedPassbookImage = null;
+            this.personalData.backPassbook = '';
+            break;
+          case 'contract':
+            this.selectedContractFile = null;
+            this.selectedContractImage = null;
+            this.personalData.contract = '';
+            break;
+        }
       }
-    }
-  });
-}
+    });
+  }
 
 
   onSubmit() {
-  this.markAllFieldsAsTouched();
-  
-  // For both create and update, ensure we're on pageThree and validate documents
-  if (this.selectedPage !== 'pageThree') {
-    this.selectedPage = 'pageThree';
-    return;
-  }
+    this.markAllFieldsAsTouched();
 
-  if (this.itemId) {
-    this.updateFieldOfficer();
-  } else {
-    this.createFieldOfficer();
+    // For both create and update, ensure we're on pageThree and validate documents
+    if (this.selectedPage !== 'pageThree') {
+      this.selectedPage = 'pageThree';
+      return;
+    }
+
+    if (this.itemId) {
+      this.updateFieldOfficer();
+    } else {
+      this.createFieldOfficer();
+    }
   }
-}
 
   // Updated update method with new fields
   updateFieldOfficer(): void {
-  // Mark all fields as touched to show validation messages
-  this.markAllFieldsAsTouched();
+    // Mark all fields as touched to show validation messages
+    this.markAllFieldsAsTouched();
 
-  const missingFields: string[] = [];
+    const missingFields: string[] = [];
 
-  // Check required fields for pageOne
-  if (!this.personalData.empType) {
-    missingFields.push('Staff Employee Type is Required');
-  }
+    // Check required fields for pageOne
+    if (!this.personalData.empType) {
+      missingFields.push('Staff Employee Type is Required');
+    }
 
-  if (!this.isAtLeastOneLanguageSelected()) {
-    missingFields.push('Preferred Languages is Required');
-  }
+    if (!this.isAtLeastOneLanguageSelected()) {
+      missingFields.push('Preferred Languages is Required');
+    }
 
-  if (!this.personalData.jobRole) {
-    missingFields.push('Job Role is Required');
-  }
+    if (!this.personalData.jobRole) {
+      missingFields.push('Job Role is Required');
+    }
 
-  if (this.personalData.jobRole === 'Field Officer' && !this.personalData.irmId) {
-    missingFields.push('Chief Field Officer is Required');
-  }
+    if (this.personalData.jobRole === 'Field Officer' && !this.personalData.irmId) {
+      missingFields.push('Chief Field Officer is Required');
+    }
 
-  if (!this.personalData.firstName) {
-    missingFields.push('First Name (in English) is Required');
-  }
+    if (!this.personalData.firstName) {
+      missingFields.push('First Name (in English) is Required');
+    }
 
-  if (!this.personalData.lastName) {
-    missingFields.push('Last Name (in English) is Required');
-  }
+    if (!this.personalData.lastName) {
+      missingFields.push('Last Name (in English) is Required');
+    }
 
-  // Validate Sinhala names
-  if (!this.personalData.firstNameSinhala) {
-    missingFields.push('First Name in Sinhala is Required');
-  }
+    // Validate Sinhala names
+    if (!this.personalData.firstNameSinhala) {
+      missingFields.push('First Name in Sinhala is Required');
+    }
 
-  if (!this.personalData.lastNameSinhala) {
-    missingFields.push('Last Name in Sinhala is Required');
-  }
+    if (!this.personalData.lastNameSinhala) {
+      missingFields.push('Last Name in Sinhala is Required');
+    }
 
-  // Validate Tamil names
-  if (!this.personalData.firstNameTamil) {
-    missingFields.push('First Name in Tamil is Required');
-  }
+    // Validate Tamil names
+    if (!this.personalData.firstNameTamil) {
+      missingFields.push('First Name in Tamil is Required');
+    }
 
-  if (!this.personalData.lastNameTamil) {
-    missingFields.push('Last Name in Tamil is Required');
-  }
+    if (!this.personalData.lastNameTamil) {
+      missingFields.push('Last Name in Tamil is Required');
+    }
 
-  if (!this.personalData.phoneNumber1) {
-    missingFields.push('Mobile Number - 01 is Required');
-  } else if (!this.isValidPhoneNumber(this.personalData.phoneNumber1)) {
-    missingFields.push('Mobile Number - 01 - Must be 9 digits starting with 7');
-  }
+    if (!this.personalData.phoneNumber1) {
+      missingFields.push('Mobile Number - 01 is Required');
+    } else if (!this.isValidPhoneNumber(this.personalData.phoneNumber1)) {
+      missingFields.push('Mobile Number - 01 - Must be 9 digits starting with 7');
+    }
 
-  if (this.personalData.phoneNumber2 && !this.isValidPhoneNumber(this.personalData.phoneNumber2)) {
-    missingFields.push('Mobile Number - 02 - Must be 9 digits starting with 7');
-  }
+    if (this.personalData.phoneNumber2 && !this.isValidPhoneNumber(this.personalData.phoneNumber2)) {
+      missingFields.push('Mobile Number - 02 - Must be 9 digits starting with 7');
+    }
 
-  if (this.areDuplicatePhoneNumbers()) {
-    missingFields.push('Mobile Number - 02 - Cannot be the same as Mobile Number - 01');
-  }
+    if (this.areDuplicatePhoneNumbers()) {
+      missingFields.push('Mobile Number - 02 - Cannot be the same as Mobile Number - 01');
+    }
 
-  if (!this.personalData.nic) {
-    missingFields.push('NIC Number is Required');
-  } else if (!this.isValidNIC(this.personalData.nic)) {
-    missingFields.push('NIC Number - Must be 12 digits or 9 digits followed by V');
-  }
+    if (!this.personalData.nic) {
+      missingFields.push('NIC Number is Required');
+    } else if (!this.isValidNIC(this.personalData.nic)) {
+      missingFields.push('NIC Number - Must be 12 digits or 9 digits followed by V');
+    }
 
-  if (!this.personalData.email) {
-    missingFields.push('Email is Required');
-  } else if (!this.isValidEmail(this.personalData.email)) {
-    missingFields.push(`Email - ${this.getEmailErrorMessage(this.personalData.email)}`);
-  }
+    if (!this.personalData.email) {
+      missingFields.push('Email is Required');
+    } else if (!this.isValidEmail(this.personalData.email)) {
+      missingFields.push(`Email - ${this.getEmailErrorMessage(this.personalData.email)}`);
+    }
 
-  // Check required fields for pageTwo
-  if (!this.personalData.house) {
-    missingFields.push('House / Plot Number is Required');
-  }
+    // Check required fields for pageTwo
+    if (!this.personalData.house) {
+      missingFields.push('House / Plot Number is Required');
+    }
 
-  if (!this.personalData.street) {
-    missingFields.push('Street Name is Required');
-  }
+    if (!this.personalData.street) {
+      missingFields.push('Street Name is Required');
+    }
 
-  if (!this.personalData.city) {
-    missingFields.push('City is Required');
-  }
+    if (!this.personalData.city) {
+      missingFields.push('City is Required');
+    }
 
-  if (!this.personalData.province) {
-    missingFields.push('Province is Required');
-  }
+    if (!this.personalData.province) {
+      missingFields.push('Province is Required');
+    }
 
-  if (!this.personalData.distrct) {
-    missingFields.push('District is Required');
-  }
+    if (!this.personalData.distrct) {
+      missingFields.push('District is Required');
+    }
 
-  if (!this.personalData.accName) {
-    missingFields.push("Account Holder's Name is Required");
-  } else if (this.hasInvalidAccountHolderCharacters()) {
-    missingFields.push("Account Holder's Name should only contain English letters");
-  }
+    if (!this.personalData.accName) {
+      missingFields.push("Account Holder's Name is Required");
+    } else if (this.hasInvalidAccountHolderCharacters()) {
+      missingFields.push("Account Holder's Name should only contain English letters");
+    }
 
-  if (!this.personalData.accNumber) {
-    missingFields.push('Account Number is Required');
-  } else if (!this.isValidAccountNumber()) {
-    missingFields.push('Account Number must be between 8 and 16 digits');
-  }
+    if (!this.personalData.accNumber) {
+      missingFields.push('Account Number is Required');
+    } else if (!this.isValidAccountNumber()) {
+      missingFields.push('Account Number must be between 8 and 16 digits');
+    }
 
-  if (!this.personalData.bank) {
-    missingFields.push('Bank Name is Required');
-  }
+    if (!this.personalData.bank) {
+      missingFields.push('Bank Name is Required');
+    }
 
-  if (!this.personalData.branch) {
-    missingFields.push('Branch Name is Required');
-  }
+    if (!this.personalData.branch) {
+      missingFields.push('Branch Name is Required');
+    }
 
-  if (!this.personalData.comAmount && this.personalData.comAmount !== 0) {
-    missingFields.push('Commission Amount is required');
-  } else if (!this.isValidCommissionAmount()) {
-    missingFields.push('Commission Amount must be between 0 and 100');
-  }
+    if (!this.personalData.comAmount && this.personalData.comAmount !== 0) {
+      missingFields.push('Commission Amount is required');
+    } else if (!this.isValidCommissionAmount()) {
+      missingFields.push('Commission Amount must be between 0 and 100');
+    }
 
-  // Check assigned districts
-  if (!this.personalData.assignDistrict || this.personalData.assignDistrict.length === 0) {
-    missingFields.push('At least one Assigned District is required');
-  }
+    // Check assigned districts
+    if (!this.personalData.assignDistrict || this.personalData.assignDistrict.length === 0) {
+      missingFields.push('At least one Assigned District is required');
+    }
 
-  // ✅ ADDED: Check required documents for pageThree in UPDATE mode
-  // For update, check if documents exist (either existing files or newly uploaded files)
-  const documentErrors = this.validateDocumentFieldsForUpdate();
-  missingFields.push(...documentErrors);
+    // ✅ ADDED: Check required documents for pageThree in UPDATE mode
+    // For update, check if documents exist (either existing files or newly uploaded files)
+    const documentErrors = this.validateDocumentFieldsForUpdate();
+    missingFields.push(...documentErrors);
 
-  // If errors, show list and stop - validation messages will now be visible
-  if (missingFields.length > 0) {
-    let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
-    missingFields.forEach((field) => {
-      errorMessage += `<li>${field}</li>`;
-    });
-    errorMessage += '</ul></div>';
+    // If errors, show list and stop - validation messages will now be visible
+    if (missingFields.length > 0) {
+      let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+      missingFields.forEach((field) => {
+        errorMessage += `<li>${field}</li>`;
+      });
+      errorMessage += '</ul></div>';
 
+      Swal.fire({
+        icon: 'error',
+        title: 'Missing or Invalid Information',
+        html: errorMessage,
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+          htmlContainer: 'text-left',
+        },
+      });
+      return;
+    }
+
+    // If valid, confirm update
     Swal.fire({
-      icon: 'error',
-      title: 'Missing or Invalid Information',
-      html: errorMessage,
-      confirmButtonText: 'OK',
+      title: 'Are you sure?',
+      text: 'Do you want to update the field officer?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, update it!',
+      cancelButtonText: 'No, cancel',
+      reverseButtons: true,
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold text-lg',
-        htmlContainer: 'text-left',
       },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+
+        // Prepare the officer data object for the API with CORRECT field names including new fields
+        const officerData = {
+          // Personal Details - using correct field names that match backend
+          firstName: this.personalData.firstName,
+          lastName: this.personalData.lastName,
+          firstNameSinhala: this.personalData.firstNameSinhala,
+          lastNameSinhala: this.personalData.lastNameSinhala,
+          firstNameTamil: this.personalData.firstNameTamil,
+          lastNameTamil: this.personalData.lastNameTamil,
+          phoneNumber1: this.personalData.phoneNumber1,
+          phoneNumber2: this.personalData.phoneNumber2,
+          phoneCode1: this.personalData.phoneCode1,
+          phoneCode2: this.personalData.phoneCode2,
+          nic: this.personalData.nic,
+          email: this.personalData.email,
+
+          // Employment Details - using correct field names
+          empType: this.personalData.empType,
+          jobRole: this.personalData.jobRole,
+          empId: this.personalData.empId,
+          irmId: this.personalData.irmId,
+
+          // Languages
+          language: this.personalData.language,
+
+          // Residential Details - using correct field names
+          house: this.personalData.house,
+          street: this.personalData.street,
+          city: this.personalData.city,
+          distrct: this.personalData.distrct,
+          province: this.personalData.province,
+          country: this.personalData.country,
+
+          // Bank Details - using correct field names
+          comAmount: this.personalData.comAmount,
+          accName: this.personalData.accName,
+          accNumber: this.personalData.accNumber,
+          bank: this.personalData.bank,
+          branch: this.personalData.branch,
+
+          // Assign Districts - FIXED: Convert district objects to comma-separated names
+          assignDistrict: this.personalData.assignDistrict.map(d => d.name).join(','),
+
+          // Status
+          status: "Not Approved"
+        };
+
+
+
+        // Call the update service method
+        this.stakeHolderSrv.editFieldOfficer(
+          officerData,
+          this.itemId!,
+          this.selectedFile || undefined, // profile image (optional)
+          this.selectedFrontNicFile || undefined, // nicFront (optional)
+          this.selectedBackNicFile || undefined, // nicBack (optional)
+          this.selectedPassbookFile || undefined, // passbook (optional)
+          this.selectedContractFile || undefined // contract (optional)
+        ).subscribe(
+          (res: any) => {
+            this.isLoading = false;
+            Swal.fire({
+              icon: 'success',
+              title: 'Success',
+              text: 'Field Officer Updated Successfully',
+              confirmButtonText: 'OK',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              },
+            });
+            this.navigatePath('/steckholders/action/field-inspectors');
+          },
+          (error: any) => {
+            this.isLoading = false;
+            let errorMessage = 'An unexpected error occurred';
+            let messages: string[] = [];
+
+            if (error.error && Array.isArray(error.error.errors)) {
+              // Map backend error keys to user-friendly messages
+              messages = error.error.errors.map((err: string) => {
+                switch (err) {
+                  case 'NIC':
+                    return 'The NIC number is already registered.';
+                  case 'Email':
+                    return 'Email already exists.';
+                  case 'PhoneNumber1':
+                    return 'Mobile Number 1 already exists.';
+                  case 'PhoneNumber2':
+                    return 'Mobile Number 2 already exists.';
+                  default:
+                    return 'Validation error: ' + err;
+                }
+              });
+            }
+
+            if (messages.length > 0) {
+              errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following Duplicate field issues:</p><ul class="list-disc pl-5">';
+              messages.forEach(m => {
+                errorMessage += `<li>${m}</li>`;
+              });
+              errorMessage += '</ul></div>';
+
+              Swal.fire({
+                icon: 'error',
+                title: 'Duplicate Information',
+                html: errorMessage,
+                confirmButtonText: 'OK',
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold text-lg',
+                  htmlContainer: 'text-left',
+                },
+              });
+            } else {
+              // Generic error message
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Failed to update field officer. Please try again.',
+                confirmButtonText: 'OK',
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                },
+              });
+            }
+            console.error('Error updating field officer:', error);
+          }
+        );
+      }
     });
-    return;
   }
-
-  // If valid, confirm update
-  Swal.fire({
-    title: 'Are you sure?',
-    text: 'Do you want to update the field officer?',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, update it!',
-    cancelButtonText: 'No, cancel',
-    reverseButtons: true,
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-    },
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.isLoading = true;
-
-      // Prepare the officer data object for the API with CORRECT field names including new fields
-      const officerData = {
-        // Personal Details - using correct field names that match backend
-        firstName: this.personalData.firstName,
-        lastName: this.personalData.lastName,
-        firstNameSinhala: this.personalData.firstNameSinhala,
-        lastNameSinhala: this.personalData.lastNameSinhala,
-        firstNameTamil: this.personalData.firstNameTamil,
-        lastNameTamil: this.personalData.lastNameTamil,
-        phoneNumber1: this.personalData.phoneNumber1,
-        phoneNumber2: this.personalData.phoneNumber2,
-        phoneCode1: this.personalData.phoneCode1,
-        phoneCode2: this.personalData.phoneCode2,
-        nic: this.personalData.nic,
-        email: this.personalData.email,
-        
-        // Employment Details - using correct field names
-        empType: this.personalData.empType,
-        jobRole: this.personalData.jobRole,
-        empId: this.personalData.empId,
-        irmId: this.personalData.irmId,
-        
-        // Languages
-        language: this.personalData.language,
-        
-        // Residential Details - using correct field names
-        house: this.personalData.house,
-        street: this.personalData.street,
-        city: this.personalData.city,
-        distrct: this.personalData.distrct,
-        province: this.personalData.province,
-        country: this.personalData.country,
-        
-        // Bank Details - using correct field names
-        comAmount: this.personalData.comAmount,
-        accName: this.personalData.accName,
-        accNumber: this.personalData.accNumber,
-        bank: this.personalData.bank,
-        branch: this.personalData.branch,
-        
-        // Assign Districts - FIXED: Convert district objects to comma-separated names
-        assignDistrict: this.personalData.assignDistrict.map(d => d.name).join(','),
-        
-        // Status
-        status: "Not Approved"
-      };
-
-      
-
-      // Call the update service method
-      this.stakeHolderSrv.editFieldOfficer(
-        officerData,
-        this.itemId!,
-        this.selectedFile || undefined, // profile image (optional)
-        this.selectedFrontNicFile || undefined, // nicFront (optional)
-        this.selectedBackNicFile || undefined, // nicBack (optional)
-        this.selectedPassbookFile || undefined, // passbook (optional)
-        this.selectedContractFile || undefined // contract (optional)
-      ).subscribe(
-        (res: any) => {
-          this.isLoading = false;
-          Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: 'Field Officer Updated Successfully',
-            confirmButtonText: 'OK',
-            customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            },
-          });
-          this.navigatePath('/steckholders/action/field-inspectors');
-        },
-        (error: any) => {
-          this.isLoading = false;
-          let errorMessage = 'An unexpected error occurred';
-          let messages: string[] = [];
-
-          if (error.error && Array.isArray(error.error.errors)) {
-            // Map backend error keys to user-friendly messages
-            messages = error.error.errors.map((err: string) => {
-              switch (err) {
-                case 'NIC':
-                  return 'The NIC number is already registered.';
-                case 'Email':
-                  return 'Email already exists.';
-                case 'PhoneNumber1':
-                  return 'Mobile Number 1 already exists.';
-                case 'PhoneNumber2':
-                  return 'Mobile Number 2 already exists.';
-                default:
-                  return 'Validation error: ' + err;
-              }
-            });
-          }
-
-          if (messages.length > 0) {
-            errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following Duplicate field issues:</p><ul class="list-disc pl-5">';
-            messages.forEach(m => {
-              errorMessage += `<li>${m}</li>`;
-            });
-            errorMessage += '</ul></div>';
-
-            Swal.fire({
-              icon: 'error',
-              title: 'Duplicate Information',
-              html: errorMessage,
-              confirmButtonText: 'OK',
-              customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                title: 'font-semibold text-lg',
-                htmlContainer: 'text-left',
-              },
-            });
-          } else {
-            // Generic error message
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: 'Failed to update field officer. Please try again.',
-              confirmButtonText: 'OK',
-              customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              },
-            });
-          }
-          console.error('Error updating field officer:', error);
-        }
-      );
-    }
-  });
-}
 
   // Keep your existing createFieldOfficer logic (updated with new fields)
   createFieldOfficer(): void {
@@ -2067,16 +2068,16 @@ populateFormData(officerData: any): void {
           phoneCode2: this.personalData.phoneCode2,
           nic: this.personalData.nic,
           email: this.personalData.email,
-          
+
           // Employment Details
           empType: this.personalData.empType,
           jobRole: this.personalData.jobRole,
           empId: this.personalData.empId,
           irmId: this.personalData.irmId,
-          
+
           // Languages
           language: this.personalData.language,
-          
+
           // Residential Details
           house: this.personalData.house,
           street: this.personalData.street,
@@ -2084,17 +2085,17 @@ populateFormData(officerData: any): void {
           distrct: this.personalData.distrct,
           province: this.personalData.province,
           country: this.personalData.country,
-          
+
           // Bank Details
           comAmount: this.personalData.comAmount,
           accName: this.personalData.accName,
           accNumber: this.personalData.accNumber,
           bank: this.personalData.bank,
           branch: this.personalData.branch,
-          
+
           // Assign Districts - FIXED: Convert district objects to comma-separated names
           assignDistrict: this.personalData.assignDistrict.map(d => d.name).join(','),
-          
+
           // Status
           status: "Not Approved"
         };
@@ -2222,63 +2223,48 @@ populateFormData(officerData: any): void {
   }
 
   resetPassword() {
-      Swal.fire({
-        title: 'Are you sure?',
-        text: 'You are about to reset the Field Officer password. This action cannot be undone.',
-        icon: 'info',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, reset password!',
-        cancelButtonText: 'Cancel',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold text-lg',
-          confirmButton: 'bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg',
-          cancelButton: 'bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg'
-        }
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.isLoading = true;
-  
-          // Use the component's known id property (itemId) or fallback to personalData.id
-          this.stakeHolderSrv.changeInspectorStatus(this.itemId || this.personalData.id, 'Approved').subscribe(
-            (res) => {
-              this.isLoading = false;
-              if (res.status) {
-                Swal.fire({
-                  icon: 'success',
-                  title: 'Success!',
-                  text: 'The Field Officer password reset successfully.',
-                  showConfirmButton: false,
-                  timer: 3000,
-                  customClass: {
-                    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                    title: 'font-semibold text-lg',
-                  },
-                });
-                // Reload the currently loaded field officer data
-                this.loadFieldOfficerData(this.itemId || this.personalData.id);
-              } else {
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Error!',
-                  text: 'Something went wrong. Please try again.',
-                  showConfirmButton: false,
-                  timer: 3000,
-                  customClass: {
-                    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                    title: 'font-semibold text-lg',
-                  },
-                });
-              }
-            },
-            () => {
-              this.isLoading = false;
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You are about to reset the Field Officer password. This action cannot be undone.',
+      icon: 'info',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, reset password!',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        confirmButton: 'bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg',
+        cancelButton: 'bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg'
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+
+        // Use the component's known id property (itemId) or fallback to personalData.id
+        this.stakeHolderSrv.changeInspectorStatus(this.itemId || this.personalData.id, 'Approved').subscribe(
+          (res) => {
+            this.isLoading = false;
+            if (res.status) {
+              Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'The Field Officer password reset successfully.',
+                showConfirmButton: false,
+                timer: 3000,
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold text-lg',
+                },
+              });
+              // Reload the currently loaded field officer data
+              this.loadFieldOfficerData(this.itemId || this.personalData.id);
+            } else {
               Swal.fire({
                 icon: 'error',
                 title: 'Error!',
-                text: 'An error occurred while resetting password. Please try again.',
+                text: 'Something went wrong. Please try again.',
                 showConfirmButton: false,
                 timer: 3000,
                 customClass: {
@@ -2287,151 +2273,166 @@ populateFormData(officerData: any): void {
                 },
               });
             }
-          );
-        }
-      });
-    }
+          },
+          () => {
+            this.isLoading = false;
+            Swal.fire({
+              icon: 'error',
+              title: 'Error!',
+              text: 'An error occurred while resetting password. Please try again.',
+              showConfirmButton: false,
+              timer: 3000,
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold text-lg',
+              },
+            });
+          }
+        );
+      }
+    });
+  }
 
   touchedDocumentFields: { [key: string]: boolean } = {
-  frontNic: false,
-  backNic: false,
-  passbook: false,
-  contract: false
-};
-
-    isDocumentFieldInvalid(fieldType: 'frontNic' | 'backNic' | 'passbook' | 'contract'): boolean {
-  if (!this.touchedDocumentFields[fieldType]) {
-    return false;
-  }
-
-  switch (fieldType) {
-    case 'frontNic':
-      return !this.selectedFrontNicFile && !this.personalData.frontNic;
-    case 'backNic':
-      return !this.selectedBackNicFile && !this.personalData.backNic;
-    case 'passbook':
-      return !this.selectedPassbookFile && !this.personalData.backPassbook;
-    case 'contract':
-      return !this.selectedContractFile && !this.personalData.contract;
-    default:
-      return false;
-  }
-}
-
-markAllDocumentFieldsAsTouched(): void {
-  this.touchedDocumentFields = {
-    frontNic: true,
-    backNic: true,
-    passbook: true,
-    contract: true
+    frontNic: false,
+    backNic: false,
+    passbook: false,
+    contract: false
   };
-}
 
-validateDocumentFields(): string[] {
-  const errors: string[] = [];
+  isDocumentFieldInvalid(fieldType: 'frontNic' | 'backNic' | 'passbook' | 'contract'): boolean {
+    if (!this.touchedDocumentFields[fieldType]) {
+      return false;
+    }
 
-  if (!this.selectedFrontNicFile && !this.personalData.frontNic) {
-    errors.push('NIC Front Image is required');
+    switch (fieldType) {
+      case 'frontNic':
+        return !this.selectedFrontNicFile && !this.personalData.frontNic;
+      case 'backNic':
+        return !this.selectedBackNicFile && !this.personalData.backNic;
+      case 'passbook':
+        return !this.selectedPassbookFile && !this.personalData.backPassbook;
+      case 'contract':
+        return !this.selectedContractFile && !this.personalData.contract;
+      default:
+        return false;
+    }
   }
 
-  if (!this.selectedBackNicFile && !this.personalData.backNic) {
-    errors.push('NIC Back Image is required');
+  markAllDocumentFieldsAsTouched(): void {
+    this.touchedDocumentFields = {
+      frontNic: true,
+      backNic: true,
+      passbook: true,
+      contract: true
+    };
   }
 
-  if (!this.selectedPassbookFile && !this.personalData.backPassbook) {
-    errors.push('Bank Passbook is required');
+  validateDocumentFields(): string[] {
+    const errors: string[] = [];
+
+    if (!this.selectedFrontNicFile && !this.personalData.frontNic) {
+      errors.push('NIC Front Image is required');
+    }
+
+    if (!this.selectedBackNicFile && !this.personalData.backNic) {
+      errors.push('NIC Back Image is required');
+    }
+
+    if (!this.selectedPassbookFile && !this.personalData.backPassbook) {
+      errors.push('Bank Passbook is required');
+    }
+
+    if (!this.selectedContractFile && !this.personalData.contract) {
+      errors.push('Signed Contract is required');
+    }
+
+    return errors;
   }
 
-  if (!this.selectedContractFile && !this.personalData.contract) {
-    errors.push('Signed Contract is required');
+  validateDocumentFieldsForUpdate(): string[] {
+    const errors: string[] = [];
+
+    // For update, we need to check if documents exist (either existing or newly uploaded)
+
+    // Check NIC Front Image - must have either existing file or newly uploaded file
+    if (!this.selectedFrontNicFile && !this.personalData.frontNic) {
+      errors.push('NIC Front Image is required');
+    }
+
+    // Check NIC Back Image - must have either existing file or newly uploaded file
+    if (!this.selectedBackNicFile && !this.personalData.backNic) {
+      errors.push('NIC Back Image is required');
+    }
+
+    // Check Bank Passbook - must have either existing file or newly uploaded file
+    if (!this.selectedPassbookFile && !this.personalData.backPassbook) {
+      errors.push('Bank Passbook is required');
+    }
+
+    // Check Signed Contract - must have either existing file or newly uploaded file
+    if (!this.selectedContractFile && !this.personalData.contract) {
+      errors.push('Signed Contract is required');
+    }
+
+    return errors;
   }
 
-  return errors;
-}
-
-validateDocumentFieldsForUpdate(): string[] {
-  const errors: string[] = [];
-
-  // For update, we need to check if documents exist (either existing or newly uploaded)
-  
-  // Check NIC Front Image - must have either existing file or newly uploaded file
-  if (!this.selectedFrontNicFile && !this.personalData.frontNic) {
-    errors.push('NIC Front Image is required');
+  clearChiefFieldOfficer(): void {
+    this.personalData.irmId = null;
+    this.touchedFields['irmId'] = true;
   }
 
-  // Check NIC Back Image - must have either existing file or newly uploaded file
-  if (!this.selectedBackNicFile && !this.personalData.backNic) {
-    errors.push('NIC Back Image is required');
+  onAssignedDistrictsChange(): void {
+    // Check if assignDistrict is cleared (empty array)
+    if (!this.personalData.assignDistrict || this.personalData.assignDistrict.length === 0) {
+      // Clear Job Role (p-dropdown will handle this automatically)
+      // No need to manually set personalData.jobRole = ''
+
+      // Clear Chief Field Officer
+      this.clearChiefFieldOfficer();
+
+      // Also reset the employee ID
+      this.personalData.empId = '';
+    }
   }
 
-  // Check Bank Passbook - must have either existing file or newly uploaded file
-  if (!this.selectedPassbookFile && !this.personalData.backPassbook) {
-    errors.push('Bank Passbook is required');
+  onJobRoleChange(event: DropdownChangeEvent): void {
+    const role = event.value;
+
+    // Clear CFO if job role is not 'Field Officer'
+    if (!role || role !== 'Field Officer') {
+      this.clearChiefFieldOfficer();
+    }
+
+    // Generate employee ID
+    this.EpmloyeIdCreate();
   }
 
-  // Check Signed Contract - must have either existing file or newly uploaded file
-  if (!this.selectedContractFile && !this.personalData.contract) {
-    errors.push('Signed Contract is required');
-  }
-
-  return errors;
-}
-
-clearChiefFieldOfficer(): void {
-  this.personalData.irmId = null;
-  this.touchedFields['irmId'] = true;
-}
-
-onAssignedDistrictsChange(): void {
-  // Check if assignDistrict is cleared (empty array)
-  if (!this.personalData.assignDistrict || this.personalData.assignDistrict.length === 0) {
-    // Clear Job Role (p-dropdown will handle this automatically)
-    // No need to manually set personalData.jobRole = ''
-    
-    // Clear Chief Field Officer
+  onJobRoleClear(): void {
+    // Clear Chief Field Officer when job role is cleared
     this.clearChiefFieldOfficer();
-    
-    // Also reset the employee ID
-    this.personalData.empId = '';
+
+    // Mark field as touched for validation
+    this.touchedFields['jobRole'] = true;
   }
-}
 
-onJobRoleChange(event: DropdownChangeEvent): void {
-  const role = event.value;
-  
-  // Clear CFO if job role is not 'Field Officer'
-  if (!role || role !== 'Field Officer') {
-    this.clearChiefFieldOfficer();
+  scrollToTop(): void {
+    // Method 1: Direct window scrolling
+    window.scrollTo(0, 0);
+
+    // Method 2: With smooth scrolling
+    // window.scrollTo({
+    //   top: 0,
+    //   behavior: 'smooth'
+    // });
+
+    // Method 3: Scroll to specific container
+    // const container = document.querySelector('.mx-auto.p-6');
+    // if (container) {
+    //   container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // }
   }
-  
-  // Generate employee ID
-  this.EpmloyeIdCreate();
-}
-
-onJobRoleClear(): void {
-  // Clear Chief Field Officer when job role is cleared
-  this.clearChiefFieldOfficer();
-  
-  // Mark field as touched for validation
-  this.touchedFields['jobRole'] = true;
-}
-
-scrollToTop(): void {
-  // Method 1: Direct window scrolling
-  window.scrollTo(0, 0);
-  
-  // Method 2: With smooth scrolling
-  // window.scrollTo({
-  //   top: 0,
-  //   behavior: 'smooth'
-  // });
-  
-  // Method 3: Scroll to specific container
-  // const container = document.querySelector('.mx-auto.p-6');
-  // if (container) {
-  //   container.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  // }
-}
 
 }
 

@@ -16,11 +16,11 @@
       <!-- Crop Name -->
       <form [formGroup]="cropForm" (ngSubmit)="onSubmit()">
         <div>
-          <label for="groupId" class="block text-sm font-medium text-textLight dark:text-textDark mb-2">Crop Name
+          <label for="groupId" class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">Crop Name
             *</label>
           <p-dropdown [options]="groupList" formControlName="groupId" optionLabel="cropNameEnglish" optionValue="id"
             [filter]="true" filterPlaceholder="Search crop..." placeholder="Select a crop" [showClear]="true"
-            class="w-full mt-2 text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack crop-group-dropdown" />
+            class="w-full mt-2 text-gray-700 dark:text-textDark bg-tileLight dark:bg-tileBlack crop-group-dropdown" />
 
           <div *ngIf="
               cropForm.get('groupId')!.invalid &&
@@ -41,7 +41,7 @@
           <input type="text" id="varietyNameEnglish" formControlName="varietyNameEnglish"
             (input)="onVarietyNameInput($event, 'english')"
             (keypress)="preventInvalidEnglishAlphanumericCharacters($event)"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
             required />
           <div *ngIf="
             cropForm.get('varietyNameEnglish')!.invalid &&
@@ -65,7 +65,7 @@
           <textarea id="descriptionEnglish" formControlName="descriptionEnglish"
             (input)="onDescriptionInput($event, 'english')"
             (keypress)="preventInvalidEnglishAlphanumericCharacters($event)" name="descriptionEnglish" rows="3"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-gray-700 dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
           <div *ngIf="
       cropForm.get('descriptionEnglish')!.invalid &&
       (cropForm.get('descriptionEnglish')!.dirty ||
@@ -84,7 +84,7 @@
             Name By Sinhala *</label>
           <input type="text" id="varietyNameSinhala" formControlName="varietyNameSinhala"
             (input)="onVarietyNameInput($event, 'sinhala')"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
             required />
           <div *ngIf="
             cropForm.get('varietyNameSinhala')!.invalid &&
@@ -107,7 +107,7 @@
             class="block text-sm font-medium text-gray-700 dark:text-textDark">Description (in Sinhala) *</label>
           <textarea id="descriptionSinhala" formControlName="descriptionSinhala"
             (input)="onDescriptionInput($event, 'sinhala')" name="descriptionSinhala" rows="3"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-gray-700 dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
           <div *ngIf="
       cropForm.get('descriptionSinhala')!.invalid &&
       (cropForm.get('descriptionSinhala')!.dirty ||
@@ -127,7 +127,7 @@
             By Tamil *</label>
           <input type="text" id="varietyNameTamil" formControlName="varietyNameTamil"
             (input)="onVarietyNameInput($event, 'tamil')"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
             required />
           <div *ngIf="
             cropForm.get('varietyNameTamil')!.invalid &&
@@ -150,7 +150,7 @@
             (in Tamil) *</label>
           <textarea id="descriptionTamil" formControlName="descriptionTamil"
             (input)="onDescriptionInput($event, 'tamil')" name="descriptionTamil" rows="3"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-[#000000] dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-gray-700 dark:text-textDark bg-tileLight  dark:bg-tileBlack"></textarea>
           <div *ngIf="
       cropForm.get('descriptionTamil')!.invalid &&
       (cropForm.get('descriptionTamil')!.dirty ||

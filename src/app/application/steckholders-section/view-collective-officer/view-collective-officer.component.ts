@@ -1,11 +1,11 @@
-import { Component, ViewChild  } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { DropdownModule } from 'primeng/dropdown';
 import { HttpClientModule } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormsModule, NgModel  } from '@angular/forms';
+import { FormsModule, NgModel } from '@angular/forms';
 import { CollectionService } from '../../../services/collection.service';
 import { environment } from '../../../environment/environment';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
@@ -28,7 +28,7 @@ interface CollectionOfficers {
   created_at: string;
   centerName: string;
   officerModiyBy: string;
-  adminModifyBy:string;
+  adminModifyBy: string;
   regCode: string;
 }
 
@@ -58,7 +58,6 @@ export class ViewCollectiveOfficerComponent {
   jobRole: JobRole[] = [
     { id: 1, jobRole: 'Collection Officer' },
     { id: 2, jobRole: 'Collection Centre Manager' },
-
   ];
   centerNames: CenterName[] = [];
   collectionCenterManagerNames: ManagerNames[] = [];
@@ -108,22 +107,20 @@ export class ViewCollectiveOfficerComponent {
     public permissionService: PermissionService,
     private collectionOfficerService: CollectionOfficerService,
     private route: ActivatedRoute,
-  ) { }
+  ) {}
 
   fetchAllCollectionOfficer(
-    
     page: number = 1,
     limit: number = this.itemsPerPage,
     centerStatus: string = this.selectCenterStatus,
     status: string = this.selectStatus,
-    centerId: string | null = this.selectedCenterId
+    centerId: string | null = this.selectedCenterId,
   ) {
     this.isLoading = true;
     this.route.queryParams.subscribe((params) => {
       this.centerId = params['id'] ? +params['id'] : null;
       this.Cname = params['Cname'] ? params['Cname'] : null;
     });
-
 
     if (this.centerId === null) {
       this.collectionService
@@ -140,18 +137,17 @@ export class ViewCollectiveOfficerComponent {
           (response) => {
             this.isLoading = false;
             if (response.total > 0) {
-              this.hasData = true
+              this.hasData = true;
             } else {
-              this.hasData = false
+              this.hasData = false;
             }
             this.collectionOfficers = response.items;
             this.totalItems = response.total;
           },
           (error) => {
             this.isLoading = false;
-          }
+          },
         );
-
     } else {
       this.collectionService
         .fetchAllCollectionOfficercenter(
@@ -162,7 +158,7 @@ export class ViewCollectiveOfficerComponent {
           this.searchNIC,
           this.statusFilter?.id,
           this.role?.jobRole,
-          this.centerId ? this.centerId : ''
+          this.centerId ? this.centerId : '',
         )
         .subscribe(
           (response) => {
@@ -173,20 +169,17 @@ export class ViewCollectiveOfficerComponent {
           },
           (error) => {
             this.isLoading = false;
-          }
+          },
         );
-
     }
-
   }
 
   back(): void {
     if (this.centerId != null) {
-      history.back()
+      history.back();
     } else {
       this.router.navigate(['steckholders/action']);
     }
-
   }
 
   fetchCenterNames() {
@@ -194,7 +187,7 @@ export class ViewCollectiveOfficerComponent {
       (response) => {
         this.centerNames = response;
       },
-      (error) => { }
+      (error) => {},
     );
   }
 
@@ -202,7 +195,6 @@ export class ViewCollectiveOfficerComponent {
     if (this.selectedCenterId) {
       const numericCenterId = parseInt(this.selectedCenterId);
       this.fetchManagerNames(numericCenterId);
-
     } else {
       this.collectionCenterManagerNames = [];
     }
@@ -212,24 +204,27 @@ export class ViewCollectiveOfficerComponent {
     this.collectionService.getCollectionCenterManagerNames(centerId).subscribe(
       (response) => {
         this.collectionCenterManagerNames = response.data || response;
-        this.collectionCenterManagerNames = this.collectionCenterManagerNames.map(manager => ({
-          ...manager,
-          displayLabel: `${manager.empId} - ${manager.firstNameEnglish} ${manager.lastNameEnglish}`
-        }));
+        this.collectionCenterManagerNames =
+          this.collectionCenterManagerNames.map((manager) => ({
+            ...manager,
+            displayLabel: `${manager.empId} - ${manager.firstNameEnglish} ${manager.lastNameEnglish}`,
+          }));
       },
       (error) => {
         console.error('Error fetching managers:', error);
         this.collectionCenterManagerNames = [];
-      }
+      },
     );
   }
 
   ngOnInit() {
     window.scrollTo({
-    top: 0,
-    behavior: 'smooth' // Optional: adds smooth scrolling animation
-  });
-    this.isSteckholdersRoute = this.router.url.includes('/steckholders/action/collective-officer');
+      top: 0,
+      behavior: 'smooth', // Optional: adds smooth scrolling animation
+    });
+    this.isSteckholdersRoute = this.router.url.includes(
+      '/steckholders/action/collective-officer',
+    );
     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
     this.getAllcompany();
     this.fetchCenterNames();
@@ -237,7 +232,9 @@ export class ViewCollectiveOfficerComponent {
       this.fetchManagerNames(this.centerId);
     }
 
-    this.urlSegment = this.router.url.split('/').filter(segment => segment.length > 0)[0];
+    this.urlSegment = this.router.url
+      .split('/')
+      .filter((segment) => segment.length > 0)[0];
   }
 
   onPageChange(event: number) {
@@ -258,85 +255,93 @@ export class ViewCollectiveOfficerComponent {
     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
   }
 
- deleteCollectionOfficer(id: number) {
-  const token = this.tokenService.getToken();
-  if (!token) return;
+  deleteCollectionOfficer(id: number) {
+    const token = this.tokenService.getToken();
+    if (!token) return;
 
-  Swal.fire({
-    title: 'Are you sure?',
-    text: 'Do you really want to delete this Collection Officer? This action cannot be undone.',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, delete it!',
-    cancelButtonText: 'Cancel',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-      confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700',
-      cancelButton: 'bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 ml-2'
-    },
-    buttonsStyling: false, // let Tailwind handle button styling
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.isLoading = true;
-      this.collectionService.deleteOfficer(id).subscribe(
-        (data) => {
-          this.isLoading = false;
-          if (data.status) {
-            Swal.fire({
-              icon: 'success',
-              title: 'Deleted!',
-              text: 'The Collection Officer has been deleted.',
-              customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                title: 'font-semibold',
-                confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
-              },
-              buttonsStyling: false
-            });
-            this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
-          } else {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you really want to delete this Collection Officer? This action cannot be undone.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+        confirmButton:
+          'bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700',
+        cancelButton:
+          'bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 ml-2',
+      },
+      buttonsStyling: false, // let Tailwind handle button styling
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+        this.collectionService.deleteOfficer(id).subscribe(
+          (data) => {
+            this.isLoading = false;
+            if (data.status) {
+              Swal.fire({
+                icon: 'success',
+                title: 'Deleted!',
+                text: 'The Collection Officer has been deleted.',
+                customClass: {
+                  popup:
+                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold',
+                  confirmButton:
+                    'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700',
+                },
+                buttonsStyling: false,
+              });
+              this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'There was an error deleting the Collection Officer.',
+                customClass: {
+                  popup:
+                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold',
+                  confirmButton:
+                    'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700',
+                },
+                buttonsStyling: false,
+              });
+            }
+          },
+          () => {
+            this.isLoading = false;
             Swal.fire({
               icon: 'error',
               title: 'Error!',
               text: 'There was an error deleting the Collection Officer.',
               customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                 title: 'font-semibold',
-                confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
+                confirmButton:
+                  'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700',
               },
-              buttonsStyling: false
+              buttonsStyling: false,
             });
-          }
-        },
-        () => {
-          this.isLoading = false;
-          Swal.fire({
-            icon: 'error',
-            title: 'Error!',
-            text: 'There was an error deleting the Collection Officer.',
-            customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              title: 'font-semibold',
-              confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
-            },
-            buttonsStyling: false
-          });
-        }
-      );
-    }
-  });
-}
+          },
+        );
+      }
+    });
+  }
 
   editCollectionOfficer(id: number) {
-    this.navigatePath(
-      `/collection-hub/edit-collection-officers/${id}`
-    );
+    this.navigatePath(`/collection-hub/edit-collection-officers/${id}`);
   }
 
   openPopup(item: any) {
-    const showApproveButton = item.status === 'Rejected' || item.status === 'Not Approved';
-    const showRejectButton = item.status === 'Approved' || item.status === 'Not Approved';
+    const showApproveButton =
+      item.status === 'Rejected' || item.status === 'Not Approved';
+    const showRejectButton =
+      item.status === 'Approved' || item.status === 'Not Approved';
 
     // Dynamic message based on status
     let message = '';
@@ -345,7 +350,8 @@ export class ViewCollectiveOfficerComponent {
     } else if (item.status === 'Rejected') {
       message = 'Are you sure you want to approve this collection officer?';
     } else if (item.status === 'Not Approved') {
-      message = 'Are you sure you want to approve or reject this collection officer?';
+      message =
+        'Are you sure you want to approve or reject this collection officer?';
     }
 
     const tableHtml = `
@@ -382,51 +388,59 @@ export class ViewCollectiveOfficerComponent {
               Swal.close();
               this.isPopupVisible = false;
               this.isLoading = true;
-              this.collectionService.ChangeStatus(item.id, 'Approved').subscribe(
-                (res) => {
-                  this.isLoading = false;
-                  if (res.status) {
-                    Swal.fire({
-                      icon: 'success',
-                      title: 'Success!',
-                      text: 'The Collection Officer was approved successfully.',
-                      showConfirmButton: false,
-                      timer: 3000,
-                      customClass: {
-                        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                        title: 'font-semibold',
-                      },
-                    });
-                    this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
-                  } else {
+              this.collectionService
+                .ChangeStatus(item.id, 'Approved')
+                .subscribe(
+                  (res) => {
+                    this.isLoading = false;
+                    if (res.status) {
+                      Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'The Collection Officer was approved successfully.',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        customClass: {
+                          popup:
+                            'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                          title: 'font-semibold',
+                        },
+                      });
+                      this.fetchAllCollectionOfficer(
+                        this.page,
+                        this.itemsPerPage,
+                      );
+                    } else {
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Something went wrong. Please try again.',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        customClass: {
+                          popup:
+                            'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                          title: 'font-semibold',
+                        },
+                      });
+                    }
+                  },
+                  () => {
+                    this.isLoading = false;
                     Swal.fire({
                       icon: 'error',
                       title: 'Error!',
-                      text: 'Something went wrong. Please try again.',
+                      text: 'An error occurred while approving. Please try again.',
                       showConfirmButton: false,
                       timer: 3000,
                       customClass: {
-                        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                        popup:
+                          'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                         title: 'font-semibold',
                       },
                     });
-                  }
-                },
-                () => {
-                  this.isLoading = false;
-                  Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'An error occurred while approving. Please try again.',
-                    showConfirmButton: false,
-                    timer: 3000,
-                    customClass: {
-                      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                      title: 'font-semibold',
-                    },
-                  });
-                }
-              );
+                  },
+                );
             });
         }
 
@@ -437,51 +451,59 @@ export class ViewCollectiveOfficerComponent {
               Swal.close();
               this.isPopupVisible = false;
               this.isLoading = true;
-              this.collectionService.ChangeStatus(item.id, 'Rejected').subscribe(
-                (res) => {
-                  this.isLoading = false;
-                  if (res.status) {
-                    Swal.fire({
-                      icon: 'success',
-                      title: 'Success!',
-                      text: 'The Collection Officer was rejected successfully.',
-                      showConfirmButton: false,
-                      timer: 3000,
-                      customClass: {
-                        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                        title: 'font-semibold',
-                      },
-                    });
-                    this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
-                  } else {
+              this.collectionService
+                .ChangeStatus(item.id, 'Rejected')
+                .subscribe(
+                  (res) => {
+                    this.isLoading = false;
+                    if (res.status) {
+                      Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'The Collection Officer was rejected successfully.',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        customClass: {
+                          popup:
+                            'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                          title: 'font-semibold',
+                        },
+                      });
+                      this.fetchAllCollectionOfficer(
+                        this.page,
+                        this.itemsPerPage,
+                      );
+                    } else {
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Something went wrong. Please try again.',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        customClass: {
+                          popup:
+                            'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                          title: 'font-semibold',
+                        },
+                      });
+                    }
+                  },
+                  () => {
+                    this.isLoading = false;
                     Swal.fire({
                       icon: 'error',
                       title: 'Error!',
-                      text: 'Something went wrong. Please try again.',
+                      text: 'An error occurred while rejecting. Please try again.',
                       showConfirmButton: false,
                       timer: 3000,
                       customClass: {
-                        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                        popup:
+                          'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                         title: 'font-semibold',
                       },
                     });
-                  }
-                },
-                () => {
-                  this.isLoading = false;
-                  Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'An error occurred while rejecting. Please try again.',
-                    showConfirmButton: false,
-                    timer: 3000,
-                    customClass: {
-                      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                      title: 'font-semibold',
-                    },
-                  });
-                }
-              );
+                  },
+                );
             });
         }
       },
@@ -490,15 +512,15 @@ export class ViewCollectiveOfficerComponent {
 
   updateStatus(item: CollectionOfficers, newStatus: string) {
     item.status = newStatus;
-    Swal.fire(
-     { title: 'Updated!',
-     text: `The Collection Officer status has been updated to ${newStatus}.`,
-     icon: 'success',
-     customClass: {
-       popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-       title: 'font-semibold',
-     }}
-    );
+    Swal.fire({
+      title: 'Updated!',
+      text: `The Collection Officer status has been updated to ${newStatus}.`,
+      icon: 'success',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    });
     this.isPopupVisible = false;
   }
 
@@ -509,7 +531,7 @@ export class ViewCollectiveOfficerComponent {
   }
 
   onSearch() {
-    this.searchNIC = this.searchNIC?.trim() || ''
+    this.searchNIC = this.searchNIC?.trim() || '';
     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
   }
 
@@ -558,7 +580,6 @@ export class ViewCollectiveOfficerComponent {
       this.collectionCenterManagerNames = [];
     } else if (item.claimStatus === 1) {
       this.showDisclaimView = true;
-      
     }
   }
 
@@ -573,11 +594,12 @@ export class ViewCollectiveOfficerComponent {
             text: 'Officer disclaimed successfully!',
             confirmButtonText: 'OK',
             customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold',
-              confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
+              confirmButton:
+                'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700',
             },
-            
           }).then((result) => {
             if (result.isConfirmed) {
               window.location.reload();
@@ -592,26 +614,28 @@ export class ViewCollectiveOfficerComponent {
             text: 'Failed to disclaim User successfully!',
             confirmButtonText: 'Try Again',
             customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold',
-              confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
+              confirmButton:
+                'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700',
             },
           });
-        }
+        },
       );
   }
 
   claimOfficer() {
     const centerControl = (this as any).selectedCenterIdInput;
     const managerControl = (this as any).selectedIrmIdInput;
-  
+
     if (centerControl) {
       centerControl.control.markAsTouched();
     }
     if (managerControl) {
       managerControl.control.markAsTouched();
     }
-  
+
     if (this.selectedOfficer?.jobRole === 'Collection Officer') {
       // Require both center and manager
       if (!this.selectedCenterId || !this.selectedIrmId) {
@@ -640,9 +664,11 @@ export class ViewCollectiveOfficerComponent {
             text: 'Officer claimed successfully!',
             confirmButtonText: 'OK',
             customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold',
-              confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
+              confirmButton:
+                'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700',
             },
           }).then((result) => {
             if (result.isConfirmed) {
@@ -660,12 +686,14 @@ export class ViewCollectiveOfficerComponent {
             text: 'Failed to claim officer!',
             confirmButtonText: 'Try Again',
             customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold',
-              confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
+              confirmButton:
+                'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700',
             },
           });
-        }
+        },
       );
   }
 
@@ -679,8 +707,8 @@ export class ViewCollectiveOfficerComponent {
   }
 
   getModifiedBy(item: CollectionOfficers): string {
-  return item.officerModiyBy || item.adminModifyBy || '--';
-}
+    return item.officerModiyBy || item.adminModifyBy || '--';
+  }
 }
 
 class Company {

@@ -49,8 +49,6 @@ export class LandFixedAssetComponent {
       this.fullName = params['fullName'] || null;
       this.farmName = params['farmName'] || null;
       
-      console.log('Received item ID:', this.userId);
-      console.log('Received category:', this.category);
     });
     this.assetsBuilding(this.userId, this.category,this.farmId)
   }
@@ -61,7 +59,6 @@ export class LandFixedAssetComponent {
       .subscribe(
         (response) => {
           this.isLoading = false;
-          console.log('Received items:', response); // Debug log
          
           this.fixedAssetB = response;
           this.hasData = this.fixedAssetB.length > 0;

@@ -10,7 +10,7 @@
   <div class="min-w-max bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg p-5">
     <!-- Header and filters section -->
     <div class="flex flex-row items-center justify-between mb-4">
-      <h2 class="text-xl text-left text-textLight dark:text-textDark font-bold">
+      <h2 class="text-xl text-left text-textLight dark:text-textDark font-bold mr-5">
         GoVi Link Jobs
         {{ hasData ? "(" + (jobs.length | number : "2.0") + ")" : "" }}
       </h2>
@@ -40,15 +40,15 @@
         <!-- Date Filter with p-calendar -->
         <div>
           <p-calendar id="toDate" [(ngModel)]="dateFilter" (onSelect)="onDateSelect()" (onClear)="clearDateFilter()"
-            placeholder="Select Date" [showIcon]="true" [showClear]="true" [showButtonBar]="true" iconDisplay="input" [readonlyInput]="true"
-            [style]="{ width: '16rem', height: '2rem' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+            placeholder="Select Date" [showIcon]="true" [showClear]="true" [showButtonBar]="true" iconDisplay="input"
+            [readonlyInput]="true" [style]="{ width: '12rem', height: '2rem' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
                            [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
                            [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
                            [&_.p-datepicker-header]:dark:bg-[#2d354d] 
                            [&_.p-datepicker-header]:dark:text-white
                            [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
                            [&_.p-button:hover]:dark:bg-[#6b7280]"
-            inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
+            inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-48 h-8 pr-12"
             [appendTo]="'body'" />
         </div>
 
@@ -112,7 +112,7 @@
             </th>
             <th
               *ngIf="permissionService.hasPermission('Assign govi link jobs assign inspectors') || tokenService.getUserDetails().role === '1'"
-              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">
+              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap ">
               Assign
             </th>
             <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">
@@ -150,26 +150,28 @@
               {{ job.district }}
             </td>
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark whitespace-nowrap">
-  <span class="px-2 py-1 rounded-full font-medium" [ngClass]="{
-      'text-red-500': job.status === 'Pending' || job.status === 'Assigned',
-      'text-green-500': job.status === 'Completed',
-      'bg-gray-200 text-gray-800': !job.status
-    }">
-    {{ getDisplayStatus(job.status) }}
-  </span>
-</td>
+              <span class="px-2 py-1 rounded-full font-medium" [ngClass]="{
+                'text-red-500': job.status === 'Pending' || job.status === 'Assigned' || job.status === 'Ongoing',
+                'text-green-500': job.status === 'Completed',
+                'bg-gray-200 text-gray-800': !job.status
+              }">
+                {{ getDisplayStatus(job.status) }}
+              </span>
+            </td>
             <td
               *ngIf="permissionService.hasPermission('Assign govi link jobs assign inspectors') || tokenService.getUserDetails().role === '1'"
               class="px-3 py-3 text-center text-textLight dark:text-textDark cursor-pointer whitespace-nowrap w-full">
               <span
-                class="px-2 py-2 rounded-lg text-sm font-medium cursor-pointer hover:opacity-80 transition-opacity inline-block text-center"
+                class="px-2 py-2 rounded-lg text-sm font-medium cursor-pointer hover:opacity-80 transition-all inline-block text-center"
                 [ngClass]="{
-                    'bg-[#BBFFC6] text-[#308233] cursor-pointer hover:bg-green-200':
-                      job.assignStatus === 'Assigned',
-                    'bg-[#F8FFA6] text-[#A8A100] cursor-pointer hover:bg-yellow-200':
-                      job.assignStatus === 'Not Assigned'
-                  }" (click)="onAssignStatusClick(job)" title="Click to assign or view officer" [style.min-width]="'120px'">
-                <!-- Set a fixed minimum width -->
+                  'bg-[#BBFFC6] text-[#308233] hover:bg-green-200':
+                    job.assignStatus === 'Assigned',
+                  'bg-[#F8FFA6] text-[#A8A100] hover:bg-yellow-200':
+                    job.assignStatus === 'Not Assigned'
+                }" [style.box-shadow]="job.assignStatus === 'Assigned' 
+                  ? '0 4px 10px rgba(48, 130, 51, 0.35)' 
+                  : '0 4px 10px rgba(168, 161, 0, 0.35)'" (click)="onAssignStatusClick(job)"
+                title="Click to assign or view officer" [style.min-width]="'120px'">
                 {{ job.assignStatus }}
               </span>
             </td>
@@ -279,10 +281,10 @@
         {{ selectedOfficerInfo.lastName }}
       </p>
       <p class="text-sm text-textLight dark:text-textDark">
-        Distrct: {{ selectedJob?.district }}
+        Distrct : {{ selectedJob?.district }}
       </p>
       <p class="text-sm text-textLight dark:text-textDark">
-        Count:
+        Count :
         <span class="text-blue-500">{{
           selectedOfficerInfo.activeJobCount
           }}</span>
@@ -311,22 +313,21 @@
   </div>
 </div>
 
-<!-- Completed Job Warning Popup -->
-<div *ngIf="isCompletedJobPopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-  (click)="completedJobPopupClose()">
+<!-- Assign Blocked Warning Popup (Completed / Ongoing) -->
+<div *ngIf="isAssignBlockedPopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+  (click)="assignBlockedPopupClose()">
   <div class="bg-[#FFFFFF] dark:bg-tileBlack px-20 py-10 rounded-lg shadow-md w-96 max-h-[90vh] overflow-y-auto"
     (click)="$event.stopPropagation()">
     <!-- Warning Message -->
     <div class="mb-6">
       <p class="text-center text-textLight dark:text-textDark">
-        You can't assign an officer to the task because the task has already
-        been completed.
+        {{ assignBlockedMessage }}
       </p>
     </div>
 
     <!-- Action Button -->
     <div class="flex justify-center gap-3 mt-6">
-      <button (click)="completedJobPopupClose()"
+      <button (click)="assignBlockedPopupClose()"
         class="px-4 py-2 text-sm font-medium text-gray-500 bg-gray-100 rounded-lg hover:bg-[#2c6da3] hover:text-white transition-colors">
         Cancel
       </button>

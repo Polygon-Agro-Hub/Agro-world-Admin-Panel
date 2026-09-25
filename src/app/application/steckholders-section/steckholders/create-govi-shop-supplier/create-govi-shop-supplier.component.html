@@ -40,12 +40,9 @@
             #mobileNumberInput="ngModel"
             class="w-full px-3 py-2 h-12 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
             placeholder="e.g. 07XXXXXXXX" required pattern="^[0-9]{10}$"
-            (keypress)="blockInvalidKeypressForPhone($event)" (paste)="blockInvalidPasteForPhone($event)" 
-            (input)="onPhoneInput($event)"
-             minlength="10"
-            maxlength="10" 
-            (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"
-            />
+            (keypress)="blockInvalidKeypressForPhone($event)" (paste)="blockInvalidPasteForPhone($event)"
+            (input)="onPhoneInput($event)" minlength="10" maxlength="10"
+            (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()" />
           <div *ngIf="mobileNumberInput.touched && !mobileNumber" class="text-red-500 mt-1">
             <div> Mobile Number is required</div>
           </div>
@@ -167,11 +164,7 @@
           (click)="onCancel()">
           Cancel
         </button>
-        <button
-          type="submit"
-          class="px-6 py-2 rounded-lg text-white bg-[#3980C0] transition-colors w-32"
-          
-        >
+        <button type="submit" class="px-6 py-2 rounded-lg text-white bg-[#3980C0] transition-colors w-32">
           <span *ngIf="!isLoading">Next</span>
           <span *ngIf="isLoading">Processing...</span>
         </button>
@@ -198,45 +191,27 @@
 
       <!-- OTP Input -->
       <div class="flex mt-4 gap-y-2 gap-x-8 mb-4 justify-start">
-        <input #otpInput type="text" maxlength="1"
-          (input)="onInput($event, 0)"
-          placeholder="X"
-          (keydown)="onKeyDown($event, 0)"
-          class="otp-box" />
-      
-        <input #otpInput type="text" maxlength="1"
-          (input)="onInput($event, 1)"
-          (keydown)="onKeyDown($event, 1)"
-          placeholder="X"
-          class="otp-box" />
-      
-        <input #otpInput type="text" maxlength="1"
-          (input)="onInput($event, 2)"
-          (keydown)="onKeyDown($event, 2)"
-          placeholder="X"
-          class="otp-box" />
-      
-        <input #otpInput type="text" maxlength="1"
-          (input)="onInput($event, 3)"
-          (keydown)="onKeyDown($event, 3)"
-          placeholder="X"
-          class="otp-box" />
-      
-        <input #otpInput type="text" maxlength="1"
-          (input)="onInput($event, 4)"
-          (keydown)="onKeyDown($event, 4)"
-          placeholder="X"
-          class="otp-box" />
+        <input #otpInput type="text" maxlength="1" (input)="onInput($event, 0)" placeholder="X"
+          (keydown)="onKeyDown($event, 0)" class="otp-box" />
+
+        <input #otpInput type="text" maxlength="1" (input)="onInput($event, 1)" (keydown)="onKeyDown($event, 1)"
+          placeholder="X" class="otp-box" />
+
+        <input #otpInput type="text" maxlength="1" (input)="onInput($event, 2)" (keydown)="onKeyDown($event, 2)"
+          placeholder="X" class="otp-box" />
+
+        <input #otpInput type="text" maxlength="1" (input)="onInput($event, 3)" (keydown)="onKeyDown($event, 3)"
+          placeholder="X" class="otp-box" />
+
+        <input #otpInput type="text" maxlength="1" (input)="onInput($event, 4)" (keydown)="onKeyDown($event, 4)"
+          placeholder="X" class="otp-box" />
       </div>
 
-      <div 
-        class="text-[#0023F6] text-[18px] mb-16 mt-8 "
-        (click)="handleResend()"
-      >
+      <div class="text-[#0023F6] text-[18px] mb-16 mt-8 " (click)="handleResend()">
         <ng-container *ngIf="!canResend" class="cursor-not-allowed">
           Resend in <span class="underline cursor-not-allowed">{{ displayTime }}</span>
         </ng-container>
-      
+
         <ng-container *ngIf="canResend">
           <span class="underline cursor-pointer">Resend Again</span>
         </ng-container>
@@ -247,11 +222,8 @@
                  hover:bg-[#74788D] transition">
           Cancel
         </button>
-      
-        <button 
-          (click)="verifyOtp()" 
-          [disabled]="!isOtpComplete()"
-          class="px-6 py-2 rounded-lg min-w-28 text-white transition
+
+        <button (click)="verifyOtp()" [disabled]="!isOtpComplete()" class="px-6 py-2 rounded-lg min-w-28 text-white transition
                  bg-[#3980C0] hover:bg-[#3980C0]
                  disabled:bg-[#A8B0C5] disabled:cursor-not-allowed">
           Submit
@@ -260,7 +232,7 @@
     </div>
 
     <!-- Actions -->
-    
+
 
   </div>
 </div>

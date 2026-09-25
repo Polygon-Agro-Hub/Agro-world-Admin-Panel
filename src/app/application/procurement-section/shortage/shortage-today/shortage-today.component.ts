@@ -13,6 +13,7 @@ import { ProcumentsService } from '../../../../services/procuments/procuments.se
 import { LoadingSpinnerComponent } from "../../../../components/loading-spinner/loading-spinner.component"; // adjust path/name as needed
 import { TokenService } from '../../../../services/token/services/token.service';
 import { PermissionService } from '../../../../services/roles-permission/permission.service';
+import blueLoadingAnimation from '../../../../../assets/json/blue_loading.json';
 // adjust path/name as needed
 
 interface AssignmentRecord {
@@ -42,12 +43,12 @@ export class ShortageTodayComponent
   implements OnInit, AfterViewInit, OnDestroy {
   shortages: ShortageItem[] = [];
 
-  availableDate: Date = new Date('2026-06-23T18:00:00');
+  availableDate: Date = new Date();
   isWaiting = true;
   isLoading = false;
 
   loadingOptions: any = {
-    path: '/assets/json/blue_loading.json',
+    animationData: blueLoadingAnimation,
     loop: true,
     autoplay: true,
   };
@@ -69,10 +70,12 @@ export class ShortageTodayComponent
   }
 
   ngOnInit(): void {
-    const now = new Date().getTime();
-    const target = this.availableDate.getTime();
+    const now = new Date();
+    const target = new Date(now);
+    target.setHours(18, 0, 0, 0);
+    this.availableDate = target;
 
-    if (now >= target) {
+    if (now.getTime() >= target.getTime()) {
       this.isWaiting = false;
       this.fetchShortageDetails();
     } else {
@@ -81,7 +84,7 @@ export class ShortageTodayComponent
         this.isWaiting = false;
         this.animationItem?.destroy();
         this.fetchShortageDetails();
-      }, target - now);
+      }, target.getTime() - now.getTime());
     }
   }
 
@@ -116,7 +119,7 @@ export class ShortageTodayComponent
         renderer: 'svg',
         loop: this.loadingOptions.loop,
         autoplay: this.loadingOptions.autoplay,
-        path: this.loadingOptions.path,
+        animationData: this.loadingOptions.animationData,
       });
     }
   }

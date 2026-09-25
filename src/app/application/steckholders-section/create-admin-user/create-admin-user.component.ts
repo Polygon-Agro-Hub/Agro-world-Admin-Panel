@@ -45,11 +45,11 @@ interface Position {
   selector: 'app-create-admin-user',
   standalone: true,
   imports: [
-    CommonModule, 
-    ReactiveFormsModule, 
-    FormsModule, 
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
     HttpClientModule,
-    DropdownModule
+    DropdownModule,
   ],
   templateUrl: './create-admin-user.component.html',
   styleUrls: ['./create-admin-user.component.css'],
@@ -71,7 +71,7 @@ export class CreateAdminUserComponent implements OnInit {
     private http: HttpClient,
     private route: ActivatedRoute,
     private router: Router,
-    private tokenService: TokenService
+    private tokenService: TokenService,
   ) {
     this.userForm = this.fb.group({
       id: [''],
@@ -152,12 +152,14 @@ export class CreateAdminUserComponent implements OnInit {
 
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
 
-    this.http.get<any>(`${environment.API_URL}auth/get-all-roles`, { headers }).subscribe(
-      (response) => {
-        this.rolesList = response.roles || [];
-      },
-      (error) => console.error('Error fetching roles:', error)
-    );
+    this.http
+      .get<any>(`${environment.API_URL}auth/get-all-roles`, { headers })
+      .subscribe(
+        (response) => {
+          this.rolesList = response.roles || [];
+        },
+        (error) => console.error('Error fetching roles:', error),
+      );
   }
 
   getAllPosition() {
@@ -166,12 +168,14 @@ export class CreateAdminUserComponent implements OnInit {
 
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
 
-    this.http.get<any>(`${environment.API_URL}auth/get-all-position`, { headers }).subscribe(
-      (response) => {
-        this.positionList = response.positions || [];
-      },
-      (error) => console.error('Error fetching positions:', error)
-    );
+    this.http
+      .get<any>(`${environment.API_URL}auth/get-all-position`, { headers })
+      .subscribe(
+        (response) => {
+          this.positionList = response.positions || [];
+        },
+        (error) => console.error('Error fetching positions:', error),
+      );
   }
 
   emailValidator(): (control: AbstractControl) => ValidationErrors | null {
@@ -180,7 +184,8 @@ export class CreateAdminUserComponent implements OnInit {
       if (!value) return null;
 
       // Comprehensive email regex pattern
-      const emailRegex = /^[a-zA-Z0-9]+([._%+-]?[a-zA-Z0-9]+)*@[a-zA-Z0-9]+([.-]?[a-zA-Z0-9]+)*\.[a-zA-Z]{2,}$/;
+      const emailRegex =
+        /^[a-zA-Z0-9]+([._%+-]?[a-zA-Z0-9]+)*@[a-zA-Z0-9]+([.-]?[a-zA-Z0-9]+)*\.[a-zA-Z]{2,}$/;
 
       // Check for common invalid patterns
       if (value.includes('..')) {
@@ -193,7 +198,10 @@ export class CreateAdminUserComponent implements OnInit {
         return { invalidEmail: 'Email contains invalid special characters' };
       }
       if (!emailRegex.test(value)) {
-        return { invalidEmail: 'Please enter a valid email in the format: example@domain.com' };
+        return {
+          invalidEmail:
+            'Please enter a valid email in the format: example@domain.com',
+        };
       }
 
       return null;
@@ -226,7 +234,10 @@ export class CreateAdminUserComponent implements OnInit {
   preventLeadingSpace(event: KeyboardEvent, fieldName: string): void {
     const input = event.target as HTMLInputElement;
 
-    if (event.key === ' ' && (input.selectionStart === 0 || !input.value.trim())) {
+    if (
+      event.key === ' ' &&
+      (input.selectionStart === 0 || !input.value.trim())
+    ) {
       event.preventDefault();
     }
   }
@@ -302,7 +313,7 @@ export class CreateAdminUserComponent implements OnInit {
             });
           }
         },
-        (error) => console.error('Error fetching admin:', error)
+        (error) => console.error('Error fetching admin:', error),
       );
   }
 
@@ -311,7 +322,7 @@ export class CreateAdminUserComponent implements OnInit {
     const requiredFields: string[] = [];
     const otherErrors: string[] = [];
 
-    Object.keys(this.userForm.controls).forEach(key => {
+    Object.keys(this.userForm.controls).forEach((key) => {
       const control = this.userForm.get(key);
       if (control && control.invalid && (control.dirty || control.touched)) {
         if (control.hasError('required')) {
@@ -371,7 +382,6 @@ export class CreateAdminUserComponent implements OnInit {
   // Updated updateAdmin method
   updateAdmin(itemId: number | null) {
     // Log form values to verify
-    
 
     const missingFields: string[] = [];
 
@@ -402,7 +412,8 @@ export class CreateAdminUserComponent implements OnInit {
 
     // If errors, show popup and stop submission
     if (missingFields.length > 0) {
-      let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+      let errorMessage =
+        '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
       missingFields.forEach((field) => {
         errorMessage += `<li>${field}</li>`;
       });
@@ -449,10 +460,10 @@ export class CreateAdminUserComponent implements OnInit {
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, update it!',
       cancelButtonText: 'Cancel',
-                  customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    }
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         const headers = new HttpHeaders({
@@ -461,17 +472,22 @@ export class CreateAdminUserComponent implements OnInit {
         });
 
         this.http
-          .post(`${environment.API_URL}auth/update-admin/${itemId}`, this.userForm.value, { headers })
+          .post(
+            `${environment.API_URL}auth/update-admin/${itemId}`,
+            this.userForm.value,
+            { headers },
+          )
           .subscribe(
             () => {
               Swal.fire({
                 icon: 'success',
                 title: 'Success',
                 text: 'Admin updated successfully!',
-                              customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
+                customClass: {
+                  popup:
+                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold',
+                },
               }).then(() => {
                 this.navigatePath('/steckholders/action/admin');
               });
@@ -482,7 +498,7 @@ export class CreateAdminUserComponent implements OnInit {
                 title: 'Unsuccess',
                 text: error.error?.error || 'Update failed',
               });
-            }
+            },
           );
       }
     });
@@ -491,7 +507,6 @@ export class CreateAdminUserComponent implements OnInit {
   // Updated createAdmin method
   createAdmin() {
     // Log form values to verify
-    
 
     const missingFields: string[] = [];
 
@@ -530,7 +545,8 @@ export class CreateAdminUserComponent implements OnInit {
 
     // If errors, show popup and stop submission
     if (missingFields.length > 0) {
-      let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+      let errorMessage =
+        '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
       missingFields.forEach((field) => {
         errorMessage += `<li>${field}</li>`;
       });
@@ -577,10 +593,10 @@ export class CreateAdminUserComponent implements OnInit {
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, create it!',
       cancelButtonText: 'Cancel',
-                    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         const headers = new HttpHeaders({
@@ -589,17 +605,22 @@ export class CreateAdminUserComponent implements OnInit {
         });
 
         this.http
-          .post(`${environment.API_URL}auth/create-admin`, this.userForm.value, { headers })
+          .post(
+            `${environment.API_URL}auth/create-admin`,
+            this.userForm.value,
+            { headers },
+          )
           .subscribe(
             () => {
               Swal.fire({
                 icon: 'success',
                 title: 'Success',
                 text: 'Admin created successfully!',
-                                              customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
+                customClass: {
+                  popup:
+                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold',
+                },
               }).then(() => {
                 this.userForm.reset();
                 this.navigatePath('/steckholders/action/admin');
@@ -611,7 +632,7 @@ export class CreateAdminUserComponent implements OnInit {
                 title: 'Unsuccess',
                 text: error.error?.error || 'Creation failed',
               });
-            }
+            },
           );
       }
     });

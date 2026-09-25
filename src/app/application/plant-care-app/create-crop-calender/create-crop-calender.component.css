@@ -403,6 +403,36 @@
     /* red-600 */
 }
 
+:host ::ng-deep .crop-form-multiselect.p-multiselect {
+  background-color: var(--tile-tileLight) !important;
+  border-color: #d1d5db;
+  color: var(--text-textLight) !important;
+}
+
+:host ::ng-deep .dark .crop-form-multiselect.p-multiselect {
+  background-color: var(--tile-tileBlack) !important;
+  border-color: #4b5563;
+  color: var(--text-textDark) !important;
+}
+
+:host ::ng-deep .crop-form-multiselect .p-multiselect-label,
+:host ::ng-deep .crop-form-multiselect .p-multiselect-trigger-icon {
+  color: #6b7280 !important;
+}
+
+:host ::ng-deep .dark .crop-form-multiselect .p-multiselect-label,
+:host ::ng-deep .dark .crop-form-multiselect .p-multiselect-trigger-icon {
+  color: var(--text-textDark) !important;
+}
+
+:host ::ng-deep p-multiselect#suitableAreas .p-multiselect-label.p-placeholder {
+  color: #6b7280 !important;
+}
+
+:host ::ng-deep .dark p-multiselect#suitableAreas .p-multiselect-label.p-placeholder {
+  color: var(--text-textDark) !important;
+}
+
 ::ng-deep .p-multiselect-filter-container {
     padding: 0.5rem;
     border-bottom: 1px solid #e5e7eb;
@@ -528,44 +558,35 @@
 ::ng-deep .dark .p-multiselect .p-multiselect-label:not(.p-placeholder) {
     color: white;
 }
-/* Force black text on ALL multiselect dropdowns, light and dark mode */
-
-/* Closed/collapsed field label + placeholder */
-::ng-deep .p-multiselect .p-multiselect-label,
-::ng-deep .p-multiselect .p-multiselect-label.p-placeholder,
-::ng-deep .p-multiselect .p-multiselect-label:not(.p-placeholder),
-::ng-deep .dark .p-multiselect .p-multiselect-label,
-::ng-deep .dark .p-multiselect .p-multiselect-label.p-placeholder,
-::ng-deep .dark .p-multiselect .p-multiselect-label:not(.p-placeholder) {
-    color: #000000 !important;
+/* Match the multi-select colors with the other form controls. */
+:host ::ng-deep .p-multiselect .p-multiselect-label,
+:host ::ng-deep .p-multiselect .p-multiselect-label.p-placeholder,
+:host ::ng-deep .p-multiselect .p-multiselect-label:not(.p-placeholder),
+:host ::ng-deep .p-multiselect .p-multiselect-trigger-icon {
+  color: var(--text-textLight) !important;
 }
 
-/* Dropdown trigger icon (arrow) */
-::ng-deep .p-multiselect .p-multiselect-trigger-icon,
-::ng-deep .dark .p-multiselect .p-multiselect-trigger-icon {
-    color: #000000 !important;
+:host ::ng-deep .dark .p-multiselect .p-multiselect-label,
+:host ::ng-deep .dark .p-multiselect .p-multiselect-label.p-placeholder,
+:host ::ng-deep .dark .p-multiselect .p-multiselect-label:not(.p-placeholder),
+:host ::ng-deep .dark .p-multiselect .p-multiselect-trigger-icon {
+  color: var(--text-textDark) !important;
 }
 
-/* Panel list items (unselected) */
-::ng-deep .p-multiselect-item,
-::ng-deep .dark .p-multiselect-item {
-    color: #000000 !important;
+:host ::ng-deep .p-multiselect-item {
+  color: #374151 !important;
 }
 
-/* Panel list items (selected/highlighted) */
-::ng-deep .p-multiselect-item.p-highlight,
-::ng-deep .dark .p-multiselect-item.p-highlight {
-    color: #000000 !important;
+:host ::ng-deep .dark .p-multiselect-item {
+  color: #f9fafb !important;
 }
 
-/* Filter input text inside panel */
-::ng-deep .p-multiselect-filter,
-::ng-deep .dark .p-multiselect-filter {
-    color: #000000 !important;
+:host ::ng-deep .p-multiselect-item.p-highlight {
+  background-color: #dbeafe !important;
+  color: #1e40af !important;
 }
 
-/* Header/select-all label inside panel, if present */
-::ng-deep .p-multiselect-header,
-::ng-deep .dark .p-multiselect-header {
-    color: #000000 !important;
+:host ::ng-deep .dark .p-multiselect-item.p-highlight {
+  background-color: #1e40af !important;
+  color: #ffffff !important;
 }

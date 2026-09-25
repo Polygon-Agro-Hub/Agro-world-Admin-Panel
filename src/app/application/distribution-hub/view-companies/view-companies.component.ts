@@ -28,20 +28,23 @@ export class ViewCompaniesComponent implements OnInit {
     private router: Router,
     public tokenService: TokenService,
     public permissionService: PermissionService,
-    private location: Location
-  ) { }
+    private location: Location,
+  ) {}
 
   ngOnInit() {
     this.fetchAllCompanys(); // Initial fetch
 
     const currentUrl = this.router.url;
-    const segments = currentUrl.split('/').filter(segment => segment.length > 0);
+    const segments = currentUrl
+      .split('/')
+      .filter((segment) => segment.length > 0);
     this.urlSegment = segments[0]; // "steckholders"
   }
 
   fetchAllCompanys() {
     this.isLoading = true;
-    this.distributionHubService.getAllCompanyDetails(this.search.trim())
+    this.distributionHubService
+      .getAllCompanyDetails(this.search.trim())
       .subscribe(
         (response: any) => {
           this.isLoading = false;
@@ -53,7 +56,7 @@ export class ViewCompaniesComponent implements OnInit {
           console.error('API Error:', error);
           this.isLoading = false;
           this.hasData = false;
-        }
+        },
       );
   }
 
@@ -83,7 +86,7 @@ export class ViewCompaniesComponent implements OnInit {
       ['/distribution-hub/action/view-distribution-company'],
       {
         queryParams: { id, companyName },
-      }
+      },
     );
   }
 
@@ -115,7 +118,7 @@ export class ViewCompaniesComponent implements OnInit {
         title: 'font-semibold',
       },
       confirmButtonColor: '#2563eb', // Blue confirm
-      cancelButtonColor: '#dc2626',  // Red cancel
+      cancelButtonColor: '#dc2626', // Red cancel
     }).then((result) => {
       if (result.isConfirmed) {
         this.distributionHubService.deleteCompany(id).subscribe(
@@ -125,7 +128,8 @@ export class ViewCompaniesComponent implements OnInit {
               text: 'The company has been deleted.',
               icon: 'success',
               customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                 title: 'font-semibold',
               },
               confirmButtonColor: '#2563eb',
@@ -138,12 +142,13 @@ export class ViewCompaniesComponent implements OnInit {
               text: 'There was an error deleting the company.',
               icon: 'error',
               customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                 title: 'font-semibold',
               },
               confirmButtonColor: '#2563eb',
             });
-          }
+          },
         );
       }
     });
@@ -211,5 +216,5 @@ class CompanyDetails {
   ownedCentersCount!: number;
   managerCount!: number;
   officerCount!: number;
-  modifyBy!:string;
+  modifyBy!: string;
 }

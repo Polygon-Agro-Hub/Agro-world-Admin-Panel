@@ -40,6 +40,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
   templateUrl: './collection-officer-report-view.component.html',
   styleUrl: './collection-officer-report-view.component.css',
 })
+
 export class CollectionOfficerReportViewComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
@@ -68,7 +69,7 @@ export class CollectionOfficerReportViewComponent implements OnInit, OnDestroy {
     private tokenService: TokenService,
     private router: Router,
     private themeService: ThemeService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
@@ -153,11 +154,11 @@ export class CollectionOfficerReportViewComponent implements OnInit, OnDestroy {
     const chartData =
       Object.keys(this.reportData).length > 0
         ? Object.entries(this.reportData).map(([crop, grades]) => ({
-            label: crop,
-            gradeA: grades['Grade A'] || 0,
-            gradeB: grades['Grade B'] || 0,
-            gradeC: grades['Grade C'] || 0,
-          }))
+          label: crop,
+          gradeA: grades['Grade A'] || 0,
+          gradeB: grades['Grade B'] || 0,
+          gradeC: grades['Grade C'] || 0,
+        }))
         : [];
 
     const labels = chartData.map((item) => item.label);
@@ -183,31 +184,31 @@ export class CollectionOfficerReportViewComponent implements OnInit, OnDestroy {
       plugins: [ChartDataLabels],
       options: {
         responsive: true,
-    maintainAspectRatio: false,
-    indexAxis: 'y',
-    plugins: {
-      title: {
-        display: true,
-        text: `${this.name} ${this.lastName} - Crop Weights`,
-        color: titleColor,
-        padding: { top: 10, bottom: 30 },
-        font: { size: 18, weight: 600 },
-      },
-      legend: {
-        position: 'bottom',
-        labels: {
-          padding: 30,
-          color: textColor,
-          font: { size: 14, weight: 400 },
+        maintainAspectRatio: false,
+        indexAxis: 'y',
+        plugins: {
+          title: {
+            display: true,
+            text: `${this.name} ${this.lastName} - Crop Weights`,
+            color: titleColor,
+            padding: { top: 10, bottom: 30 },
+            font: { size: 18, weight: 600 },
+          },
+          legend: {
+            position: 'bottom',
+            labels: {
+              padding: 30,
+              color: textColor,
+              font: { size: 14, weight: 400 },
+            },
+          },
+          datalabels: {
+            display: false,
+            color: '#fff',
+            font: { size: 11, weight: 600 },
+            formatter: (value: number) => (value > 0 ? value : ''), // ✅ hides the 0
+          },
         },
-      },
-      datalabels: {
-        display:false,
-        color: '#fff',
-        font: { size: 11, weight: 600 },
-        formatter: (value: number) => (value > 0 ? value : ''), // ✅ hides the 0
-      },
-    },
         scales: {
           x: {
             stacked: true,
@@ -490,10 +491,10 @@ export class CollectionOfficerReportViewComponent implements OnInit, OnDestroy {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result
       ? [
-          parseInt(result[1], 16),
-          parseInt(result[2], 16),
-          parseInt(result[3], 16),
-        ]
+        parseInt(result[1], 16),
+        parseInt(result[2], 16),
+        parseInt(result[3], 16),
+      ]
       : [0, 0, 0];
   }
 

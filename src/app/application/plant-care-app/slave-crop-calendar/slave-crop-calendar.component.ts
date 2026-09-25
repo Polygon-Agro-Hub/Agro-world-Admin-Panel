@@ -180,6 +180,10 @@ export class SlaveCropCalendarComponent implements OnInit {
     }
   }
 
+  canOpenCalendar(item: NewsItem): boolean {
+    return !!item.cropCalendar && (item.totalTasks ?? 0) > 0;
+  }
+
   navigatePath(path: string) {
     this.router.navigate([path]);
   }

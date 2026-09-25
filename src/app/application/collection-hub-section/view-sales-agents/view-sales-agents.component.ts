@@ -55,7 +55,7 @@ export class ViewSalesAgentsComponent implements OnInit {
     private router: Router,
     public permissionService: PermissionService,
     public tokenService: TokenService,
-    private salesAgentsService: SalesAgentsService
+    private salesAgentsService: SalesAgentsService,
   ) {}
 
   ngOnInit() {
@@ -66,7 +66,7 @@ export class ViewSalesAgentsComponent implements OnInit {
     page: number = 1,
     limit: number = this.itemsPerPage,
     search: string = this.searchText,
-    status: string = this.statusFilter
+    status: string = this.statusFilter,
   ) {
     this.isLoading = true;
     this.salesAgentsService
@@ -82,7 +82,7 @@ export class ViewSalesAgentsComponent implements OnInit {
           if (error.status === 401) {
             this.isLoading = false;
           }
-        }
+        },
       );
   }
 
@@ -92,7 +92,7 @@ export class ViewSalesAgentsComponent implements OnInit {
       this.page,
       this.itemsPerPage,
       this.searchText,
-      this.statusFilter
+      this.statusFilter,
     );
   }
 
@@ -103,7 +103,7 @@ export class ViewSalesAgentsComponent implements OnInit {
       this.page,
       this.itemsPerPage,
       this.searchText,
-      this.statusFilter
+      this.statusFilter,
     );
   }
 
@@ -113,7 +113,7 @@ export class ViewSalesAgentsComponent implements OnInit {
       this.page,
       this.itemsPerPage,
       this.searchText,
-      this.statusFilter
+      this.statusFilter,
     );
   }
 
@@ -122,7 +122,7 @@ export class ViewSalesAgentsComponent implements OnInit {
       this.page,
       this.itemsPerPage,
       this.searchText,
-      this.statusFilter
+      this.statusFilter,
     );
   }
 
@@ -132,7 +132,7 @@ export class ViewSalesAgentsComponent implements OnInit {
 
   editCompanyHead(id: number) {
     this.navigatePath(
-      `/steckholders/action/sales-agents/edit-sales-agents/${id}`
+      `/steckholders/action/sales-agents/edit-sales-agents/${id}`,
     );
   }
 
@@ -140,71 +140,77 @@ export class ViewSalesAgentsComponent implements OnInit {
     this.router.navigate([path]);
   }
 
- deleteSalesAgent(id: any) {
-  Swal.fire({
-    title: 'Are you sure?',
-    text: 'Do you really want to delete this sales agent? This action cannot be undone.',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, delete it!',
-    cancelButtonText: 'Cancel',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-    confirmButtonColor: '#2563eb', // Blue confirm
-    cancelButtonColor: '#dc2626',  // Red cancel
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.isLoading = true;
-      this.salesAgentsService.deleteSalesAgent(id).subscribe(
-        (data: any) => {
-          if (data) {
+  deleteSalesAgent(id: any) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you really want to delete this sales agent? This action cannot be undone.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+      confirmButtonColor: '#2563eb', // Blue confirm
+      cancelButtonColor: '#dc2626', // Red cancel
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+        this.salesAgentsService.deleteSalesAgent(id).subscribe(
+          (data: any) => {
+            if (data) {
+              Swal.fire({
+                icon: 'success',
+                title: 'Deleted!',
+                text: 'The sales agent has been deleted.',
+                customClass: {
+                  popup:
+                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold',
+                },
+                confirmButtonColor: '#2563eb',
+              });
+              this.isLoading = true;
+              this.fetchAllSalesAgents();
+            }
+          },
+          (error) => {
             Swal.fire({
-              icon: 'success',
-              title: 'Deleted!',
-              text: 'The sales agent has been deleted.',
+              icon: 'error',
+              title: 'Error!',
+              text: 'There was an error deleting the Sales Agent.',
               customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                 title: 'font-semibold',
               },
               confirmButtonColor: '#2563eb',
             });
-            this.isLoading = true;
-            this.fetchAllSalesAgents();
-          }
-        },
-        (error) => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error!',
-            text: 'There was an error deleting the Sales Agent.',
-            customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              title: 'font-semibold',
-            },
-            confirmButtonColor: '#2563eb',
-          });
-        }
-      );
-    }
-  });
-}
-
-openPopup(item: any) {
-  const showApproveButton = item.status === 'Rejected' || item.status === 'Not Approved';
-  const showRejectButton = item.status === 'Approved' || item.status === 'Not Approved';
-
-  let confirmationMessage = '';
-  if (showApproveButton && !showRejectButton) {
-    confirmationMessage = 'Are you sure you want to approve this Sales Agent?';
-  } else if (showRejectButton && !showApproveButton) {
-    confirmationMessage = 'Are you sure you want to reject this Sales Agent?';
-  } else if (showApproveButton && showRejectButton) {
-    confirmationMessage = 'Do you want to approve or reject this Sales Agent?';
+          },
+        );
+      }
+    });
   }
 
-  const tableHtml = `
+  openPopup(item: any) {
+    const showApproveButton =
+      item.status === 'Rejected' || item.status === 'Not Approved';
+    const showRejectButton =
+      item.status === 'Approved' || item.status === 'Not Approved';
+
+    let confirmationMessage = '';
+    if (showApproveButton && !showRejectButton) {
+      confirmationMessage =
+        'Are you sure you want to approve this Sales Agent?';
+    } else if (showRejectButton && !showApproveButton) {
+      confirmationMessage = 'Are you sure you want to reject this Sales Agent?';
+    } else if (showApproveButton && showRejectButton) {
+      confirmationMessage =
+        'Do you want to approve or reject this Sales Agent?';
+    }
+
+    const tableHtml = `
     <div class="px-10 py-8 rounded-md bg-white dark:bg-gray-800">
       <h1 class="text-center text-2xl font-bold mb-4 dark:text-white">Officer Name: ${item.firstName} ${item.lastName}</h1>
       <div>
@@ -217,128 +223,142 @@ openPopup(item: any) {
     </div>
   `;
 
-  Swal.fire({
-    html: tableHtml,
-    showConfirmButton: false,
-    width: 'auto',
-    background: 'transparent',
-    backdrop: 'rgba(0, 0, 0, 0.5)',
-    grow: 'row',
-    showClass: { popup: 'animate__animated animate__fadeIn' },
-    hideClass: { popup: 'animate__animated animate__fadeOut' },
-    didOpen: () => {
-      if (showApproveButton) {
-        document.getElementById('approveButton')?.addEventListener('click', () => {
-          Swal.close();
-          this.isPopupVisible = false;
-          this.isLoading = true;
-          this.salesAgentsService.ChangeStatus(item.id, 'Approved').subscribe(
-            (res) => {
-              this.isLoading = false;
-              if (res.status) {
-                Swal.fire({
-                  icon: 'success',
-                  title: 'Success!',
-                  text: 'The Sales Agent was approved successfully.',
-                  showConfirmButton: false,
-                  timer: 3000,
-                  customClass: {
-                    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                    title: 'font-semibold',
+    Swal.fire({
+      html: tableHtml,
+      showConfirmButton: false,
+      width: 'auto',
+      background: 'transparent',
+      backdrop: 'rgba(0, 0, 0, 0.5)',
+      grow: 'row',
+      showClass: { popup: 'animate__animated animate__fadeIn' },
+      hideClass: { popup: 'animate__animated animate__fadeOut' },
+      didOpen: () => {
+        if (showApproveButton) {
+          document
+            .getElementById('approveButton')
+            ?.addEventListener('click', () => {
+              Swal.close();
+              this.isPopupVisible = false;
+              this.isLoading = true;
+              this.salesAgentsService
+                .ChangeStatus(item.id, 'Approved')
+                .subscribe(
+                  (res) => {
+                    this.isLoading = false;
+                    if (res.status) {
+                      Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'The Sales Agent was approved successfully.',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        customClass: {
+                          popup:
+                            'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                          title: 'font-semibold',
+                        },
+                      });
+                      this.fetchAllSalesAgents();
+                    } else {
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Something went wrong. Please try again.',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        customClass: {
+                          popup:
+                            'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                          title: 'font-semibold',
+                        },
+                      });
+                    }
                   },
-                });
-                this.fetchAllSalesAgents();
-              } else {
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Error!',
-                  text: 'Something went wrong. Please try again.',
-                  showConfirmButton: false,
-                  timer: 3000,
-                  customClass: {
-                    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                    title: 'font-semibold',
+                  () => {
+                    this.isLoading = false;
+                    Swal.fire({
+                      icon: 'error',
+                      title: 'Error!',
+                      text: 'An error occurred while approving. Please try again.',
+                      showConfirmButton: false,
+                      timer: 3000,
+                      customClass: {
+                        popup:
+                          'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                        title: 'font-semibold',
+                      },
+                    });
                   },
-                });
-              }
-            },
-            () => {
-              this.isLoading = false;
-              Swal.fire({
-                icon: 'error',
-                title: 'Error!',
-                text: 'An error occurred while approving. Please try again.',
-                showConfirmButton: false,
-                timer: 3000,
-                customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                  title: 'font-semibold',
-                },
-              });
-            }
-          );
-        });
-      }
+                );
+            });
+        }
 
-      if (showRejectButton) {
-        document.getElementById('rejectButton')?.addEventListener('click', () => {
-          Swal.close();
-          this.isPopupVisible = false;
-          this.isLoading = true;
-          this.salesAgentsService.ChangeStatus(item.id, 'Rejected').subscribe(
-            (res) => {
-              this.isLoading = false;
-              if (res.status) {
-                Swal.fire({
-                  icon: 'success',
-                  title: 'Success!',
-                  text: 'The Sales Agent was rejected successfully.',
-                  showConfirmButton: false,
-                  timer: 3000,
-                  customClass: {
-                    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                    title: 'font-semibold',
+        if (showRejectButton) {
+          document
+            .getElementById('rejectButton')
+            ?.addEventListener('click', () => {
+              Swal.close();
+              this.isPopupVisible = false;
+              this.isLoading = true;
+              this.salesAgentsService
+                .ChangeStatus(item.id, 'Rejected')
+                .subscribe(
+                  (res) => {
+                    this.isLoading = false;
+                    if (res.status) {
+                      Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'The Sales Agent was rejected successfully.',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        customClass: {
+                          popup:
+                            'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                          title: 'font-semibold',
+                        },
+                      });
+                      this.fetchAllSalesAgents();
+                    } else {
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Something went wrong. Please try again.',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        customClass: {
+                          popup:
+                            'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                          title: 'font-semibold',
+                        },
+                      });
+                    }
                   },
-                });
-                this.fetchAllSalesAgents();
-              } else {
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Error!',
-                  text: 'Something went wrong. Please try again.',
-                  showConfirmButton: false,
-                  timer: 3000,
-                  customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-                });
-              }
-            },
-            () => {
-              this.isLoading = false;
-              Swal.fire({
-                icon: 'error',
-                title: 'Error!',
-                text: 'An error occurred while rejecting. Please try again.',
-                showConfirmButton: false,
-                timer: 3000,
-                customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                  title: 'font-semibold',
-                },
-              });
-            }
-          );
-        });
-      }
-    },
-  });
-}
+                  () => {
+                    this.isLoading = false;
+                    Swal.fire({
+                      icon: 'error',
+                      title: 'Error!',
+                      text: 'An error occurred while rejecting. Please try again.',
+                      showConfirmButton: false,
+                      timer: 3000,
+                      customClass: {
+                        popup:
+                          'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                        title: 'font-semibold',
+                      },
+                    });
+                  },
+                );
+            });
+        }
+      },
+    });
+  }
 
   viewSalesAgent(id: number) {
     this.navigatePath(
-      `/steckholders/action/sales-agents/preview-sales-agents/${id}`
+      `/steckholders/action/sales-agents/preview-sales-agents/${id}`,
     );
   }
 

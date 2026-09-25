@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { FinanceService } from '../../../../services/finance/finance.service';
 import { PermissionService } from '../../../../services/roles-permission/permission.service';
 import { TokenService } from '../../../../services/token/services/token.service';
+
 @Component({
   selector: 'app-distribution-finance',
   standalone: true,
@@ -11,6 +12,7 @@ import { TokenService } from '../../../../services/token/services/token.service'
   templateUrl: './distribution-finance.component.html',
   styleUrl: './distribution-finance.component.css',
 })
+
 export class DistributionFinanceComponent implements OnInit {
   popupShortagePurchases = false;
   popupCODTransactions = false;
@@ -18,19 +20,22 @@ export class DistributionFinanceComponent implements OnInit {
   popupViewTransactions = false;
   shortageSubmissionsCount = 0;
   copTransactionsCount = 0;
+
   constructor(
     private router: Router,
     private financeService: FinanceService,
     public tokenService: TokenService,
     public permissionService: PermissionService,
   ) { }
+
   ngOnInit(): void {
     this.loadShortageSubmissionsCount();
     this.loadCOPTransactionsCount();
   }
+
   loadShortageSubmissionsCount(): void {
     this.financeService
-      .getAllShortageSubmissions(1, 1, '', '', '')
+      .getAllShortageSubmissions(1, 1, 'Pending', '', '')
       .subscribe({
         next: (res) => {
           this.shortageSubmissionsCount = res.total || 0;
@@ -41,9 +46,10 @@ export class DistributionFinanceComponent implements OnInit {
         },
       });
   }
+
   loadCOPTransactionsCount(): void {
     this.financeService
-      .getAllCOPTransactions(1, 1, '', '', '')
+      .getAllCOPTransactions(1, 1, 'Pending', '', '')
       .subscribe({
         next: (res) => {
           this.copTransactionsCount = res.total || 0;
@@ -54,6 +60,7 @@ export class DistributionFinanceComponent implements OnInit {
         },
       });
   }
+
   goBack() {
     this.router.navigate(['/finance/action']);
   }
@@ -64,6 +71,7 @@ export class DistributionFinanceComponent implements OnInit {
       this.popupViewTransactions = false;
     }
   }
+
   togglePopupViewTransactions() {
     this.popupViewTransactions = !this.popupViewTransactions;
     if (this.popupViewTransactions) {
@@ -71,6 +79,7 @@ export class DistributionFinanceComponent implements OnInit {
       this.popupCODTransactions = false;
     }
   }
+
   togglePopupCODTransactions() {
     this.popupCODTransactions = !this.popupCODTransactions;
     if (this.popupCODTransactions) {
@@ -78,11 +87,13 @@ export class DistributionFinanceComponent implements OnInit {
       this.popupViewTransactions = false;
     }
   }
+
   ViewSubmissions(): void {
     this.router.navigate([
       '/finance/action/distribution-finance/view-submissions',
     ]);
   }
+
   ViewTransactions(): void {
     this.router.navigate([
       '/finance/action/distribution-finance/view-transactions',

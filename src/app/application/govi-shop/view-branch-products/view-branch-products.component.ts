@@ -25,6 +25,7 @@ interface Category {
   templateUrl: './view-branch-products.component.html',
   styleUrl: './view-branch-products.component.css',
 })
+
 export class ViewBranchProductsComponent implements OnInit {
   isLoading = false;
   errorMessage = '';
@@ -54,7 +55,6 @@ export class ViewBranchProductsComponent implements OnInit {
     // Load branchId and other params
     this.route.params.subscribe((params) => {
       this.branchId = +params['branchId'];
-      
 
       if (this.branchId) {
         this.loadProducts();
@@ -67,8 +67,6 @@ export class ViewBranchProductsComponent implements OnInit {
     this.route.queryParams.subscribe((queryParams) => {
       this.shopName = queryParams['shopName'] || 'Agri Shop';
       this.branchName = queryParams['branchName'] || 'Branch';
-      
-      
     });
   }
 
@@ -76,7 +74,7 @@ export class ViewBranchProductsComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
 
-    
+
 
     // Don't make API call if branchId is null
     if (!this.branchId) {
@@ -92,14 +90,13 @@ export class ViewBranchProductsComponent implements OnInit {
       )
       .subscribe({
         next: (response) => {
-          
+
           this.isLoading = false;
 
           if (response && response.success) {
             // Set products from response
             this.allProducts = response.products || [];
             this.filteredProducts = [...this.allProducts];
-            
 
             // Load categories from the response
             if (response.categories && response.categories.length > 0) {
@@ -143,7 +140,7 @@ export class ViewBranchProductsComponent implements OnInit {
   }
 
   onSearch(): void {
-    
+
     this.loadProducts(); // Reload with search filter
   }
 
@@ -153,7 +150,6 @@ export class ViewBranchProductsComponent implements OnInit {
   }
 
   onCategoryChange(): void {
-    
     this.loadProducts(); // Reload with category filter
   }
 }

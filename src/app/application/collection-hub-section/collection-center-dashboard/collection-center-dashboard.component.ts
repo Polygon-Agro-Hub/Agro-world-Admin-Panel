@@ -34,8 +34,8 @@ export class CollectionCenterDashboardComponent {
     private route: ActivatedRoute,
     private TargetSrv: CollectionCenterService,
     public tokenService: TokenService,
-    public permissionService: PermissionService
-  ) { }
+    public permissionService: PermissionService,
+  ) {}
 
   ngOnInit(): void {
     this.centerId = this.route.snapshot.params['id'];
@@ -46,10 +46,9 @@ export class CollectionCenterDashboardComponent {
   }
 
   centerOfficers(id = this.centerId) {
-    this.router.navigate(
-      ['/steckholders/action/collective-officer'],
-      { queryParams: { id } }
-    );
+    this.router.navigate(['/steckholders/action/collective-officer'], {
+      queryParams: { id },
+    });
   }
 
   fetchCenterDashbordDetails() {
@@ -59,14 +58,12 @@ export class CollectionCenterDashboardComponent {
 
       this.centerNameObj = res.officerCount;
       this.transCount = res.transCount.transactionCount;
-      this.transAmount = res.transAmountCount.transAmountCount
+      this.transAmount = res.transAmountCount.transAmountCount;
       this.totExpences = res.totExpences.totExpences ?? 0;
       this.expencePrecentage = res.difExpences;
-      this.resentCollectionArr = res.limitedResentCollection
+      this.resentCollectionArr = res.limitedResentCollection;
     });
   }
-
-
 
   chooseTable(table: string) {
     this.selectTable = table;
@@ -86,25 +83,30 @@ export class CollectionCenterDashboardComponent {
     this.router.navigate([`/collection-hub/agro-world-centers`]);
   }
 
-
   navigateToMarketPrice() {
-  this.router.navigate(
-    [`collection-hub/agro-world-center-price/${this.centerId}/${this.companyId}/${this.centerName}`],
-    { queryParams: { Cname: this.Cname } } // This is correct - passing as query param
-  );
-}
+    this.router.navigate(
+      [
+        `collection-hub/agro-world-center-price/${this.centerId}/${this.companyId}/${this.centerName}`,
+      ],
+      { queryParams: { Cname: this.Cname } }, // This is correct - passing as query param
+    );
+  }
 
   navigateToTarget() {
-    this.router.navigate([`collection-hub/view-current-centre-target/${this.centerId}`]); // Replace with your actual route
+    this.router.navigate([
+      `collection-hub/view-current-centre-target/${this.centerId}`,
+    ]); // Replace with your actual route
   }
 
   navigateCollectionExpenses() {
-    this.router.navigate([`collection-hub/center-collection-expense/${this.centerId}`]);
+    this.router.navigate([
+      `collection-hub/center-collection-expense/${this.centerId}`,
+    ]);
   }
 
   viewCenterOfficers() {
     this.router.navigate(['collection-hub/view-center-officers'], {
-      queryParams: { id: this.centerId, Cname: this.Cname }
+      queryParams: { id: this.centerId, Cname: this.Cname },
     });
   }
 }

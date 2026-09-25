@@ -10,18 +10,17 @@
     <div class="flex flex-col gap-7 px-2 py-2">
 
         <!-- Header Section with Logo and Details -->
-        <div
-            class="flex flex-row justify-between items-center border-[#F1F7FA] border-[2px] rounded-lg p-6">
-            <div class="flex flex-row items-center">            <!-- Logo -->
-            <div class="w-28 h-28 rounded-full border flex justify-center items-center overflow-hidden">
-                <ng-container *ngIf="shopData; else defaultIcon">
-                    <img [src]="defaultImage" alt="Shop Logo" class="w-full h-full object-cover"
+        <div class="flex flex-row justify-between items-center border-[#F1F7FA] border-[2px] rounded-lg p-6">
+            <div class="flex flex-row items-center"> <!-- Logo -->
+                <div class="w-28 h-28 rounded-full border flex justify-center items-center overflow-hidden">
+                    <ng-container *ngIf="shopData; else defaultIcon">
+                        <img [src]="defaultImage" alt="Shop Logo" class="w-full h-full object-cover"
                             (error)="onImageError($event)" />
-                </ng-container>
-                <ng-template #defaultIcon>
-                    <img [src]="defaultImage" alt="Default Logo" class="w-full h-full object-cover" />
-                </ng-template>
-            </div>
+                    </ng-container>
+                    <ng-template #defaultIcon>
+                        <img [src]="defaultImage" alt="Default Logo" class="w-full h-full object-cover" />
+                    </ng-template>
+                </div>
 
                 <!-- Shop Name, Email, and Status -->
                 <div class="ml-6">
@@ -36,9 +35,7 @@
                     </p>
                 </div>
             </div>
-            <div
-                class="px-8 py-2 rounded-lg font-inter font-[400]"
-                [ngClass]="{
+            <div class="px-8 py-2 rounded-lg font-inter font-[400]" [ngClass]="{
                   'bg-[#D7EEFF] text-[#002AFF]': (shopData?.planStatus === 'ACTIVE' || shopData?.planStatus === 'NO_PLAN') && shopData?.currentPlan === 'Free',
                   'bg-[#FFFF9F] text-[#D8B800]': shopData?.planStatus === 'ACTIVE' && shopData?.currentPlan === 'Premium',
                   'bg-[#FFD5D5] text-[#FF0000]': shopData?.planStatus === 'EXPIRED'
@@ -55,7 +52,8 @@
                 <!-- Phone Number -->
                 <div>
                     <p class="text-[#627189] text-[14px]">Phone Number</p>
-                    <p class="text-[#000000] dark:text-[#ffffff] text-[16px]">{{ shopData?.shopPhone || '0113333800' }}</p>
+                    <p class="text-[#000000] dark:text-[#ffffff] text-[16px]">{{ shopData?.shopPhone || '0113333800' }}
+                    </p>
                 </div>
 
                 <!-- BR Image -->
@@ -70,7 +68,8 @@
                 <!-- Address -->
                 <div>
                     <p class="text-[#627189] text-[14px]">Address</p>
-                    <p class="text-[#000000] dark:text-[#ffffff] text-[16px]">{{ shopData?.adress || '1/A, Galle Road, Dehiwala' }}
+                    <p class="text-[#000000] dark:text-[#ffffff] text-[16px]">{{ shopData?.adress || '1/A, Galle Road,
+                        Dehiwala' }}
                     </p>
                 </div>
 
@@ -93,7 +92,8 @@
                 <!-- Owner Name -->
                 <div>
                     <p class="text-[#627189] text-[14px]">Owner Name</p>
-                    <p class="text-[#000000] dark:text-[#ffffff] text-[16px]">{{ shopData?.ownername || 'Gayani Perera' }}</p>
+                    <p class="text-[#000000] dark:text-[#ffffff] text-[16px]">{{ shopData?.ownername || 'Gayani Perera'
+                        }}</p>
                 </div>
 
                 <!-- Owner NIC -->
@@ -105,7 +105,8 @@
                 <!-- Owner Phone Number -->
                 <div>
                     <p class="text-[#627189] text-[14px]">Owner Phone Number</p>
-                    <p class="text-[#000000] dark:text-[#ffffff] text-[16px]">{{ shopData?.shopPhone || '0771122888' }}</p>
+                    <p class="text-[#000000] dark:text-[#ffffff] text-[16px]">{{ shopData?.shopPhone || '0771122888' }}
+                    </p>
                 </div>
             </div>
         </div>

@@ -7,6 +7,7 @@ import { environment } from '../../environment/environment';
 export interface CertificateCompany {
   id?: number;
   companyName: string;
+  companySector?: 'Government Sector' | 'Private Sector';
   regNumber: string;
   taxId: string;
   phoneCode1: string;

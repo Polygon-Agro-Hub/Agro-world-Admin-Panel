@@ -22,7 +22,6 @@ export interface Supplier {
   activatedAt: Date;
   onbordStatus: string;
   createdAt: Date;
-
 }
 
 @Component({
@@ -34,7 +33,7 @@ export interface Supplier {
 })
 export class ViewGovishopSupliersComponent implements OnInit {
   @ViewChild('searchInput') searchInput!: ElementRef;
-  
+
   isLoading = false;
   searchTerm = '';
   selectedPlan: string = '';
@@ -70,7 +69,7 @@ export class ViewGovishopSupliersComponent implements OnInit {
     private goviShopService: StakeholderService,
     public tokenService: TokenService,
     public permissionService: PermissionService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadSuppliers();
@@ -78,10 +77,10 @@ export class ViewGovishopSupliersComponent implements OnInit {
 
   loadSuppliers(): void {
     this.isLoading = true;
-    
+
     // Separate currentPlan and planStatus based on selected filter
     let currentPlan: string | undefined;
-    
+
     this.goviShopService.getAllGoviShopUsers(
       this.searchTerm || undefined,
       this.selectedPlan,
@@ -146,7 +145,7 @@ export class ViewGovishopSupliersComponent implements OnInit {
 
   // Pass ID as parameter instead of the whole object
   viewShops(id: number, name: string) {
-    this.router.navigate(['steckholders/action/govi-shop-suppliers/govishop-view-shops', ], {
+    this.router.navigate(['steckholders/action/govi-shop-suppliers/govishop-view-shops',], {
       queryParams: { id, name },
     });
   }
@@ -171,7 +170,7 @@ export class ViewGovishopSupliersComponent implements OnInit {
 
     form.form.markAllAsTouched();
     this.textAreaTouched = true;
-    if(this.supplierToDelete && this.text !== '' && this.mobileNumber && this.mobileNumber === this.supplierToDelete.shopPhone) {
+    if (this.supplierToDelete && this.text !== '' && this.mobileNumber && this.mobileNumber === this.supplierToDelete.shopPhone) {
       Swal.fire({
         icon: 'info',
         title: 'Are you sure?',
@@ -193,14 +192,14 @@ export class ViewGovishopSupliersComponent implements OnInit {
         }
       });
     }
-    
+
   }
 
   confirmDeleteSupplier() {
-      this.isLoading = true;
-      this.goviShopService.deleteGoviShopUser(this.supplierToDelete!.id, this.text).subscribe({
-        next: (response) => {
-          if (response.status) {
+    this.isLoading = true;
+    this.goviShopService.deleteGoviShopUser(this.supplierToDelete!.id, this.text).subscribe({
+      next: (response) => {
+        if (response.status) {
           Swal.fire({
             icon: 'success',
             title: 'Success',
@@ -213,31 +212,31 @@ export class ViewGovishopSupliersComponent implements OnInit {
             },
           });
         }
-          this.showDeleteModal = false;
-          this.isLoading = false;
-          this.supplierToDelete = null;
-          this.text = '';
-          this.mobileNumber = '';
-          
-          this.loadSuppliers();
-        },
-        error: (error) => {
-          console.error('Error deleting GoViShop Supplier:', error);
-          this.isLoading = false;
-          this.showDeleteModal = false;
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            html: 'Error deleting GoViShop Supplier',
-            confirmButtonText: 'OK',
-            customClass: {
-              popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
-              title: 'font-semibold text-lg',
-              htmlContainer: 'text-left',
-            },
-          });
-        }
-      });
+        this.showDeleteModal = false;
+        this.isLoading = false;
+        this.supplierToDelete = null;
+        this.text = '';
+        this.mobileNumber = '';
+
+        this.loadSuppliers();
+      },
+      error: (error) => {
+        console.error('Error deleting GoViShop Supplier:', error);
+        this.isLoading = false;
+        this.showDeleteModal = false;
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          html: 'Error deleting GoViShop Supplier',
+          confirmButtonText: 'OK',
+          customClass: {
+            popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
+            title: 'font-semibold text-lg',
+            htmlContainer: 'text-left',
+          },
+        });
+      }
+    });
   }
 
   addNew() {
@@ -247,31 +246,31 @@ export class ViewGovishopSupliersComponent implements OnInit {
   blockInvalidKeypressForPhone(event: KeyboardEvent) {
 
     const input = event.target as HTMLInputElement;
-  
+
     // Allow control keys
     if (['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete'].includes(event.key)) {
       return;
     }
-  
+
     // Only allow digits
     if (!/^[0-9]$/.test(event.key)) {
       event.preventDefault();
       return;
     }
-  
+
     // If first digit and not 7 → force 7
     if (input.value.length === 0 && event.key !== '7') {
       event.preventDefault();
-  
+
       input.value = '7';                 // visually set
       input.dispatchEvent(new Event('input')); // update ngModel
     }
   }
-  
+
   blockInvalidPasteForPhone(event: ClipboardEvent) {
-  
+
     const pastedData = event.clipboardData?.getData('text') || '';
-  
+
     // Must match 7XXXXXXXX
     if (!/^7[0-9]{0,8}$/.test(pastedData)) {
       event.preventDefault();
@@ -279,29 +278,29 @@ export class ViewGovishopSupliersComponent implements OnInit {
   }
 
   editSupplier(id: number): void {
-    this.router.navigate(['steckholders/action/govi-shop-suppliers/edit-govi-shop-supplier', ], {
+    this.router.navigate(['steckholders/action/govi-shop-suppliers/edit-govi-shop-supplier',], {
       queryParams: { id },
     });
   }
 
   viewManagerUsers(id: number, name: string) {
-  this.router.navigate(['steckholders/action/govi-shop-suppliers/govishop-users'], {
-    queryParams: { 
-      shopId: id, 
-      shopName: name,
-      role: 'Manager' 
-    },
-  });
-}
+    this.router.navigate(['steckholders/action/govi-shop-suppliers/govishop-users'], {
+      queryParams: {
+        shopId: id,
+        shopName: name,
+        role: 'Manager'
+      },
+    });
+  }
 
-viewPOSUsers(id: number, name: string) {
-  this.router.navigate(['steckholders/action/govi-shop-suppliers/govishop-users'], {
-    queryParams: { 
-      shopId: id, 
-      shopName: name,
-      role: 'POS' 
-    },
-  });
-}
-  
+  viewPOSUsers(id: number, name: string) {
+    this.router.navigate(['steckholders/action/govi-shop-suppliers/govishop-users'], {
+      queryParams: {
+        shopId: id,
+        shopName: name,
+        role: 'POS'
+      },
+    });
+  }
+
 }

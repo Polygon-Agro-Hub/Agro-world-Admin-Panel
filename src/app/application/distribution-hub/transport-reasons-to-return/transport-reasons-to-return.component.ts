@@ -8,7 +8,11 @@ import {
 } from '@angular/forms';
 import { Location } from '@angular/common';
 import Swal from 'sweetalert2';
-import { CdkDragDrop, moveItemInArray, DragDropModule } from '@angular/cdk/drag-drop';
+import {
+  CdkDragDrop,
+  moveItemInArray,
+  DragDropModule,
+} from '@angular/cdk/drag-drop';
 import { DistributionHubService } from '../../../services/distribution-hub/distribution-hub.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { TokenService } from '../../../services/token/services/token.service';
@@ -25,7 +29,12 @@ interface Reason {
 @Component({
   selector: 'app-transport-reasons-to-return',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, DragDropModule, LoadingSpinnerComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    DragDropModule,
+    LoadingSpinnerComponent,
+  ],
   templateUrl: './transport-reasons-to-return.component.html',
   styleUrls: ['./transport-reasons-to-return.component.css'],
 })
@@ -41,8 +50,8 @@ export class TransportReasonsToReturnComponent implements OnInit {
     private location: Location,
     private distributionService: DistributionHubService,
     public permissionService: PermissionService,
-    public tokenService: TokenService
-  ) { }
+    public tokenService: TokenService,
+  ) {}
 
   ngOnInit(): void {
     this.reasonForm = this.fb.group({
@@ -85,12 +94,12 @@ export class TransportReasonsToReturnComponent implements OnInit {
 
   // Separate fixed reason (id=1) from draggable reasons and reorder
   private separateReasons(): void {
-    this.fixedReason = this.reasons.find(r => r.id === 1) || null;
-    this.draggableReasons = this.reasons.filter(r => r.id !== 1);
-    
+    this.fixedReason = this.reasons.find((r) => r.id === 1) || null;
+    this.draggableReasons = this.reasons.filter((r) => r.id !== 1);
+
     // Sort draggable reasons by indexNo to maintain order
     this.draggableReasons.sort((a, b) => a.indexNo - b.indexNo);
-    
+
     // Recalculate indexes: draggable reasons get 1 to n, fixed reason gets n+1
     this.updateIndexes();
   }
@@ -121,7 +130,7 @@ export class TransportReasonsToReturnComponent implements OnInit {
       this.location.back();
     }
   }
-  
+
   preventLeadingSpace(event: KeyboardEvent): void {
     const input = event.target as HTMLInputElement | HTMLTextAreaElement;
     if (event.key === ' ' && input.selectionStart === 0) {
@@ -193,13 +202,14 @@ export class TransportReasonsToReturnComponent implements OnInit {
             timer: 2000,
             showConfirmButton: false,
             customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold text-lg',
             },
           });
           this.loadReasons();
           this.reasonForm.reset();
-          
+
           // After loading, send updated indexes to backend
           setTimeout(() => {
             this.saveIndexesToBackend();
@@ -212,7 +222,11 @@ export class TransportReasonsToReturnComponent implements OnInit {
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: error.error?.error === `Data too long for column 'rsnEnglish' at row 1` ? 'The message is too long. Please limit it to a maximum of 250 characters.' : 'Failed to add reason. Please try again.',
+          text:
+            error.error?.error ===
+            `Data too long for column 'rsnEnglish' at row 1`
+              ? 'The message is too long. Please limit it to a maximum of 250 characters.'
+              : 'Failed to add reason. Please try again.',
           customClass: {
             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
             title: 'font-semibold text-lg',
@@ -264,7 +278,8 @@ export class TransportReasonsToReturnComponent implements OnInit {
                 timer: 2000,
                 showConfirmButton: false,
                 customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  popup:
+                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                   title: 'font-semibold text-lg',
                 },
               });
@@ -277,9 +292,12 @@ export class TransportReasonsToReturnComponent implements OnInit {
             Swal.fire({
               icon: 'error',
               title: 'Error',
-              text: error.error?.message || 'Failed to delete reason. Please try again.',
+              text:
+                error.error?.message ||
+                'Failed to delete reason. Please try again.',
               customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                 title: 'font-semibold text-lg',
               },
             });
@@ -317,7 +335,11 @@ export class TransportReasonsToReturnComponent implements OnInit {
   drop(event: CdkDragDrop<Reason[]>): void {
     // Only allow drop if it's within the draggable reasons
     if (event.previousIndex !== event.currentIndex) {
-      moveItemInArray(this.draggableReasons, event.previousIndex, event.currentIndex);
+      moveItemInArray(
+        this.draggableReasons,
+        event.previousIndex,
+        event.currentIndex,
+      );
       this.updateIndexes();
       this.saveIndexesToBackend();
     }
@@ -328,14 +350,17 @@ export class TransportReasonsToReturnComponent implements OnInit {
     this.draggableReasons.forEach((reason, i) => {
       reason.indexNo = i + 1;
     });
-    
+
     // Fixed reason (id=1) always gets the last index
     if (this.fixedReason) {
       this.fixedReason.indexNo = this.draggableReasons.length + 1;
     }
-    
+
     // Combine for the full reasons array
-    this.reasons = [...this.draggableReasons, ...(this.fixedReason ? [this.fixedReason] : [])];
+    this.reasons = [
+      ...this.draggableReasons,
+      ...(this.fixedReason ? [this.fixedReason] : []),
+    ];
   }
 
   private saveIndexesToBackend(): void {

@@ -93,29 +93,36 @@ export class ShortageFinalizationTodayComponent implements OnInit {
   }
 
   private mapToShortageItems(data: any[], finalized: boolean): ShortageItem[] {
-    return data.map((item) => {
-      const distributionCenters: DistributionCenterDto[] =
-        item.distributionCenters || [];
+  return data.map((item) => {
+    const distributionCenters: DistributionCenterDto[] = (
+      item.distributionCenters || []
+    )
+      .slice()
+      .sort((a: DistributionCenterDto, b: DistributionCenterDto) =>
+        (a.label || '').localeCompare(b.label || '', undefined, {
+          sensitivity: 'base',
+        })
+      );
 
-      const preselectedDC =
-        item.selectedDC ||
-        distributionCenters.find((dc) => dc.comCenId === item.comCenId) ||
-        null;
+    const preselectedDC =
+      item.selectedDC ||
+      distributionCenters.find((dc) => dc.comCenId === item.comCenId) ||
+      null;
 
-      return {
-        id: item.shortageAssignedId,
-        itemName: item.itemName,
-        imageUrl: item.imageUrl,
-        shortageKg: item.shortageKg,
-        distributionCenters,
-        selectedDC: preselectedDC,
-        marketPricePerKg: Number(item.marketPricePerKg) || 0,
-        ceilingPercent: Number(item.ceilingPercent) || 0,
-        assignedBy: item.assignedBy || item.assignOfficerBy || null,
-        finalized,
-      };
-    });
-  }
+    return {
+      id: item.shortageAssignedId,
+      itemName: item.itemName,
+      imageUrl: item.imageUrl,
+      shortageKg: item.shortageKg,
+      distributionCenters,
+      selectedDC: preselectedDC,
+      marketPricePerKg: Number(item.marketPricePerKg) || 0,
+      ceilingPercent: Number(item.ceilingPercent) || 0,
+      assignedBy: item.assignedBy || item.assignOfficerBy || null,
+      finalized,
+    };
+  });
+}
 
   get toFinalizeList(): ShortageItem[] {
     return this.shortageItems.filter((item) => !item.finalized);

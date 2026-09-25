@@ -249,6 +249,8 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
           this.totalDefinePkgPrice += packageTotal;
         });
 
+        this.recalculatePackageTotal();
+
         this.loading = false;
         this.isLoading = false;
 
@@ -298,9 +300,15 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
       this.totalPackagePrice += +pkg.productPrice || 0;
     });
 
-    // Compare against 1.08 * totalPackagePrice
-    const limit = 1.08 * this.totalPackagePrice;
-    this.isWithinLimit = this.totalDefinePkgPrice <= limit;
+    const minimumLimit = this.totalPackagePrice;
+    const maximumLimit = minimumLimit * 1.08;
+    this.isWithinLimit =
+      this.totalDefinePkgPrice >= minimumLimit &&
+      this.totalDefinePkgPrice <= maximumLimit;
+  }
+
+  get isBelowMinimumLimit(): boolean {
+    return this.totalDefinePkgPrice < this.totalPackagePrice;
   }
 
 

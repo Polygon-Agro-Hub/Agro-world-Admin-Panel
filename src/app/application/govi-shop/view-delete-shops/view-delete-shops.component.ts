@@ -15,19 +15,20 @@ import { PermissionService } from '../../../services/roles-permission/permission
   templateUrl: './view-delete-shops.component.html',
   styleUrl: './view-delete-shops.component.css',
 })
+
 export class ViewDeleteShopsComponent implements OnInit {
   isLoading = false;
   deletedShops: any[] = [];
   totalCount = 0;
-  
+
   // Filter and search properties
   businessType: string = '';
   searchItem: string = '';
-  
+
   // Modal properties
   showReasonModal: boolean = false;
   selectedShop: any = null;
-  
+
   // Dropdown options for business types
   businessTypes = [
     { label: 'Limited Liability Company', value: 'Limited Liability Company' },
@@ -42,7 +43,7 @@ export class ViewDeleteShopsComponent implements OnInit {
     private shopService: GovishopService,
     public permissionService: PermissionService,
     public tokenService: TokenService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadDeletedShops();
@@ -50,7 +51,7 @@ export class ViewDeleteShopsComponent implements OnInit {
 
   loadDeletedShops(): void {
     this.isLoading = true;
-    
+
     this.shopService.getAllRemovedShops(
       this.businessType || null,
       this.searchItem || null

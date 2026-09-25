@@ -24,15 +24,10 @@
         <p class="text-gray-500 mr-5">Filter By</p>
         <div class="mr-5">
           <p-dropdown
-    styleClass="border border-2 rounded-xl w-auto h-8 items-center dark:text-white bg-white dark:bg-[#1F2937] border-gray-300 dark:border-gray-600"
-    [options]="centers" 
-    [(ngModel)]="selectedCenter" 
-    optionLabel="centerName" 
-    optionValue="centerName" 
-    [showClear]="selectedCenter !== ''" 
-    placeholder=" Centre"
-    (onChange)="applyFilters()" 
-    name="selectedCenter"/>
+            styleClass="border border-2 rounded-xl w-auto h-8 items-center dark:text-white bg-white dark:bg-[#1F2937] border-gray-300 dark:border-gray-600"
+            [options]="centers" [(ngModel)]="selectedCenter" optionLabel="centerName" optionValue="centerName"
+            [showClear]="selectedCenter !== ''" placeholder=" Centre" (onChange)="applyFilters()"
+            name="selectedCenter" />
 
         </div>
         <div class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-96">
@@ -142,9 +137,9 @@
               </td>
               <!-- Monthly Report -->
               <td *ngIf="
-    permissionService.hasPermission('Collection Officer Monthly Report') ||
-    tokenService.getUserDetails().role === '1'
-  " class="px-4 py-3 text-center">
+                permissionService.hasPermission('Collection Officer Monthly Report') ||
+                tokenService.getUserDetails().role === '1'
+                " class="px-4 py-3 text-center">
                 <button class="w-6 h-6 mr-3 hover:opacity-80" (click)="navigateToMonthlyReport(item.id)">
                   <img src="assets/icons/orderdetails.png" alt="Monthly Report" class="w-5 h-5 mx-auto" />
                 </button>
@@ -152,9 +147,9 @@
 
               <!-- Daily Report -->
               <td *ngIf="
-    permissionService.hasPermission('Collection Officer Daily Report') ||
-    tokenService.getUserDetails().role === '1'
-  " class="px-4 py-3 text-center">
+                permissionService.hasPermission('Collection Officer Daily Report') ||
+                tokenService.getUserDetails().role === '1'
+                " class="px-4 py-3 text-center">
                 <button class="w-6 h-6 mr-3 hover:opacity-80"
                   (click)="navigateToReport(item.id, item.firstNameEnglish, item.lastNameEnglish, item.empId)">
                   <img src="assets/icons/orderdetails.png" alt="Daily Report" class="w-5 h-5 mx-auto" />
@@ -163,20 +158,19 @@
 
               <!-- Farmer Report -->
               <td *ngIf="
-    permissionService.hasPermission('Collection Officer Farmer Report') ||
-    tokenService.getUserDetails().role === '1'
-  " class="px-4 py-3 text-center">
+                permissionService.hasPermission('Collection Officer Farmer Report') ||
+                tokenService.getUserDetails().role === '1'
+                " class="px-4 py-3 text-center">
                 <button class="w-6 h-6 mr-3 hover:opacity-80" (click)="navigateToPaymentSlipReport(
-      item.id,
-      item.firstNameEnglish,
-      item.lastNameEnglish,
-      item.QRcode,
-      item.empId
-    )">
+                  item.id,
+                  item.firstNameEnglish,
+                  item.lastNameEnglish,
+                  item.QRcode,
+                  item.empId
+                )">
                   <img src="assets/icons/orderdetails.png" alt="Farmer Report" class="w-5 h-5 mx-auto" />
                 </button>
               </td>
-
             </tr>
           </tbody>
         </table>

@@ -19,38 +19,35 @@
       <div class="flex items-center">
         <h2 class="text-2xl font-normal text-[#292929] dark:text-textDark">
           All Packages ({{
-          this.filteredPackages.length < 9 ? "0" + this.filteredPackages.length : this.filteredPackages.length }})
-        </h2>
+          this.filteredPackages.length < 9 ? "0" + this.filteredPackages.length : this.filteredPackages.length }}) </h2>
       </div>
       <div class="flex items-center gap-4 h-8">
         <div class="flex items-center gap-1 h-8 relative">
           <div class="mr-5">
-  <p-dropdown [options]="packageTypeOptions" [(ngModel)]="selectedPackageType"
-    styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-     optionValue="value" [showClear]="true" placeholder="Type" />
-</div>
+            <p-dropdown [options]="packageTypeOptions" [(ngModel)]="selectedPackageType"
+              styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+              optionValue="value" [showClear]="true" placeholder="Type" />
+          </div>
           <p-calendar id="toDate" [(ngModel)]="date" (onSelect)="dateFilter()" (onClear)="clearDateFilter()"
-            placeholder="Last Defined Date" [showIcon]="true" [showClear]="false" [showButtonBar]="false"
-            iconDisplay="input"   styleClass="calendar-compact dark-calendar"
-              [style]="{ width: '170px' }" styleClass="calendar-compact dark-calendar"
-              [inputStyle]="{ width: '170px', padding: '0.5rem 1.5rem 0.5rem 0.75rem', fontSize: '0.875rem' }"
-              inputStyleClass="text-[16px] h-9 rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-2 border-[#E5E5E5] dark:border-[#AFAFAF] placeholder:text-[#9CA3AF] dark:placeholder:text-[#9CA3AF] focus:outline-none focus:border-blue-500 dark:focus:border-blue-400"
-              panelStyleClass="dark:bg-gray-800 dark:border dark:border-gray-700 dark:text-white"
-             />
-          <button *ngIf="date" (click)="clearDateFilter()"
-            class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 dark:hover:text-white focus:outline-none z-10">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-5" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+            placeholder="Last Defined Date" title="Last Defined Date" [showIcon]="true" [showClear]="true" [showButtonBar]="false"
+            iconDisplay="input" styleClass="calendar-compact dark-calendar" [style]="{ width: '170px' }"
+            panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600
+              [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568]
+              [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+              [&_.p-datepicker-header]:dark:bg-[#2d354d]
+              [&_.p-datepicker-header]:dark:text-white
+              [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+              [&_.p-button:hover]:dark:bg-[#6b7280]"
+            [inputStyle]="{ width: '170px', padding: '0.5rem 1.5rem 0.5rem 0.75rem', fontSize: '0.875rem' }"
+            inputStyleClass="text-[16px] h-9 rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-2 border-[#E5E5E5] dark:border-[#AFAFAF] placeholder:text-[#9CA3AF] dark:placeholder:text-[#9CA3AF] focus:outline-none focus:border-blue-500 dark:focus:border-blue-400 cursor-pointer"
+            [appendTo]="'body'" />
         </div>
 
         <div class="flex flex-row items-center">
           <div class="mr-5">
             <p-dropdown [options]="statusOptions" [(ngModel)]="selectedStatus"
               styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-             optionValue="value" [showClear]="true" placeholder="Status" />
+              optionValue="value" [showClear]="true" placeholder="Status" />
           </div>
 
           <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96 relative group">
@@ -100,13 +97,20 @@
           <thead>
             <tr>
               <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">No</th>
-              <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">Package Name</th>
-              <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">Total Price (Rs.)</th>
-              <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">Package Type</th>
-              <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">Start Date</th>
-              <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">End Date</th>
-              <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center whitespace-nowrap">Status</th>
-              <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">Last Defined</th>
+              <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">Package
+                Name</th>
+              <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">Total
+                Price (Rs.)</th>
+              <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">Package
+                Type</th>
+              <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">Start Date
+              </th>
+              <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">End Date
+              </th>
+              <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center whitespace-nowrap">Status
+              </th>
+              <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">Last
+                Defined</th>
               <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center whitespace-nowrap"
                 *ngIf="permissionService.hasPermission('Define packages') || tokenService.getUserDetails().role === '1'">
                 Define
@@ -115,7 +119,9 @@
                 *ngIf="permissionService.hasPermission('View package history') || tokenService.getUserDetails().role === '1'">
                 History
               </th>
-              <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center whitespace-nowrap">Last Modified By</th>
+              <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center whitespace-nowrap">
+                Last Defined By
+              </th>
               <th class="px-2"></th>
               <th class="px-2"
                 *ngIf="permissionService.hasPermission('Edit packages') || tokenService.getUserDetails().role === '1'">
@@ -131,19 +137,21 @@
                 <td class="px-4 py-4 text-[#000000] dark:text-textDark">
                   {{ i < 9 ? "0" + (i + 1) : i + 1 }} </td>
                 <td class="px-4 py-4 text-[#000000] dark:text-textDark whitespace-nowrap">{{ pkg.displayName }}</td>
-                <td class="px-4 py-4 text-[#000000] dark:text-textDark whitespace-nowrap">{{ pkg.total | number : "1.2-2" }}</td>
+                <td class="px-4 py-4 text-[#000000] dark:text-textDark whitespace-nowrap">{{ pkg.total | number :
+                  "1.2-2" }}</td>
                 <td class="px-4 py-4 text-[#000000] dark:text-textDark whitespace-nowrap">{{ pkg.packageType }}</td>
-                <td class="px-4 py-4 text-[#000000] dark:text-textDark whitespace-nowrap">{{ pkg.startDate | date : "mediumDate" }}</td>
+                <td class="px-4 py-4 text-[#000000] dark:text-textDark whitespace-nowrap">{{ pkg.startDate | date :
+                  "mediumDate" }}</td>
                 <td class="px-4 py-4 text-[#000000] dark:text-textDark whitespace-nowrap"
-    [ngStyle]="{'color': !pkg.endDate ? '#308233' : ''}">
-  {{ pkg.endDate ? (pkg.endDate | date : "mediumDate") : "--No Limit--" }}
-</td>
+                  [ngStyle]="{'color': !pkg.endDate ? '#308233' : ''}">
+                  {{ pkg.endDate ? (pkg.endDate | date : "mediumDate") : "--No Limit--" }}
+                </td>
                 <td class="px-4 py-2 text-center">
                   <button [ngClass]="{
                   'bg-[#BBFFC6] text-[#308233] px-4': pkg.status === 'Enabled',
                   'bg-[#FFB9B7] text-[#D16D6A] px-3': pkg.status === 'Disabled',
                   'cursor-not-allowed': !permissionService.hasPermission('Disable package') && tokenService.getUserDetails().role !== '1'
-                }" class="py-2 rounded-lg font-medium" (click)="disablePopup(pkg)"
+                }" class="py-2 rounded-lg font-medium shadow-md" (click)="disablePopup(pkg)"
                     [disabled]="!permissionService.hasPermission('Disable package') && tokenService.getUserDetails().role !== '1'">
                     {{ pkg.status }}
                   </button>
@@ -163,7 +171,7 @@
                   *ngIf="permissionService.hasPermission('View package history') || tokenService.getUserDetails().role === '1'">
                   <i class="fa-solid fa-history cursor-pointer" (click)="viewDefinePackageDate(pkg.id)"></i>
                 </td>
-                <td class="px-4 py-4 text-[#000000] dark:text-textDark text-center whitespace-nowrap">
+                <td class="px-4 py-4 text-[#000000] dark:text-textDark text-left whitespace-nowrap">
                   {{ pkg.adminUser ? pkg.adminUser : "--" }}
                 </td>
                 <td class="px-2">

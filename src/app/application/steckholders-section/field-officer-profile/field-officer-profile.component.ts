@@ -26,6 +26,7 @@ import { PermissionService } from '../../../services/roles-permission/permission
   templateUrl: './field-officer-profile.component.html',
   styleUrl: './field-officer-profile.component.css'
 })
+
 export class FieldOfficerProfileComponent {
 
   officerObj: FieldOfficer = new FieldOfficer();

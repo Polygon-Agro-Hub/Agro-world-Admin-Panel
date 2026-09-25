@@ -48,7 +48,7 @@ interface JobRole {
     LoadingSpinnerComponent,
   ],
   templateUrl: './view-distribution-officer.component.html',
-  styleUrl: './view-distribution-officer.component.css'
+  styleUrl: './view-distribution-officer.component.css',
 })
 export class ViewDistributionOfficerComponent {
   distributionOfficers: DistributionOfficers[] = [];
@@ -79,7 +79,6 @@ export class ViewDistributionOfficerComponent {
   selectStatus: string = '';
   irmValidationError: boolean = false;
 
-
   // Add this line
   centerValidationError: boolean = false;
   hasData: boolean = false;
@@ -104,33 +103,30 @@ export class ViewDistributionOfficerComponent {
     public permissionService: PermissionService,
     private collectionOfficerService: CollectionOfficerService,
     private route: ActivatedRoute,
-  ) { }
+  ) {}
 
   ngOnInit() {
     window.scrollTo({
-    top: 0,
-    behavior: 'smooth' // Optional: adds smooth scrolling animation
-  });
+      top: 0,
+      behavior: 'smooth', // Optional: adds smooth scrolling animation
+    });
     this.fetchAllDistributionOfficer(this.page, this.itemsPerPage);
     this.getAllcompany();
     this.fetchDistributionCenterNames();
-
   }
 
   fetchAllDistributionOfficer(
     page: number = 1,
     limit: number = this.itemsPerPage,
     centerStatus: string = this.selectCenterStatus,
-    status: string = this.selectStatus
+    status: string = this.selectStatus,
   ) {
     this.isLoading = true;
     this.route.queryParams.subscribe((params) => {
       this.centerId = params['id'] ? +params['id'] : null;
     });
 
-
     if (this.centerId === null) {
-
       this.distributionService
         .fetchAllDistributionOfficers(
           page,
@@ -140,26 +136,23 @@ export class ViewDistributionOfficerComponent {
           this.searchNIC,
           this.statusFilter?.id,
           this.role?.jobRole,
-
         )
         .subscribe(
           (response) => {
             this.isLoading = false;
             if (response.total > 0) {
-              this.hasData = true
+              this.hasData = true;
             } else {
-              this.hasData = false
+              this.hasData = false;
             }
             this.distributionOfficers = response.items;
             this.totalItems = response.total;
           },
           (error) => {
             this.isLoading = false;
-          }
+          },
         );
-
     } else {
-
       this.distributionService
         .fetchAllDistributionOfficercenter(
           page,
@@ -169,7 +162,7 @@ export class ViewDistributionOfficerComponent {
           this.searchNIC,
           this.statusFilter?.id,
           this.role?.jobRole,
-          this.centerId ? this.centerId : ''
+          this.centerId ? this.centerId : '',
         )
         .subscribe(
           (response) => {
@@ -180,44 +173,41 @@ export class ViewDistributionOfficerComponent {
           },
           (error) => {
             this.isLoading = false;
-          }
+          },
         );
-
     }
-
   }
 
   back(): void {
     if (this.centerId != null) {
-      history.back()
+      history.back();
     } else {
       this.router.navigate(['steckholders/action']);
     }
-
   }
 
   fetchDistributionCenterNames() {
-  this.distributionService.getDistributionCenterNames().subscribe(
-    (response) => {
-      this.centerNames = response.map((center: CenterName) => ({
-        ...center,
-        displayName: `${center.regCode} - ${center.centerName}` // Combine regCode and centerName
-      }));
-    },
-    (error) => { }
-  );
-}
-
-  fetchDistributionManagerNames() {
-    this.distributionService.getDistributionCenterManagerNames(this.selectedCenterId).subscribe(
+    this.distributionService.getDistributionCenterNames().subscribe(
       (response) => {
-        this.collectionCenterManagerNames = response;
+        this.centerNames = response.map((center: CenterName) => ({
+          ...center,
+          displayName: `${center.regCode} - ${center.centerName}`, // Combine regCode and centerName
+        }));
       },
-      (error) => { }
+      (error) => {},
     );
   }
 
-
+  fetchDistributionManagerNames() {
+    this.distributionService
+      .getDistributionCenterManagerNames(this.selectedCenterId)
+      .subscribe(
+        (response) => {
+          this.collectionCenterManagerNames = response;
+        },
+        (error) => {},
+      );
+  }
 
   onPageChange(event: number) {
     this.page = event;
@@ -267,7 +257,8 @@ export class ViewDistributionOfficerComponent {
                 text: 'Successfully deleted Distribution officer',
                 icon: 'success',
                 customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  popup:
+                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                   title: 'font-semibold text-lg',
                   htmlContainer: 'text-left',
                 },
@@ -279,7 +270,8 @@ export class ViewDistributionOfficerComponent {
                 text: 'There was an error deleting the Distribution Officer.',
                 icon: 'error',
                 customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  popup:
+                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                   title: 'font-semibold text-lg',
                   htmlContainer: 'text-left',
                 },
@@ -293,12 +285,13 @@ export class ViewDistributionOfficerComponent {
               text: 'There was an error deleting the Collection Officer.',
               icon: 'error',
               customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                 title: 'font-semibold text-lg',
                 htmlContainer: 'text-left',
               },
             });
-          }
+          },
         );
       }
     });
@@ -311,8 +304,10 @@ export class ViewDistributionOfficerComponent {
   // }
 
   openPopup(item: any) {
-    const showApproveButton = item.status === 'Rejected' || item.status === 'Not Approved';
-    const showRejectButton = item.status === 'Approved' || item.status === 'Not Approved';
+    const showApproveButton =
+      item.status === 'Rejected' || item.status === 'Not Approved';
+    const showRejectButton =
+      item.status === 'Approved' || item.status === 'Not Approved';
 
     // Dynamic message based on status
     let message = '';
@@ -321,7 +316,8 @@ export class ViewDistributionOfficerComponent {
     } else if (item.status === 'Rejected') {
       message = 'Are you sure you want to approve this distribution officer?';
     } else if (item.status === 'Not Approved') {
-      message = 'Are you sure you want to approve or reject this distribution officer?';
+      message =
+        'Are you sure you want to approve or reject this distribution officer?';
     }
 
     const tableHtml = `
@@ -354,54 +350,62 @@ export class ViewDistributionOfficerComponent {
               Swal.close();
               this.isPopupVisible = false;
               this.isLoading = true;
-              this.distributionService.ChangeStatus(item.id, 'Approved').subscribe(
-                (res) => {
-                  this.isLoading = false;
-                  if (res.status) {
-                    Swal.fire({
-                      icon: 'success',
-                      title: 'Success!',
-                      text: 'The Distribution Officer was approved successfully.',
-                      showConfirmButton: false,
-                      timer: 3000,
-                      customClass: {
-                        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                        title: 'font-semibold text-lg',
-                        htmlContainer: 'text-left',
-                      },
-                    });
-                    this.fetchAllDistributionOfficer(this.page, this.itemsPerPage);
-                  } else {
+              this.distributionService
+                .ChangeStatus(item.id, 'Approved')
+                .subscribe(
+                  (res) => {
+                    this.isLoading = false;
+                    if (res.status) {
+                      Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'The Distribution Officer was approved successfully.',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        customClass: {
+                          popup:
+                            'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                          title: 'font-semibold text-lg',
+                          htmlContainer: 'text-left',
+                        },
+                      });
+                      this.fetchAllDistributionOfficer(
+                        this.page,
+                        this.itemsPerPage,
+                      );
+                    } else {
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Something went wrong. Please try again.',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        customClass: {
+                          popup:
+                            'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                          title: 'font-semibold text-lg',
+                          htmlContainer: 'text-left',
+                        },
+                      });
+                    }
+                  },
+                  () => {
+                    this.isLoading = false;
                     Swal.fire({
                       icon: 'error',
                       title: 'Error!',
-                      text: 'Something went wrong. Please try again.',
+                      text: 'An error occurred while approving. Please try again.',
                       showConfirmButton: false,
                       timer: 3000,
                       customClass: {
-                        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                        popup:
+                          'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                         title: 'font-semibold text-lg',
                         htmlContainer: 'text-left',
                       },
                     });
-                  }
-                },
-                () => {
-                  this.isLoading = false;
-                  Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'An error occurred while approving. Please try again.',
-                    showConfirmButton: false,
-                    timer: 3000,
-                    customClass: {
-                      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                      title: 'font-semibold text-lg',
-                      htmlContainer: 'text-left',
-                    },
-                  });
-                }
-              );
+                  },
+                );
             });
         }
 
@@ -412,54 +416,62 @@ export class ViewDistributionOfficerComponent {
               Swal.close();
               this.isPopupVisible = false;
               this.isLoading = true;
-              this.distributionService.ChangeStatus(item.id, 'Rejected').subscribe(
-                (res) => {
-                  this.isLoading = false;
-                  if (res.status) {
-                    Swal.fire({
-                      icon: 'success',
-                      title: 'Success!',
-                      text: 'The Distribution Officer was rejected successfully.',
-                      showConfirmButton: false,
-                      timer: 3000,
-                      customClass: {
-                        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                        title: 'font-semibold text-lg',
-                        htmlContainer: 'text-left',
-                      },
-                    });
-                    this.fetchAllDistributionOfficer(this.page, this.itemsPerPage);
-                  } else {
+              this.distributionService
+                .ChangeStatus(item.id, 'Rejected')
+                .subscribe(
+                  (res) => {
+                    this.isLoading = false;
+                    if (res.status) {
+                      Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'The Distribution Officer was rejected successfully.',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        customClass: {
+                          popup:
+                            'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                          title: 'font-semibold text-lg',
+                          htmlContainer: 'text-left',
+                        },
+                      });
+                      this.fetchAllDistributionOfficer(
+                        this.page,
+                        this.itemsPerPage,
+                      );
+                    } else {
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Something went wrong. Please try again.',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        customClass: {
+                          popup:
+                            'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                          title: 'font-semibold text-lg',
+                          htmlContainer: 'text-left',
+                        },
+                      });
+                    }
+                  },
+                  () => {
+                    this.isLoading = false;
                     Swal.fire({
                       icon: 'error',
                       title: 'Error!',
-                      text: 'Something went wrong. Please try again.',
+                      text: 'An error occurred while rejecting. Please try again.',
                       showConfirmButton: false,
                       timer: 3000,
                       customClass: {
-                        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                        popup:
+                          'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                         title: 'font-semibold text-lg',
                         htmlContainer: 'text-left',
                       },
                     });
-                  }
-                },
-                () => {
-                  this.isLoading = false;
-                  Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'An error occurred while rejecting. Please try again.',
-                    showConfirmButton: false,
-                    timer: 3000,
-                    customClass: {
-                      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                      title: 'font-semibold text-lg',
-                      htmlContainer: 'text-left',
-                    },
-                  });
-                }
-              );
+                  },
+                );
             });
         }
       },
@@ -471,7 +483,7 @@ export class ViewDistributionOfficerComponent {
     Swal.fire(
       'Updated!',
       `The Distribution Officer status has been updated to ${newStatus}.`,
-      'success'
+      'success',
     );
     this.isPopupVisible = false;
   }
@@ -483,7 +495,7 @@ export class ViewDistributionOfficerComponent {
   }
 
   onSearch() {
-    this.searchNIC = this.searchNIC?.trim() || ''
+    this.searchNIC = this.searchNIC?.trim() || '';
     this.fetchAllDistributionOfficer(this.page, this.itemsPerPage);
   }
 
@@ -545,11 +557,12 @@ export class ViewDistributionOfficerComponent {
             text: 'Officer disclaimed successfully!',
             confirmButtonText: 'OK',
             customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold',
-              confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
+              confirmButton:
+                'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700',
             },
-
           }).then((result) => {
             if (result.isConfirmed) {
               window.location.reload();
@@ -564,11 +577,9 @@ export class ViewDistributionOfficerComponent {
             text: 'Failed to disclaim User successfully!',
             confirmButtonText: 'Try Again',
           });
-        }
+        },
       );
   }
-
-
 
   claimOfficer() {
     // Reset validation flags
@@ -581,7 +592,10 @@ export class ViewDistributionOfficerComponent {
     }
 
     // Validate manager
-    if (!this.selectedIrmId && this.selectedOfficer?.jobRole !== 'Distribution Centre Manager') {
+    if (
+      !this.selectedIrmId &&
+      this.selectedOfficer?.jobRole !== 'Distribution Centre Manager'
+    ) {
       this.irmValidationError = true;
     }
 
@@ -593,8 +607,11 @@ export class ViewDistributionOfficerComponent {
     // Payload
     const data = {
       centerId: this.selectedCenterId,
-      irmId: this.selectedOfficer?.jobRole === 'Distribution Centre Manager' ? null : this.selectedIrmId,
-      id: this.selectOfficerId
+      irmId:
+        this.selectedOfficer?.jobRole === 'Distribution Centre Manager'
+          ? null
+          : this.selectedIrmId,
+      id: this.selectOfficerId,
     };
 
     this.distributionService.claimDistributedOfficer(data).subscribe(
@@ -607,7 +624,8 @@ export class ViewDistributionOfficerComponent {
           customClass: {
             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
             title: 'font-semibold',
-            confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
+            confirmButton:
+              'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700',
           },
         }).then((result) => {
           if (result.isConfirmed) {
@@ -625,10 +643,9 @@ export class ViewDistributionOfficerComponent {
           text: 'Failed to claim officer!',
           confirmButtonText: 'Try Again',
         });
-      }
+      },
     );
   }
-
 
   applyStatusFilters() {
     this.fetchAllDistributionOfficer(this.page, this.itemsPerPage);
@@ -641,7 +658,7 @@ export class ViewDistributionOfficerComponent {
 
   updateDistributionOfficer(id: number) {
     this.navigatePath(
-      `/steckholders/action/view-distribution-officers/update-distribution-officer/${id}`
+      `/steckholders/action/view-distribution-officers/update-distribution-officer/${id}`,
     );
   }
 }
@@ -662,5 +679,5 @@ class ManagerNames {
   firstNameEnglish!: string;
   lastNameEnglish!: string;
   empId!: string;
-  labelName!: string
+  labelName!: string;
 }

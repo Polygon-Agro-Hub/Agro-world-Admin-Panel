@@ -40,9 +40,7 @@
       </div>
 
       <div class="h-[20px]"></div>
-
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-
         <div>
           <label for="enpType" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Staff Employee Type
@@ -88,8 +86,6 @@
           </div>
         </div>
 
-
-
         <div class='mb-4 w-full'>
           <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-textDark">EMP ID / User name</label>
@@ -129,8 +125,6 @@
           </div>
         </div>
 
-
-
         <!--   
           <div>
             <label for="phoneNumber1" class="block text-sm font-medium text-gray-700 dark:text-textDark">
@@ -138,12 +132,12 @@
             </label>
             <div class="mt-1 flex">
                <input
-  id="phoneNumber1Code"
-  name="phoneNumber1Code"
-  [(ngModel)]="personalData.phoneCode1"
-  class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack w-16"
-  [disabled]="true"
-/>
+                  id="phoneNumber1Code"
+                  name="phoneNumber1Code"
+                  [(ngModel)]="personalData.phoneCode1"
+                  class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack w-16"
+                  [disabled]="true"
+                />
 
               
               <input id="phoneNumber1" name="phoneNumber1" type="text" [(ngModel)]="personalData.phoneNumber1"
@@ -180,9 +174,6 @@
               readonly />
           </div>
         </div>
-
-
-
 
         <div>
           <label for="phoneNumber2" class="block text-sm font-medium text-gray-700 dark:text-textDark">
@@ -221,8 +212,6 @@
           <input id="nic" name="nic" [(ngModel)]="personalData.nic"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             [disabled]="true" />
-
-
         </div>
 
 
@@ -231,11 +220,8 @@
           <input type="email" id="email" name="email" [(ngModel)]="personalData.email"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             [disabled]="true" />
-
-
         </div>
       </div>
-
     </div>
   </div>
 
@@ -246,15 +232,12 @@
     </h2>
     <div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-
         <div class="pb-6">
           <label for="house" class="block text-sm font-medium text-gray-700 dark:text-textDark">House / Plot
             Number</label>
           <input id="houseNumber" name="houseNumber" [(ngModel)]="personalData.houseNumber"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             [disabled]="true" />
-
-
         </div>
 
         <div class="pb-6">
@@ -265,14 +248,11 @@
 
         </div>
 
-
-
         <div class="pb-6">
           <label for="city" class="block text-sm font-medium text-gray-700 dark:text-textDark">City</label>
           <input id="city" name="city" [(ngModel)]="personalData.city"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             [disabled]="true" />
-
         </div>
 
         <div class="pb-6">
@@ -289,7 +269,6 @@
                   {{ district.name }}
                 </option>
               </select> -->
-
         </div>
 
         <div class="pb-6">
@@ -309,10 +288,6 @@
         </div>
       </div>
 
-
-
-
-
     </div>
     <div>
       <h2 class="text-2xl mt-10 mb-6 text-textLight dark:text-textDark">
@@ -324,7 +299,6 @@
         <input id="accHolderName" name="accHolderName" [(ngModel)]="personalData.accHolderName"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           [disabled]="true" />
-
       </div>
 
       <div class="pb-6">
@@ -332,7 +306,6 @@
         <input id="accNumber" name="accNumber" [(ngModel)]="personalData.accNumber"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           [disabled]="true" />
-
       </div>
 
       <!-- <div class="pb-6">
@@ -345,22 +318,16 @@
               [(ngModel)]="confirmAccNumber"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
               [disabled]="true"
-            />
-            
-            
-            
+            />        
           </div>
      -->
-
 
       <div class="pb-6">
         <label for="bankDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">Bank Name</label>
         <input id="bankDropdown" name="bankDropdown" [(ngModel)]="personalData.bankName"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           [disabled]="true" />
-
       </div>
-
 
       <div class="pb-6">
         <label for="branchDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">Branch
@@ -368,11 +335,8 @@
         <input id="branchDropdown" name="branchDropdown"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           [(ngModel)]="personalData.branchName" [disabled]="true" />
-
       </div>
     </div>
 
-
   </div>
-
 </div>

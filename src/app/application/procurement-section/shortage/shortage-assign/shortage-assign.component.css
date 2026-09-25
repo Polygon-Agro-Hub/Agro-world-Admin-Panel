@@ -21,6 +21,29 @@
   padding: 0.5rem 0.75rem;
 }
 
+::ng-deep .shortage-centre-panel .p-dropdown-filter-container {
+  padding: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+::ng-deep .shortage-centre-panel .p-dropdown-filter {
+  width: 100%;
+  padding: 0.375rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  box-sizing: border-box;
+}
+
+:host-context(.dark) ::ng-deep .shortage-centre-panel .p-dropdown-filter-container {
+  border-bottom-color: #6b7280;
+}
+
+:host-context(.dark) ::ng-deep .shortage-centre-panel .p-dropdown-filter {
+  border-color: #6b7280;
+  background-color: #4b5563;
+  color: #f9fafb;
+}
+
 .shortage-centre-dropdown .p-dropdown-label.p-placeholder {
   font-weight: 500;
   font-size: 14px;

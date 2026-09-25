@@ -72,12 +72,6 @@ export class FarmersFarmsFixedAssetsBuildingComponent implements OnInit {
       this.farmName = params['farmName'] || null;
       this.category = params['category'] || null;
 
-      console.log('Query Params:', {
-        buildingfixedassetId: this.buildingfixedassetId,
-        fullName: this.fullName,
-        farmName: this.farmName,
-        category: this.category
-      });
 
       if (this.buildingfixedassetId) {
         this.getBuildingOwnershipDetails();
@@ -99,7 +93,6 @@ export class FarmersFarmsFixedAssetsBuildingComponent implements OnInit {
         this.ownershipType = response.ownershipType || null;
         
         this.hasData = !!(response.buildingDetails || response.ownershipDetails);
-        console.log('Building ownership details:', response);
       },
       (error) => {
         this.isLoading = false;

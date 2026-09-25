@@ -91,6 +91,9 @@
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
               Duration
             </th>
+            <th class="w-16 px-2 py-3"></th>
+            <th class="w-16 px-2 py-3"></th>
+            <th class="w-16 px-2 py-3"></th>
           </tr>
         </thead>
         <tbody>
@@ -134,8 +137,8 @@
             <td *ngIf="
                 permissionService.hasPermission('View crop calendar task') ||
                 tokenService.getUserDetails().role === '1'
-              " class="px-3 py-3 text-left text-textLight dark:text-textDark">
-              <button class="w-5 h-5 text-blue-500 hover:text-blue-700 mr-8" (click)="ViewCroptask(item.id)">
+              " class="w-16 px-2 py-3 text-center text-textLight dark:text-textDark">
+              <button class="w-5 h-5 text-blue-500 hover:text-blue-700" (click)="ViewCroptask(item.id)">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
                     d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
@@ -147,8 +150,8 @@
             <td *ngIf="
                 permissionService.hasPermission('Edit crop calendar') ||
                 tokenService.getUserDetails().role === '1'
-              " class="px-3 py-3 text-center text-textLight dark:text-textDark">
-              <button class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd]" (click)="editCropCalender(item.id)">
+              " class="w-16 px-2 py-3 text-center text-textLight dark:text-textDark">
+              <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]" (click)="editCropCalender(item.id)">
                 <svg fill="currentColor" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
                   <title>Edit</title>
                   <path
@@ -161,8 +164,8 @@
             <td *ngIf="
                 permissionService.hasPermission('Delete crop calendar') ||
                 tokenService.getUserDetails().role === '1'
-              " class="px-3 py-3 text-center text-textLight dark:text-textDark">
-              <button class="w-6 h-6 ml-3 text-[#fc3636] hover:text-[#f38f8f]" (click)="deleteCropCalender(item.id)">
+              " class="w-16 px-2 py-3 text-center text-textLight dark:text-textDark">
+              <button class="w-6 h-6 text-[#fc3636] hover:text-[#f38f8f]" (click)="deleteCropCalender(item.id)">
                 <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                   viewBox="0 0 24 24">
                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

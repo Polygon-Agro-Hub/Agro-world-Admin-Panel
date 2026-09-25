@@ -215,12 +215,10 @@
               {{ item.firstName }} {{ item.lastName }}
             </td>
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
-              <span *ngIf="item.membership === 'Basic'"
-                class="bg-[#D7EEFF] text-[#002AFF] px-4 py-2 rounded-lg">
+              <span *ngIf="item.membership === 'Basic'" class="bg-[#D7EEFF] text-[#002AFF] px-4 py-2 rounded-lg">
                 BASIC
               </span>
-              <span *ngIf="item.membership === 'Pro'"
-                class="bg-[#FFFF9F] text-[#D8B800] px-6 py-2 rounded-lg">
+              <span *ngIf="item.membership === 'Pro'" class="bg-[#FFFF9F] text-[#D8B800] px-6 py-2 rounded-lg">
                 PRO
               </span>
             </td>

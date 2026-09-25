@@ -23,7 +23,7 @@
 
 <div
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
-  <div class="pt-8 pr-10 pl-12 pb-5 w-[75%] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+  <div class="pt-8 pr-10 pl-12 pb-5 w-full bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
@@ -66,7 +66,7 @@
     <div *ngIf="errorMessage" class="text-red-500 mb-4">{{ errorMessage }}</div>
 
     <div class="w-full py-4">
-      <table class="min-w-full w-[75%] divide-y divide-gray-200 dark:divide-[#4B555A] table-fixed">
+      <table class="min-w-full w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-fixed">
         <thead *ngIf="deliveryCharges.length > 0 || isLoading">
           <tr>
             <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left w-[8%]">No</th>
@@ -138,12 +138,35 @@
         </h3>
 
         <form #editForm="ngForm" (ngSubmit)="updateDeliveryCharge()">
+
+          <div class="mb-4 flex items-center">
+            <label class="flex-shrink-0 text-sm font-medium text-gray-700 dark:text-gray-300 w-48">
+              Province
+            </label>
+            <p-dropdown [(ngModel)]="editData.province" [options]="provinceOptions" optionLabel="label"
+              optionValue="value" [filter]="true" filterBy="label" [showClear]="false" (onChange)="onProvinceChange()"
+              name="province" placeholder="Select Province" styleClass="w-full mt-1"
+              panelStyleClass="custom-dropdown-panel" class="mt-1 block w-full p-dropdown-custom" required>
+            </p-dropdown>
+          </div>
+
+          <div class="mb-4 flex items-center">
+            <label class="flex-shrink-0 text-sm font-medium text-gray-700 dark:text-gray-300 w-48">
+              District
+            </label>
+            <p-dropdown [(ngModel)]="editData.district" [options]="availableDistrictOptions" optionLabel="label"
+              optionValue="value" [filter]="true" filterBy="label" [showClear]="false" name="district"
+              placeholder="Select District" styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
+              class="mt-1 block w-full p-dropdown-custom" [disabled]="!editData.province" required>
+            </p-dropdown>
+          </div>
+
           <div class="mb-4 flex items-center">
             <label class="flex-shrink-0 text-sm font-medium text-gray-700 dark:text-gray-300 w-48">
               City Name
             </label>
             <input type="text" [(ngModel)]="editData.city" name="city"
-              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-textLight dark:text-textDark"
               readonly />
           </div>
 
@@ -153,7 +176,7 @@
             </label>
             <input type="number" [(ngModel)]="editData.charge" name="charge" step="0.01" min="0"
               (input)="onChargeInput($event)"
-              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-textLight dark:text-textDark"
               required />
           </div>
 

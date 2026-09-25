@@ -40,13 +40,12 @@ interface PhoneCode {
     CommonModule,
     FormsModule,
     LoadingSpinnerComponent,
-    DropdownModule
+    DropdownModule,
   ],
   templateUrl: './add-distribution-officer.component.html',
   styleUrl: './add-distribution-officer.component.css',
 })
 export class AddDistributionOfficerComponent implements OnInit {
-
   @ViewChild('empTypeCtrl') empTypeCtrl!: NgModel;
   @ViewChild('languagesCtrl') languagesCtrl!: NgModel;
   duplicatePhoneError: boolean = false;
@@ -72,7 +71,8 @@ export class AddDistributionOfficerComponent implements OnInit {
 
   languagesRequired: boolean = false;
 
-  touchedFields: { [key in keyof Personal]?: boolean } = {};
+  // Loosened so we can also track non-Personal keys like bankId / branchId
+  touchedFields: { [key: string]: boolean } = {};
 
   confirmAccountNumberError: boolean = false;
   confirmAccountNumberRequired: boolean = false;
@@ -137,8 +137,8 @@ export class AddDistributionOfficerComponent implements OnInit {
     private distributionHubSrv: DistributionHubService,
     private location: Location,
     private route: ActivatedRoute,
-    private emailValidationService: EmailvalidationsService
-  ) { }
+    private emailValidationService: EmailvalidationsService,
+  ) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
@@ -183,50 +183,34 @@ export class AddDistributionOfficerComponent implements OnInit {
     this.router.navigate([path]);
   }
 
-  // capitalizeWhileTyping(field: 'firstNameEnglish' | 'lastNameEnglish' | 'accHolderName' | 'houseNumber' | 'streetName' | 'city'): void {
-  //   let value = this.personalData[field] || '';
-
-  //   if (field === 'houseNumber') {
-  //     value = value.replace(/[^A-Za-z0-9\/\-\# ]/g, '');
-  //   } else {
-  //     value = value.replace(/[^A-Za-z ]/g, '');
-  //   }
-
-  //   value = value.replace(/^\s+/, '');
-
-  //   if (field !== 'houseNumber' && value.length > 0 && /[A-Za-z]/.test(value.charAt(0))) {
-  //     value = value.charAt(0).toUpperCase() + value.slice(1);
-  //   }
-
-  //   this.personalData[field] = value;
-  // }
-
-  capitalizeWhileTyping(field: 'firstNameEnglish' | 'lastNameEnglish' | 'accHolderName' | 'houseNumber' | 'streetName' | 'city'): void {
+  capitalizeWhileTyping(
+    field:
+      | 'firstNameEnglish'
+      | 'lastNameEnglish'
+      | 'accHolderName'
+      | 'houseNumber'
+      | 'streetName'
+      | 'city',
+  ): void {
     let value = this.personalData[field] || '';
 
     if (field === 'houseNumber') {
-      // For house numbers: allow alphanumeric, slash, hyphen, hash, and space
       value = value.replace(/[^A-Za-z0-9\/\-\# ]/g, '');
-    }
-    else if (field === 'streetName') {
-      // For street names: allow letters, numbers, spaces, hyphens, periods, commas, etc.
-      // Adjust this regex based on what characters you want to allow
+    } else if (field === 'streetName') {
       value = value.replace(/[^A-Za-z0-9\s\-\.\,\(\)]/g, '');
-    }
-    else if (field === 'city') {
-      // For city names: allow letters, spaces, and maybe hyphens
+    } else if (field === 'city') {
       value = value.replace(/[^A-Za-z\s\-]/g, '');
-    }
-    else {
-      // For other text fields: only letters and spaces
+    } else {
       value = value.replace(/[^A-Za-z ]/g, '');
     }
 
-    // Remove leading spaces
     value = value.replace(/^\s+/, '');
 
-    // Capitalize first letter if it's a letter field (excluding houseNumber)
-    if (field !== 'houseNumber' && value.length > 0 && /[A-Za-z]/.test(value.charAt(0))) {
+    if (
+      field !== 'houseNumber' &&
+      value.length > 0 &&
+      /[A-Za-z]/.test(value.charAt(0))
+    ) {
       value = value.charAt(0).toUpperCase() + value.slice(1);
     }
 
@@ -240,12 +224,17 @@ export class AddDistributionOfficerComponent implements OnInit {
     }
   }
 
-  onTrimInputFirstCapital(event: Event, modelRef: any, fieldName: string): void {
+  onTrimInputFirstCapital(
+    event: Event,
+    modelRef: any,
+    fieldName: string,
+  ): void {
     const inputElement = event.target as HTMLInputElement;
     let trimmedValue = inputElement.value.trimStart();
 
     if (trimmedValue.length > 0) {
-      trimmedValue = trimmedValue.charAt(0).toUpperCase() + trimmedValue.slice(1);
+      trimmedValue =
+        trimmedValue.charAt(0).toUpperCase() + trimmedValue.slice(1);
     }
 
     modelRef[fieldName] = trimmedValue;
@@ -265,9 +254,9 @@ export class AddDistributionOfficerComponent implements OnInit {
     this.distributionHubSrv.getAllDistributionCenterByCompany(id).subscribe(
       (res) => {
         this.distributionCenterData = res;
-        this.centerOptions = this.distributionCenterData.map(center => ({
+        this.centerOptions = this.distributionCenterData.map((center) => ({
           label: center.centerName,
-          value: center.id
+          value: center.id,
         }));
         this.loaded = true;
       },
@@ -275,7 +264,7 @@ export class AddDistributionOfficerComponent implements OnInit {
         this.distributionCenterData = [];
         this.centerOptions = [];
         this.loaded = true;
-      }
+      },
     );
   }
 
@@ -314,6 +303,7 @@ export class AddDistributionOfficerComponent implements OnInit {
   updateEmployeeType(selectedType: string): void {
     this.empType = selectedType;
     this.personalData.empType = selectedType;
+    this.touchedFields['empType'] = true;
   }
 
   isEmpTypeSelected(): boolean {
@@ -340,6 +330,7 @@ export class AddDistributionOfficerComponent implements OnInit {
       this.personalData.languages = languagesArray.join(',');
     }
 
+    this.touchedFields['languages'] = true;
     this.validateLanguages();
   }
 
@@ -354,7 +345,7 @@ export class AddDistributionOfficerComponent implements OnInit {
     );
   }
 
-  onBlur(fieldName: keyof Personal): void {
+  onBlur(fieldName: string): void {
     this.touchedFields[fieldName] = true;
 
     if (fieldName === 'confirmAccNumber') {
@@ -411,7 +402,7 @@ export class AddDistributionOfficerComponent implements OnInit {
       .then((lastID) => {
         this.personalData.empId = rolePrefix + lastID;
       })
-      .catch((error) => { });
+      .catch((error) => {});
     this.personalData.companyId = currentCompanyId;
     this.personalData.centerId = currentCenterId;
   }
@@ -426,7 +417,7 @@ export class AddDistributionOfficerComponent implements OnInit {
         },
         (error) => {
           reject(error);
-        }
+        },
       );
     });
   }
@@ -435,14 +426,17 @@ export class AddDistributionOfficerComponent implements OnInit {
     this.collectionCenterSrv
       .getAllManagerList(
         this.personalData.companyId,
-        this.personalData.centerId
+        this.personalData.centerId,
       )
       .subscribe((res) => {
         this.distributionHeadData = res;
       });
   }
 
-  isValidPhoneNumber(phone: string, code: string = this.personalData.phoneCode01): boolean {
+  isValidPhoneNumber(
+    phone: string,
+    code: string = this.personalData.phoneCode01,
+  ): boolean {
     if (!phone || !code) return false;
 
     const fullNumber = `${code}${phone}`;
@@ -455,12 +449,10 @@ export class AddDistributionOfficerComponent implements OnInit {
 
     const cleanNIC = nic.trim();
 
-    // Check for new format (12 digits)
     if (/^\d{12}$/.test(cleanNIC)) {
       return true;
     }
 
-    // Check for old format (9 digits followed by V/v)
     if (/^\d{9}[Vv]$/.test(cleanNIC)) {
       return true;
     }
@@ -491,10 +483,55 @@ export class AddDistributionOfficerComponent implements OnInit {
     });
   }
 
+  // Touch all page-one fields (works even before page-one's DOM is (re)rendered)
+  touchPageOneFields(): void {
+    const fields: (keyof Personal)[] = [
+      'firstNameEnglish',
+      'lastNameEnglish',
+      'phoneNumber01',
+      'phoneNumber02',
+      'nic',
+      'email',
+    ];
+    fields.forEach((field) => (this.touchedFields[field] = true));
+    this.touchedFields['empType'] = true;
+    this.touchedFields['languages'] = true;
+
+    if (this.personalData.jobRole === 'Collection Officer') {
+      this.touchedFields['irmId'] = true;
+    }
+  }
+
+  // Touch all page-two fields
+  touchPageTwoFields(): void {
+    const fields: (keyof Personal)[] = [
+      'houseNumber',
+      'streetName',
+      'city',
+      'district',
+      'accHolderName',
+      'accNumber',
+      'confirmAccNumber',
+      'bankName',
+      'branchName',
+    ];
+    fields.forEach((field) => (this.touchedFields[field] = true));
+    this.touchedFields['bankId'] = true;
+    this.touchedFields['branchId'] = true;
+
+    this.validateConfirmAccNumber();
+  }
+
+  touchAllFields(): void {
+    this.touchPageOneFields();
+    this.touchPageTwoFields();
+  }
+
   nextFormCreate(page: 'pageOne' | 'pageTwo') {
     if (page === 'pageTwo') {
       const validation = this.validatePageOne();
 
+      this.touchPageOneFields();
       this.empTypeCtrl?.control.markAsTouched();
       this.languagesCtrl?.control.markAsTouched();
 
@@ -515,81 +552,88 @@ export class AddDistributionOfficerComponent implements OnInit {
     window.scrollTo(0, 0);
   }
 
-  // Enhanced validation for pageOne
   validatePageOne(): { isValid: boolean; errors: string[] } {
     const errors: string[] = [];
 
-    // Employee type validation
     if (!this.isEmpTypeSelected()) {
       errors.push('Please select an employee type');
     }
 
-    // Languages validation
     if (!this.isAtLeastOneLanguageSelected()) {
       errors.push('Please select at least one preferred language');
     }
 
-    // First Name validation
     if (!this.personalData.firstNameEnglish) {
       errors.push('First Name is required');
     } else if (!/^[A-Z][a-zA-Z ]*$/.test(this.personalData.firstNameEnglish)) {
-      errors.push('First Name must start with a capital letter and contain only letters');
+      errors.push(
+        'First Name must start with a capital letter and contain only letters',
+      );
     }
 
-    // Last Name validation
     if (!this.personalData.lastNameEnglish) {
       errors.push('Last Name is required');
     } else if (!/^[A-Z][a-zA-Z ]*$/.test(this.personalData.lastNameEnglish)) {
-      errors.push('Last Name must start with a capital letter and contain only letters');
+      errors.push(
+        'Last Name must start with a capital letter and contain only letters',
+      );
     }
 
-    // Phone validation
     if (!this.personalData.phoneNumber01) {
       errors.push('Mobile Number - 1 is required');
     } else if (!this.isValidPhoneNumber(this.personalData.phoneNumber01)) {
-      errors.push('Mobile Number - 1 must be a valid Sri Lankan number (format: +947XXXXXXXX)');
+      errors.push(
+        'Mobile Number - 1 must be a valid Sri Lankan number (format: +947XXXXXXXX)',
+      );
     }
 
-    // Phone 2 validation (if provided)
-    if (this.personalData.phoneNumber02 && !this.isValidPhoneNumber(this.personalData.phoneNumber02)) {
-      errors.push('Mobile Number - 2 must be a valid Sri Lankan number (format: +947XXXXXXXX)');
+    if (
+      this.personalData.phoneNumber02 &&
+      !this.isValidPhoneNumber(
+        this.personalData.phoneNumber02,
+        this.personalData.phoneCode02,
+      )
+    ) {
+      errors.push(
+        'Mobile Number - 2 must be a valid Sri Lankan number (format: +947XXXXXXXX)',
+      );
     }
 
-    // NIC validation
     if (!this.personalData.nic) {
       errors.push('NIC is required');
     } else if (!this.isValidNIC(this.personalData.nic)) {
-      errors.push('NIC must be valid (12 digits or 10 digits followed by V)');
+      errors.push('NIC must be valid (12 digits or 9 digits followed by V)');
     }
 
-    // Email validation
     if (!this.personalData.email) {
       errors.push('Email is required');
     } else if (!this.isValidEmail(this.personalData.email)) {
       errors.push('Email must be valid');
     }
 
-    // Duplicate phone check
+    this.checkDuplicatePhoneNumbers();
     if (this.duplicatePhoneError) {
-      errors.push('Mobile Number - 01 and Mobile Number - 02 cannot be the same');
+      errors.push(
+        'Mobile Number - 01 and Mobile Number - 02 cannot be the same',
+      );
     }
 
-    // Manager validation for Collection Officer
-    if (this.personalData.jobRole === 'Collection Officer' && !this.personalData.irmId) {
+    if (
+      this.personalData.jobRole === 'Collection Officer' &&
+      !this.personalData.irmId
+    ) {
       errors.push('Manager Name is required for Collection Officer');
     }
 
     return {
       isValid: errors.length === 0,
-      errors
+      errors,
     };
   }
 
-  // Enhanced validation for pageTwo
   validatePageTwo(): { isValid: boolean; errors: string[] } {
     const errors: string[] = [];
 
-    // Address validation
     if (!this.personalData.houseNumber) {
       errors.push('House Number is required');
     }
@@ -606,12 +650,13 @@ export class AddDistributionOfficerComponent implements OnInit {
       errors.push('District is required');
     }
 
-    // Bank details validation
     const namePattern = /^([A-Z][a-z]*)( [A-Z][a-z]*)*$/;
     if (!this.personalData.accHolderName) {
-      errors.push('Account Holder\'s Name is required');
+      errors.push("Account Holder's Name is required");
     } else if (!namePattern.test(this.personalData.accHolderName)) {
-      errors.push('Account Holder\'s Name must contain only letters and each word must start with a capital letter');
+      errors.push(
+        "Account Holder's Name must contain only letters and each word must start with a capital letter",
+      );
     }
 
     if (!this.personalData.accNumber) {
@@ -626,42 +671,46 @@ export class AddDistributionOfficerComponent implements OnInit {
       errors.push('Confirm Account Number cannot contain special characters');
     }
 
-    if (this.personalData.accNumber && this.personalData.confirmAccNumber &&
-      this.personalData.accNumber !== this.personalData.confirmAccNumber) {
+    if (
+      this.personalData.accNumber &&
+      this.personalData.confirmAccNumber &&
+      this.personalData.accNumber !== this.personalData.confirmAccNumber
+    ) {
       errors.push('Account Numbers do not match');
     }
 
-    if (!this.personalData.bankName) {
+    if (!this.selectedBankId) {
       errors.push('Bank Name is required');
     }
 
-    if (!this.personalData.branchName) {
+    if (!this.selectedBranchId) {
       errors.push('Branch Name is required');
     }
 
     return {
       isValid: errors.length === 0,
-      errors
+      errors,
     };
   }
 
-  // Enhanced validation for final submission
   validateAllFields(): { isValid: boolean; errors: string[] } {
     const pageOneValidation = this.validatePageOne();
     const pageTwoValidation = this.validatePageTwo();
 
-    const allErrors = [...pageOneValidation.errors, ...pageTwoValidation.errors];
+    const allErrors = [
+      ...pageOneValidation.errors,
+      ...pageTwoValidation.errors,
+    ];
 
     return {
       isValid: allErrors.length === 0,
-      errors: allErrors
+      errors: allErrors,
     };
   }
 
-  // Enhanced method to show validation errors in SweetAlert
   showValidationErrors(errors: string[]): void {
     let errorMessage = '<ul style="text-align: left; margin-left: 20px;">';
-    errors.forEach(error => {
+    errors.forEach((error) => {
       errorMessage += `<li>• ${error}</li>`;
     });
     errorMessage += '</ul>';
@@ -678,27 +727,15 @@ export class AddDistributionOfficerComponent implements OnInit {
     });
   }
 
-  // Enhanced method to mark all fields as touched
+  // Kept for backward compatibility, now delegates to the two focused methods
   markAllFieldsAsTouched(): void {
-    const fields: (keyof Personal)[] = [
-      'firstNameEnglish', 'lastNameEnglish', 'phoneNumber01', 'phoneNumber02',
-      'nic', 'email', 'houseNumber', 'streetName', 'city', 'district',
-      'accHolderName', 'accNumber', 'confirmAccNumber', 'bankName', 'branchName'
-    ];
-
-    fields.forEach(field => {
-      this.touchedFields[field] = true;
-    });
-
-    // Also mark checkboxes/radio as touched
-    this.touchedFields['empType'] = true;
-    this.touchedFields['languages'] = true;
+    this.touchAllFields();
   }
 
   updateProvince(event: DropdownChangeEvent): void {
     const selectedDistrict = event.value;
     const selected = this.districts.find(
-      (district) => district.name === selectedDistrict
+      (district) => district.name === selectedDistrict,
     );
     if (this.itemId === null) {
       if (selected) {
@@ -707,15 +744,19 @@ export class AddDistributionOfficerComponent implements OnInit {
         this.personalData.province = '';
       }
     }
+    this.touchedFields['district'] = true;
   }
 
   onBankChange() {
     if (this.selectedBankId) {
-      const bankBranches = this.allBranches[this.selectedBankId.toString()] || [];
-      this.branches = bankBranches.slice().sort((a, b) => a.name.localeCompare(b.name));
+      const bankBranches =
+        this.allBranches[this.selectedBankId.toString()] || [];
+      this.branches = bankBranches
+        .slice()
+        .sort((a, b) => a.name.localeCompare(b.name));
 
       const selectedBank = this.banks.find(
-        (bank) => bank.ID === this.selectedBankId
+        (bank) => bank.ID === this.selectedBankId,
       );
       if (selectedBank) {
         this.personalData.bankName = selectedBank.name;
@@ -728,27 +769,33 @@ export class AddDistributionOfficerComponent implements OnInit {
       this.branches = [];
       this.personalData.bankName = '';
     }
+    this.touchedFields['bankId'] = true;
   }
 
   blockNicInput(event: KeyboardEvent) {
     const value = this.personalData.nic || '';
-    const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Home', 'End'];
+    const allowedKeys = [
+      'Backspace',
+      'Delete',
+      'ArrowLeft',
+      'ArrowRight',
+      'Tab',
+      'Home',
+      'End',
+    ];
 
-    // Allow control keys
     if (allowedKeys.includes(event.key)) return;
 
-    const currentPosition = (event.target as HTMLInputElement).selectionStart || 0;
+    const currentPosition =
+      (event.target as HTMLInputElement).selectionStart || 0;
 
-    // Check if we're at position 9 (where 'V' can appear for old format)
     const isAtVPosition = currentPosition === 9;
 
     if (isAtVPosition) {
-      // At position 9 (10th character), allow 'V' or 'v'
       if (event.key.toLowerCase() === 'v') {
-        return; // Allow 'V' or 'v'
+        return;
       }
 
-      // Also allow digits (for new format)
       if (event.key >= '0' && event.key <= '9') {
         return;
       }
@@ -757,13 +804,11 @@ export class AddDistributionOfficerComponent implements OnInit {
       return;
     }
 
-    // For other positions, only allow digits
     if (event.key < '0' || event.key > '9') {
       event.preventDefault();
       return;
     }
 
-    // Determine max length based on current content
     const hasV = value.toLowerCase().includes('v');
     const maxLength = hasV ? 10 : 12;
 
@@ -775,55 +820,46 @@ export class AddDistributionOfficerComponent implements OnInit {
   enforceNicLength(event: any) {
     let value = event.target.value || '';
 
-    // Remove any characters that aren't digits or 'V'/'v'
     value = value.replace(/[^0-9Vv]/g, '');
 
-    // Check if value contains 'v' or 'V'
     const vIndex = value.toLowerCase().indexOf('v');
 
     if (vIndex !== -1) {
-      // 'V' can only be at position 9 (10th character)
       if (vIndex !== 9) {
-        // Remove 'v' if it's not at position 9
         value = value.replace(/v/gi, '');
       } else {
-        // If 'V' is at position 9, truncate to 10 characters max
         if (value.length > 10) {
           value = value.slice(0, 10);
         }
       }
     }
 
-    // If no 'V' present, limit to 12 digits
     if (!value.toLowerCase().includes('v') && value.length > 12) {
       value = value.slice(0, 12);
     }
 
-    // Ensure only one 'V' or 'v'
     const vCount = (value.match(/v/gi) || []).length;
     if (vCount > 1) {
-      // Keep only the first 'v'
       const firstIndex = value.toLowerCase().indexOf('v');
-      value = value.slice(0, firstIndex + 1) + value.slice(firstIndex + 1).replace(/v/gi, '');
+      value =
+        value.slice(0, firstIndex + 1) +
+        value.slice(firstIndex + 1).replace(/v/gi, '');
     }
 
     this.personalData.nic = value;
-    event.target.value = value; // Update the input value
+    event.target.value = value;
   }
 
   capitalizeV(): void {
     if (this.personalData.nic) {
       let nic = this.personalData.nic;
 
-      // Convert 'v' to 'V' if present
       if (nic.toLowerCase().includes('v')) {
         const digits = nic.replace(/[^0-9]/g, '');
 
-        // For old format (9 digits + V)
         if (digits.length === 9 && nic.length === 10) {
           this.personalData.nic = digits + 'V';
         } else {
-          // Replace all 'v' with 'V'
           this.personalData.nic = nic.replace(/v/gi, 'V');
         }
       }
@@ -833,7 +869,7 @@ export class AddDistributionOfficerComponent implements OnInit {
   onBranchChange() {
     if (this.selectedBranchId) {
       const selectedBranch = this.branches.find(
-        (branch) => branch.ID === this.selectedBranchId
+        (branch) => branch.ID === this.selectedBranchId,
       );
       if (selectedBranch) {
         this.personalData.branchName = selectedBranch.name;
@@ -842,30 +878,28 @@ export class AddDistributionOfficerComponent implements OnInit {
     } else {
       this.personalData.branchName = '';
     }
+    this.touchedFields['branchId'] = true;
   }
 
   onSubmit() {
-    // Mark all fields as touched first
-    this.markAllFieldsAsTouched();
+    // Touch everything first so all inline messages can render
+    this.touchAllFields();
 
-    // Validate all fields (both pages)
-    const validation = this.validateAllFields();
+    const pageOneValidation = this.validatePageOne();
+    const pageTwoValidation = this.validatePageTwo();
+    const allErrors = [
+      ...pageOneValidation.errors,
+      ...pageTwoValidation.errors,
+    ];
 
-    if (!validation.isValid) {
-      this.showValidationErrors(validation.errors);
-      return;
-    }
-
-    // Additional duplicate phone check
-    this.duplicatePhoneError = false;
-    if (
-      this.personalData.phoneNumber01 &&
-      this.personalData.phoneNumber02 &&
-      this.personalData.phoneCode01 === this.personalData.phoneCode02 &&
-      this.personalData.phoneNumber01 === this.personalData.phoneNumber02
-    ) {
-      this.duplicatePhoneError = true;
-      this.showValidationErrors(['Mobile Number - 01 and Mobile Number - 02 cannot be the same']);
+    if (allErrors.length > 0) {
+      if (!pageOneValidation.isValid) {
+        // Page one's fields aren't in the DOM while page two is showing,
+        // so switch back to page one to actually display its errors.
+        this.selectedPage = 'pageOne';
+        setTimeout(() => this.scrollToTop());
+      }
+      this.showValidationErrors(allErrors);
       return;
     }
 
@@ -897,7 +931,8 @@ export class AddDistributionOfficerComponent implements OnInit {
                 text: 'Created Distribution Centre Head Successfully',
                 icon: 'success',
                 customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  popup:
+                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                   title: 'font-semibold',
                 },
               }).then(() => {
@@ -918,11 +953,12 @@ export class AddDistributionOfficerComponent implements OnInit {
                 text: this.errorMessage,
                 icon: 'error',
                 customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  popup:
+                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                   title: 'font-semibold',
                 },
               });
-            }
+            },
           );
       }
     });
@@ -931,7 +967,7 @@ export class AddDistributionOfficerComponent implements OnInit {
   highlightDuplicateFields(duplicateFields: string[]): void {
     this.resetFieldHighlights();
 
-    duplicateFields.forEach(field => {
+    duplicateFields.forEach((field) => {
       switch (field) {
         case 'NIC':
           this.touchedFields['nic'] = true;
@@ -961,9 +997,9 @@ export class AddDistributionOfficerComponent implements OnInit {
   getAllCompanies() {
     this.distributionHubSrv.getAllCompanyList().subscribe((res) => {
       this.CompanyData = res;
-      this.companyOptions = this.CompanyData.map(company => ({
+      this.companyOptions = this.CompanyData.map((company) => ({
         label: company.companyNameEnglish,
-        value: company.id
+        value: company.id,
       }));
     });
   }
@@ -978,7 +1014,7 @@ export class AddDistributionOfficerComponent implements OnInit {
       (error) => {
         this.distributionCenterData = [];
         this.loaded = true;
-      }
+      },
     );
   }
 
@@ -987,12 +1023,20 @@ export class AddDistributionOfficerComponent implements OnInit {
       (data) => {
         this.banks = data.slice().sort((a, b) => a.name.localeCompare(b.name));
       },
-      (error) => { }
+      (error) => {},
     );
   }
 
   blockPhoneLength(event: KeyboardEvent, value: string) {
-    const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Home', 'End'];
+    const allowedKeys = [
+      'Backspace',
+      'Delete',
+      'ArrowLeft',
+      'ArrowRight',
+      'Tab',
+      'Home',
+      'End',
+    ];
 
     if (allowedKeys.includes(event.key)) return;
 
@@ -1037,14 +1081,15 @@ export class AddDistributionOfficerComponent implements OnInit {
   trimLeadingSpace(event: Event) {
     const input = event.target as HTMLInputElement;
 
-    // Remove leading spaces
     if (input.value.startsWith(' ')) {
       const cursorPos = input.selectionStart || 0;
       input.value = input.value.trimStart();
-      input.setSelectionRange(Math.max(0, cursorPos - 1), Math.max(0, cursorPos - 1));
+      input.setSelectionRange(
+        Math.max(0, cursorPos - 1),
+        Math.max(0, cursorPos - 1),
+      );
     }
 
-    // Also enforce NIC length after trimming
     this.enforceNicLength(event);
   }
 
@@ -1060,13 +1105,14 @@ export class AddDistributionOfficerComponent implements OnInit {
       (data) => {
         this.allBranches = data;
         if (this.selectedBankId) {
-          this.branches = (data[this.selectedBankId.toString()] || []).slice()
+          this.branches = (data[this.selectedBankId.toString()] || [])
+            .slice()
             .sort((a, b) => a.name.localeCompare(b.name));
         }
       },
       (error) => {
         console.error('Failed to load branches', error);
-      }
+      },
     );
   }
 
@@ -1074,9 +1120,14 @@ export class AddDistributionOfficerComponent implements OnInit {
     return this.emailValidationService.getErrorMessage(email);
   }
 
-  getPhoneValidationMessage(field: 'phoneNumber01' | 'phoneNumber02'): string | null {
+  getPhoneValidationMessage(
+    field: 'phoneNumber01' | 'phoneNumber02',
+  ): string | null {
     const phoneValue = this.personalData[field];
-    const phoneCode = field === 'phoneNumber01' ? this.personalData.phoneCode01 : this.personalData.phoneCode02;
+    const phoneCode =
+      field === 'phoneNumber01'
+        ? this.personalData.phoneCode01
+        : this.personalData.phoneCode02;
 
     if (field === 'phoneNumber01') {
       if (this.touchedFields[field] && !phoneValue) {
@@ -1088,16 +1139,25 @@ export class AddDistributionOfficerComponent implements OnInit {
       return 'Mobile Number - 01 and Mobile Number - 02 cannot be the same.';
     }
 
-    if (phoneValue && !this.isValidPhoneNumber(phoneValue, phoneCode)) {
+    if (
+      this.touchedFields[field] &&
+      phoneValue &&
+      !this.isValidPhoneNumber(phoneValue, phoneCode)
+    ) {
       return 'Please enter a valid mobile number (format: +947XXXXXXXX).';
     }
 
     return null;
   }
 
-  getPhone1ValidationMessage(field: 'phoneNumber01' | 'phoneNumber02'): string | null {
+  getPhone1ValidationMessage(
+    field: 'phoneNumber01' | 'phoneNumber02',
+  ): string | null {
     const phoneValue = this.personalData[field];
-    const phoneCode = field === 'phoneNumber01' ? this.personalData.phoneCode01 : this.personalData.phoneCode02;
+    const phoneCode =
+      field === 'phoneNumber01'
+        ? this.personalData.phoneCode01
+        : this.personalData.phoneCode02;
 
     if (field === 'phoneNumber01') {
       if (this.touchedFields[field] && !phoneValue) {
@@ -1105,37 +1165,30 @@ export class AddDistributionOfficerComponent implements OnInit {
       }
     }
 
-    if (phoneValue && !this.isValidPhoneNumber(phoneValue, phoneCode)) {
+    if (
+      this.touchedFields[field] &&
+      phoneValue &&
+      !this.isValidPhoneNumber(phoneValue, phoneCode)
+    ) {
       return 'Please enter a valid mobile number (format: +947XXXXXXXX).';
     }
 
     return null;
   }
 
-  // Add this method to your component
   validateNameInput(event: any): void {
     const input = event.target;
     let value = input.value;
 
-    // Remove any numbers or special characters immediately
-    // This regex allows only letters (A-Z a-z) and spaces
     const filteredValue = value.replace(/[^A-Za-z\s]/g, '');
-
-    // Prevent multiple consecutive spaces
     const singleSpaces = filteredValue.replace(/\s+/g, ' ');
 
-    // Update the model value if it changed
     if (value !== singleSpaces) {
       input.value = singleSpaces;
       this.personalData.accHolderName = singleSpaces;
-
-      // Trigger Angular's validation
       event.stopPropagation();
     }
   }
-
-
-
 }
 
 class Personal {

@@ -29,36 +29,49 @@
       </div>
 
       <div class="flex items-center gap-3">
-        <!-- Ratings Filter Dropdown -->
+         <!-- Agent Filter Dropdown -->
+          
         <p-dropdown
           styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#D1D5DB] dark:border-[#AFAFAF]"
-          [options]="ratingFilterOptions"
-          [checkmark]="true"
+          [options]="agentFilterOptions"
           optionLabel="label"
           optionValue="value"
-          [showClear]="!!selectedRatingFilter"
-          placeholder="Ratings"
-          [(ngModel)]="selectedRatingFilter"
-          (onChange)="applyRatingFilter()"
-        >
-          <ng-template pTemplate="selectedItem">
-            <div class="flex items-center gap-2" *ngIf="selectedRatingFilter">
-              <img
-                [src]="getRatingIcon(selectedRatingFilter)"
-                class="w-4 h-4 object-contain"
-              />
-              <span class="text-sm text-textLight dark:text-textDark">{{
-                getRatingLabel(selectedRatingFilter)
-              }}</span>
-            </div>
-          </ng-template>
-          <ng-template let-option pTemplate="item">
-            <div class="flex items-center gap-2 py-1">
-              <img [src]="option.icon" class="w-4 h-4 object-contain" />
-              <span class="text-sm">{{ option.label }}</span>
-            </div>
-          </ng-template>
-        </p-dropdown>
+          [showClear]="!!selectedAgentFilter"
+          placeholder="Agent"
+          [(ngModel)]="selectedAgentFilter"
+          (onChange)="applyAgentFilter()"
+        ></p-dropdown>
+
+        <!-- Ratings Filter Dropdown -->
+        <p-dropdown
+  styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#D1D5DB] dark:border-[#AFAFAF]"
+  panelStyleClass="compact-dropdown-panel"
+  [options]="ratingFilterOptions"
+  optionLabel="label"
+  optionValue="value"
+  [showClear]="!!selectedRatingFilter"
+  placeholder="Ratings"
+  [(ngModel)]="selectedRatingFilter"
+  (onChange)="applyRatingFilter()"
+>
+  <ng-template pTemplate="selectedItem">
+    <div class="flex items-center gap-2" *ngIf="selectedRatingFilter">
+      <img
+        [src]="getRatingIcon(selectedRatingFilter)"
+        class="w-4 h-4 object-contain"
+      />
+      <span class="text-sm text-textLight dark:text-textDark">{{
+        getRatingLabel(selectedRatingFilter)
+      }}</span>
+    </div>
+  </ng-template>
+  <ng-template let-option pTemplate="item">
+    <div class="flex items-center gap-2">
+      <img [src]="option.icon" class="w-4 h-4 object-contain" />
+      <span class="text-sm">{{ option.label }}</span>
+    </div>
+  </ng-template>
+</p-dropdown>
 
         <!-- Search Bar -->
         <div
@@ -67,7 +80,7 @@
           <div
             class="absolute top-full mt-2 bg-gray-800 dark:bg-gray-700 text-white dark:text-gray-200 text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10"
           >
-            Search by Customer ID, Name, Phone Number
+            Search by Customer ID, Name, Phone Number, City
           </div>
           <input
             type="text"
@@ -143,7 +156,7 @@
         <thead>
           <tr>
             <th
-              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap"
             >
               Customer ID
             </th>
@@ -156,6 +169,11 @@
               class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
               Agent ID
+            </th>
+            <th
+              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              Nearest City
             </th>
             <th
               class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center"
@@ -216,11 +234,14 @@
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
               {{ customer.empId }}
             </td>
+            <td class="px-3 py-3 text-left text-textLight dark:text-textDark">
+              {{ customer.nearesCity }}
+            </td>
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
               {{ customer.created_at | date: "d MMM, y h:mm a" }}
             </td>
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
-              {{ customer.phoneNumber }}
+              0{{ customer.phoneNumber }}
             </td>
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
               {{
@@ -598,8 +619,8 @@
             <ng-container [ngSwitch]="option.value">
               <ng-container *ngSwitchCase="'VVIP'">
                 <img
-                  src="assets/images/ratings/VVIP.png"
-                  class="w-8 h-4 object-contain"
+                  src="assets/images/ratings/VIP.png"
+                  class="w-4 h-4 object-contain"
                   alt="VVIP"
                 />
               </ng-container>
@@ -665,13 +686,4 @@
   aria-live="polite"
 >
   Copied!
-</div>
-
-<div
-  *ngIf="showRatingToast"
-  class="fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity duration-300 z-50"
-  role="alert"
-  aria-live="polite"
->
-  Rating updated successfully!
 </div>

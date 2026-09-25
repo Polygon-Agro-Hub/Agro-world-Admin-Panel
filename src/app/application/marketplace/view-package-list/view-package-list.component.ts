@@ -94,7 +94,7 @@ export class ViewPackageListComponent implements OnInit {
     }
     this.viewPackagesList.getAllMarketplacePackages(trimmedSearch, dateString).subscribe(
       (response) => {
-        console.log('Package list response:', response);
+        
         this.viewPackageList = response.data.flatMap((group: any) =>
           group.packages.map((pkg: any) => ({
             ...pkg,
@@ -261,7 +261,7 @@ export class ViewPackageListComponent implements OnInit {
   }
 
   viewDefinePackageDate(id: number) {
-    console.log('Navigating to history with package ID:', id); // Debugging
+     // Debugging
     this.router.navigate([`/market/action/view-package-history`], {
       queryParams: { id },
     });
@@ -278,7 +278,7 @@ export class ViewPackageListComponent implements OnInit {
         .getAllMarketplacePackages(this.searchtext, dateString)
         .subscribe(
           (response) => {
-            console.log('Filtered package list response:', response);
+            
             this.viewPackageList = response.data.flatMap((group: any) =>
               group.packages.map((pkg: any) => ({
                 ...pkg,

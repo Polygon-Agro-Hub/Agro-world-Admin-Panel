@@ -26,9 +26,10 @@ export interface GoviShopUser {
   templateUrl: './govishop-users.component.html',
   styleUrl: './govishop-users.component.css',
 })
+
 export class GovishopUsersComponent implements OnInit {
   @ViewChild('searchInput') searchInput!: ElementRef;
-  
+
   isLoading = false;
   supplierName = '';
   searchTerm = '';
@@ -47,14 +48,14 @@ export class GovishopUsersComponent implements OnInit {
     private goviShopService: StakeholderService,
     public tokenService: TokenService,
     public permissionService: PermissionService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       this.shopId = params['shopId'] || '';
       this.supplierName = params['shopName'] || '';
       this.role = params['role'] || 'Manager';
-      
+
       if (this.shopId) {
         this.loadUsers();
       }
@@ -108,7 +109,7 @@ export class GovishopUsersComponent implements OnInit {
         } else {
           this.users = [];
         }
-      
+
         this.isLoading = false;
       },
       error: (error) => {

@@ -490,13 +490,13 @@ export class CreateCropCalenderComponent implements OnInit {
     const missingFields: string[] = [];
     const controls = this.cropForm.controls;
     const fieldLabels: { [key: string]: string } = {
-      groupId: 'Crop Name',
-      varietyId: 'Variety Name',
-      cultivationMethod: 'Cultivation Method',
-      natureOfCultivation: 'Nature of Cultivation',
-      cropDuration: 'Crop Duration',
-      suitableAreas: 'Suitable Areas',
-      specialNotes: 'Special Notes',
+      groupId: 'Crop Name is Required',
+      varietyId: 'Variety Name is Required',
+      cultivationMethod: 'Cultivation Method is Required',
+      natureOfCultivation: 'Nature of Cultivation is Required',
+      cropDuration: 'Crop Duration is Required',
+      suitableAreas: 'Suitable Areas are Required',
+      specialNotes: 'Special Notes is Required',
     };
 
     for (const controlName in controls) {

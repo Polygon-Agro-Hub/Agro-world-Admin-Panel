@@ -73,6 +73,7 @@ interface DistributionOfficers {
 })
 
 export class UpdateDistributionOfficerComponent {
+  @ViewChild('insExpDate') insuranceCalendar: any;
   @ViewChild('licNoInput') licNoModel!: NgModel;
   @ViewChild('confirmLicNoInput') confirmLicNoModel!: NgModel;
   @ViewChild('insurenceNoInput') insurenceNoModel!: NgModel;
@@ -236,6 +237,12 @@ export class UpdateDistributionOfficerComponent {
   minInsuranceDate: Date = new Date(
     new Date().setDate(new Date().getDate() + 1),
   );
+  insuranceCalendarDefaultDate: Date = new Date();
+  disabledInsuranceDates: Date[] = [];
+  insuranceDateBeforeCalendarOpen: Date | string | null = null;
+  lastInsuranceExpiryDate: Date | null = null;
+  insuranceCalendarValue: Date | string = '';
+  insuranceDateSelected = false;
 
   private isFutureInsuranceDate(date: Date | string): boolean {
     const selectedDate = new Date(date);
@@ -246,6 +253,55 @@ export class UpdateDistributionOfficerComponent {
     tomorrow.setDate(tomorrow.getDate() + 1);
 
     return selectedDate >= tomorrow;
+  }
+
+  private setDisabledInsuranceDates(today: Date): void {
+    const date = new Date(1970, 0, 1);
+    while (date <= today) {
+      this.disabledInsuranceDates.push(new Date(date));
+      date.setDate(date.getDate() + 1);
+    }
+  }
+
+  openInsuranceCalendarAtToday(): void {
+    const today = new Date();
+    this.insuranceDateBeforeCalendarOpen = this.driverObj.insExpDate
+      ? new Date(this.driverObj.insExpDate)
+      : null;
+    this.insuranceDateSelected = false;
+
+    setTimeout(() => {
+      this.insuranceCalendar.currentMonth = today.getMonth();
+      this.insuranceCalendar.currentYear = today.getFullYear();
+      this.insuranceCalendar.createMonths(today.getMonth(), today.getFullYear());
+      this.insuranceCalendar.updateFocus();
+    });
+  }
+
+  onInsuranceCalendarValueChange(value: Date | string): void {
+    if (!(value instanceof Date) || Number.isNaN(value.getTime())) {
+      return;
+    }
+
+    if (!this.isFutureInsuranceDate(value)) {
+      this.insuranceDateSelected = false;
+      this.insuranceCalendarValue = this.lastInsuranceExpiryDate ??
+        this.insuranceDateBeforeCalendarOpen ?? '';
+      return;
+    }
+
+    this.insuranceDateSelected = true;
+    this.lastInsuranceExpiryDate = new Date(value);
+    this.driverObj.insExpDate = new Date(value);
+  }
+
+  restoreInsuranceDateOnCalendarClose(): void {
+    if (!this.insuranceDateSelected) {
+      const dateToRestore =
+        this.lastInsuranceExpiryDate ?? this.insuranceDateBeforeCalendarOpen;
+      this.insuranceCalendarValue = dateToRestore === null ? '' : dateToRestore;
+      this.driverObj.insExpDate = this.insuranceCalendarValue;
+    }
   }
 
   constructor(
@@ -266,6 +322,8 @@ export class UpdateDistributionOfficerComponent {
     tomorrow.setDate(tomorrow.getDate() + 1);
 
     this.minInsuranceDate = tomorrow;
+    this.insuranceCalendarDefaultDate = today;
+    this.setDisabledInsuranceDates(today);
 
     this.loadBanks();
     this.loadBranches();
@@ -324,18 +382,27 @@ export class UpdateDistributionOfficerComponent {
         this.personalData.image = officerData.image || '';
         this.personalData.status = officerData.status || '';
 
+        const driverData = Array.isArray(response.driverData)
+          ? response.driverData[0]
+          : response.driverData;
+        const insuranceExpireDate =
+          driverData?.insExpDate ?? officerData.insExpDate;
+        if (insuranceExpireDate) {
+          const parsedInsuranceDate = new Date(insuranceExpireDate);
+          if (!Number.isNaN(parsedInsuranceDate.getTime())) {
+            this.driverObj.insExpDate = parsedInsuranceDate;
+            this.lastInsuranceExpiryDate = new Date(parsedInsuranceDate);
+            this.insuranceCalendarValue = new Date(parsedInsuranceDate);
+          }
+        }
+
         if (
           (officerData.jobRole === this.LIGHT_WEIGHT_DRIVER ||
             officerData.jobRole === this.HEAVY_WEIGHT_DRIVER) &&
-          response.driverData &&
-          response.driverData.length > 0
+          driverData
         ) {
-          const driverData = response.driverData[0];
           this.driverObj.licNo = driverData.licNo || '';
           this.driverObj.insNo = driverData.insNo || '';
-          this.driverObj.insExpDate = driverData.insExpDate
-            ? new Date(driverData.insExpDate)
-            : '';
           this.driverObj.vType = driverData.vType || '';
           this.driverObj.vCapacity = driverData.vCapacity || '';
           this.driverObj.vRegNo = driverData.vRegNo || '';
@@ -1064,29 +1131,30 @@ export class UpdateDistributionOfficerComponent {
     }
 
     if (fieldName === 'email') {
-      const charCode = event.which ? event.which : event.keyCode;
-
       if (
         event.ctrlKey ||
         event.metaKey ||
-        charCode === 8 ||
-        charCode === 9 ||
-        charCode === 13 ||
-        charCode === 27 ||
-        charCode === 46 ||
-        (charCode >= 35 && charCode <= 40)
+        event.key === 'Backspace' ||
+        event.key === 'Tab' ||
+        event.key === 'Enter' ||
+        event.key === 'Escape' ||
+        event.key === 'Delete' ||
+        event.key === 'ArrowLeft' ||
+        event.key === 'ArrowRight' ||
+        event.key === 'ArrowUp' ||
+        event.key === 'ArrowDown' ||
+        event.key === 'Home' ||
+        event.key === 'End'
       ) {
         return;
       }
 
-      const char = String.fromCharCode(charCode);
-
-      if (charCode === 32) {
+      if (event.key === ' ') {
         event.preventDefault();
         return;
       }
 
-      if (!/[a-zA-Z0-9@.\-_+]/.test(char)) {
+      if (event.key.length === 1 && !/[a-zA-Z0-9@.\-_+]/.test(event.key)) {
         event.preventDefault();
         return;
       }
@@ -1364,35 +1432,37 @@ export class UpdateDistributionOfficerComponent {
   }
 
   EpmloyeIdCreate() {
-    if (this.personalData.jobRole !== this.initiateJobRole) {
-      this.selectVehicletype = { name: '', capacity: '' };
-      this.driverObj.vType = '';
-      this.driverObj.vCapacity = '';
-    }
-
-    let rolePrefix: string | undefined;
-
     const rolePrefixes: { [key: string]: string } = {
       'Distribution Centre Manager': 'DCM',
       'Distribution Officer': 'DIO',
       [this.LIGHT_WEIGHT_DRIVER]: 'DRV',
       [this.HEAVY_WEIGHT_DRIVER]: 'DRV'
-
     };
 
-    rolePrefix = rolePrefixes[this.personalData.jobRole];
+    const newRolePrefix = rolePrefixes[this.personalData.jobRole];
+    const initialRolePrefix = rolePrefixes[this.initiateJobRole];
 
-    if (this.personalData.jobRole === this.initiateJobRole) {
-      this.lastID = this.initiateId;
-    } else {
-      if (!rolePrefix) {
-        return;
-      }
-
-      this.getLastID(rolePrefix).then((lastID) => {
-        this.personalData.empId = rolePrefix + lastID;
-      });
+    if (newRolePrefix !== initialRolePrefix) {
+      this.selectVehicletype = { name: '', capacity: '' };
+      this.driverObj.vType = '';
+      this.driverObj.vCapacity = '';
     }
+
+    if (newRolePrefix === initialRolePrefix) {
+      this.lastID = this.initiateId;
+      this.personalData.empId = this.initiateJobRole
+        ? this.personalData.empId
+        : this.personalData.empId;
+      return;
+    }
+
+    if (!newRolePrefix) {
+      return;
+    }
+
+    this.getLastID(newRolePrefix).then((lastID) => {
+      this.personalData.empId = newRolePrefix + lastID;
+    });
   }
 
   getLastID(role: string): Promise<string> {
@@ -1443,7 +1513,7 @@ export class UpdateDistributionOfficerComponent {
       }
 
       if (!this.personalData.centerId) {
-        missingFields.push('Collection Centre Name is Required');
+        missingFields.push('Distribution Centre Name is Required');
       }
 
       if (!this.personalData.jobRole) {
@@ -1694,6 +1764,12 @@ export class UpdateDistributionOfficerComponent {
       });
   }
 
+  onCenterChange() {
+    this.personalData.irmId = null;
+    this.managerOptions = [];
+    this.getAllCollectionManagers();
+  }
+
   getAllCollectionManagers() {
     this.distributionOfficerServ
       .getAllManagerList(
@@ -1828,7 +1904,7 @@ export class UpdateDistributionOfficerComponent {
     }
 
     if (!this.personalData.centerId) {
-      missingFields.push('Collection Centre Name is Required');
+      missingFields.push('Distribution Centre Name is Required');
     }
 
     if (!this.personalData.jobRole) {
@@ -2096,7 +2172,6 @@ export class UpdateDistributionOfficerComponent {
       if (result.isConfirmed) {
         this.isLoading = true;
 
-        // ⬇️ Submit කරන්න කලින්, change කරපු images විතරක් R2 ට batch upload කරනවා
         this.uploadChangedImages().subscribe({
           next: (urls) => {
             const payload = {
@@ -2132,7 +2207,7 @@ export class UpdateDistributionOfficerComponent {
               .editDistributionOfficer(
                 payload,
                 this.itemId,
-                urls['profile'] || null, // ⬅ අලුතෙන් upload වුණොත් URL, නැත්නම් null
+                urls['profile'] || null,
                 driverDataToSend,
                 urls['licFront'] || null,
                 urls['licBack'] || null,
@@ -2229,7 +2304,6 @@ export class UpdateDistributionOfficerComponent {
                     return;
                   }
 
-                  // ⬇️ messages array එක empty උනත් (validation errors නැති server error එකක්) - generic error එක පෙන්නනවා
                   Swal.fire({
                     icon: 'error',
                     title: 'Error',

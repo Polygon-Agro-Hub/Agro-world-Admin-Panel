@@ -115,7 +115,7 @@
           <p-dropdown [(ngModel)]="personalData.centerId" #centerNameInput="ngModel" [options]="centerOptions"
             optionLabel="label" optionValue="value" [filter]="true" filterBy="label" [showClear]="false"
             placeholder="Select a collection centre" styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
-            class="mt-1 block w-full p-dropdown-custom" (onChange)="getAllCollectionManagers()">
+            class="mt-1 block w-full p-dropdown-custom" (onChange)="onCenterChange()">
           </p-dropdown>
 
           <div *ngIf="centerNameInput.touched && !personalData.centerId" class="text-red-500 text-sm mt-1">
@@ -472,7 +472,7 @@
         </div>
       </div>
     </div>
-    <div *ngIf="personalData.companyId == 2">
+    <div>
       <h2 class="text-2xl mt-10 mb-6 text-textLight dark:text-textDark">
         Add Bank Details
       </h2>
@@ -843,8 +843,13 @@
         <label for="insExpDate" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Insurance Expire Date *
         </label>
-        <p-calendar id="insExpDate" [(ngModel)]="driverObj.insExpDate" [showIcon]="true" [showClear]="false"
-          [showButtonBar]="false" [minDate]="minInsuranceDate" [readonlyInput]="true" [selectOtherMonths]="false"
+        <p-calendar #insExpDate id="insExpDate" [(ngModel)]="insuranceCalendarValue" [showIcon]="true" [showClear]="false"
+          (ngModelChange)="onInsuranceCalendarValueChange($event)"
+          (onShow)="openInsuranceCalendarAtToday()"
+          (onHide)="restoreInsuranceDateOnCalendarClose()"
+          [showButtonBar]="false" [disabledDates]="disabledInsuranceDates"
+          [defaultDate]="insuranceCalendarDefaultDate"
+          [readonlyInput]="true" [selectOtherMonths]="false"
           [showOtherMonths]="false" iconDisplay="input" dateFormat="yy-mm-dd" placeholder="Select Expiry Date"
           [style]="{ width: '100%' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
                      [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 

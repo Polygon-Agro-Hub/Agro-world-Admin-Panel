@@ -143,7 +143,7 @@ export class ViewDeliveryChargesComponent implements OnInit {
 
           Swal.fire({
             title: 'Success!',
-            text: 'Template with database data downloaded successfully',
+            text: 'Delivery Charge Template downloaded successfully',
             icon: 'success',
             confirmButtonText: 'OK',
             timer: 3000,
@@ -197,9 +197,9 @@ export class ViewDeliveryChargesComponent implements OnInit {
     // Populate district options for the province already set on this record
     this.availableDistrictOptions = this.editData.province
       ? (this.provinceDistrictMap[this.editData.province] || []).map((d) => ({
-          label: d,
-          value: d,
-        }))
+        label: d,
+        value: d,
+      }))
       : [];
 
     this.showEditModal = true;
@@ -220,9 +220,9 @@ export class ViewDeliveryChargesComponent implements OnInit {
   onProvinceChange(): void {
     this.availableDistrictOptions = this.editData.province
       ? (this.provinceDistrictMap[this.editData.province] || []).map((d) => ({
-          label: d,
-          value: d,
-        }))
+        label: d,
+        value: d,
+      }))
       : [];
 
     // Reset district if it no longer belongs to the newly selected province
@@ -296,7 +296,6 @@ export class ViewDeliveryChargesComponent implements OnInit {
       .updateDeliveryCharge(updateData, this.editData.id)
       .subscribe({
         next: (response) => {
-          this.isLoading = false;
           Swal.fire({
             title: 'Success!',
             text: 'Delivery charge updated successfully',
@@ -310,15 +309,7 @@ export class ViewDeliveryChargesComponent implements OnInit {
             },
           });
 
-          const index = this.deliveryCharges.findIndex(
-            (item) => item.id === this.editData.id
-          );
-          if (index !== -1) {
-            this.deliveryCharges[index].charge = this.editData.charge;
-            this.deliveryCharges[index].city = this.editData.city;
-            this.deliveryCharges[index].province = this.editData.province;
-            this.deliveryCharges[index].district = this.editData.district;
-          }
+          this.loadDeliveryCharges();
 
           this.closeEditModal();
         },

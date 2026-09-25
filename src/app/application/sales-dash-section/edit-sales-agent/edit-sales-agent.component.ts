@@ -181,10 +181,11 @@ export class EditSalesAgentComponent implements OnInit {
   isValidEmail(email: string): boolean {
     if (!email) return false;
 
-    // Basic email pattern
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    email = email.trim();
 
-    // Additional checks
+    const emailPattern =
+      /^[a-zA-Z0-9]+([._%+-]?[a-zA-Z0-9]+)*@[a-zA-Z0-9]+([.-]?[a-zA-Z0-9]+)*\.[a-zA-Z]{2,}$/;
+
     if (email.includes('..')) {
       this.emailValidationError = 'Email cannot contain consecutive dots';
       return false;
@@ -200,16 +201,27 @@ export class EditSalesAgentComponent implements OnInit {
       return false;
     }
 
+    const [localPart] = email.split('@');
+    if (localPart && (localPart.startsWith('.') || localPart.endsWith('.'))) {
+      this.emailValidationError = 'Email cannot start or end with a dot';
+      return false;
+    }
+
+    if (/[!#$%^&*()=<>?\/\\]/.test(email)) {
+      this.emailValidationError = 'Email contains invalid special characters';
+      return false;
+    }
+
     const atIndex = email.indexOf('@');
     if (atIndex < 0) {
       this.emailValidationError = 'Email must contain an @ symbol';
       return false;
     }
 
-    const localPart = email.substring(0, atIndex);
+    const localPartBeforeAt = email.substring(0, atIndex);
     const domainPart = email.substring(atIndex + 1);
 
-    if (localPart.length === 0) {
+    if (localPartBeforeAt.length === 0) {
       this.emailValidationError = 'Email must have characters before @';
       return false;
     }
@@ -225,7 +237,6 @@ export class EditSalesAgentComponent implements OnInit {
       return false;
     }
 
-    // If all checks pass
     this.emailValidationError = '';
     return true;
   }

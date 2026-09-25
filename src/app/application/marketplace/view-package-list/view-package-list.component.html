@@ -29,7 +29,7 @@
               optionValue="value" [showClear]="true" placeholder="Type" />
           </div>
           <p-calendar id="toDate" [(ngModel)]="date" (onSelect)="dateFilter()" (onClear)="clearDateFilter()"
-            placeholder="Last Defined Date" title="Last Defined Date" [showIcon]="true" [showClear]="false" [showButtonBar]="false"
+            placeholder="Last Defined Date" title="Last Defined Date" [showIcon]="true" [showClear]="true" [showButtonBar]="false"
             iconDisplay="input" styleClass="calendar-compact dark-calendar" [style]="{ width: '170px' }"
             panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600
               [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568]
@@ -119,8 +119,9 @@
                 *ngIf="permissionService.hasPermission('View package history') || tokenService.getUserDetails().role === '1'">
                 History
               </th>
-              <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center whitespace-nowrap">Last
-                Modified By</th>
+              <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center whitespace-nowrap">
+                Last Defined By
+              </th>
               <th class="px-2"></th>
               <th class="px-2"
                 *ngIf="permissionService.hasPermission('Edit packages') || tokenService.getUserDetails().role === '1'">
@@ -150,7 +151,7 @@
                   'bg-[#BBFFC6] text-[#308233] px-4': pkg.status === 'Enabled',
                   'bg-[#FFB9B7] text-[#D16D6A] px-3': pkg.status === 'Disabled',
                   'cursor-not-allowed': !permissionService.hasPermission('Disable package') && tokenService.getUserDetails().role !== '1'
-                }" class="py-2 rounded-lg font-medium" (click)="disablePopup(pkg)"
+                }" class="py-2 rounded-lg font-medium shadow-md" (click)="disablePopup(pkg)"
                     [disabled]="!permissionService.hasPermission('Disable package') && tokenService.getUserDetails().role !== '1'">
                     {{ pkg.status }}
                   </button>
@@ -170,7 +171,7 @@
                   *ngIf="permissionService.hasPermission('View package history') || tokenService.getUserDetails().role === '1'">
                   <i class="fa-solid fa-history cursor-pointer" (click)="viewDefinePackageDate(pkg.id)"></i>
                 </td>
-                <td class="px-4 py-4 text-[#000000] dark:text-textDark text-center whitespace-nowrap">
+                <td class="px-4 py-4 text-[#000000] dark:text-textDark text-left whitespace-nowrap">
                   {{ pkg.adminUser ? pkg.adminUser : "--" }}
                 </td>
                 <td class="px-2">

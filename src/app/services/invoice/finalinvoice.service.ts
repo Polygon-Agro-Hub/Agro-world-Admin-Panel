@@ -334,12 +334,6 @@ export class FinalinvoiceService {
     // Right side details - fixed anchors
     const rightYStart = 55;
 
-    // Capture where the address section would start (title line).
-    // Payment Method aligns to this ONLY when an address block will be
-    // rendered (non-Pickup). For Pickup, there's no address section to
-    // align to, so it stays close to Grand Total instead, and the LEFT
-    // column gets extra spacing so Invoice No / Ordered Date (which
-    // share the same Y) don't collide with it.
     let paymentMethodLabelY: number;
     let paymentMethodValueY: number;
 
@@ -371,7 +365,7 @@ export class FinalinvoiceService {
           const label = line.substring(0, colonIndex + 1);
           const value = line.substring(colonIndex + 1);
 
-          doc.setTextColor(146, 146, 146); // #929292 in RGB
+          doc.setTextColor(146, 146, 146);
           doc.text(label, 15, yPosition);
 
           const labelWidth = doc.getTextWidth(label);
@@ -397,7 +391,7 @@ export class FinalinvoiceService {
           const label = line.substring(0, colonIndex + 1);
           const value = line.substring(colonIndex + 1);
 
-          doc.setTextColor(146, 146, 146); // #929292 in RGB
+          doc.setTextColor(146, 146, 146);
           doc.text(label, 15, yPosition);
 
           const labelWidth = doc.getTextWidth(label);
@@ -408,21 +402,13 @@ export class FinalinvoiceService {
         });
       }
 
-      // Add space after address
       yPosition += 5;
     } else {
-      // Pickup: no address block, so Payment Method keeps a fixed
-      // small gap under Grand Total, matching the reference image.
-      paymentMethodLabelY = rightYStart + 15; // 70
-      paymentMethodValueY = rightYStart + 20; // 75
-
-      // Extra spacing on the LEFT column so Invoice No / Ordered Date
-      // (which share the same Y) land safely below the Payment Method
-      // value on the right, instead of nearly touching it.
+      paymentMethodLabelY = rightYStart + 15;
+      paymentMethodValueY = rightYStart + 20;
       yPosition += 15;
     }
 
-    // Add small space above Invoice No
     yPosition += 3;
 
     const padZero = (value: number): string => {
@@ -449,30 +435,28 @@ export class FinalinvoiceService {
       yPosition + 5,
     );
     yPosition += 10;
- 
+
     if (
       invoice.deliveryMethod?.toLowerCase() === 'pickup' &&
       invoice.pickupInfo
     ) {
-      // Add space before Pickup Center
       yPosition += 5;
- 
+
       doc.setFont('helvetica', 'bold');
       const pickupLabel = 'Centre :';
       doc.text(pickupLabel, 15, yPosition);
- 
-      // Calculate position for center name with small space
+
       const centerName = invoice.pickupInfo.centerName || '';
-      const spaceWidth = 2; // Small space in mm
+      const spaceWidth = 2;
       const centerNameX = 15 + doc.getTextWidth(pickupLabel) + spaceWidth;
- 
+
       doc.setFont('helvetica', 'bold');
       doc.text(centerName, centerNameX, yPosition);
- 
+
       let addressY = yPosition + 5;
 
       const addressLines: Array<{ label: string; value: string }> = [];
- 
+
       if (invoice.pickupInfo.address?.city) {
         addressLines.push({
           label: 'City :',
@@ -491,26 +475,24 @@ export class FinalinvoiceService {
           value: invoice.pickupInfo.address.province,
         });
       }
- 
+
       addressLines.forEach(({ label, value }) => {
         doc.setFont('helvetica', 'normal');
-        doc.setTextColor(146, 146, 146); // #929292
+        doc.setTextColor(146, 146, 146);
         doc.text(label, 15, addressY);
- 
+
         const labelWidth = doc.getTextWidth(label);
         doc.setTextColor(0, 0, 0);
         doc.text(value, 15 + labelWidth + spaceWidth, addressY);
- 
+
         addressY += 5;
       });
- 
-      // Reset to black for anything rendered after this block
+
       doc.setTextColor(0, 0, 0);
- 
+
       yPosition = addressY + 10;
     }
 
-    // Add extra space here between Delivery Method and Package Title
     yPosition += 10;
 
     // Right side details - render Grand Total, Payment Method, Ordered
@@ -540,7 +522,6 @@ export class FinalinvoiceService {
     doc.setFont('helvetica', 'normal');
     doc.text(paymentTypeLabel, 140, paymentMethodValueY);
 
-    // Always aligns with Invoice No: / Delivery Method: on the left
     doc.setFont('helvetica', 'bold');
     doc.text('Ordered Date:', 140, invoiceNoY);
     doc.setFont('helvetica', 'normal');
@@ -662,7 +643,6 @@ export class FinalinvoiceService {
         yPosition = 20;
       }
 
-      // Calculate total amount for additional items
       const additionalItemsTotalAmount = invoice.additionalItems.reduce(
         (total, item) => {
           return total + parseFloat(item.normalPrice || '0');
@@ -673,7 +653,6 @@ export class FinalinvoiceService {
       const hasFamilyPacks =
         invoice.familyPackItems && invoice.familyPackItems.length > 0;
 
-      // Determine title based on orderApp
       let addTitle;
       if (invoice.orderApp === 'Marketplace') {
         addTitle = hasFamilyPacks
@@ -817,10 +796,8 @@ export class FinalinvoiceService {
     doc.line(15, yPosition, 195, yPosition);
     yPosition += 5;
 
-    // Create grand total body with individual packages
     const grandTotalBody: any[] = [];
 
-    // Handle family packages - show total if multiple, single package name if only one
     if (invoice.familyPackItems && invoice.familyPackItems.length > 0) {
       if (invoice.familyPackItems.length > 1) {
         const packagesTotal = invoice.familyPackItems.reduce(
@@ -840,7 +817,6 @@ export class FinalinvoiceService {
       }
     }
 
-    // Add additional items total if they exist
     if (invoice.additionalItems && invoice.additionalItems.length > 0) {
       const additionalItemsTotal = invoice.additionalItems.reduce(
         (total, item) => {
@@ -867,7 +843,6 @@ export class FinalinvoiceService {
       ]);
     }
 
-    // Add delivery fee and discount
     if (
       invoice.deliveryMethod !== 'Pickup' &&
       parseNum(invoice.deliveryFee) > 0
@@ -878,7 +853,6 @@ export class FinalinvoiceService {
       ]);
     }
 
-    // Add service fee between Discount and Coupon Discount
     if (
       invoice.orderApp !== 'Marketplace' &&
       invoice.additionalItems &&
@@ -895,7 +869,6 @@ export class FinalinvoiceService {
       ]);
     }
 
-    // Add coupon discount only if it has a value greater than 0
     const couponValue = parseNum(invoice.billingInfo.couponValue);
     if (couponValue > 0) {
       grandTotalBody.push([
@@ -904,7 +877,6 @@ export class FinalinvoiceService {
       ]);
     }
 
-    // Calculate final grand total
     const familyPackTotal =
       invoice.familyPackItems?.reduce(
         (total, pack) => total + parseNum(pack.amount),
@@ -938,8 +910,6 @@ export class FinalinvoiceService {
       serviceFee -
       discountTotal;
 
-    // Add final total row and remember its index — this is the row the
-    // border line under "Grand Total" should be drawn against.
     grandTotalBody.push([
       {
         content: 'Grand Total',
@@ -957,7 +927,12 @@ export class FinalinvoiceService {
 
     const isPaid = Number(invoice.isPaid) === 1;
     const isCardPayment = invoice.paymentMethod === 'Card';
-    const isOnlineTransfer = invoice.paymentMethod === 'Online Transfer'; // ✅ ADDED — confirm this string matches your actual paymentMethod value
+
+    // ✅ FIXED — derive from the same label shown in "Payment Method:",
+    // not the raw invoice.paymentMethod field, so this always agrees
+    // with what's displayed on the invoice.
+    const isOnlineTransfer = paymentTypeLabel === 'Online Transfer';
+
     const creditPaidNum = parseNum(invoice.creditPaid as any);
     const hasCreditPaid =
       invoice.creditPaid !== null &&
@@ -1005,7 +980,6 @@ export class FinalinvoiceService {
             ORANGE_COLOR,
           );
         } else if (isOnlineTransfer) {
-          // ✅ ADDED BRANCH
           pushPaymentRow(
             'Online Transferred Amount (Pending)',
             remainingAfterCredit,
@@ -1040,7 +1014,6 @@ export class FinalinvoiceService {
           ORANGE_COLOR,
         );
       } else if (isOnlineTransfer) {
-        // ✅ ADDED BRANCH
         pushPaymentRow(
           'Online Transferred Amount (Pending)',
           finalGrandTotal,
@@ -1058,7 +1031,6 @@ export class FinalinvoiceService {
       }
     }
 
-    // Single table render — Grand Total row + payment status rows together
     (doc as any).autoTable({
       startY: yPosition,
       body: grandTotalBody,
@@ -1079,8 +1051,6 @@ export class FinalinvoiceService {
         fillColor: [255, 255, 255],
       },
       didDrawCell: (data: any) => {
-        // Draw line at the TOP of the Grand Total row (separates it from
-        // Discount/Coupon rows above), not below it
         if (data.row.index === grandTotalActualIndex) {
           doc.setDrawColor(0, 0, 0);
           doc.setLineWidth(0.5);
@@ -1102,7 +1072,7 @@ export class FinalinvoiceService {
 
       const iconX = 16;
       const iconRadius = 1.6;
-      const textX = iconX + iconRadius + 2.5; // small gap after icon
+      const textX = iconX + iconRadius + 2.5;
       const iconY = yPosition - 1;
 
       doc.setDrawColor(80, 80, 80);
@@ -1125,20 +1095,17 @@ export class FinalinvoiceService {
 
     yPosition += 4;
 
-    // UPDATED REMARKS SECTION (WITHOUT UNDERLINE)
     const estimatedRemarksHeight = 50;
     if (yPosition + estimatedRemarksHeight > 250) {
       doc.addPage();
       yPosition = 20;
     }
 
-    // Remarks Title without underline
     doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
     doc.text('Remarks:', 15, yPosition);
     yPosition += 8;
 
-    // Remarks content
     doc.setFontSize(9);
     doc.setFont('helvetica', 'normal');
     const remarks = [
@@ -1186,9 +1153,9 @@ export class FinalinvoiceService {
       yPosition,
       { align: 'center' },
     );
- 
+
     yPosition += 5;
- 
+
     const now = new Date();
     const generatedTime = now.toLocaleTimeString('en-US', {
       timeZone: 'Asia/Colombo',
@@ -1202,14 +1169,14 @@ export class FinalinvoiceService {
       month: 'long',
       day: 'numeric',
     });
- 
+
     doc.text(
       `- GENERATED AT : ${generatedTime}, ${generatedDate} -`,
       105,
       yPosition,
       { align: 'center' },
     );
-    
+
     // Save the PDF
     doc.save(`Pre_Invoice_${invoice.invoiceNumber || 'unknown'}.pdf`);
   }

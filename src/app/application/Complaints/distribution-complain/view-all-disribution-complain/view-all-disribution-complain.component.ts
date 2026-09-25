@@ -20,6 +20,7 @@ import { environment } from '../../../../environment/environment';
   templateUrl: './view-all-disribution-complain.component.html',
   styleUrl: './view-all-disribution-complain.component.css'
 })
+
 export class ViewAllDisributionComplainComponent {
   page: number = 1;
   totalItems: number = 0;
@@ -232,7 +233,9 @@ export class ViewAllDisributionComplainComponent {
       })
       .subscribe(
         (response) => {
-          this.company = response;
+          this.company = (response || []).sort((a: Company, b: Company) =>
+            a.companyNameEnglish.localeCompare(b.companyNameEnglish)
+          );
         },
         (error) => {
           console.error('Error fetching news:', error);

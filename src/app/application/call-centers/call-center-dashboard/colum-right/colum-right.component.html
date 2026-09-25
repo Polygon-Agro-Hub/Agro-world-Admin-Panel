@@ -39,7 +39,7 @@
             </span>
         </div>
 
-        <div class="flex flex-col divide-y divide-slate-700/60">
+        <div class="flex flex-col border-t border-slate-700/60">
             <div *ngFor="let item of hourMix" class="flex items-center justify-between py-2.5">
                 <div class="flex items-center gap-2.5">
                     <span class="h-2.5 w-2.5 rounded-full" [ngClass]="item.dotClass"></span>
@@ -53,8 +53,8 @@
         </div>
 
         <div class="flex items-center justify-between pt-3 mt-1 border-t border-slate-700/60">
-            <span class="text-slate-400 text-xs">Active PBX Trunks: {{ activeTrunks }}</span>
-            <span class="text-emerald-400 text-xs font-semibold">{{ engineStatus }}</span>
+            <span class="text-[#BDC9C5] text-[11px] font-medium">Active PBX Trunks: {{ activeTrunks }}</span>
+            <span class="text-[#91F4E2] text-[11px] font-medium">{{ engineStatus }}</span>
         </div>
     </div>
 

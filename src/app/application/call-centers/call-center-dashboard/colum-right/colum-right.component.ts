@@ -79,13 +79,13 @@ export class ColumRightComponent {
   engineStatus = 'Engine Online';
 
   hourMix: HourMixItem[] = [
-    { label: 'Incoming', value: 0, percent: 0, dotClass: 'bg-blue-500' },
-    { label: 'Answered', value: 0, percent: 0, dotClass: 'bg-emerald-300' },
-    { label: 'Outgoing', value: 0, percent: 0, dotClass: 'bg-slate-300' },
-    { label: 'Failed', value: 0, percent: 0, dotClass: 'bg-red-500' },
-    { label: 'Voicemail', value: 0, percent: 0, dotClass: 'bg-amber-400' },
-    { label: 'Transfer', value: 0, percent: 0, dotClass: 'bg-orange-300' },
-    { label: 'Conference', value: 0, percent: 0, dotClass: 'bg-slate-400' },
+    { label: 'Incoming', value: 0, percent: 0, dotClass: 'bg-[#2170E4]' },
+    { label: 'Answered', value: 0, percent: 0, dotClass: 'bg-[#91F4E2]' },
+    { label: 'Outgoing', value: 0, percent: 0, dotClass: 'bg-[#D8E2FF]' },
+    { label: 'Failed', value: 0, percent: 0, dotClass: 'bg-[#BA1A1A]' },
+    { label: 'Voicemail', value: 0, percent: 0, dotClass: 'bg-[#FFB95F]' },
+    { label: 'Transfer', value: 0, percent: 0, dotClass: 'bg-[#FFDDB8]' },
+    { label: 'Conference', value: 0, percent: 0, dotClass: 'bg-[#BDC9C5]' },
   ];
 
   serviceQualityStats: ServiceCard[] = [

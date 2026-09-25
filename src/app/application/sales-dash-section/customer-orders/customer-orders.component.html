@@ -166,7 +166,7 @@
                             Order Type
                         </th>
                         <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
-                            Order Time
+                            Schedule Date
                         </th>
                         <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
                             Schedule
@@ -202,7 +202,7 @@
                                 <span *ngIf="order.isPackage === 0">Custom</span>
                             </td>
                             <td class="px-3 py-3 text-center dark:text-textDark">
-                                {{ order.createdAt | date : "d MMM, y h:mm a" }}
+                                {{ order.sheduleDate | date : "d MMM, y" }}
                             </td>
                             <td class="px-3 py-3 text-left dark:text-textDark">{{ order.sheduleType }}</td>
                             <td class="px-3 py-3 text-left dark:text-textDark">{{ order.paymentMethod === 'Card' ? 'Debit/Credit' : 'Cash on Delivery' }}</td>

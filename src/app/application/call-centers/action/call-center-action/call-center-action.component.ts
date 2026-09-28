@@ -29,7 +29,7 @@ export class CallCenterActionComponent {
     event.stopPropagation();
     this.isCallLogsMenuOpen = false;
     this.router
-      .navigate(['/call-centers/action/call-logs/ivr-call-summary'])
+      .navigate(['/call-centers/action/ivr-call-summary'])
       .then(() => {});
   }
 

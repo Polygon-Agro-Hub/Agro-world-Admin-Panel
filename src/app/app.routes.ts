@@ -272,6 +272,7 @@ import { CallCenterDashboardComponent } from './application/call-centers/call-ce
 import { CallCenterActionComponent } from './application/call-centers/action/call-center-action/call-center-action.component';
 import { CallCenterComponentComponent } from './application/call-centers/action/call-center-component/call-center-component.component';
 import { AllCallLogsComponent } from './application/call-centers/all-call-logs/all-call-logs.component';
+import { IvrLiveCallListComponent } from './application/call-centers/ivr-live-call-list/ivr-live-call-list.component';
 import { ViewGovicapitalUsersComponent } from './application/steckholders-section/steckholders/view-govicapital-users/view-govicapital-users.component';
 import { ViewGovishopSupliersComponent } from './application/steckholders-section/steckholders/view-govishop-supliers/view-govishop-supliers.component';
 import { ViewGoviShopSuppliersComponent } from './application/steckholders-section/view-govi-shop-suppliers/view-govi-shop-suppliers.component';
@@ -2245,6 +2246,10 @@ export const routes: Routes = [
               {
                 path: 'call-logs',
                 component: AllCallLogsComponent,
+              },
+              {
+                path: 'ivr-live-call-log',
+                component: IvrLiveCallListComponent,
               },
             ],
           },

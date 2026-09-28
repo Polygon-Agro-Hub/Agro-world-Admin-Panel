@@ -23,4 +23,10 @@ export class CallCenterActionComponent {
       .navigate(['/call-centers/action/call-logs'])
       .then(() => {});
   }
+
+  ivrLiveCallLog(): void {
+    this.router
+      .navigate(['/call-centers/action/ivr-live-call-log'])
+      .then(() => {});
+  }
 }

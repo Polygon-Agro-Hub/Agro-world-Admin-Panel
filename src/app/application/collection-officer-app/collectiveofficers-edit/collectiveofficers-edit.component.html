@@ -127,7 +127,7 @@
           <label for="jobRole" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Job Role *
           </label>
-          <p-dropdown id="jobRole" [(ngModel)]="personalData.jobRole" (onChange)="EpmloyeIdCreate()" name="jobRole"
+          <p-dropdown id="jobRole" [(ngModel)]="personalData.jobRole" (onChange)="onJobRoleChange()" name="jobRole"
             placeholder="-- select --" [options]="jobRoleOptions" optionLabel="label" optionValue="value"
             [filter]="false" [showClear]="false" class="mt-1 block w-full p-dropdown-custom"
             panelStyleClass="custom-dropdown-panel" styleClass="w-full mt-1">

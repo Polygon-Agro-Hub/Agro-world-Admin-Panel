@@ -526,6 +526,8 @@ export class CollectiveofficersEditComponent {
     if (this.personalData.jobRole !== 'Collection Officer') {
       this.personalData.irmId = null;
       this.managerRequiredError = false;
+    } else {
+      this.getAllCollectionManagers();
     }
     this.EpmloyeIdCreate();
   }
@@ -829,8 +831,8 @@ export class CollectiveofficersEditComponent {
 
     if (error) {
       this.showImageErrorAlert(error, file.name);
-      input.value = ''; 
-      return; 
+      input.value = '';
+      return;
     }
 
     this.selectedFile = file;
@@ -1128,7 +1130,6 @@ export class CollectiveofficersEditComponent {
       });
   }
 
-
   getAllCollectionManagers() {
     if (this.personalData.companyId && this.personalData.centerId) {
       this.collectionCenterSrv
@@ -1137,11 +1138,22 @@ export class CollectiveofficersEditComponent {
           this.personalData.centerId
         )
         .subscribe((res) => {
-          this.collectionManagerData = res;
+          this.collectionManagerData = res.filter(
+            (manager: CollectionManager) =>
+              Number(manager.id) !== Number(this.itemId)
+          );
+
           this.managerOptions = this.collectionManagerData.map(manager => ({
             label: manager.empId + " - " + manager.firstNameEnglish + ' ' + manager.lastNameEnglish,
             value: manager.id
           }));
+
+          if (
+            this.personalData.irmId &&
+            !this.managerOptions.some(m => m.value === this.personalData.irmId)
+          ) {
+            this.personalData.irmId = null;
+          }
         });
     } else {
       this.managerOptions = [];

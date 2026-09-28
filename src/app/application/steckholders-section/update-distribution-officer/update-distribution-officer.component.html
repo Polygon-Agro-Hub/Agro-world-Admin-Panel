@@ -15,7 +15,8 @@
     <div>
       <div class="flex justify-center pt-3 pb-9">
         <div class="relative">
-          <input type="file" id="imageUpload" accept=".png,.jpg,.jpeg,image/png,image/jpeg" class="hidden" (change)="onFileSelected($event)" />
+          <input type="file" id="imageUpload" accept=".png,.jpg,.jpeg,image/png,image/jpeg" class="hidden"
+            (change)="onFileSelected($event)" />
 
           <img *ngIf="!selectedImage && personalData.image" class="rounded-full w-40 h-40 object-cover"
             [src]="personalData.image" alt="Profile Picture" />
@@ -128,7 +129,7 @@
             Job Role *
           </label>
           <div class="relative">
-            <p-dropdown id="jobRole" [(ngModel)]="personalData.jobRole" (onChange)="EpmloyeIdCreate()"
+            <p-dropdown id="jobRole" [(ngModel)]="personalData.jobRole" (onChange)="onJobRoleChange()"
               (onBlur)="onBlur('jobRole')" name="jobRole" [options]="jobRoleOptions" placeholder="Select a job role"
               [filter]="false" [showClear]="false" styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
               class="mt-1 block w-full p-dropdown-custom">
@@ -636,8 +637,8 @@
         <label class="block text-sm font-medium text-gray-700 dark:text-textDark my-2">
           License's Front Image *
         </label>
-        <input id="licenseFrontImageUpload" type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg" (change)="onLicenseFrontImageSelected($event)"
-          class="hidden" />
+        <input id="licenseFrontImageUpload" type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg"
+          (change)="onLicenseFrontImageSelected($event)" class="hidden" />
         <div (click)="triggerFileInputForDriver($event, 'licenseFrontImageUpload')"
           class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-3 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
           <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
@@ -675,8 +676,8 @@
         <label class="block text-sm font-medium text-gray-700 dark:text-textDark my-2">
           License's Back Image *
         </label>
-        <input id="licenseBackImageUpload" type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg" (change)="onLicenseBackImageSelected($event)"
-          class="hidden" />
+        <input id="licenseBackImageUpload" type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg"
+          (change)="onLicenseBackImageSelected($event)" class="hidden" />
         <div (click)="triggerFileInputForDriver($event, 'licenseBackImageUpload')"
           class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-3 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
           <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
@@ -843,15 +844,12 @@
         <label for="insExpDate" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Insurance Expire Date *
         </label>
-        <p-calendar #insExpDate id="insExpDate" [(ngModel)]="insuranceCalendarValue" [showIcon]="true" [showClear]="false"
-          (ngModelChange)="onInsuranceCalendarValueChange($event)"
-          (onShow)="openInsuranceCalendarAtToday()"
-          (onHide)="restoreInsuranceDateOnCalendarClose()"
-          [showButtonBar]="false" [disabledDates]="disabledInsuranceDates"
-          [defaultDate]="insuranceCalendarDefaultDate"
-          [readonlyInput]="true" [selectOtherMonths]="false"
-          [showOtherMonths]="false" iconDisplay="input" dateFormat="yy-mm-dd" placeholder="Select Expiry Date"
-          [style]="{ width: '100%' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+        <p-calendar #insExpDate id="insExpDate" [(ngModel)]="insuranceCalendarValue" [showIcon]="true"
+          [showClear]="false" (ngModelChange)="onInsuranceCalendarValueChange($event)"
+          (onShow)="openInsuranceCalendarAtToday()" (onHide)="restoreInsuranceDateOnCalendarClose()"
+          [showButtonBar]="false" [disabledDates]="disabledInsuranceDates" [defaultDate]="insuranceCalendarDefaultDate"
+          [readonlyInput]="true" [selectOtherMonths]="false" [showOtherMonths]="false" iconDisplay="input"
+          dateFormat="yy-mm-dd" placeholder="Select Expiry Date" [style]="{ width: '100%' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
                      [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
                      [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
                      [&_.p-datepicker-header]:dark:bg-[#2d354d] 
@@ -930,8 +928,8 @@
         <label class="block text-sm font-medium text-gray-700 dark:text-textDark my-2">
           Vehicle's Front Image *
         </label>
-        <input id="vehicleFrontImageUpload" type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg" (change)="onVehicleFrontImageSelected($event)"
-          class="hidden" />
+        <input id="vehicleFrontImageUpload" type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg"
+          (change)="onVehicleFrontImageSelected($event)" class="hidden" />
         <div (click)="triggerFileInputForDriver($event, 'vehicleFrontImageUpload')"
           class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-3 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
           <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
@@ -970,8 +968,8 @@
         <label class="block text-sm font-medium text-gray-700 dark:text-textDark my-2">
           Vehicle's Back Image *
         </label>
-        <input id="vehicleBackImageUpload" type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg" (change)="onVehicleBackImageSelected($event)"
-          class="hidden" />
+        <input id="vehicleBackImageUpload" type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg"
+          (change)="onVehicleBackImageSelected($event)" class="hidden" />
         <div (click)="triggerFileInputForDriver($event, 'vehicleBackImageUpload')"
           class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-3 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
           <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
@@ -1009,8 +1007,8 @@
         <label class="block text-sm font-medium text-gray-700 dark:text-textDark my-2">
           Vehicle's Side Image - 1 *
         </label>
-        <input id="vehicleSideAImageUpload" type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg" (change)="onVehicleSideAImageSelected($event)"
-          class="hidden" />
+        <input id="vehicleSideAImageUpload" type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg"
+          (change)="onVehicleSideAImageSelected($event)" class="hidden" />
         <div (click)="triggerFileInputForDriver($event, 'vehicleSideAImageUpload')"
           class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-3 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
           <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
@@ -1046,8 +1044,8 @@
         <label class="block text-sm font-medium text-gray-700 dark:text-textDark my-2">
           Vehicle's Side Image - 2 *
         </label>
-        <input id="vehicleSideBImageUpload" type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg" (change)="onVehicleSideBImageSelected($event)"
-          class="hidden" />
+        <input id="vehicleSideBImageUpload" type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg"
+          (change)="onVehicleSideBImageSelected($event)" class="hidden" />
         <div (click)="triggerFileInputForDriver($event, 'vehicleSideBImageUpload')"
           class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-3 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
           <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>

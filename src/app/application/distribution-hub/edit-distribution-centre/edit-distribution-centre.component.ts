@@ -647,7 +647,7 @@ export class EditDistributionCentreComponent implements OnInit {
         .subscribe({
           next: (response) => {
             this.distributionForm.patchValue({
-              regCode: `D-${response.regCode}`,
+              regCode: response.regCode,
             });
             this.isLoadingregcode = false;
           },

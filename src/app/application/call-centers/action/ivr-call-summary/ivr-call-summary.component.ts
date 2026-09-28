@@ -47,8 +47,13 @@ export class IvrCallSummaryComponent {
 
   selectedFlow: string | null = null;
   selectedType: DetailsType | null = null;
-  startDate: Date | null = new Date(2026, 8, 1);
-  endDate: Date | null = new Date(2026, 8, 7);
+
+  // Latest selectable date (today at 00:00) - future dates are disabled
+  today: Date = this.getDefaultEndDate();
+
+  // End Date = today, Start Date = End Date - 7 days
+  endDate: Date | null = this.getDefaultEndDate();
+  startDate: Date | null = this.getDefaultStartDate(this.endDate);
 
   resultType: DetailsType | '' = '';
   records: IvrRecord[] = [];
@@ -159,6 +164,21 @@ export class IvrCallSummaryComponent {
 
   constructor(private router: Router) {}
 
+  // ---------- Default dates ----------
+  // Today at 00:00
+  private getDefaultEndDate(): Date {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    return d;
+  }
+
+  // End Date minus 7 days
+  private getDefaultStartDate(end: Date | null): Date {
+    const d = end ? new Date(end) : this.getDefaultEndDate();
+    d.setDate(d.getDate() - 7);
+    return d;
+  }
+
   // Repeats the seed rows up to `count` entries with unique call IDs
   private build(
     seeds: IvrRecord[],
@@ -194,8 +214,9 @@ export class IvrCallSummaryComponent {
   onClear() {
     this.selectedFlow = null;
     this.selectedType = null;
-    this.startDate = new Date(2026, 8, 1);
-    this.endDate = new Date(2026, 8, 7);
+    this.today = this.getDefaultEndDate();
+    this.endDate = this.getDefaultEndDate();
+    this.startDate = this.getDefaultStartDate(this.endDate);
     this.records = [];
     this.resultType = '';
     this.hasSearched = false;

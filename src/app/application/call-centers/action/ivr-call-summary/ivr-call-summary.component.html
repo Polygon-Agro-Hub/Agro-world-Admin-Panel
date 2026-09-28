@@ -8,28 +8,28 @@
 <!-- Filter Card -->
 <div class="p-6 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg mb-6">
     <h2
-        class="text-[20px] font-semibold text-textLight dark:text-textDark pb-6 border-b border-gray-200 dark:border-gray-700">
+        class="text-[20px] font-semibold text-[#121D24] dark:text-textDark pb-6 border-b border-gray-200 dark:border-gray-700">
         IVR Call Summary
     </h2>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mt-5">
         <!-- IVR Flow -->
         <div class="flex flex-col gap-2">
-            <label class="text-sm font-semibold text-textLight dark:text-textDark">Select IVR Flow</label>
+            <label class="text-[12px] font-semibold text-[#101C2B] dark:text-textDark">Select IVR Flow</label>
             <p-dropdown [options]="ivrFlows" [(ngModel)]="selectedFlow" placeholder="--Select--" appendTo="body"
                 styleClass="ivr-dropdown w-full"></p-dropdown>
         </div>
 
         <!-- Details Type -->
         <div class="flex flex-col gap-2">
-            <label class="text-sm font-semibold text-textLight dark:text-textDark">Select Details Type</label>
+            <label class="text-[12px] font-semibold text-[#101C2B] dark:text-textDark">Select Details Type</label>
             <p-dropdown [options]="detailTypes" [(ngModel)]="selectedType" placeholder="--Select--" appendTo="body"
                 styleClass="ivr-dropdown w-full"></p-dropdown>
         </div>
 
         <!-- Start Date -->
         <div class="flex flex-col gap-2">
-            <label class="text-sm font-semibold text-textLight dark:text-textDark">Start Date</label>
+            <label class="text-[12px] font-semibold text-[#101C2B] dark:text-textDark">Start Date</label>
             <p-calendar [(ngModel)]="startDate" dateFormat="mm/dd/yy" [showIcon]="true" iconDisplay="input"
                 [maxDate]="endDate || today" appendTo="body" styleClass="ivr-calendar w-full"
                 inputStyleClass="w-full"></p-calendar>
@@ -37,7 +37,7 @@
 
         <!-- End Date -->
         <div class="flex flex-col gap-2">
-            <label class="text-sm font-semibold text-textLight dark:text-textDark">End Date</label>
+            <label class="text-[12px] font-semibold text-[#101C2B] dark:text-textDark">End Date</label>
             <p-calendar [(ngModel)]="endDate" dateFormat="mm/dd/yy" [showIcon]="true" iconDisplay="input"
                 [minDate]="startDate" [maxDate]="today" appendTo="body" styleClass="ivr-calendar w-full"
                 inputStyleClass="w-full"></p-calendar>

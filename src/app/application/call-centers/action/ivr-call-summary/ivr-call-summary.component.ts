@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { DropdownModule } from 'primeng/dropdown';
+import { CalendarModule } from 'primeng/calendar';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 
 type DetailsType = 'ALL_DIAL_CALLS' | 'OUT_DIAL_CALLS' | 'CONNECT_AGENT_CALLS';
@@ -22,7 +24,13 @@ interface IvrRecord {
 @Component({
   selector: 'app-ivr-call-summary',
   standalone: true,
-  imports: [CommonModule, FormsModule, LoadingSpinnerComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    DropdownModule,
+    CalendarModule,
+    LoadingSpinnerComponent
+],
   templateUrl: './ivr-call-summary.component.html',
   styleUrl: './ivr-call-summary.component.css',
 })
@@ -37,10 +45,10 @@ export class IvrCallSummaryComponent {
     'CONNECT_AGENT_CALLS',
   ];
 
-  selectedFlow = '';
-  selectedType: DetailsType | '' = '';
-  startDate = '2026-09-01';
-  endDate = '2026-09-07';
+  selectedFlow: string | null = null;
+  selectedType: DetailsType | null = null;
+  startDate: Date | null = new Date(2026, 8, 1);
+  endDate: Date | null = new Date(2026, 8, 7);
 
   resultType: DetailsType | '' = '';
   records: IvrRecord[] = [];
@@ -84,7 +92,8 @@ export class IvrCallSummaryComponent {
       startTime: '2026-09-17 09:00:59',
       endTime: '2026-09-17 09:01:13',
       status: 'SUCCESS',
-      details: 'agent dialed and start customer dial success call hangup by customer.',
+      details:
+        'agent dialed and start customer dial success call hangup by customer.',
     },
     {
       agentCli: '716371872',
@@ -151,7 +160,11 @@ export class IvrCallSummaryComponent {
   constructor(private router: Router) {}
 
   // Repeats the seed rows up to `count` entries with unique call IDs
-  private build(seeds: IvrRecord[], count: number, baseId: number): IvrRecord[] {
+  private build(
+    seeds: IvrRecord[],
+    count: number,
+    baseId: number,
+  ): IvrRecord[] {
     return Array.from({ length: count }, (_, i) => {
       const seed = seeds[i % seeds.length];
       return {
@@ -170,7 +183,7 @@ export class IvrCallSummaryComponent {
     if (!this.canGet) return;
     this.isLoading = true;
     setTimeout(() => {
-      this.resultType = this.selectedType;
+      this.resultType = this.selectedType as DetailsType;
       this.records = this.dataByType[this.selectedType as DetailsType] ?? [];
       this.currentPage = 1;
       this.hasSearched = true;
@@ -179,10 +192,10 @@ export class IvrCallSummaryComponent {
   }
 
   onClear() {
-    this.selectedFlow = '';
-    this.selectedType = '';
-    this.startDate = '2026-09-01';
-    this.endDate = '2026-09-07';
+    this.selectedFlow = null;
+    this.selectedType = null;
+    this.startDate = new Date(2026, 8, 1);
+    this.endDate = new Date(2026, 8, 7);
     this.records = [];
     this.resultType = '';
     this.hasSearched = false;

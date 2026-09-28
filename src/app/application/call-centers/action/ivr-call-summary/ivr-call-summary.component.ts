@@ -274,12 +274,12 @@ export class IvrCallSummaryComponent {
   getStatusClass(status: string): string {
     switch (status) {
       case 'SUCCESS':
-        return 'bg-[#CFF5EA] text-[#0F6B55]';
+        return 'bg-[#91F4E2] text-[#00685C]';
       case 'FAILED':
       case 'HANGUP':
-        return 'bg-[#FCE1E1] text-[#B42323]';
+        return 'bg-[#FFDAD6] text-[#BA1A1A]';
       case 'NORMAL_MENU':
-        return 'bg-[#DDE6FB] text-[#2F55B8]';
+        return 'bg-[#D8E2FF] text-[#0058BE]';
       default:
         return 'bg-gray-200 text-gray-700';
     }
@@ -288,12 +288,12 @@ export class IvrCallSummaryComponent {
   getDotClass(status: string): string {
     switch (status) {
       case 'SUCCESS':
-        return 'bg-[#0F6B55]';
+        return 'bg-[#00685C]';
       case 'FAILED':
       case 'HANGUP':
         return 'bg-[#B42323]';
       case 'NORMAL_MENU':
-        return 'bg-[#2F55B8]';
+        return 'bg-[#0058BE]';
       default:
         return 'bg-gray-500';
     }

@@ -74,7 +74,7 @@
         </div>
 
         <table *ngIf="records.length > 0" class="min-w-[1000px] w-full table-auto">
-            <thead class="bg-[#E6EEF8] dark:bg-[#272F45]">
+            <thead class="bg-[#E9F5FF] dark:bg-[#272F45]">
                 <tr class="text-left text-[14px] font-medium tracking-wider text-gray-600 dark:text-gray-300 uppercase">
                     <ng-container [ngSwitch]="resultType">
                         <ng-container *ngSwitchCase="'ALL_DIAL_CALLS'">
@@ -201,7 +201,7 @@
             <button *ngFor="let p of visiblePages" (click)="goToPage(p)"
                 class="w-9 h-9 rounded-md text-sm font-semibold transition-colors"
                 [ngClass]="p === currentPage
-                    ? 'bg-[#4A7BC0] text-white'
+                    ? 'bg-[#3980C0] text-white'
                     : 'bg-white dark:bg-tileBlack text-textLight dark:text-textDark hover:bg-gray-100 dark:hover:bg-gray-800'">
                 {{ p }}
             </button>

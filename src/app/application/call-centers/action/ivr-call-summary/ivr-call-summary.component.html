@@ -1,0 +1,219 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
+    <i class="fa-solid fa-arrow-left"></i>
+    <span class="underline ml-2">Back</span>
+</button>
+
+<!-- Filter Card -->
+<div class="p-6 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg mb-6">
+    <h2
+        class="text-[20px] font-semibold text-[#121D24] dark:text-textDark pb-6 border-b border-gray-200 dark:border-gray-700">
+        IVR Call Summary
+    </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mt-5">
+        <!-- IVR Flow -->
+        <div class="flex flex-col gap-2">
+            <label class="text-[12px] font-semibold text-[#101C2B] dark:text-textDark">Select IVR Flow</label>
+            <p-dropdown [options]="ivrFlows" [(ngModel)]="selectedFlow" placeholder="--Select--" appendTo="body"
+                styleClass="ivr-dropdown w-full"></p-dropdown>
+        </div>
+
+        <!-- Details Type -->
+        <div class="flex flex-col gap-2">
+            <label class="text-[12px] font-semibold text-[#101C2B] dark:text-textDark">Select Details Type</label>
+            <p-dropdown [options]="detailTypes" [(ngModel)]="selectedType" placeholder="--Select--" appendTo="body"
+                styleClass="ivr-dropdown w-full"></p-dropdown>
+        </div>
+
+        <!-- Start Date -->
+        <div class="flex flex-col gap-2">
+            <label class="text-[12px] font-semibold text-[#101C2B] dark:text-textDark">Start Date</label>
+            <p-calendar [(ngModel)]="startDate" dateFormat="mm/dd/yy" [showIcon]="true" iconDisplay="input"
+                [maxDate]="endDate || today" appendTo="body" styleClass="ivr-calendar w-full"
+                inputStyleClass="w-full"></p-calendar>
+        </div>
+
+        <!-- End Date -->
+        <div class="flex flex-col gap-2">
+            <label class="text-[12px] font-semibold text-[#101C2B] dark:text-textDark">End Date</label>
+            <p-calendar [(ngModel)]="endDate" dateFormat="mm/dd/yy" [showIcon]="true" iconDisplay="input"
+                [minDate]="startDate" [maxDate]="today" appendTo="body" styleClass="ivr-calendar w-full"
+                inputStyleClass="w-full"></p-calendar>
+        </div>
+    </div>
+
+    <div class="flex justify-end gap-3 mt-5">
+        <button type="button" (click)="onClear()"
+            class="flex items-center gap-2 px-5 h-11 rounded-lg bg-[#74788D] hover:bg-[#6a6d85] text-white text-sm font-medium transition-colors">
+            <i class="fa-solid fa-xmark"></i>
+            Clear
+        </button>
+        <button type="button" (click)="onGet()" [disabled]="!canGet"
+            class="px-6 h-11 rounded-lg text-white text-sm font-semibold transition-colors"
+            [ngClass]="canGet ? 'bg-[#3980C0] hover:bg-[#3d6aa8]' : 'bg-gray-300 cursor-not-allowed'">
+            GET
+        </button>
+    </div>
+</div>
+
+<!-- Results Card -->
+<div *ngIf="hasSearched && !isLoading" class="bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg overflow-hidden">
+    <div class="flex items-center gap-3 px-6 py-5">
+        <span class="w-3 h-6 rounded-full bg-[#3980C0]"></span>
+        <h3 class="text-[16px] font-semibold text-textLight dark:text-textDark">IVR Flow Dial Call History</h3>
+    </div>
+
+    <div
+        class="overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+        <!-- No Data -->
+        <div *ngIf="records.length === 0" class="flex flex-col items-center w-full px-10 py-10 dark:text-textDark">
+            <p class="text-[#494949] my-6 dark:text-textDark">No Data Available</p>
+            <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+        </div>
+
+        <table *ngIf="records.length > 0" class="min-w-[1000px] w-full table-auto">
+            <thead class="bg-[#E9F5FF] dark:bg-[#272F45]">
+                <tr class="text-left text-[14px] font-medium tracking-wider text-gray-600 dark:text-gray-300 uppercase">
+                    <ng-container [ngSwitch]="resultType">
+                        <ng-container *ngSwitchCase="'ALL_DIAL_CALLS'">
+                            <th class="px-6 py-4">Call ID</th>
+                            <th class="px-6 py-4">CLI</th>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="'OUT_DIAL_CALLS'">
+                            <th class="px-6 py-4">Call ID</th>
+                            <th class="px-6 py-4">Agent CLI</th>
+                            <th class="px-6 py-4">User CLI</th>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="'CONNECT_AGENT_CALLS'">
+                            <th class="px-6 py-4">Agent</th>
+                            <th class="px-6 py-4">To</th>
+                        </ng-container>
+                    </ng-container>
+                    <th class="px-6 py-4">Start Time</th>
+                    <th class="px-6 py-4">End Time</th>
+                    <th class="px-6 py-4">Status</th>
+                    <th class="px-6 py-4">Details</th>
+                </tr>
+            </thead>
+
+            <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                <tr *ngFor="let row of pagedRecords" class="hover:bg-gray-50 dark:hover:bg-gray-800 align-middle">
+                    <ng-container [ngSwitch]="resultType">
+                        <ng-container *ngSwitchCase="'ALL_DIAL_CALLS'">
+                            <td class="px-6 py-6">
+                                <span
+                                    class="px-3 py-1 rounded-md bg-[#E6EEF8] dark:bg-[#272F45] text-[15px] text-textLight dark:text-textDark">{{
+                                    row.callId }}</span>
+                            </td>
+                            <td class="px-6 py-6 whitespace-nowrap">
+                                <i class="fa-solid fa-phone text-[13px] mr-2"
+                                    [ngClass]="row.status === 'NORMAL_MENU' ? 'text-gray-500' : 'text-teal-700'"></i>
+                                <span class="font-semibold text-[16px] text-textLight dark:text-textDark">{{ row.cli
+                                    }}</span>
+                            </td>
+                        </ng-container>
+
+                        <ng-container *ngSwitchCase="'OUT_DIAL_CALLS'">
+                            <td class="px-6 py-6">
+                                <span
+                                    class="px-3 py-1 rounded-md bg-[#E6EEF8] dark:bg-[#272F45] text-[15px] text-textLight dark:text-textDark">{{
+                                    row.callId }}</span>
+                            </td>
+                            <td class="px-6 py-6 whitespace-nowrap">
+                                <i class="fa-solid fa-phone text-[13px] mr-2 text-teal-700"></i>
+                                <span class="font-semibold text-[16px] text-textLight dark:text-textDark">{{
+                                    row.agentCli }}</span>
+                            </td>
+                            <td
+                                class="px-6 py-6 font-semibold text-[16px] text-textLight dark:text-textDark whitespace-nowrap">
+                                {{ row.userCli }}
+                            </td>
+                        </ng-container>
+
+                        <ng-container *ngSwitchCase="'CONNECT_AGENT_CALLS'">
+                            <td class="px-6 py-6 whitespace-nowrap">
+                                <i class="fa-solid fa-phone text-[13px] mr-2 text-teal-700"></i>
+                                <span class="font-semibold text-[16px] text-textLight dark:text-textDark">{{ row.agent
+                                    }}</span>
+                            </td>
+                            <td
+                                class="px-6 py-6 font-semibold text-[16px] text-textLight dark:text-textDark whitespace-nowrap">
+                                {{ row.to }}
+                            </td>
+                        </ng-container>
+                    </ng-container>
+
+                    <td class="px-6 py-6 text-[14px] text-gray-600 dark:text-gray-300 whitespace-nowrap">
+                        {{ getDatePart(row.startTime) }}
+                        <span class="font-bold text-textLight dark:text-textDark">{{ getTimePart(row.startTime)
+                            }}</span>
+                    </td>
+                    <td class="px-6 py-6 text-[14px] text-gray-600 dark:text-gray-300 whitespace-nowrap">
+                        {{ getDatePart(row.endTime) }}
+                        <span class="font-bold text-textLight dark:text-textDark">{{ getTimePart(row.endTime) }}</span>
+                    </td>
+
+                    <td class="px-6 py-6">
+                        <span
+                            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[13px] font-bold whitespace-nowrap"
+                            [ngClass]="getStatusClass(row.status)">
+                            <span class="w-1.5 h-1.5 rounded-full" [ngClass]="getDotClass(row.status)"></span>
+                            {{ row.status }}
+                        </span>
+                    </td>
+
+                    <td
+                        class="px-6 py-6 text-[15px] text-textLight dark:text-textDark whitespace-pre-line min-w-[280px]">
+                        {{ row.details }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    <div *ngIf="records.length > 0"
+        class="flex flex-wrap items-center justify-between gap-4 px-6 py-4 bg-[#F5F8FD] dark:bg-[#272F45]">
+        <div class="flex items-center gap-4 text-xs text-gray-600 dark:text-gray-300">
+            <div class="flex items-center gap-2">
+                <span>Rows per page:</span>
+                <select [(ngModel)]="rowsPerPage" (change)="onRowsChange()"
+                    class="px-2 py-2 rounded-md bg-white dark:bg-tileBlack text-sm text-textLight dark:text-textDark outline-none">
+                    <option *ngFor="let n of rowsOptions" [ngValue]="n">{{ n }}</option>
+                </select>
+            </div>
+            <span>
+                Showing <b>{{ startIndex + 1 }}</b> to <b>{{ endIndex }}</b> of <b>{{ records.length }}</b> entries
+            </span>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <button (click)="goToPage(1)" [disabled]="currentPage === 1"
+                class="w-9 h-9 rounded-md bg-white dark:bg-tileBlack text-gray-500 disabled:opacity-40 disabled:cursor-not-allowed">
+                <i class="fa-solid fa-angles-left text-xs"></i>
+            </button>
+            <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1"
+                class="w-9 h-9 rounded-md bg-white dark:bg-tileBlack text-gray-500 disabled:opacity-40 disabled:cursor-not-allowed">
+                <i class="fa-solid fa-angle-left text-xs"></i>
+            </button>
+
+            <button *ngFor="let p of visiblePages" (click)="goToPage(p)"
+                class="w-9 h-9 rounded-md text-sm font-semibold transition-colors"
+                [ngClass]="p === currentPage
+                    ? 'bg-[#3980C0] text-white'
+                    : 'bg-white dark:bg-tileBlack text-textLight dark:text-textDark hover:bg-gray-100 dark:hover:bg-gray-800'">
+                {{ p }}
+            </button>
+
+            <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages"
+                class="w-9 h-9 rounded-md bg-white dark:bg-tileBlack text-gray-500 disabled:opacity-40 disabled:cursor-not-allowed">
+                <i class="fa-solid fa-angle-right text-xs"></i>
+            </button>
+            <button (click)="goToPage(totalPages)" [disabled]="currentPage === totalPages"
+                class="w-9 h-9 rounded-md bg-white dark:bg-tileBlack text-gray-500 disabled:opacity-40 disabled:cursor-not-allowed">
+                <i class="fa-solid fa-angles-right text-xs"></i>
+            </button>
+        </div>
+    </div>
+</div>

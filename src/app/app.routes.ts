@@ -319,6 +319,7 @@ import { CompletedViewAllOdersComponent } from './application/finance/sales/comp
 import { DailyPackingTargetComponent } from './application/procurement-section/daily-packing-target/daily-packing-target.component';
 import { ProcumentProductMismatchTodayComponent } from './application/procurement-section/procument-product-mismatch-today/procument-product-mismatch-today.component';
 import { PendingProductMismatchTodayComponent } from './application/procurement-section/pending-product-mismatch-today/pending-product-mismatch-today.component';
+import { IvrCallSummaryComponent } from './application/call-centers/action/ivr-call-summary/ivr-call-summary.component';
 
 export const routes: Routes = [
   {
@@ -2246,6 +2247,10 @@ export const routes: Routes = [
                 path: 'call-logs',
                 component: AllCallLogsComponent,
               },
+              {
+                path: 'ivr-call-summary',
+                component: IvrCallSummaryComponent,
+              }
             ],
           },
         ],

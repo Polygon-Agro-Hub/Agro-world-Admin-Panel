@@ -13,7 +13,8 @@
     <div>
       <div class="flex justify-center pt-3 pb-9">
         <div class="relative">
-          <input type="file" id="imageUpload" accept="image/*" class="hidden" (change)="onFileSelected($event)" />
+          <input type="file" id="imageUpload" accept=".jpg,.jpeg,.png,image/jpeg,image/png" class="hidden"
+            (change)="onFileSelected($event)" />
 
           <div *ngIf="!selectedImage"
             class="flex rounded-full border-solid border-2 justify-center items-center w-40 h-40">

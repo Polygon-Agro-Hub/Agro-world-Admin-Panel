@@ -12,33 +12,35 @@
         IVR Call Summary
     </h2>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mt-5">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mt-5">
         <!-- IVR Flow -->
         <div class="flex flex-col gap-2">
             <label class="text-sm font-semibold text-textLight dark:text-textDark">Select IVR Flow</label>
             <p-dropdown [options]="ivrFlows" [(ngModel)]="selectedFlow" placeholder="--Select--"
-                styleClass="ivr-dropdown w-full"></p-dropdown>
+                appendTo="body" styleClass="ivr-dropdown w-full"></p-dropdown>
         </div>
 
         <!-- Details Type -->
         <div class="flex flex-col gap-2">
             <label class="text-sm font-semibold text-textLight dark:text-textDark">Select Details Type</label>
             <p-dropdown [options]="detailTypes" [(ngModel)]="selectedType" placeholder="--Select--"
-                styleClass="ivr-dropdown w-full"></p-dropdown>
+                appendTo="body" styleClass="ivr-dropdown w-full"></p-dropdown>
         </div>
 
         <!-- Start Date -->
         <div class="flex flex-col gap-2">
             <label class="text-sm font-semibold text-textLight dark:text-textDark">Start Date</label>
             <p-calendar [(ngModel)]="startDate" dateFormat="mm/dd/yy" [showIcon]="true" iconDisplay="input"
-                [maxDate]="endDate" styleClass="ivr-calendar w-full" inputStyleClass="w-full"></p-calendar>
+                [maxDate]="endDate" appendTo="body" styleClass="ivr-calendar w-full"
+                inputStyleClass="w-full"></p-calendar>
         </div>
 
         <!-- End Date -->
         <div class="flex flex-col gap-2">
             <label class="text-sm font-semibold text-textLight dark:text-textDark">End Date</label>
             <p-calendar [(ngModel)]="endDate" dateFormat="mm/dd/yy" [showIcon]="true" iconDisplay="input"
-                [minDate]="startDate" styleClass="ivr-calendar w-full" inputStyleClass="w-full"></p-calendar>
+                [minDate]="startDate" appendTo="body" styleClass="ivr-calendar w-full"
+                inputStyleClass="w-full"></p-calendar>
         </div>
     </div>
 

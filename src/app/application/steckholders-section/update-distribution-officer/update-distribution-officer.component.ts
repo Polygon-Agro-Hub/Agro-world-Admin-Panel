@@ -1442,7 +1442,7 @@ export class UpdateDistributionOfficerComponent {
     const newRolePrefix = rolePrefixes[this.personalData.jobRole];
     const initialRolePrefix = rolePrefixes[this.initiateJobRole];
 
-    if (newRolePrefix !== initialRolePrefix) {
+    if (this.personalData.jobRole !== this.initiateJobRole) {
       this.selectVehicletype = { name: '', capacity: '' };
       this.driverObj.vType = '';
       this.driverObj.vCapacity = '';
@@ -2117,7 +2117,7 @@ export class UpdateDistributionOfficerComponent {
         missingFields.push("Insurance's Back Image is Required");
       }
 
-      if (!this.driverObj.vType) {
+      if (!this.selectVehicletype?.name || !this.driverObj.vType) {
         missingFields.push('Vehicle Type is Required');
       }
       if (!this.vehicleFrontImageFileName) {

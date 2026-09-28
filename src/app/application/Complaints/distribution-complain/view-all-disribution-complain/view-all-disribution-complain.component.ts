@@ -62,9 +62,6 @@ export class ViewAllDisributionComplainComponent {
 
   @ViewChild("dropdown") dropdown!: Dropdown;
 
-
-
-
   constructor(
     private router: Router,
     private http: HttpClient,
@@ -73,12 +70,7 @@ export class ViewAllDisributionComplainComponent {
     public permissionService: PermissionService
   ) { }
 
-
-
-
   ngOnInit(): void {
-
-
     this.fetchAllComplain(this.page, this.itemsPerPage);
     this.getAllComplainCategories();
     this.getAllCompanyForOfficerComplain();
@@ -177,7 +169,7 @@ export class ViewAllDisributionComplainComponent {
       });
 
       this.http
-        .get<any>(`${environment.API_URL}auth/get-all-complain-category-list-super/2`, {
+        .get<any>(`${environment.API_URL}auth/get-all-complain-category-list-super/5`, {
           headers,
         })
         .subscribe(
@@ -200,7 +192,7 @@ export class ViewAllDisributionComplainComponent {
       });
 
       this.http
-        .get<any>(`${environment.API_URL}auth/get-all-complain-category-list/${this.tokenService.getUserDetails().role}/2`, {
+        .get<any>(`${environment.API_URL}auth/get-all-complain-category-list/${this.tokenService.getUserDetails().role}/5`, {
           headers,
         })
         .subscribe(

@@ -29,8 +29,8 @@ interface IvrRecord {
     FormsModule,
     DropdownModule,
     CalendarModule,
-    LoadingSpinnerComponent
-],
+    LoadingSpinnerComponent,
+  ],
   templateUrl: './ivr-call-summary.component.html',
   styleUrl: './ivr-call-summary.component.css',
 })

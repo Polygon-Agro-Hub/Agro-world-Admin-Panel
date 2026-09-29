@@ -1189,6 +1189,32 @@ export class AddDistributionOfficerComponent implements OnInit {
       event.stopPropagation();
     }
   }
+
+  onAccHolderNameInput(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  const cursor = input.selectionStart ?? input.value.length;
+  const original = input.value;
+
+  let value = original
+    .replace(/[^A-Za-z\s]/g, '') // letters and spaces only
+    .replace(/\s+/g, ' ') // collapse multiple spaces
+    .trimStart(); // no leading space
+
+  // Capitalize the first letter of each word
+  value = value.replace(
+    /(^|\s)([a-z])/g,
+    (_match, space: string, char: string) => space + char.toUpperCase(),
+  );
+
+  if (value !== original) {
+    const removed = original.length - value.length;
+    input.value = value;
+    const pos = Math.max(0, cursor - removed);
+    input.setSelectionRange(pos, pos);
+  }
+
+  this.personalData.accHolderName = value;
+}
 }
 
 class Personal {

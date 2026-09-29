@@ -46,4 +46,14 @@ export class CallCenterActionComponent {
       .navigate(['/call-centers/action/govi-care-call'])
       .then(() => {});
   }
+<<<<<<< HEAD
+=======
+
+  allCallLogs(): void {
+    this.router
+      .navigate(['/call-centers/action/call-logs'])
+      .then(() => {});
+  }
+
+>>>>>>> origin/dev/isuranga-frontend
 }

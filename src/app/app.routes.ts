@@ -2252,10 +2252,10 @@ export const routes: Routes = [
                 path: 'ivr-call-summary',
                 component: IvrCallSummaryComponent,
               }
-              {
-                path: 'ivr-live-call-log',
-                component: IvrLiveCallListComponent,
-              },
+              // {
+              //   path: 'ivr-live-call-log',
+              //   component: IvrLiveCallListComponent,
+              // },
             ],
           },
         ],

@@ -58,7 +58,7 @@ export class CreateCompanyComponent implements OnInit {
 
   companyData: Company = new Company();
   userForm: FormGroup;
-  selectedPage: 'pageOne' | 'pageTwo' = 'pageOne';
+  selectedPage: 'pageOne' | 'pageTwo' = 'pageTwo';
   itemId: number | null = null;
   touchedFields: { [key in keyof Company]?: boolean } = {};
   banks: Bank[] = [];

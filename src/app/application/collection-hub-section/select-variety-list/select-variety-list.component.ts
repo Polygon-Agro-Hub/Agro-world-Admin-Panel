@@ -29,7 +29,7 @@ export class SelectVarietyListComponent {
   searchText: string = '';
   isLoading = false;
 
-  constructor(private TargetSrv: TargetService) {}
+  constructor(private TargetSrv: TargetService) { }
 
   ngOnInit(): void {
     this.fetchCenterCrops();
@@ -59,11 +59,13 @@ export class SelectVarietyListComponent {
     if (this.searchText) {
       this.searchText = this.searchText.trimStart();
     }
+    this.page = 1; 
     this.fetchCenterCrops();
   }
 
   offSearchVarity() {
     this.searchText = '';
+    this.page = 1; 
     this.fetchCenterCrops();
   }
 

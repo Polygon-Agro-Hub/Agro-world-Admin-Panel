@@ -120,6 +120,7 @@ class MarketPrice {
   varietyName!: string;
   grade!: string;
   price!: string;
+  averagePrice!: string;
   date!: string;
   startTime!: Date;
   endTime!: Date;

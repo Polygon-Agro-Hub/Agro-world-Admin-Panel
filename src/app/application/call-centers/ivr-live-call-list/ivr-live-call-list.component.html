@@ -1,0 +1,191 @@
+<button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
+    <i class="fa-solid fa-arrow-left"></i>
+    <span class="underline ml-1">Back</span>
+</button>
+
+<div
+    class="overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+    <div class="pt-8 pr-6 pl-6 pb-5 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg min-w-[1100px]">
+
+        <h2 class="text-[20px] font-semibold text-[#121D24] dark:text-textDark mb-6">IVR Live Call List</h2>
+
+        <!-- filter bar -->
+        <div
+            class="flex items-center justify-between px-5 py-4 mb-6 flex-wrap gap-4 border-2 border-[#E2E8F0] rounded-xl">
+            <div class="flex flex-col gap-2.5">
+                <span class="flex mt-1 items-center gap-1.5 text-[14px] font-[700] text-[#334155]">
+                    <i class="fa-solid fa-filter"></i> Filter by Status:
+                </span>
+                <div class="flex mt-2 mb-1 items-center gap-3">
+                    <label
+                        class="flex items-center gap-2 text-[14px] cursor-pointer select-none border-2 border-[#E2E8F0] rounded-lg px-3 py-1.5"
+                        [ngClass]="statusFilters.answered ? 'text-[#1E293B] font-bold' : 'text-[#475569] font-[400]'">
+                        <input type="checkbox" [(ngModel)]="statusFilters.answered"
+                            (ngModelChange)="onSearchChange()"
+                            class="h-4 w-4 border-2 border-[#E2E8F0] rounded-xl text-blue-700 focus:ring-blue-600" />
+                        Answered
+                    </label>
+                    <label
+                        class="flex items-center gap-2 text-[14px] cursor-pointer select-none border-2 border-[#E2E8F0] rounded-lg px-3 py-1.5"
+                        [ngClass]="statusFilters.missed ? 'text-[#1E293B] font-bold' : 'text-[#475569] font-[400]'">
+                        <input type="checkbox" [(ngModel)]="statusFilters.missed" (ngModelChange)="onSearchChange()"
+                            class="h-4 w-4 border-2 border-[#E2E8F0] rounded-xl text-blue-700 focus:ring-blue-600" />
+                        Missed
+                    </label>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-center gap-3">
+                <div class="relative">
+                    <svg class="h-4 w-4 text-[#101C2B] absolute left-3.5 top-1/2 -translate-y-1/2"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange()"
+                        placeholder="Search by Phone Number.."
+                        class="bg-white border-2 border-[#E2E8F0] text-sm text-[#717782] font-[300] placeholder-slate-400 rounded-lg pl-10 pr-4 py-2 w-64 outline-none focus:ring-2 focus:ring-slate-200" />
+                </div>
+                <button (click)="refresh()"
+                    class="flex items-center gap-2 bg-[#3980C0] hover:bg-[#316a9e] text-white text-[16px] font-[400] rounded-lg px-4 py-2 whitespace-nowrap">
+                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="23 4 23 10 17 10"></polyline>
+                        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                    </svg>
+                    Refresh
+                </button>
+            </div>
+        </div>
+
+        <!-- table + pagination -->
+        <div class="border border-[#F1F5F9] rounded-xl overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full border-collapse min-w-[1000px]">
+                    <thead>
+                        <tr class="bg-[#EDF4FC]">
+                            <th class="px-6 py-3 text-[13px] font-bold text-[#334155] text-left">FLOW</th>
+                            <th class="px-6 py-3 text-[13px] font-bold text-[#334155] text-left">FROM</th>
+                            <th class="px-6 py-3 text-[13px] font-bold text-[#334155] text-left">TO</th>
+                            <th class="px-6 py-3 text-[13px] font-bold text-[#334155] text-left">TIME</th>
+                            <th class="px-6 py-3 text-[13px] font-bold text-[#334155] text-left">TYPE</th>
+                            <th class="px-6 py-3 text-[13px] font-bold text-[#334155] text-center">STATUS</th>
+                            <th class="px-6 py-3 text-[13px] font-bold text-[#334155] text-left">DESCRIPTION</th>
+                            <th class="px-6 py-3 text-[13px] font-bold text-[#334155] text-center">FEEDBACK</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-[#F1F5F9]">
+                        <tr *ngFor="let row of pagedRows" class="hover:bg-slate-50/60 align-middle">
+                            <td class="px-6 py-4 text-[#64748B] text-[14px] font-[400]">{{ row.flow }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <p class="flex items-center gap-1.5 text-[13.5px] text-[#1E293B] font-[700]">
+                                    <i *ngIf="row.fromMain" class="fa-solid fa-phone text-[11px] text-[#1E293B]"></i>
+                                    <span >{{ row.fromMain || '-' }}</span>
+                                </p>
+                                
+                            </td>
+                            <td class="px-6 py-4">
+                                <p class="font-[700] text-[#1E293B] text-[13.5px]">{{ row.toMain || '-' }}</p>
+                                <p class="text-[12px] text-[#94A3B8] font-[400]">{{ row.toSub || '-' }}</p>
+                            </td>
+                            <td class="px-6 py-4 text-sm whitespace-nowrap">
+                                <span class="inline-flex items-center gap-1.5">
+                                    <span class="text-[#3E4946] text-[12px] font-[600]">{{ dateOf(row.time) }}</span>
+                                    <span class="text-[12px] font-[600] text-[#000000]">{{ clockOf(row.time) }}</span>
+                                </span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span
+                                    class="inline-block bg-[#F1F5F9] text-[#334155] text-[12px] font-[400] px-2.5 py-1 rounded-md">{{
+                                    row.type }}</span>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <span *ngIf="row.status === 'ANSWERED'"
+                                    class="inline-flex items-center gap-1.5 bg-[#91F4E266] text-[#00685C] text-[12px] font-[600] px-3 py-1.5 rounded-full">
+                                    <span class="h-1.5 w-1.5 rounded-full bg-[#00685C]"></span> ANSWERED
+                                </span>
+                                <span *ngIf="row.status === 'MISSED'"
+                                    class="inline-flex items-center gap-1.5 border border-[#FECACA] bg-[#FEE2E2] text-[#B91C1C] text-[12px] font-[700] px-3 py-1.5 rounded-full">
+                                    <span class="h-1.5 w-1.5 rounded-full bg-[#DC2626]"></span> MISSED
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-[#475569] text-[12px] font-[400] max-w-xs">{{ row.description }}</td>
+                            <td class="px-6 py-4 text-center">
+                                <div class="flex flex-col items-center gap-1.5" *ngIf="row.feedback; else onlyEdit">
+                                    <span class="text-[11px] text-slate-500">{{ row.feedback }}</span>
+                                    <div class="flex items-center justify-center gap-2">
+                                        <button type="button"
+                                            class="h-7 w-7 flex items-center justify-center rounded-md border border-slate-200 text-slate-500 hover:bg-slate-50">
+                                            <i class="fa-solid fa-pen text-[11px]"></i>
+                                        </button>
+                                        <button type="button"
+                                            class="h-7 w-7 flex items-center justify-center rounded-md bg-red-600 text-white hover:bg-red-700">
+                                            <i class="fa-solid fa-trash text-[11px]"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <ng-template #onlyEdit>
+                                    <div class="flex justify-center">
+                                        <button type="button"
+                                            class="h-7 w-7 flex items-center justify-center rounded-md border border-slate-200 text-slate-500 hover:bg-slate-50">
+                                            <i class="fa-solid fa-pen text-[11px]"></i>
+                                        </button>
+                                    </div>
+                                </ng-template>
+                            </td>
+                        </tr>
+
+                        <tr *ngIf="pagedRows.length === 0">
+                            <td colspan="8" class="px-6 py-10 text-center text-sm text-slate-400">
+                                No call records match the current filter.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- pagination -->
+        <div
+            class="flex items-center justify-between px-6 py-4 mt-4 bg-[#E9F5FF66] border border-[#F1F5F9] rounded-xl flex-wrap gap-3">
+            <div class="flex items-center gap-2">
+                <span class="text-[11px] text-[#3E4946] font-[500]">Rows per page:</span>
+                <select [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange()"
+                    class="bg-white border border-slate-200 rounded-md px-2.5 py-1 text-[11px] font-[500] text-[#121D24] outline-none">
+                    <option *ngFor="let size of pageSizeOptions" [ngValue]="size">{{ size }}</option>
+                </select>
+                <span class="text-[11px] text-[#6E7A76] font-[500] ml-1">
+                    Showing <span class="font-[600] text-[#121D24]">{{ rangeStart }}</span> to
+                    <span class="font-[600] text-[#121D24]">{{ rangeEnd }}</span> of
+                    <span class="font-[600] text-[#121D24]">{{ totalEntries }}</span> entries
+                </span>
+            </div>
+
+            <div class="flex items-center gap-1.5">
+                <button (click)="goToPage(1)" [disabled]="currentPage === 1"
+                    class="h-8 w-8 flex items-center justify-center rounded-lg text-slate-400 hover:bg-slate-200/60 disabled:opacity-40 disabled:hover:bg-transparent">
+                    <i class="fa-solid fa-angles-left text-xs"></i>
+                </button>
+                <button (click)="previousPage()" [disabled]="currentPage === 1"
+                    class="h-8 w-8 flex items-center justify-center rounded-lg text-slate-400 hover:bg-slate-200/60 disabled:opacity-40 disabled:hover:bg-transparent">
+                    <i class="fa-solid fa-angle-left text-xs"></i>
+                </button>
+                <button *ngFor="let page of pageNumbers" (click)="goToPage(page)"
+                    [ngClass]="currentPage === page ? 'bg-[#3980C0] text-white' : 'text-slate-600'"
+                    class="h-8 w-8 flex items-center justify-center rounded-lg text-sm font-semibold hover:bg-slate-200/60">
+                    {{ page }}
+                </button>
+                <button (click)="nextPage()" [disabled]="currentPage === totalPages"
+                    class="h-8 w-8 flex items-center justify-center rounded-lg text-slate-400 hover:bg-slate-200/60 disabled:opacity-40 disabled:hover:bg-transparent">
+                    <i class="fa-solid fa-angle-right text-xs"></i>
+                </button>
+                <button (click)="goToPage(totalPages)" [disabled]="currentPage === totalPages"
+                    class="h-8 w-8 flex items-center justify-center rounded-lg text-slate-400 hover:bg-slate-200/60 disabled:opacity-40 disabled:hover:bg-transparent">
+                    <i class="fa-solid fa-angles-right text-xs"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+

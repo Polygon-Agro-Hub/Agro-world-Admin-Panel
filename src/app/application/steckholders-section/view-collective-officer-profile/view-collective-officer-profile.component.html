@@ -385,41 +385,36 @@
   </div>
 </div>
 
-<div *ngIf="showDisclaimView" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-  <div class="bg-white dark:bg-[#272F45] shadow-lg rounded-lg p-6 w-1/2">
-    <div>
-      <!-- Icon -->
-      <div class="mb-4 flex justify-center dark:text-textDark">
-        <i class="fa-solid fa-triangle-exclamation"></i>
+<div *ngIf="showDisclaimView" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+  <div class="bg-white dark:bg-[#272F45] shadow-xl rounded-xl px-8 py-6 w-full max-w-[560px] text-center">
+    <!-- Icon -->
+    <div class="mb-4 flex justify-center">
+      <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-700">
+        <i class="fa-solid fa-triangle-exclamation text-[#64748B] dark:text-gray-300"></i>
       </div>
+    </div>
 
-      <div class="mb-4 text-center">
-        <p class="text-lg mb-2 dark:text-textDark">
-          Are you sure you want to Discharge the officer
-        </p>
-        <p class="font-semibold text-lg dark:text-white">
-          "{{ officerObj.firstNameEnglish }} {{ officerObj.lastNameEnglish }}""
-          (EMP ID - "{{ officerObj.fullEmpId }}")
-          <span class="font-normal dark:text-textDark">from centre</span> <br />
-          "{{ officerObj.distributedCenterName }}"?
-        </p>
+    <div class="mb-4 text-center">
+      <p class="text-lg mb-2 dark:text-textDark">
+        Are you sure you want to Disclaim this officer
+      </p>
+      <p class="font-semibold text-lg dark:text-white">
+        "{{ officerObj.firstNameEnglish }} {{ officerObj.lastNameEnglish }}
+        (EMP ID - {{ officerObj.fullEmpId }})"
+        <span class="font-normal dark:text-textDark">from centre</span> <br />
+        "{{ disclaimCenterName }}"?
+      </p>
+    </div>
 
-
-      </div>
-
-      <!-- Buttons -->
-      <div class="flex justify-center gap-4">
-        <button class="bg-[#E8E8E8] border-[1px] border-[#6B7D8C] px-10 py-0.35 rounded-lg shadow-md"
-          (click)="confirmDisclaim(officerId)">
-          <span class="font-semibold text-[#6B7D8C]">Yes,</span> <br />
-          <span class="text-light text-whight-700 button-text text-[#6B7D8C]">Discharge</span>
-        </button>
-        <button class="bg-[#415CFF] border-[1px] border-[#415CFF] px-10 py-0.35 rounded-lg shadow-md"
-          (click)="cancelDisclaim()">
-          <span class="font-semibold text-white">No,</span> <br />
-          <span class="text-light text-whight-700 button-text text-white">Go Back</span>
-        </button>
-      </div>
+    <!-- Buttons -->
+    <div class="flex justify-center gap-4">
+      <button class="bg-[#74788D] border-[#74788D] px-8 py-2.5 rounded-lg shadow-md" (click)="cancelDisclaim()">
+        <span class="text-semibold text-whight-600 button-text text-[#D3D3D3]">No, Go Back</span>
+      </button>
+      <button class="bg-[#D45242] border-[#D45242] px-8 py-2.5 rounded-lg shadow-md"
+        (click)="confirmDisclaim(officerId)">
+        <span class="text-semibold text-whight-600 button-text text-[#FFFFFF]">Yes, Disclaim</span>
+      </button>
     </div>
   </div>
 </div>

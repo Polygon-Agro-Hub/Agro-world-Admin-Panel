@@ -272,6 +272,7 @@ import { CallCenterDashboardComponent } from './application/call-centers/call-ce
 import { CallCenterActionComponent } from './application/call-centers/action/call-center-action/call-center-action.component';
 import { CallCenterComponentComponent } from './application/call-centers/action/call-center-component/call-center-component.component';
 import { AllCallLogsComponent } from './application/call-centers/all-call-logs/all-call-logs.component';
+import { IvrLiveCallListComponent } from './application/call-centers/ivr-live-call-list/ivr-live-call-list.component';
 import { ViewGovicapitalUsersComponent } from './application/steckholders-section/steckholders/view-govicapital-users/view-govicapital-users.component';
 import { ViewGovishopSupliersComponent } from './application/steckholders-section/steckholders/view-govishop-supliers/view-govishop-supliers.component';
 import { ViewGoviShopSuppliersComponent } from './application/steckholders-section/view-govi-shop-suppliers/view-govi-shop-suppliers.component';
@@ -319,6 +320,7 @@ import { CompletedViewAllOdersComponent } from './application/finance/sales/comp
 import { DailyPackingTargetComponent } from './application/procurement-section/daily-packing-target/daily-packing-target.component';
 import { ProcumentProductMismatchTodayComponent } from './application/procurement-section/procument-product-mismatch-today/procument-product-mismatch-today.component';
 import { PendingProductMismatchTodayComponent } from './application/procurement-section/pending-product-mismatch-today/pending-product-mismatch-today.component';
+import { IvrCallSummaryComponent } from './application/call-centers/action/ivr-call-summary/ivr-call-summary.component';
 
 export const routes: Routes = [
   {
@@ -2246,6 +2248,14 @@ export const routes: Routes = [
                 path: 'call-logs',
                 component: AllCallLogsComponent,
               },
+              {
+                path: 'ivr-call-summary',
+                component: IvrCallSummaryComponent,
+              }
+              // {
+              //   path: 'ivr-live-call-log',
+              //   component: IvrLiveCallListComponent,
+              // },
             ],
           },
         ],

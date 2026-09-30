@@ -526,6 +526,8 @@ export class CollectiveofficersEditComponent {
     if (this.personalData.jobRole !== 'Collection Officer') {
       this.personalData.irmId = null;
       this.managerRequiredError = false;
+    } else {
+      this.getAllCollectionManagers();
     }
     this.EpmloyeIdCreate();
   }
@@ -770,29 +772,77 @@ export class CollectiveofficersEditComponent {
     }
   }
 
-  onFileSelected(event: any): void {
-    const file: File = event.target.files[0];
-    if (file) {
-      if (file.size > 5000000) {
-        Swal.fire('Error', 'File size should not exceed 5MB', 'error');
-        return;
-      }
+  private readonly allowedImageTypes = ['image/jpeg', 'image/png'];
+  private readonly allowedImageExt = /\.(jpe?g|png)$/i;
+  private readonly maxImageSize = 5 * 1024 * 1024; // 5MB
 
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-      if (!allowedTypes.includes(file.type)) {
-        Swal.fire('Error', 'Only JPEG, JPG and PNG files are allowed', 'error');
-        return;
-      }
+  private escapeHtml(text: string): string {
+    return text.replace(/[&<>"']/g, (c) => (
+      { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!
+    ));
+  }
 
-      this.selectedFile = file;
-      this.selectedFileName = file.name;
+  private showImageErrorAlert(kind: 'format' | 'size', fileName: string) {
+    const customClass = {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold text-lg',
+    };
 
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.selectedImage = e.target.result;
-      };
-      reader.readAsDataURL(file);
+    if (kind === 'format') {
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid File Format',
+        html: `"<b>${this.escapeHtml(fileName)}</b>" is not a supported file type.<br>
+             Only <b>PNG</b>, <b>JPG</b>, and <b>JPEG</b> files are allowed.`,
+        confirmButtonText: 'OK',
+        width: 450,
+        padding: '1rem',
+        customClass,
+      });
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'File size should not exceed 5MB',
+        confirmButtonText: 'OK',
+        width: 450,
+        padding: '1rem',
+        customClass,
+      });
     }
+  }
+
+  private getImageError(file: File): 'format' | 'size' | null {
+    const validType =
+      this.allowedImageTypes.includes(file.type) &&
+      this.allowedImageExt.test(file.name);
+
+    if (!validType) return 'format';
+    if (file.size > this.maxImageSize) return 'size';
+    return null;
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+
+    const error = this.getImageError(file);
+
+    if (error) {
+      this.showImageErrorAlert(error, file.name);
+      input.value = '';
+      return;
+    }
+
+    this.selectedFile = file;
+    this.selectedFileName = file.name;
+
+    const reader = new FileReader();
+    reader.onload = (e: any) => (this.selectedImage = e.target.result);
+    reader.readAsDataURL(file);
+
+    input.value = '';
   }
 
   triggerFileInput(event: Event): void {
@@ -1080,7 +1130,6 @@ export class CollectiveofficersEditComponent {
       });
   }
 
-
   getAllCollectionManagers() {
     if (this.personalData.companyId && this.personalData.centerId) {
       this.collectionCenterSrv
@@ -1089,11 +1138,22 @@ export class CollectiveofficersEditComponent {
           this.personalData.centerId
         )
         .subscribe((res) => {
-          this.collectionManagerData = res;
+          this.collectionManagerData = res.filter(
+            (manager: CollectionManager) =>
+              Number(manager.id) !== Number(this.itemId)
+          );
+
           this.managerOptions = this.collectionManagerData.map(manager => ({
             label: manager.empId + " - " + manager.firstNameEnglish + ' ' + manager.lastNameEnglish,
             value: manager.id
           }));
+
+          if (
+            this.personalData.irmId &&
+            !this.managerOptions.some(m => m.value === this.personalData.irmId)
+          ) {
+            this.personalData.irmId = null;
+          }
         });
     } else {
       this.managerOptions = [];
@@ -1307,7 +1367,7 @@ export class CollectiveofficersEditComponent {
                   confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
                 },
               });
-               this.location.back();
+              this.location.back();
             },
             (error: any) => {
               this.isLoading = false;

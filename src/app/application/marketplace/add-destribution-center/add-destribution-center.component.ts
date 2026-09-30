@@ -99,7 +99,7 @@ export class AddDestributionCenterComponent implements OnInit {
     private distributionService: DestributionService,
     private emailValidationService: EmailvalidationsService,
     private location: Location,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.initializeForm();
@@ -587,9 +587,8 @@ export class AddDestributionCenterComponent implements OnInit {
         .generateRegCode(province, district, city.trim())
         .subscribe({
           next: (response) => {
-            // Prepend "D" to the reg code from API
             this.distributionForm.patchValue({
-              regCode: `D-${response.regCode}`,
+              regCode: response.regCode,
             });
             this.isLoadingregcode = false;
           },
@@ -737,7 +736,7 @@ export class AddDestributionCenterComponent implements OnInit {
         } else if (
           key === 'contact1' &&
           this.getFieldError('contact1') ===
-            'Please enter a valid contact number (format: +947XXXXXXXX)'
+          'Please enter a valid contact number (format: +947XXXXXXXX)'
         ) {
           missingFields.push(
             'Contact Number -1 - Must be a valid Contact Number format',
@@ -745,7 +744,7 @@ export class AddDestributionCenterComponent implements OnInit {
         } else if (
           key === 'contact2' &&
           this.getFieldError('contact2') ===
-            'Please enter a valid contact number (format: +947XXXXXXXX)'
+          'Please enter a valid contact number (format: +947XXXXXXXX)'
         ) {
           missingFields.push(
             'Contact Number -2 - Must be a valid Contact Number format',
@@ -753,7 +752,7 @@ export class AddDestributionCenterComponent implements OnInit {
         } else if (
           key === 'contact2' &&
           this.getFieldError('contact2') ===
-            'Contact Number - 1 and Contact Number - 2 cannot be the same'
+          'Contact Number - 1 and Contact Number - 2 cannot be the same'
         ) {
           missingFields.push(
             'Contact Number - 1 and Contact Number - 2 cannot be the same',
@@ -763,7 +762,7 @@ export class AddDestributionCenterComponent implements OnInit {
         } else if (
           key === 'latitude' &&
           this.getFieldError('latitude') ===
-            'Latitude must be between -90 and 90'
+          'Latitude must be between -90 and 90'
         ) {
           missingFields.push('Latitude - Must be be between -90 and 90');
         } else if (key === 'longitude' && control.errors['required']) {
@@ -771,7 +770,7 @@ export class AddDestributionCenterComponent implements OnInit {
         } else if (
           key === 'longitude' &&
           this.getFieldError('longitude') ===
-            'Longitude must be between -180 and 180'
+          'Longitude must be between -180 and 180'
         ) {
           missingFields.push('Longitude - Must be between -180 and 180');
         } else if (key === 'address' && control.errors['required']) {

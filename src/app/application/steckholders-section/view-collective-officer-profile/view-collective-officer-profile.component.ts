@@ -873,6 +873,20 @@ export class ViewCollectiveOfficerProfileComponent {
       this.router.navigate([`/steckholders/action/drivers/edit-driver/${id}`]);
     }
   }
+
+  get disclaimCenterName(): string {
+    const o = this.officerObj;
+    const isDistribution =
+      o.jobRole === 'Distribution Officer' ||
+      o.jobRole === 'Distribution Centre Manager' ||
+      o.jobRole === 'Distribution Centre Head';
+
+    const name = isDistribution
+      ? (o.distributedCenterName || o.centerRegCode)
+      : (o.centerRegCode || o.distributedCenterName);
+
+    return name || '-';
+  }
 }
 
 class CollectionOfficer {

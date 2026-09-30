@@ -292,6 +292,7 @@ export class DefinePackageViewComponent implements OnInit {
       productType.quantity = undefined;
       productType.calculatedPrice = undefined;
       inputElement.value = '';
+      this.calculateTotalPrice();
       return;
     } else {
       // if (quantity < 0) {
@@ -320,12 +321,18 @@ export class DefinePackageViewComponent implements OnInit {
   calculateTotalPrice() {
     if (this.orderDetails && this.orderDetails.length) {
       this.totalPrice = this.getCombinedProductPrice();
-      const allowedLimit = this.totalPrice * 1.08;
       const currentTotal = this.orderDetails.reduce(
         (sum: number, pkg: OrderDetailItem) => sum + this.getPackageTotal(pkg),
         0,
       );
-      this.isWithinLimit = currentTotal <= allowedLimit;
+      const minimumAllowedPrice = this.getCombinedProductPrice();
+      const maximumAllowedPrice = minimumAllowedPrice * 1.08;
+      const comparisonTolerance = 0.001;
+
+      this.isWithinLimit =
+        currentTotal === 0 ||
+        (currentTotal >= minimumAllowedPrice - comparisonTolerance &&
+          currentTotal <= maximumAllowedPrice + comparisonTolerance);
     } else {
       this.totalPrice = 0;
       this.isWithinLimit = true;
@@ -357,6 +364,14 @@ export class DefinePackageViewComponent implements OnInit {
       (sum, pkg) => sum + this.getPackageTotal(pkg),
       0,
     );
+  }
+
+  getMinimumAllowedPrice(): number {
+    return this.getCombinedProductPrice();
+  }
+
+  getMaximumAllowedPrice(): number {
+    return this.getMinimumAllowedPrice() * 1.08;
   }
 
   isFormValid(): boolean {

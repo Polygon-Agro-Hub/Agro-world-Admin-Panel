@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, HostListener, Input } from '@angular/core';
 import { TargetService } from '../../../services/target-service/target.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -78,10 +78,13 @@ export class AssignCenterTargetComponent {
     ).subscribe((res) => {
       this.isLoading = false;
 
-      this.assignCropsArr = res.products.map((p: AssignCrops) => ({
-        ...p,
-        originalTotal: (p.targetA || 0) + (p.targetB || 0) + (p.targetC || 0),
-      }));
+        this.assignCropsArr = res.products.map((p: AssignCrops) => ({
+          ...p,
+          editingA: false,
+          editingB: false,
+          editingC: false,
+          originalTotal: (p.targetA || 0) + (p.targetB || 0) + (p.targetC || 0),
+        }));
       this.officerName = res.officerName;
       this.countCrops = res.products.length;
       this.companyCenterId = res.companyCenterId;
@@ -297,6 +300,75 @@ export class AssignCenterTargetComponent {
     if (grade === 'A') item.preValueA = item.targetA;
     if (grade === 'B') item.preValueB = item.targetB;
     if (grade === 'C') item.preValueC = item.targetC;
+  }
+
+  editGrade(item: AssignCrops, grade: 'A' | 'B' | 'C') {
+    if (this.isAnyGradeEditing) return;
+
+    if (grade === 'A') item.editingA = true;
+    if (grade === 'B') item.editingB = true;
+    if (grade === 'C') item.editingC = true;
+    this.pressEditIcon(item, grade);
+  }
+
+  get isAnyGradeEditing(): boolean {
+    return this.assignCropsArr.some(
+      (crop) => crop.editingA || crop.editingB || crop.editingC,
+    );
+  }
+
+  isSaveDisabled(item: AssignCrops, grade: string): boolean {
+    const target =
+      grade === 'A' ? item.targetA : grade === 'B' ? item.targetB : item.targetC;
+    const preValue =
+      grade === 'A' ? item.preValueA : grade === 'B' ? item.preValueB : item.preValueC;
+    return (
+      target === preValue ||
+      target < 0 ||
+      target < preValue ||
+      this.isQtyExceeded(item)
+    );
+  }
+
+  private getActiveGradeEdit(): { item: AssignCrops; grade: string } | null {
+    for (const item of this.assignCropsArr) {
+      if (item.editingA) return { item, grade: 'A' };
+      if (item.editingB) return { item, grade: 'B' };
+      if (item.editingC) return { item, grade: 'C' };
+    }
+    return null;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    if (!this.isAnyGradeEditing) return;
+
+    const activeEdit = this.getActiveGradeEdit();
+    if (!activeEdit || !this.isSaveDisabled(activeEdit.item, activeEdit.grade)) {
+      return;
+    }
+
+    const activeCell = document.querySelector('.grade-editing-cell');
+    if (activeCell && !activeCell.contains(event.target as Node)) {
+      this.cancelActiveGradeEdit();
+    }
+  }
+
+  private cancelActiveGradeEdit() {
+    for (const item of this.assignCropsArr) {
+      if (item.editingA) {
+        item.targetA = item.preValueA;
+        item.editingA = false;
+      }
+      if (item.editingB) {
+        item.targetB = item.preValueB;
+        item.editingB = false;
+      }
+      if (item.editingC) {
+        item.targetC = item.preValueC;
+        item.editingC = false;
+      }
+    }
   }
 
   onCancel() {

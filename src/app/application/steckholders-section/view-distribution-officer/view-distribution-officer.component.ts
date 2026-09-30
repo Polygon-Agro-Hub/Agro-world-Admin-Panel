@@ -103,13 +103,13 @@ export class ViewDistributionOfficerComponent {
     public permissionService: PermissionService,
     private collectionOfficerService: CollectionOfficerService,
     private route: ActivatedRoute,
-  ) {}
+  ) { }
 
   ngOnInit() {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth', // Optional: adds smooth scrolling animation
-    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const id = this.route.snapshot.queryParamMap.get('id');
+    this.centerId = id ? +id : null;
+
     this.fetchAllDistributionOfficer(this.page, this.itemsPerPage);
     this.getAllcompany();
     this.fetchDistributionCenterNames();
@@ -194,7 +194,7 @@ export class ViewDistributionOfficerComponent {
           displayName: `${center.regCode} - ${center.centerName}`, // Combine regCode and centerName
         }));
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -205,25 +205,31 @@ export class ViewDistributionOfficerComponent {
         (response) => {
           this.collectionCenterManagerNames = response;
         },
-        (error) => {},
+        (error) => { },
       );
   }
 
   onPageChange(event: number) {
     this.page = event;
     this.fetchAllDistributionOfficer(this.page, this.itemsPerPage);
+
+    const container = document.querySelector('main'); 
+    (container ?? window).scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   applyFilters() {
+    this.page = 1;
     this.fetchAllDistributionOfficer(this.page, this.itemsPerPage);
   }
 
   applyCenterStatusFilters() {
+    this.page = 1;
     this.fetchAllDistributionOfficer(this.page, this.itemsPerPage);
   }
 
   clearCenterStatusFilter() {
     this.selectCenterStatus = '';
+    this.page = 1;
     this.fetchAllDistributionOfficer(this.page, this.itemsPerPage);
   }
 
@@ -496,11 +502,13 @@ export class ViewDistributionOfficerComponent {
 
   onSearch() {
     this.searchNIC = this.searchNIC?.trim() || '';
+    this.page = 1;
     this.fetchAllDistributionOfficer(this.page, this.itemsPerPage);
   }
 
   offSearch() {
     this.searchNIC = '';
+    this.page = 1;
     this.fetchAllDistributionOfficer(this.page, this.itemsPerPage);
   }
 
@@ -648,11 +656,13 @@ export class ViewDistributionOfficerComponent {
   }
 
   applyStatusFilters() {
+    this.page = 1;
     this.fetchAllDistributionOfficer(this.page, this.itemsPerPage);
   }
 
   clearStatusFilter() {
     this.selectStatus = '';
+    this.page = 1;
     this.fetchAllDistributionOfficer(this.page, this.itemsPerPage);
   }
 

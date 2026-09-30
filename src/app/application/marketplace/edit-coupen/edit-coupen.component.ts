@@ -35,11 +35,11 @@ export class EditCoupenComponent {
 
   ngOnInit() {
     const idParam = this.route.snapshot.paramMap.get('id');
-    this.coupenId = idParam !== null ? Number(idParam) : null;
+  this.coupenId = idParam !== null ? Number(idParam) : null;
 
-    if (this.coupenId) {
-      this.fetchCoupen(this.coupenId);
-    }
+  if (this.coupenId) {
+    this.fetchCoupen(this.coupenId);
+  }
 
     if (this.coupenObj.startDate && this.coupenObj.startDate < this.today) {
       this.minDate = this.coupenObj.startDate; // If start date is in past

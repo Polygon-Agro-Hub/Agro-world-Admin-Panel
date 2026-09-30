@@ -1442,7 +1442,7 @@ export class UpdateDistributionOfficerComponent {
     const newRolePrefix = rolePrefixes[this.personalData.jobRole];
     const initialRolePrefix = rolePrefixes[this.initiateJobRole];
 
-    if (newRolePrefix !== initialRolePrefix) {
+    if (this.personalData.jobRole !== this.initiateJobRole) {
       this.selectVehicletype = { name: '', capacity: '' };
       this.driverObj.vType = '';
       this.driverObj.vCapacity = '';
@@ -1771,13 +1771,21 @@ export class UpdateDistributionOfficerComponent {
   }
 
   getAllCollectionManagers() {
+    if (!this.personalData.companyId || !this.personalData.centerId) {
+      this.managerOptions = [];
+      return;
+    }
+
     this.distributionOfficerServ
       .getAllManagerList(
         this.personalData.companyId,
         this.personalData.centerId,
       )
       .subscribe((res) => {
-        this.collectionManagerData = res;
+        this.collectionManagerData = res.filter(
+          (manager: CollectionManager) =>
+            Number(manager.id) !== Number(this.itemId),
+        );
 
         this.managerOptions = this.collectionManagerData.map((manager) => ({
           label:
@@ -1788,8 +1796,26 @@ export class UpdateDistributionOfficerComponent {
             manager.lastNameEnglish,
           value: manager.id,
         }));
+
+        if (
+          this.personalData.irmId &&
+          !this.managerOptions.some((m) => m.value === this.personalData.irmId)
+        ) {
+          this.personalData.irmId = null;
+        }
       });
   }
+
+  onJobRoleChange() {
+    this.EpmloyeIdCreate();
+
+    if (this.personalData.jobRole === 'Distribution Centre Manager') {
+      this.personalData.irmId = null;
+    } else {
+      this.getAllCollectionManagers();
+    }
+  }
+
   onCheckboxChange(language: string, event: Event): void {
     const isChecked = (event.target as HTMLInputElement).checked;
 
@@ -2091,7 +2117,7 @@ export class UpdateDistributionOfficerComponent {
         missingFields.push("Insurance's Back Image is Required");
       }
 
-      if (!this.driverObj.vType) {
+      if (!this.selectVehicletype?.name || !this.driverObj.vType) {
         missingFields.push('Vehicle Type is Required');
       }
       if (!this.vehicleFrontImageFileName) {

@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 import { CollectionOfficerService } from '../../../../services/collection-officer/collection-officer.service';
+import { TokenService } from '../../../../services/token/services/token.service';
+import { PermissionService } from '../../../../services/roles-permission/permission.service';
 
 interface DriverCategory {
   id: number;
@@ -29,8 +31,11 @@ export class ViewDriverCategoriesComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private collectionOfficerService: CollectionOfficerService
-  ) {}
+    private collectionOfficerService: CollectionOfficerService,
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
+
+  ) { }
 
   ngOnInit(): void {
     this.loadDriverCategories();
@@ -68,7 +73,7 @@ export class ViewDriverCategoriesComponent implements OnInit {
       this.driverCategories = [...this.driverCategoriesAll];
       return;
     }
-    
+
     this.isLoading = true;
     this.collectionOfficerService.getAllDriveCategories(term).subscribe(
       (response) => {

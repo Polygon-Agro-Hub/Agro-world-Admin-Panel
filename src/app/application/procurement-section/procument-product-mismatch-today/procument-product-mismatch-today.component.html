@@ -4,7 +4,9 @@
         <span class="text-[16px] font-semibold text-[#000000] dark:text-textDark">
             {{ mismatch.id }}
         </span>
-        <button type="button" (click)="sendToApprove()"
+        <button
+            *ngIf="permissionService.hasPermission('Load mismatch send to approve') || tokenService.getUserDetails().role === '1'"
+            type="button" (click)="sendToApprove()"
             class="bg-[#3980C0] hover:bg-blue-600 text-white text-[16px] font-medium px-6 py-2 rounded-lg transition duration-200 ease-in-out shadow-lg">
             Send to Approve
         </button>
@@ -49,7 +51,7 @@
                     <span class="text-[#000000] dark:text-textDark font-semibold text-[12px]">{{
                         mismatch.driver.phone
                         }}</span>
-                    <button (click)="call(mismatch.driver.phone)"
+                    <button *ngIf="permissionService.hasPermission('Load mismatch call officers') || tokenService.getUserDetails().role === '1'" (click)="call(mismatch.driver.phone)"
                         class="flex items-center gap-1 text-[14px] font-medium bg-[#3980C0] hover:bg-blue-600 text-white text-xs px-3 py-1 rounded-full shadow-lg">
                         <i class="fa-solid fa-phone"></i> Call
                     </button>
@@ -81,7 +83,7 @@
                     <span class="text-[#000000] dark:text-textDark font-semibold text-[12px]">{{
                         mismatch.officer.phone
                         }}</span>
-                    <button (click)="call(mismatch.officer.phone)"
+                    <button *ngIf="permissionService.hasPermission('Load mismatch call officers') || tokenService.getUserDetails().role === '1'" (click)="call(mismatch.officer.phone)"
                         class="flex items-center gap-1 text-[14px] font-medium bg-[#3980C0] hover:bg-blue-600 text-white text-xs px-3 py-1 rounded-full shadow-lg">
                         <i class="fa-solid fa-phone"></i> Call
                     </button>

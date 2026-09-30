@@ -174,21 +174,30 @@ export class ViewCustomerOrdersComponent implements OnInit {
   }
 
   downloadInvoice(id: number, tableInvoiceNo: string): void {
-    this.isLoading = true;
-    this.invoiceService.generateAndDownloadInvoice(id, tableInvoiceNo)
-      .finally(() => {
-        this.isLoading = false;
-      })
-      .catch(error => {
-        console.error('Error generating invoice:', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Failed to download invoice. Please try again.',
-          confirmButtonColor: '#3085d6',
-        });
+  this.isLoading = true;
+
+  this.invoiceService.generateAndDownloadInvoice(id, tableInvoiceNo)
+    .then(() => {
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: 'Pre invoice downloaded successfully!',
+        confirmButtonColor: '#3085d6',
       });
-  }
+    })
+    .catch((error) => {
+      console.error('Error generating invoice:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Failed to download invoice. Please try again.',
+        confirmButtonColor: '#3085d6',
+      });
+    })
+    .finally(() => {
+      this.isLoading = false;
+    });
+}
 
   isPostInvoiceEnabled(status: string): boolean {
     // Normalize status by trimming

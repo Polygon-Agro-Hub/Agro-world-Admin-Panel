@@ -321,6 +321,8 @@ import { DailyPackingTargetComponent } from './application/procurement-section/d
 import { ProcumentProductMismatchTodayComponent } from './application/procurement-section/procument-product-mismatch-today/procument-product-mismatch-today.component';
 import { PendingProductMismatchTodayComponent } from './application/procurement-section/pending-product-mismatch-today/pending-product-mismatch-today.component';
 import { IvrCallSummaryComponent } from './application/call-centers/action/ivr-call-summary/ivr-call-summary.component';
+import { AddNewContainerComponent } from './application/procurement-section/add-new-container/add-new-container.component';
+import { ManageContainerSizesComponent } from './application/procurement-section/manage-container-sizes/manage-container-sizes.component';
 
 export const routes: Routes = [
   {
@@ -1586,8 +1588,19 @@ export const routes: Routes = [
           {
             path: 'pending-procurement-product-mismatch-today',
             component: PendingProductMismatchTodayComponent
-          }
-
+          },
+          {
+            path: 'add-new-container',
+            component: AddNewContainerComponent
+          },
+          {
+            path: 'edit-container/:id',
+            component: AddNewContainerComponent
+          },
+          {
+            path: 'manage-container-sizes',
+            component: ManageContainerSizesComponent
+          },
         ],
       },
 

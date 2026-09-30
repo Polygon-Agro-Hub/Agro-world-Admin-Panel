@@ -13,6 +13,8 @@ import {
 
 import { ProcumentsService } from '../../../services/procuments/procuments.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 interface ContainerSize {
   id: number;
@@ -44,7 +46,10 @@ export class ManageContainerSizesComponent implements OnInit {
   constructor(
     private procementsService: ProcumentsService,
     private router: Router,
-  ) {}
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
+
+  ) { }
 
   ngOnInit(): void {
     this.loadContainers();

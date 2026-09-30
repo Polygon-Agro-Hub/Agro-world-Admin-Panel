@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FinanceService } from '../../../../services/finance/finance.service';
+import { TokenService } from '../../../../services/token/services/token.service';
+import { PermissionService } from '../../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-govi-trans-finance',
@@ -19,7 +21,10 @@ export class GoviTransFinanceComponent implements OnInit {
   constructor(
     private router: Router,
     private financeSrv: FinanceService,
-  ) {}
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
+
+  ) { }
 
   ngOnInit(): void {
     this.getTransactionsCount();

@@ -1,7 +1,9 @@
 import { CommonModule, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ProcumentsService, MismatchReport } from '../../../services/procuments/procuments.service'; 
+import { ProcumentsService, MismatchReport } from '../../../services/procuments/procuments.service';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-pending-product-mismatch-today',
@@ -18,8 +20,11 @@ export class PendingProductMismatchTodayComponent implements OnInit {
   constructor(
     private router: Router,
     private location: Location,
-    private procumentsService: ProcumentsService
-  ) {}
+    private procumentsService: ProcumentsService,
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
+
+  ) { }
 
   ngOnInit(): void {
     this.loadReports();

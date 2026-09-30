@@ -99,10 +99,12 @@
             <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center" style="white-space: nowrap">
               Status
             </th>
-            <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center" style="white-space: nowrap">
+            <th *ngIf="permissionService.hasPermission('View GoviTrans transaction amount') || tokenService.getUserDetails().role === '1'" 
+            class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center" style="white-space: nowrap">
               Amount
             </th>
-            <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left" style="white-space: nowrap">
+            <th *ngIf="permissionService.hasPermission('View GoviTrans transaction document') || tokenService.getUserDetails().role === '1'" 
+            class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left" style="white-space: nowrap">
               View Documents
             </th>
             <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center" style="white-space: nowrap">
@@ -161,11 +163,13 @@
                 {{ item.status }}
               </span>
             </td>
-            <td class="px-2 py-3 text-center text-[#000000] dark:text-textDark">
+            <td *ngIf="permissionService.hasPermission('View GoviTrans transaction amount') || tokenService.getUserDetails().role === '1'" 
+             class="px-2 py-3 text-center text-[#000000] dark:text-textDark">
               <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]" (click)="navigateToAmount(item.id)">
                 <i class="fa-solid fa-arrow-up-right-from-square text-black text-lg"></i>
               </button>
-            <td class="px-2 py-3 text-center text-[#000000] dark:text-textDark">
+            <td *ngIf="permissionService.hasPermission('View GoviTrans transaction document') || tokenService.getUserDetails().role === '1'"
+              class="px-2 py-3 text-center text-[#000000] dark:text-textDark">
               <button (click)="navigateToDocument(item.id)" class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]">
                 <i class="fa-solid fa-arrow-up-right-from-square text-red-500 text-lg"></i>
               </button>

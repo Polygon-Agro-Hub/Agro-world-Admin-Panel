@@ -53,8 +53,9 @@ export class AddNewContainerComponent implements OnInit {
       next: (res) => {
         this.containerData = {
           labelName: res.data.labelName,
-          weight: String(res.data.weight),
+          weight: this.formatWeight(res.data.weight),
         };
+        this.weightError = '';
         this.isLoading = false;
       },
       error: (err) => {
@@ -67,6 +68,16 @@ export class AddNewContainerComponent implements OnInit {
         this.back();
       },
     });
+  }
+
+  // Normalizes a fetched weight to at most 2 decimals, no trailing zeros
+  // e.g. "1.500" -> "1.5", 30 -> "30", "2.456" -> "2.46"
+  private formatWeight(value: unknown): string {
+    const num = Number(value);
+    if (value === null || value === undefined || value === '' || isNaN(num)) {
+      return '';
+    }
+    return String(Number(num.toFixed(this.MAX_DECIMALS)));
   }
 
   // ---------- Validation ----------

@@ -283,7 +283,7 @@ export class PostinvoiceService {
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
     doc.text('No. 42/46, Nawam Mawatha, Colombo 02.', 15, 30);
-    doc.text('Contact No: +94 770 111 999', 15, 35);
+    doc.text('Contact No: 011 431 3433', 15, 35);
     doc.text('Email Address: info@polygon.lk', 15, 40);
 
     // Bill To section

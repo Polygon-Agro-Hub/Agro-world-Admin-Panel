@@ -110,8 +110,8 @@ export class ProcurementShortageHistoryComponent implements OnInit {
     isAssigned,
     assignedCentre: isAssigned ? centreParts.join(' ') : undefined,
     ceilingPercentage: isAssigned ? row.ceilling : undefined,
-    firstAssignedBy: isAssigned ? row.assignedByName : undefined,
-    finalizedBy: isAssigned ? row.finalizedByName : undefined,
+    firstAssignedBy: isAssigned ? (row.assignedByName || row.assignOfficerName) : undefined,
+    finalizedBy: isAssigned ? (row.finalizedByName || row.finalizedOfficerName) : undefined,
     createdAt: row.shortageCreatedAt,
   };
   }

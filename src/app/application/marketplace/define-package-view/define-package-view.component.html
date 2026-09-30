@@ -14,7 +14,7 @@
       Cancel
     </button>
     <button class="px-6 py-2 bg-[#3980C0] text-white rounded disabled:opacity-50 disabled:cursor-not-allowed"
-      (click)="onSave()" [disabled]="hasInvalidOrDisabledProduct()">
+      (click)="onSave()" [disabled]="hasInvalidOrDisabledProduct() || !isWithinLimit">
       Save
     </button>
   </div>
@@ -83,12 +83,9 @@
           }}
         </div>
         <div *ngIf="!isWithinLimit" class="text-[#E11E21] dark:text-red-400 mt-1 italic">
-          Calculated price exceeds the allowed limit ({{
-          packagePrice | number : "1.2-2"
-          }}
-          + {{ packagePrice | number : "1.2-2" }} * 8% = Rs.{{
-          packagePrice * 1.08 | number : "1.2-2"
-          }}). To save the order, it must be within 8% of the target price.
+          Calculated price must be between Rs. {{ getMinimumAllowedPrice() | number : "1.2-2" }} and Rs.
+          {{ getMaximumAllowedPrice() | number : "1.2-2" }} to save the order. Prices below Rs.
+          {{ getMinimumAllowedPrice() | number : "1.2-2" }} cannot be saved.
         </div>
       </div>
     </div>

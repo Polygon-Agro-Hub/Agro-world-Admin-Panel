@@ -83,72 +83,72 @@
       </div>
 
       <!-- Assigned Section -->
+      <!-- Assigned Section -->
       <div *ngIf="assignedItems.length > 0">
         <h3 class="text-lg font-medium text-[#292929] dark:text-textDark mb-4">
           Assigned ({{ getAssignedCount() }})
         </h3>
 
-        <div class="flex flex-col gap-3">
+        <div class="flex flex-col gap-4 overflow-x-auto">
           <div *ngFor="let item of assignedItems"
-            class="flex items-center border border-[#C3C3D2] dark:border-[#3A3F55] rounded-lg px-4 py-3 flex-wrap gap-y-2">
-            <img [src]="item.imageUrl" [alt]="item.itemName"
-              class="w-16 h-16 rounded-md object-cover mr-4 flex-shrink-0" />
-            <span class="font-medium text-[#000000] dark:text-textDark w-40 flex-shrink-0">
-              {{ item.itemName }}
-            </span>
+            class="grid grid-cols-[minmax(180px,1.6fr)_100px_minmax(160px,1.4fr)_minmax(130px,1fr)_90px_minmax(130px,1fr)_minmax(130px,1fr)] items-center gap-x-6 min-w-[1000px] w-full border border-[#C3C3D2] dark:border-[#3A3F55] rounded-lg px-5 py-4">
 
-            <div class="mr-8">
-              <div class="bg-[#FBEFE4] dark:bg-[#3A3F55] text-[#FEF7EF] dark:text-textDark rounded px-3 py-1">
-                <p class="text-xs text-[#000000] dark:text-textDark mb-1">
-                  Shortage
-                </p>
-                <p class="text-sm font-medium text-[#000000] dark:text-textDark">
+            <!-- Image + Name -->
+            <div class="flex items-center gap-4 min-w-0">
+              <img [src]="item.imageUrl" [alt]="item.itemName"
+                class="w-12 h-12 rounded-md object-cover flex-shrink-0" />
+              <span class="font-medium text-[#000000] dark:text-textDark text-sm leading-tight break-words"
+                [title]="item.itemName">
+                {{ item.itemName }}
+              </span>
+            </div>
+
+            <!-- Shortage -->
+            <div>
+              <div class="bg-[#FBEFE4] dark:bg-[#3A3F55] rounded px-3 py-1 w-fit">
+                <p class="text-xs text-[#000000] dark:text-textDark mb-1">Shortage</p>
+                <p class="text-sm font-medium text-[#000000] dark:text-textDark whitespace-nowrap">
                   {{ item.assignedQty }} {{ item.unit }}
                 </p>
               </div>
             </div>
 
-            <div class="mr-8 min-w-[180px]">
-              <p class="text-xs text-[#000000] dark:text-textDark mb-1">
-                Assigned Centre
-              </p>
-              <p class="font-medium text-[#292929] dark:text-textDark truncate">
+            <!-- Assigned Centre -->
+            <div class="min-w-0">
+              <p class="text-xs text-[#000000] dark:text-textDark mb-1">Assigned Centre</p>
+              <p class="font-medium text-[#292929] dark:text-textDark truncate" [title]="item.assignedCentre || '----'">
                 {{ item.assignedCentre || "----" }}
               </p>
             </div>
 
-            <div class="mr-8">
-              <p class="text-xs text-[#000000] dark:text-textDark mb-1">
-                Market Price per kg
-              </p>
-              <p class="font-semibold text-[#292929] dark:text-textDark">
+            <!-- Market Price -->
+            <div>
+              <p class="text-xs text-[#000000] dark:text-textDark mb-1">Market Price per kg</p>
+              <p class="font-semibold text-[#292929] dark:text-textDark whitespace-nowrap">
                 Rs. {{ formatCurrency(item.marketPricePerKg) }}
               </p>
             </div>
 
-            <div class="mr-8 text-center">
-              <p class="text-xs text-[#000000] dark:text-textDark mb-1">
-                Ceiling (%)
-              </p>
+            <!-- Ceiling -->
+            <div class="text-center">
+              <p class="text-xs text-[#000000] dark:text-textDark mb-1">Ceiling (%)</p>
               <p class="font-semibold text-[#292929] dark:text-textDark">
                 {{ item.ceilingPercentage ?? "----" }}
               </p>
             </div>
 
-            <div class="mr-8 max-w-[100px]">
-              <p class="text-xs text-[#000000] dark:text-textDark mb-1">
-                1st Assigned By
-              </p>
+            <!-- 1st Assigned By -->
+            <div class="min-w-0">
+              <p class="text-xs text-[#000000] dark:text-textDark mb-1">1st Assigned By</p>
               <p class="font-semibold text-[#292929] dark:text-textDark truncate"
                 [title]="item.firstAssignedBy || '----'">
                 {{ item.firstAssignedBy || "----" }}
               </p>
             </div>
 
-            <div class="max-w-[100px]">
-              <p class="text-xs text-[#000000] dark:text-textDark mb-1">
-                Finalized By
-              </p>
+            <!-- Finalized By -->
+            <div class="min-w-0">
+              <p class="text-xs text-[#000000] dark:text-textDark mb-1">Finalized By</p>
               <p class="font-semibold text-[#292929] dark:text-textDark truncate" [title]="item.finalizedBy || '----'">
                 {{ item.finalizedBy || "----" }}
               </p>
@@ -156,13 +156,12 @@
           </div>
         </div>
       </div>
-    </div>
 
-    <div *ngIf="!hasData && !isLoading" class="flex flex-col justify-center items-center py-20">
-      <p class="text-[#494949] dark:text-textDark mb-4">
-        -- No Data Available --
-      </p>
-      <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 mb-4" />
+      <div *ngIf="!hasData && !isLoading" class="flex flex-col justify-center items-center py-20">
+        <p class="text-[#494949] dark:text-textDark mb-4">
+          -- No Data Available --
+        </p>
+        <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 mb-4" />
+      </div>
     </div>
   </div>
-</div>

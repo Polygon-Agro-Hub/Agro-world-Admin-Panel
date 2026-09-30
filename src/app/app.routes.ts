@@ -1594,6 +1594,10 @@ export const routes: Routes = [
             component: AddNewContainerComponent
           },
           {
+            path: 'edit-container/:id',
+            component: AddNewContainerComponent
+          },
+          {
             path: 'manage-container-sizes',
             component: ManageContainerSizesComponent
           },

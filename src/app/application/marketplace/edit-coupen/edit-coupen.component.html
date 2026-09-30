@@ -140,6 +140,7 @@
     <p-calendar id="startDate" name="startDate" [(ngModel)]="coupenObj.startDate" (onSelect)="checkStartDate()"
       placeholder="Start Date" [showIcon]="true" [showClear]="true" #startDateInput="ngModel" required
       [showButtonBar]="true" iconDisplay="input" [style]="{ width: '100%' }" 
+      [minDate]="today"
       panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
       [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
       [&_.p-datepicker-calendar_td_span:hover]:dark:text-white

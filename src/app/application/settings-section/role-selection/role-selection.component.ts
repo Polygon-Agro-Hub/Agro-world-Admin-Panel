@@ -75,6 +75,7 @@ export class RoleSelectionComponent {
     this.closeModal();
   }
   onSubmit() {
+    this.isLoading = true;
     this.validateCreateEmail();
 
     if (this.emailError) {
@@ -84,6 +85,7 @@ export class RoleSelectionComponent {
         icon: 'error',
         confirmButtonText: 'OK',
       });
+      this.isLoading = false;
       return;
     }
 
@@ -99,6 +101,7 @@ export class RoleSelectionComponent {
         }).then((result) => {
           // Refresh the page after the user clicks "OK"
           if (result.isConfirmed) {
+            this.isLoading = false;
             window.location.reload(); // Refresh the page
           }
         });
@@ -111,6 +114,8 @@ export class RoleSelectionComponent {
           icon: 'error',
           confirmButtonText: 'OK',
         });
+        this.isLoading = false;
+
       }
     );
   }

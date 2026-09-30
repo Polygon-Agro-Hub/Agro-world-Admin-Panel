@@ -823,6 +823,29 @@ getCrateById(id: number): Observable<any> {
     );
 }
   
+  getManageContainerSizes(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}procument/get-manage-container-sizes`;
+
+    return this.http.get<any>(url, { headers });
+  }
+
+  deleteManageContainerSize(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.delete<any>(
+      `${this.apiUrl}procument/delete-manage-container-size/${id}`,
+      { headers }
+    );
+  }
+  
 }
 
 

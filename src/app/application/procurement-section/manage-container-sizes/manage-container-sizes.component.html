@@ -1,1 +1,78 @@
-<p>manage-container-sizes works!</p>
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<button class="mb-5 text-textLight dark:text-textDark flex items-center gap-3" (click)="back()">
+    <i class="fa-solid fa-arrow-left"></i> Back
+</button>
+
+<button class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center" type="button"
+    (click)="addNew()">
+    <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 12H20M12 4V20" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" />
+    </svg>
+    Add New
+</button>
+
+<section class="bg-white border border-[#e1e5ea] rounded-[9px] px-7 pt-5 pb-[42px]">
+    <h1 class="text-[#171717] text-[19px] font-medium mb-[26px]">Manage Container Sizes ({{ containerSizes.length |
+        number: '2.0-0' }})</h1>
+
+    <div *ngIf="!isLoading && containerSizes.length; else emptyState" cdkDropList class="grid gap-[26px]"
+        (cdkDropListDropped)="drop($event)">
+        <article *ngFor="let container of containerSizes; let index = index"
+            class="relative flex items-center border border-[#e1e5ea] rounded-lg pl-[14px] pr-[18px] py-4 bg-white"
+            cdkDrag>
+
+            <div class="text-[#87909b] cursor-move text-[11px] pr-3" cdkDragHandle aria-label="Drag to reorder">
+                <i class="fa-solid fa-grip-vertical"></i>
+            </div>
+
+            <div class="text-[#505F76] text-sm font-semibold mr-[18px] min-w-[18px]">{{ (index +
+                1).toString().padStart(2, '0') }}</div>
+
+            <div class="flex-1 text-sm">
+                <span *ngIf="index === 0"
+                    class="inline-block bg-[#00875D26] border border-[#00875D26] rounded-[10px] text-[#00875D] text-[10px] font-semibold mb-1 px-[9px] py-[1px] leading-4">Default</span>
+
+                <div class="flex items-center flex-wrap gap-x-2.5 gap-y-1">
+                    <span class="text-[#414751]">Label : <span class="text-[#101C2B] font-medium">{{ container.labelName
+                            }}</span></span>
+                    <span class="text-[#a5adb7] text-xs">•</span>
+                    <span class="text-[#414751]">Weight : <span class="text-[#101C2B] font-medium">{{ container.weight |
+                            number: '1.0-3' }} kg</span></span>
+                </div>
+
+                <div class="flex items-center flex-wrap gap-x-2.5 gap-y-1 text-[11px] text-[#414751] mt-1.5">
+                    <span>Last modified by: <span class="text-[#101C2B] font-medium">{{ container.modifyBy
+                            }}</span></span>
+                    <span class="text-[#414751] px-1">|</span>
+                    <span>Last modified at: <span class="text-[#101C2B] font-medium">{{ container.modifyAt | date: 'MMM
+                            dd, yyyy | hh:mm a' }}</span></span>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4 ml-[18px]">
+                <button type="button" class="bg-transparent border-0 cursor-pointer text-[#3980c0] text-sm"
+                    aria-label="Edit container size">
+                    <i class="fa-solid fa-pen"></i>
+                </button>
+                <button type="button" class="bg-transparent border-0 cursor-pointer text-[#f10d1b] text-sm"
+                    aria-label="Delete container size" (click)="deleteContainer(index)">
+                    <i class="fa-solid fa-trash"></i>
+                </button>
+            </div>
+
+            <div *cdkDragPlaceholder class="bg-[#f1f5f9] border border-dashed border-[#3980c0] rounded-lg min-h-[78px]">
+            </div>
+        </article>
+    </div>
+
+    <ng-template #emptyState>
+        <div *ngIf="!isLoading" class="flex flex-col items-center w-full h-64 px-10 py-7 dark:text-textDark mt-6">
+            <p class="text-[#494949] my-6 dark:text-textDark">
+                There is no added crate sizes yet.
+            </p>
+            <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 dark:text-textDark" />
+        </div>
+    </ng-template>
+</section>

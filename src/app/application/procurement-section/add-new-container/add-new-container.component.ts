@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-// TODO: adjust this path to where your spinner component lives
+import { ActivatedRoute } from '@angular/router';
+import Swal from 'sweetalert2';
+// TODO: adjust these two paths/names to your project
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { ProcumentsService } from '../../../services/procuments/procuments.service';
 
 interface ContainerData {
   labelName: string;
@@ -15,7 +17,7 @@ interface ContainerData {
   standalone: true,
   imports: [CommonModule, FormsModule, LoadingSpinnerComponent],
   templateUrl: './add-new-container.component.html',
-  styleUrl: './add-new-container.component.css'
+  styleUrl: './add-new-container.component.css',
 })
 export class AddNewContainerComponent implements OnInit {
   itemId: number | null = null;
@@ -30,9 +32,8 @@ export class AddNewContainerComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
-    private location: Location
-    // TODO: inject your service, e.g. private containerService: ContainerService
+    private location: Location,
+    private procumentService: ProcumentsService,
   ) {}
 
   ngOnInit(): void {
@@ -44,20 +45,27 @@ export class AddNewContainerComponent implements OnInit {
     }
   }
 
+  // ---------- Load (edit mode) ----------
   loadContainer(): void {
     this.isLoading = true;
-    // TODO: replace with your service call
-    // this.containerService.getContainerById(this.itemId!).subscribe({
-    //   next: (res) => {
-    //     this.containerData = {
-    //       labelName: res.labelName,
-    //       weight: String(res.weight)
-    //     };
-    //     this.isLoading = false;
-    //   },
-    //   error: () => (this.isLoading = false)
-    // });
-    this.isLoading = false;
+    this.procumentService.getCrateById(this.itemId!).subscribe({
+      next: (res) => {
+        this.containerData = {
+          labelName: res.data.labelName,
+          weight: String(res.data.weight),
+        };
+        this.isLoading = false;
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.showMessage(
+          'error',
+          'Error',
+          err?.error?.error || 'Failed to load container',
+        );
+        this.back();
+      },
+    });
   }
 
   // ---------- Validation ----------
@@ -86,7 +94,10 @@ export class AddNewContainerComponent implements OnInit {
   }
 
   // ---------- Input helpers ----------
-  handleInputWithSpaceTrimming(event: KeyboardEvent, field: keyof ContainerData): void {
+  handleInputWithSpaceTrimming(
+    event: KeyboardEvent,
+    field: keyof ContainerData,
+  ): void {
     const input = event.target as HTMLInputElement;
     if (event.key === ' ' && input.selectionStart === 0) {
       event.preventDefault();
@@ -94,8 +105,17 @@ export class AddNewContainerComponent implements OnInit {
   }
 
   allowOnlyDecimal(event: KeyboardEvent): void {
-    const allowedKeys = ['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight', 'Home', 'End'];
-    if (allowedKeys.includes(event.key) || event.ctrlKey || event.metaKey) return;
+    const allowedKeys = [
+      'Backspace',
+      'Delete',
+      'Tab',
+      'ArrowLeft',
+      'ArrowRight',
+      'Home',
+      'End',
+    ];
+    if (allowedKeys.includes(event.key) || event.ctrlKey || event.metaKey)
+      return;
 
     const input = event.target as HTMLInputElement;
     const isDigit = /^[0-9]$/.test(event.key);
@@ -119,22 +139,36 @@ export class AddNewContainerComponent implements OnInit {
       return;
     }
 
-    const payload = {
-      labelName: this.containerData.labelName.trim(),
-      weight: Number(this.containerData.weight)
-    };
+    const labelName = this.containerData.labelName.trim();
+    const weight = Number(this.containerData.weight);
 
     this.isLoading = true;
 
-    if (this.isEditMode) {
-      // TODO: this.containerService.updateContainer(this.itemId!, payload).subscribe(...)
-      console.log('Update', this.itemId, payload);
-    } else {
-      // TODO: this.containerService.createContainer(payload).subscribe(...)
-      console.log('Create', payload);
-    }
+    const request$ = this.isEditMode
+      ? this.procumentService.updateCrate(this.itemId!, labelName, weight)
+      : this.procumentService.createCrate(labelName, weight);
 
-    this.isLoading = false;
+    request$.subscribe({
+      next: (res) => {
+        this.isLoading = false;
+        this.showMessage(
+          'success',
+          'Success',
+          res?.message ||
+            (this.isEditMode
+              ? 'Container updated successfully'
+              : 'Container created successfully'),
+        ).then(() => this.back());
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.showMessage(
+          'error',
+          err?.status === 409 ? 'Duplicate Label' : 'Error',
+          err?.error?.error || 'Something went wrong',
+        );
+      },
+    });
   }
 
   onCancel(): void {
@@ -143,5 +177,10 @@ export class AddNewContainerComponent implements OnInit {
 
   back(): void {
     this.location.back();
+  }
+
+  // ---------- Alerts (swap for your own toast/alert service) ----------
+  private showMessage(icon: 'success' | 'error', title: string, text: string) {
+    return Swal.fire({ icon, title, text, confirmButtonColor: '#3980C0' });
   }
 }

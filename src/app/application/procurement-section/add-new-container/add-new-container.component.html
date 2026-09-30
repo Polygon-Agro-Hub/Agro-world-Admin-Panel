@@ -7,14 +7,14 @@
 <div class="h-[20px]"></div>
 
 <div class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg">
-    <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
+    <h2 class="text-[20px] font-medium mb-6 text-[#000000] dark:text-textDark">
         {{ isEditMode ? 'Edit Container' : 'Add Container' }}
     </h2>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         <!-- Container Label Name -->
         <div class="pb-2">
-            <label for="containerLabel" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            <label for="containerLabel" class="block text-[16px] font-medium text-[#101C2B] dark:text-textDark">
                 Container Label Name *
             </label>
             <input id="containerLabel" name="containerLabel" type="text" [(ngModel)]="containerData.labelName"
@@ -29,7 +29,7 @@
 
         <!-- Weight -->
         <div class="pb-2">
-            <label for="containerWeight" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            <label for="containerWeight" class="block text-[16px] font-medium text-[#101C2B] dark:text-textDark">
                 Weight (kg) *
             </label>
             <input id="containerWeight" name="containerWeight" type="text" inputmode="decimal"

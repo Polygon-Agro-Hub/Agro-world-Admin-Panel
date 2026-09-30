@@ -3,7 +3,6 @@ import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
-// TODO: adjust these two paths/names to your project
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { ProcumentsService } from '../../../services/procuments/procuments.service';
 
@@ -29,6 +28,8 @@ export class AddNewContainerComponent implements OnInit {
   touched: Record<string, boolean> = {};
   attemptedSubmit = false;
   weightError = '';
+
+  private readonly MAX_DECIMALS = 2;
 
   constructor(
     private route: ActivatedRoute,
@@ -85,9 +86,14 @@ export class AddNewContainerComponent implements OnInit {
       this.weightError = '';
       return;
     }
+
     const num = Number(value);
+    const decimalPart = value.split('.')[1] ?? '';
+
     if (isNaN(num) || num <= 0) {
       this.weightError = 'Weight must be a number greater than 0.';
+    } else if (decimalPart.length > this.MAX_DECIMALS) {
+      this.weightError = 'Weight can have up to 2 decimal places only.';
     } else {
       this.weightError = '';
     }
@@ -104,6 +110,7 @@ export class AddNewContainerComponent implements OnInit {
     }
   }
 
+  // Blocks invalid keys while typing (digits, one dot, max 2 decimals)
   allowOnlyDecimal(event: KeyboardEvent): void {
     const allowedKeys = [
       'Backspace',
@@ -118,12 +125,62 @@ export class AddNewContainerComponent implements OnInit {
       return;
 
     const input = event.target as HTMLInputElement;
-    const isDigit = /^[0-9]$/.test(event.key);
-    const isSingleDot = event.key === '.' && !input.value.includes('.');
+    const value = input.value;
+    const selStart = input.selectionStart ?? value.length;
+    const selEnd = input.selectionEnd ?? value.length;
+    const hasSelection = selStart !== selEnd;
 
-    if (!isDigit && !isSingleDot) {
+    const isDigit = /^[0-9]$/.test(event.key);
+    const isDot = event.key === '.';
+
+    if (!isDigit && !isDot) {
+      event.preventDefault();
+      return;
+    }
+
+    // Only one dot allowed (unless the dot is part of the selected text)
+    if (isDot) {
+      const dotSelected =
+        hasSelection && value.slice(selStart, selEnd).includes('.');
+      if (value.includes('.') && !dotSelected) {
+        event.preventDefault();
+      }
+      return;
+    }
+
+    // Digit: block if caret is after the dot and 2 decimals already exist
+    const dotIndex = value.indexOf('.');
+    if (
+      dotIndex !== -1 &&
+      selStart > dotIndex &&
+      !hasSelection &&
+      value.length - dotIndex - 1 >= this.MAX_DECIMALS
+    ) {
       event.preventDefault();
     }
+  }
+
+  // Cleans pasted / autofilled values (strips invalid chars, trims to 2 decimals)
+  onWeightInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value.replace(/[^0-9.]/g, '');
+
+    // keep only the first dot
+    const firstDot = value.indexOf('.');
+    if (firstDot !== -1) {
+      value =
+        value.slice(0, firstDot + 1) +
+        value.slice(firstDot + 1).replace(/\./g, '');
+      const [intPart, decPart] = value.split('.');
+      value = intPart + '.' + decPart.slice(0, this.MAX_DECIMALS);
+    }
+
+    if (value !== input.value) {
+      input.value = value;
+    }
+    this.containerData.weight = value;
+
+    if (this.touched['weight']) this.validateWeight();
   }
 
   // ---------- Actions ----------
@@ -140,7 +197,7 @@ export class AddNewContainerComponent implements OnInit {
     }
 
     const labelName = this.containerData.labelName.trim();
-    const weight = Number(this.containerData.weight);
+    const weight = Number(Number(this.containerData.weight).toFixed(2));
 
     this.isLoading = true;
 

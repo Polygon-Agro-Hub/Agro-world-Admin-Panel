@@ -1594,7 +1594,7 @@ export const routes: Routes = [
             component: AddNewContainerComponent
           },
           {
-            path: 'add-new-container/:id',
+            path: 'edit-container/:id',
             component: AddNewContainerComponent
           },
           {

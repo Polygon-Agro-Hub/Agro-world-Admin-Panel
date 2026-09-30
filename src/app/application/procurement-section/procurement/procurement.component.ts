@@ -14,6 +14,7 @@ import { CommonModule } from '@angular/common';
 export class ProcurementComponent {
 
   istogglePopupProductStorageView = false;
+  istogglePopupContainerSizesView = false;
 
   constructor(
     private router: Router,
@@ -53,5 +54,9 @@ export class ProcurementComponent {
 
   navigatePath(path: string) {
     this.router.navigate([path]);
+  }
+
+  togglePopupContainerSizes(): void {
+    this.istogglePopupContainerSizesView = !this.istogglePopupContainerSizesView;
   }
 }

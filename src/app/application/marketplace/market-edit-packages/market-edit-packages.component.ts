@@ -152,15 +152,12 @@ export class MarketEditPackagesComponent {
   }
 
   async onSubmit() {
-    
-    
-
     if (
       !this.packageObj.displayName ||
       !this.packageObj.description ||
       !this.packageObj.productPrice ||
       !this.packageObj.packageFee ||
-      !this.packageObj.serviceFee ||
+      this.isEmptyValue(this.packageObj.serviceFee) ||
       !this.selectedImage ||
       !this.packageObj.packageType ||
       !this.packageObj.startDate ||
@@ -176,7 +173,7 @@ export class MarketEditPackagesComponent {
         errorMessage += 'Product price is required.<br>';
       if (!this.packageObj.packageFee)
         errorMessage += 'Package fee is required.<br>';
-      if (!this.packageObj.serviceFee)
+      if (this.isEmptyValue(this.packageObj.serviceFee))
         errorMessage += 'Service fee is required.<br>';
       if (!this.selectedImage) errorMessage += 'Package Image is required.<br>';
       if (!this.packageObj.packageType)
@@ -479,6 +476,10 @@ export class MarketEditPackagesComponent {
 
   isInvalidType(isValid: number | string): boolean {
     return Number(isValid) === 0;
+  }
+
+  private isEmptyValue(value: any): boolean {
+    return value === null || value === undefined || value === '';
   }
 }
 

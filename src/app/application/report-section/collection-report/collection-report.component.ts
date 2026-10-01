@@ -111,10 +111,13 @@ export class CollectionReportComponent {
   getAllCenters() {
     this.collectionoOfficer.getAllCenters().subscribe(
       (res) => {
-        this.centers = res;
+        this.centers = res.map((center: Centers) => ({
+          ...center,
+          displayName: `${center.regCode} - ${center.centerName.trim()}`,
+        }));
       },
       (error) => {
-        Swal.fire('Error!', 'There was an error fetching crops.', 'error');
+        Swal.fire('Error!', 'There was an error fetching centers.', 'error');
       }
     );
   }
@@ -351,4 +354,5 @@ class Centers {
   id!: string;
   centerName!: string;
   regCode!: string;
+  displayName?: string;
 }

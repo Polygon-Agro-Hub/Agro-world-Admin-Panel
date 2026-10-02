@@ -185,97 +185,109 @@ export class CollectionReportComponent {
   }
 
   downloadTemplate1() {
-    // Both dates are required to download
-    if (!this.fromDate || !this.toDate) {
-      return;
-    }
-
-    this.isDownloading = true;
-
-    let queryParams = [];
-
-    if (this.selectedCenter) {
-      queryParams.push(`centerId=${this.selectedCenter.id}`);
-    }
-
-    // Convert Date objects to formatted strings for download
-    const formattedFromDate = this.datePipe.transform(
-      this.fromDate,
-      'yyyy-MM-dd',
-    );
-    const formattedToDate = this.datePipe.transform(this.toDate, 'yyyy-MM-dd');
-
-    if (formattedFromDate) {
-      queryParams.push(`startDate=${formattedFromDate}`);
-    }
-
-    if (formattedToDate) {
-      queryParams.push(`endDate=${formattedToDate}`);
-    }
-
-    if (this.search) {
-      queryParams.push(`search=${this.search}`);
-    }
-
-    const queryString =
-      queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
-    const apiUrl = `${environment.API_URL}auth/download-collection-report${queryString}`;
-
-    fetch(apiUrl, {
-      method: 'GET',
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.blob();
-        } else {
-          throw new Error('Failed to download the file');
-        }
-      })
-      .then((blob) => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-
-        // Generate filename
-        let filename = 'Collection Report';
-
-        const fromDateFormatted = this.formatDateForFilename(
-          new Date(this.fromDate!),
-        );
-        const toDateFormatted = this.formatDateForFilename(
-          new Date(this.toDate!),
-        );
-        filename += ` from ${fromDateFormatted} to ${toDateFormatted}`;
-
-        // Add generation timestamp: YYYY-MM-DD HH.MM AM/PM
-        const now = new Date();
-        const generatedDate = this.formatDateForGeneration(now);
-        const generatedTime = this.formatTimeForFilename(now);
-
-        filename += ` Generated at ${generatedDate} ${generatedTime}`;
-
-        filename += '.xlsx';
-
-        a.download = filename;
-        a.click();
-        window.URL.revokeObjectURL(url);
-
-        Swal.fire({
-          icon: 'success',
-          title: 'Downloaded',
-          text: 'Please check your downloads folder',
-        });
-        this.isDownloading = false;
-      })
-      .catch((error) => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Download Failed',
-          text: error.message,
-        });
-        this.isDownloading = false;
-      });
+  // Both dates are required to download
+  if (!this.fromDate || !this.toDate) {
+    return;
   }
+
+  this.isDownloading = true;
+
+  let queryParams: string[] = [];
+
+  if (this.selectedCenter) {
+    queryParams.push(`centerId=${this.selectedCenter.id}`);
+  }
+
+  // Convert Date objects to formatted strings for download
+  const formattedFromDate = this.datePipe.transform(
+    this.fromDate,
+    'yyyy-MM-dd',
+  );
+  const formattedToDate = this.datePipe.transform(this.toDate, 'yyyy-MM-dd');
+
+  if (formattedFromDate) {
+    queryParams.push(`startDate=${formattedFromDate}`);
+  }
+
+  if (formattedToDate) {
+    queryParams.push(`endDate=${formattedToDate}`);
+  }
+
+  if (this.search) {
+    queryParams.push(`search=${encodeURIComponent(this.search)}`);
+  }
+
+  const queryString =
+    queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
+  const apiUrl = `${environment.API_URL}auth/download-collection-report${queryString}`;
+
+  // Capture the selected center's code now, so the filename stays correct
+  // even if the user changes the filter while the download is in progress
+  const centerCode = this.selectedCenter?.regCode?.trim() || '';
+
+  fetch(apiUrl, {
+    method: 'GET',
+  })
+    .then((response) => {
+      if (response.ok) {
+        return response.blob();
+      } else {
+        throw new Error('Failed to download the file');
+      }
+    })
+    .then((blob) => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+
+      // Generate filename
+      let filename = '';
+
+      // Prefix with collection centre code when a center is selected
+      if (centerCode) {
+        filename += `${centerCode} `;
+      }
+
+      filename += 'Collection Report';
+
+      const fromDateFormatted = this.formatDateForFilename(
+        new Date(this.fromDate!),
+      );
+      const toDateFormatted = this.formatDateForFilename(
+        new Date(this.toDate!),
+      );
+      filename += ` from ${fromDateFormatted} to ${toDateFormatted}`;
+
+      // Add generation timestamp: YYYY-MM-DD HH.MM AM/PM
+      const now = new Date();
+      const generatedDate = this.formatDateForGeneration(now);
+      const generatedTime = this.formatTimeForFilename(now);
+
+      filename += ` Generated at ${generatedDate} ${generatedTime}`;
+
+      filename += '.xlsx';
+
+      // Remove characters that are invalid in file names
+      a.download = filename.replace(/[\\/:*?"<>|]/g, '-');
+      a.click();
+      window.URL.revokeObjectURL(url);
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Downloaded',
+        text: 'Please check your downloads folder',
+      });
+      this.isDownloading = false;
+    })
+    .catch((error) => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Download Failed',
+        text: error.message,
+      });
+      this.isDownloading = false;
+    });
+}
 
   // Format date for filename (returns format like "10th February")
   private formatDateForFilename(date: Date): string {

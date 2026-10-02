@@ -58,14 +58,13 @@ export class AddNewContainerComponent implements OnInit {
         this.weightError = '';
         this.isLoading = false;
       },
-      error: (err) => {
+      error: () => {
         this.isLoading = false;
         this.showMessage(
           'error',
           'Error',
-          err?.error?.error || 'Failed to load container',
-        );
-        this.back();
+          'Failed to load container. Please try again.',
+        ).then(() => this.back());
       },
     });
   }
@@ -217,24 +216,31 @@ export class AddNewContainerComponent implements OnInit {
       : this.procumentService.createCrate(labelName, weight);
 
     request$.subscribe({
-      next: (res) => {
+      next: () => {
         this.isLoading = false;
         this.showMessage(
           'success',
           'Success',
-          res?.message ||
-            (this.isEditMode
-              ? 'Container updated successfully'
-              : 'Container created successfully'),
+          this.isEditMode
+            ? 'Container updated successfully'
+            : 'Container created successfully',
         ).then(() => this.back());
       },
       error: (err) => {
         this.isLoading = false;
-        this.showMessage(
-          'error',
-          err?.status === 409 ? 'Duplicate Label' : 'Error',
-          err?.error?.error || 'Something went wrong',
-        );
+        if (err?.status === 409) {
+          this.showMessage(
+            'error',
+            'Duplicate Label',
+            'A container with this label already exists.',
+          );
+        } else {
+          this.showMessage(
+            'error',
+            'Error',
+            'Something went wrong. Please try again.',
+          );
+        }
       },
     });
   }

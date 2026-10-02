@@ -66,16 +66,16 @@
         </div>
 
         <div>
-          <label class="block text-sm text-[#534E4E] dark:text-textDark mb-2">Service Fee (Rs.)*</label>
-          <input type="text" [(ngModel)]="packageObj.serviceFee" name="serviceFee" (blur)="validateDecimalInput($event)"
+          <label class="block text-sm text-[#534E4E] dark:text-textDark mb-2">Packaging Fee (Rs.)*</label>
+          <input type="text" [(ngModel)]="packageObj.packageFee" name="packageFee" (blur)="validateDecimalInput($event)"
             (keypress)="allowDecimalNumbers($event)" (change)="calculateApproximatedPrice()"
             class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 focus:outline-none dark:bg-gray-800 dark:text-white"
             placeholder="Enter Amount" />
         </div>
 
         <div>
-          <label class="block text-sm text-[#534E4E] dark:text-textDark mb-2">Packaging Fee (Rs.)*</label>
-          <input type="text" [(ngModel)]="packageObj.packageFee" name="packageFee" (blur)="validateDecimalInput($event)"
+          <label class="block text-sm text-[#534E4E] dark:text-textDark mb-2">Service Fee (Rs.)*</label>
+          <input type="text" [(ngModel)]="packageObj.serviceFee" name="serviceFee" (blur)="validateDecimalInput($event)"
             (keypress)="allowDecimalNumbers($event)" (change)="calculateApproximatedPrice()"
             class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 focus:outline-none dark:bg-gray-800 dark:text-white"
             placeholder="Enter Amount" />
@@ -139,7 +139,8 @@
               <p class="text-lg text-gray-500 italic">--Package Name--</p>
             </ng-template>
 
-            <p class="text-base sm:text-lg text-[#00957D] font-bold" *ngIf="packageObj.approximatedPrice > 0; else noPrice">
+            <p class="text-base sm:text-lg text-[#00957D] font-bold"
+              *ngIf="packageObj.approximatedPrice > 0; else noPrice">
               Rs.{{ packageObj.approximatedPrice | number : '1.2-2' }}
             </p>
             <ng-template #noPrice>

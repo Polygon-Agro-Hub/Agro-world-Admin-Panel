@@ -137,23 +137,30 @@ export class RoleSelectionComponent {
   }
 
   updateRole() {
+    this.isLoading = true;
+
     this.roleSelectionService.updateRole(this.selectedRole)?.subscribe(
       (response) => {
-        // Show SweetAlert confirmation
+        this.isLoading = false;
+
+        // Swal eka pennanna kalin edit modal eka close karanawa
+        this.iseditModalOpen = false;
+        this.editEmailError = null;
+
         Swal.fire({
           title: 'Success!',
           text: 'Role updated successfully.',
           icon: 'success',
           confirmButtonText: 'OK',
         }).then((result) => {
-          // Refresh the page after the user clicks "OK"
           if (result.isConfirmed) {
-            window.location.reload(); // Refresh the page
+            this.selectedRole = {};
+            this.getAllRoles(); // window.location.reload() wenuwata list eka reload karanawa
           }
         });
       },
       (error) => {
-        // Handle error if the role update fails
+        this.isLoading = false;
         Swal.fire({
           title: 'Error!',
           text: 'Failed to update role.',

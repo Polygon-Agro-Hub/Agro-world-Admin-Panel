@@ -845,7 +845,17 @@ getCrateById(id: number): Observable<any> {
       { headers }
     );
   }
-  
+
+  reorderContainerSizes(orderedIds: number[]): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}procument/reorder-container-sizes`;
+
+    return this.http.put<any>(url, { orderedIds }, { headers });
+  }
 }
 
 

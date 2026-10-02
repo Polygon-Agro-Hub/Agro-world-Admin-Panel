@@ -30,10 +30,10 @@
 </button>
 
 <div
-  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
+  class="fixed-width-container overflow-hidden"
 >
   <div
-    class="pt-5 pr-12 pl-12 pb-5 min-w-[1400px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
+    class="pt-5 pr-12 pl-12 pb-5 w-full bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
   >
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
@@ -145,59 +145,62 @@
     </div>
 
     <div *ngIf="hasData" class="w-full">
+      <div
+        class="overflow-auto max-h-[60vh] scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
+      >
       <table
-        class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto"
+        class="w-full min-w-max divide-y divide-gray-200 dark:divide-[#4B555A] table-auto"
       >
         <thead>
           <tr>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-start"
+              class="sticky left-0 top-0 z-30 w-[60px] min-w-[60px] bg-tileLight dark:bg-tileBlack px-4 py-3 font-normal text-textLight dark:text-textDark text-start"
             >
               No
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-start"
+              class="sticky left-[60px] top-0 z-30 min-w-[180px] bg-tileLight dark:bg-tileBlack px-4 py-3 font-normal text-textLight dark:text-textDark text-start whitespace-nowrap"
             >
               Crop
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="sticky top-0 z-20 bg-tileLight dark:bg-tileBlack px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
               Preview
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="sticky top-0 z-20 bg-tileLight dark:bg-tileBlack px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
               Category
             </th>
             <th
-              class="px-2 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap"
+              class="sticky top-0 z-20 bg-tileLight dark:bg-tileBlack px-2 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap"
             >
               No. of Varieties
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="sticky top-0 z-20 bg-tileLight dark:bg-tileBlack px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
               Varieties
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="sticky top-0 z-20 bg-tileLight dark:bg-tileBlack px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Variety Names
             </th>
 
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">
+            <th class="sticky top-0 z-20 bg-tileLight dark:bg-tileBlack px-4 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">
               Add Variety
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">
+            <th class="sticky top-0 z-20 bg-tileLight dark:bg-tileBlack px-4 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">
               Last Modified By
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">
+            <th class="sticky top-0 z-20 bg-tileLight dark:bg-tileBlack px-4 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">
               Last Modified At
             </th>
-            <th class="px-4 py-3 font-normal"></th>
-            <th class="px-4 py-3 font-normal"></th>
-            <th class="px-4 py-3 font-normal"></th>
+            <th class="sticky top-0 z-20 bg-tileLight dark:bg-tileBlack px-4 py-3 font-normal"></th>
+            <th class="sticky top-0 z-20 bg-tileLight dark:bg-tileBlack px-4 py-3 font-normal"></th>
+            <th class="sticky top-0 z-20 bg-tileLight dark:bg-tileBlack px-4 py-3 font-normal"></th>
           </tr>
         </thead>
         <tbody>
@@ -214,10 +217,10 @@
             "
             class="border-b border-gray-200 dark:border-[#4B555A]"
           >
-            <td class="py-3 px-4 text-textLight dark:text-textDark">
+            <td class="sticky left-0 z-10 w-[60px] min-w-[60px] bg-tileLight dark:bg-tileBlack py-3 px-4 text-textLight dark:text-textDark">
               {{ (page - 1) * itemsPerPage + i + 1 }}
             </td>
-            <td class="py-3 px-4 text-textLight dark:text-textDark text-start">
+            <td class="sticky left-[60px] z-10 min-w-[180px] bg-tileLight dark:bg-tileBlack py-3 px-4 text-textLight dark:text-textDark text-start whitespace-nowrap">
               {{
                 item.cropNameEnglish
                   ? item.cropNameEnglish.charAt(0).toUpperCase() +
@@ -394,6 +397,7 @@
           </tr>
         </tbody>
       </table>
+      </div>
       <div class="dark:bg-[#262f45]">
         <pagination-controls
           (pageChange)="onPageChange($event)"

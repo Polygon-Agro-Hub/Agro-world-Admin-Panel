@@ -31,53 +31,53 @@
         <div class="flex flex-col gap-4" *ngIf="!isLoading && !errorMessage && reports.length > 0">
           <div *ngFor="let report of reports; let i = index"
             class="flex items-center justify-between min-h-[74px] border border-gray-200 dark:border-gray-700 rounded-lg px-5 py-3">
-            <div class="flex items-center gap-6 flex-wrap">
+            <div class="flex items-center gap-6 flex-nowrap min-w-max">
               <span
-                class="flex items-center justify-center w-8 h-8 rounded-full border bg-[#F6F6F6] dark:bg-[#272F45] text-[#000000] dark:text-textDark font-semibold text-sm">
+                class="flex items-center justify-center w-8 min-w-8 h-8 rounded-full border bg-[#F6F6F6] dark:bg-[#272F45] text-[#000000] dark:text-textDark font-semibold text-sm">
                 {{ i + 1 < 10 ? "0" + (i + 1) : i + 1 }} </span>
 
-                  <span class="text-[#000000] font-semibold dark:text-textDark whitespace-nowrap">
+                  <span class="w-[190px] min-w-[190px] text-[#000000] font-semibold dark:text-textDark whitespace-nowrap">
                     {{ report.driverId }}
                   </span>
 
                   <div
-                    class="flex flex-col items-start justify-center bg-[#E1ECFF] dark:bg-[#1E3A5F] text-sm px-3 py-1.5 rounded-md whitespace-nowrap leading-tight">
+                    class="w-[106px] min-w-[106px] flex flex-col items-start justify-center bg-[#E1ECFF] dark:bg-[#1E3A5F] text-sm px-3 py-1.5 rounded-md whitespace-nowrap leading-tight">
                     <span class="text-black text-xs dark:text-blue-200">Loaded</span>
                     <span class="text-black dark:text-blue-100 font-semibold">{{ report.loaded.toFixed(2) }} kg</span>
                   </div>
 
                   <div
-                    class="flex flex-col items-start justify-center bg-[#FEF7EF] dark:bg-[#4A3620] text-sm px-3 py-1.5 rounded-md whitespace-nowrap leading-tight">
+                    class="w-[106px] min-w-[106px] flex flex-col items-start justify-center bg-[#FEF7EF] dark:bg-[#4A3620] text-sm px-3 py-1.5 rounded-md whitespace-nowrap leading-tight">
                     <span class="text-black text-xs dark:text-orange-200">Unloaded</span>
                     <span class="text-black dark:text-orange-100 font-semibold">{{ report.unloaded.toFixed(2) }}
                       kg</span>
                   </div>
 
                   <div
-                    class="flex flex-col items-start justify-center bg-[#FFE5E5] dark:bg-[#4A1F1F] text-sm px-3 py-1.5 rounded-md whitespace-nowrap leading-tight">
+                    class="w-[106px] min-w-[106px] flex flex-col items-start justify-center bg-[#FFE5E5] dark:bg-[#4A1F1F] text-sm px-3 py-1.5 rounded-md whitespace-nowrap leading-tight">
                     <span class="text-black text-xs dark:text-red-200">Missing</span>
                     <span class="text-black dark:text-red-100 font-semibold">{{ report.missing.toFixed(2) }} kg</span>
                   </div>
 
                   <div
                     [ngClass]="isAllFound(report.crates) ? 'bg-[#F1F4F5] dark:bg-[#2A2F35]' : 'bg-[#FFE5E5] dark:bg-[#4A1F1F]'"
-                    class="flex flex-col items-start justify-center text-sm px-3 py-1.5 rounded-md whitespace-nowrap leading-tight">
+                    class="w-[106px] min-w-[106px] flex flex-col items-start justify-center text-sm px-3 py-1.5 rounded-md whitespace-nowrap leading-tight">
                     <span [ngClass]="isAllFound(report.crates) ? 'dark:text-gray-200' : 'dark:text-red-200'"
-                      class="text-black text-xs">Crates</span>
+                      class="text-black text-xs">Containers</span>
                     <span [ngClass]="isAllFound(report.crates) ? 'dark:text-gray-100' : 'dark:text-red-100'"
                       class="text-black font-semibold">{{
                       report.crates
                       }}</span>
                   </div>
 
-                  <div class="flex flex-col whitespace-nowrap">
+                  <div class="w-[150px] min-w-[150px] flex flex-col whitespace-nowrap">
                     <span class="text-xs text-black dark:text-gray-400">Distribution Centre</span>
                     <span class="text-[#000000] dark:text-textDark font-semibold">{{
                       report.distributionCentre
                       }}</span>
                   </div>
 
-                  <div class="flex flex-col whitespace-nowrap">
+                  <div class="w-[120px] min-w-[120px] flex flex-col whitespace-nowrap">
                     <span class="text-xs text-black dark:text-gray-400">Reported At</span>
                     <span class="text-[#000000] dark:text-textDark font-semibold">{{
                       report.reportedAt

@@ -1195,13 +1195,13 @@ export const routes: Routes = [
                   {
                     path: 'collective-officer-profile/:id',
                     component: ViewCollectiveOfficerProfileComponent,
-                    canActivate: [PermissionGuard],
-                    data: {
-                      permission: [
-                        'View individual collection officer',
-                        'View Polygon Centre Officer Profile',
-                      ],
-                    },
+                    // canActivate: [PermissionGuard],
+                    // data: {
+                    //   permission: [
+                    //     'View individual collection officer',
+                    //     'View Polygon Centre Officer Profile',
+                    //   ],
+                    // },
                   },
                   {
                     path: 'view-officer-targets/:officerId',

@@ -236,7 +236,6 @@ export class ViewDeliveryChargesComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     let value = input.value;
     const selectionStart = input.selectionStart ?? 0;
-    const selectionEnd = input.selectionEnd ?? 0;
 
     value = value.replace(/[^0-9.]/g, '');
 
@@ -264,11 +263,21 @@ export class ViewDeliveryChargesComponent implements OnInit {
       input.setSelectionRange(newPos, newPos);
     }
 
-    this.editData.charge = value ? parseFloat(parseFloat(value).toFixed(2)) : null;
+    // "" or "." => null, but "0" / "0.00" => 0 (allowed)
+    const parsed = parseFloat(value);
+    this.editData.charge = value === '' || isNaN(parsed)
+      ? null
+      : parseFloat(parsed.toFixed(2));
   }
 
   updateDeliveryCharge(): void {
-    if (!this.editData.id || this.editData.charge === null || !this.editData.province || !this.editData.district) {
+    const chargeInvalid =
+      this.editData.charge === null ||
+      this.editData.charge === undefined ||
+      isNaN(this.editData.charge) ||
+      this.editData.charge < 0;
+
+    if (!this.editData.id || chargeInvalid || !this.editData.province || !this.editData.district) {
       Swal.fire({
         title: 'Error!',
         text: 'Invalid data for update',

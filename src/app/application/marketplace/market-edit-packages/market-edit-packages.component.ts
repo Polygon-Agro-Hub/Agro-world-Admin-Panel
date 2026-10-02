@@ -43,7 +43,7 @@ export class MarketEditPackagesComponent {
     private marketSrv: MarketPlaceService,
     private route: ActivatedRoute,
     private router: Router,
-  ) {}
+  ) { }
 
   back(): void {
     Swal.fire({
@@ -68,7 +68,7 @@ export class MarketEditPackagesComponent {
     this.route.params.subscribe((params) => {
       if (params && params['id']) {
         this.packageId = +params['id'];
-        
+
         if (this.packageId) {
           this.isLoading = true;
           forkJoin({
@@ -117,7 +117,7 @@ export class MarketEditPackagesComponent {
 
   getPackageDetails() {
     this.marketSrv.getPackageById(this.packageId).subscribe((res) => {
-      
+
       this.packageObj = res;
       this.packageObj.startDate = res.startDate
         ? new Date(res.startDate)
@@ -139,7 +139,7 @@ export class MarketEditPackagesComponent {
   getProductTypes() {
     this.marketSrv.fetchProductTypes().subscribe((res) => {
       this.productTypeObj = res.data;
-      
+
     });
   }
 
@@ -156,7 +156,7 @@ export class MarketEditPackagesComponent {
       !this.packageObj.displayName ||
       !this.packageObj.description ||
       !this.packageObj.productPrice ||
-      !this.packageObj.packageFee ||
+      this.isEmptyValue(this.packageObj.packageFee) ||
       this.isEmptyValue(this.packageObj.serviceFee) ||
       !this.selectedImage ||
       !this.packageObj.packageType ||
@@ -171,7 +171,7 @@ export class MarketEditPackagesComponent {
         errorMessage += 'Description is required.<br>';
       if (!this.packageObj.productPrice)
         errorMessage += 'Product price is required.<br>';
-      if (!this.packageObj.packageFee)
+      if (this.isEmptyValue(this.packageObj.packageFee))
         errorMessage += 'Package fee is required.<br>';
       if (this.isEmptyValue(this.packageObj.serviceFee))
         errorMessage += 'Service fee is required.<br>';
@@ -344,7 +344,7 @@ export class MarketEditPackagesComponent {
     this.packageObj.approximatedPrice =
       productPrice + (serviceFee + packageFee);
 
-    
+
     return this.packageObj.approximatedPrice;
   }
 
@@ -431,9 +431,9 @@ export class MarketEditPackagesComponent {
     if (input.name === 'productPrice') {
       this.packageObj.productPrice = value ? parseFloat(value) : 0;
     } else if (input.name === 'serviceFee') {
-      this.packageObj.serviceFee = value ? parseFloat(value) : 0;
+      this.packageObj.serviceFee = value ? parseFloat(value) : (null as any);
     } else if (input.name === 'packageFee') {
-      this.packageObj.packageFee = value ? parseFloat(value) : 0;
+      this.packageObj.packageFee = value ? parseFloat(value) : (null as any);
     }
 
     this.calculateApproximatedPrice();

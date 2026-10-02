@@ -14,7 +14,7 @@
       Cancel
     </button>
     <button class="px-6 py-2 bg-[#3980C0] text-white rounded disabled:opacity-50 disabled:cursor-not-allowed"
-      (click)="onSave()" [disabled]="hasInvalidOrDisabledProduct()">
+      (click)="onSave()" [disabled]="hasInvalidOrDisabledProduct() || !isWithinLimit">
       Save
     </button>
   </div>
@@ -43,7 +43,7 @@
                   optionLabel="displayName" optionValue="id" placeholder="--Select Product--" [showClear]="false"
                   (onChange)="onProductSelected(typeItems, $event)" [style]="{'width': '100%'}"
                   [ngClass]="getDropdownStatusClass(typeItems)" styleClass="custom-dropdown" class="flex-1"
-                  filter="true">
+                  [filter]="true" appendTo="body" scrollHeight="250px">
                 </p-dropdown>
                 <input type="number" step="1" min="0" placeholder="--Quantity in kg--"
                   class="rounded-xl text-sm w-40 px-4 py-4 bg-white dark:bg-gray-800 text-[#000000] dark:text-[#F1F4F5] placeholder-gray-500 dark:placeholder-gray-400 placeholder:italic focus:outline-none focus:ring-0"
@@ -83,12 +83,9 @@
           }}
         </div>
         <div *ngIf="!isWithinLimit" class="text-[#E11E21] dark:text-red-400 mt-1 italic">
-          Calculated price exceeds the allowed limit ({{
-          packagePrice | number : "1.2-2"
-          }}
-          + {{ packagePrice | number : "1.2-2" }} * 8% = Rs.{{
-          packagePrice * 1.08 | number : "1.2-2"
-          }}). To save the order, it must be within 8% of the target price.
+          Calculated price must be between Rs. {{ getMinimumAllowedPrice() | number : "1.2-2" }} and Rs.
+          {{ getMaximumAllowedPrice() | number : "1.2-2" }} to save the order. Prices below Rs.
+          {{ getMinimumAllowedPrice() | number : "1.2-2" }} cannot be saved.
         </div>
       </div>
     </div>

@@ -8,7 +8,7 @@ export const navbarData = [
     icon: 'fa-solid fa-users',
     label: 'Stakeholders',
     expanded: false,
-    Permission: 'Steckholders Tab',
+    Permission: 'Stakeholders Tab',
     children: [
       {
         RouterLink: '/steckholders/dashboard',

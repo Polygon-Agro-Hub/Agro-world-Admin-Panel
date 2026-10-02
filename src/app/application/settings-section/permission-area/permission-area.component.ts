@@ -337,7 +337,7 @@ export class PermissionAreaComponent {
               this.messageService.add({
                 severity: 'success',
                 summary: 'Deleted',
-                detail: 'Give Permission removed successfully!',
+                detail: 'Permission removed successfully!',
                 life: 2000,
               });
             },

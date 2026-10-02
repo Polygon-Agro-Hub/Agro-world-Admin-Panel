@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { TokenService } from '../../../../services/token/services/token.service';
+import { PermissionService } from '../../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-sales',
@@ -12,7 +14,12 @@ import { Router } from '@angular/router';
 export class SalesComponent {
   popupCompletedOrders = false;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
+
+  ) { }
 
   togglePopupDriverCategories() {
     this.popupCompletedOrders = !this.popupCompletedOrders;

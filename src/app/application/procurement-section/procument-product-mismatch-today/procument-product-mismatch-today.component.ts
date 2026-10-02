@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProcumentsService } from '../../../services/procuments/procuments.service';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 interface MismatchItem {
   id: number;
   name: string;
@@ -64,7 +66,10 @@ export class ProcumentProductMismatchTodayComponent implements OnInit {
     private procumentsService: ProcumentsService,
     private route: ActivatedRoute,
     private router: Router,
-  ) {}
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
+
+  ) { }
 
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('loadedItemId');
@@ -102,15 +107,15 @@ export class ProcumentProductMismatchTodayComponent implements OnInit {
             loadedFrom: details.centerName ?? '',
             loadedTime: details.createdAt
               ? new Date(details.createdAt).toLocaleTimeString([], {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })
+                hour: '2-digit',
+                minute: '2-digit',
+              })
               : '',
             unloadedTime: details.unloadTime
               ? new Date(details.unloadTime).toLocaleTimeString([], {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })
+                hour: '2-digit',
+                minute: '2-digit',
+              })
               : '',
             driver: {
               id: details.driverEmpId ?? '',

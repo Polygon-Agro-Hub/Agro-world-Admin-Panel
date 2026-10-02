@@ -17,7 +17,8 @@
     <div>
       <div class="flex justify-center pt-3 pb-9">
         <div class="relative">
-          <input type="file" id="imageUpload" accept="image/*" class="hidden" (change)="onFileSelected($event)" />
+          <input type="file" id="imageUpload" accept=".jpg,.jpeg,.png,image/jpeg,image/png" class="hidden"
+            (change)="onFileSelected($event)" />
 
           <img *ngIf="!selectedImage && personalData.image" class="rounded-full w-60 h-60 object-cover"
             [src]="personalData.image" alt="Profile Picture" />
@@ -126,7 +127,7 @@
           <label for="jobRole" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Job Role *
           </label>
-          <p-dropdown id="jobRole" [(ngModel)]="personalData.jobRole" (onChange)="EpmloyeIdCreate()" name="jobRole"
+          <p-dropdown id="jobRole" [(ngModel)]="personalData.jobRole" (onChange)="onJobRoleChange()" name="jobRole"
             placeholder="-- select --" [options]="jobRoleOptions" optionLabel="label" optionValue="value"
             [filter]="false" [showClear]="false" class="mt-1 block w-full p-dropdown-custom"
             panelStyleClass="custom-dropdown-panel" styleClass="w-full mt-1">

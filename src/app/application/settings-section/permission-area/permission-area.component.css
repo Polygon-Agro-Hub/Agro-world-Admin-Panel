@@ -138,3 +138,12 @@
 ::ng-deep .dark .p-dropdown .p-dropdown-label:not(.p-placeholder) {
   color: white;
 }
+
+.custom-dropdown-panel {
+  z-index: 1100 !important; /* stays above the sidebar/overlays if needed */
+}
+
+.dark .custom-dropdown-panel {
+  background: #1e2538;
+  color: #fff;
+}

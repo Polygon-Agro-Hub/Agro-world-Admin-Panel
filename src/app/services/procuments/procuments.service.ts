@@ -756,7 +756,106 @@ createPackingTargetLimit(tarValue: number): Observable<any> {
         })
       );
   }
+
+  createCrate(labelName: string, weight: number): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
+
+  // Structure the data to match the endpoint's expected format
+  const requestData = {
+    labelName: labelName,
+    weight: weight,
+  };
+
+  return this.http
+    .post(`${this.apiUrl}procument/create-crate`, requestData, {
+      headers,
+    })
+    .pipe(
+      catchError((error) => {
+        console.error('Error in createCrate:', error);
+        return throwError(() => error);
+      })
+    );
+}
+
+updateCrate(id: number, labelName: string, weight: number): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
+
+  // Structure the data to match the endpoint's expected format
+  const requestData = {
+    labelName: labelName,
+    weight: weight,
+  };
+
+  return this.http
+    .put(`${this.apiUrl}procument/update-crate/${id}`, requestData, {
+      headers,
+    })
+    .pipe(
+      catchError((error) => {
+        console.error('Error in updateCrate:', error);
+        return throwError(() => error);
+      })
+    );
+}
+
+getCrateById(id: number): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
+
+  return this.http
+    .get(`${this.apiUrl}procument/get-crate/${id}`, {
+      headers,
+    })
+    .pipe(
+      catchError((error) => {
+        console.error('Error in getCrateById:', error);
+        return throwError(() => error);
+      })
+    );
+}
   
+  getManageContainerSizes(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}procument/get-manage-container-sizes`;
+
+    return this.http.get<any>(url, { headers });
+  }
+
+  deleteManageContainerSize(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.delete<any>(
+      `${this.apiUrl}procument/delete-manage-container-size/${id}`,
+      { headers }
+    );
+  }
+
+  reorderContainerSizes(orderedIds: number[]): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}procument/reorder-container-sizes`;
+
+    return this.http.put<any>(url, { orderedIds }, { headers });
+  }
 }
 
 

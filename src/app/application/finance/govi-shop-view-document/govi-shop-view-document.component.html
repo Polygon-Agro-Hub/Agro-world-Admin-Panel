@@ -26,7 +26,7 @@
         </div>
 
         <!-- Action Buttons -->
-        <div class="flex gap-4">
+        <div *ngIf="permissionService.hasPermission('Active or reject supplier document') || tokenService.getUserDetails().role === '1'" class="flex gap-4">
             <!-- Renew Button (disabled after clicking) -->
             <button *ngIf="shopDocument.accessStatus === 'Pending' || shopDocument.accessStatus === 'Rejected'" (click)="openRenewPopup()"
                 class="px-8 py-2 bg-[#3980C0] text-white font-medium rounded-md transition-colors duration-200 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#3980C0]">

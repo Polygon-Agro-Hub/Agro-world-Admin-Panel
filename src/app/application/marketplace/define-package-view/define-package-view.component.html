@@ -43,7 +43,7 @@
                   optionLabel="displayName" optionValue="id" placeholder="--Select Product--" [showClear]="false"
                   (onChange)="onProductSelected(typeItems, $event)" [style]="{'width': '100%'}"
                   [ngClass]="getDropdownStatusClass(typeItems)" styleClass="custom-dropdown" class="flex-1"
-                  filter="true">
+                  [filter]="true" appendTo="body" scrollHeight="250px">
                 </p-dropdown>
                 <input type="number" step="1" min="0" placeholder="--Quantity in kg--"
                   class="rounded-xl text-sm w-40 px-4 py-4 bg-white dark:bg-gray-800 text-[#000000] dark:text-[#F1F4F5] placeholder-gray-500 dark:placeholder-gray-400 placeholder:italic focus:outline-none focus:ring-0"

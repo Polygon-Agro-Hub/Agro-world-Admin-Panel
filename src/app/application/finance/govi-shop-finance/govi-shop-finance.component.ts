@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-govi-shop-finance',
@@ -15,7 +17,10 @@ export class GoviShopFinanceComponent {
   popupVisibleView: boolean = false;
 
   constructor(
-    private router: Router
+    private router: Router,
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
+
   ) { }
 
 

@@ -54,7 +54,7 @@
                     <h3 class="text-[20px] font-semibold text-[#000000] dark:text-textDark">
                         All ({{ totalItems.toString().padStart(2, '0') }})
                     </h3>
-                    <button
+                    <button *ngIf="permissionService.hasPermission('Download completed sales orders') || tokenService.getUserDetails().role === '1'"
                         class="bg-[#3980C0] text-white text-[15px] font-medium py-1.5 px-4 rounded-md flex items-center gap-2 w-fit"
                         (click)="downloadTemplate1()" [disabled]="isDownloading" [ngClass]="{
                           'opacity-50 cursor-not-allowed': isDownloading

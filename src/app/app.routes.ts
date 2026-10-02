@@ -1119,8 +1119,8 @@ export const routes: Routes = [
                   {
                     path: 'create-admin-user',
                     component: CreateAdminUserComponent,
-                    canActivate: [PermissionGuard],
-                    data: { permission: 'Onboard individual admin user' },
+                    // canActivate: [PermissionGuard],
+                    // data: { permission: 'Onboard individual admin user' },
                   },
                 ],
               },

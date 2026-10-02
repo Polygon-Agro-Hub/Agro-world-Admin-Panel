@@ -92,7 +92,6 @@ export class RetailComplaintsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-
     this.fetchComplaints();
     this.fetchComplaintCategories();
   }
@@ -102,10 +101,7 @@ export class RetailComplaintsComponent implements OnInit {
 
     this.complaintsService.fetchComplaints(this.roleCategory).subscribe({
       next: (resp: ApiResponse) => {
-        if (resp.data.length === 0) {
-          this.hasData = false;
-        }
-        this.hasData = true;
+        this.hasData = resp.data.length > 0;
         this.complaints = resp.data
           .map(item => ({
             id: item.id.toString(),
@@ -182,56 +178,56 @@ export class RetailComplaintsComponent implements OnInit {
 
   private readonly FILTER_LOADING_DELAY = 300;
 
-applyFilters(): void {
-  this.isLoading = true;
+  applyFilters(): void {
+    this.isLoading = true;
 
-  setTimeout(() => {
-    const txt = this.searchText.trim().toLowerCase();
+    setTimeout(() => {
+      const txt = this.searchText.trim().toLowerCase();
 
-    this.filteredComplaints = this.complaints
-      .filter(item => {
-        const matchesSearch = !txt || [
-          item.refNo,
-          item.complainCategory,
-          item.firstName,
-          item.lastName,
-          item.contactNumber,
-        ].some(field => field?.toLowerCase().includes(txt));
+      this.filteredComplaints = this.complaints
+        .filter(item => {
+          const matchesSearch = !txt || [
+            item.refNo,
+            item.complainCategory,
+            item.firstName,
+            item.lastName,
+            item.contactNumber,
+          ].some(field => field?.toLowerCase().includes(txt));
 
-        const matchesReply =
-          this.rpst === 'Yes' ? !!item.reply :
-            this.rpst === 'No' ? !item.reply :
-              true;
+          const matchesReply =
+            this.rpst === 'Yes' ? !!item.reply :
+              this.rpst === 'No' ? !item.reply :
+                true;
 
-        const matchesCat =
-          !this.filterComCategory || item.complainCategory === this.filterComCategory;
+          const matchesCat =
+            !this.filterComCategory || item.complainCategory === this.filterComCategory;
 
-        const matchesStat =
-          !this.filterStatus || item.status === this.filterStatus;
+          const matchesStat =
+            !this.filterStatus || item.status === this.filterStatus;
 
-        return matchesSearch && matchesReply && matchesCat && matchesStat;
-      })
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+          return matchesSearch && matchesReply && matchesCat && matchesStat;
+        })
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
-    this.totalItems = this.filteredComplaints.length;
-    this.page = 1;
-    this.hasData = this.filteredComplaints.length > 0;
-    this.isLoading = false;
-  }, this.FILTER_LOADING_DELAY);
-}
+      this.totalItems = this.filteredComplaints.length;
+      this.page = 1;
+      this.hasData = this.filteredComplaints.length > 0;
+      this.isLoading = false;
+    }, this.FILTER_LOADING_DELAY);
+  }
 
-searchComplain(): void {
-  this.applyFilters();
-}
+  searchComplain(): void {
+    this.applyFilters();
+  }
 
-clearSearch(): void {
-  this.searchText = '';
-  this.applyFilters();
-}
+  clearSearch(): void {
+    this.searchText = '';
+    this.applyFilters();
+  }
 
-regStatusFil(): void {
-  this.applyFilters();
-}
+  regStatusFil(): void {
+    this.applyFilters();
+  }
 
   onPageChange(p: number): void {
     this.page = p;

@@ -43,6 +43,7 @@
   required
   #categoryEnglish="ngModel"
   (keydown)="blockLeadingSpace($event)"
+  (keydown)="blockNumericInput($event)"
   (input)="validateEnglish()"
   class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
 />
@@ -66,6 +67,7 @@
   required
   #categorySinhala="ngModel"
   (keydown)="blockLeadingSpace($event)"
+  (keydown)="blockNumericInput($event)"
   
   class="mt-1 block w-full p-2 border  border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
 />
@@ -86,6 +88,7 @@
   required
   #categoryTamil="ngModel"
   (keydown)="blockLeadingSpace($event)"
+  (keydown)="blockNumericInput($event)"
   
   class="mt-1 block w-full p-2 border border-gray-300  rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
 />

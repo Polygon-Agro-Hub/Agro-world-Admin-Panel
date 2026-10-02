@@ -43,7 +43,6 @@ interface PurchaseReport {
   styleUrl: './collection-report.component.css',
   providers: [DatePipe],
 })
-
 export class CollectionReportComponent {
   isLoading = false;
   fromDate: Date | null = null;
@@ -64,21 +63,33 @@ export class CollectionReportComponent {
     private router: Router,
     public tokenService: TokenService,
     public permissionService: PermissionService,
-    private datePipe: DatePipe
-  ) { }
+    private datePipe: DatePipe,
+  ) {}
 
   ngOnInit() {
     this.getAllCenters();
     this.maxDate = new Date(); // Today's date
   }
 
-  fetchAllCollectionReport(page: number = 1, limit: number = this.itemsPerPage) {
+  fetchAllCollectionReport(
+    page: number = 1,
+    limit: number = this.itemsPerPage,
+  ) {
+    // Both dates are required before fetching/displaying data
+    if (!this.fromDate || !this.toDate) {
+      this.clearData();
+      return;
+    }
+
     this.isLoading = true;
+    this.page = page;
     const centerId = this.selectedCenter?.id || '';
 
     // Convert Date objects to formatted strings
-    const formattedFromDate = this.fromDate ? this.datePipe.transform(this.fromDate, 'yyyy-MM-dd') : '';
-    const formattedToDate = this.toDate ? this.datePipe.transform(this.toDate, 'yyyy-MM-dd') : '';
+    const formattedFromDate =
+      this.datePipe.transform(this.fromDate, 'yyyy-MM-dd') || '';
+    const formattedToDate =
+      this.datePipe.transform(this.toDate, 'yyyy-MM-dd') || '';
 
     this.collectionoOfficer
       .fetchAllCollectionReport(
@@ -87,7 +98,7 @@ export class CollectionReportComponent {
         centerId,
         formattedFromDate,
         formattedToDate,
-        this.search
+        this.search,
       )
       .subscribe(
         (response) => {
@@ -96,7 +107,7 @@ export class CollectionReportComponent {
           this.purchaseReport.forEach((head) => {
             head.createdAtFormatted = this.datePipe.transform(
               head.createdAt,
-              "yyyy/MM/dd 'at' hh.mm a"
+              "yyyy/MM/dd 'at' hh.mm a",
             );
           });
           this.isLoading = false;
@@ -104,7 +115,7 @@ export class CollectionReportComponent {
         (error) => {
           console.error('Error fetching report:', error);
           this.isLoading = false;
-        }
+        },
       );
   }
 
@@ -118,7 +129,7 @@ export class CollectionReportComponent {
       },
       (error) => {
         Swal.fire('Error!', 'There was an error fetching centers.', 'error');
-      }
+      },
     );
   }
 
@@ -140,8 +151,18 @@ export class CollectionReportComponent {
     this.search = input.value.trim();
   }
 
+  // Both dates must be selected
+  get isDateRangeSelected(): boolean {
+    return !!this.fromDate && !!this.toDate;
+  }
+
+  // Data is only shown when both dates are selected
   get hasData(): boolean {
-    return this.purchaseReport && this.purchaseReport.length > 0;
+    return (
+      this.isDateRangeSelected &&
+      !!this.purchaseReport &&
+      this.purchaseReport.length > 0
+    );
   }
 
   applyFiltersCrop() {
@@ -164,6 +185,11 @@ export class CollectionReportComponent {
   }
 
   downloadTemplate1() {
+    // Both dates are required to download
+    if (!this.fromDate || !this.toDate) {
+      return;
+    }
+
     this.isDownloading = true;
 
     let queryParams = [];
@@ -173,8 +199,11 @@ export class CollectionReportComponent {
     }
 
     // Convert Date objects to formatted strings for download
-    const formattedFromDate = this.fromDate ? this.datePipe.transform(this.fromDate, 'yyyy-MM-dd') : '';
-    const formattedToDate = this.toDate ? this.datePipe.transform(this.toDate, 'yyyy-MM-dd') : '';
+    const formattedFromDate = this.datePipe.transform(
+      this.fromDate,
+      'yyyy-MM-dd',
+    );
+    const formattedToDate = this.datePipe.transform(this.toDate, 'yyyy-MM-dd');
 
     if (formattedFromDate) {
       queryParams.push(`startDate=${formattedFromDate}`);
@@ -207,26 +236,18 @@ export class CollectionReportComponent {
         const a = document.createElement('a');
         a.href = url;
 
-        // Generate filename according to the new format
+        // Generate filename
         let filename = 'Collection Report';
 
-        // Add date range if both dates are selected
-        if (formattedFromDate && formattedToDate) {
-          const fromDateObj = new Date(this.fromDate!);
-          const toDateObj = new Date(this.toDate!);
+        const fromDateFormatted = this.formatDateForFilename(
+          new Date(this.fromDate!),
+        );
+        const toDateFormatted = this.formatDateForFilename(
+          new Date(this.toDate!),
+        );
+        filename += ` from ${fromDateFormatted} to ${toDateFormatted}`;
 
-          const fromDateFormatted = this.formatDateForFilename(fromDateObj);
-          const toDateFormatted = this.formatDateForFilename(toDateObj);
-
-          filename += ` from ${fromDateFormatted} to ${toDateFormatted}`;
-        } else if (formattedFromDate) {
-          // If only from date is selected
-          const fromDateObj = new Date(this.fromDate!);
-          const fromDateFormatted = this.formatDateForFilename(fromDateObj);
-          filename += ` on ${fromDateFormatted}`;
-        }
-
-        // Add generation timestamp in the new format: YYYY-MM-DD HH.MM AM/PM
+        // Add generation timestamp: YYYY-MM-DD HH.MM AM/PM
         const now = new Date();
         const generatedDate = this.formatDateForGeneration(now);
         const generatedTime = this.formatTimeForFilename(now);
@@ -265,10 +286,14 @@ export class CollectionReportComponent {
     const getOrdinalSuffix = (day: number): string => {
       if (day > 3 && day < 21) return 'th';
       switch (day % 10) {
-        case 1: return 'st';
-        case 2: return 'nd';
-        case 3: return 'rd';
-        default: return 'th';
+        case 1:
+          return 'st';
+        case 2:
+          return 'nd';
+        case 3:
+          return 'rd';
+        default:
+          return 'th';
       }
     };
 
@@ -284,7 +309,6 @@ export class CollectionReportComponent {
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const day = date.getDate().toString().padStart(2, '0');
 
-    // Return format: "2026-03-03"
     return `${year}-${month}-${day}`;
   }
 
@@ -297,48 +321,38 @@ export class CollectionReportComponent {
     hours = hours % 12;
     hours = hours ? hours : 12; // the hour '0' should be '12'
 
-    // Format: HH.MM AM/PM (using dots instead of colons)
     return `${hours.toString().padStart(2, '0')}.${minutes} ${ampm}`;
   }
 
   // Method to handle from date selection
   onFromDateChange() {
-    if (this.fromDate) {
-      // Set minimum date for toDate as today (to disable previous dates)
-      // This ensures only today and future dates can be selected in toDate
-      this.minToDate = new Date();
-
-      // If toDate exists and is before today, reset toDate
-      if (this.toDate && this.toDate < this.minToDate) {
-        this.toDate = null;
-      }
-    } else {
-      // If fromDate is cleared, also clear toDate and reset minToDate
-      this.toDate = null;
-      this.minToDate = null;
-    }
-  }
+  // Always reset To date and hide old data when From date changes
+  this.toDate = null;
+  this.minToDate = this.fromDate;
+  this.clearData();
+}
 
   // Getter to check if from date is selected
   get isFromDateSelected(): boolean {
     return !!this.fromDate;
   }
 
-  // New method to clear data when dates are cleared
+  // Clear data when either date is cleared
   clearData(): void {
     this.purchaseReport = [];
     this.totalItems = 0;
     this.page = 1;
   }
 
-  // New method to handle when fromDate is cleared
+  // Handle when fromDate is cleared
   onFromDateClear(): void {
     this.fromDate = null;
-    this.toDate = null; // Also clear toDate when fromDate is cleared
+    this.toDate = null; // toDate depends on fromDate
+    this.minToDate = null;
     this.clearData();
   }
 
-  // New method to handle when toDate is cleared
+  // Handle when toDate is cleared
   onToDateClear(): void {
     this.toDate = null;
     this.clearData();
@@ -348,6 +362,18 @@ export class CollectionReportComponent {
     this.page = event;
     this.fetchAllCollectionReport(this.page, this.itemsPerPage);
   }
+
+  onFromDateModelChange(value: Date | null): void {
+  this.toDate = null;
+  this.minToDate = value;
+  this.clearData();
+}
+
+onToDateModelChange(value: Date | null): void {
+  if (!value) {
+    this.clearData();
+  }
+}
 }
 
 class Centers {

@@ -282,7 +282,7 @@ export class PostinvoiceService {
     doc.text('Polygon Holdings (Private) Ltd', 15, 25);
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
-    doc.text('No. 42/46, Nawam Mawatha, Colombo 02.', 15, 30);
+    doc.text('Level 2, Building 2, No. 46/42, Nawam Mawatha, Colombo 02.', 15, 30);
     doc.text('Contact No: 011 431 3433', 15, 35);
     doc.text('Email Address: info@polygon.lk', 15, 40);
 

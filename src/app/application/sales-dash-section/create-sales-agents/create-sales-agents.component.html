@@ -13,7 +13,13 @@
     <div>
       <div class="flex justify-center pt-3 pb-9">
         <div class="relative">
-          <input type="file" id="imageUpload" accept="image/*" class="hidden" (change)="onFileSelected($event)" />
+          <input
+  type="file"
+  id="imageUpload"
+  accept=".jpg,.jpeg,.png"
+  class="hidden"
+  (change)="onFileSelected($event)"
+/>
 
           <!-- Display default image if no file is selected -->
           <div *ngIf="!selectedImage"

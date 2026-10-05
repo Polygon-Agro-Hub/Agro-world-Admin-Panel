@@ -11,8 +11,10 @@ import { TokenService } from '../../../services/token/services/token.service';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 interface Center {
-  id: string;
-  name: string;
+  id: number;
+  centerName: string;
+  regCode: string;
+  displayName: string;
 }
 
 interface OngoingCultivationItem {
@@ -45,11 +47,10 @@ interface OngoingCultivationItem {
   templateUrl: './collection-officer-report.component.html',
   styleUrls: ['./collection-officer-report.component.css'],
 })
-
 export class CollectionOfficerReportComponent implements OnInit {
   ongoingCultivation: OngoingCultivationItem[] = [];
   centers: Center[] = [];
-  selectedCenter: string = '';
+  selectedCenter: number | null = null;
   isPopupVisible = false;
   page: number = 1;
   totalItems: number = 0;
@@ -73,8 +74,10 @@ export class CollectionOfficerReportComponent implements OnInit {
     this.isLoading = true;
     this.collectionOfficer.getCollectionCenter().subscribe({
       next: (response: any) => {
-        this.centers = response.data;
-
+        this.centers = (response.data || []).map((c: any) => ({
+          ...c,
+          displayName: c.regCode ? `${c.regCode} - ${c.centerName}` : c.centerName,
+        }));
         this.isLoading = false;
       },
       error: (error) => {
@@ -87,15 +90,17 @@ export class CollectionOfficerReportComponent implements OnInit {
 
   fetchAllNews(page: number = 1, limit: number = this.itemsPerPage): void {
     this.isLoading = true;
-    // const centerName = this.selectedCenter?.name.trim() || '';
-    // const trimmedSearchNIC = this.searchNIC.trim();
+
+    // Sends the center id as a string, or '' when nothing is selected
+    const centerId =
+      this.selectedCenter !== null ? String(this.selectedCenter) : '';
 
     this.collectionOfficer
       .fetchAllCollectionOfficerStatus(
         page,
         limit,
         this.searchNIC,
-        this.selectedCenter,
+        centerId,
       )
       .subscribe({
         next: (response) => {
@@ -124,7 +129,7 @@ export class CollectionOfficerReportComponent implements OnInit {
 
   clearSearch(): void {
     this.searchNIC = '';
-    this.selectedCenter = '';
+    this.selectedCenter = null;
     this.page = 1;
     this.fetchAllNews(this.page, this.itemsPerPage);
   }

@@ -62,18 +62,18 @@
       </div>
     </div>
     <div
-      class="w-full overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+      class="w-full overflow-auto max-h-[60vh] scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
       <div *ngIf="!hasData"
-        class="flex flex-col items-center w-full h-screen px-10 py-7 bg-tileLight dark:bg-[#363636] dark:text-textDark mt-6">
+        class="flex flex-col items-center w-full px-10 py-7 bg-tileLight dark:bg-[#363636] dark:text-textDark mt-6">
         <p class="text-[#494949] my-6 dark:text-textDark">
           --No Data Availabale--
         </p>
         <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 dark:text-textDark" />
       </div>
-      <table class="divide-y divide-gray-200 table-auto whitespace-nowrap" *ngIf="hasData">
-        <thead>
+      <table class="min-w-max divide-y divide-gray-200 table-auto whitespace-nowrap" *ngIf="hasData">
+        <thead class="sticky top-0 z-20 bg-tileLight dark:bg-tileBlack">
           <tr>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">
+            <th class="sticky left-0 top-0 z-30 bg-tileLight dark:bg-tileBlack px-4 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">
               Company Name
             </th>
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
@@ -156,7 +156,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let item of companies; let i = index">
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap">
+            <td class="sticky left-0 z-10 bg-tileLight dark:bg-tileBlack px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap">
               {{ item.companyNameEnglish }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">

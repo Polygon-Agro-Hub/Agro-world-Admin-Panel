@@ -300,7 +300,7 @@ export class StakeholderService {
     });
 
     const body = JSON.stringify({
-      source: "PolygonAgro",
+      source: "Polygon",
       transport: "sms",
       content: {
         sms: 'Your OTP for verification is: {{code}}',

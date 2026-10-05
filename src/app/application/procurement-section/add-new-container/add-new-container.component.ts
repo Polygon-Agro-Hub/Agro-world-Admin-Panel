@@ -91,23 +91,23 @@ export class AddNewContainerComponent implements OnInit {
   }
 
   validateWeight(): void {
-    const value = this.containerData.weight?.toString().trim();
-    if (!value) {
-      this.weightError = '';
-      return;
-    }
-
-    const num = Number(value);
-    const decimalPart = value.split('.')[1] ?? '';
-
-    if (isNaN(num) || num <= 0) {
-      this.weightError = 'Weight must be a number greater than 0.';
-    } else if (decimalPart.length > this.MAX_DECIMALS) {
-      this.weightError = 'Weight can have up to 2 decimal places only.';
-    } else {
-      this.weightError = '';
-    }
+  const value = this.containerData.weight?.toString().trim();
+  if (!value) {
+    this.weightError = '';
+    return;
   }
+
+  const num = Number(value);
+  const decimalPart = value.split('.')[1] ?? '';
+
+  if (isNaN(num) || num < 0) {
+    this.weightError = 'Weight must be a valid number (0 or greater).';
+  } else if (decimalPart.length > this.MAX_DECIMALS) {
+    this.weightError = 'Weight can have up to 2 decimal places only.';
+  } else {
+    this.weightError = '';
+  }
+}
 
   // ---------- Input helpers ----------
   handleInputWithSpaceTrimming(
@@ -195,55 +195,56 @@ export class AddNewContainerComponent implements OnInit {
 
   // ---------- Actions ----------
   onSubmit(): void {
-    this.attemptedSubmit = true;
-    this.validateWeight();
+  this.attemptedSubmit = true;
+  this.touched['weight'] = true;
+  this.validateWeight();
 
-    if (
-      !this.containerData.labelName?.trim() ||
-      !this.containerData.weight?.toString().trim() ||
-      this.weightError
-    ) {
-      return;
-    }
-
-    const labelName = this.containerData.labelName.trim();
-    const weight = Number(Number(this.containerData.weight).toFixed(2));
-
-    this.isLoading = true;
-
-    const request$ = this.isEditMode
-      ? this.procumentService.updateCrate(this.itemId!, labelName, weight)
-      : this.procumentService.createCrate(labelName, weight);
-
-    request$.subscribe({
-      next: () => {
-        this.isLoading = false;
-        this.showMessage(
-          'success',
-          'Success',
-          this.isEditMode
-            ? 'Container updated successfully'
-            : 'Container created successfully',
-        ).then(() => this.back());
-      },
-      error: (err) => {
-        this.isLoading = false;
-        if (err?.status === 409) {
-          this.showMessage(
-            'error',
-            'Duplicate Label',
-            'A container with this label already exists.',
-          );
-        } else {
-          this.showMessage(
-            'error',
-            'Error',
-            'Something went wrong. Please try again.',
-          );
-        }
-      },
-    });
+  if (
+    !this.containerData.labelName?.trim() ||
+    !this.containerData.weight?.toString().trim() ||
+    this.weightError
+  ) {
+    return;
   }
+
+  const labelName = this.containerData.labelName.trim();
+  const weight = Number(Number(this.containerData.weight).toFixed(this.MAX_DECIMALS));
+
+  this.isLoading = true;
+
+  const request$ = this.isEditMode
+    ? this.procumentService.updateCrate(this.itemId!, labelName, weight)
+    : this.procumentService.createCrate(labelName, weight);
+
+  request$.subscribe({
+    next: () => {
+      this.isLoading = false;
+      this.showMessage(
+        'success',
+        'Success',
+        this.isEditMode
+          ? 'Container updated successfully'
+          : 'Container created successfully',
+      ).then(() => this.back());
+    },
+    error: (err) => {
+      this.isLoading = false;
+      if (err?.status === 409) {
+        this.showMessage(
+          'error',
+          'Duplicate Label',
+          'A container with this label already exists.',
+        );
+      } else {
+        this.showMessage(
+          'error',
+          'Error',
+          'Something went wrong. Please try again.',
+        );
+      }
+    },
+  });
+}
 
   onCancel(): void {
     this.back();

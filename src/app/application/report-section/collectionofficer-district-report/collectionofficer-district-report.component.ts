@@ -247,6 +247,9 @@ export class CollectionofficerDistrictReportComponent implements OnInit, OnDestr
       const chartWidth = 100;
       const yAxisTitleX = 20;
 
+      // Rounds to max 4 decimal places and drops trailing zeros
+      const formatQty = (value: number): string =>
+        `${parseFloat(value.toFixed(4))}kg`;
 
       const colors = {
         gradeA: '#FF9263',
@@ -438,11 +441,7 @@ export class CollectionofficerDistrictReportComponent implements OnInit, OnDestr
       // Draw x-axis title
       doc.setFontSize(10);
       doc.setTextColor('#738AC0');
-      // doc.text('Total Weight (kg)', xAxisStartX + 130, xAxisY + 5, {
-      //   align: 'center',
-      // });
       doc.text('Total Weight (kg)', xAxisStartX + (chartWidth / 2), xAxisY + 5, { align: 'center' });
-
 
       // Summary Table
       const tableStartY = xAxisY + 15; // Reduced from 30 to decrease gap between chart and table
@@ -477,10 +476,10 @@ export class CollectionofficerDistrictReportComponent implements OnInit, OnDestr
 
         const values = [
           crop.cropName,
-          qtyA ? `${qtyA}kg` : '-',
-          qtyB ? `${qtyB}kg` : '-',
-          qtyC ? `${qtyC}kg` : '-',
-          `${totalWeight}kg`,
+          qtyA ? formatQty(qtyA) : '-',
+          qtyB ? formatQty(qtyB) : '-',
+          qtyC ? formatQty(qtyC) : '-',
+          formatQty(totalWeight),
         ];
 
         cellX = tableStartX;

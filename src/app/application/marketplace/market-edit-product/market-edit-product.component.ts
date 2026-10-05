@@ -555,13 +555,21 @@ if (this.productObj.comPrice <= salePriceForComparison) {
     this.productObj.changeby = parseFloat(this.productObj.changeby.toFixed(3));
   }
 
-  validateMaxQuantity() {
+  validateMaxQuantity(event?: Event) {
+    if (event && (event.target as HTMLInputElement).value === '') {
+      return;
+    }
+
     if (this.productObj.maxQuantity <= 0.0) {
       this.productObj.maxQuantity = 0.0;
     }
   }
 
-  validateMinQuantity() {
+  validateMinQuantity(event?: Event) {
+    if (event && (event.target as HTMLInputElement).value === '') {
+      return;
+    }
+
     if (this.productObj.startValue < 0) {
       this.productObj.startValue = 0;
     }

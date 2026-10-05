@@ -15,15 +15,6 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-html, body {
-  height: 100%;
-}
-
-body {
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-}
-
 /* Apply Tailwind classes using @apply */
 .angular-editor-toolbar {
   @apply bg-gray-100;
@@ -43,36 +34,18 @@ body {
   font-size: 17px !important;
 }
 
-
 .compact-slider .swiper-button-next,
 .compact-slider .swiper-button-prev {
   width: 8px;
-  /* Adjust size */
   height: 8px;
-  /* Adjust size */
   font-size: 8px;
-  /* Adjust arrow icon size */
 }
 
 .compact-slider .swiper-button-next::after,
 .compact-slider .swiper-button-prev::after {
   width: 8px;
-  /* Adjust size */
   height: 8px;
-  /* Adjust size */
   font-size: 8px;
-  font-size: 8px;
-  /* Reduces arrow icon size */
-}
-
-
-html, body {
-  height: 100%;
-}
-
-body {
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
 /* Dark mode for Angular Material */
@@ -90,7 +63,6 @@ body {
   opacity: 0.7;
 }
 
-
 /* src/styles.css */
 .chip-input-wrapper .mat-mdc-floating-label,
 .chip-input-wrapper .mdc-floating-label,
@@ -98,4 +70,78 @@ body {
   color: var(--label-text) !important;
   opacity: 1 !important;
   font-weight: 500;
+}
+
+/* =========================================================
+   DARK THEME - ALL PAGINATION (numbers, Previous, Next) WHITE
+   ========================================================= */
+
+/* ---- ngx-pagination ---- */
+.dark .ngx-pagination,
+.dark .ngx-pagination li,
+.dark .ngx-pagination a,
+.dark .ngx-pagination button,
+.dark .ngx-pagination span,
+.dark .ngx-pagination .disabled,
+.dark .ngx-pagination .current,
+.dark .ngx-pagination .pagination-previous,
+.dark .ngx-pagination .pagination-next,
+.dark .ngx-pagination .pagination-previous a,
+.dark .ngx-pagination .pagination-next a,
+.dark .ngx-pagination .pagination-previous.disabled,
+.dark .ngx-pagination .pagination-next.disabled {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+.dark .ngx-pagination a:hover,
+.dark .ngx-pagination button:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* ---- PrimeNG paginator ---- */
+.dark .p-paginator,
+.dark .p-paginator .p-paginator-first,
+.dark .p-paginator .p-paginator-prev,
+.dark .p-paginator .p-paginator-next,
+.dark .p-paginator .p-paginator-last,
+.dark .p-paginator .p-paginator-pages .p-paginator-page,
+.dark .p-paginator .p-paginator-current,
+.dark .p-paginator .p-dropdown .p-dropdown-label,
+.dark .p-paginator .p-dropdown .p-dropdown-trigger {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  background: transparent;
+}
+
+.dark .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+  background: #415CFF !important;
+  color: #ffffff !important;
+}
+
+.dark .p-paginator .p-paginator-first:not(.p-disabled):hover,
+.dark .p-paginator .p-paginator-prev:not(.p-disabled):hover,
+.dark .p-paginator .p-paginator-next:not(.p-disabled):hover,
+.dark .p-paginator .p-paginator-last:not(.p-disabled):hover,
+.dark .p-paginator .p-paginator-pages .p-paginator-page:not(.p-highlight):hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: #ffffff !important;
+}
+
+/* ---- Angular Material paginator ---- */
+.dark .mat-mdc-paginator,
+.dark .mat-mdc-paginator .mat-mdc-paginator-range-label,
+.dark .mat-mdc-paginator .mat-mdc-paginator-page-size-label,
+.dark .mat-mdc-paginator .mat-mdc-icon-button,
+.dark .mat-mdc-paginator .mat-mdc-select-value {
+  color: #ffffff !important;
+}
+
+/* ---- Custom / Tailwind pagination containers ---- */
+.dark [class*="pagination"] a,
+.dark [class*="pagination"] button,
+.dark [class*="pagination"] span,
+.dark [class*="pagination"] li {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
 }

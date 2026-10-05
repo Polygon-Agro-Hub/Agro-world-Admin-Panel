@@ -1266,10 +1266,10 @@ export const routes: Routes = [
                   {
                     path: '',
                     component: ViewDriverComponent,
-                    canActivate: [PermissionGuard],
-                    data: {
-                      permission: 'Onboard individual collection CO / CCM / DO',
-                    },
+                    // canActivate: [PermissionGuard],
+                    // data: {
+                    //   permission: 'Onboard individual collection CO / CCM / DO',
+                    // },
                   },
 
                   {

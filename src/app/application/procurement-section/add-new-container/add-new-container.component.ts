@@ -29,6 +29,8 @@ export class AddNewContainerComponent implements OnInit {
   attemptedSubmit = false;
   weightError = '';
 
+  private readonly MAX_LABEL_LENGTH = 8;
+
   private readonly MAX_DECIMALS = 2;
 
   constructor(
@@ -52,7 +54,7 @@ export class AddNewContainerComponent implements OnInit {
     this.procumentService.getCrateById(this.itemId!).subscribe({
       next: (res) => {
         this.containerData = {
-          labelName: res.data.labelName,
+            labelName: (res.data.labelName ?? '').toString().slice(0, this.MAX_LABEL_LENGTH),
           weight: this.formatWeight(res.data.weight),
         };
         this.weightError = '';
@@ -207,7 +209,7 @@ export class AddNewContainerComponent implements OnInit {
     return;
   }
 
-  const labelName = this.containerData.labelName.trim();
+  const labelName = this.containerData.labelName.trim().slice(0, this.MAX_LABEL_LENGTH);
   const weight = Number(Number(this.containerData.weight).toFixed(this.MAX_DECIMALS));
 
   this.isLoading = true;

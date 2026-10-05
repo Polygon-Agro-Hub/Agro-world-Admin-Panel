@@ -133,69 +133,71 @@
       <span *ngIf="!isDownloading">Download</span>
       <span *ngIf="isDownloading">Downloading...</span>
     </button>
-    <div class="overflow-x-auto w-full">
+    <div
+      class="overflow-auto max-h-[60vh] w-full scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
+    >
       <table
-        class="min-w-full divide-y divide-gray-200 table-auto"
+        class="min-w-max divide-y divide-gray-200 table-auto"
         *ngIf="hasData"
       >
         <thead>
           <tr>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="sticky left-0 top-0 z-30 w-[60px] min-w-[60px] bg-white dark:bg-tileBlack px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
               style="white-space: nowrap"
             >
               No
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="sticky left-[60px] top-0 z-30 w-[280px] min-w-[280px] bg-white dark:bg-tileBlack px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
               style="white-space: nowrap"
             >
               Full Name
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="sticky left-[340px] top-0 z-30 w-[150px] min-w-[150px] bg-white dark:bg-tileBlack px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
               style="white-space: nowrap"
             >
               NIC
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="sticky top-0 z-20 bg-white dark:bg-tileBlack px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
               style="white-space: nowrap"
             >
               Phone number
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="sticky top-0 z-20 bg-white dark:bg-tileBlack px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
               style="white-space: nowrap"
             >
               Amount (Rs.)
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="sticky top-0 z-20 bg-white dark:bg-tileBlack px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
               style="white-space: nowrap"
             >
               Date
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="sticky top-0 z-20 bg-white dark:bg-tileBlack px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
               style="white-space: nowrap"
             >
               Account Number
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="sticky top-0 z-20 bg-white dark:bg-tileBlack px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
               style="white-space: nowrap"
             >
               Bank Name
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="sticky top-0 z-20 bg-white dark:bg-tileBlack px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
               style="white-space: nowrap"
             >
               Branch Name
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="sticky top-0 z-20 bg-white dark:bg-tileBlack px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
               style="white-space: nowrap"
             >
               Payment Reference
@@ -204,16 +206,16 @@
         </thead>
         <tbody>
           <tr *ngFor="let payment of filteredPayments; let i = index">
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+            <td class="sticky left-0 z-10 w-[60px] min-w-[60px] bg-white dark:bg-tileBlack px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ i + 1 | number: "2.0" }}
             </td>
             <td
-              class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap"
+              class="sticky left-[60px] z-10 w-[280px] min-w-[280px] bg-white dark:bg-tileBlack px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap"
             >
               {{ payment.farmerName }}
             </td>
             <td
-              class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap"
+              class="sticky left-[340px] z-10 w-[150px] min-w-[150px] bg-white dark:bg-tileBlack px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap"
             >
               {{ payment.NICnumber }}
             </td>

@@ -119,16 +119,16 @@
             <td *ngIf="
               permissionService.hasPermission('Approve Or Reject Company Head') ||
               tokenService.getUserDetails().role === '1'
-            " class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              <div class="cursor-pointer">
+              " class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              <div class="cursor-pointer shadow-md rounded-md">
                 <span [ngClass]="{
-    'font-bold px-3 py-1 text-sm bg-[#F8FFA6] text-[#A8A100] rounded-lg':
+                    'font-bold px-3 py-1 text-sm bg-[#F8FFA6] text-[#A8A100] rounded-lg':
                       item.status === 'Not Approved',
                     'font-bold px-3 py-1 text-sm bg-green-100 text-[#308233] rounded-lg':
                       item.status === 'Approved',
                     'font-bold px-3 py-1 text-sm bg-red-100 text-[#D16D6A] rounded-lg':
                       item.status === 'Rejected'
-  }" class="inline-block font-medium rounded-md px-4 py-2 text-xs text-center w-32" (click)="openPopup(item)">
+                }" class="inline-block font-medium rounded-md px-4 py-2 text-xs text-center w-32" (click)="openPopup(item)">
                   {{ item.status }}
                 </span>
               </div>

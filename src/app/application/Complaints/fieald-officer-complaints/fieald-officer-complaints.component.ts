@@ -182,9 +182,9 @@ export class FiealdOfficerComplaintsComponent implements OnInit {
     let url = '';
 
     if (role === "1") {
-      url = `${environment.API_URL}auth/get-all-complain-category-list-super/5`;
+      url = `${environment.API_URL}auth/get-all-complain-category-list-super/6`;
     } else {
-      url = `${environment.API_URL}auth/get-all-complain-category-list/${role}/5`;
+      url = `${environment.API_URL}auth/get-all-complain-category-list/${role}/6`;
     }
 
     this.http.get<any>(url, { headers }).subscribe(

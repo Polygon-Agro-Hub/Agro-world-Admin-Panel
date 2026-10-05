@@ -120,10 +120,12 @@
           ({{ (totalItems || 0) < 10 ? '0' + (totalItems || 0) : (totalItems || 0) }}) </span>
       </div>
 
-      <div class="flex items-center mr-5" *ngIf="
-        (permissionService.hasPermission('Filter CO / CCM / DO') ||
-        tokenService.getUserDetails().role === '1') 
-      ">
+      <div class="flex items-center mr-5" 
+      *ngIf="
+             ((urlSegment === 'steckholders' && permissionService.hasPermission('Filter CO / CCM / DO')) ||
+             (urlSegment === 'collection-hub' && permissionService.hasPermission('Filter Polygon CO / CCM / DO')) ||
+                tokenService.getUserDetails().role === '1')"
+      >
         <i class="mr-6 w-6 h-6 fill-current text-textLight dark:text-textDark">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
             <path

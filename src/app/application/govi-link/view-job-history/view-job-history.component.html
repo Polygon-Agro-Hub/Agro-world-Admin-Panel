@@ -80,20 +80,36 @@
       </div>
     </div>
 
-    <!-- Table Section with INDEPENDENT Horizontal Scroll -->
+    <!-- Table data scrolls while the header and leading columns remain visible. -->
     <div
-      class="overflow-x-auto scrollbar-thin overflow-y-hidden scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
+      class="isolate max-h-[60vh] w-full overflow-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
       [class.overflow-x-scroll]="hasData">
       <div *ngIf="hasData" class="min-w-max">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead>
-            <tr>
-              <th class="py-3 font-normal text-[#4B5563] dark:text-textDark text-left whitespace-nowrap">No</th>
-              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-start whitespace-nowrap">Job ID
+        <table class="min-w-[1900px] border-separate border-spacing-0 divide-y divide-gray-200 table-fixed">
+          <colgroup>
+            <col style="width: 64px" />
+            <col style="width: 140px" />
+            <col style="width: 140px" />
+            <col style="width: 140px" />
+            <col style="width: 190px" />
+            <col style="width: 130px" />
+            <col style="width: 170px" />
+            <col style="width: 170px" />
+            <col style="width: 100px" />
+            <col style="width: 150px" />
+            <col style="width: 150px" />
+            <col style="width: 180px" />
+            <col style="width: 180px" />
+            <col style="width: 180px" />
+          </colgroup>
+          <thead class="sticky top-0 z-40 bg-white dark:bg-tileBlack">
+            <tr class="bg-white dark:bg-tileBlack">
+              <th class="sticky left-0 z-50 box-border w-[64px] min-w-[64px] max-w-[64px] bg-white px-3 py-3 font-normal text-[#4B5563] dark:bg-tileBlack dark:text-textDark text-left whitespace-nowrap">No</th>
+              <th class="sticky left-[64px] z-50 box-border w-[140px] min-w-[140px] max-w-[140px] bg-white px-6 py-3 font-normal text-[#4B5563] dark:bg-tileBlack dark:text-textDark text-start whitespace-nowrap">Job ID
               </th>
-              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-start whitespace-nowrap">EMP ID
+              <th class="sticky left-[204px] z-50 box-border w-[140px] min-w-[140px] max-w-[140px] bg-white px-6 py-3 font-normal text-[#4B5563] dark:bg-tileBlack dark:text-textDark text-start whitespace-nowrap">EMP ID
               </th>
-              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-start whitespace-nowrap">Farm ID
+              <th class="sticky left-[344px] z-50 box-border w-[140px] min-w-[140px] max-w-[140px] bg-white px-6 py-3 font-normal text-[#4B5563] dark:bg-tileBlack dark:text-textDark text-start whitespace-nowrap">Farm ID
               </th>
               <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-start whitespace-nowrap">Visit
                 Purpose</th>
@@ -130,16 +146,16 @@
                       };
                 let i = index
               ">
-              <td class="py-3 text-[#000000] dark:text-textDark text-left whitespace-nowrap">
+              <td class="sticky left-0 z-30 box-border w-[64px] min-w-[64px] max-w-[64px] bg-white px-3 py-3 text-[#000000] dark:bg-tileBlack dark:text-textDark text-left whitespace-nowrap">
                 {{ (page - 1) * itemsPerPage + i + 1 }}
               </td>
-              <td class="px-6 py-3 text-[#000000] dark:text-textDark text-start whitespace-nowrap">
+              <td class="sticky left-[64px] z-30 box-border w-[140px] min-w-[140px] max-w-[140px] bg-white px-6 py-3 text-[#000000] dark:bg-tileBlack dark:text-textDark text-start whitespace-nowrap">
                 {{ item.jobId || '--' }}
               </td>
-              <td class="px-6 py-3 text-[#000000] dark:text-textDark text-start whitespace-nowrap">
+              <td class="sticky left-[204px] z-30 box-border w-[140px] min-w-[140px] max-w-[140px] bg-white px-6 py-3 text-[#000000] dark:bg-tileBlack dark:text-textDark text-start whitespace-nowrap">
                 {{ item.empId || '--' }}
               </td>
-              <td class="px-6 py-3 text-[#000000] dark:text-textDark text-start whitespace-nowrap">
+              <td class="sticky left-[344px] z-30 box-border w-[140px] min-w-[140px] max-w-[140px] bg-white px-6 py-3 text-[#000000] dark:bg-tileBlack dark:text-textDark text-start whitespace-nowrap">
                 {{ item.farmCode || '--' }}
               </td>
               <td class="px-6 py-3 text-[#000000] dark:text-textDark text-start whitespace-nowrap">

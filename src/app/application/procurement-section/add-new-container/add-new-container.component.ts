@@ -54,7 +54,9 @@ export class AddNewContainerComponent implements OnInit {
     this.procumentService.getCrateById(this.itemId!).subscribe({
       next: (res) => {
         this.containerData = {
-            labelName: (res.data.labelName ?? '').toString().slice(0, this.MAX_LABEL_LENGTH),
+          labelName: (res.data.labelName ?? '')
+            .toString()
+            .slice(0, this.MAX_LABEL_LENGTH),
           weight: this.formatWeight(res.data.weight),
         };
         this.weightError = '';
@@ -93,23 +95,23 @@ export class AddNewContainerComponent implements OnInit {
   }
 
   validateWeight(): void {
-  const value = this.containerData.weight?.toString().trim();
-  if (!value) {
-    this.weightError = '';
-    return;
-  }
+    const value = this.containerData.weight?.toString().trim();
+    if (!value) {
+      this.weightError = '';
+      return;
+    }
 
-  const num = Number(value);
-  const decimalPart = value.split('.')[1] ?? '';
+    const num = Number(value);
+    const decimalPart = value.split('.')[1] ?? '';
 
-  if (isNaN(num) || num < 0) {
-    this.weightError = 'Weight must be a valid number (0 or greater).';
-  } else if (decimalPart.length > this.MAX_DECIMALS) {
-    this.weightError = 'Weight can have up to 2 decimal places only.';
-  } else {
-    this.weightError = '';
+    if (isNaN(num) || num < 0) {
+      this.weightError = 'Weight must be a valid number (0 or greater).';
+    } else if (decimalPart.length > this.MAX_DECIMALS) {
+      this.weightError = 'Weight can have up to 2 decimal places only.';
+    } else {
+      this.weightError = '';
+    }
   }
-}
 
   // ---------- Input helpers ----------
   handleInputWithSpaceTrimming(
@@ -197,56 +199,60 @@ export class AddNewContainerComponent implements OnInit {
 
   // ---------- Actions ----------
   onSubmit(): void {
-  this.attemptedSubmit = true;
-  this.touched['weight'] = true;
-  this.validateWeight();
+    this.attemptedSubmit = true;
+    this.touched['weight'] = true;
+    this.validateWeight();
 
-  if (
-    !this.containerData.labelName?.trim() ||
-    !this.containerData.weight?.toString().trim() ||
-    this.weightError
-  ) {
-    return;
+    if (
+      !this.containerData.labelName?.trim() ||
+      !this.containerData.weight?.toString().trim() ||
+      this.weightError
+    ) {
+      return;
+    }
+
+    const labelName = this.containerData.labelName
+      .trim()
+      .slice(0, this.MAX_LABEL_LENGTH);
+    const weight = Number(
+      Number(this.containerData.weight).toFixed(this.MAX_DECIMALS),
+    );
+
+    this.isLoading = true;
+
+    const request$ = this.isEditMode
+      ? this.procumentService.updateCrate(this.itemId!, labelName, weight)
+      : this.procumentService.createCrate(labelName, weight);
+
+    request$.subscribe({
+      next: () => {
+        this.isLoading = false;
+        this.showMessage(
+          'success',
+          'Success',
+          this.isEditMode
+            ? 'Container updated successfully'
+            : 'Container created successfully',
+        ).then(() => this.back());
+      },
+      error: (err) => {
+        this.isLoading = false;
+        if (err?.status === 409) {
+          this.showMessage(
+            'error',
+            'Duplicate Label',
+            'A container with this label already exists.',
+          );
+        } else {
+          this.showMessage(
+            'error',
+            'Error',
+            'Something went wrong. Please try again.',
+          );
+        }
+      },
+    });
   }
-
-  const labelName = this.containerData.labelName.trim().slice(0, this.MAX_LABEL_LENGTH);
-  const weight = Number(Number(this.containerData.weight).toFixed(this.MAX_DECIMALS));
-
-  this.isLoading = true;
-
-  const request$ = this.isEditMode
-    ? this.procumentService.updateCrate(this.itemId!, labelName, weight)
-    : this.procumentService.createCrate(labelName, weight);
-
-  request$.subscribe({
-    next: () => {
-      this.isLoading = false;
-      this.showMessage(
-        'success',
-        'Success',
-        this.isEditMode
-          ? 'Container updated successfully'
-          : 'Container created successfully',
-      ).then(() => this.back());
-    },
-    error: (err) => {
-      this.isLoading = false;
-      if (err?.status === 409) {
-        this.showMessage(
-          'error',
-          'Duplicate Label',
-          'A container with this label already exists.',
-        );
-      } else {
-        this.showMessage(
-          'error',
-          'Error',
-          'Something went wrong. Please try again.',
-        );
-      }
-    },
-  });
-}
 
   onCancel(): void {
     this.back();
@@ -259,5 +265,28 @@ export class AddNewContainerComponent implements OnInit {
   // ---------- Alerts (swap for your own toast/alert service) ----------
   private showMessage(icon: 'success' | 'error', title: string, text: string) {
     return Swal.fire({ icon, title, text, confirmButtonColor: '#3980C0' });
+  }
+
+  // Capitalizes the first letter of the label as the user types / pastes
+    // Capitalizes the first letter of every word as the user types / pastes
+  onLabelInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const capitalized = this.capitalizeWords(input.value);
+
+    if (capitalized !== input.value) {
+      const start = input.selectionStart;
+      const end = input.selectionEnd;
+      input.value = capitalized;
+      input.setSelectionRange(start, end); // keep the caret where it was
+    }
+
+    this.containerData.labelName = input.value;
+  }
+
+    // "50l sack" -> "50L Sack"
+  private capitalizeWords(value: string): string {
+    return value
+      ? value.replace(/(^|[\s\d])(\p{L})/gu, (_m, prev, char) => prev + char.toUpperCase())
+      : value;
   }
 }

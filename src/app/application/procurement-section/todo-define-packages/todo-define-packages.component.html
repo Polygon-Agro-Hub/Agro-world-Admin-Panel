@@ -1,7 +1,8 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
-<div *ngIf="!isLoading">
-  <div class="pt-5 px-12 pb-5 w-full bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
-    <div class="flex justify-between items-center mb-8">
+<div *ngIf="!isLoading" class="w-full min-w-0 max-w-full overflow-hidden">
+  <div
+    class="flex h-[calc(100vh-140px)] max-h-[calc(100vh-140px)] w-full min-w-0 max-w-full flex-col overflow-hidden rounded-lg bg-tileLight pt-5 px-12 pb-5 shadow-lg dark:bg-tileBlack">
+    <div class="mb-8 flex min-h-0 min-w-0 shrink-0 flex-wrap items-center justify-between gap-4">
       <div class="flex items-center">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
           All Orders ({{
@@ -71,8 +72,8 @@
       </div>
     </div>
     <div
-      class="w-full overflow-auto max-h-[60vh] scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
-      <table *ngIf="hasData" class="min-w-[1200px] divide-y divide-gray-200">
+      class="relative isolate min-h-0 w-full min-w-0 max-w-full flex-1 basis-0 overflow-x-auto overflow-y-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
+      <table *ngIf="hasData" class="w-max min-w-[1200px] table-fixed border-separate border-spacing-0">
         <colgroup>
           <col class="w-[60px]" />
           <col class="w-[180px]" />
@@ -86,11 +87,11 @@
         <thead>
           <tr>
             <th
-              class="sticky left-0 top-0 z-30 w-[60px] min-w-[60px] bg-tileLight dark:bg-tileBlack px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+              class="sticky left-0 top-0 z-50 box-border w-[60px] min-w-[60px] max-w-[60px] bg-tileLight px-4 py-3 font-normal text-textLight dark:bg-tileBlack dark:text-textDark text-left shadow-[2px_0_0_0_#ffffff] dark:shadow-[2px_0_0_0_#272F45]">
               No
             </th>
             <th
-              class="sticky left-[60px] top-0 z-30 w-[180px] min-w-[180px] bg-tileLight dark:bg-tileBlack px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+              class="sticky left-[60px] top-0 z-50 box-border w-[180px] min-w-[180px] max-w-[180px] bg-tileLight px-4 py-3 font-normal text-textLight dark:bg-tileBlack dark:text-textDark text-center shadow-[2px_0_0_0_#ffffff] dark:shadow-[2px_0_0_0_#272F45]">
               Invoice No
             </th>
             <th
@@ -133,14 +134,14 @@
                 let i = index
               " class="hover:bg-gray-50 dark:hover:bg-gray-700">
             <td
-              class="sticky left-0 z-10 w-[60px] min-w-[60px] bg-tileLight dark:bg-tileBlack px-4 py-3 text-left text-textLight dark:text-textDark">
+              class="sticky left-0 z-40 box-border w-[60px] min-w-[60px] max-w-[60px] border-b border-gray-200 bg-tileLight px-4 py-3 text-left text-textLight dark:border-gray-700 dark:bg-tileBlack dark:text-textDark shadow-[2px_0_0_0_#ffffff] dark:shadow-[2px_0_0_0_#272F45]">
               {{ (page - 1) * itemsPerPage + i + 1 }}
             </td>
             <td
-              class="sticky left-[60px] z-10 w-[180px] min-w-[180px] bg-tileLight dark:bg-tileBlack px-4 py-3 text-center text-textLight dark:text-textDark">
+              class="sticky left-[60px] z-40 box-border w-[180px] min-w-[180px] max-w-[180px] border-b border-gray-200 bg-tileLight px-4 py-3 text-center text-textLight dark:border-gray-700 dark:bg-tileBlack dark:text-textDark shadow-[2px_0_0_0_#ffffff] dark:shadow-[2px_0_0_0_#272F45]">
               {{ order.invNo || "N/A" }}
             </td>
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+            <td class="border-b border-gray-200 px-4 py-3 text-left text-textLight dark:border-gray-700 dark:text-textDark">
               {{
               order.orderApp === "Dash"
               ? "SalesDash"
@@ -149,16 +150,16 @@
               : order.orderApp
               }}
             </td>
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+            <td class="border-b border-gray-200 px-4 py-3 text-left text-textLight dark:border-gray-700 dark:text-textDark">
               {{ order.total | number : "1.2-2" }}
             </td>
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+            <td class="border-b border-gray-200 px-4 py-3 text-left text-textLight dark:border-gray-700 dark:text-textDark">
               {{ order.createdAt | date : "mediumDate" }}
             </td>
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+            <td class="border-b border-gray-200 px-4 py-3 text-left text-textLight dark:border-gray-700 dark:text-textDark">
               {{ order.sheduleDate | date : "mediumDate" }}
             </td>
-            <td class="px-4 py-3 text-center">
+            <td class="border-b border-gray-200 px-4 py-3 text-center dark:border-gray-700">
               <!-- <span
                   class="inline-block font-medium rounded-md px-4 py-2 text-xs text-center w-32 {{
                     getStatusClass(order.status)
@@ -171,7 +172,7 @@
                 Pending
               </span>
             </td>
-            <td class="px-4 py-3 text-center">
+            <td class="border-b border-gray-200 px-4 py-3 text-center dark:border-gray-700">
               <button class="w-5 h-5 text-blue-500 hover:text-blue-700"
                 (click)="viewPremadePackages(order.processOrderId)">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -189,19 +190,19 @@
           </tr>
         </tbody>
       </table>
-      <div *ngIf="hasData" class="dark:bg-[#262f45]">
-        <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
-          [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
-          [screenReaderCurrentLabel]="'Youre on page'">
-        </pagination-controls>
-      </div>
+    </div>
+    <div *ngIf="hasData" class="h-10 min-h-10 w-full min-w-0 shrink-0 overflow-hidden dark:bg-[#262f45]">
+      <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
+        [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
+        [screenReaderCurrentLabel]="'Youre on page'">
+      </pagination-controls>
+    </div>
 
-      <div *ngIf="!hasData" class="flex flex-col items-center w-full px-10 py-7 mt-6">
-        <p class="text-[#494949] my-6 dark:text-textDark">
-          --No Data Available--
-        </p>
-        <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
-      </div>
+    <div *ngIf="!hasData" class="flex flex-col items-center w-full px-10 py-7 mt-6">
+      <p class="text-[#494949] my-6 dark:text-textDark">
+        --No Data Available--
+      </p>
+      <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
     </div>
   </div>
 </div>

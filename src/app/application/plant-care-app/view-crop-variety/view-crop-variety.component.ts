@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { CropCalendarService } from '../../../services/plant-care/crop-calendar.service';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
 interface VegetableVariety {
   imageUrl: string;
@@ -18,7 +19,7 @@ interface VegetableVariety {
 @Component({
   selector: 'app-view-crop-variety',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, LoadingSpinnerComponent],
   templateUrl: './view-crop-variety.component.html',
   styleUrl: './view-crop-variety.component.css'
 })
@@ -26,7 +27,7 @@ export class ViewCropVarietyComponent implements OnInit {
 
   itemId: number | null = null;
   CropPassId: number | null = null;
-  isLoading: boolean = false;
+  isLoading: boolean = true;       // start in loading state
   imageLoading: boolean = true;
   selectedImage: string = '';
   selectedFileName: string = '';
@@ -44,7 +45,7 @@ export class ViewCropVarietyComponent implements OnInit {
 
   constructor(
     private cropCalendarService: CropCalendarService,
-    private route: ActivatedRoute,   // ← inject ActivatedRoute
+    private route: ActivatedRoute,
   ) { }
 
   ngOnInit() {
@@ -54,6 +55,9 @@ export class ViewCropVarietyComponent implements OnInit {
 
       if (this.itemId) {
         this.getCropVarietyById(this.itemId);
+      } else {
+        this.isLoading = false;
+        this.imageLoading = false;
       }
     });
   }
@@ -61,20 +65,26 @@ export class ViewCropVarietyComponent implements OnInit {
   getCropVarietyById(itemId: number): void {
     this.isLoading = true;
     this.imageLoading = true;
+
     this.cropCalendarService.getCropVarietyById(itemId).subscribe({
       next: (response: any) => {
-        const data = response.groups[0];   // ← first record from API
+        const data = response?.groups?.[0];
 
-        // Map API fields → variety object
+        if (!data) {
+          this.isLoading = false;
+          this.imageLoading = false;
+          return;
+        }
+
         this.variety = {
-          imageUrl: data.image || 'assets/images/broccoli.png',
+          imageUrl:      data.image || 'assets/images/broccoli.png',
           nameEn:        data.varietyNameEnglish  || '',
           descriptionEn: data.descriptionEnglish  || '',
           nameSi:        data.varietyNameSinhala  || '',
           descriptionSi: data.descriptionSinhala  || '',
           nameTa:        data.varietyNameTamil    || '',
           descriptionTa: data.descriptionTamil    || '',
-          bgColor:       data.bgColor           || '',
+          bgColor:       data.bgColor             || '',
         };
 
         if (data.image) {
@@ -82,6 +92,7 @@ export class ViewCropVarietyComponent implements OnInit {
           this.selectedFileName = 'Existing Image';
         }
 
+        // Card renders now; imageLoading stays true until the <img> fires load/error
         this.isLoading = false;
       },
       error: () => {

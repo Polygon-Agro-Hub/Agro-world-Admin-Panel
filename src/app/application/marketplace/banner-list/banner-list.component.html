@@ -32,8 +32,9 @@
 
     <div class="h-5"></div>
 
+    <!-- ================= RETAIL ================= -->
     <div *ngIf="isRetail">
-      <div class="flex items-center mb-5 gap-4" >
+      <div class="flex items-center mb-5 gap-4">
         <button [disabled]="maxBannersReached" *ngIf="permissionService.hasPermission('Add retail web slider') || tokenService.getUserDetails().role === '1'"
           [ngClass]="maxBannersReached ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#3980C0]'"
           class="text-white font-medium py-2 px-5 rounded text-lg flex items-center"
@@ -46,7 +47,7 @@
         </button>
 
         <!-- Maximum banners message -->
-        <div *ngIf="maxBannersReached" class="p-3   rounded-lg">
+        <div *ngIf="maxBannersReached" class="p-3 rounded-lg">
           <p class="text-[#0D9488] text-sm">
             You have added the maximum number of banner options.<br>
             If you want to add another, please delete one first.
@@ -65,8 +66,6 @@
               {{ feedback.indexId.toString().padStart(2, "0") }}
             </div>
 
-            <!-- Color Square -->
-            <!-- <div class="w-8 h-8 rounded-md" [style.backgroundColor]="getColorByOrderNumber(feedback.indexId)"></div> -->
             <img *ngIf="feedback.image != null" class="profile-pic" [src]="feedback.image" />
 
             <!-- Feedback Text -->
@@ -89,6 +88,7 @@
       </div>
     </div>
 
+    <!-- ================= WHOLESALE ================= -->
     <div *ngIf="!isRetail">
       <div class="flex items-center mb-5 gap-4">
         <button [disabled]="maxBannersReachedWholesale" *ngIf="permissionService.hasPermission('Add wholesale web slider') || tokenService.getUserDetails().role === '1'"
@@ -103,8 +103,8 @@
         </button>
 
         <!-- Maximum banners message -->
-        <div *ngIf="maxBannersReachedWholesale" class="p-3  rounded-lg">
-           <p class="text-[#0D9488] text-sm">
+        <div *ngIf="maxBannersReachedWholesale" class="p-3 rounded-lg">
+          <p class="text-[#0D9488] text-sm">
             You have added the maximum number of banner options.<br>
             If you want to add another, please delete one first.
           </p>
@@ -122,8 +122,6 @@
               {{ feedback.indexId.toString().padStart(2, "0") }}
             </div>
 
-            <!-- Color Square -->
-            <!-- <div class="w-8 h-8 rounded-md" [style.backgroundColor]="getColorByOrderNumber(feedback.indexId)"></div> -->
             <img *ngIf="feedback.image != null" class="profile-pic" [src]="feedback.image" />
 
             <!-- Feedback Text -->
@@ -133,7 +131,7 @@
             </div>
 
             <!-- Delete Button -->
-            <button (click)="deletebannerWhole(feedback.id)" (click)="deletebannerRetail(feedback.id)" *ngIf="permissionService.hasPermission('Delete wholesale web slider') || tokenService.getUserDetails().role === '1'"
+            <button (click)="deletebannerWhole(feedback.id)" *ngIf="permissionService.hasPermission('Delete wholesale web slider') || tokenService.getUserDetails().role === '1'"
               class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors duration-200 p-2">
               <i class="fa-solid fa-trash"></i>
             </button>
@@ -148,14 +146,12 @@
   </div>
 </div>
 
+<!-- ================= RETAIL UPLOAD MODAL ================= -->
 <div *ngIf="ViewRetailAddBanner" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-  <!-- Added overflow-y-auto to the outer container to handle cases where the modal might be taller than screen -->
   <div class="max-w-2xl w-full mx-4 p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-y-auto"
     style="max-height: 90vh">
-    <!-- Changed from max-h-[120vh] to 90vh for better responsiveness -->
 
     <div class="space-y-6 overflow-y-auto" style="max-height: calc(90vh - 48px)">
-      <!-- 48px accounts for padding (24px top + 24px bottom) -->
 
       <h2 class="text-xl font-semibold text-center dark:text-gray-300">
         Upload Retail Web Banner
@@ -164,7 +160,7 @@
       <div>
         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Index No</label>
         <input type="text" placeholder="--auto fill--" [(ngModel)]="indexRetail" disabled
-          class="mt-1 pl-3 block h-10 w-full rounded-md  border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm bg-gray-100 border-2 dark:bg-gray-800 dark:text-gray-300" />
+          class="mt-1 pl-3 block h-10 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm bg-gray-100 border-2 dark:bg-gray-800 dark:text-gray-300" />
       </div>
 
       <div>
@@ -184,19 +180,19 @@
 
         <div
           class="mt-2 flex items-center justify-center border-2 border-dashed rounded-md p-6 text-center cursor-pointer relative"
-  [class.border-blue-400]="!isDragOverReatil"
-  [class.border-red-400]="isDragOverReatil"
-  [class.bg-blue-50]="!isDragOverReatil"
-  [class.bg-red-50]="isDragOverReatil"
-  [class.text-blue-500]="!isDragOverReatil"
-  [class.text-red-500]="isDragOverReatil"
-  (drop)="onDropRetail($event)" 
-  (dragover)="onDragOverRetail($event)" 
-  (dragleave)="onDragLeaveRetail($event)">
-          <input type="file" accept="image/png, image/jpeg" class="hidden" id="fileUpload"
+          [class.border-blue-400]="!isDragOverReatil"
+          [class.border-red-400]="isDragOverReatil"
+          [class.bg-blue-50]="!isDragOverReatil"
+          [class.bg-red-50]="isDragOverReatil"
+          [class.text-blue-500]="!isDragOverReatil"
+          [class.text-red-500]="isDragOverReatil"
+          (drop)="onDropRetail($event)"
+          (dragover)="onDragOverRetail($event)"
+          (dragleave)="onDragLeaveRetail($event)">
+          <input type="file" accept="image/png, image/jpeg" class="hidden" id="fileUploadRetail"
             (change)="onFileSelectedRetail($event)" />
-          <label for="fileUpload" class="cursor-pointer w-full h-full flex flex-col items-center justify-center">
-            <ng-container *ngIf="selectedRetailImageUrl; else placeholder">
+          <label for="fileUploadRetail" class="cursor-pointer w-full h-full flex flex-col items-center justify-center">
+            <ng-container *ngIf="selectedRetailImageUrl; else placeholderRetail">
               <div class="flex flex-col items-center">
                 <img [src]="selectedRetailImageUrl" alt="Preview" class="max-h-48 rounded-md object-contain" />
                 <p class="mt-2 text-sm text-gray-600 dark:text-gray-300 truncate max-w-xs">
@@ -204,7 +200,7 @@
                 </p>
               </div>
             </ng-container>
-            <ng-template #placeholder>
+            <ng-template #placeholderRetail>
               <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mb-2" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -221,7 +217,6 @@
       </div>
 
       <div class="flex justify-end space-x-2 pt-4 sticky bottom-0 bg-white dark:bg-gray-800 pb-2">
-        <!-- Made buttons sticky at the bottom -->
         <button class="px-4 py-2 rounded-md text-sm font-medium bg-gray-300 text-gray-800 hover:bg-gray-400"
           (click)="cancelUploadRetail()">
           Cancel
@@ -235,15 +230,12 @@
   </div>
 </div>
 
-
+<!-- ================= WHOLESALE UPLOAD MODAL ================= -->
 <div *ngIf="ViewWholesaleAddBanner" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-  <!-- Added overflow-y-auto to the outer container to handle cases where the modal might be taller than screen -->
   <div class="max-w-2xl w-full mx-4 p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-y-auto"
     style="max-height: 90vh">
-    <!-- Changed from max-h-[120vh] to 90vh for better responsiveness -->
 
     <div class="space-y-6 overflow-y-auto" style="max-height: calc(90vh - 48px)">
-      <!-- 48px accounts for padding (24px top + 24px bottom) -->
 
       <h2 class="text-xl font-semibold text-center dark:text-gray-300">
         Upload Wholesale Web Banner
@@ -272,19 +264,19 @@
 
         <div
           class="mt-2 flex items-center justify-center border-2 border-dashed rounded-md p-6 text-center cursor-pointer relative"
-  [class.border-blue-400]="!isDragOver"
-  [class.border-red-400]="isDragOver"
-  [class.bg-blue-50]="!isDragOver"
-  [class.bg-red-50]="isDragOver"
-  [class.text-blue-500]="!isDragOver"
-  [class.text-red-500]="isDragOver"
-  (drop)="onDropWholesale($event)" 
-  (dragover)="onDragOver($event)" 
-  (dragleave)="onDragLeave($event)">
-          <input type="file" accept="image/png, image/jpeg" class="hidden" id="fileUpload"
+          [class.border-blue-400]="!isDragOver"
+          [class.border-red-400]="isDragOver"
+          [class.bg-blue-50]="!isDragOver"
+          [class.bg-red-50]="isDragOver"
+          [class.text-blue-500]="!isDragOver"
+          [class.text-red-500]="isDragOver"
+          (drop)="onDropWholesale($event)"
+          (dragover)="onDragOver($event)"
+          (dragleave)="onDragLeave($event)">
+          <input type="file" accept="image/png, image/jpeg" class="hidden" id="fileUploadWholesale"
             (change)="onFileSelectedWholesale($event)" />
-          <label for="fileUpload" class="cursor-pointer w-full h-full flex flex-col items-center justify-center">
-            <ng-container *ngIf="selectedWholesaleImageUrl; else placeholder">
+          <label for="fileUploadWholesale" class="cursor-pointer w-full h-full flex flex-col items-center justify-center">
+            <ng-container *ngIf="selectedWholesaleImageUrl; else placeholderWholesale">
               <div class="flex flex-col items-center">
                 <img [src]="selectedWholesaleImageUrl" alt="Preview" class="max-h-48 rounded-md object-contain" />
                 <p class="mt-2 text-sm text-gray-600 dark:text-gray-300 truncate max-w-xs">
@@ -292,7 +284,7 @@
                 </p>
               </div>
             </ng-container>
-            <ng-template #placeholder>
+            <ng-template #placeholderWholesale>
               <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mb-2" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -308,75 +300,7 @@
         </div>
       </div>
 
-      <!-- <div>
-        <label class="block text-sm font-medium text-gray-700">
-          Image
-          <span class="text-xs text-gray-500"
-            >( Suggested Dimension : 1200 × 450 px )</span
-          >
-        </label>
-        <div
-          class="mt-2 flex items-center justify-center border-2 border-dashed border-blue-400 rounded-md p-6 text-center text-blue-500 cursor-pointer bg-blue-50 hover:bg-blue-100 relative"
-          (drop)="onDropWholesale($event)"
-          (dragover)="onDragOver($event)"
-          (dragleave)="onDragLeave($event)"
-          [class.bg-blue-100]="isDragOver"
-        >
-          <input
-            type="file"
-            accept="image/png, image/jpeg"
-            class="hidden"
-            id="fileUpload"
-            (change)="onFileSelectedWholesale($event)"
-          />
-          <label
-            for="fileUpload"
-            class="cursor-pointer w-full h-full flex flex-col items-center justify-center"
-          >
-            <ng-container *ngIf="selectedWholesaleImageUrl; else placeholder">
-              <div class="flex flex-col items-center">
-                <img
-                  [src]="selectedWholesaleImageUrl"
-                  alt="Preview"
-                  class="max-h-48 rounded-md object-contain"
-                />
-                <p
-                  class="mt-2 text-sm text-gray-600 dark:text-gray-300 truncate max-w-xs"
-                >
-                  {{ selectedFileWholesale?.name }}
-                </p>
-              </div>
-            </ng-container>
-            <ng-template #placeholder>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-10 w-10 mb-2"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M7 16V4m0 0L4 7m3-3l3 3M17 16v-6m0 0l-3 3m3-3l3 3M4 20h16"
-                />
-              </svg>
-              <p class="text-sm">
-                <span class="font-medium"
-                  >Select a JPG / PNG file to upload</span
-                >
-                <br />
-                or drag and drop it here
-              </p>
-            </ng-template>
-          </label>
-        </div>
-      </div> -->
-
-
-
-      <div class="flex justify-end space-x-2 pt-4">
+      <div class="flex justify-end space-x-2 pt-4 sticky bottom-0 bg-white dark:bg-gray-800 pb-2">
         <button class="px-4 py-2 rounded-md text-sm font-medium bg-gray-300 text-gray-800 hover:bg-gray-400"
           (click)="cancelUploadWholesale()">
           Cancel

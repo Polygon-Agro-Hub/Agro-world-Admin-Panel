@@ -19,6 +19,7 @@ export class EditCoupenComponent {
   isValid: boolean = true;
   checkPrecentageValueMessage: string = '';
   checkfixAmountValueMessage: string = '';
+  priceLimitDisplay: string = '';
   coupenId: number | null = null;
   isLoading: boolean = false;
   minDate: Date = new Date();
@@ -71,6 +72,10 @@ export class EditCoupenComponent {
             }
 
             this.coupenObj = data;
+            this.priceLimitDisplay =
+  data.priceLimit !== null && data.priceLimit !== undefined && data.priceLimit !== ''
+    ? Number(data.priceLimit).toLocaleString('en-US', { maximumFractionDigits: 2 })
+    : '';
           } else {
             Swal.fire({
               icon: 'error',
@@ -325,10 +330,11 @@ export class EditCoupenComponent {
 }
 
   onCheckLimitChange(): void {
-    if (!this.coupenObj.checkLimit) {
-      this.coupenObj.priceLimit = 0;
-    }
+  if (!this.coupenObj.checkLimit) {
+    this.coupenObj.priceLimit = 0;
+    this.priceLimitDisplay = '';
   }
+}
 
 validateDecimalInput(event: Event, field: 'priceLimit' | 'fixDiscount' | 'percentage') {
   const input = event.target as HTMLInputElement;
@@ -426,6 +432,53 @@ validateDecimalInput(event: Event, field: 'priceLimit' | 'fixDiscount' | 'percen
   if (e.key === '0' && input.value.length === 0) {
     e.preventDefault();
   }
+}
+
+onPriceLimitInput(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  const original = input.value;
+  const caret = input.selectionStart ?? original.length;
+
+  // count digits/dots before the caret so we can restore its position
+  const sigBeforeCaret = original.slice(0, caret).replace(/[^0-9.]/g, '').length;
+
+  // keep digits and a single dot only
+  let raw = original.replace(/[^0-9.]/g, '');
+  const firstDot = raw.indexOf('.');
+  if (firstDot !== -1) {
+    raw = raw.slice(0, firstDot + 1) + raw.slice(firstDot + 1).replace(/\./g, '');
+  }
+
+  let [intPart, decPart] = raw.split('.');
+  intPart = intPart.replace(/^0+(?=\d)/, ''); // no leading zeros like 007
+  if (intPart === '' && decPart !== undefined) intPart = '0';
+  if (decPart !== undefined) decPart = decPart.slice(0, 2); // max 2 decimals
+
+  const formattedInt = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  const formatted = decPart !== undefined ? `${formattedInt}.${decPart}` : formattedInt;
+
+  // set display + numeric value
+  input.value = formatted;
+  this.priceLimitDisplay = formatted;
+
+  const numeric = formatted.replace(/,/g, '');
+  this.coupenObj.priceLimit = numeric !== '' && numeric !== '.' ? parseFloat(numeric) : null!;
+
+  // restore caret after the same number of digits/dots
+  let sigSeen = 0;
+  let newCaret = formatted.length;
+  if (sigBeforeCaret === 0) {
+    newCaret = 0;
+  } else {
+    for (let i = 0; i < formatted.length; i++) {
+      if (formatted[i] !== ',') sigSeen++;
+      if (sigSeen >= sigBeforeCaret) {
+        newCaret = i + 1;
+        break;
+      }
+    }
+  }
+  input.setSelectionRange(newCaret, newCaret);
 }
   
 }

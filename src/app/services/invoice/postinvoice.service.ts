@@ -935,11 +935,11 @@ export class PostinvoiceService {
 
     const borderRowIndex = grandTotalBody.length - 2;
 
-    const GREEN_COLOR: [number, number, number] = [22, 163, 74];
+        const GREEN_COLOR: [number, number, number] = [22, 163, 74];
     const ORANGE_COLOR: [number, number, number] = [217, 119, 6];
 
     const isPaid = Number(invoice.isPaid) === 1;
-    const isCardPayment = invoice.paymentMethod === 'Card'; // <-- new check
+    const isCardPayment = invoice.paymentMethod === 'Card';
     const creditPaidNum = parseNum(invoice.creditPaid as any);
     const hasCreditPaid =
       invoice.creditPaid !== null &&
@@ -949,13 +949,25 @@ export class PostinvoiceService {
 
     const isPickup = invoice.deliveryMethod?.toLowerCase() === 'pickup';
     const isFreeDeliveryCouponApplied = !!invoice.hasFreeDeliveryCoupon;
-    const invoiceStatus = String(invoice.status || '').trim().toLowerCase();
+
+    // Check every field the status might come in on
+    const rawStatus =
+      (invoice as any).status ??
+      (invoice as any).orderStatus ??
+      (invoice as any).deliveryStatus ??
+      '';
+    const invoiceStatus = String(rawStatus).trim().toLowerCase();
     const isDelivered = invoiceStatus === 'delivered';
+
+    console.log('Invoice status for label:', rawStatus, '=> delivered:', isDelivered);
+
     const cashLabel = isPickup
       ? 'Cash On Pickup'
       : isDelivered
         ? 'Cash On Delivery'
         : 'Cash On Delivery (Pending)';
+
+    // The "charges might change" note only makes sense before delivery
     let showDeliveryNote = false;
 
     const pushPaymentRow = (
@@ -972,63 +984,36 @@ export class PostinvoiceService {
       ]);
     };
 
+    const pushCashRow = (amount: number) => {
+      pushPaymentRow(cashLabel, amount, ORANGE_COLOR);
+      if (!isPickup && !isDelivered && !isFreeDeliveryCouponApplied) {
+        showDeliveryNote = true;
+      }
+    };
+
     if (hasCreditPaid) {
       pushPaymentRow('Credit Balance Used', creditPaidNum, GREEN_COLOR);
 
       if (remainingAfterCredit > 0.01) {
-        if (isPaid) {
-          if (isCardPayment) {
-            pushPaymentRow(
+        if (isPaid && isCardPayment) {
+          pushPaymentRow(
             'Online Transferred Amount',
             remainingAfterCredit,
             GREEN_COLOR,
           );
         } else {
-          pushPaymentRow(cashLabel, remainingAfterCredit, ORANGE_COLOR);
-        }
-      } else if (isPickup) {
-        pushPaymentRow(
-          'Cash On Pickup',
-          remainingAfterCredit,
-          ORANGE_COLOR,
-        );
-      } else {
-        pushPaymentRow(
-          cashLabel,
-          remainingAfterCredit,
-          ORANGE_COLOR,
-        );
-        if (!isFreeDeliveryCouponApplied) {
-          showDeliveryNote = true;
+          pushCashRow(remainingAfterCredit);
         }
       }
-    }
-  } else {
-      if (isPaid) {
-        if (isCardPayment) {
-          pushPaymentRow(
-            'Online Transferred Amount',
-            finalGrandTotal,
-            GREEN_COLOR,
-          );
-        } else {
-          pushPaymentRow(cashLabel, finalGrandTotal, ORANGE_COLOR);
-        } 
-      } else if (isPickup) {
+    } else {
+      if (isPaid && isCardPayment) {
         pushPaymentRow(
-          'Cash On Pickup',
+          'Online Transferred Amount',
           finalGrandTotal,
-          ORANGE_COLOR,
+          GREEN_COLOR,
         );
       } else {
-        pushPaymentRow(
-          cashLabel,
-          finalGrandTotal,
-          ORANGE_COLOR,
-        );
-        if (!isFreeDeliveryCouponApplied) {
-          showDeliveryNote = true;
-        }
+        pushCashRow(finalGrandTotal);
       }
     }
 

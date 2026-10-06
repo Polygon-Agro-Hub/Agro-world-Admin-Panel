@@ -209,30 +209,71 @@ export class CreateSalesAgentsComponent implements OnInit {
     fileInput?.click();
   }
 
-  onFileSelected(event: any): void {
-    const file: File = event.target.files[0];
-    if (file) {
-      if (file.size > 5000000) {
-        Swal.fire('Error', 'File size should not exceed 5MB', 'error');
-        return;
-      }
-
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-      if (!allowedTypes.includes(file.type)) {
-        Swal.fire('Error', 'Only JPEG, JPG and PNG files are allowed', 'error');
-        return;
-      }
-
-      this.selectedFile = file;
-      this.personalData.image = file;
-      this.selectedFileName = file.name;
-
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.selectedImage = e.target.result;
-      };
-      reader.readAsDataURL(file);
+    validateFile(file: File): boolean {
+    if (file.size > 3145728) {
+      Swal.fire({
+        title: 'Error',
+        text: 'File size should not exceed 3MB',
+        icon: 'error',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+      return false;
     }
+
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+    const allowedExtensions = ['jpg', 'jpeg', 'png'];
+
+    const fileExtension = file.name.split('.').pop()?.toLowerCase() || '';
+    const isValidType = allowedTypes.includes(file.type);
+    const isValidExtension = allowedExtensions.includes(fileExtension);
+
+    if (!isValidType || !isValidExtension) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid File Format',
+        html: `<div class="text-left">
+               <p class="mb-2">"<b>${file.name}</b>" is not a supported file type.</p>
+               <p>Only <b>PNG</b>, <b>JPG</b>, and <b>JPEG</b> files are allowed.</p>
+             </div>`,
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+          htmlContainer: 'text-left',
+        },
+      });
+      return false;
+    }
+
+    return true;
+  }
+
+  onFileSelected(event: any): void {
+    const input = event.target as HTMLInputElement;
+    const file: File | undefined = input.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    if (!this.validateFile(file)) {
+      // Reset the input so the same file can be re-selected later
+      input.value = '';
+      return;
+    }
+
+    this.selectedFile = file;
+    this.personalData.image = file;
+    this.selectedFileName = file.name;
+
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      this.selectedImage = e.target.result;
+    };
+    reader.readAsDataURL(file);
   }
 
   updateEmployeeType(selectedType: string): void {

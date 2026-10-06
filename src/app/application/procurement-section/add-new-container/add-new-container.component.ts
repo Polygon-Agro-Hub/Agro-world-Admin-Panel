@@ -260,4 +260,19 @@ export class AddNewContainerComponent implements OnInit {
   private showMessage(icon: 'success' | 'error', title: string, text: string) {
     return Swal.fire({ icon, title, text, confirmButtonColor: '#3980C0' });
   }
+
+    // Capitalizes the first letter of the label as the user types / pastes
+  onLabelInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+
+    if (value && value.charAt(0) !== value.charAt(0).toUpperCase()) {
+      const start = input.selectionStart;
+      const end = input.selectionEnd;
+      input.value = value.charAt(0).toUpperCase() + value.slice(1);
+      input.setSelectionRange(start, end); // keep the caret where it was
+    }
+
+    this.containerData.labelName = input.value;
+  }
 }

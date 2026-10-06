@@ -42,10 +42,8 @@
             <label class="block text-[15px] font-medium text-[#534E4E] dark:text-white mb-1.5">
                 Description (in English)
             </label>
-            <p
-                class="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg font-normal text-[15px] text-[#000000] bg-[#ffffff] dark:bg-gray-800 dark:text-white leading-relaxed whitespace-pre-wrap">
-                {{ variety.descriptionEn || '—' }}
-            </p>
+            <textarea readonly rows="4" [value]="variety.descriptionEn || '—'"
+    class="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-[15px] font-normal text-[#000000] bg-[#ffffff] dark:bg-gray-800 dark:text-white leading-relaxed resize-none focus:outline-none cursor-default"></textarea>
         </div>
     </div>
 
@@ -66,10 +64,8 @@
             <label class="block text-[15px] font-medium text-[#534E4E] dark:text-white mb-1.5">
                 Description (in Sinhala)
             </label>
-            <p
-                class="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-[15px] font-normal text-[#000000] bg-[#ffffff] dark:bg-gray-800 dark:text-white leading-relaxed whitespace-pre-wrap">
-                {{ variety.descriptionSi || '—' }}
-            </p>
+            <textarea readonly rows="4" [value]="variety.descriptionSi || '—'"
+    class="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-[15px] font-normal text-[#000000] bg-[#ffffff] dark:bg-gray-800 dark:text-white leading-relaxed resize-none focus:outline-none cursor-default"></textarea>
         </div>
     </div>
 
@@ -90,10 +86,8 @@
             <label class="block text-[15px] font-medium text-[#534E4E] dark:text-white mb-1.5">
                 Description (in Tamil)
             </label>
-            <p
-                class="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-[15px] text-[#000000] bg-[#ffffff] font-normal dark:bg-gray-800 dark:text-white leading-relaxed whitespace-pre-wrap">
-                {{ variety.descriptionTa || '—' }}
-            </p>
+            <textarea readonly rows="4" [value]="variety.descriptionTa || '—'"
+    class="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-[15px] font-normal text-[#000000] bg-[#ffffff] dark:bg-gray-800 dark:text-white leading-relaxed resize-none focus:outline-none cursor-default"></textarea>
         </div>
     </div>
 </div>

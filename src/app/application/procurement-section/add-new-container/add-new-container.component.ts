@@ -283,10 +283,10 @@ export class AddNewContainerComponent implements OnInit {
     this.containerData.labelName = input.value;
   }
 
-    // "sack bag" -> "Sack Bag"
+    // "50l sack" -> "50L Sack"
   private capitalizeWords(value: string): string {
     return value
-      ? value.replace(/(^|\s)(\S)/g, (_m, space, char) => space + char.toUpperCase())
+      ? value.replace(/(^|[\s\d])(\p{L})/gu, (_m, prev, char) => prev + char.toUpperCase())
       : value;
   }
 }

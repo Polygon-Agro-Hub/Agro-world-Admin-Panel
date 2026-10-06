@@ -16,9 +16,9 @@
   </button>
 </div>
 
-<div class="overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
+<div class="w-full min-w-0 max-w-full overflow-x-hidden">
   <div
-    class="min-w-max bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg py-5 px-8"
+    class="w-full min-w-0 max-w-full overflow-hidden rounded-lg bg-tileLight px-8 py-5 shadow-lg dark:bg-tileBlack"
   >
     <div class="flex items-center justify-between mb-2">
       <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
@@ -99,82 +99,100 @@
         class="w-20 h-20 mx-auto"
       />
     </div>
-    <div *ngIf="hasData">
+    <div
+      *ngIf="hasData"
+      class="relative isolate h-[60vh] max-h-[60vh] w-full min-w-0 max-w-full overflow-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
+    >
       <table
-        class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap gap-4 px-6" 
+        class="w-max min-w-[1800px] table-fixed border-separate border-spacing-0 whitespace-nowrap"
       >
+        <colgroup>
+          <col style="width: 80px" />
+          <col style="width: 220px" />
+          <col style="width: 280px" />
+          <col style="width: 180px" />
+          <col style="width: 150px" />
+          <col style="width: 150px" />
+          <col style="width: 130px" />
+          <col style="width: 160px" />
+          <col style="width: 180px" />
+          <col style="width: 150px" />
+          <col style="width: 150px" />
+        </colgroup>
         <thead>
           <tr>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="sticky left-0 top-0 z-50 box-border w-[80px] min-w-[80px] max-w-[80px] bg-tileLight px-4 py-3 font-normal text-textLight dark:bg-tileBlack dark:text-textDark text-left shadow-[2px_0_0_0_#ffffff] dark:shadow-[2px_0_0_0_#272F45]"
             >
               No
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="sticky left-[80px] top-0 z-50 box-border w-[220px] min-w-[220px] max-w-[220px] bg-tileLight px-4 py-3 font-normal text-textLight dark:bg-tileBlack dark:text-textDark text-left shadow-[2px_0_0_0_#ffffff] dark:shadow-[2px_0_0_0_#272F45]"
             >
               Certificate Number
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="sticky left-[300px] top-0 z-50 box-border w-[280px] min-w-[280px] max-w-[280px] bg-tileLight px-4 py-3 font-normal text-textLight dark:bg-tileBlack dark:text-textDark text-left shadow-[2px_0_0_0_#ffffff] dark:shadow-[2px_0_0_0_#272F45]"
             >
               Certificate Name
             </th>
 
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="sticky top-0 z-40 bg-tileLight px-4 py-3 font-normal text-textLight dark:bg-tileBlack dark:text-textDark text-left"
             >
               Company
             </th>
 
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="sticky top-0 z-40 bg-tileLight px-4 py-3 font-normal text-textLight dark:bg-tileBlack dark:text-textDark text-center"
             >
               Commission
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="sticky top-0 z-40 bg-tileLight px-4 py-3 font-normal text-textLight dark:bg-tileBlack dark:text-textDark text-center"
             >
               Service Areas
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="sticky top-0 z-40 bg-tileLight px-4 py-3 font-normal text-textLight dark:bg-tileBlack dark:text-textDark text-center"
             >
               Questions
             </th>
             <th *ngIf="permissionService.hasPermission('View all questionnaire') || tokenService.getUserDetails().role === '1'" 
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="sticky top-0 z-40 bg-tileLight px-4 py-3 font-normal text-textLight dark:bg-tileBlack dark:text-textDark text-center"
             >
               Questionnaire
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="sticky top-0 z-40 bg-tileLight px-4 py-3 font-normal text-textLight dark:bg-tileBlack dark:text-textDark text-left"
             >
               Last Modified By
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="sticky top-0 z-40 bg-tileLight px-4 py-3 font-normal text-textLight dark:bg-tileBlack dark:text-textDark text-left"
             >
               Last Modified On
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="sticky top-0 z-40 bg-tileLight px-4 py-3 font-normal text-textLight dark:bg-tileBlack dark:text-textDark text-left"
             ></th>
           </tr>
         </thead>
-        <tbody>
+        <tbody
+          class="[&>tr>td]:border-b [&>tr>td]:border-gray-200 dark:[&>tr>td]:border-[#4B555A]"
+        >
           <tr
             *ngFor="let item of certificateArr; let i = index"
             class="border-b border-gray-200 dark:border-[#4B555A]"
           >
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+            <td class="sticky left-0 z-40 box-border w-[80px] min-w-[80px] max-w-[80px] border-b border-gray-200 bg-tileLight px-4 py-3 text-left text-textLight dark:border-[#4B555A] dark:bg-tileBlack dark:text-textDark shadow-[2px_0_0_0_#ffffff] dark:shadow-[2px_0_0_0_#272F45]">
               {{ i + 1 | number : "2.0" }}
             </td>
 
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+            <td class="sticky left-[80px] z-40 box-border w-[220px] min-w-[220px] max-w-[220px] border-b border-gray-200 bg-tileLight px-4 py-3 text-left text-textLight dark:border-[#4B555A] dark:bg-tileBlack dark:text-textDark shadow-[2px_0_0_0_#ffffff] dark:shadow-[2px_0_0_0_#272F45]">
               {{ item.srtNumber }}
             </td>
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+            <td class="sticky left-[300px] z-40 box-border w-[280px] min-w-[280px] max-w-[280px] border-b border-gray-200 bg-tileLight px-4 py-3 text-left text-textLight dark:border-[#4B555A] dark:bg-tileBlack dark:text-textDark shadow-[2px_0_0_0_#ffffff] dark:shadow-[2px_0_0_0_#272F45]">
               {{ item.srtName }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">

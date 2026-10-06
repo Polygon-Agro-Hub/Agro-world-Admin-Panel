@@ -57,21 +57,26 @@
 
 <div class="h-[20px]"></div>
 
-<div class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg relative overflow-x-auto">
+<div class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg relative">
     <div *ngIf="hasData && citiesArr.length > 0 && centersArr.length > 0">
-        <table class="min-w-full divide-y divide-gray-200 table-auto">
-            <thead>
-                <tr>
-                    <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"></th>
+        <div class="relative isolate h-[60vh] max-h-[60vh] w-full min-w-0 overflow-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+        <table class="min-w-max border-collapse divide-y divide-gray-200 dark:divide-[#4B555A] table-fixed">
+            <colgroup>
+                <col style="width: 240px" />
+                <col *ngFor="let center of centersArr" style="width: 150px" />
+            </colgroup>
+            <thead class="sticky top-0 z-40 bg-white dark:bg-tileBlack">
+                <tr class="bg-white dark:bg-tileBlack">
+                    <th class="sticky left-0 z-50 box-border w-[240px] min-w-[240px] max-w-[240px] bg-white px-4 py-3 font-normal text-textLight dark:bg-tileBlack dark:text-textDark text-left shadow-[2px_0_0_0_#ffffff] dark:shadow-[2px_0_0_0_#272F45]"></th>
                     <th *ngFor="let center of centersArr"
                         class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">
                         {{ center.regCode }}
                     </th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="divide-y divide-gray-300 dark:divide-[#4B555A]">
                 <tr *ngFor="let city of citiesArr">
-                    <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+                    <td class="sticky left-0 z-30 box-border w-[240px] min-w-[240px] max-w-[240px] bg-white px-4 py-3 text-left text-textLight dark:bg-tileBlack dark:text-textDark whitespace-nowrap shadow-[2px_0_0_0_#ffffff] dark:shadow-[2px_0_0_0_#272F45]">
                         {{ city.city }}
                     </td>
                     <td *ngFor="let center of centersArr" class="px-4 py-3 text-center">
@@ -87,6 +92,7 @@
                 </tr>
             </tbody>
         </table>
+        </div>
     </div>
 
     <div *ngIf="!selectDistrict || !selectProvince || !hasData"

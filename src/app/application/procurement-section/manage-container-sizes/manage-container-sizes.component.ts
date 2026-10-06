@@ -23,7 +23,7 @@ interface ContainerSize {
   weight: number;
   modifyBy: string;
   modifyByName?: string;
-  modifyAt: string;
+  modifyAt: Date;
 }
 
 @Component({

@@ -268,17 +268,25 @@ export class AddNewContainerComponent implements OnInit {
   }
 
   // Capitalizes the first letter of the label as the user types / pastes
+    // Capitalizes the first letter of every word as the user types / pastes
   onLabelInput(event: Event): void {
     const input = event.target as HTMLInputElement;
-    const value = input.value;
+    const capitalized = this.capitalizeWords(input.value);
 
-    if (value && value.charAt(0) !== value.charAt(0).toUpperCase()) {
+    if (capitalized !== input.value) {
       const start = input.selectionStart;
       const end = input.selectionEnd;
-      input.value = value.charAt(0).toUpperCase() + value.slice(1);
+      input.value = capitalized;
       input.setSelectionRange(start, end); // keep the caret where it was
     }
 
     this.containerData.labelName = input.value;
+  }
+
+    // "sack bag" -> "Sack Bag"
+  private capitalizeWords(value: string): string {
+    return value
+      ? value.replace(/(^|\s)(\S)/g, (_m, space, char) => space + char.toUpperCase())
+      : value;
   }
 }

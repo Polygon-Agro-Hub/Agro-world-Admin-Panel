@@ -82,3 +82,10 @@
     </div>
   </ng-template>
 </section>
+
+  <ng-template #emptyState>
+    <div *ngIf="!isLoading" class="flex flex-col items-center w-full px-10 py-10 dark:text-textDark">
+      <p class="text-[#494949] my-6 dark:text-textDark">There is no added crate sizes yet.</p>
+      <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+    </div>
+  </ng-template>

@@ -18,11 +18,12 @@ import { PermissionService } from '../../../services/roles-permission/permission
 
 interface ContainerSize {
   id: number;
+  createIndex?: number;
   labelName: string;
   weight: number;
   modifyBy: string;
   modifyByName?: string;
-  modifyAt: string;
+  modifyAt: Date;
 }
 
 @Component({
@@ -55,8 +56,8 @@ export class ManageContainerSizesComponent implements OnInit {
     this.loadContainers();
   }
 
-  loadContainers(): void {
-    this.isLoading = true;
+  loadContainers(silent = false): void {
+    if (!silent) this.isLoading = true;
     this.procementsService.getManageContainerSizes().subscribe({
       next: (data) => {
         this.containerSizes = (data?.data ?? []).map(
@@ -96,13 +97,34 @@ export class ManageContainerSizesComponent implements OnInit {
     this.router.navigate(['/procurement/edit-container', id]);
   }
 
-  // Local reorder only (not saved until you add a sortOrder column)
   drop(event: CdkDragDrop<ContainerSize[]>): void {
+    if (event.previousIndex === event.currentIndex) return;
+
+    const previousOrder = [...this.containerSizes];
+
     moveItemInArray(
       this.containerSizes,
       event.previousIndex,
       event.currentIndex,
     );
+
+    const orderedIds = this.containerSizes.map((container) => container.id);
+
+    this.procementsService.reorderContainerSizes(orderedIds).subscribe({
+      next: () => {
+        this.loadContainers(true);
+      },
+      error: (error) => {
+        console.error(error);
+        this.containerSizes = previousOrder;
+        Swal.fire({
+          icon: 'error',
+          title: 'Reorder failed',
+          text: error?.error?.message || 'Unable to save the new order.',
+          confirmButtonColor: '#3980C0',
+        });
+      },
+    });
   }
 
   deleteContainer(id: number): void {

@@ -6,6 +6,8 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
 import { FinanceService } from '../../../services/finance/finance.service';
 import Swal from 'sweetalert2';
 import { FormsModule } from '@angular/forms';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-govi-shop-view-document',
@@ -47,6 +49,9 @@ export class GoviShopViewDocumentComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private financeService: FinanceService,
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
+
   ) {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
@@ -251,7 +256,7 @@ export class GoviShopViewDocumentComponent implements OnInit {
     //     cancelButton: 'px-6 py-2 rounded-md',
     //   },
     //   reverseButtons: true,
-      
+
     // }).then((result) => {
     //   if (result.isConfirmed) {
     //     this.isRejectPopUp = true;
@@ -267,7 +272,7 @@ export class GoviShopViewDocumentComponent implements OnInit {
     if (!this.text) {
       return;
     }
-    
+
     this.isRejectPopUp = false;
     this.isLoading = true;
     this.financeService
@@ -288,7 +293,7 @@ export class GoviShopViewDocumentComponent implements OnInit {
                 confirmButton: 'px-6 py-2 rounded-md',
                 cancelButton: 'px-6 py-2 rounded-md',
               },
-              
+
             }).then(() => {
               this.router.navigate([
                 '/finance/action/finance-govishop/view-action',

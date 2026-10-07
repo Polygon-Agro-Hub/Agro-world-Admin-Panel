@@ -33,23 +33,26 @@
       </div>
     </div>
 
-    <div *ngIf="hasData" class="overflow-x-auto">
+    <div
+      *ngIf="hasData"
+      class="overflow-auto max-h-[60vh] scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
+    >
       <table class="w-[75%] divide-y divide-gray-200 dark:divide-[#4B555A] table-auto">
         <thead>
           <tr>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th class="sticky top-0 z-20 bg-tileLight dark:bg-tileBlack px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               No
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th class="sticky top-0 z-20 bg-tileLight dark:bg-tileBlack px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               Preview
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+            <th class="sticky top-0 z-20 bg-tileLight dark:bg-tileBlack px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
               Variety
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">
+            <th class="sticky top-0 z-20 bg-tileLight dark:bg-tileBlack px-4 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">
               Last Modified By
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th class="sticky top-0 z-20 bg-tileLight dark:bg-tileBlack px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               Last Modified At
             </th>
           </tr>

@@ -7,6 +7,13 @@ import { TokenService } from '../../../services/token/services/token.service';
 import { Router } from '@angular/router';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
 
+type PopupKey =
+  | 'popupVisibleCollectionCenter'
+  | 'popupVisibleComplains'
+  | 'popupVisibleMarketPrice'
+  | 'popupVisibleCompanys'
+  | 'popupVisibleAG';
+
 @Component({
   selector: 'app-collection-hub',
   standalone: true,
@@ -27,49 +34,38 @@ export class CollectionHubComponent {
     private http: HttpClient,
     public tokenService: TokenService,
     private router: Router,
-    public permissionService: PermissionService
-  ) { }
+    public permissionService: PermissionService,
+  ) {}
 
-  togglePopupCollectionCenter() {
-    this.popupVisibleCollectionCenter = !this.popupVisibleCollectionCenter;
+  // Toggles the given popup and closes all the others
+  private togglePopup(key: PopupKey): void {
+    const wasOpen = this[key];
+    this.popupVisibleCollectionCenter = false;
+    this.popupVisibleComplains = false;
     this.popupVisibleMarketPrice = false;
     this.popupVisibleCompanys = false;
     this.popupVisibleAG = false;
-    if ((this.popupVisibleComplains = true)) {
-      this.popupVisibleComplains = !this.popupVisibleComplains;
-    }
+    this[key] = !wasOpen;
+  }
+
+  togglePopupCollectionCenter() {
+    this.togglePopup('popupVisibleCollectionCenter');
   }
 
   togglePopupCompanys() {
-    this.popupVisibleCompanys = !this.popupVisibleCompanys;
-    this.popupVisibleMarketPrice = false;
-    this.popupVisibleCollectionCenter = false;
-    this.popupVisibleAG = false;
+    this.togglePopup('popupVisibleCompanys');
   }
 
   togglePopupComplains() {
-    this.popupVisibleComplains = !this.popupVisibleComplains;
-    this.popupVisibleMarketPrice = false;
-    this.popupVisibleCompanys = false;
-    this.popupVisibleAG = false;
-    if ((this.popupVisibleCollectionCenter = true)) {
-      this.popupVisibleCollectionCenter = !this.popupVisibleCollectionCenter;
-    }
+    this.togglePopup('popupVisibleComplains');
   }
 
   togglePopupMarketPrice() {
-    this.popupVisibleMarketPrice = !this.popupVisibleMarketPrice;
-    this.popupVisibleCompanys = false;
-    this.popupVisibleComplains = false;
-    this.popupVisibleCollectionCenter = false;
-    this.popupVisibleAG = false;
+    this.togglePopup('popupVisibleMarketPrice');
   }
 
   togglePopupAG() {
-    this.popupVisibleAG = !this.popupVisibleAG;
-    this.popupVisibleCollectionCenter = false;
-    this.popupVisibleMarketPrice = false;
-    this.popupVisibleCompanys = false;
+    this.togglePopup('popupVisibleAG');
   }
 
   downloadTemplate1() {

@@ -139,12 +139,12 @@ export class CustomerOrdersComponent implements OnInit {
   getPaymentStatusClass(paymentMethod: string, isPaid: number): string {
     if (isPaid === 1) {
       if (paymentMethod?.toLowerCase() === 'card') {
-        return 'bg-[#BBFFC6] text-[#308233] rounded-xl px-7 py-2';
+        return 'bg-[#BBFFC6] text-[#308233] rounded-xl w-[84px] h-8 inline-flex items-center justify-center';
       } else if (paymentMethod?.toLowerCase() === 'cash') {
-        return 'bg-[#F5FF85] text-[#878216] rounded-xl px-5 py-2';
+        return 'bg-[#F5FF85] text-[#878216] rounded-xl w-[84px] h-8 inline-flex items-center justify-center';
       }
     }
-    return 'bg-[#DFDFDF] text-[#5C5C5C] rounded-xl px-4 py-2';
+    return 'bg-[#DFDFDF] text-[#5C5C5C] rounded-xl w-[84px] h-8 inline-flex items-center justify-center';
   }
 
   getPaymentStatusText(paymentMethod: string, isPaid: number): string {

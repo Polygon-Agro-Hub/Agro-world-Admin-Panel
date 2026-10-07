@@ -6,6 +6,8 @@ import { CalendarModule } from 'primeng/calendar';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 import { FinanceService } from '../../../../services/finance/finance.service'; // adjust path/name as needed
+import { TokenService } from '../../../../services/token/services/token.service';
+import { PermissionService } from '../../../../services/roles-permission/permission.service';
 
 interface CompletedOrder {
   invoiceNo: string;
@@ -62,6 +64,9 @@ export class CompletedViewAllOdersComponent {
   constructor(
     private router: Router,
     private financeService: FinanceService,
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
+
   ) {
     // "From" can never be today or later — cap it at yesterday
     const yesterday = new Date();

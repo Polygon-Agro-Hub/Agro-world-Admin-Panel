@@ -28,28 +28,30 @@
       </div>
 
       <!-- To Date -->
-      <div class="flex items-center gap-2 w-full">
-        <label for="toDate" class="text-sm font-medium text-gray-700 dark:text-textDark whitespace-nowrap">To:</label>
-        <p-calendar id="toDate" [(ngModel)]="toDate" placeholder="YYYY/MM/DD" [showIcon]="true" [showClear]="true"
-          [showButtonBar]="true" [minDate]="fromDate || minToDate" [maxDate]="maxDate" iconDisplay="input"
-          [style]="{ width: '20rem', height: '2.5rem' }" [disabled]="!fromDate" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
-                 [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
-                 [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
-                 [&_.p-datepicker-header]:dark:bg-[#2d354d] 
-                 [&_.p-datepicker-header]:dark:text-white
-                 [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
-                 [&_.p-button:hover]:dark:bg-[#6b7280]"
-          inputStyleClass="p-2 border cursor-pointer rounded-lg bg-white dark:bg-[#272F45] text-textLight dark:text-textDark w-full h-10 pr-12"
-          [ngClass]="{ 'opacity-50 cursor-not-allowed': !fromDate }" (onClear)="onToDateClear()" />
-      </div>
+      <!-- To Date -->
+<div class="flex items-center gap-2 w-full">
+  <label for="toDate" class="text-sm font-medium text-gray-700 dark:text-textDark whitespace-nowrap">To:</label>
+  <p-calendar id="toDate" [(ngModel)]="toDate" placeholder="YYYY/MM/DD" [showIcon]="true" [showClear]="true"
+    [showButtonBar]="true" [minDate]="fromDate || minToDate" [maxDate]="maxDate" iconDisplay="input"
+    [style]="{ width: '20rem', height: '2.5rem' }" [disabled]="!fromDate" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+           [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+           [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+           [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+           [&_.p-datepicker-header]:dark:text-white
+           [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+           [&_.p-button:hover]:dark:bg-[#6b7280]"
+    inputStyleClass="p-2 border cursor-pointer rounded-lg bg-white dark:bg-[#272F45] text-textLight dark:text-textDark w-full h-10 pr-12"
+    [ngClass]="{ 'opacity-50 cursor-not-allowed': !fromDate }"
+    (ngModelChange)="onToDateModelChange($event)"
+    (onClear)="onToDateClear()" />
+</div>
     </div>
 
     <!-- Go Button -->
     <div class="flex justify-end w-1/4 ml-20">
-      <button (click)="fetchAllCollectionReport()" [disabled]="!fromDate" [class.opacity-50]="!fromDate"
-        [class.cursor-not-allowed]="!fromDate"
-        class="bg-[#3980C0] text-white px-6 py-2 rounded-md hover:bg-blue-600 h-10 transition-all duration-200"
-        [class.hover:bg-[#3980C0]]="!fromDate">
+      <button (click)="fetchAllCollectionReport()" [disabled]="!isDateRangeSelected"
+        [class.opacity-50]="!isDateRangeSelected" [class.cursor-not-allowed]="!isDateRangeSelected"
+        class="bg-[#3980C0] text-white px-6 py-2 rounded-md hover:bg-blue-600 h-10 transition-all duration-200">
         Go
       </button>
     </div>
@@ -60,8 +62,8 @@
     <div class="h-10"></div>
 
     <div class="pt-5 pr-12 pl-12 pb-5 w-full bg-white dark:bg-tileBlack shadow-lg rounded-lg">
-      <!-- Header Section - Only show when a date is selected or there's data -->
-      <div *ngIf="isFromDateSelected || hasData">
+      <!-- Header Section - Only show when BOTH dates are selected -->
+      <div *ngIf="isDateRangeSelected">
         <!-- Download Button - Only show when there's data -->
         <div *ngIf="hasData" class="flex justify-between items-center mb-5">
           <button class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
@@ -74,7 +76,7 @@
           </button>
         </div>
 
-        <!-- Filters Section - Show when a date is selected or there's data -->
+        <!-- Filters Section -->
         <div class="flex justify-between items-center mb-8">
           <div class="flex items-center">
             <h2 class="text-2xl font-normal text-gray-500 dark:text-textDark">
@@ -92,7 +94,7 @@
             <div class="mx-6">
               <p-dropdown
                 styleClass="border border-2 rounded-xl items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] h-10"
-                [options]="centers" optionLabel="centerName" [(ngModel)]="selectedCenter" [showClear]="true"
+                [options]="centers" optionLabel="displayName" [(ngModel)]="selectedCenter" [showClear]="true"
                 placeholder="Centre" (onChange)="applyFiltersCrop()" />
             </div>
 
@@ -121,7 +123,7 @@
         </div>
       </div>
 
-      <!-- Data Table Section - Only show when there's data -->
+      <!-- Data Table Section - Only show when both dates are selected and there's data -->
       <div *ngIf="hasData">
         <table class="min-w-full divide-y divide-gray-200 table-auto">
           <thead>
@@ -208,10 +210,10 @@
         </div>
       </div>
 
-      <!-- No Data Section - Show when there's no data and not loading AND no date is selected OR when search returns no results -->
-      <div *ngIf="(!hasData && !isLoading)" class="flex flex-col items-center justify-center w-full py-16">
+      <!-- No Data Section -->
+      <div *ngIf="!hasData && !isLoading" class="flex flex-col items-center justify-center w-full py-16">
         <p class="text-[#494949] my-6 dark:text-textDark text-lg">
-          -- No Data Available --
+          {{ isDateRangeSelected ? '-- No Data Available --' : '-- Please select both From and To dates --' }}
         </p>
         <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
       </div>

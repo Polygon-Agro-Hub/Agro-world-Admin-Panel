@@ -29,6 +29,8 @@ export class AddNewContainerComponent implements OnInit {
   attemptedSubmit = false;
   weightError = '';
 
+  private readonly MAX_LABEL_LENGTH = 8;
+
   private readonly MAX_DECIMALS = 2;
 
   constructor(
@@ -52,20 +54,21 @@ export class AddNewContainerComponent implements OnInit {
     this.procumentService.getCrateById(this.itemId!).subscribe({
       next: (res) => {
         this.containerData = {
-          labelName: res.data.labelName,
+          labelName: (res.data.labelName ?? '')
+            .toString()
+            .slice(0, this.MAX_LABEL_LENGTH),
           weight: this.formatWeight(res.data.weight),
         };
         this.weightError = '';
         this.isLoading = false;
       },
-      error: (err) => {
+      error: () => {
         this.isLoading = false;
         this.showMessage(
           'error',
           'Error',
-          err?.error?.error || 'Failed to load container',
-        );
-        this.back();
+          'Failed to load container. Please try again.',
+        ).then(() => this.back());
       },
     });
   }
@@ -101,8 +104,8 @@ export class AddNewContainerComponent implements OnInit {
     const num = Number(value);
     const decimalPart = value.split('.')[1] ?? '';
 
-    if (isNaN(num) || num <= 0) {
-      this.weightError = 'Weight must be a number greater than 0.';
+    if (isNaN(num) || num < 0) {
+      this.weightError = 'Weight must be a valid number (0 or greater).';
     } else if (decimalPart.length > this.MAX_DECIMALS) {
       this.weightError = 'Weight can have up to 2 decimal places only.';
     } else {
@@ -197,6 +200,7 @@ export class AddNewContainerComponent implements OnInit {
   // ---------- Actions ----------
   onSubmit(): void {
     this.attemptedSubmit = true;
+    this.touched['weight'] = true;
     this.validateWeight();
 
     if (
@@ -207,8 +211,12 @@ export class AddNewContainerComponent implements OnInit {
       return;
     }
 
-    const labelName = this.containerData.labelName.trim();
-    const weight = Number(Number(this.containerData.weight).toFixed(2));
+    const labelName = this.containerData.labelName
+      .trim()
+      .slice(0, this.MAX_LABEL_LENGTH);
+    const weight = Number(
+      Number(this.containerData.weight).toFixed(this.MAX_DECIMALS),
+    );
 
     this.isLoading = true;
 
@@ -217,24 +225,31 @@ export class AddNewContainerComponent implements OnInit {
       : this.procumentService.createCrate(labelName, weight);
 
     request$.subscribe({
-      next: (res) => {
+      next: () => {
         this.isLoading = false;
         this.showMessage(
           'success',
           'Success',
-          res?.message ||
-            (this.isEditMode
-              ? 'Container updated successfully'
-              : 'Container created successfully'),
+          this.isEditMode
+            ? 'Container updated successfully'
+            : 'Container created successfully',
         ).then(() => this.back());
       },
       error: (err) => {
         this.isLoading = false;
-        this.showMessage(
-          'error',
-          err?.status === 409 ? 'Duplicate Label' : 'Error',
-          err?.error?.error || 'Something went wrong',
-        );
+        if (err?.status === 409) {
+          this.showMessage(
+            'error',
+            'Duplicate Label',
+            'A container with this label already exists.',
+          );
+        } else {
+          this.showMessage(
+            'error',
+            'Error',
+            'Something went wrong. Please try again.',
+          );
+        }
       },
     });
   }
@@ -250,5 +265,28 @@ export class AddNewContainerComponent implements OnInit {
   // ---------- Alerts (swap for your own toast/alert service) ----------
   private showMessage(icon: 'success' | 'error', title: string, text: string) {
     return Swal.fire({ icon, title, text, confirmButtonColor: '#3980C0' });
+  }
+
+  // Capitalizes the first letter of the label as the user types / pastes
+    // Capitalizes the first letter of every word as the user types / pastes
+  onLabelInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const capitalized = this.capitalizeWords(input.value);
+
+    if (capitalized !== input.value) {
+      const start = input.selectionStart;
+      const end = input.selectionEnd;
+      input.value = capitalized;
+      input.setSelectionRange(start, end); // keep the caret where it was
+    }
+
+    this.containerData.labelName = input.value;
+  }
+
+    // "50l sack" -> "50L Sack"
+  private capitalizeWords(value: string): string {
+    return value
+      ? value.replace(/(^|[\s\d])(\p{L})/gu, (_m, prev, char) => prev + char.toUpperCase())
+      : value;
   }
 }

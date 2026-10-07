@@ -79,16 +79,16 @@
                 {{ crop.cropName }}
               </td>
               <td class="px-6 py-3 border-[2px] dark:text-textDark">
-                {{ crop.qtyA ? crop.qtyA + "kg" : "-" }}
+                {{ +crop.qtyA ? (+crop.qtyA | number: '1.0-3') + "kg" : "-" }}
               </td>
               <td class="px-6 py-3 border-[2px] dark:text-textDark">
-                {{ crop.qtyB ? crop.qtyB + "kg" : "-" }}
+                {{ +crop.qtyB ? (+crop.qtyB | number: '1.0-3') + "kg" : "-" }}
               </td>
               <td class="px-6 py-3 border-[2px] dark:text-textDark">
-                {{ crop.qtyC ? crop.qtyC + "kg" : "-" }}
+                {{ +crop.qtyC ? (+crop.qtyC | number: '1.0-3') + "kg" : "-" }}
               </td>
               <td class="px-6 py-3 border-[2px] dark:text-textDark">
-                {{ crop.qtyA + crop.qtyB + crop.qtyC }}kg
+                {{ (+crop.qtyA || 0) + (+crop.qtyB || 0) + (+crop.qtyC || 0) | number: '1.0-3' }}kg
               </td>
             </tr>
           </tbody>

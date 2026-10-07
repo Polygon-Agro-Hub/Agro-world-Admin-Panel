@@ -40,6 +40,7 @@
       <label for="featureCategory" class="text-textLight dark:text-textDark">Category</label>
       <p-dropdown [(ngModel)]="selectedCategory" [options]="categories" optionLabel="category" optionValue="id"
         (onChange)="onCategoryChange($event)" placeholder="Select a category" [filter]="true" filterBy="category"
+        appendTo="body" panelStyleClass="custom-dropdown-panel"
         styleClass="custom-dropdown w-[300px] border max-h-10 mt-1 p-0 items-center bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
         [style]="{ width: '300px' }">
         <ng-template pTemplate="item" let-category>

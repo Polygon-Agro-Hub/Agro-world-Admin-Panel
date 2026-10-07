@@ -13,8 +13,9 @@
   Add New
 </button>
 
-<div class="w-full">
-  <div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+<div class="w-full min-w-0 max-w-full overflow-x-hidden">
+  <div
+    class="flex max-h-[calc(100vh-140px)] flex-col overflow-hidden pt-5 pr-12 pl-12 pb-5 w-full min-w-0 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex justify-between items-center align-middle mb-8">
       <div class="flex items-center">
         <h2 class="text-2xl font-normal text-[#292929] dark:text-textDark">
@@ -29,9 +30,9 @@
               optionValue="value" [showClear]="true" placeholder="Type" />
           </div>
           <p-calendar id="toDate" [(ngModel)]="date" (onSelect)="dateFilter()" (onClear)="clearDateFilter()"
-            placeholder="Last Defined Date" title="Last Defined Date" [showIcon]="true" [showClear]="true" [showButtonBar]="false"
-            iconDisplay="input" styleClass="calendar-compact dark-calendar" [style]="{ width: '170px' }"
-            panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600
+            placeholder="Last Defined Date" title="Last Defined Date" [showIcon]="true" [showClear]="true"
+            [showButtonBar]="false" iconDisplay="input" styleClass="calendar-compact dark-calendar"
+            [style]="{ width: '170px' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600
               [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568]
               [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
               [&_.p-datepicker-header]:dark:bg-[#2d354d]
@@ -90,14 +91,33 @@
       <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
     </div>
 
-    <div *ngIf="hasFilteredData">
+    <div *ngIf="hasFilteredData" class="min-h-0 min-w-0 flex-1">
       <div *ngIf="hasData"
-        class="overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
-        <table class="min-w-[1400px] divide-y divide-gray-200 table-auto">
-          <thead>
-            <tr>
-              <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">No</th>
-              <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">Package
+        class="isolate h-[calc(100vh-330px)] max-h-[calc(100vh-330px)] w-full min-w-0 overflow-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
+        <table class="min-w-[1400px] border-collapse divide-y divide-gray-200 dark:divide-[#4B555A] table-fixed">
+          <colgroup>
+            <col style="width: 80px" />
+            <col style="width: 240px" />
+            <col style="width: 180px" />
+            <col style="width: 170px" />
+            <col style="width: 170px" />
+            <col style="width: 170px" />
+            <col style="width: 150px" />
+            <col style="width: 170px" />
+            <col style="width: 100px" />
+            <col style="width: 100px" />
+            <col style="width: 180px" />
+            <col style="width: 70px" />
+            <col style="width: 70px" />
+          </colgroup>
+          <thead class="sticky top-0 z-40 bg-white dark:bg-tileBlack">
+            <tr class="bg-white dark:bg-tileBlack">
+              <th
+                class="sticky left-0 z-50 box-border w-[80px] min-w-[80px] max-w-[80px] bg-tileLight px-4 py-3 font-normal text-[#5C5C5C] dark:bg-tileBlack dark:text-textDark text-left whitespace-nowrap">
+                No</th>
+              <th
+                class="sticky left-[80px] z-50 box-border w-[240px] min-w-[240px] max-w-[240px] overflow-hidden bg-tileLight px-4 py-3 font-normal text-[#5C5C5C] dark:bg-tileBlack dark:text-textDark text-left whitespace-nowrap">
+                Package
                 Name</th>
               <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">Total
                 Price (Rs.)</th>
@@ -119,7 +139,7 @@
                 *ngIf="permissionService.hasPermission('View package history') || tokenService.getUserDetails().role === '1'">
                 History
               </th>
-              <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center whitespace-nowrap">
+              <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">
                 Last Defined By
               </th>
               <th class="px-2"></th>
@@ -131,12 +151,17 @@
               </th> -->
             </tr>
           </thead>
-          <tbody>
+          <tbody class="divide-y divide-gray-300 dark:divide-[#4B555A]">
             <ng-container>
               <tr *ngFor="let pkg of filteredPackages; let i = index">
-                <td class="px-4 py-4 text-[#000000] dark:text-textDark">
+                <td
+                  class="sticky left-0 z-30 box-border w-[80px] min-w-[80px] max-w-[80px] bg-tileLight px-4 py-4 text-[#000000] dark:bg-tileBlack dark:text-textDark">
                   {{ i < 9 ? "0" + (i + 1) : i + 1 }} </td>
-                <td class="px-4 py-4 text-[#000000] dark:text-textDark whitespace-nowrap">{{ pkg.displayName }}</td>
+                <td
+                  class="sticky left-[80px] z-30 box-border w-[240px] min-w-[240px] max-w-[240px] overflow-hidden bg-tileLight px-4 py-4 text-[#000000] dark:bg-tileBlack dark:text-textDark text-ellipsis whitespace-nowrap"
+                  [title]="pkg.displayName">
+                  {{ pkg.displayName }}
+                </td>
                 <td class="px-4 py-4 text-[#000000] dark:text-textDark whitespace-nowrap">{{ pkg.total | number :
                   "1.2-2" }}</td>
                 <td class="px-4 py-4 text-[#000000] dark:text-textDark whitespace-nowrap">{{ pkg.packageType }}</td>

@@ -186,6 +186,12 @@ export class AddComplainCategoriesComponent implements OnInit {
     }
   }
 
+  blockNumericInput(event: KeyboardEvent): void {
+    if (/^\d$/.test(event.key)) {
+      event.preventDefault();
+    }
+  }
+
   validateEnglish(): void {
     let value = this.complainObj.categoryEnglish || '';
     value = value.replace(/[^A-Za-z ]+/g, '');

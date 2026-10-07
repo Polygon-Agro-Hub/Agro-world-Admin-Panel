@@ -242,11 +242,14 @@ export class PurchaseReportComponent {
   getAllCenters() {
     this.collectionoOfficer.getAllCenters().subscribe(
       (res) => {
-        this.centers = res;
+        this.centers = res.map((center: Centers) => ({
+          ...center,
+          displayName: `${center.regCode} - ${center.centerName.trim()}`,
+        }));
       },
       (error) => {
         Swal.fire('Error!', 'There was an error fetching centers.', 'error');
-      },
+      }
     );
   }
 
@@ -325,54 +328,44 @@ export class PurchaseReportComponent {
 
   // Helper method to generate the filename
   private generateFileName(): string {
-    const now = new Date();
-    const generatedDate = this.datePipe.transform(now, 'yyyy-MM-dd');
-    const generatedTime = this.datePipe.transform(now, 'hh.mm a');
+    const parts: string[] = [];
 
-    let fileName = 'Purchase Report';
-
-    // Add center code if selected
-    if (this.selectedCenter) {
-      fileName += ` of ${this.selectedCenter.regCode}`;
+    const centerCode = this.getCenterCode();
+    if (centerCode) {
+      parts.push(centerCode);
     }
 
-    // Add date range
+    parts.push('Purchase Report');
+
     if (this.fromDate && this.toDate) {
-      const fromDateFormatted = this.formatDateForFilename(this.fromDate);
-      const toDateFormatted = this.formatDateForFilename(this.toDate);
-      fileName += ` on ${fromDateFormatted} to ${toDateFormatted}`;
+      parts.push(
+        `From ${this.formatDateForFilename(this.fromDate)} To ${this.formatDateForFilename(this.toDate)}`,
+      );
     } else if (this.fromDate) {
-      const fromDateFormatted = this.formatDateForFilename(this.fromDate);
-      fileName += ` on ${fromDateFormatted}`;
+      parts.push(`From ${this.formatDateForFilename(this.fromDate)}`);
     }
 
-    // Add generated timestamp
-    fileName += ` Generated at ${generatedDate} ${generatedTime}`;
+    // Remove characters that are invalid in file names (e.g. / \ : * ? " < > |)
+    const fileName = parts.join(' ').replace(/[\\/:*?"<>|]/g, '-');
 
-    return fileName + '.xlsx';
+    return `${fileName}.xlsx`;
+  }
+
+  private getCenterCode(): string {
+    const selected: any = this.selectedCenter;
+    if (!selected) return '';
+
+    if (typeof selected === 'object') {
+      return selected.regCode || '';
+    }
+
+    const center = this.centers?.find((c) => c.id === selected);
+    return center?.regCode || '';
   }
 
   // Helper method to format date as "04th August"
   private formatDateForFilename(date: Date): string {
-    const day = date.getDate();
-    const month = this.datePipe.transform(date, 'MMMM');
-
-    // Add ordinal suffix to day
-    const getOrdinalSuffix = (day: number): string => {
-      if (day > 3 && day < 21) return 'th';
-      switch (day % 10) {
-        case 1:
-          return 'st';
-        case 2:
-          return 'nd';
-        case 3:
-          return 'rd';
-        default:
-          return 'th';
-      }
-    };
-
-    return `${day}${getOrdinalSuffix(day)} ${month}`;
+    return this.datePipe.transform(date, 'yyyy-MM-dd') || '';
   }
 
   navigateToFamerListReport(id: number, userId: number, QRcode: string) {
@@ -441,6 +434,7 @@ class Centers {
   id!: string;
   centerName!: string;
   regCode!: string;
+  displayName?: string;
 }
 
 interface Months {

@@ -145,11 +145,7 @@
 
         <div class="h-5"></div>
 
-        <div *ngIf="isLoading" class="flex justify-center p-8">
-            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#415CFF]"></div>
-        </div>
-
-        <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6 ">
+        <div *ngIf="!hasData && !isLoading" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6">
             <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
             <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
         </div>

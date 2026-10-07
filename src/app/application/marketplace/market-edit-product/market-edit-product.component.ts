@@ -555,13 +555,21 @@ if (this.productObj.comPrice <= salePriceForComparison) {
     this.productObj.changeby = parseFloat(this.productObj.changeby.toFixed(3));
   }
 
-  validateMaxQuantity() {
+  validateMaxQuantity(event?: Event) {
+    if (event && (event.target as HTMLInputElement).value === '') {
+      return;
+    }
+
     if (this.productObj.maxQuantity <= 0.0) {
       this.productObj.maxQuantity = 0.0;
     }
   }
 
-  validateMinQuantity() {
+  validateMinQuantity(event?: Event) {
+    if (event && (event.target as HTMLInputElement).value === '') {
+      return;
+    }
+
     if (this.productObj.startValue < 0) {
       this.productObj.startValue = 0;
     }
@@ -773,17 +781,6 @@ if (this.productObj.comPrice <= salePriceForComparison) {
 
   // Let the user clear the field to type a new value
   if (rawValue === '') {
-    switch (fieldName) {
-      case 'discountedPrice':
-        this.productObj.discountedPrice = 0;
-        break;
-      case 'normalPrice': this.productObj.normalPrice = 0; break;
-      case 'salePrice': this.productObj.salePrice = 0; break;
-      case 'comPrice': this.productObj.comPrice = 0; break;
-      case 'startValue': this.productObj.startValue = 0; break;
-      case 'changeby': this.productObj.changeby = 0; break;
-      case 'maxQuantity': this.productObj.maxQuantity = 0; break;
-    }
     return;
   }
 

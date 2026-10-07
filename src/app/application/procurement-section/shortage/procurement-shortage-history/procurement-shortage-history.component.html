@@ -31,9 +31,9 @@
         <div class="flex items-center">
           <p-calendar [(ngModel)]="selectedDate" (onSelect)="onDateChange($event)" (onClear)="clearDate()"
             [showIcon]="true" [showButtonBar]="false" dateFormat="dd/mm/yy" placeholder="Select Date"
-            [readonlyInput]="true" [showClear]="true" [maxDate]="maxSelectableDate"
+            [readonlyInput]="true" [showClear]="true" [maxDate]="maxSelectableDate" appendTo="body"
             [style]="{ width: '12rem', height: '2rem' }"
-            inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#FFFFFF] dark:bg-[#272F45]"
+            inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#FFFFFF] dark:bg-[#272F45] dark:text-textDark"
             panelStyleClass="custom-calendar-panel">
             <ng-template pTemplate="clearicon">
               <i class="pi pi-times"></i>
@@ -82,7 +82,6 @@
         </div>
       </div>
 
-      <!-- Assigned Section -->
       <!-- Assigned Section -->
       <div *ngIf="assignedItems.length > 0">
         <h3 class="text-lg font-medium text-[#292929] dark:text-textDark mb-4">

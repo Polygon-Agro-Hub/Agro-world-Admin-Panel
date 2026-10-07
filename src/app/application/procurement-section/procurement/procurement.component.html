@@ -128,8 +128,8 @@
 
       <!-- Pending Load Alerts popup pill -->
       <div *ngIf="istogglePopupLoadMismatchView" (click)="loadmismatch()"
-        class="absolute top-[52px] left-6 flex items-center justify-between bg-white dark:bg-tileBlack shadow-[0_3px_10px_rgb(0,0,0,0.15)] dark:hover:bg-tileHoverDark dark:text-gray-200 rounded-full px-5 py-3 w-[260px] cursor-pointer z-10 hover:bg-tileHoverLight">
-        <span class="text-sm text-[#495057] dark:text-gray-200">Pending Load Alerts</span>
+        class="absolute top-[52px] left-8 flex items-center justify-between bg-[#F6F4F6] dark:bg-tileBlack shadow-[0_3px_10px_rgb(0,0,0,0.15)] dark:hover:bg-tileHoverDark dark:text-gray-200 rounded-2xl px-5 py-2.5 w-[275px] cursor-pointer z-10 hover:bg-tileHoverLight">
+        <span class="text-sm font-inter font-[400] text-[#575459] dark:text-gray-200">Pending Load Alerts</span>
         <span class="flex items-center justify-center bg-black text-white text-xs font-medium rounded-full w-7 h-7">
           {{
           pendingLoadAlertsCount < 10 ? "0" + pendingLoadAlertsCount : pendingLoadAlertsCount }} </span>

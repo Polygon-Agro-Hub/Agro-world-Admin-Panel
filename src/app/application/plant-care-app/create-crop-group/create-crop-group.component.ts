@@ -12,6 +12,7 @@ import { TokenService } from '../../../services/token/services/token.service';
 import { DropdownModule } from 'primeng/dropdown';
 interface NewsItem {
   id: number;
+  displayFor: string; // new
   cropNameEnglish: string;
   cropNameSinhala: string;
   cropNameTamil: string;
@@ -48,6 +49,7 @@ export class CreateCropGroupComponent {
   costFeildDisplay = '';
   incomeFeildDisplay = '';
   imageTouched = false;
+  itemCount: number | null = null; // new
 
   allowOnlyEnglish(event: KeyboardEvent): void {
     const input = event.target as HTMLInputElement;
@@ -159,6 +161,7 @@ export class CreateCropGroupComponent {
         this.cropCalendarService.getCropGroupById(this.itemId).subscribe({
           next: (response: any) => {
             this.newsItems = response.groups;
+            this.itemCount = response.itemCount ?? 0; // new
             this.selectUpdateName = response.groups[0]?.cropNameEnglish;
 
             if (response.groups[0]?.image) {
@@ -567,6 +570,7 @@ export class CreateCropGroupComponent {
     const newsItem = this.newsItems[0];
 
     const formData = new FormData();
+    formData.append('displayFor', newsItem.displayFor || 'Both'); // new
     formData.append('cropNameEnglish', newsItem.cropNameEnglish || '');
     formData.append('cropNameSinhala', newsItem.cropNameSinhala || '');
     formData.append('cropNameTamil', newsItem.cropNameTamil || '');

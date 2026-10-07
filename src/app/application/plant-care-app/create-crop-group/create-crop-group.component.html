@@ -369,6 +369,30 @@
 
     <form #cropForm="ngForm">
       <div class="space-y-4">
+        <!-- Display (only when no marketplace items exist for this crop group) -->
+        <div *ngIf="newsItems.length && itemCount === 0">
+          <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            Display *
+          </label>
+          <div
+            class="mt-2 inline-flex items-center gap-8 px-5 py-2 border border-[#4A90E2] rounded-lg text-gray-700 dark:text-textDark">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="radio" name="displayFor" value="Farmery" [(ngModel)]="newsItems[0].displayFor"
+                class="accent-[#4A90E2]" />
+              Farmery Only
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="radio" name="displayFor" value="Sales" [(ngModel)]="newsItems[0].displayFor"
+                class="accent-[#4A90E2]" />
+              Sales Only
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="radio" name="displayFor" value="Both" [(ngModel)]="newsItems[0].displayFor"
+                class="accent-[#4A90E2]" />
+              Both
+            </label>
+          </div>
+        </div>
         <!-- Crop Name -->
         <div *ngIf="newsItems.length">
           <label for="cropNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">

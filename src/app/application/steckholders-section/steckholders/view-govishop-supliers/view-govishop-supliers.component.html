@@ -266,14 +266,13 @@
           </tr>
         </tbody>
       </table>
-
-      <!-- Pagination Controls -->
-      <div *ngIf="!isLoading && suppliers.length > 0" class="py-4 dark:bg-[#262f45]">
-        <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
-          [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
-          [screenReaderCurrentLabel]="'You\'re on page'">
-        </pagination-controls>
-      </div>
+    </div>
+    <!-- Pagination Controls -->
+    <div *ngIf="!isLoading && suppliers.length > 0" class="dark:bg-[#262f45]">
+      <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
+        [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
+        [screenReaderCurrentLabel]="'You\'re on page'">
+      </pagination-controls>
     </div>
   </div>
 </div>

@@ -129,7 +129,7 @@ export class GoviShopViewActionComponent implements OnInit {
   }
 
   Back(): void {
-    this.router.navigate(['/finance/action']);
+    this.router.navigate(['/finance/action/finance-govishop']);
   }
 
   navigatePath(path: string) {

@@ -100,6 +100,7 @@ export class CreateCropGroupComponent {
   }
 
   cropGroup = {
+    displayFor: 'Both', // new
     cropNameEnglish: '',
     cropNameSinahala: '',
     cropNameTamil: '',
@@ -322,6 +323,7 @@ export class CreateCropGroupComponent {
     this.isLoading = true;
 
     const formData = new FormData();
+    formData.append('displayFor', this.cropGroup.displayFor); // new
     formData.append('cropNameEnglish', this.cropGroup.cropNameEnglish);
     formData.append('cropNameSinhala', this.cropGroup.cropNameSinahala);
     formData.append('cropNameTamil', this.cropGroup.cropNameTamil);
@@ -407,6 +409,7 @@ export class CreateCropGroupComponent {
         this.costFeildDisplay = '';
         this.incomeFeildDisplay = '';
         this.cropGroup = {
+          displayFor: 'Both', // new
           cropNameEnglish: '',
           cropNameSinahala: '',
           cropNameTamil: '',

@@ -1,7 +1,11 @@
 import { CommonModule, Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
+import {
+  SafeResourceUrl,
+  SafeUrl,
+  DomSanitizer,
+} from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
@@ -16,14 +20,14 @@ import { PermissionService } from '../../../../services/roles-permission/permiss
   templateUrl: './view-transaction-document.component.html',
   styleUrl: './view-transaction-document.component.css',
 })
-export class ViewTransactionDocumentComponent implements OnInit {
+export class ViewTransactionDocumentComponent implements OnInit, OnDestroy {
   isLoading = false;
   shopId: number = 0;
 
   transactionDocument!: TransactionDocument;
 
   isModalOpen = false;
-  modalImage = '';
+  modalImage: string | SafeUrl = '';
   modalTitle = '';
   sanitizedUrl: SafeResourceUrl = '';
   scale = 1;
@@ -39,6 +43,7 @@ export class ViewTransactionDocumentComponent implements OnInit {
   textAreaTouched: boolean = false;
 
   isPDF = false;
+  private objectUrl: string | null = null;
 
   constructor(
     private location: Location,
@@ -48,7 +53,6 @@ export class ViewTransactionDocumentComponent implements OnInit {
     private financeService: FinanceService,
     public tokenService: TokenService,
     public permissionService: PermissionService,
-
   ) {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
@@ -62,6 +66,17 @@ export class ViewTransactionDocumentComponent implements OnInit {
     } else {
       console.warn('No shop ID provided');
       this.back();
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.revokeObjectUrl();
+  }
+
+  private revokeObjectUrl(): void {
+    if (this.objectUrl) {
+      URL.revokeObjectURL(this.objectUrl);
+      this.objectUrl = null;
     }
   }
 
@@ -97,19 +112,71 @@ export class ViewTransactionDocumentComponent implements OnInit {
   }
 
   loadCurrentImage(): void {
-    this.modalImage = this.paymentSlipUrl;
     this.modalTitle = 'Payment Slip';
     this.isPDF = this.checkIfPDF(this.paymentSlipUrl);
 
     if (this.isPDF) {
+      this.modalImage = this.paymentSlipUrl;
       this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-        this.modalImage,
+        this.paymentSlipUrl,
       );
+      return;
+    }
+
+    if (this.checkIfHeic(this.paymentSlipUrl)) {
+      this.convertHeicToJpeg(this.paymentSlipUrl);
+      return;
+    }
+
+    this.modalImage = this.paymentSlipUrl;
+  }
+
+  private async convertHeicToJpeg(url: string): Promise<void> {
+    this.isLoading = true;
+    try {
+      // 'no-store' avoids a cached non-CORS response (e.g. from an earlier <img> load)
+      const response = await fetch(url, { mode: 'cors', cache: 'no-store' });
+      if (!response.ok) {
+        throw new Error(`Download failed: ${response.status}`);
+      }
+      const heicBlob = await response.blob();
+
+      const { default: heic2any } = await import('heic2any');
+      const result = await heic2any({
+        blob: heicBlob,
+        toType: 'image/jpeg',
+        quality: 0.9,
+      });
+      const jpegBlob = Array.isArray(result) ? result[0] : result;
+
+      this.revokeObjectUrl();
+      this.objectUrl = URL.createObjectURL(jpegBlob);
+      this.modalImage = this.sanitizer.bypassSecurityTrustUrl(this.objectUrl);
+    } catch (error) {
+      console.error('Error converting HEIC image:', error);
+      Swal.fire({
+        title: 'Error!',
+        text: 'Failed to load payment slip image',
+        icon: 'error',
+        confirmButtonColor: '#C40D0D',
+      });
+    } finally {
+      this.isLoading = false;
     }
   }
 
   checkIfPDF(url: string): boolean {
-    return url.toLowerCase().endsWith('.pdf');
+    return this.getExtension(url) === 'pdf';
+  }
+
+  checkIfHeic(url: string): boolean {
+    const ext = this.getExtension(url);
+    return ext === 'heic' || ext === 'heif';
+  }
+
+  private getExtension(url: string): string {
+    const path = url.split('?')[0].split('#')[0];
+    return path.split('.').pop()?.toLowerCase() ?? '';
   }
 
   resetImageTransform(): void {

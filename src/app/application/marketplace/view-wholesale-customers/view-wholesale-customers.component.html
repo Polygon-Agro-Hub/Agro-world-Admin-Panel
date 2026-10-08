@@ -467,7 +467,7 @@
         <div class="flex items-center border border-gray-300 dark:border-[#4B555A] rounded-xl py-2 px-2">
           <span class="text-xl font-medium text-[#000000] dark:text-white">Rs.</span>
           <div class="w-px h-6 bg-gray-300 dark:bg-gray-500 mx-2"></div>
-          <input type="number" min="2000" step="1" inputmode="numeric" [(ngModel)]="newCreditLimit"
+          <input type="number" min="3500" step="1" inputmode="numeric" [(ngModel)]="newCreditLimit"
             (keydown)="blockInvalidCreditKeys($event)" (paste)="blockInvalidCreditPaste($event)"
             (input)="onCreditInputChange($event)"
             class="no-spinner flex-1 bg-transparent outline-none text-xl font-medium text-[#000000] dark:text-white" />

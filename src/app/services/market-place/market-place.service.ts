@@ -303,6 +303,18 @@ export class MarketPlaceService {
     );
   }
 
+  updateBannerOrderWholesale(feedbacks: { id: number; orderNumber: number }[]) {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.put(
+      `${environment.API_URL}market-place/update-banner-order-wholesale`,
+      { feedbacks },
+      { headers }
+    );
+  }
+
   updateBannerOrderWhole(feedbacks: { id: number; orderNumber: number }[]) {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,

@@ -37,6 +37,7 @@ interface NewCropGroup {
   createdAt?: string;
   AdminmodifyBy?: string;
   modifyAt?: string;
+  displayFor?: 'Farmery' | 'Sales' | 'Both';
 }
 
 interface CategoryOption {
@@ -101,6 +102,27 @@ export class ViewCropGroupComponent {
   selectedCategory: string = '';
   categoryOptions: CategoryOption[] = [];
 
+  selectedDisplay: string = '';
+
+  displayOptions: CategoryOption[] = [
+    { label: 'Farmers Only', value: 'Farmery' },
+    { label: 'Sales Only', value: 'Sales' },
+    { label: 'Both', value: 'Both' },
+  ];
+
+  getDisplayLabel(value?: string): string {
+    switch (value) {
+      case 'Farmery':
+        return 'Farmers Only';
+      case 'Sales':
+        return 'Sales Only';
+      case 'Both':
+        return 'Both';
+      default:
+        return '--';
+    }
+  }
+
   constructor(
     private cropCalendarService: CropCalendarService,
     private http: HttpClient,
@@ -108,12 +130,13 @@ export class ViewCropGroupComponent {
     public permissionService: PermissionService,
     public tokenService: TokenService,
     private route: ActivatedRoute,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
       this.searchTerm = params['search'] || '';
       this.selectedCategory = params['category'] || '';
+      this.selectedDisplay = params['display'] || '';
       this.page = params['page'] ? +params['page'] : 1;
 
       this.initializeCategories();
@@ -122,6 +145,7 @@ export class ViewCropGroupComponent {
         this.itemsPerPage,
         this.searchTerm,
         this.selectedCategory,
+        this.selectedDisplay,
       );
     });
   }
@@ -157,7 +181,7 @@ export class ViewCropGroupComponent {
           }
         });
 
-        
+
       },
       error: (err) => {
         console.error('Error fetching categories:', err);
@@ -171,12 +195,13 @@ export class ViewCropGroupComponent {
     limit: number = this.itemsPerPage,
     searchTerm: string = this.searchTerm,
     category: string = this.selectedCategory || '',
+    displayFor: string = this.selectedDisplay || '',
   ) {
     this.page = page;
     this.isLoading = true;
 
     this.cropCalendarService
-      .fetchAllCropGroups(page, limit, searchTerm, category)
+      .fetchAllCropGroups(page, limit, searchTerm, category, displayFor)
       .subscribe({
         next: (data) => {
           this.isLoading = false;
@@ -217,6 +242,7 @@ export class ViewCropGroupComponent {
   clearFilters() {
     this.searchTerm = '';
     this.selectedCategory = '';
+    this.selectedDisplay = '';
     this.page = 1;
     this.updateUrlParams();
     this.fetchAllCropGroups();
@@ -231,6 +257,18 @@ export class ViewCropGroupComponent {
       this.itemsPerPage,
       this.searchTerm,
       this.selectedCategory,
+    );
+  }
+
+  onDisplayChange() {
+    this.page = 1;
+    this.updateUrlParams();
+    this.fetchAllCropGroups(
+      this.page,
+      this.itemsPerPage,
+      this.searchTerm,
+      this.selectedCategory,
+      this.selectedDisplay,
     );
   }
 
@@ -370,6 +408,7 @@ export class ViewCropGroupComponent {
       queryParams: {
         search: this.searchTerm || null,
         category: this.selectedCategory || null,
+        display: this.selectedDisplay || null,
         page: this.page !== 1 ? this.page : null,
       },
       queryParamsHandling: 'merge',

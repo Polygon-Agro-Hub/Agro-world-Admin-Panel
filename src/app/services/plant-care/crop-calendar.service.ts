@@ -216,7 +216,8 @@ export class CropCalendarService {
     page: number = 1,
     limit: number = 10,
     cropNameEnglish: string = '',
-    category: string = ''
+    category: string = '',
+    displayFor: string = ''
   ): Observable<{ items: NewCropGroup[]; total: number }> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -235,6 +236,10 @@ export class CropCalendarService {
     // Add category filter if provided
     if (category) {
       params = params.set('category', category);
+    }
+
+    if (displayFor) {
+      params = params.set('displayFor', displayFor);
     }
 
     return this.http.get<{ items: NewCropGroup[]; total: number }>(

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { Router } from '@angular/router';
 import { TokenService } from '../../../services/token/services/token.service';
@@ -41,7 +41,7 @@ import {
   templateUrl: './banner-list.component.html',
   styleUrl: './banner-list.component.css',
 })
-export class BannerListComponent {
+export class BannerListComponent implements OnInit {
   isRetail = true;
   isLoading = false;
   ViewRetailAddBanner: boolean = false;
@@ -100,6 +100,7 @@ export class BannerListComponent {
     this.isRetail = isRetail;
   }
 
+  // ---------- Add (open modal) ----------
   addBannerRetail(): void {
     this.isLoading = true;
     const token = this.tokenService.getToken();
@@ -158,6 +159,7 @@ export class BannerListComponent {
       );
   }
 
+  // ---------- Cancel ----------
   cancelUploadRetail(): void {
     this.bannerName = '';
     this.selectedFile = null;
@@ -172,6 +174,7 @@ export class BannerListComponent {
     this.ViewWholesaleAddBanner = false;
   }
 
+  // ---------- Next index ----------
   loadNextNumberRetail() {
     const token = this.tokenService.getToken();
     if (!token) {
@@ -222,11 +225,7 @@ export class BannerListComponent {
       );
   }
 
-  onFileSelected(event: any) {
-    this.selectedFile = event.target.files[0];
-  }
-
-
+  // ---------- Wholesale file handling ----------
   onFileSelectedWholesale(event: Event): void {
     const input = event.target as HTMLInputElement | null;
 
@@ -304,7 +303,6 @@ export class BannerListComponent {
         const height = img.height;
         URL.revokeObjectURL(objectUrl);
 
-
         const isValidSize = width === 1200 && height === 450;
 
         if (isValidSize) {
@@ -348,7 +346,7 @@ export class BannerListComponent {
     this.isDragOver = true;
   }
 
-
+  // ---------- Retail file handling ----------
   onFileSelectedRetail(event: Event): void {
     const input = event.target as HTMLInputElement | null;
 
@@ -426,7 +424,6 @@ export class BannerListComponent {
         const height = img.height;
         URL.revokeObjectURL(objectUrl);
 
-
         const isValidSize = width === 1200 && height === 450;
 
         if (isValidSize) {
@@ -470,10 +467,10 @@ export class BannerListComponent {
     this.isDragOverReatil = true;
   }
 
+  // ---------- Upload ----------
   uploadBanner() {
     this.isLoading = true;
     this.bannerName = this.bannerName.trim();
-
 
     const emptyFields = [];
     if (!this.bannerName) emptyFields.push('Banner Name');
@@ -488,7 +485,6 @@ export class BannerListComponent {
       );
       return;
     }
-
 
     const formData = new FormData();
     formData.append('index', this.indexRetail.toString());
@@ -542,7 +538,6 @@ export class BannerListComponent {
     this.isLoading = true;
     this.bannerNameWholesale = this.bannerNameWholesale.trim();
 
-
     const emptyFields = [];
     if (!this.bannerNameWholesale) emptyFields.push('Banner Name');
     if (!this.selectedFileWholesale) emptyFields.push('Image');
@@ -560,7 +555,6 @@ export class BannerListComponent {
     const formData = new FormData();
     formData.append('index', this.indexWholesale.toString());
     formData.append('name', this.bannerNameWholesale);
-
 
     if (this.selectedFileWholesale) {
       formData.append('image', this.selectedFileWholesale);
@@ -606,6 +600,7 @@ export class BannerListComponent {
     });
   }
 
+  // ---------- Fetch ----------
   getAllFeedbacks() {
     const token = this.tokenService.getToken();
     if (!token) {
@@ -625,7 +620,9 @@ export class BannerListComponent {
           this.maxBannersReached = this.feebackList.length >= 5;
           this.isLoading = false;
         },
-        () => { }
+        () => {
+          this.isLoading = false;
+        }
       );
   }
 
@@ -651,10 +648,16 @@ export class BannerListComponent {
           this.maxBannersReachedWholesale = this.feebackListWhole.length >= 5;
           this.isLoading = false;
         },
-        () => { }
+        () => {
+          this.isLoading = false;
+        }
       );
   }
+
+  // ---------- Reorder ----------
   drop(event: CdkDragDrop<any[]>) {
+    if (event.previousIndex === event.currentIndex) return;
+
     this.isLoading = true;
     moveItemInArray(this.feebackList, event.previousIndex, event.currentIndex);
     const updatedFeedbacks = this.feebackList.map((item, index) => ({
@@ -663,34 +666,27 @@ export class BannerListComponent {
     }));
     this.marketPlaceSrv.updateBannerOrder(updatedFeedbacks).subscribe({
       next: (response: any) => {
-        if (response.status) {
-          this.feebackList.forEach((item, index) => {
-            item.orderNumber = index + 1;
-          });
-          this.getAllFeedbacks();
-          this.getAllFeedbacksWhole();
-          this.isLoading = false;
-        } else {
-          Swal.fire('Error', 'Failed to update feedback order', 'error');
-          this.getAllFeedbacks();
-          this.getAllFeedbacksWhole();
-          this.isLoading = false;
+        if (!response.status) {
+          Swal.fire('Error', 'Failed to update banner order', 'error');
         }
+        this.getAllFeedbacks();
+        this.isLoading = false;
       },
       error: () => {
         Swal.fire(
           'Error',
-          'An error occurred while updating feedback order',
+          'An error occurred while updating banner order',
           'error'
         );
         this.getAllFeedbacks();
-        this.getAllFeedbacksWhole();
         this.isLoading = false;
       },
     });
   }
 
   dropWhole(event: CdkDragDrop<any[]>) {
+    if (event.previousIndex === event.currentIndex) return;
+
     this.isLoading = true;
     moveItemInArray(
       this.feebackListWhole,
@@ -701,36 +697,27 @@ export class BannerListComponent {
       id: item.id,
       orderNumber: index + 1,
     }));
-    this.marketPlaceSrv.updateBannerOrder(updatedFeedbacks).subscribe({
+    this.marketPlaceSrv.updateBannerOrderWholesale(updatedFeedbacks).subscribe({
       next: (response: any) => {
-        if (response.status) {
-          this.feebackListWhole.forEach((item, index) => {
-            item.orderNumber = index + 1;
-          });
-
-          this.getAllFeedbacks();
-          this.getAllFeedbacksWhole();
-          this.isLoading = false;
-        } else {
-          Swal.fire('Error', 'Failed to update feedback order', 'error');
-          this.getAllFeedbacks();
-          this.getAllFeedbacksWhole();
-          this.isLoading = false;
+        if (!response.status) {
+          Swal.fire('Error', 'Failed to update banner order', 'error');
         }
+        this.getAllFeedbacksWhole();
+        this.isLoading = false;
       },
       error: () => {
         Swal.fire(
           'Error',
-          'An error occurred while updating feedback order',
+          'An error occurred while updating banner order',
           'error'
         );
-        this.getAllFeedbacks();
         this.getAllFeedbacksWhole();
         this.isLoading = false;
       },
     });
   }
 
+  // ---------- Delete ----------
   deletebannerRetail(feedbackId: number): void {
     Swal.fire({
       title: 'Are you sure?',
@@ -746,6 +733,7 @@ export class BannerListComponent {
       },
     }).then((result) => {
       if (result.isConfirmed) {
+        this.isLoading = true;
         this.marketPlaceSrv.deleteBannerRetail(feedbackId).subscribe({
           next: () => {
             Swal.fire({
@@ -762,6 +750,7 @@ export class BannerListComponent {
             this.indexWholesale = 0;
             this.getAllFeedbacks();
             this.getAllFeedbacksWhole();
+            this.isLoading = false;
           },
           error: () => {
             Swal.fire({
@@ -775,11 +764,13 @@ export class BannerListComponent {
             });
             this.getAllFeedbacks();
             this.getAllFeedbacksWhole();
+            this.isLoading = false;
           },
         });
       }
     });
   }
+
   deletebannerWhole(feedbackId: number): void {
     Swal.fire({
       title: 'Are you sure?',
@@ -831,10 +822,10 @@ export class BannerListComponent {
     });
   }
 
+  // ---------- Input helpers ----------
   trimLeadingSpaces(event: any, isRetail: boolean = true): void {
     const inputValue = event.target.value;
     if (inputValue.startsWith(' ')) {
-
       const trimmedValue = inputValue.trimStart();
       if (isRetail) {
         this.bannerName = trimmedValue;

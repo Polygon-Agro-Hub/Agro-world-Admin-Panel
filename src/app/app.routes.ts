@@ -1752,8 +1752,8 @@ export const routes: Routes = [
               {
                 path: 'subscription',
                 component: SubsriptionComponent,
-                canActivate: [PermissionGuard],
-                data: { permission: 'GoviMart Subscriptions' },
+                // canActivate: [PermissionGuard],
+                // data: { permission: 'GoviMart Subscriptions' },
               },
               {
                 path: 'edit-product-type/:id',

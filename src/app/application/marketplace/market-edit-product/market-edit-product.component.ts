@@ -30,10 +30,6 @@ import { DropdownModule } from 'primeng/dropdown';
   styleUrl: './market-edit-product.component.css',
 })
 export class MarketEditProductComponent implements OnInit {
-  // References to the editable Sale Price and Competitor Price inputs so we
-  // can force a 2-decimal display right after data loads (Angular's number
-  // input strips trailing zeros unless we intervene, same as formatPrice()
-  // does on blur).
   @ViewChild('comPriceInput') comPriceInputRef?: ElementRef<HTMLInputElement>;
   @ViewChild('salePriceInput') salePriceInputRef?: ElementRef<HTMLInputElement>;
 
@@ -614,22 +610,37 @@ if (this.productObj.comPrice <= salePriceForComparison) {
     return false;
   }
 
-  // Check decimal places based on field type
+    // Check decimal places only when the caret is AFTER the decimal point
   if (value.includes('.')) {
     const decimalPart = value.split('.')[1];
     let maxDecimals = 2; // Default for price fields
-    if (
-      input.id === 'startValue' ||
-      input.id === 'changeby' ||
-      input.id === 'maxQuantity'
-    ) {
-      maxDecimals = 3;
+      if (
+        input.id === 'startValue' ||
+        input.id === 'changeby' ||
+        input.id === 'maxQuantity'
+      ) {
+        maxDecimals = 3;
+      }
+
+      const start = input.selectionStart;
+      const end = input.selectionEnd;
+      const hasSelection = start !== null && end !== null && start !== end;
+      const dotIndex = value.indexOf('.');
+
+      // For type="number" inputs selectionStart is null -> we can't know the
+      // caret position, so skip blocking here (handled in clampMinValue).
+      const caretInDecimalPart = start !== null && start > dotIndex;
+
+      if (
+        caretInDecimalPart &&
+        !hasSelection &&
+        decimalPart &&
+        decimalPart.length >= maxDecimals
+      ) {
+        event.preventDefault();
+        return false;
+      }
     }
-    if (decimalPart && decimalPart.length >= maxDecimals && key !== '.') {
-      event.preventDefault();
-      return false;
-    }
-  }
 
   if (key === '.' && value === '') {
     event.preventDefault();

@@ -116,7 +116,7 @@ export class CreateSalesAgentsComponent implements OnInit {
     { code: 'BD', dialCode: '+880', name: 'Bangladesh' },
     { code: 'IN', dialCode: '+91', name: 'India' },
     { code: 'NL', dialCode: '+31', name: 'Netherlands' },
-    { code: 'UK', dialCode: '+44', name: 'United Kingdom' },
+    { code: 'GB', dialCode: '+44', name: 'United Kingdom' },
     { code: 'US', dialCode: '+1', name: 'United States' },
   ];
 

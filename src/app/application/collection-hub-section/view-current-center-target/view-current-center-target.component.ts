@@ -41,6 +41,7 @@ export class ViewCurrentCenterTargetComponent implements OnInit {
   itemsPerPage: number = 10;
 
   isLoading: boolean = false;
+  formattedToday!: string
 
   isStatusDropdownOpen = false;
   statusDropdownOptions = [
@@ -75,6 +76,7 @@ export class ViewCurrentCenterTargetComponent implements OnInit {
     const month = ('0' + (date.getMonth() + 1)).slice(-2);
     const day = ('0' + date.getDate()).slice(-2);
     this.today = `${year}/${month}/${day}`;
+    this.formattedToday = `${year}-${month}-${day}`
 
     this.fetchAllTarget();
   }
@@ -101,8 +103,9 @@ export class ViewCurrentCenterTargetComponent implements OnInit {
     search: string = this.searchText,
   ) {
     this.isLoading = true;
+
     this.collectionCenterSrv
-      .getAllCenterDailyTarget(centerId, page, limit, status, search)
+      .getAllCenterDailyTarget(centerId, page, limit, status, search, this.formattedToday)
       .subscribe((res) => {
         this.targetArr = res.items;
         if (res.items.length > 0) {

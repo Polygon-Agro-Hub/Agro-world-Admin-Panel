@@ -21,6 +21,7 @@ interface CropGroupDetails {
   nitrogen: string;
   phosphorus: string;
   potassium: string;
+  displayFor: string;
 }
 
 @Component({
@@ -40,7 +41,7 @@ export class ViewCropGroupDetailsComponent implements OnInit {
     private router: Router,
     private cropCalendarService: CropCalendarService,
     private location: Location,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
@@ -73,11 +74,24 @@ export class ViewCropGroupDetailsComponent implements OnInit {
 
     return num.toLocaleString('en-US', {
       minimumFractionDigits: 0,
-      maximumFractionDigits: 10, 
+      maximumFractionDigits: 10,
     });
   }
 
   goBack(): void {
     this.location.back();
+  }
+
+  getDisplayLabel(value?: string | null): string {
+    switch (value) {
+      case 'Farmery':
+        return 'Farmers Only';
+      case 'Sales':
+        return 'Sales Only';
+      case 'Both':
+        return 'Both';
+      default:
+        return '—';
+    }
   }
 }

@@ -193,7 +193,7 @@ export class ViewDriverComplaintsComponent {
       });
 
       this.http
-        .get<any>(`${environment.API_URL}auth/get-all-complain-category-list/${this.tokenService.getUserDetails().role}/Transport`, {
+        .get<any>(`${environment.API_URL}auth/get-all-complain-category-list/${this.tokenService.getUserDetails().role}/7`, {
           headers,
         })
         .subscribe(

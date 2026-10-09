@@ -46,6 +46,7 @@
     "file-save": "^0.2.0",
     "file-saver": "^2.0.5",
     "google-libphonenumber": "^3.2.38",
+    "heic2any": "^0.0.4",
     "highlight.js": "^11.9.0",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.2",

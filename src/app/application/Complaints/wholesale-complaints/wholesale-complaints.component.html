@@ -217,8 +217,18 @@
       </table>
     </div>
 
-    <pagination-controls [id]="'retailComplaintsPager'" (pageChange)="onPageChange($event)" previousLabel="Previous"
-      nextLabel="Next"></pagination-controls>
+    <div
+  [class.pointer-events-none]="!hasData || isLoading"
+  [class.opacity-50]="!hasData || isLoading"
+  [attr.aria-disabled]="!hasData || isLoading"
+>
+  <pagination-controls
+    [id]="'retailComplaintsPager'"
+    (pageChange)="onPageChange($event)"
+    previousLabel="Previous"
+    nextLabel="Next"
+  ></pagination-controls>
+</div>
   </div>
 </div>
 

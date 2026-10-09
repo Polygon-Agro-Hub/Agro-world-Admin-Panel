@@ -89,7 +89,7 @@ export class ViewCollectiveOfficerProfileComponent {
         break;
       case this.LIGHT_WEIGHT_DRIVER:
       case this.HEAVY_WEIGHT_DRIVER:
-        this.empHeader = 'DVR';
+        this.empHeader = 'DRV';
         break;
       default:
         this.empHeader = '';
@@ -333,7 +333,7 @@ export class ViewCollectiveOfficerProfileComponent {
         break;
       case this.LIGHT_WEIGHT_DRIVER:
       case this.HEAVY_WEIGHT_DRIVER:
-        empCode = 'DVR';
+        empCode = 'DRV';
         isDriver = true;
         break;
       case 'Distribution Centre Head':

@@ -240,35 +240,52 @@ export class CollectionReportComponent {
       const a = document.createElement('a');
       a.href = url;
 
-      // Generate filename
-      let filename = '';
+      // // Generate filename
+      // let filename = '';
 
-      // Prefix with collection centre code when a center is selected
+      // // Prefix with collection centre code when a center is selected
+      // if (centerCode) {
+      //   filename += `${centerCode} `;
+      // }
+
+      // filename += 'Collection Report';
+
+      // const fromDateFormatted = this.formatDateForFilename(
+      //   new Date(this.fromDate!),
+      // );
+      // const toDateFormatted = this.formatDateForFilename(
+      //   new Date(this.toDate!),
+      // );
+      // filename += ` from ${fromDateFormatted} to ${toDateFormatted}`;
+
+      // // Add generation timestamp: YYYY-MM-DD HH.MM AM/PM
+      // const now = new Date();
+      // const generatedDate = this.formatDateForGeneration(now);
+      // const generatedTime = this.formatTimeForFilename(now);
+
+      // filename += ` Generated at ${generatedDate} ${generatedTime}`;
+
+      // filename += '.xlsx';
+
+      // // Remove characters that are invalid in file names
+      // a.download = filename.replace(/[\\/:*?"<>|]/g, '-');
+
+      // Generate filename: <Centre Code> Collection Report From YYYY-MM-DD To YYYY-MM-DD
+      const fromDateFormatted = this.datePipe.transform(this.fromDate!, 'yyyy-MM-dd');
+      const toDateFormatted = this.datePipe.transform(this.toDate!, 'yyyy-MM-dd');
+
+      let filename = '';
+      
       if (centerCode) {
         filename += `${centerCode} `;
       }
 
-      filename += 'Collection Report';
-
-      const fromDateFormatted = this.formatDateForFilename(
-        new Date(this.fromDate!),
-      );
-      const toDateFormatted = this.formatDateForFilename(
-        new Date(this.toDate!),
-      );
-      filename += ` from ${fromDateFormatted} to ${toDateFormatted}`;
-
-      // Add generation timestamp: YYYY-MM-DD HH.MM AM/PM
-      const now = new Date();
-      const generatedDate = this.formatDateForGeneration(now);
-      const generatedTime = this.formatTimeForFilename(now);
-
-      filename += ` Generated at ${generatedDate} ${generatedTime}`;
-
-      filename += '.xlsx';
+      filename += `Collection Report From ${fromDateFormatted} To ${toDateFormatted}.xlsx`;
 
       // Remove characters that are invalid in file names
       a.download = filename.replace(/[\\/:*?"<>|]/g, '-');
+      a.click();
+      window.URL.revokeObjectURL(url);
       a.click();
       window.URL.revokeObjectURL(url);
 

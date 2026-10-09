@@ -89,7 +89,7 @@
                   ID</th>
                 <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">Customer
                   Name</th>
-                  <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">Nearest
+                <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">Nearest
                   City</th>
                 <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">Company
                   Name</th>
@@ -429,8 +429,7 @@
   (click)="closeUpdateCreditPopup()">
   <div class="bg-white dark:bg-gray-800 rounded-[28px] shadow-lg w-[500px] max-w-[90vw] p-8 flex flex-col items-center"
     (click)="$event.stopPropagation()">
-    <div
-      class="bg-white dark:bg-gray-800 rounded-[28px] max-w-[90vw] flex flex-col items-center">
+    <div class="bg-white dark:bg-gray-800 rounded-[28px] max-w-[90vw] flex flex-col items-center">
       <!-- Icon -->
       <div class="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center mb-5">
         <i class="fa-solid fa-wallet text-2xl text-gray-800 dark:text-gray-200"></i>
@@ -472,6 +471,9 @@
             (input)="onCreditInputChange($event)"
             class="no-spinner flex-1 bg-transparent outline-none text-xl font-medium text-[#000000] dark:text-white" />
         </div>
+        <p *ngIf="newCreditLimit !== null && newCreditLimit < MIN_CREDIT_LIMIT" class="text-red-500 text-sm mt-2">
+          Minimum credit limit is Rs. 3,500.00
+        </p>
       </div>
 
       <div class="flex justify-center gap-4 w-full">
@@ -480,7 +482,7 @@
           Cancel
         </button>
         <button (click)="submitUpdateCredit()"
-          [disabled]="newCreditLimit === null || newCreditLimit === undefined || newCreditLimit < 2000 || isUpdatingCredit"
+          [disabled]="newCreditLimit === null || newCreditLimit === undefined || newCreditLimit < MIN_CREDIT_LIMIT || isUpdatingCredit"
           class="flex-1 bg-[#3980C0] text-white py-3 rounded-xl font-medium hover:bg-[#2563eb] transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
           {{ isUpdatingCredit ? 'Updating...' : 'Update' }}
         </button>

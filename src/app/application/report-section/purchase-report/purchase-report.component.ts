@@ -242,14 +242,21 @@ export class PurchaseReportComponent {
   getAllCenters() {
     this.collectionoOfficer.getAllCenters().subscribe(
       (res) => {
-        this.centers = res.map((center: Centers) => ({
-          ...center,
-          displayName: `${center.regCode} - ${center.centerName.trim()}`,
-        }));
+        this.centers = res
+          .map((center: Centers) => ({
+            ...center,
+            displayName: `${center.regCode} - ${center.centerName.trim()}`,
+          }))
+          .sort((a: Centers, b: Centers) =>
+            (a.regCode || '').trim().localeCompare((b.regCode || '').trim(), undefined, {
+              numeric: true,
+              sensitivity: 'base',
+            }),
+          );
       },
       (error) => {
         Swal.fire('Error!', 'There was an error fetching centers.', 'error');
-      }
+      },
     );
   }
 

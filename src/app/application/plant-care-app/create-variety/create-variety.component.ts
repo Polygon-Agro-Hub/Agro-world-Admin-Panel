@@ -737,7 +737,7 @@ export class CreateVarietyComponent implements OnInit {
     this.isLoading = true;
     this.http
       .put(
-        `${environment.API_URL}crop-calendar/update-crop-variety/${this.itemId}`,
+        `${environment.API_URL}crop-calendar/update-crop-varietyEdit/${this.itemId}`,
         formData,
         { headers },
       )

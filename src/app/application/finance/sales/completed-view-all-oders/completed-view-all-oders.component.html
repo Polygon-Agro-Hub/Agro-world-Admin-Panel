@@ -20,6 +20,7 @@
                 <p-calendar id="fromDate" [(ngModel)]="fromDate" dateFormat="yy/mm/dd" placeholder="--Select Date--"
                     [showIcon]="true" [showClear]="true" [showButtonBar]="true" [maxDate]="maxFromDate"
                     iconDisplay="input" [style]="{ width: '15rem', height: '2.5rem' }"
+                    title="Select Order Completed Date"
                     inputStyleClass="px-3 py-2 border border-gray-200 cursor-pointer rounded-md bg-white dark:bg-[#272F45] text-textLight dark:text-textDark w-full h-10 text-[16px]"
                     (onSelect)="onFromDateChange()" (onClear)="onFromDateClear()" />
             </div>
@@ -28,7 +29,7 @@
             <div class="flex items-center gap-4">
                 <label for="toDate"
                     class="text-[18px] text-[#000000] font-normal dark:text-textDark whitespace-nowrap">To :</label>
-                <p-calendar id="toDate" [(ngModel)]="toDate" dateFormat="yy/mm/dd" placeholder="--Select Date--"
+                <p-calendar id="toDate" [(ngModel)]="toDate" dateFormat="yy/mm/dd" placeholder="--Select Date--" title="Select Order Completed Date"
                     [showIcon]="true" [showClear]="true" [showButtonBar]="true" [minDate]="minToDate"
                     iconDisplay="input" [style]="{ width: '15rem', height: '2.5rem' }" [disabled]="!fromDate"
                     inputStyleClass="px-3 py-2 border border-gray-200 cursor-pointer rounded-md bg-white dark:bg-[#272F45] text-textLight dark:text-textDark w-full h-10 text-[16px]"
@@ -47,36 +48,44 @@
     <!-- Results Card -->
     <div class="p-10 w-full bg-white dark:bg-tileBlack rounded-lg shadow-md">
 
-        <div *ngIf="hasData">
-            <!-- Top row: All + Download (left, stacked) / Search (centered) -->
-            <div class="grid grid-cols-3 items-start mb-6">
-                <div class="flex flex-col gap-3">
-                    <h3 class="text-[20px] font-semibold text-[#000000] dark:text-textDark">
-                        All ({{ totalItems.toString().padStart(2, '0') }})
-                    </h3>
-                    <button *ngIf="permissionService.hasPermission('Download completed sales orders') || tokenService.getUserDetails().role === '1'"
-                        class="bg-[#3980C0] text-white text-[15px] font-medium py-1.5 px-4 rounded-md flex items-center gap-2 w-fit"
-                        (click)="downloadTemplate1()" [disabled]="isDownloading" [ngClass]="{
-                          'opacity-50 cursor-not-allowed': isDownloading
-                        }">
-                        <i class="fa-solid fa-download" *ngIf="!isDownloading"></i>
-                        <i class="fa-solid fa-spinner fa-spin" *ngIf="isDownloading"></i>
-                        {{ isDownloading ? "Downloading..." : "Download" }}
-                    </button>
-                </div>
+    <!-- Top row: show whenever a date range is selected (even if search returns nothing) -->
+    <div *ngIf="isFromDateSelected && (hasData || search)">
+        <div class="grid grid-cols-3 items-start mb-6">
+            <div class="flex flex-col gap-3">
+                <h3 class="text-[20px] font-semibold text-[#000000] dark:text-textDark">
+                    All ({{ totalItems.toString().padStart(2, '0') }})
+                </h3>
+                <button
+                    *ngIf="hasData && (permissionService.hasPermission('Download completed sales orders') || tokenService.getUserDetails().role === '1')"
+                    class="bg-[#3980C0] text-white text-[15px] font-medium py-1.5 px-4 rounded-md flex items-center gap-2 w-fit"
+                    (click)="downloadTemplate1()" [disabled]="isDownloading"
+                    [ngClass]="{ 'opacity-50 cursor-not-allowed': isDownloading }">
+                    <i class="fa-solid fa-download" *ngIf="!isDownloading"></i>
+                    <i class="fa-solid fa-spinner fa-spin" *ngIf="isDownloading"></i>
+                    {{ isDownloading ? "Downloading..." : "Download" }}
+                </button>
+            </div>
 
                 <div class="flex justify-center">
                     <div class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-1.5 w-80">
                         <input type="text" placeholder="Search By Invoice No.."
                             class="bg-transparent outline-none w-full text-sm text-gray-600 dark:text-textDark"
                             [(ngModel)]="search" (keydown.enter)="applysearch()" (keydown)="preventLeadingSpace($event)"
-                            (input)="onSearchInput($event)" />
-                        <button type="button" class="text-gray-400 hover:text-gray-600 focus:outline-none"
+                            (input)="onSearchInput($event)"/>
+                        <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none"
                             (click)="applysearch()">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
+                            </svg>
+                        </button>
+                        <button *ngIf="search" (click)="clearSearch()" type="button"
+                            class="text-gray-500 hover:text-gray-700 focus:outline-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </button>
                     </div>
@@ -87,7 +96,8 @@
         </div>
 
         <!-- Data Table -->
-        <div *ngIf="hasData" class="overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full mt-4">
+        <div *ngIf="hasData"
+            class="overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full mt-4">
             <table class="min-w-full divide-y divide-gray-100 dark:divide-gray-700 table-auto">
                 <thead>
                     <tr>
@@ -209,7 +219,7 @@
         <div *ngIf="isFromDateSelected && !hasData && !isLoading"
             class="flex flex-col items-center justify-center w-full py-24">
             <p class="text-gray-400 dark:text-textDark text-sm mb-6">
-                --No Orders Found--
+                {{ search ? '--No orders found for "' + search + '"--' : '--No Orders Found--' }}
             </p>
             <img src="assets/images/NoData.png" alt="No Data" class="w-14 h-14 opacity-70" />
         </div>

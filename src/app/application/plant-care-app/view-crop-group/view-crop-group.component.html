@@ -16,13 +16,13 @@
 
 <div class="fixed-width-container overflow-hidden">
   <div class="pt-5 pr-12 pl-12 pb-5 w-full bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
-    <div class="flex justify-between items-center mb-8">
+    <div class="crop-group-toolbar flex justify-between items-center mb-8">
       <div class="flex items-center">
-        <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
+        <h2 class="crop-group-heading text-2xl font-normal text-textLight dark:text-textDark">
           All Crop Groups ({{ this.totalItems | number: "2.0" }})
         </h2>
       </div>
-      <div class="flex items-center mr-5">
+      <div class="crop-group-filters flex items-center mr-5">
         <i class="mr-6 w-6 h-6 fill-current text-textLight dark:text-textDark">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
             <path
@@ -56,7 +56,7 @@
         <div *ngIf="
             permissionService.hasPermission('Search crop group') ||
             tokenService.getUserDetails().role === '1'
-          " class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
+          " class="crop-group-search flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
           <input type="text" [(ngModel)]="searchTerm" placeholder="Search by Crop Name"
             class="bg-transparent outline-none w-full text-textLight dark:text-textDark" (keyup.enter)="onSearch()"
             (keydown)="preventLeadingSpace($event, 'searchTerm')" (input)="formatSearchInput()" />

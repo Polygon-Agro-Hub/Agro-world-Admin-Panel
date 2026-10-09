@@ -70,9 +70,9 @@
       <hr class="my-8 border border-[#D9D9D9] dark:border-gray-700" />
 
       <!-- Pricing Inputs with validation -->
-      <div class="grid grid-cols-3 gap-8 mb-6">
+      <div class="package-pricing-fields grid grid-cols-3 gap-8 mb-6">
         <div>
-          <label class="block text-sm text-[#534E4E] font-medium mb-2 dark:text-textDark">
+          <label class="package-pricing-label block text-sm text-[#534E4E] font-medium mb-2 dark:text-textDark">
             Total Package Price (Rs.)*
           </label>
           <input type="number" min="0" step="0.01" name="productPrice" [(ngModel)]="packageObj.productPrice"
@@ -86,7 +86,7 @@
         </div>
 
         <div>
-          <label class="block text-sm text-[#534E4E] font-medium mb-2 dark:text-textDark">
+          <label class="package-pricing-label block text-sm text-[#534E4E] font-medium mb-2 dark:text-textDark">
             Packaging Fee (Rs.)*
           </label>
           <input type="number" min="0" step="0.01" name="packageFee" [(ngModel)]="packageObj.packageFee"
@@ -100,7 +100,7 @@
         </div>
 
         <div>
-          <label class="block text-sm text-[#534E4E] font-medium mb-2 dark:text-textDark">
+          <label class="package-pricing-label block text-sm text-[#534E4E] font-medium mb-2 dark:text-textDark">
             Service Fee (Rs.) *
           </label>
           <input type="number" min="0" step="0.01" name="serviceFee" [(ngModel)]="packageObj.serviceFee"

@@ -397,11 +397,11 @@
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-[#000000] dark:text-textDark bg-tileLight dark:bg-tileBlack"
           #accNumberInput="ngModel" required pattern="^[0-9]+$" (keypress)="allowOnlyNumbers($event)"
           (ngModelChange)="validateAccNumber()" (blur)="onBlur('accNumber')" />
-        <div *ngIf="touchedFields['accNumber'] && !personalData.accNumber" class="text-red-500 text-sm mt-1">
+        <div *ngIf="touchedFields['accNumber'] && !personalData.accNumber" class="text-red-600 text-sm mt-1">
           <div>Account Number is required</div>
         </div>
         <div *ngIf="touchedFields['accNumber'] && personalData.accNumber && accNumberInput.errors?.['pattern']"
-          class="text-red-500 text-sm mt-1">
+          class="text-red-600 text-sm mt-1">
           <div>Account Number cannot contain special characters</div>
         </div>
       </div>
@@ -427,7 +427,7 @@
 
         <span
           *ngIf="touchedFields['confirmAccNumber'] && personalData.confirmAccNumber && !confirmAccountNumberError && confirmAccNumberInput.errors?.['pattern']"
-          class="text-red-500 text-sm mt-1">
+          class="text-red-600 text-sm mt-1">
           <div>Account Number cannot contain special characters</div>
         </span>
       </div>

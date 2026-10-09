@@ -877,27 +877,32 @@ export class AddCertificateDetailsComponent implements OnInit {
 
   formatPriceInput(event: Event): void {
     const input = event.target as HTMLInputElement;
-    let value = input.value;
 
-    value = value.replace(/[^0-9.]/g, '');
+    const cursor = input.selectionStart ?? input.value.length;
+    const sigBeforeCursor = input.value
+      .substring(0, cursor)
+      .replace(/[^0-9.]/g, '').length;
 
-    const firstDotIndex = value.indexOf('.');
-    if (firstDotIndex !== -1) {
+    let value = input.value.replace(/[^0-9.]/g, '');
+
+    // Dot ekak witharak
+    const firstDot = value.indexOf('.');
+    if (firstDot !== -1) {
       value =
-        value.substring(0, firstDotIndex + 1) +
-        value.substring(firstDotIndex + 1).replace(/\./g, '');
+        value.substring(0, firstDot + 1) +
+        value.substring(firstDot + 1).replace(/\./g, '');
     }
 
-    const [integerPartRaw, decimalPartRaw] = value.split('.');
-    const integerPart = integerPartRaw || '';
-    const decimalPart = decimalPartRaw !== undefined ? decimalPartRaw.slice(0, 2) : undefined;
+    const [intRaw, decRaw] = value.split('.');
+    const integerPart = intRaw || '';
+    const decimalPart = decRaw !== undefined ? decRaw.slice(0, 2) : undefined;
 
     const rawValue =
       decimalPart !== undefined ? `${integerPart}.${decimalPart}` : integerPart;
 
-    const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    const formattedInt = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     const displayValue =
-      decimalPart !== undefined ? `${formattedInteger}.${decimalPart}` : formattedInteger;
+      decimalPart !== undefined ? `${formattedInt}.${decimalPart}` : formattedInt;
 
     input.value = displayValue;
 
@@ -905,7 +910,41 @@ export class AddCertificateDetailsComponent implements OnInit {
     control?.setValue(rawValue, { emitEvent: false, emitModelToViewChange: false });
     control?.markAsTouched();
 
-    const cursorPos = displayValue.length;
-    input.setSelectionRange(cursorPos, cursorPos);
+    // Cursor eka hariyata thiyenna thanata gannawa
+    let newPos = 0;
+    let count = 0;
+    while (newPos < displayValue.length && count < sigBeforeCursor) {
+      if (/[0-9.]/.test(displayValue[newPos])) count++;
+      newPos++;
+    }
+    input.setSelectionRange(newPos, newPos);
+  }
+
+  formatPriceOnBlur(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const control = this.certificateForm.get('price');
+
+    const raw = (input.value || '').replace(/,/g, '').trim();
+
+    if (raw === '' || raw === '.') {
+      input.value = '';
+      control?.setValue('', { emitEvent: false, emitModelToViewChange: false });
+      control?.markAsTouched();
+      control?.updateValueAndValidity();
+      return;
+    }
+
+    const num = parseFloat(raw);
+    if (isNaN(num)) return;
+
+    const fixed = num.toFixed(2);
+    const [intPart, decPart] = fixed.split('.');
+    const formattedInt = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+    input.value = `${formattedInt}.${decPart}`;
+
+    control?.setValue(fixed, { emitEvent: false, emitModelToViewChange: false }); // stored: 1500.00
+    control?.markAsTouched();
+    control?.updateValueAndValidity();
   }
 }

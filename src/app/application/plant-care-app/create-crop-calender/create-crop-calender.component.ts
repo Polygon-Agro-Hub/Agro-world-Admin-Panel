@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import * as XLSX from 'xlsx';
 import {
   FormBuilder,
   FormGroup,
@@ -37,6 +38,46 @@ export class CreateCrop {
   suitableAreas: string = '';
   specialNotes: string = '';
 }
+
+const REQUIRED_XLSX_COLUMNS: string[] = [
+  'Task index',
+  'Day',
+  'Task type (English)',
+  'Task type (Sinhala)',
+  'Task type (Tamil)',
+  'Task Category (English)',
+  'Task Category (Sinhala)',
+  'Task Category (Tamil)',
+  'Task (English)',
+  'Task (Sinhala)',
+  'Task (Tamil)',
+  'Task description (English)',
+  'Task description (Sinhala)',
+  'Task description (Tamil)',
+  'Image Link',
+  'Video Link English',
+  'Video Link Sinhala',
+  'Video Link Tamil',
+  'Required Images',
+];
+
+const NON_EMPTY_XLSX_COLUMNS: string[] = [
+  'Task index',
+  'Day',
+  'Task type (English)',
+  'Task type (Sinhala)',
+  'Task type (Tamil)',
+  'Task Category (English)',
+  'Task Category (Sinhala)',
+  'Task Category (Tamil)',
+  'Task (English)',
+  'Task (Sinhala)',
+  'Task (Tamil)',
+  'Task description (English)',
+  'Task description (Sinhala)',
+  'Task description (Tamil)',
+  'Required Images',
+];
 
 @Component({
   selector: 'app-create-crop-calender',
@@ -541,7 +582,7 @@ export class CreateCropCalenderComponent implements OnInit {
     }
   }
 
-    openXlsxUploadDialog(cropId: number) {
+        openXlsxUploadDialog(cropId: number) {
     Swal.fire({
       title: 'Upload XLSX File',
       html: `
@@ -590,6 +631,7 @@ export class CreateCropCalenderComponent implements OnInit {
             fileNameDisplay!.textContent = `Selected file: ${fileInput.files[0].name}`;
             Swal.getConfirmButton()?.removeAttribute('disabled');
           } else {
+            fileNameDisplay!.textContent = 'No file selected';
             Swal.getConfirmButton()?.setAttribute('disabled', 'true');
           }
         };
@@ -603,9 +645,35 @@ export class CreateCropCalenderComponent implements OnInit {
         }
         return null;
       },
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed && result.value) {
-        this.uploadXlsxFile(cropId, result.value);
+        const file: File = result.value;
+
+        this.isLoading = true;
+        const errorMessage = await this.validateXlsxFile(file);
+        this.isLoading = false;
+
+        if (errorMessage) {
+          // Show the validation error in a separate alert, then reopen the upload dialog
+          Swal.fire({
+            icon: 'error',
+            title: 'Invalid Excel File',
+            html: `<div class="text-left">${errorMessage}</div>`,
+            confirmButtonText: 'OK',
+            allowOutsideClick: false,
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+              confirmButton:
+                'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+            },
+          }).then(() => {
+            this.openXlsxUploadDialog(cropId);
+          });
+          return;
+        }
+
+        this.uploadXlsxFile(cropId, file);
       } else {
         // User cancelled the upload dialog: clean up the created crop calendar,
         // then show a cancellation message instead of the delete message
@@ -865,6 +933,70 @@ export class CreateCropCalenderComponent implements OnInit {
     if (value && value.length > 0) {
       const capitalized = value.charAt(0).toUpperCase() + value.slice(1);
       this.cropForm.get('specialNotes')?.setValue(capitalized);
+    }
+  }
+
+    private async validateXlsxFile(file: File): Promise<string | null> {
+    try {
+      const buffer = await file.arrayBuffer();
+      const workbook = XLSX.read(buffer, { type: 'array' });
+      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+
+      const rows = XLSX.utils.sheet_to_json<any[]>(sheet, {
+        header: 1,
+        defval: '',
+        blankrows: false,
+      });
+
+      if (!rows.length) {
+        return 'The selected file is empty.';
+      }
+
+      const headers = (rows[0] as any[]).map((h) =>
+        String(h ?? '').trim().toLowerCase(),
+      );
+      const dataRows = rows.slice(1);
+
+      // 1. Columns that don't exist in the header row
+      const missingColumns = REQUIRED_XLSX_COLUMNS.filter(
+        (col) => !headers.includes(col.trim().toLowerCase()),
+      );
+
+      if (missingColumns.length > 0) {
+        return `Missing required column(s):<br><b>${missingColumns.join(', ')}</b>`;
+      }
+
+      if (dataRows.length === 0) {
+        return 'The file has no data rows.';
+      }
+
+      // 2. Columns that exist but have empty cells
+      const emptyCellErrors: string[] = [];
+      REQUIRED_XLSX_COLUMNS.forEach((col) => {
+        const colIndex = headers.indexOf(col.trim().toLowerCase());
+        const emptyRows: number[] = [];
+
+        dataRows.forEach((row, i) => {
+          const cell = (row as any[])[colIndex];
+          if (cell === undefined || cell === null || String(cell).trim() === '') {
+            emptyRows.push(i + 2); // +2 = header row + 1-based index
+          }
+        });
+
+        if (emptyRows.length > 0) {
+          const shown = emptyRows.slice(0, 5).join(', ');
+          const more = emptyRows.length > 5 ? ` and ${emptyRows.length - 5} more` : '';
+          emptyCellErrors.push(`<b>${col}</b> (row ${shown}${more})`);
+        }
+      });
+
+      if (emptyCellErrors.length > 0) {
+        return `No data in required column(s):<br>${emptyCellErrors.join('<br>')}`;
+      }
+
+      return null;
+    } catch {
+      return 'Unable to read the file. Please upload a valid Excel file.';
     }
   }
 }

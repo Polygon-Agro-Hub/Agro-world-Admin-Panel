@@ -541,7 +541,7 @@ export class CreateCropCalenderComponent implements OnInit {
     }
   }
 
-  openXlsxUploadDialog(cropId: number) {
+    openXlsxUploadDialog(cropId: number) {
     Swal.fire({
       title: 'Upload XLSX File',
       html: `
@@ -607,7 +607,9 @@ export class CreateCropCalenderComponent implements OnInit {
       if (result.isConfirmed && result.value) {
         this.uploadXlsxFile(cropId, result.value);
       } else {
-        this.deleteCropCalender(cropId);
+        // User cancelled the upload dialog: clean up the created crop calendar,
+        // then show a cancellation message instead of the delete message
+        this.deleteCropCalender(cropId, true);
       }
     });
   }
@@ -719,15 +721,17 @@ export class CreateCropCalenderComponent implements OnInit {
     });
   }
 
-  deleteCropCalender(id: number) {
+    deleteCropCalender(id: number, isUploadCancelled: boolean = false) {
     this.isLoading = true;
     this.cropCalendarService.deleteCropCalender(id).subscribe({
       next: () => {
         this.isLoading = false;
         Swal.fire({
-          title: 'Success',
-          text: 'Crop calendar deleted successfully.',
-          icon: 'success',
+          title: isUploadCancelled ? 'Cancelled' : 'Success',
+          text: isUploadCancelled
+            ? 'Crop calendar Excel upload cancelled.'
+            : 'Crop calendar deleted successfully.',
+          icon: isUploadCancelled ? 'info' : 'success',
           customClass: {
             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
             title: 'font-semibold',
@@ -740,7 +744,9 @@ export class CreateCropCalenderComponent implements OnInit {
         this.isLoading = false;
         Swal.fire({
           title: 'Error',
-          text: 'Failed to delete crop calendar.',
+          text: isUploadCancelled
+            ? 'Upload cancelled, but failed to clean up the crop calendar.'
+            : 'Failed to delete crop calendar.',
           icon: 'error',
           customClass: {
             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',

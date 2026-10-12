@@ -56,6 +56,7 @@ export class ViewWholesaleCustomersComponent implements OnInit {
   selectedCustomerForCredit: Customers | null = null;
   newCreditLimit: number | null = null;
   isUpdatingCredit: boolean = false;
+  readonly MIN_CREDIT_LIMIT = 3500;
 
   ratingFilterOptions = [
     {
@@ -83,7 +84,7 @@ export class ViewWholesaleCustomersComponent implements OnInit {
     private router: Router,
     public permissionService: PermissionService,
     public tokenService: TokenService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.fetchWholesaleCustomers();
@@ -310,7 +311,7 @@ export class ViewWholesaleCustomersComponent implements OnInit {
       !this.selectedCustomerForCredit ||
       this.newCreditLimit === null ||
       this.newCreditLimit === undefined ||
-      this.newCreditLimit < 2000 ||
+      this.newCreditLimit < this.MIN_CREDIT_LIMIT ||
       !Number.isInteger(this.newCreditLimit)
     )
       return;

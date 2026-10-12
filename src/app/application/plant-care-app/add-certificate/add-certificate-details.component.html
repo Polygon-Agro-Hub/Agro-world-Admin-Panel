@@ -392,12 +392,13 @@
           formControlName="price"
           (input)="formatPriceInput($event)"
           (keypress)="allowDecimalInput($event)"
+          (blur)="formatPriceOnBlur($event)"
           class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [ngClass]="{
             'border-red-500':
-              certificateForm.get('price')?.invalid &&
-              (certificateForm.get('price')?.touched ||
-                certificateForm.get('price')?.dirty)
+            certificateForm.get('price')?.invalid &&
+            (certificateForm.get('price')?.touched ||
+            certificateForm.get('price')?.dirty)
           }"
         />
 

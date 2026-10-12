@@ -170,137 +170,145 @@ export class ViewCentreRequirementComponent implements OnInit {
   }
 
   // Download PDF
-  downloadTemplate1(): void {
-  if (this.distributionOrders.length === 0) {
-    alert('No data available to download');
-    return;
-  }
-
-  this.isDownloading = true;
-
-  try {
-    // Create new PDF document
-    const doc = new jsPDF('l', 'mm', 'a4'); // landscape orientation
-
-    // Add title
-    doc.setFontSize(18);
-    doc.text('Distribution Orders Report', 14, 15);
-
-    // Add generation date
-    doc.setFontSize(10);
-    doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 14, 22);
-
-    // Add filters info if applied
-    let yPos = 28;
-    if (this.deliveryDateFilter) {
-      doc.text(`Delivery Date: ${this.formatDateForDisplay(this.deliveryDateFilter)}`, 14, yPos);
-      yPos += 5;
-    }
-    if (this.selectedCenter) {
-      doc.text(`Centre: ${this.selectedCenter.centerName}`, 14, yPos);
-      yPos += 5;
-    }
-    if (this.search) {
-      doc.text(`Search: ${this.search}`, 14, yPos);
-      yPos += 5;
+    downloadTemplate1(): void {
+    if (this.distributionOrders.length === 0) {
+      alert('No data available to download');
+      return;
     }
 
-    // Prepare table data
-    const tableData = this.distributionOrders.map((item, index) => [
-      index + 1,
-      item.cropNameEnglish,
-      item.varietyNameEnglish,
-      item.quantity,
-      this.formatDateForExcel(item.sheduleDate),
-      item.regCode,
-      item.centerName
-    ]);
+    this.isDownloading = true;
 
-    // Add table
-    autoTable(doc, {
-      head: [['No', 'Crop', 'Variety', 'Quantity (kg)', 'Scheduled Date', 'Centre Code', 'Centre Name']],
-      body: tableData,
-      startY: yPos + 5,
-      theme: 'grid',
-      headStyles: {
-        fillColor: [41, 128, 185],
-        textColor: 255,
-        fontStyle: 'bold',
-        halign: 'center'
-      },
-      columnStyles: {
-        0: { halign: 'center', cellWidth: 15 },
-        1: { cellWidth: 35 },
-        2: { cellWidth: 35 },
-        3: { halign: 'right', cellWidth: 25 },
-        4: { halign: 'center', cellWidth: 35 },
-        5: { halign: 'center', cellWidth: 30 },
-        6: { cellWidth: 'auto' }
-      },
-      styles: {
-        fontSize: 9,
-        cellPadding: 3
-      },
-      alternateRowStyles: {
-        fillColor: [245, 245, 245]
+    try {
+      // Create new PDF document
+      const doc = new jsPDF('l', 'mm', 'a4'); // landscape orientation
+
+      // Add title
+      doc.setFontSize(18);
+      doc.text('Distribution Orders Report', 14, 15);
+
+      // Add generation date
+      doc.setFontSize(10);
+      doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 14, 22);
+
+      // Add filters info if applied
+      let yPos = 28;
+      if (this.deliveryDateFilter) {
+        doc.text(`Delivery Date: ${this.formatDateForDisplay(this.deliveryDateFilter)}`, 14, yPos);
+        yPos += 5;
       }
-    });
-
-    // Add footer with page numbers
-    const pageCount = (doc as any).internal.getNumberOfPages();
-    for (let i = 1; i <= pageCount; i++) {
-      doc.setPage(i);
-      doc.setFontSize(8);
-      doc.text(
-        `Page ${i} of ${pageCount}`,
-        doc.internal.pageSize.getWidth() / 2,
-        doc.internal.pageSize.getHeight() - 10,
-        { align: 'center' }
-      );
-    }
-
-    // Generate filename with Centre code, Centre name and Scheduled Delivery Date
-    let fileName = 'Distribution_Orders';
-
-    if (this.selectedCenter) {
-      // Centre registration code: keep letters, numbers and hyphens (e.g. D-UPBB-01)
-      const regCode = (
-        (this.selectedCenter as any).regCode ||
-        this.distributionOrders[0]?.regCode ||
-        ''
-      )
-        .toString()
-        .trim()
-        .replace(/[^a-zA-Z0-9-]/g, '');
-
-      // Centre name: remove special characters, replace spaces with underscores
-      const cleanCentreName = this.selectedCenter.centerName
-        .replace(/[^a-zA-Z0-9\s]/g, '')
-        .trim()
-        .replace(/\s+/g, '_');
-
-      if (regCode) {
-        fileName += `_${regCode}`;
+      if (this.selectedCenter) {
+        doc.text(`Centre: ${this.selectedCenter.centerName}`, 14, yPos);
+        yPos += 5;
       }
-      fileName += `_${cleanCentreName}`;
+      if (this.search) {
+        doc.text(`Search: ${this.search}`, 14, yPos);
+        yPos += 5;
+      }
+
+      // Prepare table data
+      const tableData = this.distributionOrders.map((item, index) => [
+        index + 1,
+        item.cropNameEnglish,
+        item.varietyNameEnglish,
+        item.quantity,
+        this.formatDateForExcel(item.sheduleDate),
+        item.regCode,
+        item.centerName
+      ]);
+
+      // Add table
+      autoTable(doc, {
+        head: [['No', 'Crop', 'Variety', 'Quantity (kg)', 'Scheduled Date', 'Centre Code', 'Centre Name']],
+        body: tableData,
+        startY: yPos + 5,
+        theme: 'grid',
+        headStyles: {
+          fillColor: [41, 128, 185],
+          textColor: 255,
+          fontStyle: 'bold',
+          halign: 'center'
+        },
+        columnStyles: {
+          0: { halign: 'center', cellWidth: 15 },
+          1: { cellWidth: 35 },
+          2: { cellWidth: 35 },
+          3: { halign: 'right', cellWidth: 25 },
+          4: { halign: 'center', cellWidth: 35 },
+          5: { halign: 'center', cellWidth: 30 },
+          6: { cellWidth: 'auto' }
+        },
+        styles: {
+          fontSize: 9,
+          cellPadding: 3
+        },
+        alternateRowStyles: {
+          fillColor: [245, 245, 245]
+        }
+      });
+
+      // Add footer with page numbers
+      const pageCount = (doc as any).internal.getNumberOfPages();
+      for (let i = 1; i <= pageCount; i++) {
+        doc.setPage(i);
+        doc.setFontSize(8);
+        doc.text(
+          `Page ${i} of ${pageCount}`,
+          doc.internal.pageSize.getWidth() / 2,
+          doc.internal.pageSize.getHeight() - 10,
+          { align: 'center' }
+        );
+      }
+
+      // Filename format:
+      // Distribution_Orders_D-UPBB-01_Bandarawela_Scheduled_Delivery_Date_2026-09-30
+      let fileName = 'Distribution_Orders';
+
+      if (this.selectedCenter) {
+        // centerName looks like "D-UPBB-01 - Bandarawela"
+        const centerNameParts = this.selectedCenter.centerName.split(' - ');
+
+        // Centre code: from regCode, otherwise the part before " - "
+        const regCode = (
+          (this.selectedCenter as any).regCode ||
+          this.distributionOrders[0]?.regCode ||
+          (centerNameParts.length > 1 ? centerNameParts[0] : '')
+        )
+          .toString()
+          .trim()
+          .replace(/[^a-zA-Z0-9-]/g, '');
+
+        // Centre name: only the part after " - ", spaces replaced with underscores
+        const cleanCentreName = centerNameParts
+          .slice(centerNameParts.length > 1 ? 1 : 0)
+          .join(' ')
+          .replace(/[^a-zA-Z0-9\s]/g, '')
+          .trim()
+          .replace(/\s+/g, '_');
+
+        if (regCode) {
+          fileName += `_${regCode}`;
+        }
+        if (cleanCentreName) {
+          fileName += `_${cleanCentreName}`;
+        }
+      }
+
+      // Add Scheduled Delivery Date
+      if (this.deliveryDateFilter) {
+        fileName += `_Scheduled_Delivery_Date_${this.deliveryDateFilter}`;
+      }
+
+      fileName += '.pdf';
+
+      doc.save(fileName);
+
+      this.isDownloading = false;
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('Error generating PDF. Please try again.');
+      this.isDownloading = false;
     }
-
-    // Add Scheduled Delivery Date
-    if (this.deliveryDateFilter) {
-      fileName += `_Scheduled_Delivery_Date_${this.deliveryDateFilter}`;
-    }
-
-    fileName += '.pdf';
-
-    doc.save(fileName);
-
-    this.isDownloading = false;
-  } catch (error) {
-    console.error('Error generating PDF:', error);
-    alert('Error generating PDF. Please try again.');
-    this.isDownloading = false;
   }
-}
 
   // Helper methods
   formatDate(date: Date): string {

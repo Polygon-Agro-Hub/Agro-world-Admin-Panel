@@ -138,6 +138,12 @@
     display: inline-flex !important;
 }
 
+@media (max-width: 1400px) {
+    .package-pricing-label {
+      min-height: 2.5rem;
+    }
+}
+
 /* Reduce dropdown item padding */
 ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
     padding-left: 15px !important;

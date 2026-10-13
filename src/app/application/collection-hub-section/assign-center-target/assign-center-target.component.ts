@@ -583,6 +583,19 @@ export class AssignCenterTargetComponent {
     selected.setHours(0, 0, 0, 0);
     return selected < today;
   }
+
+  blockInvalidKeys(event: KeyboardEvent): void {
+    if (['-', '+', 'e', 'E'].includes(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  blockInvalidPaste(event: ClipboardEvent): void {
+    const pasted = event.clipboardData?.getData('text') ?? '';
+    if (/[-+eE]/.test(pasted)) {
+      event.preventDefault();
+    }
+  }
 }
 
 class CenterDetails {

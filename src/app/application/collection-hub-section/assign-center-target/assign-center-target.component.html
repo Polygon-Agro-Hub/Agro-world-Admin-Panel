@@ -19,14 +19,14 @@
 
       <div class="mr-5">
         <p-calendar id="toDate" [(ngModel)]="selectDate" (onSelect)="onDateChange($event)"
-          (onClear)="onDateChange(null)" (onClose)="checkDateSelection()" [showIcon]="true" [showClear]="true"
-          [showButtonBar]="true" placeholder="Select Date" iconDisplay="input" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600
-                     [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568]
-                     [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
-                     [&_.p-datepicker-header]:dark:bg-[#2d354d]
-                     [&_.p-datepicker-header]:dark:text-white
-                     [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
-                     [&_.p-button:hover]:dark:bg-[#6b7280]"
+          (onClose)="checkDateSelection()" [showIcon]="true" [showButtonBar]="true" placeholder="Select Date"
+          iconDisplay="input" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600
+             [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568]
+             [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+             [&_.p-datepicker-header]:dark:bg-[#2d354d]
+             [&_.p-datepicker-header]:dark:text-white
+             [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+             [&_.p-button:hover]:dark:bg-[#6b7280]"
           inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
           [appendTo]="'body'"></p-calendar>
 

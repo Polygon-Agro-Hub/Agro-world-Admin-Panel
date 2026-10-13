@@ -33,10 +33,12 @@
             Centre Name is required
           </div>
         </div>
-        
+
 
         <!-- Select Manager (conditionally shown) -->
-        <div *ngIf="selectedOfficer?.jobRole === LIGHT_WEIGHT_DRIVER || selectedOfficer?.jobRole === HEAVY_WEIGHT_DRIVER" class="w-full">
+        <div
+          *ngIf="selectedOfficer?.jobRole === LIGHT_WEIGHT_DRIVER || selectedOfficer?.jobRole === HEAVY_WEIGHT_DRIVER"
+          class="w-full">
           <p-dropdown [options]="collectionCenterManagerNames" optionLabel="displayLabel" optionValue="id"
             placeholder="Select Manager" [(ngModel)]="selectedIrmId" #selectedIrmIdInput="ngModel" name="selectedIrmId"
             required panelStyleClass="custom-dropdown-panel" [filter]="true"
@@ -103,8 +105,7 @@
   </div>
 </div>
 
-<div
-  class="fixed-width-container w-full max-w-full min-w-0 box-border">
+<div class="fixed-width-container w-full max-w-full min-w-0 box-border">
   <div class="pt-5 px-12 pb-5 w-full min-w-0 box-border bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
 
     <div *ngIf="Cname" class="flex items-center my-5">
@@ -124,17 +125,19 @@
         </h2>
       </div>
 
-      <div class="flex min-w-0 flex-1 flex-wrap items-center justify-end gap-y-2 mr-5">
-        <i class="mr-6 w-6 h-6 fill-current text-textLight dark:text-textDark">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-            <path
-              d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z" />
-          </svg>
+      <div class="flex min-w-0 flex-1 flex-wrap items-center justify-end gap-x-5 gap-y-3">
+        <div class="flex items-center gap-4 shrink-0">
+          <i class="w-6 h-6 fill-current text-textLight dark:text-textDark">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+              <path
+                d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z" />
+            </svg>
 
-        </i>
-        <p class="text-textLight dark:text-textDark mr-6">Filter By</p>
+          </i>
+          <p class="text-textLight dark:text-textDark mr-6">Filter By</p>
+        </div>
 
-        <div class="mr-5">
+        <div>
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] custom-top-dropdown"
             [options]="driverRoleOptions" [checkmark]="false" optionLabel="label" optionValue="value"
@@ -143,7 +146,7 @@
             panelStyleClass="custom-top-dropdown"></p-dropdown>
         </div>
 
-        <div class="mr-5">
+        <div>
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] custom-top-dropdown"
             [options]="categoryOptions" [checkmark]="false" optionLabel="label" optionValue="value"
@@ -152,7 +155,7 @@
             panelStyleClass="custom-top-dropdown"></p-dropdown>
         </div>
 
-        <div class="mr-5">
+        <div>
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] custom-top-dropdown"
             [options]="statusOptions" [checkmark]="false" optionLabel="label" optionValue="value"
@@ -160,7 +163,7 @@
             (onChange)="applyStatusFilters()" panelStyleClass="custom-top-dropdown"></p-dropdown>
         </div>
 
-        <div class="mr-5">
+        <div>
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] custom-top-dropdown"
             [options]="centerOptions" [checkmark]="false" optionLabel="label" optionValue="value"
@@ -168,7 +171,7 @@
             panelStyleClass="custom-top-dropdown"></p-dropdown>
         </div>
 
-        <div class="mr-5">
+        <div>
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] custom-top-dropdown"
             [options]="centerStatusOptions" [checkmark]="false" optionLabel="label" optionValue="value"
@@ -177,7 +180,8 @@
             panelStyleClass="custom-top-dropdown"></p-dropdown>
         </div>
 
-        <div class="basis-full ml-auto flex max-w-md min-w-0 items-center rounded-full px-4 py-2 bg-[#F1F1F1] dark:bg-[#272F45]">
+        <div
+          class="basis-full ml-auto flex max-w-md min-w-0 items-center rounded-full px-4 py-2 bg-[#F1F1F1] dark:bg-[#272F45]">
           <input type="text" placeholder="Search by EMP ID, NIC" [(ngModel)]="searchNIC"
             class="bg-transparent outline-none w-full text-textLight dark:text-textDark" (keyup.enter)="onSearch()"
             (keyup.esc)="offSearch()" />
@@ -207,8 +211,9 @@
       <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 dark:text-textDark" />
     </div>
 
-    <div *ngIf="hasData" class="isolate w-full overflow-auto max-h-[60vh] scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
-      <table class="min-w-[2060px] divide-y divide-gray-200 table-auto whitespace-nowrap">
+    <div *ngIf="hasData"
+      class="relative isolate w-full overflow-auto max-h-[60vh] scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+      <table class="min-w-[2060px] table-auto whitespace-nowrap border-separate border-spacing-0">
         <colgroup>
           <col style="width: 64px" />
           <col style="width: 128px" />
@@ -224,49 +229,31 @@
           <col style="width: 220px" />
           <col style="width: 60px" />
         </colgroup>
-        <thead class="sticky top-0 z-40 bg-white dark:bg-tileBlack">
-          <tr class="bg-white dark:bg-tileBlack whitespace-nowrap">
-            <th class="sticky left-0 z-50 box-border w-[64px] min-w-[64px] max-w-[64px] bg-white dark:bg-tileBlack px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
-              No
-            </th>
-            <!-- <th class="py-3 font-normal text-gray-500 text-left"></th> -->
-            <th class="sticky left-[64px] z-50 box-border w-[128px] min-w-[128px] max-w-[128px] bg-white dark:bg-tileBlack px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
-              EMP ID
-            </th>
-            <th class="sticky left-[192px] z-50 box-border w-[192px] min-w-[192px] max-w-[192px] bg-white dark:bg-tileBlack px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
-              First Name
-            </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
-              Last Name
-            </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
-              Driver Role
-            </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
-              Driver Category
-            </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
-              Centre
-            </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
-              Centre Status
-            </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
-              Status
-            </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
-              Phone
-            </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
-              NIC
-            </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
-              Last Modified By
-            </th>
+        <thead>
+          <tr
+            class="[&>th]:sticky [&>th]:top-0 [&>th]:bg-white dark:[&>th]:bg-tileBlack [&>th]:border-b [&>th]:border-gray-200 dark:[&>th]:border-[#4B555A]">
+            <th
+              class="left-0 z-50 box-border w-[64px] min-w-[64px] max-w-[64px] px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
+              No</th>
+            <th
+              class="left-[64px] z-50 box-border w-[128px] min-w-[128px] max-w-[128px] px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
+              EMP ID</th>
+            <th
+              class="left-[192px] z-50 box-border w-[192px] min-w-[192px] max-w-[192px] px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
+              First Name</th>
+            <th class="z-40 px-4 py-3 font-normal text-textLight dark:text-textDark text-left">Last Name</th>
+            <th class="z-40 px-4 py-3 font-normal text-textLight dark:text-textDark text-left">Driver Role</th>
+            <th class="z-40 px-4 py-3 font-normal text-textLight dark:text-textDark text-left">Driver Category</th>
+            <th class="z-40 px-4 py-3 font-normal text-textLight dark:text-textDark text-left">Centre</th>
+            <th class="z-40 px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Centre Status</th>
+            <th class="z-40 px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Status</th>
+            <th class="z-40 px-4 py-3 font-normal text-textLight dark:text-textDark text-left">Phone</th>
+            <th class="z-40 px-4 py-3 font-normal text-textLight dark:text-textDark text-left">NIC</th>
+            <th class="z-40 px-4 py-3 font-normal text-textLight dark:text-textDark text-left">Last Modified By</th>
             <th *ngIf="
                ( permissionService.hasPermission('View individual collection officer') ||
                 tokenService.getUserDetails().role === '1') && !Cname
-              " class="py-3 font-normal text-textLight dark:text-textDark text-center"></th>
+              " class="z-40 py-3 font-normal text-textLight dark:text-textDark text-center"></th>
 
             <!-- <th *ngIf="
                 permissionService.hasPermission('Manage CO / CCM / DO') ||
@@ -288,18 +275,21 @@
                       totalItems: totalItems
                     };
               let i = index
-            ">
+            " class="[&>td]:border-b [&>td]:border-gray-200 dark:[&>td]:border-[#4B555A]">
             <!-- <td class="py-3">
             <img class="profile-pic w-14 h-14 bg-white rounded-full" [src]="'data:image/jpeg;base64,' + item.image"
               alt="Profile Picture" width="50" height="50" />
           </td> -->
-            <td class="sticky left-0 z-30 box-border w-[64px] min-w-[64px] max-w-[64px] bg-tileLight dark:bg-tileBlack px-3 py-3 text-left text-textLight dark:text-textDark">
+            <td
+              class="sticky left-0 z-30 box-border w-[64px] min-w-[64px] max-w-[64px] bg-tileLight dark:bg-tileBlack px-3 py-3 text-left text-textLight dark:text-textDark">
               {{ (page - 1) * itemsPerPage + i + 1 | number:'2.0' }}
             </td>
-            <td class="sticky left-[64px] z-30 box-border w-[128px] min-w-[128px] max-w-[128px] bg-tileLight dark:bg-tileBlack px-3 py-3 text-left text-textLight dark:text-textDark">
+            <td
+              class="sticky left-[64px] z-30 box-border w-[128px] min-w-[128px] max-w-[128px] bg-tileLight dark:bg-tileBlack px-3 py-3 text-left text-textLight dark:text-textDark">
               {{ item.empId }}
             </td>
-            <td class="sticky left-[192px] z-30 box-border w-[192px] min-w-[192px] max-w-[192px] bg-tileLight dark:bg-tileBlack px-3 py-3 text-left text-textLight dark:text-textDark">
+            <td
+              class="sticky left-[192px] z-30 box-border w-[192px] min-w-[192px] max-w-[192px] bg-tileLight dark:bg-tileBlack px-3 py-3 text-left text-textLight dark:text-textDark">
               {{ item.firstNameEnglish }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
@@ -344,7 +334,7 @@
                       item.status === 'Approved',
                     'font-bold px-3 py-1 text-sm bg-red-100 text-[#D16D6A] rounded-lg':
                       item.status === 'Rejected'
-                  }" class="inline-block font-medium rounded-md px-4 py-2 text-xs text-center w-32"
+                  }" class="inline-block font-medium rounded-md px-4 py-2 text-xs text-center w-32 shadow-md"
                   [class.cursor-pointer]="
                     permissionService.hasPermission(
                       'Stakeholder approve driver'
@@ -413,11 +403,11 @@
         </tbody>
       </table>
     </div>
-      <div class="dark:bg-[#262f45]">
-        <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
-          [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
-          [screenReaderCurrentLabel]="'Youre on page'">
-        </pagination-controls>
-      </div>
+    <div class="dark:bg-[#262f45]">
+      <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
+        [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
+        [screenReaderCurrentLabel]="'Youre on page'">
+      </pagination-controls>
+    </div>
   </div>
 </div>

@@ -315,19 +315,17 @@ export class UpdateDistributionOfficerComponent {
 
   ngOnInit() {
     this.scrollToTop();
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
 
-    this.minInsuranceDate = tomorrow;
-    this.insuranceCalendarDefaultDate = today;
-    this.setDisabledInsuranceDates(today);
+  this.minInsuranceDate = tomorrow;
 
-    this.loadBanks();
-    this.loadBranches();
-    this.setupDropdownOptions();
+  this.loadBanks();
+  this.loadBranches();
+  this.setupDropdownOptions();
     this.itemId = this.route.snapshot.params['id'];
     const urlSegments = this.router.url
       .split('/')
@@ -2706,6 +2704,21 @@ export class UpdateDistributionOfficerComponent {
       ];
     }
   }
+
+  openInsuranceCalendarAtMinDate(): void {
+  const target = this.minInsuranceDate;
+  this.insuranceDateBeforeCalendarOpen = this.driverObj.insExpDate
+    ? new Date(this.driverObj.insExpDate)
+    : null;
+  this.insuranceDateSelected = false;
+
+  setTimeout(() => {
+    this.insuranceCalendar.currentMonth = target.getMonth();
+    this.insuranceCalendar.currentYear = target.getFullYear();
+    this.insuranceCalendar.createMonths(target.getMonth(), target.getFullYear());
+    this.insuranceCalendar.updateFocus();
+  });
+}
 
   viewImagePreview(
     imagePreview: string | ArrayBuffer | null,

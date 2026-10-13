@@ -230,8 +230,11 @@ export class RetailComplaintsComponent implements OnInit {
   }
 
   onPageChange(p: number): void {
-    this.page = p;
+  if (!this.hasData || this.isLoading) {
+    return;
   }
+  this.page = p;
+}
 
   goBack(): void {
     this.router.navigate(['/complaints']);

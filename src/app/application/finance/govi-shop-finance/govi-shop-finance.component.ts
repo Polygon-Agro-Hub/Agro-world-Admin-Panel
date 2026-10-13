@@ -23,7 +23,6 @@ export class GoviShopFinanceComponent {
 
   ) { }
 
-
   togglePopupGoviShopCalender() {
     this.popupVisibleGoviShop = !this.popupVisibleGoviShop;
     if ((this.popupVisibleView = true)) {
@@ -33,6 +32,10 @@ export class GoviShopFinanceComponent {
 
   navPath(path: string) {
     this.router.navigate([path])
+  }
+
+  goBack() {
+    this.router.navigate(['/finance/action']);
   }
 
 }

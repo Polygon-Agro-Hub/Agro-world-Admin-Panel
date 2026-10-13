@@ -30,10 +30,6 @@ import { DropdownModule } from 'primeng/dropdown';
   styleUrl: './market-edit-product.component.css',
 })
 export class MarketEditProductComponent implements OnInit {
-  // References to the editable Sale Price and Competitor Price inputs so we
-  // can force a 2-decimal display right after data loads (Angular's number
-  // input strips trailing zeros unless we intervene, same as formatPrice()
-  // does on blur).
   @ViewChild('comPriceInput') comPriceInputRef?: ElementRef<HTMLInputElement>;
   @ViewChild('salePriceInput') salePriceInputRef?: ElementRef<HTMLInputElement>;
 
@@ -614,22 +610,24 @@ if (this.productObj.comPrice <= salePriceForComparison) {
     return false;
   }
 
-  // Check decimal places based on field type
-  if (value.includes('.')) {
-    const decimalPart = value.split('.')[1];
-    let maxDecimals = 2; // Default for price fields
-    if (
-      input.id === 'startValue' ||
-      input.id === 'changeby' ||
-      input.id === 'maxQuantity'
-    ) {
-      maxDecimals = 3;
+    // Check decimal places only when the caret is AFTER the decimal point
+    if (value.includes('.') && input.type === 'text') {
+      const maxDecimals = ['startValue', 'changeby', 'maxQuantity'].includes(input.id) ? 3 : 2;
+      const start = input.selectionStart;
+      const end = input.selectionEnd;
+      const dotIndex = value.indexOf('.');
+      const hasSelection = start !== null && end !== null && start !== end;
+
+      if (
+        start !== null &&
+        start > dotIndex &&
+        !hasSelection &&
+        value.split('.')[1].length >= maxDecimals
+      ) {
+        event.preventDefault();
+        return false;
+      }
     }
-    if (decimalPart && decimalPart.length >= maxDecimals && key !== '.') {
-      event.preventDefault();
-      return false;
-    }
-  }
 
   if (key === '.' && value === '') {
     event.preventDefault();
@@ -784,7 +782,18 @@ if (this.productObj.comPrice <= salePriceForComparison) {
     return;
   }
 
-  let value = parseFloat(rawValue);
+    // Lock decimals to 2 places (discountedPrice has none)
+  let cleanRaw = rawValue;
+
+  if (fieldName !== 'discountedPrice' && rawValue.includes('.')) {
+    const [intPart, decPart] = rawValue.split('.');
+    if (decPart.length > 2) {
+      cleanRaw = `${intPart}.${decPart.slice(0, 2)}`;
+      input.value = cleanRaw;
+    }
+  }
+
+  let value = parseFloat(cleanRaw);
 
   // Only clamp if it's a real negative number, not just "in progress" typing
   if (!isNaN(value) && value < 0) {

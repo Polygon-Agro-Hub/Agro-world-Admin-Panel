@@ -19,14 +19,14 @@
 
       <div class="mr-5">
         <p-calendar id="toDate" [(ngModel)]="selectDate" (onSelect)="onDateChange($event)"
-          (onClear)="onDateChange(null)" (onClose)="checkDateSelection()" [showIcon]="true" [showClear]="true"
-          [showButtonBar]="true" placeholder="Select Date" iconDisplay="input" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600
-                     [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568]
-                     [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
-                     [&_.p-datepicker-header]:dark:bg-[#2d354d]
-                     [&_.p-datepicker-header]:dark:text-white
-                     [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
-                     [&_.p-button:hover]:dark:bg-[#6b7280]"
+          (onClose)="checkDateSelection()" [showIcon]="true" [showButtonBar]="true" placeholder="Select Date"
+          iconDisplay="input" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600
+             [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568]
+             [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+             [&_.p-datepicker-header]:dark:bg-[#2d354d]
+             [&_.p-datepicker-header]:dark:text-white
+             [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+             [&_.p-button:hover]:dark:bg-[#6b7280]"
           inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
           [appendTo]="'body'"></p-calendar>
 
@@ -111,6 +111,7 @@
                 [class.grade-editing-cell]="item.editingA">
                 <div class="flex flex-nowrap items-center gap-2 whitespace-nowrap">
                   <input type="number" [(ngModel)]="item.targetA" step="any" name="targetA" min="0"
+                    (keydown)="blockInvalidKeys($event)" (paste)="blockInvalidPaste($event)"
                     (change)="checkNegativeValue(item, 'A')" (input)="restrictDecimal($event, item, 'A')"
                     (input)="validateForm()"
                     class="border-[#3980C0] dark:bg-[#272F45] border-[2px] border-dotted rounded-lg w-24 px-2 py-1 shrink-0 focus:outline-none"
@@ -118,10 +119,8 @@
                     [disabled]="!item.isNew && !item.editingA" />
 
                   <button type="button" *ngIf="!item.isNew && !item.editingA && isDateValid"
-                    class="relative z-10 cursor-pointer"
-                    [attr.aria-disabled]="isAnyGradeEditing"
-                    [class.opacity-40]="isAnyGradeEditing"
-                    (mousedown)="editGrade(item, 'A')">
+                    class="relative z-10 cursor-pointer" [attr.aria-disabled]="isAnyGradeEditing"
+                    [class.opacity-40]="isAnyGradeEditing" (mousedown)="editGrade(item, 'A')">
                     <i class="fa-solid fa-pen-to-square text-[#3980C0] text-xl"
                       [ngClass]="isAnyGradeEditing ? 'text-gray-400 cursor-not-allowed' : 'text-[#3980C0]' "></i>
                   </button>
@@ -159,6 +158,7 @@
                 [class.grade-editing-cell]="item.editingB">
                 <div class="flex flex-nowrap items-center gap-2 whitespace-nowrap">
                   <input type="number" [(ngModel)]="item.targetB" step="any" name="targetB" min="0"
+                    (keydown)="blockInvalidKeys($event)" (paste)="blockInvalidPaste($event)"
                     (change)="checkNegativeValue(item, 'B')" (input)="restrictDecimal($event, item, 'B')"
                     (input)="validateForm()"
                     class="border-[#3980C0] dark:bg-[#272F45] border-[2px] border-dotted rounded-lg w-24 px-2 py-1 shrink-0 focus:outline-none"
@@ -166,10 +166,8 @@
                     [disabled]="!item.isNew && !item.editingB" />
 
                   <button type="button" *ngIf="!item.isNew && !item.editingB && isDateValid"
-                    class="relative z-10 cursor-pointer"
-                    [attr.aria-disabled]="isAnyGradeEditing"
-                    [class.opacity-40]="isAnyGradeEditing"
-                    (mousedown)="editGrade(item, 'B')">
+                    class="relative z-10 cursor-pointer" [attr.aria-disabled]="isAnyGradeEditing"
+                    [class.opacity-40]="isAnyGradeEditing" (mousedown)="editGrade(item, 'B')">
                     <i class="fa-solid fa-pen-to-square text-[#3980C0] text-xl"
                       [ngClass]="isAnyGradeEditing ? 'text-gray-400 cursor-not-allowed' : 'text-[#3980C0]' "></i>
                   </button>
@@ -202,6 +200,7 @@
                 [class.grade-editing-cell]="item.editingC">
                 <div class="flex flex-nowrap items-center gap-2 whitespace-nowrap">
                   <input type="number" [(ngModel)]="item.targetC" step="any" name="targetC" min="0"
+                    (keydown)="blockInvalidKeys($event)" (paste)="blockInvalidPaste($event)"
                     (change)="checkNegativeValue(item, 'C')" (input)="restrictDecimal($event, item, 'C')"
                     (input)="validateForm()"
                     class="border-[#3980C0] dark:bg-[#272F45] border-[2px] border-dotted rounded-lg w-24 px-2 py-1 shrink-0 focus:outline-none"
@@ -209,10 +208,8 @@
                     [disabled]="!item.isNew && !item.editingC" />
 
                   <button type="button" *ngIf="!item.isNew && !item.editingC && isDateValid"
-                    class="relative z-10 cursor-pointer"
-                    [attr.aria-disabled]="isAnyGradeEditing"
-                    [class.opacity-40]="isAnyGradeEditing"
-                    (mousedown)="editGrade(item, 'C')">
+                    class="relative z-10 cursor-pointer" [attr.aria-disabled]="isAnyGradeEditing"
+                    [class.opacity-40]="isAnyGradeEditing" (mousedown)="editGrade(item, 'C')">
                     <i class="fa-solid fa-pen-to-square text-[#3980C0] text-xl"
                       [ngClass]="isAnyGradeEditing ? 'text-gray-400 cursor-not-allowed' : 'text-[#3980C0]' "></i>
                   </button>

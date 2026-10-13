@@ -1,9 +1,10 @@
 import { CommonModule, Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import heic2any from 'heic2any';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 import { FinanceService } from '../../../../services/finance/finance.service';
 
@@ -14,7 +15,7 @@ import { FinanceService } from '../../../../services/finance/finance.service';
   templateUrl: './view-cop-transactions-document.component.html',
   styleUrl: './view-cop-transactions-document.component.css',
 })
-export class ViewCopTransactionsDocumentComponent implements OnInit {
+export class ViewCopTransactionsDocumentComponent implements OnInit, OnDestroy {
   isLoading = false;
   id: number = 0;
 
@@ -31,6 +32,9 @@ export class ViewCopTransactionsDocumentComponent implements OnInit {
   startY = 0;
 
   isPDF = false;
+
+  // Holds the converted HEIC -> JPEG blob URL so it can be released later
+  private heicObjectUrl: string | null = null;
 
   constructor(
     private location: Location,
@@ -52,6 +56,10 @@ export class ViewCopTransactionsDocumentComponent implements OnInit {
       console.warn('No transaction ID provided');
       this.back();
     }
+  }
+
+  ngOnDestroy(): void {
+    this.revokeHeicObjectUrl();
   }
 
   loadCopTransactionDocument(): void {
@@ -101,19 +109,80 @@ export class ViewCopTransactionsDocumentComponent implements OnInit {
   }
 
   loadCurrentImage(): void {
-    this.modalImage = this.transactionDocument.slip;
+    const url = this.transactionDocument.slip;
+
     this.modalTitle = 'Payment Slip';
-    this.isPDF = this.checkIfPDF(this.modalImage);
+    this.scale = 1;
+    this.translateX = 0;
+    this.translateY = 0;
+    this.isPDF = this.checkIfPDF(url);
 
     if (this.isPDF) {
-      this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-        this.modalImage,
-      );
+      this.modalImage = url;
+      this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    } else if (this.checkIfHEIC(url)) {
+      this.convertHeicToJpeg(url);
+    } else {
+      this.modalImage = url;
     }
   }
 
+  // Removes query string / hash (e.g. signed URLs) before checking the extension
+  private getCleanUrl(url: string): string {
+    return (url || '').split('?')[0].split('#')[0].toLowerCase();
+  }
+
   checkIfPDF(url: string): boolean {
-    return url?.toLowerCase().endsWith('.pdf');
+    return this.getCleanUrl(url).endsWith('.pdf');
+  }
+
+  checkIfHEIC(url: string): boolean {
+    const clean = this.getCleanUrl(url);
+    return clean.endsWith('.heic') || clean.endsWith('.heif');
+  }
+
+  private async convertHeicToJpeg(url: string): Promise<void> {
+    this.isLoading = true;
+
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Failed to download image (${response.status})`);
+      }
+
+      const heicBlob = await response.blob();
+
+      const converted = await heic2any({
+        blob: heicBlob,
+        toType: 'image/jpeg',
+        quality: 0.9,
+      });
+
+      // heic2any returns an array for multi-image HEIC files
+      const jpegBlob = Array.isArray(converted) ? converted[0] : converted;
+
+      this.revokeHeicObjectUrl();
+      this.heicObjectUrl = URL.createObjectURL(jpegBlob);
+      this.modalImage = this.heicObjectUrl;
+    } catch (error) {
+      console.error('Error converting HEIC image:', error);
+      this.modalImage = '';
+      Swal.fire({
+        title: 'Error!',
+        text: 'Failed to display the HEIC image',
+        icon: 'error',
+        confirmButtonColor: '#C40D0D',
+      });
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  private revokeHeicObjectUrl(): void {
+    if (this.heicObjectUrl) {
+      URL.revokeObjectURL(this.heicObjectUrl);
+      this.heicObjectUrl = null;
+    }
   }
 
   zoomIn(): void {

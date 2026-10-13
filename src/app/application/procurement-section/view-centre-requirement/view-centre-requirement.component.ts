@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
+import { firstValueFrom } from 'rxjs';
 import { ProcumentsService } from '../../../services/procuments/procuments.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import jsPDF from 'jspdf';
@@ -106,7 +107,7 @@ export class ViewCentreRequirementComponent implements OnInit {
     this.isLoading = true;
 
     const centerId = this.selectedCenter ? this.selectedCenter.id.toString() : '';
-    const trimmedSearch  = this.search ? this.search.trim() : '';
+    const trimmedSearch = this.search ? this.search.trim() : '';
 
     this.procumentsService
       .getDistributionOrders(
@@ -114,7 +115,7 @@ export class ViewCentreRequirementComponent implements OnInit {
         this.itemsPerPage,
         centerId,
         this.deliveryDateFilter,
-        trimmedSearch 
+        trimmedSearch
       )
       .subscribe({
         next: (response) => {
@@ -169,8 +170,43 @@ export class ViewCentreRequirementComponent implements OnInit {
     this.search = this.search.replace(/^\s+/, '');
   }
 
-  // Download PDF
-    downloadTemplate1(): void {
+  // Fetch ALL pages for the current filters (used by the PDF download)
+  private async fetchAllDistributionOrders(): Promise<DistributionOrder[]> {
+    const centerId = this.selectedCenter ? this.selectedCenter.id.toString() : '';
+    const trimmedSearch = this.search ? this.search.trim() : '';
+    const batchSize = 100;
+
+    const allItems: DistributionOrder[] = [];
+    let currentPage = 1;
+    let total = 0;
+
+    do {
+      const response: any = await firstValueFrom(
+        this.procumentsService.getDistributionOrders(
+          currentPage,
+          batchSize,
+          centerId,
+          this.deliveryDateFilter,
+          trimmedSearch
+        )
+      );
+
+      const items: DistributionOrder[] = response?.items || [];
+      total = response?.total || 0;
+
+      if (items.length === 0) {
+        break;
+      }
+
+      allItems.push(...items);
+      currentPage++;
+    } while (allItems.length < total);
+
+    return allItems;
+  }
+
+  // Download PDF (all pages)
+  async downloadTemplate1(): Promise<void> {
     if (this.distributionOrders.length === 0) {
       alert('No data available to download');
       return;
@@ -179,6 +215,15 @@ export class ViewCentreRequirementComponent implements OnInit {
     this.isDownloading = true;
 
     try {
+      // Get data from every page, not just the visible one
+      const allOrders = await this.fetchAllDistributionOrders();
+
+      if (allOrders.length === 0) {
+        alert('No data available to download');
+        this.isDownloading = false;
+        return;
+      }
+
       // Create new PDF document
       const doc = new jsPDF('l', 'mm', 'a4'); // landscape orientation
 
@@ -205,8 +250,8 @@ export class ViewCentreRequirementComponent implements OnInit {
         yPos += 5;
       }
 
-      // Prepare table data
-      const tableData = this.distributionOrders.map((item, index) => [
+      // Prepare table data from ALL orders
+      const tableData = allOrders.map((item, index) => [
         index + 1,
         item.cropNameEnglish,
         item.varietyNameEnglish,
@@ -270,7 +315,7 @@ export class ViewCentreRequirementComponent implements OnInit {
         // Centre code: from regCode, otherwise the part before " - "
         const regCode = (
           (this.selectedCenter as any).regCode ||
-          this.distributionOrders[0]?.regCode ||
+          allOrders[0]?.regCode ||
           (centerNameParts.length > 1 ? centerNameParts[0] : '')
         )
           .toString()

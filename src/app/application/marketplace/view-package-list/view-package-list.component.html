@@ -17,67 +17,69 @@
   <div
     class="flex max-h-[calc(100vh-140px)] flex-col overflow-hidden pt-5 pr-12 pl-12 pb-5 w-full min-w-0 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex justify-between items-center align-middle mb-8">
-      <div class="flex items-center">
-        <h2 class="text-2xl font-normal text-[#292929] dark:text-textDark">
-          All Packages ({{
-          this.filteredPackages.length < 9 ? "0" + this.filteredPackages.length : this.filteredPackages.length }}) </h2>
+  <div class="flex items-center">
+    <h2 class="text-2xl font-normal text-[#292929] dark:text-textDark whitespace-nowrap shrink-0">
+      All Packages ({{
+      this.filteredPackages.length < 9 ? "0" + this.filteredPackages.length : this.filteredPackages.length }})
+    </h2>
+  </div>
+
+  <div class="flex flex-1 min-w-0 flex-wrap items-center justify-end gap-4">
+    <div class="contents">
+      <div>
+        <p-dropdown [options]="packageTypeOptions" [(ngModel)]="selectedPackageType"
+          styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+          optionValue="value" [showClear]="true" placeholder="Type" />
       </div>
-      <div class="flex items-center gap-4 h-8">
-        <div class="flex items-center gap-1 h-8 relative">
-          <div class="mr-5">
-            <p-dropdown [options]="packageTypeOptions" [(ngModel)]="selectedPackageType"
-              styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-              optionValue="value" [showClear]="true" placeholder="Type" />
-          </div>
-          <p-calendar id="toDate" [(ngModel)]="date" (onSelect)="dateFilter()" (onClear)="clearDateFilter()"
-            placeholder="Last Defined Date" title="Last Defined Date" [showIcon]="true" [showClear]="true"
-            [showButtonBar]="false" iconDisplay="input" styleClass="calendar-compact dark-calendar"
-            [style]="{ width: '170px' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600
-              [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568]
-              [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
-              [&_.p-datepicker-header]:dark:bg-[#2d354d]
-              [&_.p-datepicker-header]:dark:text-white
-              [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
-              [&_.p-button:hover]:dark:bg-[#6b7280]"
-            [inputStyle]="{ width: '170px', padding: '0.5rem 1.5rem 0.5rem 0.75rem', fontSize: '0.875rem' }"
-            inputStyleClass="text-[16px] h-9 rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-2 border-[#E5E5E5] dark:border-[#AFAFAF] placeholder:text-[#9CA3AF] dark:placeholder:text-[#9CA3AF] focus:outline-none focus:border-blue-500 dark:focus:border-blue-400 cursor-pointer"
-            [appendTo]="'body'" />
-        </div>
+      <p-calendar id="toDate" [(ngModel)]="date" (onSelect)="dateFilter()" (onClear)="clearDateFilter()"
+        placeholder="Last Defined Date" title="Last Defined Date" [showIcon]="true" [showClear]="true"
+        [showButtonBar]="false" iconDisplay="input" styleClass="calendar-compact dark-calendar"
+        [style]="{ width: '170px' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600
+          [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568]
+          [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+          [&_.p-datepicker-header]:dark:bg-[#2d354d]
+          [&_.p-datepicker-header]:dark:text-white
+          [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+          [&_.p-button:hover]:dark:bg-[#6b7280]"
+        [inputStyle]="{ width: '170px', padding: '0.5rem 1.5rem 0.5rem 0.75rem', fontSize: '0.875rem' }"
+        inputStyleClass="text-[16px] h-9 rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-2 border-[#E5E5E5] dark:border-[#AFAFAF] placeholder:text-[#9CA3AF] dark:placeholder:text-[#9CA3AF] focus:outline-none focus:border-blue-500 dark:focus:border-blue-400 cursor-pointer"
+        [appendTo]="'body'" />
+    </div>
 
-        <div class="flex flex-row items-center">
-          <div class="mr-5">
-            <p-dropdown [options]="statusOptions" [(ngModel)]="selectedStatus"
-              styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-              optionValue="value" [showClear]="true" placeholder="Status" />
-          </div>
+    <div class="contents">
+      <div>
+        <p-dropdown [options]="statusOptions" [(ngModel)]="selectedStatus"
+          styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+          optionValue="value" [showClear]="true" placeholder="Status" />
+      </div>
 
-          <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96 relative group">
-            <!-- Input field -->
-            <input type="text" placeholder="Search by Package Name" [(ngModel)]="searchtext" name="searchtext"
-              (keyup.enter)="onSearch()" (keyup.esc)="offSearch()"
-              class="bg-transparent outline-none w-full dark:text-textDark text-gray-600" />
+      <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-72 shrink-0 relative group">
+        <!-- Input field -->
+        <input type="text" placeholder="Search by Package Name" [(ngModel)]="searchtext" name="searchtext"
+          (keyup.enter)="onSearch()" (keyup.esc)="offSearch()"
+          class="bg-transparent outline-none w-full dark:text-textDark text-gray-600" />
 
-            <!-- Search button -->
-            <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-              (click)="onSearch()">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
-              </svg>
-            </button>
+        <!-- Search button -->
+        <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+          (click)="onSearch()">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
+          </svg>
+        </button>
 
-            <!-- Clear button -->
-            <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none" (click)="offSearch()">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
-        </div>
+        <!-- Clear button -->
+        <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none" (click)="offSearch()">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
     </div>
+  </div>
+</div>
 
     <div *ngIf="!hasFilteredData" class="flex flex-col items-center w-full px-10 py-7 mt-6">
       <p class="text-[#494949] my-6 dark:text-textDark">

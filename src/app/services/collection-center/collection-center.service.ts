@@ -548,7 +548,7 @@ resetPassword(id: number, data: any): Observable<any> {
     return this.http.get(url, { headers, responseType: 'blob' });
   }
 
-  getAllCenterDailyTarget(centerId: number, page: number = 1, limit: number = 10, status: string = '', searchText: string = ''): Observable<any> {
+  getAllCenterDailyTarget(centerId: number, page: number = 1, limit: number = 10, status: string = '', searchText: string = '', formattedToday: string): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`
     });
@@ -561,6 +561,10 @@ resetPassword(id: number, data: any): Observable<any> {
 
     if (searchText) {
       url += `&searchText=${searchText}`
+    }formattedToday
+
+    if (formattedToday) {
+      url += `&formattedToday=${formattedToday}`
     }
 
     return this.http.get<any>(url, { headers });

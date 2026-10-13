@@ -53,16 +53,16 @@ export class UserBulkUploadComponent {
   existingUsers: ExistingUser[] = [];
 
   // Check if dark mode is enabled
-  private isDarkMode(): boolean {
-    if (typeof window !== 'undefined') {
-      return (
-        document.documentElement.classList.contains('dark') ||
-        document.body.classList.contains('dark') ||
-        window.matchMedia('(prefers-color-scheme: dark)').matches
-      );
-    }
-    return false;
+  // Check if the website's dark mode is enabled (not the system setting)
+private isDarkMode(): boolean {
+  if (typeof document !== 'undefined') {
+    return (
+      document.documentElement.classList.contains('dark') ||
+      document.body.classList.contains('dark')
+    );
   }
+  return false;
+}
 
   constructor(
     private http: HttpClient,

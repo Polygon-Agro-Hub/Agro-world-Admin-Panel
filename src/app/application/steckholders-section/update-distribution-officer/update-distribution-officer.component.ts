@@ -263,6 +263,66 @@ export class UpdateDistributionOfficerComponent {
     }
   }
 
+  private parseInsuranceDate(value: any): Date | null {
+    if (!value) return null;
+    if (value instanceof Date) {
+      return Number.isNaN(value.getTime()) ? null : new Date(value);
+    }
+
+    const str = String(value).trim();
+
+    // Plain date or MySQL datetime: "2026-05-10" / "2026-05-10 00:00:00"
+    const match = str.match(
+      /^(\d{4})-(\d{2})-(\d{2})(?:[ T]00:00:00(?:\.0+)?)?$/,
+    );
+    if (match) {
+      return new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+    }
+
+    // Full ISO string with timezone, e.g. "2025-12-18T18:30:00.000Z"
+    const parsed = new Date(str);
+    return Number.isNaN(parsed.getTime()) ? null : parsed;
+  }
+
+  private syncInsuranceCalendarValue(): void {
+    const date =
+      this.parseInsuranceDate(this.driverObj.insExpDate) ??
+      this.lastInsuranceExpiryDate;
+
+    if (date) {
+      this.insuranceCalendarValue = new Date(date);
+      this.lastInsuranceExpiryDate = new Date(date);
+      this.driverObj.insExpDate = new Date(date);
+    }
+  }
+
+  // Lowers the calendar's minDate to the saved date when it is in the past,
+  // so PrimeNG can display it instead of hiding it as out of range.
+  get calendarMinDate(): Date {
+    const saved = this.lastInsuranceExpiryDate;
+    return saved && saved < this.minInsuranceDate
+      ? saved
+      : this.minInsuranceDate;
+  }
+
+  // Disables every past day after the saved date, so the user can only
+  // pick a future date (the saved date itself stays enabled so it displays).
+  private buildDisabledInsuranceDates(savedDate: Date): void {
+    this.disabledInsuranceDates = [];
+
+    const day = new Date(savedDate);
+    day.setHours(0, 0, 0, 0);
+    day.setDate(day.getDate() + 1);
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    while (day <= today) {
+      this.disabledInsuranceDates.push(new Date(day));
+      day.setDate(day.getDate() + 1);
+    }
+  }
+
   openInsuranceCalendarAtToday(): void {
     const today = new Date();
     this.insuranceDateBeforeCalendarOpen = this.driverObj.insExpDate
@@ -298,9 +358,12 @@ export class UpdateDistributionOfficerComponent {
   restoreInsuranceDateOnCalendarClose(): void {
     if (!this.insuranceDateSelected) {
       const dateToRestore =
-        this.lastInsuranceExpiryDate ?? this.insuranceDateBeforeCalendarOpen;
-      this.insuranceCalendarValue = dateToRestore === null ? '' : dateToRestore;
-      this.driverObj.insExpDate = this.insuranceCalendarValue;
+        this.lastInsuranceExpiryDate ??
+        this.insuranceDateBeforeCalendarOpen ??
+        this.parseInsuranceDate(this.driverObj.insExpDate);
+
+      this.insuranceCalendarValue = dateToRestore ?? '';
+      this.driverObj.insExpDate = dateToRestore ?? '';
     }
   }
 
@@ -315,17 +378,17 @@ export class UpdateDistributionOfficerComponent {
 
   ngOnInit() {
     this.scrollToTop();
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-  const tomorrow = new Date(today);
-  tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
 
-  this.minInsuranceDate = tomorrow;
+    this.minInsuranceDate = tomorrow;
 
-  this.loadBanks();
-  this.loadBranches();
-  this.setupDropdownOptions();
+    this.loadBanks();
+    this.loadBranches();
+    this.setupDropdownOptions();
     this.itemId = this.route.snapshot.params['id'];
     const urlSegments = this.router.url
       .split('/')
@@ -383,15 +446,15 @@ export class UpdateDistributionOfficerComponent {
         const driverData = Array.isArray(response.driverData)
           ? response.driverData[0]
           : response.driverData;
-        const insuranceExpireDate =
-          driverData?.insExpDate ?? officerData.insExpDate;
-        if (insuranceExpireDate) {
-          const parsedInsuranceDate = new Date(insuranceExpireDate);
-          if (!Number.isNaN(parsedInsuranceDate.getTime())) {
-            this.driverObj.insExpDate = parsedInsuranceDate;
-            this.lastInsuranceExpiryDate = new Date(parsedInsuranceDate);
-            this.insuranceCalendarValue = new Date(parsedInsuranceDate);
-          }
+
+        const parsedInsuranceDate = this.parseInsuranceDate(
+          driverData?.insExpDate ?? officerData.insExpDate,
+        );
+        if (parsedInsuranceDate) {
+          this.driverObj.insExpDate = new Date(parsedInsuranceDate);
+          this.lastInsuranceExpiryDate = new Date(parsedInsuranceDate);
+          this.insuranceCalendarValue = new Date(parsedInsuranceDate);
+          this.buildDisabledInsuranceDates(parsedInsuranceDate);
         }
 
         if (
@@ -1494,7 +1557,6 @@ export class UpdateDistributionOfficerComponent {
   }
 
   nextFormCreate(page: 'pageOne' | 'pageTwo' | 'pageThree') {
-    console.log('test data', this.personalData)
     if (page === 'pageTwo') {
       const missingFields: string[] = [];
 
@@ -1678,6 +1740,11 @@ export class UpdateDistributionOfficerComponent {
     }
 
     this.selectedPage = page;
+
+    if (page === 'pageThree') {
+      // Calendar is created by *ngIf, so push the saved value in after it renders
+      setTimeout(() => this.syncInsuranceCalendarValue());
+    }
 
     setTimeout(() => {
       window.scrollTo({
@@ -1895,7 +1962,6 @@ export class UpdateDistributionOfficerComponent {
   }
 
   onSubmit() {
-    console.log('test data', this.personalData)
     if (this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER || this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER) {
       this.licNoModel.control.markAsTouched();
       this.confirmLicNoModel.control.markAsTouched();
@@ -2706,19 +2772,19 @@ export class UpdateDistributionOfficerComponent {
   }
 
   openInsuranceCalendarAtMinDate(): void {
-  const target = this.minInsuranceDate;
-  this.insuranceDateBeforeCalendarOpen = this.driverObj.insExpDate
-    ? new Date(this.driverObj.insExpDate)
-    : null;
-  this.insuranceDateSelected = false;
+    const target = this.minInsuranceDate;
+    this.insuranceDateBeforeCalendarOpen = this.driverObj.insExpDate
+      ? new Date(this.driverObj.insExpDate)
+      : null;
+    this.insuranceDateSelected = false;
 
-  setTimeout(() => {
-    this.insuranceCalendar.currentMonth = target.getMonth();
-    this.insuranceCalendar.currentYear = target.getFullYear();
-    this.insuranceCalendar.createMonths(target.getMonth(), target.getFullYear());
-    this.insuranceCalendar.updateFocus();
-  });
-}
+    setTimeout(() => {
+      this.insuranceCalendar.currentMonth = target.getMonth();
+      this.insuranceCalendar.currentYear = target.getFullYear();
+      this.insuranceCalendar.createMonths(target.getMonth(), target.getFullYear());
+      this.insuranceCalendar.updateFocus();
+    });
+  }
 
   viewImagePreview(
     imagePreview: string | ArrayBuffer | null,

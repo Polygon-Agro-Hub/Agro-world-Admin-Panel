@@ -2,9 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import Swal from 'sweetalert2';
 import { ProcumentsService } from '../../../services/procuments/procuments.service';
 import { TokenService } from '../../../services/token/services/token.service';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
+
 interface MismatchItem {
   id: number;
   name: string;
@@ -68,7 +70,6 @@ export class ProcumentProductMismatchTodayComponent implements OnInit {
     private router: Router,
     public tokenService: TokenService,
     public permissionService: PermissionService,
-
   ) { }
 
   ngOnInit(): void {
@@ -180,11 +181,17 @@ export class ProcumentProductMismatchTodayComponent implements OnInit {
     this.recommendation = '';
   }
 
-  submitApproval(): void {
+    submitApproval(): void {
     if (!this.recommendation.trim() || this.isSubmitting) return;
 
     if (!this.mismatch.transportId) {
       console.error('Missing transportId — cannot submit recommendation.');
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Transport ID is missing. Cannot submit recommendation.',
+        confirmButtonColor: '#3980C0',
+      });
       return;
     }
 
@@ -198,11 +205,29 @@ export class ProcumentProductMismatchTodayComponent implements OnInit {
       .subscribe({
         next: () => {
           this.isSubmitting = false;
-          this.closeApproveModal();
+          this.showApproveModal = false;
+          this.recommendation = '';
+
+          Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: 'Your recommendation has been sent for approval.',
+            confirmButtonColor: '#3980C0',
+            timer: 2500,
+          });
         },
         error: (err) => {
           this.isSubmitting = false;
           console.error('Error in submitApproval:', err);
+
+          Swal.fire({
+            icon: 'error',
+            title: 'Failed',
+            text:
+              err?.error?.message ||
+              'Failed to send the recommendation. Please try again.',
+            confirmButtonColor: '#3980C0',
+          });
         },
       });
   }

@@ -70,7 +70,7 @@ export class ProcumentProductMismatchTodayComponent implements OnInit {
     private router: Router,
     public tokenService: TokenService,
     public permissionService: PermissionService,
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('loadedItemId');
@@ -108,15 +108,15 @@ export class ProcumentProductMismatchTodayComponent implements OnInit {
             loadedFrom: details.centerName ?? '',
             loadedTime: details.createdAt
               ? new Date(details.createdAt).toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit',
-              })
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })
               : '',
             unloadedTime: details.unloadTime
               ? new Date(details.unloadTime).toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit',
-              })
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })
               : '',
             driver: {
               id: details.driverEmpId ?? '',
@@ -181,7 +181,7 @@ export class ProcumentProductMismatchTodayComponent implements OnInit {
     this.recommendation = '';
   }
 
-    submitApproval(): void {
+  submitApproval(): void {
     if (!this.recommendation.trim() || this.isSubmitting) return;
 
     if (!this.mismatch.transportId) {
@@ -214,6 +214,10 @@ export class ProcumentProductMismatchTodayComponent implements OnInit {
             text: 'Your recommendation has been sent for approval.',
             confirmButtonColor: '#3980C0',
             timer: 2500,
+          }).then(() => {
+            this.router.navigate([
+              '/procurement/pending-procurement-product-mismatch-today',
+            ]);
           });
         },
         error: (err) => {

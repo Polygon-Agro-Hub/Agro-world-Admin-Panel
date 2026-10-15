@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { TokenService } from '../token/services/token.service';
 import { Observable, throwError } from 'rxjs';
@@ -684,37 +684,43 @@ createPackingTargetLimit(tarValue: number): Observable<any> {
       );
   }
 
-  getLoadMismatchReportsToday(): Observable<MismatchReport[]> {
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`,
-      'Content-Type': 'application/json',
-    });
+  getLoadMismatchReportsToday(date?: string): Observable<MismatchReport[]> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
 
-    const url = `${this.apiUrl}procument/get-load-mismatch-reports-today`;
-
-    return this.http
-      .get<{ success: boolean; total: number; data: MismatchReport[] }>(url, {
-        headers,
-      })
-      .pipe(
-        map((response) => {
-          if (response.success) {
-            return response.data;
-          }
-          throw new Error('Failed to fetch load mismatch reports');
-        }),
-        catchError((error) => {
-          console.error('Error fetching load mismatch reports:', error);
-          return throwError(
-            () =>
-              new Error(
-                error.error?.message ||
-                  'An error occurred while fetching load mismatch reports'
-              )
-          );
-        })
-      );
+  let params = new HttpParams();
+  if (date) {
+    params = params.set('date', date); // format: YYYY-MM-DD
   }
+
+  const url = `${this.apiUrl}procument/get-load-mismatch-reports-today`;
+
+  return this.http
+    .get<{ success: boolean; total: number; data: MismatchReport[] }>(url, {
+      headers,
+      params,
+    })
+    .pipe(
+      map((response) => {
+        if (response.success) {
+          return response.data;
+        }
+        throw new Error('Failed to fetch load mismatch reports');
+      }),
+      catchError((error) => {
+        console.error('Error fetching load mismatch reports:', error);
+        return throwError(
+          () =>
+            new Error(
+              error.error?.message ||
+                'An error occurred while fetching load mismatch reports'
+            )
+        );
+      })
+    );
+}
 
   getTransportLoadFullDetails(loadedItemId: number | string): Observable<any> {
     const headers = new HttpHeaders({

@@ -51,6 +51,12 @@ export class AddPackageComponent implements OnInit {
     { label: 'Recurring Package', value: 'Recurring' },
   ];
 
+  priceDisplay: Record<'productPrice' | 'packageFee' | 'serviceFee', string> = {
+    productPrice: '',
+    packageFee: '',
+    serviceFee: '',
+  };
+
   today: Date = new Date();
 
   constructor(
@@ -85,6 +91,41 @@ export class AddPackageComponent implements OnInit {
 
   ngOnInit(): void {
     this.getProductTypes();
+  }
+
+  formatPrice(value: number): string {
+    return (value || 0).toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  }
+
+  onPriceInput(
+    event: Event,
+    field: 'productPrice' | 'packageFee' | 'serviceFee',
+  ) {
+    const input = event.target as HTMLInputElement;
+    let clean = input.value.replace(/[^0-9.]/g, '');
+    const [intPart, ...rest] = clean.split('.');
+    clean = rest.length ? `${intPart}.${rest.join('').slice(0, 2)}` : intPart;
+
+    input.value = clean;
+    this.priceDisplay[field] = clean;
+    this.packageObj[field] = clean ? parseFloat(clean) || 0 : 0;
+    this.calculateApproximatedPrice();
+  }
+
+  onPriceFocus(field: 'productPrice' | 'packageFee' | 'serviceFee') {
+    this.priceDisplay[field] = this.priceDisplay[field]
+      ? String(this.packageObj[field])
+      : '';
+  }
+
+  onPriceBlur(field: 'productPrice' | 'packageFee' | 'serviceFee') {
+    this.priceDisplay[field] = this.priceDisplay[field]
+      ? this.formatPrice(this.packageObj[field])
+      : '';
+    this.calculateApproximatedPrice();
   }
 
   // Field touch tracking methods

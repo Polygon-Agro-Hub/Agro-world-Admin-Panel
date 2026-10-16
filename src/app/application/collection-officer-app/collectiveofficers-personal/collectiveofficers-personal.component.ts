@@ -159,13 +159,14 @@ export class CollectiveofficersPersonalComponent implements OnInit {
 
   selectedLanguages: string[] = [];
 
-  markAllFieldsAsTouched(): void {
+    markAllFieldsAsTouched(): void {
     const requiredFields: (keyof Personal)[] = [
       'firstNameEnglish', 'lastNameEnglish', 'firstNameSinhala', 'lastNameSinhala',
       'firstNameTamil', 'lastNameTamil', 'phoneNumber01', 'phoneNumber02',
-      'nic', 'email', 'companyId', 'centerId', 'jobRole', 'houseNumber',
-      'streetName', 'city', 'district', 'province', 'accHolderName',
-      'accNumber', 'confirmAccNumber'
+      'nic', 'email', 'companyId', 'centerId', 'jobRole', 'irmId',
+      'houseNumber', 'streetName', 'city', 'district', 'province',
+      'accHolderName', 'accNumber', 'confirmAccNumber',
+      'bankName', 'branchName'
     ];
 
     requiredFields.forEach(field => {
@@ -174,6 +175,11 @@ export class CollectiveofficersPersonalComponent implements OnInit {
 
     this.languagesTouched = true;
     this.empTypeTouched = true;
+    this.jobRoleTouched = true;
+
+    // Needed so the "Confirm Account Number is a required field" /
+    // "Account Numbers do not match" messages show on submit
+    this.validateConfirmAccNumber();
   }
 
   markPageOneFieldsAsTouched(): void {

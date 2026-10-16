@@ -343,7 +343,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
     );
   }
 
-  onSubmit() {
+    onSubmit() {
     const missingFields: string[] = [];
 
     // Only mark driver fields as touched if they exist (driver role)
@@ -480,7 +480,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
     }
 
     if (!this.personalData.accNumber) {
-      missingFields.push('Account Number');
+      missingFields.push('Account Number is Required');
     }
 
     if (!this.personalData.confirmAccNumber) {
@@ -590,16 +590,13 @@ export class CreateDistributionOfficerComponent implements OnInit {
       this.touchedFields.phoneNumber02 = true;
       this.touchedFields.nic = true;
       this.touchedFields.email = true;
-      this.touchedFields.houseNumber = true;
-      this.touchedFields.streetName = true;
-      this.touchedFields.city = true;
-      this.touchedFields.district = true;
-      this.touchedFields.province = true;
-      this.touchedFields.accHolderName = true;
-      this.touchedFields.accNumber = true;
-      this.touchedFields.confirmAccNumber = true;
-      this.invalidFields.add('bankName');
-      this.invalidFields.add('branchName');
+      this.languagesTouched = true;
+      this.empTypeTouched = true;
+      this.validateLanguages();
+
+      // Residential + Bank fields (houseNumber, streetName, city, district,
+      // accHolderName, accNumber, confirmAccNumber, bankName, branchName)
+      this.markPageTwoFieldsTouched();
 
       // Mark driver-specific fields as touched if driver role
       if (this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER || this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER) {
@@ -2499,6 +2496,26 @@ export class CreateDistributionOfficerComponent implements OnInit {
     return this.VehicleTypes.filter(
       (v: any) => v.category === this.personalData.jobRole
     );
+  }
+
+    // Marks every Residential + Bank field as touched so inline errors show up
+  private markPageTwoFieldsTouched(): void {
+    this.touchedFields.houseNumber = true;
+    this.touchedFields.streetName = true;
+    this.touchedFields.city = true;
+    this.touchedFields.district = true;
+    this.touchedFields.province = true;
+    this.touchedFields.accHolderName = true;
+    this.touchedFields.accNumber = true;
+    this.touchedFields.confirmAccNumber = true;
+    this.touchedFields.bankName = true;
+    this.touchedFields.branchName = true;
+
+    this.invalidFields.add('bankName');
+    this.invalidFields.add('branchName');
+
+    // Triggers the "Confirm Account Number is a required field" / "do not match" messages
+    this.validateConfirmAccNumber();
   }
 }
 

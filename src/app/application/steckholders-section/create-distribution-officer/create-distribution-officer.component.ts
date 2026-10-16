@@ -50,7 +50,6 @@ interface PhoneCode {
   templateUrl: './create-distribution-officer.component.html',
   styleUrl: './create-distribution-officer.component.css',
 })
-
 export class CreateDistributionOfficerComponent implements OnInit {
   @ViewChild('pageContainer') pageContainer!: ElementRef;
   @ViewChild('licNoInput') licNoModel!: NgModel;
@@ -63,7 +62,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
   officerId: number | null = null;
   selectedFile: File | null = null;
   languages: string[] = ['Sinhala', 'English', 'Tamil'];
-  selectedPage: 'pageOne' | 'pageTwo' | 'pageThree' = 'pageOne';
+  selectedPage: 'pageOne' | 'pageTwo' | 'pageThree' = 'pageThree';
   driverObj: Drivers = new Drivers();
   personalData: Personal = new Personal();
 
@@ -140,6 +139,19 @@ export class CreateDistributionOfficerComponent implements OnInit {
 
   isAppireImgValidation: boolean = false;
   selectVehicletype: any = { name: '', capacity: '' };
+  // Touched flags for driver page inline errors
+  driverTouched = {
+    licFront: false,
+    licBack: false,
+    insFront: false,
+    insBack: false,
+    insExpDate: false,
+    vType: false,
+    vFront: false,
+    vBack: false,
+    vSideA: false,
+    vSideB: false,
+  };
 
   curDate: Date = new Date();
   tomorrowDate: Date = new Date(); // tomorrow's date
@@ -288,8 +300,10 @@ export class CreateDistributionOfficerComponent implements OnInit {
       files.push(this.selectedFile);
     }
 
-
-    if (this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER || this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER) {
+    if (
+      this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER ||
+      this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER
+    ) {
       if (this.licenseFrontImageFile) {
         order.push('licFront');
         files.push(this.licenseFrontImageFile);
@@ -343,17 +357,21 @@ export class CreateDistributionOfficerComponent implements OnInit {
     );
   }
 
-    onSubmit() {
+  onSubmit() {
     const missingFields: string[] = [];
 
     // Only mark driver fields as touched if they exist (driver role)
-    if (this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER || this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER) {
+    if (
+      this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER ||
+      this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER
+    ) {
       this.licNoModel?.control.markAsTouched();
       this.confirmLicNoModel?.control.markAsTouched();
       this.insurenceNoModel?.control.markAsTouched();
       this.confirmInsurenceNoModel?.control.markAsTouched();
       this.vRegNoModel?.control.markAsTouched();
       this.confirmVRegNoModel?.control.markAsTouched();
+      this.markDriverFieldsTouched();
     }
 
     // Check required fields for pageOne
@@ -378,7 +396,8 @@ export class CreateDistributionOfficerComponent implements OnInit {
     }
 
     if (
-      (this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER || this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER) &&
+      (this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER ||
+        this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER) &&
       !this.personalData.driverCatId
     ) {
       missingFields.push('Driver Category is Required');
@@ -499,7 +518,10 @@ export class CreateDistributionOfficerComponent implements OnInit {
       missingFields.push('Branch Name is Required');
     }
 
-    if (this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER || this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER) {
+    if (
+      this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER ||
+      this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER
+    ) {
       if (!this.driverObj.licNo) {
         missingFields.push('Driving License ID number is Required');
       } else if (!/^([A-Z]\d{7}|\d{10,12})$/.test(this.driverObj.licNo)) {
@@ -599,13 +621,17 @@ export class CreateDistributionOfficerComponent implements OnInit {
       this.markPageTwoFieldsTouched();
 
       // Mark driver-specific fields as touched if driver role
-      if (this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER || this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER) {
+      if (
+        this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER ||
+        this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER
+      ) {
         this.licNoModel?.control.markAsTouched();
         this.confirmLicNoModel?.control.markAsTouched();
         this.insurenceNoModel?.control.markAsTouched();
         this.confirmInsurenceNoModel?.control.markAsTouched();
         this.vRegNoModel?.control.markAsTouched();
         this.confirmVRegNoModel?.control.markAsTouched();
+        this.markDriverFieldsTouched();
       }
 
       let errorMessage =
@@ -650,7 +676,10 @@ export class CreateDistributionOfficerComponent implements OnInit {
 
         this.uploadAllImages().subscribe({
           next: (urls) => {
-            if (this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER || this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER) {
+            if (
+              this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER ||
+              this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER
+            ) {
               const formattedDriverObj = {
                 ...this.driverObj,
                 insExpDate: this.formatDateForDatabase(
@@ -862,7 +891,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
   }
 
   nextFormCreate(page: 'pageOne' | 'pageTwo' | 'pageThree') {
-    console.log('pedata', this.personalData)
+    console.log('pedata', this.personalData);
     // this.selectedPage = page;
     // Scroll to top after page change
     setTimeout(() => {
@@ -912,7 +941,8 @@ export class CreateDistributionOfficerComponent implements OnInit {
       }
 
       if (
-        (this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER || this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER) &&
+        (this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER ||
+          this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER) &&
         !this.personalData.driverCatId
       ) {
         missingFields.push('Driver Category is Required');
@@ -920,7 +950,8 @@ export class CreateDistributionOfficerComponent implements OnInit {
 
       if (
         (this.personalData.jobRole === 'Distribution Officer' ||
-          this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER || this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER) &&
+          this.personalData.jobRole === this.LIGHT_WEIGHT_DRIVER ||
+          this.personalData.jobRole === this.HEAVY_WEIGHT_DRIVER) &&
         !this.personalData.irmId
       ) {
         missingFields.push('Manager Name is Required');
@@ -1110,7 +1141,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
       (data) => {
         this.allBranches = data;
       },
-      (error) => { },
+      (error) => {},
     );
   }
 
@@ -1126,7 +1157,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
           value: bank.ID,
         }));
       },
-      (error) => { },
+      (error) => {},
     );
   }
 
@@ -1287,7 +1318,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
       .then((lastID) => {
         this.personalData.empId = rolePrefix + lastID;
       })
-      .catch((error) => { });
+      .catch((error) => {});
     this.personalData.companyId = currentCompanyId;
     this.personalData.centerId = currentCenterId;
   }
@@ -2075,6 +2106,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
     this.licenseFrontImageFile = null;
     this.licenseFrontImageFileName = '';
     this.licenseFrontImagePreview = null;
+    this.driverTouched.licFront = true;
     const fileInput = document.getElementById(
       'licenseFrontImageUpload',
     ) as HTMLInputElement;
@@ -2104,6 +2136,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
     this.licenseBackImageFile = null;
     this.licenseBackImageFileName = '';
     this.licenseBackImagePreview = null;
+    this.driverTouched.licBack = true;
     const fileInput = document.getElementById(
       'licenseBackImageUpload',
     ) as HTMLInputElement;
@@ -2134,6 +2167,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
     this.insurenceFrontImageFile = null;
     this.insurenceFrontImageFileName = '';
     this.insurenceFrontImagePreview = null;
+    this.driverTouched.insFront = true;
     const fileInput = document.getElementById(
       'insurenceFrontImageUpload',
     ) as HTMLInputElement;
@@ -2163,6 +2197,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
     this.insurenceBackImageFile = null;
     this.insurenceBackImageFileName = '';
     this.insurenceBackImagePreview = null;
+    this.driverTouched.insBack = true;
     const fileInput = document.getElementById(
       'insuranceBackImageUpload',
     ) as HTMLInputElement;
@@ -2193,6 +2228,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
     this.vehicleFrontImageFile = null;
     this.vehicleFrontImageFileName = '';
     this.vehicleFrontImagePreview = null;
+    this.driverTouched.vFront = true;
     const fileInput = document.getElementById(
       'vehicleFrontImageUpload',
     ) as HTMLInputElement;
@@ -2222,6 +2258,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
     this.vehicleBackImageFile = null;
     this.vehicleBackImageFileName = '';
     this.vehicleBackImagePreview = null;
+    this.driverTouched.vBack = true;
     const fileInput = document.getElementById(
       'vehicleBackImageUpload',
     ) as HTMLInputElement;
@@ -2251,6 +2288,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
     this.vehicleSideAImageFile = null;
     this.vehicleSideAImageFileName = '';
     this.vehicleSideAImagePreview = null;
+    this.driverTouched.vSideA = true;
     const fileInput = document.getElementById(
       'vehicleSideAImageUpload',
     ) as HTMLInputElement;
@@ -2280,6 +2318,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
     this.vehicleSideBImageFile = null;
     this.vehicleSideBImageFileName = '';
     this.vehicleSideBImagePreview = null;
+    this.driverTouched.vSideB = true;
     const fileInput = document.getElementById(
       'vehicleSideBImageUpload',
     ) as HTMLInputElement;
@@ -2287,8 +2326,9 @@ export class CreateDistributionOfficerComponent implements OnInit {
   }
 
   vehicleChange() {
-    this.driverObj.vType = this.selectVehicletype.name;
-    this.driverObj.vCapacity = this.selectVehicletype.capacity;
+    this.driverTouched.vType = true;
+    this.driverObj.vType = this.selectVehicletype?.name || '';
+    this.driverObj.vCapacity = this.selectVehicletype?.capacity || '';
   }
 
   preventNonNumbers(event: KeyboardEvent) {
@@ -2484,21 +2524,40 @@ export class CreateDistributionOfficerComponent implements OnInit {
     return phone1 === phone2;
   }
 
-  capitalizeFirstLetterOnly(fieldName: 'firstNameEnglish' | 'lastNameEnglish'): void {
+  capitalizeFirstLetterOnly(
+    fieldName: 'firstNameEnglish' | 'lastNameEnglish',
+  ): void {
     const value = this.personalData[fieldName];
     if (value && value.length > 0) {
-      this.personalData[fieldName] = value.charAt(0).toUpperCase() + value.slice(1);
+      this.personalData[fieldName] =
+        value.charAt(0).toUpperCase() + value.slice(1);
     }
   }
 
   get filteredVehicleTypes(): any[] {
     if (!this.personalData.jobRole) return [];
     return this.VehicleTypes.filter(
-      (v: any) => v.category === this.personalData.jobRole
+      (v: any) => v.category === this.personalData.jobRole,
     );
   }
 
-    // Marks every Residential + Bank field as touched so inline errors show up
+  // Marks every driver image / date / vehicle type field as touched so inline errors show up
+  private markDriverFieldsTouched(): void {
+    this.driverTouched = {
+      licFront: true,
+      licBack: true,
+      insFront: true,
+      insBack: true,
+      insExpDate: true,
+      vType: true,
+      vFront: true,
+      vBack: true,
+      vSideA: true,
+      vSideB: true,
+    };
+  }
+
+  // Marks every Residential + Bank field as touched so inline errors show up
   private markPageTwoFieldsTouched(): void {
     this.touchedFields.houseNumber = true;
     this.touchedFields.streetName = true;

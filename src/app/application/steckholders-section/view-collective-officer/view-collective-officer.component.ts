@@ -237,8 +237,9 @@ export class ViewCollectiveOfficerComponent {
       .filter((segment) => segment.length > 0)[0];
   }
 
-  onPageChange(event: number) {
+    onPageChange(event: number) {
     this.page = event;
+    this.searchNIC = '';
     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
   }
 

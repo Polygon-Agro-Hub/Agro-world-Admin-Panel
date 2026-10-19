@@ -11,6 +11,8 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
 import { ComplaintsService } from '../../../services/complaints/complaints.service';
 import { TokenService } from '../../../services/token/services/token.service';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../../environment/environment';
 
 interface Complaint {
   id: string;
@@ -85,6 +87,7 @@ export class RetailComplaintsComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private http: HttpClient,
     private datePipe: DatePipe,
     private complaintsService: ComplaintsService,
     public tokenService: TokenService,
@@ -93,7 +96,7 @@ export class RetailComplaintsComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchComplaints();
-    this.fetchComplaintCategories();
+    this.getAllComplainCategories();
   }
 
   private fetchComplaints(): void {
@@ -119,9 +122,6 @@ export class RetailComplaintsComponent implements OnInit {
           .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         this.filteredComplaints = [...this.complaints];
         this.totalItems = this.filteredComplaints.length;
-        this.comCategories = Array.from(
-          new Set(this.complaints.map(c => c.complainCategory))
-        ).map(cat => ({ label: cat, value: cat }));
         this.status = Array.from(
           new Set(this.complaints.map(c => c.status))
         ).map(st => ({ label: st, value: st }));
@@ -142,23 +142,88 @@ export class RetailComplaintsComponent implements OnInit {
     });
   }
 
-  private fetchComplaintCategories(): void {
-    this.complaintsService.fetchComplaintCategories().subscribe({
-      next: (resp: { categories: { id: number; categoryEnglish: string }[] }) => {
-        this.comCategories = resp.categories.map((c: { id: number; categoryEnglish: string }) => ({
-          label: c.categoryEnglish,
-          value: c.categoryEnglish,
-        }));
-      },
-      error: (err) => {
-        if (err.message.includes('No authentication token found')) {
-          alert('No authentication token found. Please log in.');
-          this.router.navigate(['login']);
-        } else {
-          console.error('Category fetch error', err);
-        }
-      },
-    });
+  // private fetchComplaintCategories(): void {
+  //   this.complaintsService.fetchComplaintCategories().subscribe({
+  //     next: (resp: { categories: { id: number; categoryEnglish: string }[] }) => {
+  //       this.comCategories = resp.categories.map((c: { id: number; categoryEnglish: string }) => ({
+  //         label: c.categoryEnglish,
+  //         value: c.categoryEnglish,
+  //       }));
+  //     },
+  //     error: (err) => {
+  //       if (err.message.includes('No authentication token found')) {
+  //         alert('No authentication token found. Please log in.');
+  //         this.router.navigate(['login']);
+  //       } else {
+  //         console.error('Category fetch error', err);
+  //       }
+  //     },
+  //   });
+  // }
+
+
+  getAllComplainCategories() {
+
+    if (this.tokenService.getUserDetails().role === "1") {
+      const token = this.tokenService.getToken();
+
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${token}`,
+      });
+
+      this.http
+        .get<any>(`${environment.API_URL}auth/get-all-complain-category-list-super/3`, {
+          headers,
+        })
+        .subscribe(
+          (response: { id: number; categoryEnglish: string }[]) => {
+            this.comCategories = response.map((c) => ({
+              label: c.categoryEnglish,
+              value: c.categoryEnglish,
+            }));
+
+            console.log('Categories:', this.comCategories);
+          },
+          (error) => {
+            console.error('Error fetching news:', error);
+          }
+        );
+    } else {
+      const token = this.tokenService.getToken();
+
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${token}`,
+      });
+
+      this.http
+        .get<any>(`${environment.API_URL}auth/get-all-complain-category-list/${this.tokenService.getUserDetails().role}/3`, {
+          headers,
+        })
+        .subscribe(
+          (response: { id: number; categoryEnglish: string }[]) => {
+            this.comCategories = response.map((c) => ({
+              label: c.categoryEnglish,
+              value: c.categoryEnglish,
+            }));
+
+            console.log('Categories:', this.comCategories);
+          },
+          (error) => {
+            console.error('Error fetching news:', error);
+          }
+        );
+    }
+
+    console.log('c', this.comCategories)
+
   }
 
   private formatDate(dateString: string): string {
@@ -230,11 +295,11 @@ export class RetailComplaintsComponent implements OnInit {
   }
 
   onPageChange(p: number): void {
-  if (!this.hasData || this.isLoading) {
-    return;
+    if (!this.hasData || this.isLoading) {
+      return;
+    }
+    this.page = p;
   }
-  this.page = p;
-}
 
   goBack(): void {
     this.router.navigate(['/complaints']);

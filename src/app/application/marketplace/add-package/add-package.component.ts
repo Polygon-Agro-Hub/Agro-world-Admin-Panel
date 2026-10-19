@@ -57,7 +57,7 @@ export class AddPackageComponent implements OnInit {
     private marketSrv: MarketPlaceService,
     private router: Router,
     private location: Location,
-  ) {}
+  ) { }
 
   back(): void {
     Swal.fire({
@@ -204,12 +204,12 @@ export class AddPackageComponent implements OnInit {
   getProductTypes() {
     this.marketSrv.fetchProductTypes().subscribe((res) => {
       this.productTypeObj = res.data;
-      
+
       // Initialize quantities with 0 for each product type
       for (let item of this.productTypeObj) {
         this.packageObj.quantities[item.id] = 0;
       }
-      
+
     });
   }
 
@@ -219,8 +219,8 @@ export class AddPackageComponent implements OnInit {
     // Convert to number, default to 0 if invalid
     const numValue = Number(target.value) || 0;
     this.packageObj.quantities[id] = numValue;
-    
-    
+
+
   }
 
   async onSubmit() {
@@ -328,9 +328,15 @@ export class AddPackageComponent implements OnInit {
         return;
       }
 
+      const payload: any = {
+        ...this.packageObj,
+        startDate: this.toDateString(this.packageObj.startDate),
+        endDate: this.toDateString(this.packageObj.endDate),
+      };
+
       // Proceed with package creation
       this.marketSrv
-        .createPackage(this.packageObj, this.selectedImage)
+        .createPackage(payload, this.selectedImage)
         .subscribe(
           (res) => {
             this.isLoading = false;
@@ -494,7 +500,7 @@ export class AddPackageComponent implements OnInit {
     this.packageObj.approximatedPrice =
       productPrice + (serviceFee + packageFee);
 
-    
+
     return this.packageObj.approximatedPrice;
   }
 
@@ -630,6 +636,15 @@ export class AddPackageComponent implements OnInit {
 
   get validProductTypes(): ProductType[] {
     return this.productTypeObj.filter((item) => Number(item.isValid) !== 0);
+  }
+
+  private toDateString(d: Date | null | undefined): string | null {
+    if (!d) return null;
+    const date = new Date(d);
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
   }
 }
 

@@ -1049,6 +1049,8 @@ export class CreateDistributionOfficerComponent implements OnInit {
       // Validate pageTwo fields before moving to pageThree
       const missingFields: string[] = [];
 
+      this.markPageTwoFieldsTouched();
+
       this.touchedFields.houseNumber = true;
       this.touchedFields.streetName = true;
       this.touchedFields.city = true;

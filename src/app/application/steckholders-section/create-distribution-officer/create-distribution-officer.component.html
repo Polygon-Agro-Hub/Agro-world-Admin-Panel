@@ -490,12 +490,12 @@
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
         <span *ngIf="touchedFields.confirmAccNumber && !personalData.confirmAccNumber" class="text-red-600 text-sm">
-  Confirm Account Number is a required field
-</span>
+          Confirm Account Number is a required field
+        </span>
 
-<span *ngIf="personalData.confirmAccNumber && confirmAccountNumberError" class="text-red-600 text-sm">
-  Account Numbers do not match
-</span>
+        <span *ngIf="personalData.confirmAccNumber && confirmAccountNumberError" class="text-red-600 text-sm">
+          Account Numbers do not match
+        </span>
       </div>
 
       <div class="pb-6">
@@ -508,8 +508,8 @@
           class="mt-1 block w-full p-dropdown-custom">
         </p-dropdown>
         <span *ngIf="touchedFields.bankName && !selectedBankId" class="text-red-600 text-sm">
-  Bank Name is a required field
-</span>
+          Bank Name is a required field
+        </span>
       </div>
 
       <div class="pb-6">
@@ -522,8 +522,8 @@
           styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel" class="mt-1 block w-full p-dropdown-custom">
         </p-dropdown>
         <span *ngIf="touchedFields.branchName && !selectedBranchId" class="text-red-600 text-sm">
-  Branch Name is a required field
-</span>
+          Branch Name is a required field
+        </span>
       </div>
 
       <div class="flex justify-end">
@@ -546,7 +546,7 @@
     </div>
   </div>
   <!-- PAGE THREE - DRIVER DETAILS (ADD THIS SECTION) -->
-    <!-- PAGE THREE - DRIVER DETAILS -->
+  <!-- PAGE THREE - DRIVER DETAILS -->
   <div *ngIf="selectedPage === 'pageThree'">
     <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
       Driving Details
@@ -748,10 +748,9 @@
         </label>
         <p-calendar id="insExpDate" [(ngModel)]="driverObj.insExpDate" [readonlyInput]="true" [showIcon]="true"
           [showClear]="true" [showButtonBar]="false" iconDisplay="input" [minDate]="tomorrowDate" dateFormat="yy-mm-dd"
-          placeholder="Select Expiry Date" [style]="{ width: '100%' }"
-          (onSelect)="driverTouched.insExpDate = true" (onClear)="driverTouched.insExpDate = true"
-          (onBlur)="driverTouched.insExpDate = true" (onClose)="driverTouched.insExpDate = true"
-          panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+          placeholder="Select Expiry Date" [style]="{ width: '100%' }" (onSelect)="driverTouched.insExpDate = true"
+          (onClear)="driverTouched.insExpDate = true" (onBlur)="driverTouched.insExpDate = true"
+          (onClose)="driverTouched.insExpDate = true" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
                        [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
                        [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
                        [&_.p-datepicker-header]:dark:bg-[#2d354d] 
@@ -815,8 +814,8 @@
         </label>
         <p-dropdown id="selectVehicletype" [(ngModel)]="selectVehicletype" [options]="filteredVehicleTypes"
           optionLabel="name" placeholder="Select Vehicle Type" (onChange)="vehicleChange()"
-          (onBlur)="driverTouched.vType = true" styleClass="w-full mt-1"
-          panelStyleClass="custom-dropdown-panel" class="mt-1 block w-full p-dropdown-custom">
+          (onBlur)="driverTouched.vType = true" styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
+          class="mt-1 block w-full p-dropdown-custom">
         </p-dropdown>
         <span *ngIf="driverTouched.vType && !driverObj.vType" class="text-red-600 text-sm block mt-1">
           Vehicle Type is Required.

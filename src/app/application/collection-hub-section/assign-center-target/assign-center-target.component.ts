@@ -488,6 +488,14 @@ export class AssignCenterTargetComponent {
     return `${day}${suffix} ${month}`;
   }
 
+  onGradeBlur(item: AssignCrops, grade: 'A' | 'B' | 'C'): void {
+    const targetKey = `target${grade}` as 'targetA' | 'targetB' | 'targetC';
+    if (item[targetKey] == null) {
+      item[targetKey] = 0;
+    }
+    this.validateForm();
+  }
+
   checkNegativeValue(item: AssignCrops, grade: string) {
     if (this.isDateValid) {
       if (item.targetA < 0 || item.targetB < 0 || item.targetC < 0) {

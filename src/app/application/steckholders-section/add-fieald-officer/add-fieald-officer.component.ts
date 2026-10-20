@@ -249,36 +249,39 @@ export class AddFiealdOfficerComponent implements OnInit {
   }
 
   updateEmployeeType(selectedType: string): void {
-    this.empType = selectedType;
-    this.personalData.empType = selectedType;
-  }
+  this.empType = selectedType;
+  this.personalData.empType = selectedType;
+  this.empTypeTouched = true;
+}
 
   isEmpTypeSelected(): boolean {
     return !!this.empType;
   }
 
   onCheckboxChange(lang: string, event: any) {
-    if (event.target.checked) {
-      if (this.personalData.language) {
-        if (!this.personalData.language.includes(lang)) {
-          this.personalData.language += this.personalData.language
-            ? `,${lang}`
-            : lang;
-        }
-      } else {
-        this.personalData.language = lang;
+  this.languagesTouched = true;
+
+  if (event.target.checked) {
+    if (this.personalData.language) {
+      if (!this.personalData.language.includes(lang)) {
+        this.personalData.language += this.personalData.language
+          ? `,${lang}`
+          : lang;
       }
     } else {
-      const languagesArray = this.personalData.language.split(',');
-      const index = languagesArray.indexOf(lang);
-      if (index !== -1) {
-        languagesArray.splice(index, 1);
-      }
-      this.personalData.language = languagesArray.join(',');
+      this.personalData.language = lang;
     }
-
-    this.validateLanguages();
+  } else {
+    const languagesArray = this.personalData.language.split(',');
+    const index = languagesArray.indexOf(lang);
+    if (index !== -1) {
+      languagesArray.splice(index, 1);
+    }
+    this.personalData.language = languagesArray.join(',');
   }
+
+  this.validateLanguages();
+}
 
   validateLanguages() {
     this.languagesRequired =

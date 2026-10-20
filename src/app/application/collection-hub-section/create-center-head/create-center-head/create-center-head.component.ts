@@ -1113,19 +1113,23 @@ export class CreateCenterHeadComponent implements OnInit {
       this.personalForm.form.markAllAsTouched();
     }
 
-    // These use your own touchedFields object, not ngModel.touched,
-    // so they need to be set manually
-    this.touchedFields = {
-      ...this.touchedFields,
-      companyId: true,
-      district: true,
-      houseNumber: true,
-      streetName: true,
-      city: true,
-      accHolderName: true,
-      accNumber: true,
-      confirmAccNumber: true,
-    };
+    if (this.selectedPage === 'pageOne') {
+  this.touchedFields = {
+    ...this.touchedFields,
+    companyId: true,
+  };
+} else {
+  this.touchedFields = {
+    ...this.touchedFields,
+    district: true,
+    houseNumber: true,
+    streetName: true,
+    city: true,
+    accHolderName: true,
+    accNumber: true,
+    confirmAccNumber: true,
+  };
+}
 
     this.empTypeTouched = true;
     this.languagesTouched = true;

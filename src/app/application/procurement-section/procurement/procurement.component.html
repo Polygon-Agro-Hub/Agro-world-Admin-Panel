@@ -1,5 +1,6 @@
-<div class="flex justify-center items-center">
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 lg:gap-16">
+<div class="flex justify-center items-start">
+  <div
+    class="grid grid-cols-[310px] sm:grid-cols-[repeat(2,310px)] md:grid-cols-[repeat(3,310px)] gap-8 lg:gap-16 justify-items-start">
     <div (click)="definePackages()" class="flex justify-center cursor-pointer" *ngIf="
         permissionService.hasPermission('Procurement dispatch packages') ||
         tokenService.getUserDetails().role === '1'

@@ -86,8 +86,9 @@ export class ViewSalesAgentsComponent implements OnInit {
       );
   }
 
-  onPageChange(event: number) {
+    onPageChange(event: number) {
     this.page = event;
+    this.searchText = '';
     this.fetchAllSalesAgents(
       this.page,
       this.itemsPerPage,
@@ -99,6 +100,7 @@ export class ViewSalesAgentsComponent implements OnInit {
   onSearch() {
     // Trim the search text before making the API call
     this.searchText = this.searchText.trimStart();
+    this.page = 1;
     this.fetchAllSalesAgents(
       this.page,
       this.itemsPerPage,
@@ -109,6 +111,7 @@ export class ViewSalesAgentsComponent implements OnInit {
 
   offSearch() {
     this.searchText = '';
+    this.page = 1;
     this.fetchAllSalesAgents(
       this.page,
       this.itemsPerPage,
@@ -118,6 +121,7 @@ export class ViewSalesAgentsComponent implements OnInit {
   }
 
   applyFilters() {
+    this.page = 1;
     this.fetchAllSalesAgents(
       this.page,
       this.itemsPerPage,

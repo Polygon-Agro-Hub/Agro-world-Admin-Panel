@@ -663,7 +663,7 @@ export const routes: Routes = [
                 path: 'view-a-crop-variety',
                 canActivate: [PermissionGuard],
                 component: ViewCropVarietyComponent,
-              }
+              },
             ],
           },
         ],
@@ -741,13 +741,13 @@ export const routes: Routes = [
                 children: [
                   {
                     path: 'sales',
-                    component: SalesComponent
+                    component: SalesComponent,
                   },
                   {
                     path: 'view-all-orders',
                     component: CompletedViewAllOdersComponent,
-                  }
-                ]
+                  },
+                ],
               },
               {
                 path: 'finance-govicapital',
@@ -867,14 +867,17 @@ export const routes: Routes = [
                   {
                     path: 'view-documents/:id',
                     component: GoviShopViewDocumentComponent,
-                  }
+                  },
                 ],
               },
               {
                 path: 'govi-trans-finance',
                 children: [
                   { path: '', component: GoviTransFinanceComponent },
-                  { path: 'view-driver-categories', component: ViewDriverCategoriesComponent },
+                  {
+                    path: 'view-driver-categories',
+                    component: ViewDriverCategoriesComponent,
+                  },
                   {
                     path: 'add-driver-category',
                     component: AddEditDriverCategoryComponent,
@@ -894,8 +897,8 @@ export const routes: Routes = [
                   {
                     path: 'view-transactions/document/:id',
                     component: ViewTransactionDocumentComponent,
-                  }
-                ]
+                  },
+                ],
               },
               {
                 path: 'distribution-finance',
@@ -1563,43 +1566,42 @@ export const routes: Routes = [
           {
             path: 'procurement-shortage-history',
             component: ProcurementShortageHistoryComponent,
-
           },
           {
             path: 'view-shortage-today',
-            component: ShortageTodayComponent
+            component: ShortageTodayComponent,
           },
           {
             path: 'shortage-assign/:id',
-            component: ShortageAssignComponent
+            component: ShortageAssignComponent,
           },
           {
             path: 'view-shortage-finalization-today',
-            component: ShortageFinalizationTodayComponent
+            component: ShortageFinalizationTodayComponent,
           },
           {
             path: 'daily-packing-target',
-            component: DailyPackingTargetComponent
+            component: DailyPackingTargetComponent,
           },
           {
             path: 'procurement-product-mismatch-today/:loadedItemId',
-            component: ProcumentProductMismatchTodayComponent
+            component: ProcumentProductMismatchTodayComponent,
           },
           {
             path: 'pending-procurement-product-mismatch-today',
-            component: PendingProductMismatchTodayComponent
+            component: PendingProductMismatchTodayComponent,
           },
           {
             path: 'add-new-container',
-            component: AddNewContainerComponent
+            component: AddNewContainerComponent,
           },
           {
             path: 'edit-container/:id',
-            component: AddNewContainerComponent
+            component: AddNewContainerComponent,
           },
           {
             path: 'manage-container-sizes',
-            component: ManageContainerSizesComponent
+            component: ManageContainerSizesComponent,
           },
         ],
       },
@@ -2264,7 +2266,7 @@ export const routes: Routes = [
               {
                 path: 'ivr-call-summary',
                 component: IvrCallSummaryComponent,
-              }
+              },
               // {
               //   path: 'ivr-live-call-log',
               //   component: IvrLiveCallListComponent,
@@ -2292,7 +2294,6 @@ export const routes: Routes = [
                 canActivate: [PermissionGuard],
                 data: { permission: 'View All Govi Shops' },
                 component: ViewAllShopsComponent,
-
               },
 
               {
@@ -2354,7 +2355,7 @@ export const routes: Routes = [
               {
                 path: 'preview-govi-shop/:id',
                 component: GoviShopPreviewShopComponent,
-              }
+              },
             ],
           },
         ],
@@ -2368,4 +2369,4 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

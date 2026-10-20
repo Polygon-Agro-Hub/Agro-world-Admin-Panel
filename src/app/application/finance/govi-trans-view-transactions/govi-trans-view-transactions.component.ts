@@ -23,9 +23,9 @@ interface Transactions {
   status: string;
   amount: number;
   document: string;
-  submittedAt: Date;
+  submittedAt: string;
   updatedBy: string;
-  updatedAt: Date;
+  updatedAt: string;
 }
 
 @Component({

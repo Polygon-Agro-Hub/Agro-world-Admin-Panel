@@ -489,11 +489,11 @@
           (ngModelChange)="validateConfirmAccNumber()" (blur)="onBlur('confirmAccNumber')"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
-        <span *ngIf="confirmAccountNumberRequired" class="text-red-600 text-sm">
+        <span *ngIf="touchedFields.confirmAccNumber && !personalData.confirmAccNumber" class="text-red-600 text-sm">
           Confirm Account Number is a required field
         </span>
 
-        <span *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired" class="text-red-600 text-sm">
+        <span *ngIf="personalData.confirmAccNumber && confirmAccountNumberError" class="text-red-600 text-sm">
           Account Numbers do not match
         </span>
       </div>
@@ -507,7 +507,7 @@
           (onBlur)="onBlur('bankName')" styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
           class="mt-1 block w-full p-dropdown-custom">
         </p-dropdown>
-        <span *ngIf="isFieldInvalid('bankName')" class="text-red-600 text-sm">
+        <span *ngIf="touchedFields.bankName && !selectedBankId" class="text-red-600 text-sm">
           Bank Name is a required field
         </span>
       </div>
@@ -521,7 +521,7 @@
           placeholder="Select a branch" (onChange)="onBranchChange()" (onBlur)="onBlur('branchName')"
           styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel" class="mt-1 block w-full p-dropdown-custom">
         </p-dropdown>
-        <span *ngIf="isFieldInvalid('branchName')" class="text-red-600 text-sm">
+        <span *ngIf="touchedFields.branchName && !selectedBranchId" class="text-red-600 text-sm">
           Branch Name is a required field
         </span>
       </div>
@@ -546,6 +546,7 @@
     </div>
   </div>
   <!-- PAGE THREE - DRIVER DETAILS (ADD THIS SECTION) -->
+  <!-- PAGE THREE - DRIVER DETAILS -->
   <div *ngIf="selectedPage === 'pageThree'">
     <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
       Driving Details
@@ -593,8 +594,8 @@
             Confirm Driving License ID number is Required.
           </span>
         </div>
-
       </div>
+
       <!-- License Front Image -->
       <div>
         <label class="block text-sm font-medium text-gray-700 dark:text-textDark my-2">
@@ -603,7 +604,8 @@
         <input id="licenseFrontImageUpload" type="file" accept="image/*" (change)="onLicenseFrontImageSelected($event)"
           class="hidden" />
         <div (click)="triggerFileInputForDriver($event, 'licenseFrontImageUpload')"
-          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-3 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
+          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-3 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600"
+          [ngClass]="{ '!border-red-500': driverTouched.licFront && !licenseFrontImageFileName }">
           <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
           <p class="text-gray-700 dark:text-textDark">Upload License Front Image</p>
         </div>
@@ -615,6 +617,9 @@
             <i class="fas fa-times"></i>
           </button>
         </div>
+        <span *ngIf="driverTouched.licFront && !licenseFrontImageFileName" class="text-red-600 text-sm block mt-1">
+          License's Front Image is Required.
+        </span>
       </div>
 
       <!-- License Back Image -->
@@ -625,7 +630,8 @@
         <input id="licenseBackImageUpload" type="file" accept="image/*" (change)="onLicenseBackImageSelected($event)"
           class="hidden" />
         <div (click)="triggerFileInputForDriver($event, 'licenseBackImageUpload')"
-          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-3 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
+          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-3 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600"
+          [ngClass]="{ '!border-red-500': driverTouched.licBack && !licenseBackImageFileName }">
           <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
           <p class="text-gray-700 dark:text-textDark">Upload License Back Image</p>
         </div>
@@ -637,6 +643,9 @@
             <i class="fas fa-times"></i>
           </button>
         </div>
+        <span *ngIf="driverTouched.licBack && !licenseBackImageFileName" class="text-red-600 text-sm block mt-1">
+          License's Back Image is Required.
+        </span>
       </div>
     </div>
 
@@ -680,7 +689,6 @@
         </div>
       </div>
 
-
       <!-- Insurance Front Image -->
       <div>
         <label class="block text-sm font-medium text-gray-700 dark:text-textDark my-2">
@@ -689,7 +697,8 @@
         <input id="insurenceFrontImageUpload" type="file" accept="image/*"
           (change)="onInsurenceFrontImageSelected($event)" class="hidden" />
         <div (click)="triggerFileInputForDriver($event, 'insurenceFrontImageUpload')"
-          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-3 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
+          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-3 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600"
+          [ngClass]="{ '!border-red-500': driverTouched.insFront && !insurenceFrontImageFileName }">
           <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
           <p class="text-gray-700 dark:text-textDark">Upload Insurance Front Image</p>
         </div>
@@ -701,6 +710,9 @@
             <i class="fas fa-times"></i>
           </button>
         </div>
+        <span *ngIf="driverTouched.insFront && !insurenceFrontImageFileName" class="text-red-600 text-sm block mt-1">
+          Insurance's Front Image is Required.
+        </span>
       </div>
 
       <!-- Insurance Back Image -->
@@ -711,7 +723,8 @@
         <input id="insuranceBackImageUpload" type="file" accept="image/*"
           (change)="onInsurenceBackImageSelected($event)" class="hidden" />
         <div (click)="triggerFileInputForDriver($event, 'insuranceBackImageUpload')"
-          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-3 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
+          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-3 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600"
+          [ngClass]="{ '!border-red-500': driverTouched.insBack && !insurenceBackImageFileName }">
           <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
           <p class="text-gray-700 dark:text-textDark">Upload Insurance Back Image</p>
         </div>
@@ -723,15 +736,21 @@
             <i class="fas fa-times"></i>
           </button>
         </div>
+        <span *ngIf="driverTouched.insBack && !insurenceBackImageFileName" class="text-red-600 text-sm block mt-1">
+          Insurance's Back Image is Required.
+        </span>
       </div>
 
+      <!-- Insurance Expire Date -->
       <div class="mt-4">
         <label for="insExpDate" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Insurance Expire Date *
         </label>
         <p-calendar id="insExpDate" [(ngModel)]="driverObj.insExpDate" [readonlyInput]="true" [showIcon]="true"
           [showClear]="true" [showButtonBar]="false" iconDisplay="input" [minDate]="tomorrowDate" dateFormat="yy-mm-dd"
-          placeholder="Select Expiry Date" [style]="{ width: '100%' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+          placeholder="Select Expiry Date" [style]="{ width: '100%' }" (onSelect)="driverTouched.insExpDate = true"
+          (onClear)="driverTouched.insExpDate = true" (onBlur)="driverTouched.insExpDate = true"
+          (onClose)="driverTouched.insExpDate = true" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
                        [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
                        [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
                        [&_.p-datepicker-header]:dark:bg-[#2d354d] 
@@ -740,6 +759,9 @@
                        [&_.p-button:hover]:dark:bg-[#6b7280]"
           inputStyleClass="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack cursor-pointer"
           [appendTo]="'body'" />
+        <span *ngIf="driverTouched.insExpDate && !driverObj.insExpDate" class="text-red-600 text-sm block mt-1">
+          Insurance Expire Date is Required.
+        </span>
       </div>
     </div>
 
@@ -758,7 +780,6 @@
           class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
         <div>
-
           <span class="text-red-600 text-sm" *ngIf="vRegNoInput.touched && !driverObj.vRegNo">
             Vehicle Registration Number is Required.
           </span>
@@ -785,15 +806,20 @@
           </span>
         </div>
       </div>
+
       <!-- Vehicle Type Dropdown -->
       <div class="mt-2">
         <label for="selectVehicletype" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Vehicle Type *
         </label>
         <p-dropdown id="selectVehicletype" [(ngModel)]="selectVehicletype" [options]="filteredVehicleTypes"
-          optionLabel="name" placeholder="Select Vehicle Type" (onChange)="vehicleChange()" styleClass="w-full mt-1"
-          panelStyleClass="custom-dropdown-panel" class="mt-1 block w-full p-dropdown-custom">
+          optionLabel="name" placeholder="Select Vehicle Type" (onChange)="vehicleChange()"
+          (onBlur)="driverTouched.vType = true" styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
+          class="mt-1 block w-full p-dropdown-custom">
         </p-dropdown>
+        <span *ngIf="driverTouched.vType && !driverObj.vType" class="text-red-600 text-sm block mt-1">
+          Vehicle Type is Required.
+        </span>
       </div>
 
       <!-- Vehicle Capacity (Read-only) -->
@@ -813,7 +839,7 @@
         </div>
       </div>
 
-      <!-- Vehicle Images (Front, Back, Side A, Side B) -->
+      <!-- Vehicle Front Image -->
       <div>
         <label class="block text-sm font-medium text-gray-700 dark:text-textDark my-2">
           Vehicle's Front Image *
@@ -821,7 +847,8 @@
         <input id="vehicleFrontImageUpload" type="file" accept="image/*" (change)="onVehicleFrontImageSelected($event)"
           class="hidden" />
         <div (click)="triggerFileInputForDriver($event, 'vehicleFrontImageUpload')"
-          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-3 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
+          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-3 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600"
+          [ngClass]="{ '!border-red-500': driverTouched.vFront && !vehicleFrontImageFileName }">
           <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
           <p class="text-gray-700 dark:text-textDark">Upload Vehicle Front Image</p>
         </div>
@@ -833,8 +860,12 @@
             <i class="fas fa-times"></i>
           </button>
         </div>
+        <span *ngIf="driverTouched.vFront && !vehicleFrontImageFileName" class="text-red-600 text-sm block mt-1">
+          Vehicle's Front Image is Required.
+        </span>
       </div>
 
+      <!-- Vehicle Back Image -->
       <div>
         <label class="block text-sm font-medium text-gray-700 dark:text-textDark my-2">
           Vehicle's Back Image *
@@ -842,7 +873,8 @@
         <input id="vehicleBackImageUpload" type="file" accept="image/*" (change)="onVehicleBackImageSelected($event)"
           class="hidden" />
         <div (click)="triggerFileInputForDriver($event, 'vehicleBackImageUpload')"
-          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-3 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
+          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-3 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600"
+          [ngClass]="{ '!border-red-500': driverTouched.vBack && !vehicleBackImageFileName }">
           <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
           <p class="text-gray-700 dark:text-textDark">Upload Vehicle Back Image</p>
         </div>
@@ -854,8 +886,12 @@
             <i class="fas fa-times"></i>
           </button>
         </div>
+        <span *ngIf="driverTouched.vBack && !vehicleBackImageFileName" class="text-red-600 text-sm block mt-1">
+          Vehicle's Back Image is Required.
+        </span>
       </div>
 
+      <!-- Vehicle Side Image 1 -->
       <div>
         <label class="block text-sm font-medium text-gray-700 dark:text-textDark my-2">
           Vehicle's Side Image - 1 *
@@ -863,7 +899,8 @@
         <input id="vehicleSideAImageUpload" type="file" accept="image/*" (change)="onVehicleSideAImageSelected($event)"
           class="hidden" />
         <div (click)="triggerFileInputForDriver($event, 'vehicleSideAImageUpload')"
-          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-3 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
+          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-3 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600"
+          [ngClass]="{ '!border-red-500': driverTouched.vSideA && !vehicleSideAImageFileName }">
           <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
           <p class="text-gray-700 dark:text-textDark">Upload Side Image - 1</p>
         </div>
@@ -875,8 +912,12 @@
             <i class="fas fa-times"></i>
           </button>
         </div>
+        <span *ngIf="driverTouched.vSideA && !vehicleSideAImageFileName" class="text-red-600 text-sm block mt-1">
+          Vehicle's Side Image - 1 is Required.
+        </span>
       </div>
 
+      <!-- Vehicle Side Image 2 -->
       <div>
         <label class="block text-sm font-medium text-gray-700 dark:text-textDark my-2">
           Vehicle's Side Image - 2 *
@@ -884,7 +925,8 @@
         <input id="vehicleSideBImageUpload" type="file" accept="image/*" (change)="onVehicleSideBImageSelected($event)"
           class="hidden" />
         <div (click)="triggerFileInputForDriver($event, 'vehicleSideBImageUpload')"
-          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-3 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
+          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-3 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600"
+          [ngClass]="{ '!border-red-500': driverTouched.vSideB && !vehicleSideBImageFileName }">
           <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
           <p class="text-gray-700 dark:text-textDark">Upload Side Image - 2</p>
         </div>
@@ -896,6 +938,9 @@
             <i class="fas fa-times"></i>
           </button>
         </div>
+        <span *ngIf="driverTouched.vSideB && !vehicleSideBImageFileName" class="text-red-600 text-sm block mt-1">
+          Vehicle's Side Image - 2 is Required.
+        </span>
       </div>
     </div>
 

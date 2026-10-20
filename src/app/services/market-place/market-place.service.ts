@@ -397,8 +397,6 @@ export class MarketPlaceService {
       formData.append('file', selectedImage);
     }
 
-
-
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });

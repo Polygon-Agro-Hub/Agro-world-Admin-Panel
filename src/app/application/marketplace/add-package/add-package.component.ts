@@ -51,13 +51,19 @@ export class AddPackageComponent implements OnInit {
     { label: 'Recurring Package', value: 'Recurring' },
   ];
 
+  priceDisplay: Record<'productPrice' | 'packageFee' | 'serviceFee', string> = {
+    productPrice: '',
+    packageFee: '',
+    serviceFee: '',
+  };
+
   today: Date = new Date();
 
   constructor(
     private marketSrv: MarketPlaceService,
     private router: Router,
     private location: Location,
-  ) {}
+  ) { }
 
   back(): void {
     Swal.fire({
@@ -85,6 +91,41 @@ export class AddPackageComponent implements OnInit {
 
   ngOnInit(): void {
     this.getProductTypes();
+  }
+
+  formatPrice(value: number): string {
+    return (value || 0).toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  }
+
+  onPriceInput(
+    event: Event,
+    field: 'productPrice' | 'packageFee' | 'serviceFee',
+  ) {
+    const input = event.target as HTMLInputElement;
+    let clean = input.value.replace(/[^0-9.]/g, '');
+    const [intPart, ...rest] = clean.split('.');
+    clean = rest.length ? `${intPart}.${rest.join('').slice(0, 2)}` : intPart;
+
+    input.value = clean;
+    this.priceDisplay[field] = clean;
+    this.packageObj[field] = clean ? parseFloat(clean) || 0 : 0;
+    this.calculateApproximatedPrice();
+  }
+
+  onPriceFocus(field: 'productPrice' | 'packageFee' | 'serviceFee') {
+    this.priceDisplay[field] = this.priceDisplay[field]
+      ? String(this.packageObj[field])
+      : '';
+  }
+
+  onPriceBlur(field: 'productPrice' | 'packageFee' | 'serviceFee') {
+    this.priceDisplay[field] = this.priceDisplay[field]
+      ? this.formatPrice(this.packageObj[field])
+      : '';
+    this.calculateApproximatedPrice();
   }
 
   // Field touch tracking methods
@@ -204,12 +245,12 @@ export class AddPackageComponent implements OnInit {
   getProductTypes() {
     this.marketSrv.fetchProductTypes().subscribe((res) => {
       this.productTypeObj = res.data;
-      
+
       // Initialize quantities with 0 for each product type
       for (let item of this.productTypeObj) {
         this.packageObj.quantities[item.id] = 0;
       }
-      
+
     });
   }
 
@@ -219,8 +260,8 @@ export class AddPackageComponent implements OnInit {
     // Convert to number, default to 0 if invalid
     const numValue = Number(target.value) || 0;
     this.packageObj.quantities[id] = numValue;
-    
-    
+
+
   }
 
   async onSubmit() {
@@ -328,9 +369,15 @@ export class AddPackageComponent implements OnInit {
         return;
       }
 
+      const payload: any = {
+        ...this.packageObj,
+        startDate: this.toDateString(this.packageObj.startDate),
+        endDate: this.toDateString(this.packageObj.endDate),
+      };
+
       // Proceed with package creation
       this.marketSrv
-        .createPackage(this.packageObj, this.selectedImage)
+        .createPackage(payload, this.selectedImage)
         .subscribe(
           (res) => {
             this.isLoading = false;
@@ -494,7 +541,7 @@ export class AddPackageComponent implements OnInit {
     this.packageObj.approximatedPrice =
       productPrice + (serviceFee + packageFee);
 
-    
+
     return this.packageObj.approximatedPrice;
   }
 
@@ -630,6 +677,15 @@ export class AddPackageComponent implements OnInit {
 
   get validProductTypes(): ProductType[] {
     return this.productTypeObj.filter((item) => Number(item.isValid) !== 0);
+  }
+
+  private toDateString(d: Date | null | undefined): string | null {
+    if (!d) return null;
+    const date = new Date(d);
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
   }
 }
 

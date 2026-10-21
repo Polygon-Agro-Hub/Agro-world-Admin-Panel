@@ -166,8 +166,8 @@
           <label for="firstNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name
             (in English) *</label>
           <input id="firstNameEnglish" [(ngModel)]="personalData.firstNameEnglish" name="firstNameEnglish"
-            (blur)="onBlur('firstNameEnglish')" (input)="capitalizeNames()"
-            (keypress)="preventSpecialCharacters($event)"
+            (blur)="onBlur('firstNameEnglish')" (input)="onNameInput($event, 'firstNameEnglish', 'english')"
+            (keypress)="onNameKeyPress($event, 'english')"
             class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="isFieldInvalid('firstNameEnglish')" class="text-red-600 text-sm">First Name (in English) is a
             required field</span>
@@ -180,7 +180,8 @@
           <label for="lastNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">Last Name (in
             English) *</label>
           <input id="lastNameEnglish" name="lastNameEnglish" [(ngModel)]="personalData.lastNameEnglish"
-            (blur)="onBlur('lastNameEnglish')" (input)="capitalizeNames()" (keypress)="preventSpecialCharacters($event)"
+            (blur)="onBlur('lastNameEnglish')" (input)="onNameInput($event, 'lastNameEnglish', 'english')"
+            (keypress)="onNameKeyPress($event, 'english')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="isFieldInvalid('lastNameEnglish')" class="text-red-600 text-sm">Last Name(in English) is a
             required field</span>
@@ -193,7 +194,8 @@
           <label for="firstNameSinhala" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name
             (in Sinhala) *</label>
           <input id="firstNameSinhala" name="firstNameSinhala" [(ngModel)]="personalData.firstNameSinhala"
-            (blur)="onBlur('firstNameSinhala')" (keypress)="onLetterKeyPress($event)"
+            (blur)="onBlur('firstNameSinhala')" (input)="onNameInput($event, 'firstNameSinhala', 'sinhala')"
+            (keypress)="onNameKeyPress($event, 'sinhala')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="isFieldInvalid('firstNameSinhala')" class="text-red-600 text-sm">First Name (in Sinhala) is a
             required field</span>
@@ -206,7 +208,8 @@
           <label for="lastNameSinhala" class="block text-sm font-medium text-gray-700 dark:text-textDark">Last Name (in
             Sinhala) *</label>
           <input id="lastNameSinhala" name="lastNameSinhala" [(ngModel)]="personalData.lastNameSinhala"
-            (blur)="onBlur('lastNameSinhala')" (keypress)="onLetterKeyPress($event)"
+            (blur)="onBlur('lastNameSinhala')" (input)="onNameInput($event, 'lastNameSinhala', 'sinhala')"
+            (keypress)="onNameKeyPress($event, 'sinhala')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="isFieldInvalid('lastNameSinhala')" class="text-red-600 text-sm">Last Name (in Sinhala) is a
             required field</span>
@@ -219,7 +222,8 @@
           <label for="firstNameTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name (in
             Tamil) *</label>
           <input id="firstNameTamil" name="firstNameTamil" [(ngModel)]="personalData.firstNameTamil"
-            (blur)="onBlur('firstNameTamil')" (keypress)="onLetterKeyPress($event)"
+            (blur)="onBlur('firstNameTamil')" (input)="onNameInput($event, 'firstNameTamil', 'tamil')"
+            (keypress)="onNameKeyPress($event, 'tamil')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="isFieldInvalid('firstNameTamil')" class="text-red-600 text-sm">First Name (in Tamil) is a
             required field</span>
@@ -232,7 +236,8 @@
           <label for="lastNameTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark">Last Name (in
             Tamil) *</label>
           <input id="lastNameTamil" name="lastNameTamil" [(ngModel)]="personalData.lastNameTamil"
-            (blur)="onBlur('lastNameTamil')" (keypress)="onLetterKeyPress($event)"
+            (blur)="onBlur('lastNameTamil')" (input)="onNameInput($event, 'lastNameTamil', 'tamil')"
+            (keypress)="onNameKeyPress($event, 'tamil')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="isFieldInvalid('lastNameTamil')" class="text-red-600 text-sm">Last Name (in Tamil) is a required
             field</span>

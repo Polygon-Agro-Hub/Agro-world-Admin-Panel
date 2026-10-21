@@ -153,29 +153,31 @@
         </div>
         <div *ngIf="personalData.jobRole === 'Field Officer'"></div>
         <div>
-          <label for="firstName" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name in
-            English *</label>
-          <input id="firstName" [(ngModel)]="personalData.firstName" name="firstName" (input)="capitalizeNames()"
-            (paste)="onEnglishNamePaste($event, 'firstName')"
-            class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            [ngClass]="{'border-red-500': hasNonEnglishCharacters('firstName')}" />
-          <span *ngIf="isFieldInvalid('firstName')" class="text-red-600 text-sm">First Name is a required field</span>
-          <span *ngIf="hasNonEnglishCharacters('firstName')" class="text-red-600 text-sm block mt-1">
-            First Name should only contain English letters (A-Z, a-z)
-          </span>
-        </div>
-        <div>
-          <label for="lastName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Last Name in English
-            *</label>
-          <input id="lastName" name="lastName" [(ngModel)]="personalData.lastName" (input)="capitalizeNames()"
-            (paste)="onEnglishNamePaste($event, 'lastName')"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            [ngClass]="{'border-red-500': hasNonEnglishCharacters('lastName')}" />
-          <span *ngIf="isFieldInvalid('lastName')" class="text-red-600 text-sm">Last Name is a required field</span>
-          <span *ngIf="hasNonEnglishCharacters('lastName')" class="text-red-600 text-sm block mt-1">
-            Last Name should only contain English letters (A-Z, a-z)
-          </span>
-        </div>
+  <label for="firstName" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name in
+    English *</label>
+  <input id="firstName" [(ngModel)]="personalData.firstName" name="firstName" (input)="capitalizeNames()"
+    (keypress)="preventSpecialCharacters($event)"
+    (paste)="onEnglishNamePaste($event, 'firstName')"
+    class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+    [ngClass]="{'border-red-500': hasNonEnglishCharacters('firstName')}" />
+  <span *ngIf="isFieldInvalid('firstName')" class="text-red-600 text-sm">First Name is a required field</span>
+  <span *ngIf="hasNonEnglishCharacters('firstName')" class="text-red-600 text-sm block mt-1">
+    First Name should only contain English letters (A-Z, a-z)
+  </span>
+</div>
+<div>
+  <label for="lastName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Last Name in English
+    *</label>
+  <input id="lastName" name="lastName" [(ngModel)]="personalData.lastName" (input)="capitalizeNames()"
+    (keypress)="preventSpecialCharacters($event)"
+    (paste)="onEnglishNamePaste($event, 'lastName')"
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+    [ngClass]="{'border-red-500': hasNonEnglishCharacters('lastName')}" />
+  <span *ngIf="isFieldInvalid('lastName')" class="text-red-600 text-sm">Last Name is a required field</span>
+  <span *ngIf="hasNonEnglishCharacters('lastName')" class="text-red-600 text-sm block mt-1">
+    Last Name should only contain English letters (A-Z, a-z)
+  </span>
+</div>
 
         <!-- New Fields: Sinhala and Tamil Names -->
         <div>

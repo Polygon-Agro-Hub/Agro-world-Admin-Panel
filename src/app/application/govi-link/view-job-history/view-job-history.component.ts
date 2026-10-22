@@ -42,12 +42,11 @@ interface DropdownOption {
     NgxPaginationModule,
     LoadingSpinnerComponent,
     CalendarModule,
-    DropdownModule
+    DropdownModule,
   ],
   templateUrl: './view-job-history.component.html',
-  styleUrl: './view-job-history.component.css'
+  styleUrl: './view-job-history.component.css',
 })
-
 export class ViewJobHistoryComponent implements OnInit {
   jobHistory: FieldAuditHistory[] = [];
   filteredHistory: FieldAuditHistory[] = [];
@@ -69,7 +68,7 @@ export class ViewJobHistoryComponent implements OnInit {
     { label: 'All Status', value: '' },
     { label: 'Pending', value: 'Pending' },
     { label: 'Completed', value: 'Completed' },
-    { label: 'Ongoing', value: 'Ongoing' }
+    { label: 'Ongoing', value: 'Ongoing' },
   ];
 
   districtOptions: DropdownOption[] = [
@@ -98,15 +97,15 @@ export class ViewJobHistoryComponent implements OnInit {
     { label: 'Puttalam', value: 'Puttalam' },
     { label: 'Ratnapura', value: 'Ratnapura' },
     { label: 'Trincomalee', value: 'Trincomalee' },
-    { label: 'Vavuniya', value: 'Vavuniya' }
+    { label: 'Vavuniya', value: 'Vavuniya' },
   ];
 
   constructor(
     private router: Router,
     private goviLinkService: GoviLinkService,
     public tokenService: TokenService,
-    public permissionService: PermissionService
-  ) { }
+    public permissionService: PermissionService,
+  ) {}
 
   ngOnInit() {
     this.fetchJobHistory();
@@ -117,14 +116,16 @@ export class ViewJobHistoryComponent implements OnInit {
     const filters = {
       status: this.selectedStatus || undefined,
       district: this.selectedDistrict || undefined,
-      completedDateFrom: this.completedDateFrom ? this.formatDate(this.completedDateFrom) : undefined,
+      completedDateFrom: this.completedDateFrom
+        ? this.formatDate(this.completedDateFrom)
+        : undefined,
       searchJobId: this.getSearchParam('jobId'),
       searchFarmId: this.getSearchParam('farmId'),
-      searchNic: this.getSearchParam('nic')
+      searchNic: this.getSearchParam('nic'),
     };
 
     // Remove undefined values
-    Object.keys(filters).forEach(key => {
+    Object.keys(filters).forEach((key) => {
       if (filters[key as keyof typeof filters] === undefined) {
         delete filters[key as keyof typeof filters];
       }
@@ -151,22 +152,30 @@ export class ViewJobHistoryComponent implements OnInit {
             assignedOn: this.formatDateTime(item.assignedOn),
             assignedOnRaw: item.assignedOn, // keep raw value for sorting
             assignedByName: item.assignedByName || '--',
-            assignedOfficer: item.assignedOfficer || '--'
+            assignedOfficer: item.assignedOfficer || '--',
           }));
 
           // Sort by Last Assigned On, most recent first
           mappedData.sort((a: any, b: any) => {
-            const dateA = a.assignedOnRaw ? new Date(a.assignedOnRaw).getTime() : 0;
-            const dateB = b.assignedOnRaw ? new Date(b.assignedOnRaw).getTime() : 0;
+            const dateA = a.assignedOnRaw
+              ? new Date(a.assignedOnRaw).getTime()
+              : 0;
+            const dateB = b.assignedOnRaw
+              ? new Date(b.assignedOnRaw).getTime()
+              : 0;
             return dateB - dateA;
           });
 
           // Filter out records with null or empty empId
           this.jobHistory = mappedData
-            .filter((item: FieldAuditHistory & { assignedOnRaw?: string }) =>
-              item.empId && item.empId !== null && item.empId !== '--' && item.empId.trim() !== ''
+            .filter(
+              (item: FieldAuditHistory & { assignedOnRaw?: string }) =>
+                item.empId &&
+                item.empId !== null &&
+                item.empId !== '--' &&
+                item.empId.trim() !== '',
             )
-            .map(({ assignedOnRaw, ...rest }: any) => rest); 
+            .map(({ assignedOnRaw, ...rest }: any) => rest);
 
           this.totalItems = this.jobHistory.length;
           this.hasData = this.totalItems > 0;
@@ -178,7 +187,7 @@ export class ViewJobHistoryComponent implements OnInit {
         this.isLoading = false;
         console.error('Error fetching job history:', error);
         this.hasData = false;
-      }
+      },
     );
   }
 
@@ -206,9 +215,9 @@ export class ViewJobHistoryComponent implements OnInit {
 
   formatVisitPurpose(purpose: string): string {
     const mapping: { [key: string]: string } = {
-      'Request': 'Requested Service',
-      'Individual': 'Individual Farmer Audit',
-      'Cluster': 'Farmer Cluster Audit'
+      Request: 'Requested Service',
+      Individual: 'Individual Farmer Audit',
+      Cluster: 'Farmer Cluster Audit',
     };
     return mapping[purpose] || purpose;
   }
@@ -231,7 +240,7 @@ export class ViewJobHistoryComponent implements OnInit {
 
   formatStatus(status: string): string {
     const mapping: { [key: string]: string } = {
-      'Assigned': 'Pending'
+      Assigned: 'Pending',
     };
     return mapping[status] || status;
   }
@@ -278,20 +287,27 @@ export class ViewJobHistoryComponent implements OnInit {
   }
 
   viewResponse(jobId: string, purpose: string) {
-
-    if (jobId && jobId.startsWith("FA")) {
-      this.router.navigate(['/govi-link/action/view-govi-link-jobs-farmer-audit-response'], {
-        queryParams: { jobId },
-      });
-    } else if (jobId && jobId.startsWith("CA")) {
-      this.router.navigate(['/govi-link/action/view-govi-link-jobs-farmer-cluster-audit-response'], {
-        queryParams: { jobId },
-      });
-    } else if (jobId && jobId.startsWith("SR")) {
-      this.router.navigate(['/govi-link/action/view-govi-link-jobs-service-request-response'], {
-        queryParams: { jobId },
-      });
+    if (jobId && jobId.startsWith('FA')) {
+      this.router.navigate(
+        ['/govi-link/action/view-govi-link-jobs-farmer-audit-response'],
+        {
+          queryParams: { jobId },
+        },
+      );
+    } else if (jobId && jobId.startsWith('CA')) {
+      this.router.navigate(
+        ['/govi-link/action/view-govi-link-jobs-farmer-cluster-audit-response'],
+        {
+          queryParams: { jobId },
+        },
+      );
+    } else if (jobId && jobId.startsWith('SR')) {
+      this.router.navigate(
+        ['/govi-link/action/view-govi-link-jobs-service-request-response'],
+        {
+          queryParams: { jobId },
+        },
+      );
     }
-
   }
 }

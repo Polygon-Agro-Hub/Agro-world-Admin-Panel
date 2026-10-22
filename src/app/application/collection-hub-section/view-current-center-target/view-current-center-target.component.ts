@@ -67,7 +67,7 @@ export class ViewCurrentCenterTargetComponent implements OnInit {
     private collectionCenterSrv: CollectionCenterService,
     public tokenService: TokenService,
     public permissionService: PermissionService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.centerId = this.route.snapshot.params['centerId'];

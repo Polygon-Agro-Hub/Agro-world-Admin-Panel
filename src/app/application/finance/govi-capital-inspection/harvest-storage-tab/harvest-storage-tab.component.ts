@@ -25,8 +25,8 @@ export class HarvestStorageTabComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('---------------------------------------------------------------');
-    console.log(this.HarvestObj);
+    // console.log('---------------------------------------------------------------');
+    // console.log(this.HarvestObj);
     
   }
 

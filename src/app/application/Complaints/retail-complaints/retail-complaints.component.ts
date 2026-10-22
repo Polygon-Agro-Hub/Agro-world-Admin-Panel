@@ -185,8 +185,6 @@ export class RetailComplaintsComponent implements OnInit {
               label: c.categoryEnglish,
               value: c.categoryEnglish,
             }));
-
-            console.log('Categories:', this.comCategories);
           },
           (error) => {
             console.error('Error fetching news:', error);
@@ -213,17 +211,12 @@ export class RetailComplaintsComponent implements OnInit {
               label: c.categoryEnglish,
               value: c.categoryEnglish,
             }));
-
-            console.log('Categories:', this.comCategories);
           },
           (error) => {
             console.error('Error fetching news:', error);
           }
         );
     }
-
-    console.log('c', this.comCategories)
-
   }
 
   private formatDate(dateString: string): string {

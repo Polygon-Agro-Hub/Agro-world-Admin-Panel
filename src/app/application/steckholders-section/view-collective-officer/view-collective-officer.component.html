@@ -104,8 +104,7 @@
   </div>
 </div>
 
-<div
-  class="fixed-width-container">
+<div class="fixed-width-container">
   <div class="pt-5 px-12 pb-5 min-w-full bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
 
     <div *ngIf="Cname" class="flex items-center my-5">
@@ -120,12 +119,10 @@
           ({{ (totalItems || 0) < 10 ? '0' + (totalItems || 0) : (totalItems || 0) }}) </span>
       </div>
 
-      <div class="flex items-center mr-5" 
-      *ngIf="
+      <div class="flex items-center mr-5" *ngIf="
              ((urlSegment === 'steckholders' && permissionService.hasPermission('Filter CO / CCM / DO')) ||
              (urlSegment === 'collection-hub' && permissionService.hasPermission('Filter Polygon CO / CCM / DO')) ||
-                tokenService.getUserDetails().role === '1')"
-      >
+                tokenService.getUserDetails().role === '1')">
         <i class="mr-6 w-6 h-6 fill-current text-textLight dark:text-textDark">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
             <path
@@ -182,17 +179,21 @@
       <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 dark:text-textDark" />
     </div>
 
-    <div *ngIf="hasData" class="w-full overflow-auto max-h-[60vh] scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+    <div *ngIf="hasData"
+      class="w-full overflow-auto max-h-[60vh] scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
       <table class="min-w-max divide-y divide-gray-200 table-auto whitespace-nowrap">
         <thead class="bg-white dark:bg-tileBlack">
           <tr class="sticky top-0 z-40 bg-white dark:bg-tileBlack whitespace-nowrap">
-            <th class="sticky left-0 z-50 w-[60px] min-w-[60px] bg-white dark:bg-tileBlack px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
+            <th
+              class="sticky left-0 z-50 w-[60px] min-w-[60px] bg-white dark:bg-tileBlack px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
               No
             </th>
-            <th class="sticky left-[60px] z-50 w-[120px] min-w-[120px] bg-white dark:bg-tileBlack px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
+            <th
+              class="sticky left-[60px] z-50 w-[120px] min-w-[120px] bg-white dark:bg-tileBlack px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
               EMP ID
             </th>
-            <th class="sticky left-[180px] z-50 w-[180px] min-w-[180px] bg-white dark:bg-tileBlack px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
+            <th
+              class="sticky left-[180px] z-50 w-[180px] min-w-[180px] bg-white dark:bg-tileBlack px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
               First Name
             </th>
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
@@ -255,13 +256,16 @@
                     };
               let i = index
             ">
-            <td class="sticky left-0 z-10 w-[60px] min-w-[60px] bg-tileLight dark:bg-tileBlack px-2 py-3 text-left text-textLight dark:text-textDark">
+            <td
+              class="sticky left-0 z-10 w-[60px] min-w-[60px] bg-tileLight dark:bg-tileBlack px-2 py-3 text-left text-textLight dark:text-textDark">
               {{ (page - 1) * itemsPerPage + i + 1 }}
             </td>
-            <td class="sticky left-[60px] z-10 w-[120px] min-w-[120px] bg-tileLight dark:bg-tileBlack px-3 py-3 text-left text-textLight dark:text-textDark">
+            <td
+              class="sticky left-[60px] z-10 w-[120px] min-w-[120px] bg-tileLight dark:bg-tileBlack px-3 py-3 text-left text-textLight dark:text-textDark">
               {{ item.empId }}
             </td>
-            <td class="sticky left-[180px] z-10 w-[180px] min-w-[180px] bg-tileLight dark:bg-tileBlack px-3 py-3 text-left text-textLight dark:text-textDark">
+            <td
+              class="sticky left-[180px] z-10 w-[180px] min-w-[180px] bg-tileLight dark:bg-tileBlack px-3 py-3 text-left text-textLight dark:text-textDark">
               {{ item.firstNameEnglish }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
@@ -379,11 +383,11 @@
         </tbody>
       </table>
     </div>
-      <div class="dark:bg-[#262f45]">
-        <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
-          [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
-          [screenReaderCurrentLabel]="'Youre on page'">
-        </pagination-controls>
-      </div>
+    <div class="dark:bg-[#262f45]">
+      <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
+        [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
+        [screenReaderCurrentLabel]="'Youre on page'">
+      </pagination-controls>
+    </div>
   </div>
 </div>

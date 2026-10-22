@@ -6,7 +6,6 @@
         Back
     </button>
 
-
     <div class="w-full px-10 py-7 bg-tileLight  shadow-lg rounded-lg mt-4 dark:bg-[#363636]">
         <div id="reportContainer">
             <div>
@@ -69,10 +68,7 @@
                         </tr>
                     </tbody>
                 </table>
-
-
             </div>
-
 
             <div class="mt-10 mb-4">
                 <p class="dark:text-textDark font-semibold mb-3">Bank Details</p>
@@ -116,7 +112,6 @@
                 </table>
 
             </div>
-
 
             <div class="mt-10">
                 <p class="dark:text-textDark font-semibold mb-3">Crop Details</p>
@@ -201,7 +196,6 @@
                 </table>
             </div>
 
-
             <p class="text-lg font-medium my-8 dark:text-white">
                 Full Total (Rs.) :
                 <span class="dark:text-textDark">
@@ -234,12 +228,10 @@
         </div>
 
         <div class="flex items-center justify-center mt-10">
-            <button 
-            *ngIf="
+            <button *ngIf="
               permissionService.hasPermission('Download Farmer Report Invoice') ||
               tokenService.getUserDetails().role === '1'
-            "
-            (click)="downloadReport()" class="bg-[#415CFF] text-lg text-white px-6 py-2 rounded-lg shadow-lg">
+            " (click)="downloadReport()" class="bg-[#415CFF] text-lg text-white px-6 py-2 rounded-lg shadow-lg">
                 Download
             </button>
 

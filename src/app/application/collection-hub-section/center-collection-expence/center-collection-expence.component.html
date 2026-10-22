@@ -126,15 +126,15 @@
         </thead>
         <tbody class="bg-white text-[#000000] dark:bg-[#1D1D1F]">
           <tr *ngFor="
-          let item of farmerPaymentsArr
-            | paginate
-              : {
-                  itemsPerPage: itemsPerPage,
-                  currentPage: page,
-                  totalItems: totalItems
-                };
-          let i = index
-        " class="border-b border-gray-200 dark:border-[#202021] last:border-b-0">
+            let item of farmerPaymentsArr
+              | paginate
+                : {
+                    itemsPerPage: itemsPerPage,
+                    currentPage: page,
+                    totalItems: totalItems
+                  };
+              let i = index
+            " class="border-b border-gray-200 dark:border-[#202021] last:border-b-0">
             <td class="px-4 py-4 text-[#000000] dark:text-gray-300">
               {{
               (page - 1) * itemsPerPage + i + 1 < 10 ? "0" + ((page - 1) * itemsPerPage + i + 1) : (page - 1) *

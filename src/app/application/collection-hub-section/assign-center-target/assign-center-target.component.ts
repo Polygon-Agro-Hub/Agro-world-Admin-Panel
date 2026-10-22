@@ -32,7 +32,7 @@ export class AssignCenterTargetComponent {
   dateError: boolean = false;
   selectDate: Date | null = new Date();
 
-  constructor(private TargetSrv: TargetService) {}
+  constructor(private TargetSrv: TargetService) { }
 
   ngOnInit(): void {
     const today = new Date();
@@ -78,13 +78,13 @@ export class AssignCenterTargetComponent {
     ).subscribe((res) => {
       this.isLoading = false;
 
-        this.assignCropsArr = res.products.map((p: AssignCrops) => ({
-          ...p,
-          editingA: false,
-          editingB: false,
-          editingC: false,
-          originalTotal: (p.targetA || 0) + (p.targetB || 0) + (p.targetC || 0),
-        }));
+      this.assignCropsArr = res.products.map((p: AssignCrops) => ({
+        ...p,
+        editingA: false,
+        editingB: false,
+        editingC: false,
+        originalTotal: (p.targetA || 0) + (p.targetB || 0) + (p.targetC || 0),
+      }));
       this.officerName = res.officerName;
       this.countCrops = res.products.length;
       this.companyCenterId = res.companyCenterId;

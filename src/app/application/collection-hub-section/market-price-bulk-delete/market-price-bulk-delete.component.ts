@@ -36,7 +36,7 @@ export class MarketPriceBulkDeleteComponent {
     private http: HttpClient,
     private router: Router,
     private tokenService: TokenService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.fetchAllXl(this.page, this.itemsPerPage);

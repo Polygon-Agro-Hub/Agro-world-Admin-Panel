@@ -107,7 +107,7 @@ export class ViewCollectiveOfficerComponent {
     public permissionService: PermissionService,
     private collectionOfficerService: CollectionOfficerService,
     private route: ActivatedRoute,
-  ) {}
+  ) { }
 
   fetchAllCollectionOfficer(
     page: number = 1,
@@ -187,7 +187,7 @@ export class ViewCollectiveOfficerComponent {
       (response) => {
         this.centerNames = response;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -237,7 +237,7 @@ export class ViewCollectiveOfficerComponent {
       .filter((segment) => segment.length > 0)[0];
   }
 
-    onPageChange(event: number) {
+  onPageChange(event: number) {
     this.page = event;
     this.searchNIC = '';
     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);

@@ -117,7 +117,7 @@ export class DistributionHubDashboardComponent implements OnInit {
     },
   ];
 
-  constructor(private distributionHubService: DistributionHubService) {}
+  constructor(private distributionHubService: DistributionHubService) { }
 
   ngOnInit(): void {
     this.loadDashboard();

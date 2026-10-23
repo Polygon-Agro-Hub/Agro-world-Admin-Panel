@@ -73,7 +73,8 @@
       <table class="min-w-max divide-y divide-gray-200 table-auto whitespace-nowrap" *ngIf="hasData">
         <thead class="sticky top-0 z-20 bg-tileLight dark:bg-tileBlack">
           <tr>
-            <th class="sticky left-0 top-0 z-30 bg-tileLight dark:bg-tileBlack px-4 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">
+            <th
+              class="sticky left-0 top-0 z-30 bg-tileLight dark:bg-tileBlack px-4 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">
               Company Name
             </th>
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
@@ -156,7 +157,8 @@
         </thead>
         <tbody>
           <tr *ngFor="let item of companies; let i = index">
-            <td class="sticky left-0 z-10 bg-tileLight dark:bg-tileBlack px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap">
+            <td
+              class="sticky left-0 z-10 bg-tileLight dark:bg-tileBlack px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap">
               {{ item.companyNameEnglish }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
@@ -238,7 +240,8 @@
                 <i class="fa-regular fa-square-plus text-2xl"></i>
               </button>
             </td>
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-normal break-words max-w-[150px]">
+            <td
+              class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-normal break-words max-w-[150px]">
               {{item.modifyBy || '--'}}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">

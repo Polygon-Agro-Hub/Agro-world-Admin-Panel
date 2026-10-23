@@ -51,7 +51,7 @@ export class TransportReasonsToReturnComponent implements OnInit {
     private distributionService: DistributionHubService,
     public permissionService: PermissionService,
     public tokenService: TokenService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.reasonForm = this.fb.group({
@@ -224,7 +224,7 @@ export class TransportReasonsToReturnComponent implements OnInit {
           title: 'Error',
           text:
             error.error?.error ===
-            `Data too long for column 'rsnEnglish' at row 1`
+              `Data too long for column 'rsnEnglish' at row 1`
               ? 'The message is too long. Please limit it to a maximum of 250 characters.'
               : 'Failed to add reason. Please try again.',
           customClass: {

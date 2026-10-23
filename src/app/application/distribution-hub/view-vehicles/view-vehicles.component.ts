@@ -58,7 +58,7 @@ export class ViewVehiclesComponent {
   constructor(
     private distService: DestributionService,
     private distHubService: DistributionHubService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadCenters();

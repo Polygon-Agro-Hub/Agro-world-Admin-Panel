@@ -16,7 +16,8 @@
 </button>
 
 <div class="w-full min-w-0 max-w-full overflow-x-hidden">
-  <div class="w-full min-w-0 max-w-full overflow-hidden rounded-lg bg-tileLight pt-5 pr-12 pl-12 pb-5 shadow-lg dark:bg-tileBlack">
+  <div
+    class="w-full min-w-0 max-w-full overflow-hidden rounded-lg bg-tileLight pt-5 pr-12 pl-12 pb-5 shadow-lg dark:bg-tileBlack">
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
         <h2 class="text-2xl font-normal text-[#292929] dark:text-textDark whitespace-nowrap mr-5">
@@ -27,72 +28,72 @@
       <div class="flex items-center">
         <div class="mr-5">
           <p-dropdown styleClass="
-      border border-2 rounded-xl h-8 items-center 
-      bg-[#F1F1F1] dark:bg-[#272F45] 
-      text-textLight dark:text-textDark 
-      border-[#yourLightColor] dark:border-[#AFAFAF]
-      [&_.p-dropdown-label]:text-textLight [&_.p-dropdown-label]:dark:text-textDark
-      [&_.p-dropdown-trigger]:text-textLight [&_.p-dropdown-trigger]:dark:text-textDark
-      [&_.p-dropdown-clear-icon]:text-textLight [&_.p-dropdown-clear-icon]:dark:text-textDark
-    " panelStyleClass="
-      bg-white dark:bg-[#272F45] 
-      border border-gray-200 dark:border-[#AFAFAF]
-      [&_.p-dropdown-item]:text-textLight [&_.p-dropdown-item]:dark:text-textDark
-      [&_.p-dropdown-item]:bg-white [&_.p-dropdown-item]:dark:bg-[#272F45]
-      [&_.p-dropdown-item:hover]:bg-gray-100 [&_.p-dropdown-item:hover]:dark:bg-[#1e2332]
-      [&_.p-dropdown-item.p-highlight]:bg-[#3980C0] [&_.p-dropdown-item.p-highlight]:dark:bg-[#3980C0]
-      [&_.p-dropdown-item.p-highlight]:text-white [&_.p-dropdown-item.p-highlight]:dark:text-white
-      [&_.p-dropdown-empty-message]:text-textLight [&_.p-dropdown-empty-message]:dark:text-textDark
-      [&_.p-dropdown-empty-message]:bg-white [&_.p-dropdown-empty-message]:dark:bg-[#272F45]
-    " [options]="companyOptions" [checkmark]="false" optionLabel="label" optionValue="value"
+            border border-2 rounded-xl h-8 items-center 
+            bg-[#F1F1F1] dark:bg-[#272F45] 
+            text-textLight dark:text-textDark 
+            border-[#yourLightColor] dark:border-[#AFAFAF]
+            [&_.p-dropdown-label]:text-textLight [&_.p-dropdown-label]:dark:text-textDark
+            [&_.p-dropdown-trigger]:text-textLight [&_.p-dropdown-trigger]:dark:text-textDark
+            [&_.p-dropdown-clear-icon]:text-textLight [&_.p-dropdown-clear-icon]:dark:text-textDark
+          " panelStyleClass="
+            bg-white dark:bg-[#272F45] 
+            border border-gray-200 dark:border-[#AFAFAF]
+            [&_.p-dropdown-item]:text-textLight [&_.p-dropdown-item]:dark:text-textDark
+            [&_.p-dropdown-item]:bg-white [&_.p-dropdown-item]:dark:bg-[#272F45]
+            [&_.p-dropdown-item:hover]:bg-gray-100 [&_.p-dropdown-item:hover]:dark:bg-[#1e2332]
+            [&_.p-dropdown-item.p-highlight]:bg-[#3980C0] [&_.p-dropdown-item.p-highlight]:dark:bg-[#3980C0]
+            [&_.p-dropdown-item.p-highlight]:text-white [&_.p-dropdown-item.p-highlight]:dark:text-white
+            [&_.p-dropdown-empty-message]:text-textLight [&_.p-dropdown-empty-message]:dark:text-textDark
+            [&_.p-dropdown-empty-message]:bg-white [&_.p-dropdown-empty-message]:dark:bg-[#272F45]
+            " [options]="companyOptions" [checkmark]="false" optionLabel="label" optionValue="value"
             [showClear]="!!selectCompany" placeholder="Company" [(ngModel)]="selectCompany"
             (onChange)="applyCompanyFilter()"></p-dropdown>
         </div>
 
         <div class="mr-5">
           <p-dropdown styleClass="
-      border border-2 rounded-xl h-8 items-center 
-      bg-[#F1F1F1] dark:bg-[#272F45] 
-      text-textLight dark:text-textDark 
-      border-[#yourLightColor] dark:border-[#AFAFAF]
-      [&_.p-dropdown-label]:text-textLight [&_.p-dropdown-label]:dark:text-textDark
-      [&_.p-dropdown-trigger]:text-textLight [&_.p-dropdown-trigger]:dark:text-textDark
-      [&_.p-dropdown-clear-icon]:text-textLight [&_.p-dropdown-clear-icon]:dark:text-textDark
-    " panelStyleClass="
-      bg-white dark:bg-[#272F45] 
-      border border-gray-200 dark:border-[#AFAFAF]
-      [&_.p-dropdown-item]:text-textLight [&_.p-dropdown-item]:dark:text-textDark
-      [&_.p-dropdown-item]:bg-white [&_.p-dropdown-item]:dark:bg-[#272F45]
-      [&_.p-dropdown-item:hover]:bg-gray-100 [&_.p-dropdown-item:hover]:dark:bg-[#1e2332]
-      [&_.p-dropdown-item.p-highlight]:bg-[#3980C0] [&_.p-dropdown-item.p-highlight]:dark:bg-[#3980C0]
-      [&_.p-dropdown-item.p-highlight]:text-white [&_.p-dropdown-item.p-highlight]:dark:text-white
-      [&_.p-dropdown-empty-message]:text-textLight [&_.p-dropdown-empty-message]:dark:text-textDark
-      [&_.p-dropdown-empty-message]:bg-white [&_.p-dropdown-empty-message]:dark:bg-[#272F45]
-    " [options]="provinceOptions" [checkmark]="false" optionLabel="label" optionValue="value"
+            border border-2 rounded-xl h-8 items-center 
+            bg-[#F1F1F1] dark:bg-[#272F45] 
+            text-textLight dark:text-textDark 
+            border-[#yourLightColor] dark:border-[#AFAFAF]
+            [&_.p-dropdown-label]:text-textLight [&_.p-dropdown-label]:dark:text-textDark
+            [&_.p-dropdown-trigger]:text-textLight [&_.p-dropdown-trigger]:dark:text-textDark
+            [&_.p-dropdown-clear-icon]:text-textLight [&_.p-dropdown-clear-icon]:dark:text-textDark
+            " panelStyleClass="
+            bg-white dark:bg-[#272F45] 
+            border border-gray-200 dark:border-[#AFAFAF]
+            [&_.p-dropdown-item]:text-textLight [&_.p-dropdown-item]:dark:text-textDark
+            [&_.p-dropdown-item]:bg-white [&_.p-dropdown-item]:dark:bg-[#272F45]
+            [&_.p-dropdown-item:hover]:bg-gray-100 [&_.p-dropdown-item:hover]:dark:bg-[#1e2332]
+            [&_.p-dropdown-item.p-highlight]:bg-[#3980C0] [&_.p-dropdown-item.p-highlight]:dark:bg-[#3980C0]
+            [&_.p-dropdown-item.p-highlight]:text-white [&_.p-dropdown-item.p-highlight]:dark:text-white
+            [&_.p-dropdown-empty-message]:text-textLight [&_.p-dropdown-empty-message]:dark:text-textDark
+            [&_.p-dropdown-empty-message]:bg-white [&_.p-dropdown-empty-message]:dark:bg-[#272F45]
+            " [options]="provinceOptions" [checkmark]="false" optionLabel="label" optionValue="value"
             [showClear]="!!selectProvince" placeholder="Province" [(ngModel)]="selectProvince"
             (onChange)="applyProvinceFilters()"></p-dropdown>
         </div>
 
         <div class="mr-5">
           <p-dropdown styleClass="
-      border border-2 rounded-xl h-8 items-center 
-      bg-[#F1F1F1] dark:bg-[#272F45] 
-      text-textLight dark:text-textDark 
-      border-[#yourLightColor] dark:border-[#AFAFAF]
-      [&_.p-dropdown-label]:text-textLight [&_.p-dropdown-label]:dark:text-textDark
-      [&_.p-dropdown-trigger]:text-textLight [&_.p-dropdown-trigger]:dark:text-textDark
-      [&_.p-dropdown-clear-icon]:text-textLight [&_.p-dropdown-clear-icon]:dark:text-textDark
-    " panelStyleClass="
-      bg-white dark:bg-[#272F45] 
-      border border-gray-200 dark:border-[#AFAFAF]
-      [&_.p-dropdown-item]:text-textLight [&_.p-dropdown-item]:dark:text-textDark
-      [&_.p-dropdown-item]:bg-white [&_.p-dropdown-item]:dark:bg-[#272F45]
-      [&_.p-dropdown-item:hover]:bg-gray-100 [&_.p-dropdown-item:hover]:dark:bg-[#1e2332]
-      [&_.p-dropdown-item.p-highlight]:bg-[#3980C0] [&_.p-dropdown-item.p-highlight]:dark:bg-[#3980C0]
-      [&_.p-dropdown-item.p-highlight]:text-white [&_.p-dropdown-item.p-highlight]:dark:text-white
-      [&_.p-dropdown-empty-message]:text-textLight [&_.p-dropdown-empty-message]:dark:text-textDark
-      [&_.p-dropdown-empty-message]:bg-white [&_.p-dropdown-empty-message]:dark:bg-[#272F45]
-    " [options]="districtOptions" [checkmark]="false" optionLabel="label" optionValue="value"
+            border border-2 rounded-xl h-8 items-center 
+            bg-[#F1F1F1] dark:bg-[#272F45] 
+            text-textLight dark:text-textDark 
+            border-[#yourLightColor] dark:border-[#AFAFAF]
+            [&_.p-dropdown-label]:text-textLight [&_.p-dropdown-label]:dark:text-textDark
+            [&_.p-dropdown-trigger]:text-textLight [&_.p-dropdown-trigger]:dark:text-textDark
+            [&_.p-dropdown-clear-icon]:text-textLight [&_.p-dropdown-clear-icon]:dark:text-textDark
+            " panelStyleClass="
+            bg-white dark:bg-[#272F45] 
+            border border-gray-200 dark:border-[#AFAFAF]
+            [&_.p-dropdown-item]:text-textLight [&_.p-dropdown-item]:dark:text-textDark
+            [&_.p-dropdown-item]:bg-white [&_.p-dropdown-item]:dark:bg-[#272F45]
+            [&_.p-dropdown-item:hover]:bg-gray-100 [&_.p-dropdown-item:hover]:dark:bg-[#1e2332]
+            [&_.p-dropdown-item.p-highlight]:bg-[#3980C0] [&_.p-dropdown-item.p-highlight]:dark:bg-[#3980C0]
+            [&_.p-dropdown-item.p-highlight]:text-white [&_.p-dropdown-item.p-highlight]:dark:text-white
+            [&_.p-dropdown-empty-message]:text-textLight [&_.p-dropdown-empty-message]:dark:text-textDark
+            [&_.p-dropdown-empty-message]:bg-white [&_.p-dropdown-empty-message]:dark:bg-[#272F45]
+            " [options]="districtOptions" [checkmark]="false" optionLabel="label" optionValue="value"
             [showClear]="!!selectDistrict" placeholder="District" [(ngModel)]="selectDistrict"
             (onChange)="applyDistrictFilters()"></p-dropdown>
         </div>
@@ -126,7 +127,8 @@
     </div>
     <div
       class="relative isolate h-[60vh] max-h-[60vh] w-full min-w-0 max-w-full overflow-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
-      <table class="w-max min-w-[1700px] table-fixed border-separate border-spacing-0 whitespace-nowrap" *ngIf="hasData">
+      <table class="w-max min-w-[1700px] table-fixed border-separate border-spacing-0 whitespace-nowrap"
+        *ngIf="hasData">
         <colgroup>
           <col style="width: 70px" />
           <col style="width: 180px" />
@@ -143,15 +145,18 @@
         </colgroup>
         <thead class="sticky top-0 z-40 bg-white dark:bg-tileBlack">
           <tr>
-            <th class="sticky left-0 z-50 box-border w-[70px] min-w-[70px] max-w-[70px] bg-white px-4 py-3 font-normal text-[#5C5C5C] dark:bg-tileBlack dark:text-textDark text-left shadow-[2px_0_0_0_#ffffff] dark:shadow-[2px_0_0_0_#272F45]">
+            <th
+              class="sticky left-0 z-50 box-border w-[70px] min-w-[70px] max-w-[70px] bg-white px-4 py-3 font-normal text-[#5C5C5C] dark:bg-tileBlack dark:text-textDark text-left shadow-[2px_0_0_0_#ffffff] dark:shadow-[2px_0_0_0_#272F45]">
               No
             </th>
 
-            <th class="sticky left-[70px] z-50 box-border w-[180px] min-w-[180px] max-w-[180px] bg-white px-4 py-3 font-normal text-[#5C5C5C] dark:bg-tileBlack dark:text-textDark text-left shadow-[2px_0_0_0_#ffffff] dark:shadow-[2px_0_0_0_#272F45]">
+            <th
+              class="sticky left-[70px] z-50 box-border w-[180px] min-w-[180px] max-w-[180px] bg-white px-4 py-3 font-normal text-[#5C5C5C] dark:bg-tileBlack dark:text-textDark text-left shadow-[2px_0_0_0_#ffffff] dark:shadow-[2px_0_0_0_#272F45]">
               Reg Code
             </th>
 
-            <th class="sticky left-[250px] z-50 box-border w-[220px] min-w-[220px] max-w-[220px] bg-white px-4 py-3 font-normal text-[#5C5C5C] dark:bg-tileBlack dark:text-textDark text-left shadow-[2px_0_0_0_#ffffff] dark:shadow-[2px_0_0_0_#272F45]">
+            <th
+              class="sticky left-[250px] z-50 box-border w-[220px] min-w-[220px] max-w-[220px] bg-white px-4 py-3 font-normal text-[#5C5C5C] dark:bg-tileBlack dark:text-textDark text-left shadow-[2px_0_0_0_#ffffff] dark:shadow-[2px_0_0_0_#272F45]">
               Centre Name
             </th>
             <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left text-nowrap">
@@ -207,13 +212,16 @@
                     };
               let i = index
             ">
-            <td class="sticky left-0 z-30 box-border w-[70px] min-w-[70px] max-w-[70px] border-b border-gray-200 bg-tileLight px-4 py-3 text-left text-[#000000] dark:border-gray-700 dark:bg-tileBlack dark:text-textDark shadow-[2px_0_0_0_#ffffff] dark:shadow-[2px_0_0_0_#272F45]">
+            <td
+              class="sticky left-0 z-30 box-border w-[70px] min-w-[70px] max-w-[70px] border-b border-gray-200 bg-tileLight px-4 py-3 text-left text-[#000000] dark:border-gray-700 dark:bg-tileBlack dark:text-textDark shadow-[2px_0_0_0_#ffffff] dark:shadow-[2px_0_0_0_#272F45]">
               {{ (page - 1) * itemsPerPage + i + 1 }}
             </td>
-            <td class="sticky left-[70px] z-30 box-border w-[180px] min-w-[180px] max-w-[180px] border-b border-gray-200 bg-tileLight px-4 py-3 text-left text-[#000000] dark:border-gray-700 dark:bg-tileBlack dark:text-textDark shadow-[2px_0_0_0_#ffffff] dark:shadow-[2px_0_0_0_#272F45]">
+            <td
+              class="sticky left-[70px] z-30 box-border w-[180px] min-w-[180px] max-w-[180px] border-b border-gray-200 bg-tileLight px-4 py-3 text-left text-[#000000] dark:border-gray-700 dark:bg-tileBlack dark:text-textDark shadow-[2px_0_0_0_#ffffff] dark:shadow-[2px_0_0_0_#272F45]">
               {{ item.regCode }}
             </td>
-            <td class="sticky left-[250px] z-30 box-border w-[220px] min-w-[220px] max-w-[220px] border-b border-gray-200 bg-tileLight px-4 py-3 text-left text-[#000000] dark:border-gray-700 dark:bg-tileBlack dark:text-textDark shadow-[2px_0_0_0_#ffffff] dark:shadow-[2px_0_0_0_#272F45]">
+            <td
+              class="sticky left-[250px] z-30 box-border w-[220px] min-w-[220px] max-w-[220px] border-b border-gray-200 bg-tileLight px-4 py-3 text-left text-[#000000] dark:border-gray-700 dark:bg-tileBlack dark:text-textDark shadow-[2px_0_0_0_#ffffff] dark:shadow-[2px_0_0_0_#272F45]">
               {{ item.centerName }}
             </td>
             <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">

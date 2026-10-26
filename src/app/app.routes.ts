@@ -1135,7 +1135,7 @@ export const routes: Routes = [
                     path: '',
                     component: ViewSalesAgentsComponent,
                     canActivate: [PermissionGuard],
-                    data: { permission: 'View salses agent' },
+                    data: { permission: 'View sales agent' },
                   },
                   {
                     path: 'create-sales-agents',

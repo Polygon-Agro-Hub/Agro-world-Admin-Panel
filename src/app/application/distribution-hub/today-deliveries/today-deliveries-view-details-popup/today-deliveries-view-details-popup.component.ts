@@ -48,13 +48,13 @@ interface TrackingDetails {
 
 interface TimelineStep {
   type:
-    | 'out'
-    | 'collected'
-    | 'started'
-    | 'hold'
-    | 'restart'
-    | 'return'
-    | 'delivered';
+  | 'out'
+  | 'collected'
+  | 'started'
+  | 'hold'
+  | 'restart'
+  | 'return'
+  | 'delivered';
   payload: any;
 }
 
@@ -66,10 +66,9 @@ interface TimelineStep {
   styleUrl: './today-deliveries-view-details-popup.component.css',
 })
 export class TodayDeliveriesViewDetailsPopupComponent
-  implements OnInit, OnChanges
-{
+  implements OnInit, OnChanges {
   @Input() visible: boolean = false;
-  @Input() deliveryId!: number; 
+  @Input() deliveryId!: number;
   @Output() closePopup = new EventEmitter<void>();
 
   trackingDetails: TrackingDetails | null = null;
@@ -77,7 +76,7 @@ export class TodayDeliveriesViewDetailsPopupComponent
   error: string = '';
   steps: TimelineStep[] = [];
 
-  constructor(private distributionService: DistributionHubService) {}
+  constructor(private distributionService: DistributionHubService) { }
 
   ngOnInit(): void {
     if (this.visible) {
@@ -133,7 +132,7 @@ export class TodayDeliveriesViewDetailsPopupComponent
     if (d.collectTime) {
       steps.push({ type: 'collected', payload: { empId: d.empId, driverName: d.driverName, driverPhone: d.driverPhone, collectTime: d.collectTime } });
     } else {
-      return steps; 
+      return steps;
     }
 
     if (d.startTime) {
@@ -157,7 +156,7 @@ export class TodayDeliveriesViewDetailsPopupComponent
     if (d.completeTime) {
       steps.push({ type: 'delivered', payload: { completeTime: d.completeTime } });
     }
-    
+
     return steps;
   }
 

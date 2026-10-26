@@ -70,7 +70,7 @@ export class ProcumentProductMismatchTodayComponent implements OnInit {
     private router: Router,
     public tokenService: TokenService,
     public permissionService: PermissionService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('loadedItemId');
@@ -108,15 +108,15 @@ export class ProcumentProductMismatchTodayComponent implements OnInit {
             loadedFrom: details.centerName ?? '',
             loadedTime: details.createdAt
               ? new Date(details.createdAt).toLocaleTimeString([], {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })
+                hour: '2-digit',
+                minute: '2-digit',
+              })
               : '',
             unloadedTime: details.unloadTime
               ? new Date(details.unloadTime).toLocaleTimeString([], {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })
+                hour: '2-digit',
+                minute: '2-digit',
+              })
               : '',
             driver: {
               id: details.driverEmpId ?? '',

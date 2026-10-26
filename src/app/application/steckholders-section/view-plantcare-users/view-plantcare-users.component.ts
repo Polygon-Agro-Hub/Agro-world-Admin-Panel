@@ -65,15 +65,8 @@ interface CurrentAsset {
   ],
   templateUrl: './view-plantcare-users.component.html',
   styleUrl: './view-plantcare-users.component.css',
-  template: `
-    <pagination-controls
-      (pageChange)="onPageChange($event)"
-      [totalItems]="totalItems"
-      [itemsPerPage]="10"
-    >
-    </pagination-controls>
-  `,
 })
+
 export class ViewPlantcareUsersComponent implements OnInit {
   plantCareUser: PlantCareUser[] = [];
   page: number = 1;
@@ -135,7 +128,7 @@ export class ViewPlantcareUsersComponent implements OnInit {
     private http: HttpClient,
     private router: Router,
     public permissionService: PermissionService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.fetchAllPlantCareUsers(this.page, this.itemsPerPage);
@@ -198,6 +191,7 @@ export class ViewPlantcareUsersComponent implements OnInit {
   }
 
   regStatusFil() {
+    this.page = 1;
     this.fetchAllPlantCareUsers(this.page, this.itemsPerPage);
   }
 
@@ -226,6 +220,7 @@ export class ViewPlantcareUsersComponent implements OnInit {
 
   clearSearch(): void {
     this.searchNIC = '';
+    this.page = 1;
     this.fetchAllPlantCareUsers(this.page, this.itemsPerPage);
   }
 

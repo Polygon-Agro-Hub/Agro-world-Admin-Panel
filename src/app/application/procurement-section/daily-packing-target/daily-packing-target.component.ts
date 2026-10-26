@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
-import { ProcumentsService } from '../../../services/procuments/procuments.service'; 
+import { ProcumentsService } from '../../../services/procuments/procuments.service';
 
 @Component({
   selector: 'app-daily-packing-target',
@@ -20,7 +20,7 @@ export class DailyPackingTargetComponent implements OnInit {
   constructor(
     private router: Router,
     private procumentsService: ProcumentsService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.fetchLatestTarget();

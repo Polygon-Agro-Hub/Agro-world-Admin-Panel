@@ -28,7 +28,7 @@ export class IdProofTabComponent implements OnChanges {
   translateY = 0;
 
   ngOnChanges(): void {
-    console.log(this.idInfo);
+    // console.log(this.idInfo);
   }
 
   onNextPage(): void {

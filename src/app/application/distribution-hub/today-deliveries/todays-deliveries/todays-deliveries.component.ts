@@ -159,13 +159,13 @@ export class TodaysDeliveriesComponent implements OnInit {
     this.fetchDeliveries();
   }
 
-  initTabSelection(){
-    if(this.permissionService.hasPermission('Today deliveries all tab') || this.tokenService.getUserDetails().role === '1') this.activeTab = 'all';
-    else if(this.permissionService.hasPermission('Today deliveries out for deliveries tab')) this.activeTab = 'out-for-delivery';
-    else if(this.permissionService.hasPermission('Today deliveries collected tab')) this.activeTab = 'collected';
-    else if(this.permissionService.hasPermission('Today deliveries on the way tab')) this.activeTab = 'on-the-way';
-    else if(this.permissionService.hasPermission('Today deliveries hold tab')) this.activeTab = 'hold';
-    else if(this.permissionService.hasPermission('Today deliveries return tab')) this.activeTab = 'return';
-    else if(this.permissionService.hasPermission('Today deliveries delivered tab')) this.activeTab = 'delivered';
+  initTabSelection() {
+    if (this.permissionService.hasPermission('Today deliveries all tab') || this.tokenService.getUserDetails().role === '1') this.activeTab = 'all';
+    else if (this.permissionService.hasPermission('Today deliveries out for deliveries tab')) this.activeTab = 'out-for-delivery';
+    else if (this.permissionService.hasPermission('Today deliveries collected tab')) this.activeTab = 'collected';
+    else if (this.permissionService.hasPermission('Today deliveries on the way tab')) this.activeTab = 'on-the-way';
+    else if (this.permissionService.hasPermission('Today deliveries hold tab')) this.activeTab = 'hold';
+    else if (this.permissionService.hasPermission('Today deliveries return tab')) this.activeTab = 'return';
+    else if (this.permissionService.hasPermission('Today deliveries delivered tab')) this.activeTab = 'delivered';
   }
 }

@@ -891,7 +891,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
   }
 
   nextFormCreate(page: 'pageOne' | 'pageTwo' | 'pageThree') {
-    console.log('pedata', this.personalData);
+    // console.log('pedata', this.personalData);
     // this.selectedPage = page;
     // Scroll to top after page change
     setTimeout(() => {

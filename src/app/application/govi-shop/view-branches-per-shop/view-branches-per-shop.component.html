@@ -45,12 +45,12 @@
 </button>
 
 <div class="pt-5 pr-8 pl-8 pb-5 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
-  <div class="flex justify-between items-center mb-6">
-    <h2 class="text-xl font-[500] text-[#292929] dark:text-textDark">
+  <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
+    <h2 class="text-xl font-[500] text-[#292929] dark:text-textDark shrink-0 max-w-full">
       {{ shopId !== null ? shopName : "All Branches" }} ({{ totalBranches < 10 ? "0" + totalBranches : totalBranches }})
         </h2>
 
-        <div class="flex items-center gap-3">
+        <div class="flex flex-wrap items-center gap-3">
           <!-- Province Filter -->
           <p-dropdown [options]="provinceOptions" optionLabel="label" optionValue="value" placeholder="Province"
             [showClear]="selectedProvince ? true : false" [(ngModel)]="selectedProvince" (onChange)="onFilterChange()"
@@ -70,7 +70,7 @@
         }"></p-dropdown>
 
           <!-- Search -->
-          <div class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-80 group relative">
+          <div class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-80 max-w-full group relative">
             <input type="text" [(ngModel)]="searchTerm" (keydown.enter)="onSearch()"
               placeholder="Search Branch Name, Phone..."
               class="bg-transparent outline-none w-full text-gray-600 dark:text-gray-300 text-sm placeholder:text-base" />
@@ -165,6 +165,11 @@
             " class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 text-center">
             Details
           </th>
+          <!-- Edit column header (empty) so it lines up with the Edit cells below -->
+          <th *ngIf="
+              permissionService.hasPermission('Edit govi shop branch') ||
+              tokenService.getUserDetails().role === '1'
+            " class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 text-center"></th>
         </tr>
       </thead>
       <tbody>

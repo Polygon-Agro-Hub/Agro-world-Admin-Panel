@@ -35,7 +35,7 @@ export class CollectionHubComponent {
     public tokenService: TokenService,
     private router: Router,
     public permissionService: PermissionService,
-  ) {}
+  ) { }
 
   // Toggles the given popup and closes all the others
   private togglePopup(key: PopupKey): void {

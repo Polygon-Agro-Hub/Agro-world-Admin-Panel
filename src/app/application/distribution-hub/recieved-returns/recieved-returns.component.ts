@@ -51,7 +51,7 @@ export class RecievedReturnsComponent implements OnInit {
   constructor(
     private distService: DestributionService,
     private distHubService: DistributionHubService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.fetchCentreOptions();
@@ -228,15 +228,15 @@ export class RecievedReturnsComponent implements OnInit {
   }
 
   clearDateFilter() {
-  const today = new Date();
+    const today = new Date();
 
-  this.receivedDateModel = today;
+    this.receivedDateModel = today;
 
-  const tzFixed = new Date(today.getTime() - today.getTimezoneOffset() * 60000);
-  this.receivedDate = tzFixed.toISOString().slice(0, 10);
+    const tzFixed = new Date(today.getTime() - today.getTimezoneOffset() * 60000);
+    this.receivedDate = tzFixed.toISOString().slice(0, 10);
 
-  this.applyFilters();
-}
+    this.applyFilters();
+  }
 
   loadData() {
     this.isLoading = true;

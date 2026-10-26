@@ -104,11 +104,9 @@
       <button type="button" class="px-4 py-2 bg-[#74788D] text-white rounded-md mr-2" (click)="onCancel()">
         Cancel
       </button>
-      <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="createAdmin()"
-        [disabled]="userForm.invalid">
-        Save
-
-      </button>
+      <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="createAdmin()">
+  Save
+</button>
     </div>
   </div>
 
@@ -185,10 +183,9 @@
       <button type="button" class="px-4 py-2 bg-[#74788D] text-white rounded-md mr-2" (click)="onCancel()">
         Cancel
       </button>
-      <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="updateAdmin(this.itemId)"
-        [disabled]="userForm.invalid">
-        Save
-      </button>
+      <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="updateAdmin(this.itemId)">
+  Save
+</button>
     </div>
   </div>
 </div>

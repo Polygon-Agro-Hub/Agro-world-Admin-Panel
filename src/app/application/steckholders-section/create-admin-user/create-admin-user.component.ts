@@ -381,134 +381,104 @@ export class CreateAdminUserComponent implements OnInit {
 
   // Updated updateAdmin method
   updateAdmin(itemId: number | null) {
-    // Log form values to verify
+  this.userForm.markAllAsTouched(); // shows inline errors immediately
+  const missingFields = this.getMissingFields();
 
-    const missingFields: string[] = [];
-
-    // Validate form fields
-    if (this.userForm.get('userName')?.invalid) {
-      if (this.userForm.get('userName')?.errors?.['required']) {
-        missingFields.push('User Name');
-      } else if (this.userForm.get('userName')?.errors?.['pattern']) {
-        missingFields.push('User Name - Must contain only letters and spaces');
-      }
-    }
-
-    if (this.userForm.get('mail')?.invalid) {
-      if (this.userForm.get('mail')?.errors?.['required']) {
-        missingFields.push('Email');
-      } else if (this.userForm.get('mail')?.errors?.['email']) {
-        missingFields.push('Email - Invalid format (e.g., example@domain.com)');
-      }
-    }
-
-    if (this.userForm.get('role')?.invalid) {
-      missingFields.push('Department');
-    }
-
-    if (this.userForm.get('position')?.invalid) {
-      missingFields.push('Position');
-    }
-
-    // If errors, show popup and stop submission
-    if (missingFields.length > 0) {
-      let errorMessage =
-        '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
-      missingFields.forEach((field) => {
-        errorMessage += `<li>${field}</li>`;
-      });
-      errorMessage += '</ul></div>';
-
-      Swal.fire({
-        icon: 'error',
-        title: 'Missing or Invalid Information',
-        html: errorMessage,
-        confirmButtonText: 'OK',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold text-lg',
-          htmlContainer: 'text-left',
-        },
-      });
-
-      // Mark all fields as touched to show real-time errors
-      Object.keys(this.userForm.controls).forEach((key) => {
-        const control = this.userForm.get(key);
-        control!.markAsTouched();
-      });
-      return;
-    }
-
-    // If valid, confirm update
-    const token = this.tokenService.getToken();
-    if (!token) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Authentication token not found',
-        confirmButtonText: 'OK',
-      });
-      return;
-    }
+  // If errors, show popup and stop submission
+  if (missingFields.length > 0) {
+    let errorMessage =
+      '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+    missingFields.forEach((field) => {
+      errorMessage += `<li>${field}</li>`;
+    });
+    errorMessage += '</ul></div>';
 
     Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you really want to update this admin user?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, update it!',
-      cancelButtonText: 'Cancel',
+      icon: 'error',
+      title: 'Missing or Invalid Information',
+      html: errorMessage,
+      confirmButtonText: 'OK',
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
       },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const headers = new HttpHeaders({
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        });
-
-        this.http
-          .post(
-            `${environment.API_URL}auth/update-admin/${itemId}`,
-            this.userForm.value,
-            { headers },
-          )
-          .subscribe(
-            () => {
-              Swal.fire({
-                icon: 'success',
-                title: 'Success',
-                text: 'Admin updated successfully!',
-                customClass: {
-                  popup:
-                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                  title: 'font-semibold',
-                },
-              }).then(() => {
-                this.navigatePath('/steckholders/action/admin');
-              });
-            },
-            (error) => {
-              Swal.fire({
-                icon: 'error',
-                title: 'Unsuccess',
-                text: error.error?.error || 'Update failed',
-              });
-            },
-          );
-      }
     });
+    return;
   }
+
+  // If valid, confirm update
+  const token = this.tokenService.getToken();
+  if (!token) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Authentication token not found',
+      confirmButtonText: 'OK',
+    });
+    return;
+  }
+
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'Do you really want to update this admin user?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, update it!',
+    cancelButtonText: 'Cancel',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      });
+
+      this.http
+        .post(
+          `${environment.API_URL}auth/update-admin/${itemId}`,
+          this.userForm.getRawValue(), // includes disabled position for Super Admin
+          { headers },
+        )
+        .subscribe(
+          () => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Success',
+              text: 'Admin updated successfully!',
+              customClass: {
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+              },
+            }).then(() => {
+              this.navigatePath('/steckholders/action/admin');
+            });
+          },
+          (error) => {
+            Swal.fire({
+              icon: 'error',
+              title: 'Unsuccess',
+              text: error.error?.error || 'Update failed',
+            });
+          },
+        );
+    }
+  });
+}
 
   // Updated createAdmin method
   createAdmin() {
     // Log form values to verify
+    
+    const missingFields = this.getMissingFields();
 
-    const missingFields: string[] = [];
+    this.userForm.markAllAsTouched();
 
     // Validate form fields
     if (this.userForm.get('userName')?.invalid) {
@@ -673,6 +643,34 @@ export class CreateAdminUserComponent implements OnInit {
   navigatePath(path: string) {
     this.router.navigate([path]);
   }
+
+  private getMissingFields(): string[] {
+  const labels: Record<string, string> = {
+    userName: 'User Name',
+    mail: 'Email',
+    role: 'Department',
+    position: 'Position',
+    password: 'Password',
+  };
+  const result: string[] = [];
+
+  Object.keys(labels).forEach((key) => {
+    if (key === 'password' && this.itemId) return; // not part of the edit form
+
+    const control = this.userForm.get(key);
+    // skip valid or disabled controls (position is disabled for Super Admin)
+    if (!control || control.valid || control.disabled) return;
+
+    if (control.hasError('required')) {
+      result.push(labels[key]);
+    } else {
+      const msg = this.getErrorMessage(key);
+      if (msg) result.push(`${labels[key]} - ${msg}`);
+    }
+  });
+
+  return Array.from(new Set(result));
+}
 }
 
 export class CreateAdmin {

@@ -14,11 +14,9 @@ export class MarketPriceService {
   constructor(
     private http: HttpClient,
     private tokenService: TokenService,
-  ) {}
+  ) { }
 
   getAllMarketPrice(crop: any, grade: any, searchNIC: any): Observable<any> {
-    console.log(crop);
-
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
@@ -44,11 +42,10 @@ export class MarketPriceService {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-    return this.http.get<any>(`${this.apiUrl}market-price/get-all-crop-name`, {headers});
+    return this.http.get<any>(`${this.apiUrl}market-price/get-all-crop-name`, { headers });
   }
 
   bulkUploadingMarketPrice(formData: FormData): Observable<any> {
-    console.log(formData);
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
@@ -61,12 +58,7 @@ export class MarketPriceService {
     );
   }
 
-
-
-  getAllMarketPriceAgro(crop: any, grade: any, searchNIC: any, centerId : any, companyId : any): Observable<any> {
-    console.log(centerId,companyId);
-
-
+  getAllMarketPriceAgro(crop: any, grade: any, searchNIC: any, centerId: any, companyId: any): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });

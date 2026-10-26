@@ -67,7 +67,6 @@ export class ComplaintsService {
     }
 
     const url = `${this.apiUrl}complain/get-marketplace-complaint/${complainId}`;
-    console.log('Fetching complaint from:', url);
     return this.http.get(url, { headers });
   }
 
@@ -320,8 +319,6 @@ export class ComplaintsService {
       'Content-Type': 'application/json',
     });
 
-    console.log('searchText', searchText);
-
     let url = `${this.apiUrl}complain/get-all-distributed-complains?page=${page}&limit=${limit}&role=${roleCategory}`;
 
     if (status) {
@@ -377,12 +374,7 @@ export class ComplaintsService {
       'Content-Type': 'application/json',
     });
 
-    console.log('searchText', searchText);
-
     let url = `${this.apiUrl}auth/field-officer-complains?page=${page}&limit=${limit}`;
-
-    console.log('Final url', url);
-
 
     if (status) {
       url += `&status=${status}`;
@@ -432,13 +424,10 @@ export class ComplaintsService {
 
   ): Observable<any> {
 
-    console.log('rpstatus', rpstatus, 'status', status)
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-
-    console.log('searchText', searchText);
 
     let url = `${this.apiUrl}complain/get-all-driver-complains?page=${page}&limit=${limit}`;
 

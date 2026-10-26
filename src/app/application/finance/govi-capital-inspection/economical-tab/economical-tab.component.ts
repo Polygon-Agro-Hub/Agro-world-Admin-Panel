@@ -25,10 +25,10 @@ export class EconomicalTabComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('---------------------------------------------------------------');
-    console.log(this.EconomicalObj);
-    
-    
+    // console.log('---------------------------------------------------------------');
+    // console.log(this.EconomicalObj);
+
+
   }
 
 }

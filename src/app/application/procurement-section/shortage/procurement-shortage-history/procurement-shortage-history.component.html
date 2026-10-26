@@ -163,4 +163,13 @@
         <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 mb-4" />
       </div>
     </div>
+
+    <div *ngIf="!hasData && !isLoading" class="min-h-[500px] flex items-center justify-center">
+      <div class="text-center px-5 py-14">
+        <div #lottieContainer class="w-48 h-48 mx-auto"></div>
+        <p class="text-[16px] font-normal text-[#494949] dark:text-gray-400 mt-4">
+          --No assigned product shortages yet!--
+        </p>
+      </div>
+    </div>
   </div>

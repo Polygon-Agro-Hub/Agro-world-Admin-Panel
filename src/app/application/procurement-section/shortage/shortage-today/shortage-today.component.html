@@ -10,7 +10,7 @@
 
     <div class="px-7 py-5 border-b border-gray-100 dark:border-gray-700">
       <h2 class="text-[16px] font-medium text-textLight dark:text-textDark m-0">
-        Shortage Today ({{ shortageCount.toString().padStart(2, '0') }})
+        Shortage Today ({{ shortageCount === 0 ? '0' : shortageCount.toString().padStart(2, '0') }})
       </h2>
     </div>
 

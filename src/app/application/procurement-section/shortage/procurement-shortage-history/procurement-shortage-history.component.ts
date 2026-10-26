@@ -172,8 +172,9 @@ export class ProcurementShortageHistoryComponent implements OnInit {
   }
 
   getTotalRecords(): string {
-    return this.shortageItems.length.toString().padStart(2, '0');
-  }
+  const count = this.shortageItems.length;
+  return count === 0 ? '0' : count.toString().padStart(2, '0');
+}
 
   getNotAssignedCount(): string {
     return this.notAssignedItems.length.toString().padStart(2, '0');

@@ -24,10 +24,10 @@
     </div>
   </div>
 
-  <div class="flex flex-col lg:flex-row justify-between">
+  <div class="flex flex-col lg:flex-row items-start gap-6">
     <!-- Left Panel -->
     <div
-      class="bg-[#FFFFFF] dark:bg-tileBlack py-10 px-6 sm:px-10 lg:px-14 shadow-md rounded-md w-full lg:w-[70%] mb-6 lg:mb-0">
+      class="bg-[#FFFFFF] dark:bg-tileBlack py-10 px-6 sm:px-10 lg:px-14 shadow-md rounded-md w-full lg:flex-1 min-w-0">
       <div class="flex flex-row justify-between items-center mb-6">
         <!-- Display Package Name with validation -->
         <div class="w-[70%]">
@@ -73,15 +73,12 @@
       <div class="package-pricing-fields grid grid-cols-3 gap-8 mb-6">
         <div>
           <label class="package-pricing-label block text-sm text-[#534E4E] font-medium mb-2 dark:text-textDark">
-            Total Package Price (Rs.)*
+            Price of Products (Rs.)*
           </label>
-          <input type="text" inputmode="decimal" name="productPrice"
-  [value]="priceDisplay['productPrice']"
-  (input)="onPriceInput($event, 'productPrice')"
-  (focus)="onPriceFocus('productPrice')"
-  (blur)="onProductPriceBlur(); onPriceBlur('productPrice')"
-  placeholder="Enter Amount"
-  class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 text-black dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <input type="text" inputmode="decimal" name="productPrice" [value]="priceDisplay['productPrice']"
+            (input)="onPriceInput($event, 'productPrice')" (focus)="onPriceFocus('productPrice')"
+            (blur)="onProductPriceBlur(); onPriceBlur('productPrice')" placeholder="Enter Amount"
+            class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 text-black dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <!-- <div *ngIf="shouldShowProductPriceError" class="text-red-500 text-sm mt-1">
             Total Package Price must be greater than 0
           </div> -->
@@ -91,13 +88,10 @@
           <label class="package-pricing-label block text-sm text-[#534E4E] font-medium mb-2 dark:text-textDark">
             Packaging Fee (Rs.)*
           </label>
-          <input type="text" inputmode="decimal" name="packageFee"
-  [value]="priceDisplay['packageFee']"
-  (input)="onPriceInput($event, 'packageFee')"
-  (focus)="onPriceFocus('packageFee')"
-  (blur)="onPackageFeeBlur(); onPriceBlur('packageFee')"
-  placeholder="Enter Amount"
-  class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 text-black dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <input type="text" inputmode="decimal" name="packageFee" [value]="priceDisplay['packageFee']"
+            (input)="onPriceInput($event, 'packageFee')" (focus)="onPriceFocus('packageFee')"
+            (blur)="onPackageFeeBlur(); onPriceBlur('packageFee')" placeholder="Enter Amount"
+            class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 text-black dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <!-- <div *ngIf="shouldShowPackageFeeError" class="text-red-500 text-sm mt-1">
             Packaging Fee cannot be negative
           </div> -->
@@ -107,13 +101,10 @@
           <label class="package-pricing-label block text-sm text-[#534E4E] font-medium mb-2 dark:text-textDark">
             Service Fee (Rs.) *
           </label>
-          <input type="text" inputmode="decimal" name="serviceFee"
-  [value]="priceDisplay['serviceFee']"
-  (input)="onPriceInput($event, 'serviceFee')"
-  (focus)="onPriceFocus('serviceFee')"
-  (blur)="onServiceFeeBlur(); onPriceBlur('serviceFee')"
-  placeholder="Enter Amount"
-  class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 text-black dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <input type="text" inputmode="decimal" name="serviceFee" [value]="priceDisplay['serviceFee']"
+            (input)="onPriceInput($event, 'serviceFee')" (focus)="onPriceFocus('serviceFee')"
+            (blur)="onServiceFeeBlur(); onPriceBlur('serviceFee')" placeholder="Enter Amount"
+            class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 text-black dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <!-- <div *ngIf="shouldShowServiceFeeError" class="text-red-500 text-sm mt-1">
             Service Fee cannot be negative
           </div> -->
@@ -162,35 +153,34 @@
     </div>
 
     <!-- Right Panel: Preview & Status -->
-    <div class="flex flex-col px-4 sm:px-6 py-3 lg:mx-6 w-full lg:w-[30%]">
+    <div class="flex flex-col w-full lg:w-[300px] xl:w-[340px] lg:shrink-0">
       <!-- Preview -->
-      <div class="rounded-lg px-6 sm:px-8 lg:px-12 py-4 sm:py-6 border border-[#CFCFCF] dark:bg-tileBlack">
+      <!-- Preview -->
+      <div class="rounded-lg px-4 py-4 border border-[#CFCFCF] dark:bg-tileBlack">
         <p class="text-base sm:text-lg text-[#000000] dark:text-textDark font-normal">Preview</p>
 
         <div
-          class="flex flex-col justify-center items-center relative my-3 bg-[#FFFFFF] dark:bg-gray-800 px-3 sm:px-5 py-3 h-auto rounded-xl shadow-md max-w-full">
+          class="flex flex-col items-center my-3 bg-[#FFFFFF] dark:bg-gray-800 px-4 py-4 rounded-xl shadow-md w-full">
 
-          <div class="w-full flex justify-center items-center mt-4 sm:mt-6 lg:mt-8">
-            <img *ngIf="selectedImage; else defaultIcon" [src]="selectedImage"
-              class="w-full h-auto max-w-[200px] sm:max-w-[250px] lg:max-w-full object-contain px-2 sm:px-4 py-2" />
+          <div class="w-full flex justify-center items-center">
+            <img *ngIf="selectedImage; else defaultIcon" [src]="selectedImage" class="w-full h-40 object-contain" />
             <ng-template #defaultIcon>
-              <div class="flex items-center justify-center w-full h-24 sm:h-28 lg:h-32 px-2 sm:px-4 py-2 text-gray-400">
-                <i class="fa-solid fa-image text-4xl sm:text-6xl lg:text-9xl"></i>
+              <div class="flex items-center justify-center w-full h-40 text-gray-400">
+                <i class="fa-solid fa-image text-6xl lg:text-7xl"></i>
               </div>
             </ng-template>
           </div>
 
-          <div class="flex flex-col items-center justify-center gap-y-2 mt-2 sm:mt-3 pb-2 sm:pb-3">
-            <p class="text-base sm:text-lg lg:text-xl text-[#393939] dark:text-textDark font-medium text-center px-2"
+          <div class="flex flex-col items-center justify-center gap-y-2 mt-3 w-full">
+            <p class="text-base lg:text-lg text-[#393939] dark:text-textDark font-medium text-center break-words w-full"
               *ngIf="packageObj.displayName; else noDisplayName">
               {{ packageObj.displayName }}
             </p>
             <ng-template #noDisplayName>
-              <p class="text-sm sm:text-base lg:text-lg text-gray-500 italic">--Package Name--</p>
+              <p class="text-sm lg:text-base text-gray-500 italic text-center">--Package Name--</p>
             </ng-template>
 
-            <p class="text-base sm:text-lg text-[#00957D] font-bold"
-              *ngIf="packageObj.approximatedPrice > 0; else noPrice">
+            <p class="text-base text-[#00957D] font-bold" *ngIf="packageObj.approximatedPrice > 0; else noPrice">
               Rs.{{ packageObj.approximatedPrice | number: '1.2-2' }}
             </p>
             <ng-template #noPrice>

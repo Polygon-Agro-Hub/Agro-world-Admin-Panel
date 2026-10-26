@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CalendarModule } from 'primeng/calendar';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 import { ProcumentsService } from '../../../../services/procuments/procuments.service'; // adjust path/name as needed
+import Lottie, { AnimationItem } from 'lottie-web';
 
 interface ShortageItem {
   id: number;
@@ -34,6 +35,8 @@ export class ProcurementShortageHistoryComponent implements OnInit {
   isLoading = false;
   hasData: boolean = true;
 
+  private animation?: AnimationItem;
+
   shortageItems: ShortageItem[] = [];
   notAssignedItems: ShortageItem[] = [];
   assignedItems: ShortageItem[] = [];
@@ -52,6 +55,25 @@ export class ProcurementShortageHistoryComponent implements OnInit {
     private router: Router,
     private procurementService: ProcumentsService,
   ) { }
+
+  @ViewChild('lottieContainer') set lottieContainer(el: ElementRef | undefined) {
+    if (el && !this.animation) {
+      this.animation = Lottie.loadAnimation({
+        container: el.nativeElement,
+        renderer: 'svg',
+        loop: true,
+        autoplay: true,
+        path: 'assets/lottie/your-animation.json', // same file as Shortage Today
+      });
+    } else if (!el && this.animation) {
+      this.animation.destroy();
+      this.animation = undefined;
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.animation?.destroy();
+  }
 
   ngOnInit(): void {
     const maxDate = new Date();

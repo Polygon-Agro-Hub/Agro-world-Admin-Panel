@@ -33,4 +33,9 @@ export class SalesDashComponent {
     });
   }
 
+  viewBuyerApprovals(): void {
+    this.router.navigate(['/sales-dash/buyer-approvals']).then(() => {
+    });
+  }
+
 }

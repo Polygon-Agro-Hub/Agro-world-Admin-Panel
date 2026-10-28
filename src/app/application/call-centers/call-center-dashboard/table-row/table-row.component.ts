@@ -1,16 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-interface CallRecord {
-  callNumber: string;
-  type: string;
-  typeId: string;
-  start: string;
-  agent: string;
-  duration: string;
-  status: 'FAILED' | 'ANSWERED';
-}
+import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
+import { Pagination, RecentCalls } from '../../../../models/call-center.model';
+import { recordStart } from '../../../../utils/call-center.utils';
 
 @Component({
   selector: 'app-table-row',
@@ -19,118 +12,75 @@ interface CallRecord {
   templateUrl: './table-row.component.html',
   styleUrl: './table-row.component.css',
 })
-export class TableRowComponent {
-  filterText: string = '';
+export class TableRowComponent implements OnInit, OnChanges, OnDestroy {
+  @Input({ required: true }) recentCalls!: RecentCalls;
+  @Input() search = '';
 
-  currentPage: number = 1;
-  totalPages: number = 2;
-  pageSize: number = 10;
-  totalEntries: number = 14;
+  @Output() searchChange = new EventEmitter<string>();
+  @Output() pageChange = new EventEmitter<number>();
+  @Output() exportCsv = new EventEmitter<void>();
 
-  callRecords: CallRecord[] = [
-    {
-      callNumber: '764897587',
-      type: 'OUTGOING',
-      typeId: '#387395',
-      start: 'Sep 17, 09:00:59',
-      agent: '779994374@dwesk.cloud',
-      duration: '00:14',
-      status: 'FAILED',
-    },
-    {
-      callNumber: '764897587',
-      type: 'OUTGOING',
-      typeId: '#387391',
-      start: 'Sep 17, 09:00:34',
-      agent: '717472613@dwesk.cloud',
-      duration: '00:09',
-      status: 'ANSWERED',
-    },
-    {
-      callNumber: '764897587',
-      type: 'OUTGOING',
-      typeId: '#387389',
-      start: 'Sep 17, 08:59:17',
-      agent: '717472613@dwesk.cloud',
-      duration: '00:17',
-      status: 'ANSWERED',
-    },
-    {
-      callNumber: '0716371872',
-      type: 'CONNECT_DIAL',
-      typeId: '#387060',
-      start: 'Sep 16, 16:07:24',
-      agent: '717472613@dwesk.cloud',
-      duration: '00:18',
-      status: 'FAILED',
-    },
-    {
-      callNumber: '0770058031',
-      type: 'CONNECT_DIAL',
-      typeId: '#385090',
-      start: 'Sep 14, 11:52:42',
-      agent: '717472613@dwesk.cloud',
-      duration: '00:10',
-      status: 'ANSWERED',
-    },
-    {
-      callNumber: '0769411709',
-      type: 'CONNECT_DIAL',
-      typeId: '#380970',
-      start: 'Sep 10, 11:01:23',
-      agent: '717472613@dwesk.cloud',
-      duration: '00:19',
-      status: 'FAILED',
-    },
-    {
-      callNumber: '0769411709',
-      type: 'CONNECT_DIAL',
-      typeId: '#380960',
-      start: 'Sep 10, 10:58:26',
-      agent: '717472613@dwesk.cloud',
-      duration: '00:25',
-      status: 'FAILED',
-    },
-    {
-      callNumber: '0769411709',
-      type: 'CONNECT_DIAL',
-      typeId: '#380938',
-      start: 'Sep 10, 10:51:29',
-      agent: '717472613@dwesk.cloud',
-      duration: '00:56',
-      status: 'ANSWERED',
-    },
-    {
-      callNumber: '0769411709',
-      type: 'CONNECT_DIAL',
-      typeId: '#380919',
-      start: 'Sep 10, 10:42:35',
-      agent: '717472613@dwesk.cloud',
-      duration: '01:34',
-      status: 'FAILED',
-    },
-    {
-      callNumber: '0769411709',
-      type: 'CONNECT_DIAL',
-      typeId: '#372677',
-      start: 'Aug 31, 12:58:20',
-      agent: '717472613@dwesk.cloud',
-      duration: '02:45',
-      status: 'ANSWERED',
-    },
-  ];
+  filterText = '';
 
-  goToPage(page: number): void {
-    if (page >= 1 && page <= this.totalPages) {
-      this.currentPage = page;
+  private typing$ = new Subject<string>();
+  private destroy$ = new Subject<void>();
+
+  ngOnInit(): void {
+    this.filterText = this.search;
+    // debounce so we don't hit the API on every keystroke
+    this.typing$
+      .pipe(debounceTime(400), distinctUntilChanged(), takeUntil(this.destroy$))
+      .subscribe((v) => this.searchChange.emit(v.trim()));
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    // keep the box in sync only if the parent reset it (don't overwrite while typing)
+    if (changes['search'] && !changes['search'].firstChange && this.search === '' && this.filterText.trim() !== '') {
+      this.filterText = '';
     }
   }
 
-  previousPage(): void {
-    this.goToPage(this.currentPage - 1);
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
-  nextPage(): void {
-    this.goToPage(this.currentPage + 1);
+  onFilterInput(value: string): void {
+    this.typing$.next(value);
+  }
+
+  get records() { return this.recentCalls.records; }
+  get pg(): Pagination { return this.recentCalls.pagination; }
+  get currentPage(): number { return this.pg.page; }
+  get pageSize(): number { return this.pg.limit; }
+  get totalEntries(): number { return this.pg.total; }
+
+  get fromEntry(): number { return this.pg.total === 0 ? 0 : (this.pg.page - 1) * this.pg.limit + 1; }
+  get toEntry(): number { return this.pg.total === 0 ? 0 : this.fromEntry + this.records.length - 1; }
+
+  /** up to 5 page buttons centred on the current page */
+  get pages(): number[] {
+    const total = this.pg.totalPages;
+    const size = Math.min(5, total);
+    let start = Math.max(1, this.pg.page - Math.floor(size / 2));
+    start = Math.min(start, total - size + 1);
+    return Array.from({ length: Math.max(size, 0) }, (_, i) => start + i);
+  }
+
+  formatStart(iso: string): string { return recordStart(iso); }
+  trackById(_: number, r: { id: number }): number { return r.id; }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.pg.totalPages && page !== this.pg.page) this.pageChange.emit(page);
+  }
+  previousPage(): void { this.goToPage(this.pg.page - 1); }
+  nextPage(): void { this.goToPage(this.pg.page + 1); }
+
+  statusClass(status: string | null): { wrap: string; dot: string } {
+    switch (status) {
+      case 'FAILED': return { wrap: 'bg-red-50 text-red-600', dot: 'bg-red-500' };
+      case 'ANSWERED': return { wrap: 'bg-emerald-50 text-emerald-700', dot: 'bg-emerald-600' };
+      default: return { wrap: 'bg-slate-100 text-slate-600', dot: 'bg-slate-400' };
+    }
   }
 }

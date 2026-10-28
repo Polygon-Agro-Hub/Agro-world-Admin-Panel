@@ -3,11 +3,6 @@
 
     <!-- top row -->
     <div class="flex items-center justify-between mb-4">
-        <div
-            class="inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-[12px] font-semibold tracking-wide">
-            <!-- <span class="h-2 w-2 rounded-full bg-[#91F4E2]"></span>
-            PBX GATEWAY TELEMETRY ACTIVE -->
-        </div>
 
         <div class="inline-flex items-center gap-2 rounded-full bg-white/15 px-3.5 py-1.5 text-[13px]">
             <svg class="h-3.5 w-3.5 text-cyan-200" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -18,13 +13,13 @@
                 <path d="M21 11.8v2a4 4 0 0 1-4 4H4.2"></path>
             </svg>
             <span class="font-bold text-[#91F4E2] text-[10px] tracking-wide">STREAM</span>
-            <span class="text-[#ffffff] text-[11px] font-semibold">Updated 20:08:06</span>
+            <span class="text-[#ffffff] text-[11px] font-semibold">Updated {{ updatedTime }}</span>
         </div>
     </div>
 
     <!-- title -->
     <h1 class="text-[32px] font-bold leading-tight mb-2">
-        Polygon Holdings (Pvt) Ltd Live Dashboard
+        {{ header.companyName }} Live Dashboard
     </h1>
 
     <!-- subtitle -->
@@ -40,7 +35,7 @@
                 <circle cx="12" cy="12" r="10"></circle>
                 <polyline points="12 6 12 12 16 14"></polyline>
             </svg>
-            22/09/2026, 20:10:17
+            {{ clock }}
         </div>
 
         <div class="inline-flex items-center gap-2 rounded-full bg-white/15 px-3.5 py-1.5 text-[12px]">
@@ -60,7 +55,7 @@
                 <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
                 <polyline points="17 6 23 6 23 12"></polyline>
             </svg>
-            <strong class="font-bold">13 Weeks</strong>
+            <strong class="font-bold">{{ trends.timeRange.label }}</strong>
         </div>
     </div>
 </div>

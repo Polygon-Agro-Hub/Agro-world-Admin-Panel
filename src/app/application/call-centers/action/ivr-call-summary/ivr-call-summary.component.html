@@ -16,7 +16,7 @@
         <!-- IVR Flow -->
         <div class="flex flex-col gap-2">
             <label class="text-[12px] font-semibold text-[#101C2B] dark:text-textDark">Select IVR Flow</label>
-            <p-dropdown [options]="ivrFlows" [(ngModel)]="selectedFlow" placeholder="--Select--" appendTo="body"
+            <p-dropdown [options]="ivrFlows" optionLabel="label" optionValue="value" [(ngModel)]="selectedFlow" placeholder="--Select--" appendTo="body"
                 styleClass="ivr-dropdown w-full"></p-dropdown>
         </div>
 
@@ -58,6 +58,8 @@
     </div>
 </div>
 
+<p *ngIf="dateError" class="mb-4 text-red-600" role="alert">{{ dateError }}</p>
+<p *ngIf="errorMessage" class="mb-4 text-red-600" role="alert">{{ errorMessage }}</p>
 <!-- Results Card -->
 <div *ngIf="hasSearched && !isLoading" class="bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg overflow-hidden">
     <div class="flex items-center gap-3 px-6 py-5">
@@ -76,31 +78,39 @@
         <table *ngIf="records.length > 0" class="min-w-[1000px] w-full table-auto">
             <thead class="bg-[#E9F5FF] dark:bg-[#272F45]">
                 <tr class="text-left text-[14px] font-medium tracking-wider text-gray-600 dark:text-gray-300 uppercase">
-                    <ng-container [ngSwitch]="resultType">
+                    <ng-container [ngSwitch]="tableType">
                         <ng-container *ngSwitchCase="'ALL_DIAL_CALLS'">
                             <th class="px-6 py-4">Call ID</th>
                             <th class="px-6 py-4">CLI</th>
                         </ng-container>
                         <ng-container *ngSwitchCase="'OUT_DIAL_CALLS'">
                             <th class="px-6 py-4">Call ID</th>
-                            <th class="px-6 py-4">Agent CLI</th>
-                            <th class="px-6 py-4">User CLI</th>
+                            <th class="px-6 py-4">{{ resultType === 'DIRECT_CALL_MAPPING' ? 'From' : 'Agent CLI' }}</th>
+                            <th class="px-6 py-4">{{ resultType === 'DIRECT_CALL_MAPPING' ? 'To' : 'User CLI' }}</th>
                         </ng-container>
                         <ng-container *ngSwitchCase="'CONNECT_AGENT_CALLS'">
                             <th class="px-6 py-4">Agent</th>
                             <th class="px-6 py-4">To</th>
                         </ng-container>
+                        <ng-container *ngSwitchCase="'IVR_UPLOAD_CALLS'">
+                            <th class="px-6 py-4">Campaign ID</th>
+                            <th class="px-6 py-4">Call ID</th>
+                            <th class="px-6 py-4">From</th>
+                            <th class="px-6 py-4">To</th>
+                            <th class="px-6 py-4">Scheduled Time</th>
+                            <th class="px-6 py-4">Executed Time</th>
+                        </ng-container>
                     </ng-container>
                     <th class="px-6 py-4">Start Time</th>
                     <th class="px-6 py-4">End Time</th>
-                    <th class="px-6 py-4">Status</th>
-                    <th class="px-6 py-4">Details</th>
+                    <th class="px-6 py-4">{{ resultType === 'IVR_UPLOAD_CALLS' ? 'Result' : 'Status' }}</th>
+                    <th *ngIf="resultType !== 'IVR_UPLOAD_CALLS'" class="px-6 py-4">Details</th>
                 </tr>
             </thead>
 
             <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                 <tr *ngFor="let row of pagedRecords" class="hover:bg-gray-50 dark:hover:bg-gray-800 align-middle">
-                    <ng-container [ngSwitch]="resultType">
+                    <ng-container [ngSwitch]="tableType">
                         <ng-container *ngSwitchCase="'ALL_DIAL_CALLS'">
                             <td class="px-6 py-6">
                                 <span
@@ -143,6 +153,14 @@
                                 {{ row.to }}
                             </td>
                         </ng-container>
+                        <ng-container *ngSwitchCase="'IVR_UPLOAD_CALLS'">
+                            <td class="px-6 py-6 text-textLight dark:text-textDark">{{ row.campaignId }}</td>
+                            <td class="px-6 py-6 text-textLight dark:text-textDark">{{ row.callId }}</td>
+                            <td class="px-6 py-6 text-textLight dark:text-textDark">{{ row.agentCli }}</td>
+                            <td class="px-6 py-6 text-textLight dark:text-textDark">{{ row.userCli }}</td>
+                            <td class="px-6 py-6 whitespace-nowrap text-textLight dark:text-textDark">{{ getDatePart(row.scheduledTime || '') }} {{ getTimePart(row.scheduledTime || '') }}</td>
+                            <td class="px-6 py-6 whitespace-nowrap text-textLight dark:text-textDark">{{ getDatePart(row.executedTime || '') }} {{ getTimePart(row.executedTime || '') }}</td>
+                        </ng-container>
                     </ng-container>
 
                     <td class="px-6 py-6 text-[14px] text-gray-600 dark:text-gray-300 whitespace-nowrap">
@@ -164,7 +182,7 @@
                         </span>
                     </td>
 
-                    <td
+                    <td *ngIf="resultType !== 'IVR_UPLOAD_CALLS'"
                         class="px-6 py-6 text-[15px] text-textLight dark:text-textDark whitespace-pre-line min-w-[280px]">
                         {{ row.details }}</td>
                 </tr>
@@ -184,7 +202,7 @@
                 </select>
             </div>
             <span>
-                Showing <b>{{ startIndex + 1 }}</b> to <b>{{ endIndex }}</b> of <b>{{ records.length }}</b> entries
+                Showing <b>{{ startIndex + 1 }}</b> to <b>{{ endIndex }}</b> of <b>{{ totalItems }}</b> entries
             </span>
         </div>
 

@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, timeout } from 'rxjs';
 import { environment } from '../../environment/environment';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { TokenService } from '../token/services/token.service';
 import { DashboardQuery, DashboardResponse } from '../../models/call-center.model';
 
@@ -66,7 +65,7 @@ export class CallCenterService {
   constructor(private http: HttpClient, private tokenService: TokenService) {}
 
   getIvrCallSummary(query: IvrSummaryQuery): Observable<IvrSummaryPage> {
-    return this.http.get<IvrSummaryPage>(`${this.apiUrl}ivr/call-summary`, {
+    return this.http.get<IvrSummaryPage>(`${environment.API_URL}call-center/ivr/call-summary`, {
       headers: new HttpHeaders({ Authorization: `Bearer ${this.tokenService.getToken()}` }),
       params: { ...query },
     });
@@ -116,6 +115,6 @@ export class CallCenterService {
     if (query.from) params = params.set('from', query.from);
     if (query.to) params = params.set('to', query.to);
 
-    return this.http.get<IvrLiveCallsResponse>(`${this.apiUrl}ivr-live-calls`, { headers, params });
+    return this.http.get<IvrLiveCallsResponse>(`${environment.API_URL}call-center/ivr-live-calls`, { headers, params });
   }
 }

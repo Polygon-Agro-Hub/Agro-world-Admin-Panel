@@ -1,6 +1,6 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-<button class="mb-5 text-textLight dark:text-textDark underline" (click)="Back()">
+<button class="mb-5 text-textLight dark:text-textDark" (click)="Back()">
     <i class="fa-solid fa-arrow-left"></i>
     Back
 </button>
@@ -64,17 +64,33 @@
             <table class="min-w-full border-separate border-spacing-0 table-auto whitespace-nowrap">
                 <thead class="bg-white dark:bg-tileBlack [&_th]:bg-white dark:[&_th]:bg-tileBlack">
                     <tr class="sticky top-0 z-40 bg-white dark:bg-tileBlack">
-                        <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Customer ID</th>
-                        <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">Customer Name</th>
-                        <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">Onboarded</th>
-                        <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">Company Name</th>
-                        <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">Created At</th>
-                        <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Customer Contact
-                        </th>
-                        <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Company Contact
-                        </th>
-                        <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Status</th>
-                        <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Documents</th>
+                        <th
+                            class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+                            Customer ID</th>
+                        <th
+                            class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+                            Customer Name</th>
+                        <th
+                            class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+                            Onboarded</th>
+                        <th
+                            class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+                            Company Name</th>
+                        <th
+                            class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+                            Created At</th>
+                        <th
+                            class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+                            Customer Contact</th>
+                        <th
+                            class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+                            Company Contact</th>
+                        <th
+                            class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+                            Status</th>
+                        <th
+                            class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+                            Documents</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -111,17 +127,17 @@
                         <td
                             class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 text-center text-textLight dark:text-textDark">
                             <span [ngClass]="{
-                  'bg-[#CFE1FF] text-[#3B82F6]': item.status === 'To Review',
+                  'bg-[#EFF6FF] text-[#2563EB]': item.status === 'To Review',
                   'bg-[#BBFFC6] text-[#308233]': item.status === 'Approved',
                   'bg-[#FFDCDA] text-[#FF1100]': item.status === 'Rejected'
-                }" class="inline-block font-medium rounded-3xl min-w-28 px-4 py-2 text-xs text-center">
+                }" class="inline-block font-medium rounded-3xl min-w-28 px-4 py-1 text-[16px] text-center">
                                 {{ item.status }}
                             </span>
                         </td>
 
                         <td class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 text-center">
                             <button type="button" (click)="openDocuments(item)">
-                                <i class="fa-solid fa-arrow-up-right-from-square text-2xl text-blue-500"></i>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-xl text-blue-500"></i>
                             </button>
                         </td>
                     </tr>

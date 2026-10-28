@@ -52,9 +52,10 @@
             </div>
         </div>
 
+        <!-- activePbxTrunks / engineStatus are null (not available from PBX data): show "--" / hide -->
         <div class="flex items-center justify-between pt-3 mt-1 border-t border-slate-700/60">
-            <span class="text-[#BDC9C5] text-[11px] font-medium">Active PBX Trunks: {{ activeTrunks }}</span>
-            <span class="text-[#91F4E2] text-[11px] font-medium">{{ engineStatus }}</span>
+            <span class="text-[#BDC9C5] text-[11px] font-medium">Active PBX Trunks: {{ activeTrunks ?? '--' }}</span>
+            <span *ngIf="engineStatus" class="text-[#91F4E2] text-[11px] font-medium">{{ engineStatus }}</span>
         </div>
     </div>
 

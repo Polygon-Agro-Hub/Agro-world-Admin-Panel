@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { SummaryCards, TopCards } from '../../../../models/call-center.model';
+import { formatSeconds } from '../../../../utils/call-center.utils';
 
 interface MetricCard {
   label: string;
@@ -30,32 +32,59 @@ interface SummaryCard {
   styleUrl: './row-two.component.css'
 })
 export class RowTwoComponent {
-  metricCards: MetricCard[] = [
-    { label: 'Incoming Calls', value: '0', unit: 'in queue', note: 'Clear now', dot: '#0d9488', icon: 'fa-phone-volume' },
-    { label: 'Answer Rate', value: '0%', unit: 'ratio', note: '0 answered', dot: '#cbd5e1', icon: 'fa-chart-pie' },
-    { label: 'Peak Hour', value: '8AM', unit: 'historical', note: '0 calls registered', dot: '#fbbf24', icon: 'fa-clock' },
-  ];
+  @Input({ required: true }) topCards!: TopCards;
+  @Input({ required: true }) summaryCards!: SummaryCards;
 
-  summaryCards: SummaryCard[] = [
-    {
-      label: 'Total Calls', value: '0', description: "Recorded across today's PBX activity",
-      footerLeft: 'Daily Baseline', footerRight: 'PBX Pool A',
-      icon: 'fa-phone', iconBg: '#dbe4ff', iconColor: '#1d4ed8', accent: '#0052cc', footerRightColor: '#0052cc',
-    },
-    {
-      label: 'Answer Rate', value: '0%', description: '0 calls answered successfully',
-      footerLeft: 'Target: 95.0%', footerRight: 'Optimal SLA',
-      icon: 'fa-shield-halved', iconBg: '#99f6e4', iconColor: '#0f766e', accent: '#047857', footerRightColor: '#047857',
-    },
-    {
-      label: 'Incoming Calls', value: '0', description: 'No waiting calls right now',
-      footerLeft: 'Queue state', footerRight: 'Idle / Clear',
-      icon: 'fa-phone-volume', iconBg: '#fed7aa', iconColor: '#9a3412', accent: '#b45309', footerRightColor: '#92400e',
-    },
-    {
-      label: 'Avg Handle', value: '0s', description: '0 transfers and conferences',
-      footerLeft: 'Hold Time', footerRight: '0.00s',
-      icon: 'fa-headset', iconBg: '#fde5c0', iconColor: '#b45309', accent: '#fbbf24', footerRightColor: '#92400e',
-    },
-  ];
+  get metricCards(): MetricCard[] {
+    const t = this.topCards;
+    const idle = t.queue.state === 'idle';
+    return [
+      {
+        label: 'Incoming Calls', value: String(t.queue.waiting), unit: 'in queue',
+        note: idle ? 'Clear now' : `${t.queue.ringing} ringing`,
+        dot: idle ? '#0d9488' : '#f59e0b', icon: 'fa-phone-volume',
+      },
+      {
+        label: 'Answer Rate', value: `${t.answerRate}%`, unit: 'ratio',
+        note: `${t.answeredCalls} answered`, dot: '#cbd5e1', icon: 'fa-chart-pie',
+      },
+      {
+        label: 'Peak Hour', value: t.peakHour.label, unit: 'historical',
+        note: `${t.peakHour.calls} calls registered`, dot: '#fbbf24', icon: 'fa-clock',
+      },
+    ];
+  }
+
+  get cards(): SummaryCard[] {
+    const s = this.summaryCards;
+    const idle = s.queue.state === 'idle';
+    return [
+      {
+        label: 'Total Calls', value: String(s.totalCalls), description: "Recorded across today's PBX activity",
+        footerLeft: 'Daily Baseline', footerRight: 'PBX Pool A',
+        icon: 'fa-phone', iconBg: '#dbe4ff', iconColor: '#1d4ed8', accent: '#0052cc', footerRightColor: '#0052cc',
+      },
+      {
+        label: 'Answer Rate', value: `${s.answerRate}%`, description: `${s.answeredCalls} calls answered successfully`,
+        footerLeft: `Target: ${s.answerRateTarget.toFixed(1)}%`,
+        footerRight: s.meetsTarget ? 'Optimal SLA' : 'Below target',
+        icon: 'fa-shield-halved', iconBg: '#99f6e4', iconColor: '#0f766e',
+        accent: s.meetsTarget ? '#047857' : '#dc2626',
+        footerRightColor: s.meetsTarget ? '#047857' : '#dc2626',
+      },
+      {
+        label: 'Incoming Calls', value: String(s.queue.waiting),
+        description: idle ? 'No waiting calls right now' : `${s.queue.waiting} waiting, ${s.queue.ringing} ringing`,
+        footerLeft: 'Queue state', footerRight: idle ? 'Idle / Clear' : 'Active',
+        icon: 'fa-phone-volume', iconBg: '#fed7aa', iconColor: '#9a3412', accent: '#b45309', footerRightColor: '#92400e',
+      },
+      {
+        label: 'Avg Handle', value: formatSeconds(s.avgHandleSeconds),
+        description: `${s.handoffEvents} transfers and conferences`,
+        footerLeft: 'Hold Time',
+        footerRight: s.holdTimeSeconds === null ? '--' : `${s.holdTimeSeconds.toFixed(2)}s`,
+        icon: 'fa-headset', iconBg: '#fde5c0', iconColor: '#b45309', accent: '#fbbf24', footerRightColor: '#92400e',
+      },
+    ];
+  }
 }

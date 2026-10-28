@@ -323,6 +323,7 @@ import { PendingProductMismatchTodayComponent } from './application/procurement-
 import { IvrCallSummaryComponent } from './application/call-centers/action/ivr-call-summary/ivr-call-summary.component';
 import { AddNewContainerComponent } from './application/procurement-section/add-new-container/add-new-container.component';
 import { ManageContainerSizesComponent } from './application/procurement-section/manage-container-sizes/manage-container-sizes.component';
+import { BuyerApprovalsComponent } from './application/sales-dash-section/buyer-approvals/buyer-approvals.component';
 
 export const routes: Routes = [
   {
@@ -1855,6 +1856,12 @@ export const routes: Routes = [
           {
             path: 'customers-orders/:id',
             component: CustomerOrdersComponent,
+          },
+          {
+            path: 'buyer-approvals',
+            component: BuyerApprovalsComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Sales Dash buyer approvals' },
           },
         ],
       },

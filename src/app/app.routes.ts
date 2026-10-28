@@ -1135,7 +1135,7 @@ export const routes: Routes = [
                     path: '',
                     component: ViewSalesAgentsComponent,
                     canActivate: [PermissionGuard],
-                    data: { permission: 'View salses agent' },
+                    data: { permission: 'View sales agent' },
                   },
                   {
                     path: 'create-sales-agents',
@@ -2267,10 +2267,10 @@ export const routes: Routes = [
                 path: 'ivr-call-summary',
                 component: IvrCallSummaryComponent,
               },
-              // {
-              //   path: 'ivr-live-call-log',
-              //   component: IvrLiveCallListComponent,
-              // },
+              {
+                path: 'ivr-live-call-log',
+                component: IvrLiveCallListComponent,
+              },
             ],
           },
         ],

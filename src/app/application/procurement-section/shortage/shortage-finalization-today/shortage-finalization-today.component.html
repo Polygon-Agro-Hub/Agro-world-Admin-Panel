@@ -20,7 +20,7 @@
         <!-- Header -->
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-[16px] font-normal text-[#292929] dark:text-textDark whitespace-nowrap">
-                Shortage Today Finalization ({{ shortageItems.length | number:'2.0' }})
+                Shortage Today Finalization ({{ shortageItems.length === 0 ? '0' : (shortageItems.length | number:'2.0') }})
             </h2>
         </div>
 

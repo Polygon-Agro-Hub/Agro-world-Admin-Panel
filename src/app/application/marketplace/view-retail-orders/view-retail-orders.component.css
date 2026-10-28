@@ -153,3 +153,15 @@
   scrollbar-width: thin;
   scrollbar-color: #FFD700 #F1F1F1;
 }
+
+:host ::ng-deep .p-dropdown {
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+}
+:host ::ng-deep .p-dropdown .p-dropdown-label {
+  display: flex;
+  align-items: center;
+  padding-top: 0;
+  padding-bottom: 0;
+}

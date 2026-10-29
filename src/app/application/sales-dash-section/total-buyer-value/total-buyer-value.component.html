@@ -1,0 +1,141 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
+    <i class="fa-solid fa-arrow-left"></i>
+    Back
+</button>
+
+<div class="fixed-width-container">
+    <div class="bg-white dark:bg-tileBlack shadow-lg rounded-lg relative p-8">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-8 flex-wrap gap-4">
+            <div>
+                <h2 class="text-xl font-semibold text-[#292929] dark:text-textDark">
+                    Total Buyer Value
+                </h2>
+                <p class="text-[#292929] dark:text-textDark mt-1">
+                    Full Total :
+                    <span class="font-semibold">{{ formatAmount(fullTotal) }}</span>
+                </p>
+            </div>
+
+            <!-- Filters -->
+            <div class="flex items-center flex-wrap gap-3">
+                <div>
+                    <p-dropdown [options]="agentOptions" [(ngModel)]="selectedAgent" (onChange)="onAgentChange()"
+                        styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+                        [showClear]="!!selectedAgent" optionLabel="label" optionValue="value"
+                        placeholder="Agent"></p-dropdown>
+                </div>
+
+                <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
+                    <input type="text" [(ngModel)]="searchItem" (keydown)="preventLeadingSpace($event)"
+                        (keyup.enter)="onSearch()" placeholder="Cust ID / Customer Name"
+                        class="bg-transparent outline-none w-full text-textLight dark:text-textDark" />
+                    <button *ngIf="searchItem" type="button"
+                        class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2" (click)="clearSearch()">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                    <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none"
+                        (click)="onSearch()">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div
+            class="overflow-auto max-h-[60vh] w-full scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
+            <table class="min-w-full divide-y divide-gray-200 table-auto" *ngIf="hasData">
+                <thead>
+                    <tr>
+                        <th class="sticky top-0 z-20 bg-white dark:bg-tileBlack px-4 py-3 font-normal text-sm text-[#5C5C5C] dark:text-textDark text-left"
+                            style="white-space: nowrap">
+                            Customer ID
+                        </th>
+                        <th class="sticky top-0 z-20 bg-white dark:bg-tileBlack px-4 py-3 font-normal text-sm text-[#5C5C5C] dark:text-textDark text-left"
+                            style="white-space: nowrap">
+                            Customer Name
+                        </th>
+                        <th class="sticky top-0 z-20 bg-white dark:bg-tileBlack px-4 py-3 font-normal text-sm text-[#5C5C5C] dark:text-textDark text-left"
+                            style="white-space: nowrap">
+                            Agent
+                        </th>
+                        <th class="sticky top-0 z-20 bg-white dark:bg-tileBlack px-4 py-3 font-normal text-sm text-[#5C5C5C] dark:text-textDark text-left"
+                            style="white-space: nowrap">
+                            Buyer Type
+                        </th>
+                        <th class="sticky top-0 z-20 bg-white dark:bg-tileBlack px-4 py-3 font-normal text-sm text-[#5C5C5C] dark:text-textDark text-left"
+                            style="white-space: nowrap">
+                            Customer Contact
+                        </th>
+                        <th class="sticky top-0 z-20 bg-white dark:bg-tileBlack px-4 py-3 font-normal text-sm text-[#5C5C5C] dark:text-textDark text-left"
+                            style="white-space: nowrap">
+                            Orders
+                        </th>
+                        <th class="sticky top-0 z-20 bg-white dark:bg-tileBlack px-4 py-3 font-normal text-sm text-[#5C5C5C] dark:text-textDark text-left"
+                            style="white-space: nowrap">
+                            Order Value
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="
+                        let buyer of buyers
+                            | paginate
+                        : {
+                            itemsPerPage: itemsPerPage,
+                            currentPage: page,
+                            totalItems: totalItems
+                        }
+                        " class="border-t border-[#EFEFEF] dark:border-gray-700">
+                        <td class="px-4 py-4 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
+                            {{ buyer.customerId }}
+                        </td>
+                        <td class="px-4 py-4 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
+                            {{ buyer.customerName }}
+                        </td>
+                        <td class="px-4 py-4 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
+                            {{ buyer.agent }}
+                        </td>
+                        <td class="px-4 py-4 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
+                            {{ buyer.buyerType }}
+                        </td>
+                        <td class="px-4 py-4 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
+                            {{ buyer.customerContact }}
+                        </td>
+                        <td class="px-4 py-4 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
+                            {{ buyer.orders }}
+                        </td>
+                        <td class="px-4 py-4 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
+                            Rs. {{ formatAmount(buyer.orderValue) }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div *ngIf="!hasData && !isLoading" class="flex flex-col justify-center items-center py-20">
+                <p class="text-[#494949] dark:text-textDark mb-4">
+                    -- No Data Available --
+                </p>
+                <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 mb-4" />
+            </div>
+        </div>
+
+        <div class="dark:bg-[#262f45]" *ngIf="hasData">
+            <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
+                [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
+                [screenReaderCurrentLabel]="'You’re on page'">
+            </pagination-controls>
+        </div>
+    </div>
+</div>

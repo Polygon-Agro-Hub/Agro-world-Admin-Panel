@@ -4,6 +4,27 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { TokenService } from '../token/services/token.service';
 
+export interface SalesDashboardTotals {
+  totalBuyers: number;
+  newBuyers: number;
+  existingBuyers: number;
+  retailBuyers: number;
+  wholesaleBuyers: number;
+  wholesaleRequests: number;
+  newBuyersValue: number;
+  existingBuyersValue: number;
+  totalOrdersPlaced: number;
+}
+
+export interface SalesDashboardData extends SalesDashboardTotals {
+  packages: { name: string; purchases: number }[];
+}
+
+export interface SalesDashboardResponse {
+  status: boolean;
+  data: SalesDashboardData | null;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -99,6 +120,15 @@ export class SalesDashService {
       url += `&agentFilter=${agentFilter}`;
     }
     return this.http.get<any>(url, { headers });
+  }
+
+  getDashboard(): Observable<SalesDashboardResponse> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+    return this.http.get<SalesDashboardResponse>(
+      `${environment.API_URL}dash/dashboard`, { headers },
+    );
   }
 }
 

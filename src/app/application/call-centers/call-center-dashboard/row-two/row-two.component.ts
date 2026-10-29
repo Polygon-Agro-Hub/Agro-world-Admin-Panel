@@ -55,36 +55,38 @@ export class RowTwoComponent {
     ];
   }
 
-  get cards(): SummaryCard[] {
-    const s = this.summaryCards;
-    const idle = s.queue.state === 'idle';
-    return [
-      {
-        label: 'Total Calls', value: String(s.totalCalls), description: "Recorded across today's PBX activity",
-        footerLeft: 'Daily Baseline', footerRight: 'PBX Pool A',
-        icon: 'fa-phone', iconBg: '#dbe4ff', iconColor: '#1d4ed8', accent: '#0052cc', footerRightColor: '#0052cc',
-      },
-      {
-        label: 'Answer Rate', value: `${s.answerRate}%`, description: `${s.answeredCalls} calls answered successfully`,
-        footerLeft: `Target: ${s.answerRateTarget.toFixed(1)}%`,
-        footerRight: s.meetsTarget ? 'Optimal SLA' : 'Below target',
-        icon: 'fa-shield-halved', iconBg: '#99f6e4', iconColor: '#0f766e',
-        accent: s.meetsTarget ? '#047857' : '#dc2626',
-        footerRightColor: s.meetsTarget ? '#047857' : '#dc2626',
-      },
-      {
-        label: 'Incoming Calls', value: String(s.queue.waiting),
-        description: idle ? 'No waiting calls right now' : `${s.queue.waiting} waiting, ${s.queue.ringing} ringing`,
-        footerLeft: 'Queue state', footerRight: idle ? 'Idle / Clear' : 'Active',
-        icon: 'fa-phone-volume', iconBg: '#fed7aa', iconColor: '#9a3412', accent: '#b45309', footerRightColor: '#92400e',
-      },
-      {
-        label: 'Avg Handle', value: formatSeconds(s.avgHandleSeconds),
-        description: `${s.handoffEvents} transfers and conferences`,
-        footerLeft: 'Hold Time',
-        footerRight: s.holdTimeSeconds === null ? '--' : `${s.holdTimeSeconds.toFixed(2)}s`,
-        icon: 'fa-headset', iconBg: '#fde5c0', iconColor: '#b45309', accent: '#fbbf24', footerRightColor: '#92400e',
-      },
-    ];
-  }
+ get cards(): SummaryCard[] {
+  const s = this.summaryCards;
+  const idle = s.queue?.state === 'idle';
+  const target = s.answerRateTarget ?? 95; // spec default target
+  const hold = s.holdTimeSeconds;
+  return [
+    {
+      label: 'Total Calls', value: String(s.totalCalls ?? 0), description: "Recorded across today's PBX activity",
+      footerLeft: 'Daily Baseline', footerRight: 'PBX Pool A',
+      icon: 'fa-phone', iconBg: '#dbe4ff', iconColor: '#1d4ed8', accent: '#0052cc', footerRightColor: '#0052cc',
+    },
+    {
+      label: 'Answer Rate', value: `${s.answerRate ?? 0}%`, description: `${s.answeredCalls ?? 0} calls answered successfully`,
+      footerLeft: `Target: ${Number(target).toFixed(1)}%`,
+      footerRight: s.meetsTarget ? 'Optimal SLA' : 'Below target',
+      icon: 'fa-shield-halved', iconBg: '#99f6e4', iconColor: '#0f766e',
+      accent: s.meetsTarget ? '#047857' : '#dc2626',
+      footerRightColor: s.meetsTarget ? '#047857' : '#dc2626',
+    },
+    {
+      label: 'Incoming Calls', value: String(s.queue?.waiting ?? 0),
+      description: idle ? 'No waiting calls right now' : `${s.queue?.waiting ?? 0} waiting, ${s.queue?.ringing ?? 0} ringing`,
+      footerLeft: 'Queue state', footerRight: idle ? 'Idle / Clear' : 'Active',
+      icon: 'fa-phone-volume', iconBg: '#fed7aa', iconColor: '#9a3412', accent: '#b45309', footerRightColor: '#92400e',
+    },
+    {
+      label: 'Avg Handle', value: formatSeconds(s.avgHandleSeconds),
+      description: `${s.handoffEvents ?? 0} transfers and conferences`,
+      footerLeft: 'Hold Time',
+      footerRight: hold == null ? '--' : `${Number(hold).toFixed(2)}s`,
+      icon: 'fa-headset', iconBg: '#fde5c0', iconColor: '#b45309', accent: '#fbbf24', footerRightColor: '#92400e',
+    },
+  ];
+}
 }

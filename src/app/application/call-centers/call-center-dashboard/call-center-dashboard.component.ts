@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, catchError, map, merge, of, startWith, switchMap, takeUntil, timer } from 'rxjs';
 import { RowOneComponent } from './row-one/row-one.component';
 import { RowTwoComponent } from './row-two/row-two.component';
@@ -9,7 +9,7 @@ import { TableRowComponent } from './table-row/table-row.component';
 import { CallCenterService } from '../../../services/call-center/call-center.service';
 import { DashboardQuery, DashboardResponse, TrendRangeKey } from '../../../models/call-center.model';
 
-const POLL_MS = 60000; // spec: polling every 30-60s is fine
+const POLL_MS = 60000;
 
 @Component({
   selector: 'app-call-center-dashboard',
@@ -27,8 +27,8 @@ const POLL_MS = 60000; // spec: polling every 30-60s is fine
 })
 export class CallCenterDashboardComponent implements OnInit, OnDestroy {
   data: DashboardResponse | null = null;
-  isLoading = true;      // first load
-  isRefreshing = false;  // param change (hour/range/search/page)
+  isLoading = true;
+  isRefreshing = false;
   errorMessage = '';
 
   query: DashboardQuery = { range: '13w', months: 2, search: '', page: 1, limit: 10 };
@@ -36,7 +36,10 @@ export class CallCenterDashboardComponent implements OnInit, OnDestroy {
   private reload$ = new Subject<void>();
   private destroy$ = new Subject<void>();
 
-  constructor(private callCenterSrv: CallCenterService) {}
+  constructor(
+    private callCenterSrv: CallCenterService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     merge(this.reload$, timer(POLL_MS, POLL_MS))
@@ -51,6 +54,7 @@ export class CallCenterDashboardComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$)
       )
       .subscribe(({ res, err }) => {
+        console.log('dashboard response', res, err); // remove once working
         this.isLoading = false;
         this.isRefreshing = false;
         if (res) {
@@ -59,6 +63,7 @@ export class CallCenterDashboardComponent implements OnInit, OnDestroy {
         } else {
           this.errorMessage = this.toMessage(err);
         }
+        this.cdr.markForCheck(); // needed for zoneless apps
       });
   }
 
@@ -115,7 +120,10 @@ export class CallCenterDashboardComponent implements OnInit, OnDestroy {
         a.click();
         URL.revokeObjectURL(a.href);
       },
-      error: () => (this.errorMessage = 'Export failed. Please try again.'),
+      error: () => {
+        this.errorMessage = 'Export failed. Please try again.';
+        this.cdr.markForCheck();
+      },
     });
   }
 }

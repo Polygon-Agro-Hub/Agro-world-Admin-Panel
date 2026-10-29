@@ -38,4 +38,9 @@ export class SalesDashComponent {
     });
   }
 
+  viewTotalBuyerValue(): void {
+    this.router.navigate(['/sales-dash/total-buyer-value']).then(() => {
+    });
+  }
+
 }

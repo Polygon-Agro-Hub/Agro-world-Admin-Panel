@@ -4,9 +4,28 @@ import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { TokenService } from '../token/services/token.service';
 
+export interface BuyerRow {
+  id: number;
+  customerId: string;
+  customerName: string;
+  buyerType: string;
+  customerContact: string;
+  agent: string | null;
+  orders: number;
+  orderValue: number;
+}
+ 
+export interface TotalBuyerValueResponse {
+  items: BuyerRow[];
+  total: number;
+  fullTotal: number;
+  agents: string[];
+}
+
 @Injectable({
   providedIn: 'root',
 })
+
 export class MarketPlaceService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
@@ -713,30 +732,30 @@ export class MarketPlaceService {
     page: number = 1,
     limit: number = 10,
     searchText: string = '',
-    ratingFilter: string = '' 
+    ratingFilter: string = ''
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
- 
+
     let url = `${this.apiUrl}market-place/get-all-wholesale-customers?page=${page}&limit=${limit}`;
- 
+
     if (searchText) {
       url += `&searchText=${searchText}`;
     }
- 
+
     if (ratingFilter) {
       url += `&ratingFilter=${ratingFilter}`;  // ← new
     }
- 
+
     return this.http.get<any>(url, { headers });
   }
- 
+
   updateWholesaleCustomerRating(customerId: string, rateofCus: string): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
- 
+
     return this.http.patch<any>(
       `${this.apiUrl}market-place/update-wholesale-customer-rating/${customerId}`,
       { rateofCus },
@@ -855,6 +874,27 @@ export class MarketPlaceService {
     );
   }
 
-}
+  getTotalBuyerValue(
+    page: number = 1,
+    limit: number = 10,
+    searchItem: string = '',
+    agent: string | null = '',
+  ): Observable<TotalBuyerValueResponse> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
 
+    let url = `${this.apiUrl}market-place/get-total-buyer-value?page=${page}&limit=${limit}`;
+
+    if (searchItem) {
+      url += `&searchItem=${encodeURIComponent(searchItem)}`;
+    }
+
+    if (agent) {
+      url += `&agent=${encodeURIComponent(agent)}`;
+    }
+
+    return this.http.get<TotalBuyerValueResponse>(url, { headers: headers });
+  }
+}
 

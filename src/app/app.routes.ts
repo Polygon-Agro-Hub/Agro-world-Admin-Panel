@@ -324,6 +324,7 @@ import { IvrCallSummaryComponent } from './application/call-centers/action/ivr-c
 import { AddNewContainerComponent } from './application/procurement-section/add-new-container/add-new-container.component';
 import { ManageContainerSizesComponent } from './application/procurement-section/manage-container-sizes/manage-container-sizes.component';
 import { BuyerApprovalsComponent } from './application/sales-dash-section/buyer-approvals/buyer-approvals.component';
+import { TotalBuyerValueComponent } from './application/sales-dash-section/total-buyer-value/total-buyer-value.component';
 
 export const routes: Routes = [
   {
@@ -1863,6 +1864,12 @@ export const routes: Routes = [
             canActivate: [PermissionGuard],
             data: { permission: 'Sales Dash buyer approvals' },
           },
+          {
+            path: 'total-buyer-value',
+            component: TotalBuyerValueComponent,
+            // canActivate: [PermissionGuard],
+            // data: { permission: 'Sales Dash total buyer value' },
+          }
         ],
       },
       {

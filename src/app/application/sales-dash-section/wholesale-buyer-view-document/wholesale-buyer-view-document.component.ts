@@ -55,7 +55,8 @@ export class WholesaleBuyerViewDocumentComponent implements OnInit {
   textAreaTouched = false;
 
   private readonly swalClasses = {
-    popup: 'bg-white dark:bg-tileBlack text-black dark:text-white rounded-lg pt-2',
+    popup:
+      'bg-white dark:bg-tileBlack text-black dark:text-white rounded-lg pt-2',
     title: 'font-semibold text-lg',
     confirmButton: 'px-6 py-2 rounded-md',
     cancelButton: 'px-6 py-2 rounded-md',
@@ -94,7 +95,10 @@ export class WholesaleBuyerViewDocumentComponent implements OnInit {
             id: d.userId,
             customerName: `${d.firstName ?? ''} ${d.lastName ?? ''}`.trim(),
             customerContact: this.formatPhoneNumber(d.phoneCode, d.phoneNumber),
-            companyContact: this.formatPhoneNumber(d.companyPhoneCode, d.companyPhone),
+            companyContact: this.formatPhoneNumber(
+              d.companyPhoneCode,
+              d.companyPhone,
+            ),
             documentTitle: 'BR Document',
             documentUrl: d.brImg,
             status: d.approveStatus,
@@ -104,7 +108,9 @@ export class WholesaleBuyerViewDocumentComponent implements OnInit {
           this.isPDF = this.checkIfPDF(d.brImg);
 
           if (this.isPDF) {
-            this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(d.brImg);
+            this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+              d.brImg,
+            );
           } else {
             this.modalImage = d.brImg;
           }
@@ -221,7 +227,9 @@ export class WholesaleBuyerViewDocumentComponent implements OnInit {
               timer: 2000,
               showConfirmButton: false,
               customClass: this.swalClasses,
-            }).then(() => this.back());
+            }).then(() =>
+              this.router.navigate(['/sales-dash/action/buyer-approvals']),
+            );
           }
         },
         error: (error) => {
@@ -268,7 +276,7 @@ export class WholesaleBuyerViewDocumentComponent implements OnInit {
             }).then(() => {
               this.text = '';
               this.textAreaTouched = false;
-              this.back();
+              this.router.navigate(['/sales-dash/action/buyer-approvals']);
             });
           }
         },

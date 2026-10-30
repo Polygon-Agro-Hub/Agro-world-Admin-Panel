@@ -286,7 +286,7 @@ export class ViewOrdersComponent implements OnInit {
   }
 
   Back(): void {
-    this.router.navigate(['/sales-dash']);
+    this.router.navigate(['/sales-dash/action']);
   }
 
   navigatePath(path: string) {

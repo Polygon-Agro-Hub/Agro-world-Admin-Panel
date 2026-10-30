@@ -304,11 +304,11 @@ export class CustomersComponent implements OnInit {
   // ─────────────────────────────────────────────────────────────────────────
 
   back() {
-    this.router.navigate(['/sales-dash']);
+    this.router.navigate(['/sales-dash/action']);
   }
 
   viewOrderDetails(id: number) {
-    this.router.navigate(['/sales-dash/customers-orders', id]);
+    this.router.navigate(['/sales-dash/action/customers-orders', id]);
   }
 
   /** Returns the star-icon asset path for a given rating code */

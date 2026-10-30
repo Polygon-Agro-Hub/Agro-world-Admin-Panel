@@ -74,6 +74,7 @@ import { MonthlyReportComponent } from './application/report-section/monthly-rep
 import { CreateCompanyComponent } from './application/collection-hub-section/create-company/create-company.component';
 import { ManageCompanyComponent } from './application/collection-hub-section/manage-company/manage-company.component';
 import { CollectiveofficersEditComponent } from './application/collection-officer-app/collectiveofficers-edit/collectiveofficers-edit.component';
+import { SalesDashDbComponent } from './application/sales-dash-section/sales-dash-db/sales-dash-db.component';
 import { SalesDashComponent } from './application/sales-dash-section/sales-dash/sales-dash.component';
 import { ComplaintsDashbordComponent } from './application/Complaints/complaints-dashbord/complaints-dashbord.component';
 import { OptOutFeedbacksComponent } from './application/plant-care-app/opt-out-feedbacks/opt-out-feedbacks.component';
@@ -1831,45 +1832,54 @@ export const routes: Routes = [
         path: 'sales-dash',
         children: [
           {
-            path: '',
-            component: SalesDashComponent,
+            path: 'dashboard',
+            component: SalesDashDbComponent,
           },
           {
-            path: 'customer',
-            component: CustomersComponent,
-            canActivate: [PermissionGuard],
-            data: { permission: 'Sales Dash customer' },
-          },
+            path: 'action',
+            children: [
+              {
+                path: '',
+                component: SalesDashComponent,
+              },
+              {
+                path: 'customer',
+                component: CustomersComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Sales Dash customer' },
+              },
 
-          {
-            path: 'view-orders',
-            component: ViewOrdersComponent,
-            canActivate: [PermissionGuard],
-            data: { permission: 'Sales Dash view orders' },
-          },
+              {
+                path: 'view-orders',
+                component: ViewOrdersComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Sales Dash view orders' },
+              },
 
-          {
-            path: 'sales-targets',
-            component: SalesTargetComponent,
-            canActivate: [PermissionGuard],
-            data: { permission: 'Sales Dash sales targets' },
+              {
+                path: 'sales-targets',
+                component: SalesTargetComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Sales Dash sales targets' },
+              },
+              {
+                path: 'customers-orders/:id',
+                component: CustomerOrdersComponent,
+              },
+              {
+                path: 'buyer-approvals',
+                component: BuyerApprovalsComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Sales Dash buyer approvals' },
+              },
+              {
+                path: 'total-buyer-value',
+                component: TotalBuyerValueComponent,
+                // canActivate: [PermissionGuard],
+                // data: { permission: 'Sales Dash total buyer value' },
+              }
+            ],
           },
-          {
-            path: 'customers-orders/:id',
-            component: CustomerOrdersComponent,
-          },
-          {
-            path: 'buyer-approvals',
-            component: BuyerApprovalsComponent,
-            canActivate: [PermissionGuard],
-            data: { permission: 'Sales Dash buyer approvals' },
-          },
-          {
-            path: 'total-buyer-value',
-            component: TotalBuyerValueComponent,
-            // canActivate: [PermissionGuard],
-            // data: { permission: 'Sales Dash total buyer value' },
-          }
         ],
       },
       {

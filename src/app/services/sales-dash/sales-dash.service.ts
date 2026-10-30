@@ -17,6 +17,7 @@ export interface SalesDashboardTotals {
 }
 
 export interface SalesDashboardData extends SalesDashboardTotals {
+  periodLabel?: string;
   packages: { name: string; purchases: number }[];
 }
 

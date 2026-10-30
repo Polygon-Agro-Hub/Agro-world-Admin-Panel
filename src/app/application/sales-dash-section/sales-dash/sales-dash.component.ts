@@ -17,29 +17,29 @@ export class SalesDashComponent {
       public permissionService: PermissionService,){}
 
   viewOrders(): void {
-    this.router.navigate(['/sales-dash/view-orders']).then(() => {
+    this.router.navigate(['/sales-dash/action/view-orders']).then(() => {
     });
   }
 
 
     viewCustomers(): void {
-    this.router.navigate(['/sales-dash/customer']).then(() => {
+    this.router.navigate(['/sales-dash/action/customer']).then(() => {
     });
   }
 
 
       viewTargets(): void {
-    this.router.navigate(['/sales-dash/sales-targets']).then(() => {
+    this.router.navigate(['/sales-dash/action/sales-targets']).then(() => {
     });
   }
 
   viewBuyerApprovals(): void {
-    this.router.navigate(['/sales-dash/buyer-approvals']).then(() => {
+    this.router.navigate(['/sales-dash/action/buyer-approvals']).then(() => {
     });
   }
 
   viewTotalBuyerValue(): void {
-    this.router.navigate(['/sales-dash/total-buyer-value']).then(() => {
+    this.router.navigate(['/sales-dash/action/total-buyer-value']).then(() => {
     });
   }
 

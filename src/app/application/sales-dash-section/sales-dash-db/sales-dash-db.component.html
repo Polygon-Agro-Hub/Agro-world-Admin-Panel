@@ -5,7 +5,7 @@
     <button type="button" class="rounded bg-teal-600 px-3 py-1 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-600" (click)="loadDashboard()">Retry</button>
   </div>
   <div class="mb-[22px] grid grid-cols-6 gap-[23px] max-[1100px]:gap-[14px] max-[760px]:grid-cols-3 max-[480px]:grid-cols-2" aria-label="Buyer totals">
-    <article *ngFor="let card of buyerCards" class="flex min-h-[77px] flex-col items-center justify-center rounded-[7px] px-1 py-[9px] text-white min-[1500px]:min-h-[90px]" [ngClass]="card.bgClass">
+    <article *ngFor="let card of buyerCards; trackBy: trackByKey" class="flex min-h-[77px] flex-col items-center justify-center rounded-[7px] px-1 py-[9px] text-white min-[1500px]:min-h-[90px]" [ngClass]="card.bgClass">
       <svg class="mb-[6px] h-[19px] w-[19px]" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
         <path d="M12 2 1 7.5 12 13l11-5.5L12 2Zm-8.8 9L1 12.1l11 5.5 11-5.5-2.2-1.1L12 15.4 3.2 11Zm0 4.6L1 16.7l11 5.5 11-5.5-2.2-1.1L12 20l-8.8-4.4Z" />
       </svg>
@@ -15,7 +15,7 @@
   </div>
 
   <div class="grid grid-cols-3 gap-x-[25px] gap-y-4 max-[1100px]:gap-x-4 max-[760px]:grid-cols-2 max-[480px]:grid-cols-1" aria-label="Sales and package totals">
-    <article *ngFor="let card of summaryCards" class="relative flex min-h-[77px] items-center gap-[14px] rounded-lg border border-[#e5e7eb] bg-white px-[14px] py-[15px] min-[1500px]:min-h-[90px] max-[1100px]:gap-[10px] max-[1100px]:px-3 dark:border-[#263647] dark:bg-[#061e2c]">
+   <article *ngFor="let card of summaryCards; trackBy: trackByLabel" class="relative flex min-h-[77px] items-center gap-[14px] rounded-lg border border-[#e5e7eb] bg-white px-[14px] py-[15px] min-[1500px]:min-h-[90px] max-[1100px]:gap-[10px] max-[1100px]:px-3 dark:border-[#263647] dark:bg-[#061e2c]">
       <span class="flex h-[41px] basis-[41px] shrink-0 grow-0 items-center justify-center rounded-full"
         [ngClass]="card.type === 'orders' ? 'bg-[#eff0ff] text-[#4c59ff] text-[21px]' : card.type === 'purchases' ? 'bg-[#ffedd6] text-[#ff9138] text-[18px]' : 'bg-[#c9faf1] text-[#009e90] text-[18px]'"
         aria-hidden="true"><i [class]="card.icon"></i></span>

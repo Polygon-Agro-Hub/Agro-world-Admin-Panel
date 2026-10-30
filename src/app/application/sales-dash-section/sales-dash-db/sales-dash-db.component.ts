@@ -29,13 +29,26 @@ interface SummaryCard {
 })
 export class SalesDashDbComponent implements OnInit {
   data: SalesDashboardData | null = null;
+  summaryCards: SummaryCard[] = [];
   loading = false;
   error = false;
+
+  readonly buyerCards: BuyerCard[] = [
+    { label: 'Total Buyers', key: 'totalBuyers', bgClass: 'bg-[#0d9488]' },
+    { label: 'New Buyers', key: 'newBuyers', bgClass: 'bg-[#ff9138]' },
+    { label: 'Existing Buyers', key: 'existingBuyers', bgClass: 'bg-[#387ff5]' },
+    { label: 'Retail Buyers', key: 'retailBuyers', bgClass: 'bg-[#b90087]' },
+    { label: 'Wholesale Buyers', key: 'wholesaleBuyers', bgClass: 'bg-[#008e98]' },
+    { label: 'Wholesale Requests', key: 'wholesaleRequests', bgClass: 'bg-[#b78e00]' },
+  ];
+
+  trackByLabel = (_: number, card: SummaryCard) => card.label;
+  trackByKey = (_: number, card: BuyerCard) => card.key;
 
   constructor(
     private dashboardService: SalesDashService,
     private destroyRef: DestroyRef,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadDashboard();
@@ -50,29 +63,23 @@ export class SalesDashDbComponent implements OnInit {
         next: (response) => {
           if (response.status && response.data && Array.isArray(response.data.packages)) {
             this.data = response.data;
+            this.buildSummaryCards();
           } else {
+            this.summaryCards = [];
             this.error = true;
           }
           this.loading = false;
         },
         error: () => {
+          this.summaryCards = [];
           this.error = true;
           this.loading = false;
         },
       });
   }
 
-  readonly buyerCards: BuyerCard[] = [
-    { label: 'Total Buyers', key: 'totalBuyers', bgClass: 'bg-[#0d9488]' },
-    { label: 'New Buyers', key: 'newBuyers', bgClass: 'bg-[#ff9138]' },
-    { label: 'Existing Buyers', key: 'existingBuyers', bgClass: 'bg-[#387ff5]' },
-    { label: 'Retail Buyers', key: 'retailBuyers', bgClass: 'bg-[#b90087]' },
-    { label: 'Wholesale Buyers', key: 'wholesaleBuyers', bgClass: 'bg-[#008e98]' },
-    { label: 'Wholesale Requests', key: 'wholesaleRequests', bgClass: 'bg-[#b78e00]' },
-  ];
-
-  get summaryCards(): SummaryCard[] {
-    return [
+  private buildSummaryCards(): void {
+    this.summaryCards = [
       { label: 'Total Value of New Buyers', value: this.valueFor('newBuyersValue'), type: 'currency', icon: 'fa-solid fa-money-bill-1-wave' },
       { label: 'Total Value of Existing Buyers', value: this.valueFor('existingBuyersValue'), type: 'currency', icon: 'fa-solid fa-money-bill-1-wave' },
       { label: 'Total Orders Placed', value: this.valueFor('totalOrdersPlaced'), type: 'orders', icon: 'fa-solid fa-box' },

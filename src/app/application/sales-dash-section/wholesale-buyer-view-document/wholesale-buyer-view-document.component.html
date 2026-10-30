@@ -1,0 +1,126 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<!-- Back Button -->
+<button (click)="back()" class="mb-5 text-textLight dark:text-textDark">
+    <i class="fa-solid fa-arrow-left"></i>
+    <span class="underline ml-1">Back</span>
+</button>
+
+<div class="w-full bg-transparent overflow-hidden">
+    <!-- Header Section -->
+    <div
+        class="flex flex-row justify-between items-center mb-5 p-7 bg-white dark:bg-tileBlack rounded-lg shadow-md gap-10 dark:text-textDark">
+        <div class="flex flex-row gap-x-10">
+            <div class="flex flex-col">
+                <span class="text-[#7E7E7E] dark:text-[#C8C8C8] font-inter font-[400] mb-1">Customer Name :</span>
+                <span class="dark:text-[#FFFFFF] font-inter font-[500]">{{ buyerDocument.customerName }}</span>
+            </div>
+            <div class="flex flex-col">
+                <span class="text-[#7E7E7E] dark:text-[#C8C8C8] font-inter font-[400] mb-1">Customer Contact :</span>
+                <span class="dark:text-[#FFFFFF] font-inter font-[500]">{{ buyerDocument.customerContact }}</span>
+            </div>
+            <div class="flex flex-col">
+                <span class="text-[#7E7E7E] dark:text-[#C8C8C8] font-inter font-[400] mb-1">Company Contact :</span>
+                <span class="dark:text-[#FFFFFF] font-inter font-[500]">{{ buyerDocument.companyContact }}</span>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex gap-4">
+            <button *ngIf="buyerDocument.status === 'To Review'" (click)="openApprovePopup()"
+                class="px-8 py-2 bg-[#3980C0] text-white font-medium rounded-md transition-colors duration-200 shadow-sm">
+                Approve
+            </button>
+
+            <button *ngIf="buyerDocument.status === 'To Review'" (click)="openRejectPopup()"
+                class="px-8 py-2 bg-[#C40D0D] text-white font-medium rounded-md transition-colors duration-200 shadow-sm">
+                Reject
+            </button>
+        </div>
+    </div>
+
+    <!-- Document Section -->
+    <div class="relative pt-5 pb-5 w-full bg-white dark:bg-tileBlack shadow-lg rounded-lg overflow-hidden">
+
+        <!-- Title -->
+        <div class="flex items-center justify-start gap-4 pb-4 px-6 border-b border-gray-200">
+            <span class="text-base font-inter font-[500] text-gray-900 dark:text-white">
+                {{ buyerDocument.documentTitle }}
+            </span>
+        </div>
+
+        <!-- Content Display Area -->
+        <div class="p-4">
+            <!-- Image Viewer -->
+            <div *ngIf="!isPDF"
+                class="bg-white dark:bg-gray-700 w-full min-h-[600px] flex items-center justify-center overflow-hidden relative"
+                [style.cursor]="isPanning ? 'grabbing' : (scale > 1 ? 'grab' : 'default')"
+                (mousedown)="onMouseDown($event)" (mousemove)="onMouseMove($event)" (mouseup)="onMouseUp()"
+                (mouseleave)="onMouseLeave()">
+                <img [src]="modalImage" [style.transform]="getImageTransform()"
+                    class="max-w-full object-contain transition-transform select-none"
+                    style="pointer-events: none;" [alt]="modalTitle" draggable="false" />
+
+                <!-- Zoom Buttons -->
+                <div class="absolute right-4 bottom-6 flex flex-col gap-3">
+                    <button (click)="zoomOut()" class="w-[52px] h-[55px] rounded-[5px] bg-white dark:bg-gray-600
+                        border dark:border-gray-500 shadow text-xl dark:text-textDark
+                        hover:bg-gray-100 dark:hover:bg-gray-500">
+                        −
+                    </button>
+                    <button (click)="zoomIn()" class="w-[52px] h-[55px] rounded-[5px] bg-white dark:bg-gray-600
+                        border dark:border-gray-500 shadow text-xl dark:text-textDark
+                        hover:bg-gray-100 dark:hover:bg-gray-500">
+                        +
+                    </button>
+                </div>
+            </div>
+
+            <!-- PDF Viewer -->
+            <div *ngIf="isPDF" class="w-full bg-white dark:bg-gray-700 overflow-hidden">
+                <iframe [src]="sanitizedUrl" class="w-full h-[800px]" frameborder="0"
+                    style="border: none;"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Reject Popup -->
+<div *ngIf="isRejectPopUp" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+    <div class="bg-white dark:bg-tileBlack rounded-2xl w-full max-w-md shadow-xl p-6 sm:p-8 flex flex-col items-center">
+
+        <h3 class="text-lg font-semibold text-[#000000] dark:text-textDark mb-4 text-center">
+            Please Confirm?
+        </h3>
+
+        <div class="w-full text-center space-y-4">
+            <p class="text-[#000000] font-[400] text-center dark:text-gray-400">
+                Are you sure you want to Reject this document?
+            </p>
+
+            <div class="w-full">
+                <textarea
+                    class="w-full py-2 px-3 bg-white dark:bg-[#262f45] dark:text-white border rounded-xl outline-none resize-none"
+                    [ngClass]="textAreaTouched && !text ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600'"
+                    rows="4" placeholder="Mention Reason..." name="reply" [(ngModel)]="text"
+                    (click)="onTextareaClick()"></textarea>
+
+                <div *ngIf="textAreaTouched && !text" class="text-red-500 text-left text-sm mt-1">
+                    <i class="fa-solid fa-circle-info text-xs"></i> Reason is required
+                </div>
+            </div>
+
+            <div class="flex gap-4 w-full pt-2">
+                <button type="button" (click)="cancelReject()"
+                    class="flex-1 px-4 py-2.5 rounded-lg bg-[#74788D] text-[#FFFFFF] whitespace-nowrap">
+                    No, Go Back
+                </button>
+
+                <button type="button" (click)="rejectDocument()"
+                    class="flex-1 px-4 py-2.5 rounded-lg bg-[#C40D0D] text-white transition-colors font-medium whitespace-nowrap cursor-pointer">
+                    Yes, Reject
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

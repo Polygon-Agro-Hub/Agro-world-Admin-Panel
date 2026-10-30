@@ -326,6 +326,7 @@ import { AddNewContainerComponent } from './application/procurement-section/add-
 import { ManageContainerSizesComponent } from './application/procurement-section/manage-container-sizes/manage-container-sizes.component';
 import { BuyerApprovalsComponent } from './application/sales-dash-section/buyer-approvals/buyer-approvals.component';
 import { TotalBuyerValueComponent } from './application/sales-dash-section/total-buyer-value/total-buyer-value.component';
+import { WholesaleBuyerViewDocumentComponent } from './application/sales-dash-section/wholesale-buyer-view-document/wholesale-buyer-view-document.component';
 
 export const routes: Routes = [
   {
@@ -1877,7 +1878,13 @@ export const routes: Routes = [
                 component: TotalBuyerValueComponent,
                 // canActivate: [PermissionGuard],
                 // data: { permission: 'Sales Dash total buyer value' },
-              }
+              },
+              {
+                path: 'wholesale-buyer/document/:id',
+                component: WholesaleBuyerViewDocumentComponent,
+                // canActivate: [PermissionGuard],
+                // data: { permission: 'Sales Dash buyer approvals' },
+              },
             ],
           },
         ],

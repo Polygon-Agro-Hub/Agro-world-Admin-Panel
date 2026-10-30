@@ -26,6 +26,19 @@ export interface SalesDashboardResponse {
   data: SalesDashboardData | null;
 }
 
+export interface SalesAgentRatingRow {
+  empId: string;
+  name: string;
+  target: number | null;
+  completed: number | null;
+  date: string | null;
+}
+
+export interface SalesAgentRatingsResponse {
+  items: SalesAgentRatingRow[];
+  agents: { empId: string; name: string }[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -36,7 +49,7 @@ export class SalesDashService {
 
   constructor(private http: HttpClient, private tokenService: TokenService) { }
 
-  getAllSalesAgents(page: number = 1, limit: number = 10,  searchText: string = '', status: string = '', date: string = ''): Observable<any> {
+  getAllSalesAgents(page: number = 1, limit: number = 10, searchText: string = '', status: string = '', date: string = ''): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
@@ -66,12 +79,12 @@ export class SalesDashService {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-  
+
     const url = `${this.apiUrl}sales-agent-dash/save-target`;
-  
+
     // Create request body
-    const body = {targetValue };
-  
+    const body = { targetValue };
+
     return this.http.post(url, body, { headers });
   }
 
@@ -85,12 +98,12 @@ export class SalesDashService {
     searchText: string = '',
     date: string,
     agentFilter: number | string = '',
-   
+
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-    
+
     let url = `${this.apiUrl}dash/get-all-Orders?page=${page}&limit=${limit}`;
 
     if (orderStatus) {
@@ -99,7 +112,7 @@ export class SalesDashService {
 
     if (paymentMethod) {
       url += `&paymentMethod=${paymentMethod}`;
-    }paymentStatus
+    } paymentStatus
 
     if (paymentStatus) {
       url += `&paymentStatus=${paymentStatus}`;
@@ -130,6 +143,27 @@ export class SalesDashService {
     return this.http.get<SalesDashboardResponse>(
       `${environment.API_URL}dash/dashboard`, { headers },
     );
+  }
+
+  getSalesAgentRatings(
+    formattedDate: string = '',
+    agent: string | null = '',
+  ): Observable<SalesAgentRatingsResponse> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    let url = `${this.apiUrl}dash/get-sales-agent-ratings?`;
+
+    if (formattedDate) {
+      url += `&formattedDate=${formattedDate}`;
+    }
+
+    if (agent) {
+      url += `&agent=${encodeURIComponent(agent)}`;
+    }
+
+    return this.http.get<SalesAgentRatingsResponse>(url, { headers: headers });
   }
 }
 

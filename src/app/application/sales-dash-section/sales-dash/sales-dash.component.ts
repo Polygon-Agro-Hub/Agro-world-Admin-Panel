@@ -43,4 +43,9 @@ export class SalesDashComponent {
     });
   }
 
+  viewAgentRatings(): void {
+    this.router.navigate(['/sales-dash/action/agent-ratings']).then(() => {
+    });
+  }
+  
 }

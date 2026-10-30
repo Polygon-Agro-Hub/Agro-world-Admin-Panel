@@ -5,7 +5,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { SalesAgentsService } from '../../../services/dash/sales-agents.service';
-import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component'; // adjust path/name
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
 interface BuyerDocument {
   id: number;
@@ -17,6 +17,8 @@ interface BuyerDocument {
   status: string;
 }
 
+type StatusAction = 'Approved' | 'Rejected';
+
 @Component({
   selector: 'app-wholesale-buyer-view-document',
   standalone: true,
@@ -26,6 +28,7 @@ interface BuyerDocument {
 })
 export class WholesaleBuyerViewDocumentComponent implements OnInit {
   isLoading = false;
+  isSubmitting = false;
   userId = 0;
 
   buyerDocument: BuyerDocument = {
@@ -40,7 +43,7 @@ export class WholesaleBuyerViewDocumentComponent implements OnInit {
 
   modalImage = '';
   modalTitle = 'BR Document';
-  sanitizedUrl: SafeResourceUrl = '';
+  sanitizedUrl: SafeResourceUrl | null = null;
   isPDF = false;
 
   scale = 1;
@@ -50,16 +53,17 @@ export class WholesaleBuyerViewDocumentComponent implements OnInit {
   startX = 0;
   startY = 0;
 
-  isRejectPopUp = false;
-  text = '';
-  textAreaTouched = false;
+  private readonly MIN_SCALE = 1;
+  private readonly MAX_SCALE = 3;
+  private readonly SCALE_STEP = 0.25;
+  private readonly SCALE_EPSILON = 0.0001;
 
   private readonly swalClasses = {
     popup:
-      'bg-white dark:bg-tileBlack text-black dark:text-white rounded-lg pt-2',
+      'bg-white dark:bg-tileBlack text-black dark:text-white rounded-2xl pt-2',
     title: 'font-semibold text-lg',
-    confirmButton: 'px-6 py-2 rounded-md',
-    cancelButton: 'px-6 py-2 rounded-md',
+    confirmButton: 'px-6 py-2.5 rounded-lg',
+    cancelButton: 'px-6 py-2.5 rounded-lg',
   };
 
   constructor(
@@ -84,47 +88,59 @@ export class WholesaleBuyerViewDocumentComponent implements OnInit {
     }
   }
 
+  // ---------------------------------------------------------------
+  // Load
+  // ---------------------------------------------------------------
   loadDocument(): void {
     this.isLoading = true;
+    this.modalImage = '';
+    this.sanitizedUrl = null;
+    this.isPDF = false;
+    this.resetZoom();
+
     this.salesAgentsService.viewWholesaleBuyerDocument(this.userId).subscribe({
       next: (response) => {
         this.isLoading = false;
-        if (response.success && response.data) {
-          const d = response.data;
-          this.buyerDocument = {
-            id: d.userId,
-            customerName: `${d.firstName ?? ''} ${d.lastName ?? ''}`.trim(),
-            customerContact: this.formatPhoneNumber(d.phoneCode, d.phoneNumber),
-            companyContact: this.formatPhoneNumber(
-              d.companyPhoneCode,
-              d.companyPhone,
-            ),
-            documentTitle: 'BR Document',
-            documentUrl: d.brImg,
-            status: d.approveStatus,
-          };
+        if (!response?.success || !response?.data) {
+          this.showError('Failed to load document');
+          return;
+        }
 
-          this.modalTitle = this.buyerDocument.documentTitle;
-          this.isPDF = this.checkIfPDF(d.brImg);
+        const d = response.data;
+        this.buyerDocument = {
+          id: d.userId,
+          customerName: `${d.firstName ?? ''} ${d.lastName ?? ''}`.trim(),
+          customerContact: this.formatPhoneNumber(d.phoneCode, d.phoneNumber),
+          companyContact: this.formatPhoneNumber(
+            d.companyPhoneCode,
+            d.companyPhone,
+          ),
+          documentTitle: 'BR Document',
+          documentUrl: d.brImg,
+          status: d.approveStatus,
+        };
 
-          if (this.isPDF) {
-            this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-              d.brImg,
-            );
-          } else {
-            this.modalImage = d.brImg;
-          }
+        this.modalTitle = this.buyerDocument.documentTitle;
+
+        if (!this.isSafeUrl(d.brImg)) {
+          console.warn('Rejected unsafe document URL:', d.brImg);
+          this.showError('Document URL is invalid');
+          return;
+        }
+
+        this.isPDF = this.checkIfPDF(d.brImg);
+        if (this.isPDF) {
+          this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+            d.brImg,
+          );
+        } else {
+          this.modalImage = d.brImg;
         }
       },
       error: (error) => {
         this.isLoading = false;
         console.error('Error loading wholesale buyer document:', error);
-        Swal.fire({
-          title: 'Error!',
-          text: 'Failed to load document',
-          icon: 'error',
-          confirmButtonColor: '#C40D0D',
-        });
+        this.showError('Failed to load document');
       },
     });
   }
@@ -133,39 +149,62 @@ export class WholesaleBuyerViewDocumentComponent implements OnInit {
     this.location.back();
   }
 
-  checkIfPDF(url: string): boolean {
+  // ---------------------------------------------------------------
+  // Helpers
+  // ---------------------------------------------------------------
+  private checkIfPDF(url: string): boolean {
     if (!url) return false;
     const path = url.split('?')[0].split('#')[0];
     return path.split('.').pop()?.toLowerCase() === 'pdf';
   }
 
-  formatPhoneNumber(phoneCode: string, phoneNumber: string): string {
-    if (!phoneNumber) return '';
-    if (phoneCode === '+94') {
-      return '0' + phoneNumber;
-    }
-    return (phoneCode || '') + phoneNumber;
+  private isSafeUrl(url: string | null | undefined): boolean {
+    if (!url || typeof url !== 'string') return false;
+    return /^https?:\/\//i.test(url.trim());
   }
 
-  // ---- Zoom / pan ----
-  zoomIn(): void {
-    if (this.scale < 3) {
-      this.scale += 0.25;
+  formatPhoneNumber(
+    phoneCode?: string | null,
+    phoneNumber?: string | null,
+  ): string {
+    if (!phoneNumber) return '';
+    const code = (phoneCode ?? '').trim();
+    const num = phoneNumber.trim();
+
+    if (code === '+94') {
+      return '0' + num.replace(/^0+/, '');
     }
+    return code + num;
+  }
+
+  onImageError(event: Event): void {
+    console.error('Failed to load image', event);
+    this.modalImage = '';
+  }
+
+  // ---------------------------------------------------------------
+  // Zoom / Pan
+  // ---------------------------------------------------------------
+  zoomIn(): void {
+    this.scale = Math.min(this.MAX_SCALE, this.scale + this.SCALE_STEP);
   }
 
   zoomOut(): void {
-    if (this.scale > 1) {
-      this.scale -= 0.25;
-      if (this.scale === 1) {
-        this.translateX = 0;
-        this.translateY = 0;
-      }
+    this.scale = Math.max(this.MIN_SCALE, this.scale - this.SCALE_STEP);
+    if (this.scale <= this.MIN_SCALE + this.SCALE_EPSILON) {
+      this.resetZoom();
     }
   }
 
+  private resetZoom(): void {
+    this.scale = 1;
+    this.translateX = 0;
+    this.translateY = 0;
+    this.isPanning = false;
+  }
+
   getImageTransform(): string {
-    return `scale(${this.scale}) translate(${this.translateX}px, ${this.translateY}px)`;
+    return `translate(${this.translateX}px, ${this.translateY}px) scale(${this.scale})`;
   }
 
   onMouseDown(event: MouseEvent): void {
@@ -192,115 +231,102 @@ export class WholesaleBuyerViewDocumentComponent implements OnInit {
     this.isPanning = false;
   }
 
-  // ---- Approve ----
+  // ---------------------------------------------------------------
+  // Approve
+  // ---------------------------------------------------------------
   openApprovePopup(): void {
+    if (this.isSubmitting) return;
     Swal.fire({
       title: 'Please Confirm!',
-      text: 'Are you sure you want to Approve this document?',
+      text: 'Are you sure you want to Approve this wholesale buyer?',
       showCancelButton: true,
       confirmButtonText: 'Yes, Approve',
       cancelButtonText: 'No, Go Back',
       confirmButtonColor: '#3980C0',
-      cancelButtonColor: '#6B7280',
+      cancelButtonColor: '#74788D',
       customClass: this.swalClasses,
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.approveDocument();
+        this.updateStatus('Approved');
       }
     });
   }
 
-  approveDocument(): void {
-    this.isLoading = true;
-    this.salesAgentsService
-      .updateWholesaleBuyerStatus(this.userId, 'Approved')
-      .subscribe({
-        next: (response) => {
-          this.isLoading = false;
-          if (response.success) {
-            this.buyerDocument.status = 'Approved';
-            Swal.fire({
-              title: 'Success!',
-              text: 'Document approved successfully',
-              icon: 'success',
-              timer: 2000,
-              showConfirmButton: false,
-              customClass: this.swalClasses,
-            }).then(() =>
-              this.router.navigate(['/sales-dash/action/buyer-approvals']),
-            );
-          }
-        },
-        error: (error) => {
-          this.isLoading = false;
-          console.error('Error approving document:', error);
-          Swal.fire({
-            title: 'Error!',
-            text: 'Failed to approve document',
-            icon: 'error',
-            confirmButtonColor: '#C40D0D',
-            customClass: this.swalClasses,
-          });
-        },
-      });
-  }
-
-  // ---- Reject ----
+  // ---------------------------------------------------------------
+  // Reject
+  // ---------------------------------------------------------------
   openRejectPopup(): void {
-    this.isRejectPopUp = true;
+    if (this.isSubmitting) return;
+    Swal.fire({
+      title: 'Please Confirm!',
+      text: 'Are you sure you want to Reject this wholesale buyer?',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Reject',
+      cancelButtonText: 'No, Go Back',
+      confirmButtonColor: '#C40D0D',
+      cancelButtonColor: '#74788D',
+      customClass: this.swalClasses,
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.updateStatus('Rejected');
+      }
+    });
   }
 
-  rejectDocument(): void {
-    this.textAreaTouched = true;
-    if (!this.text) {
-      return;
-    }
-
-    this.isRejectPopUp = false;
+  // ---------------------------------------------------------------
+  // Shared status update
+  // ---------------------------------------------------------------
+  private updateStatus(status: StatusAction): void {
+    if (this.isSubmitting) return;
+    this.isSubmitting = true;
     this.isLoading = true;
+
     this.salesAgentsService
-      .updateWholesaleBuyerStatus(this.userId, 'Rejected', this.text)
+      .updateWholesaleBuyerStatus(this.userId, status)
       .subscribe({
         next: (response) => {
+          this.isSubmitting = false;
           this.isLoading = false;
-          if (response.success) {
-            this.buyerDocument.status = 'Rejected';
-            Swal.fire({
-              title: 'Success!',
-              text: 'Document rejected successfully',
-              icon: 'success',
-              timer: 2000,
-              showConfirmButton: false,
-              customClass: this.swalClasses,
-            }).then(() => {
-              this.text = '';
-              this.textAreaTouched = false;
-              this.router.navigate(['/sales-dash/action/buyer-approvals']);
-            });
+
+          if (!response?.success) {
+            this.showError(`Failed to ${status.toLowerCase()} document`);
+            return;
           }
+
+          this.buyerDocument.status = status;
+
+          Swal.fire({
+            title: 'Success!',
+            text: `Wholesale buyer ${status.toLowerCase()} successfully`,
+            icon: 'success',
+            timer: 2000,
+            showConfirmButton: false,
+            customClass: this.swalClasses,
+          }).then(() =>
+            this.router.navigate(['/sales-dash/action/buyer-approvals']),
+          );
         },
         error: (error) => {
+          this.isSubmitting = false;
           this.isLoading = false;
-          console.error('Error rejecting document:', error);
-          Swal.fire({
-            title: 'Error!',
-            text: 'Failed to reject document',
-            icon: 'error',
-            confirmButtonColor: '#C40D0D',
-            customClass: this.swalClasses,
-          });
+          console.error(`Error ${status.toLowerCase()} document:`, error);
+          this.showError(`Failed to ${status.toLowerCase()} document`);
         },
       });
   }
 
-  onTextareaClick(): void {
-    this.textAreaTouched = true;
-  }
-
-  cancelReject(): void {
-    this.isRejectPopUp = false;
-    this.text = '';
-    this.textAreaTouched = false;
+  // ---------------------------------------------------------------
+  // Swal helper
+  // ---------------------------------------------------------------
+  private showError(text: string): void {
+    Swal.fire({
+      title: 'Error!',
+      text,
+      icon: 'error',
+      confirmButtonColor: '#C40D0D',
+      customClass: this.swalClasses,
+    });
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environment/environment';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { TokenService } from '../token/services/token.service';
 
@@ -37,6 +37,36 @@ export interface SalesAgentRatingRow {
 export interface SalesAgentRatingsResponse {
   items: SalesAgentRatingRow[];
   agents: { empId: string; name: string }[];
+}
+
+// ---- Buyer approvals (wholesale applications) ----
+export interface BuyerApplication {
+  applicationId: number;
+  userId: number;
+  cusId: string;
+  name: string;
+  onboarded: string;
+  company: string;
+  createdAt: string;
+  customerContact: string;
+  companyContact: string;
+  status: 'To Review' | 'Approved' | 'Rejected';
+}
+
+export interface BuyerApplicationsResponse {
+  status: boolean;
+  items: BuyerApplication[];
+  total: number;
+}
+
+export interface OnboardedOption {
+  label: string;
+  value: string;
+}
+
+export interface OnboardedOptionsResponse {
+  status: boolean;
+  options: OnboardedOption[];
 }
 
 @Injectable({
@@ -112,7 +142,7 @@ export class SalesDashService {
 
     if (paymentMethod) {
       url += `&paymentMethod=${paymentMethod}`;
-    } paymentStatus
+    } 
 
     if (paymentStatus) {
       url += `&paymentStatus=${paymentStatus}`;
@@ -165,10 +195,43 @@ export class SalesDashService {
 
     return this.http.get<SalesAgentRatingsResponse>(url, { headers: headers });
   }
+
+  // ---- Buyer approvals ----
+
+  getPendingWholesaleBuyers(
+    page: number = 1,
+    limit: number = 10,
+    searchText: string = '',
+    onboarded: string = '',
+    status: string = 'To Review'
+  ): Observable<BuyerApplicationsResponse> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+
+    // HttpParams URL-encodes the values (search text can contain spaces/symbols)
+    let params = new HttpParams()
+      .set('page', page)
+      .set('limit', limit)
+      .set('status', status);
+
+    if (searchText) params = params.set('searchText', searchText);
+    if (onboarded) params = params.set('onboarded', onboarded);
+
+    return this.http.get<BuyerApplicationsResponse>(
+      `${this.apiUrl}sales-agent-dash/get-pending-wholesale-buyers`,
+      { headers, params }
+    );
+  }
+
+  getOnboardedOptions(): Observable<OnboardedOptionsResponse> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+
+    return this.http.get<OnboardedOptionsResponse>(
+      `${this.apiUrl}sales-agent-dash/get-onboarded-options`,
+      { headers }
+    );
+  }
 }
-
-
-
-
-
-

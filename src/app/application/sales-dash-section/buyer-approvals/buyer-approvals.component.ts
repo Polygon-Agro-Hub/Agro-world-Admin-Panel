@@ -1,20 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
-
-interface BuyerApplication {
-  cusId: string;
-  name: string;
-  onboarded: string;
-  company: string;
-  createdAt: Date;
-  customerContact: string;
-  companyContact: string;
-  status: string;
-  documentsUrl: string;
-}
+import {
+  BuyerApplication,
+  OnboardedOption,
+  SalesDashService,
+} from '../../../services/sales-dash/sales-dash.service';
 
 @Component({
   selector: 'app-buyer-approvals',
@@ -23,89 +17,82 @@ interface BuyerApplication {
   templateUrl: './buyer-approvals.component.html',
   styleUrl: './buyer-approvals.component.css',
 })
-export class BuyerApprovalsComponent {
+export class BuyerApprovalsComponent implements OnInit {
   isLoading = false;
   searchText = '';
   selectedOnboarded: string | null = null;
 
-  onboardedOptions = [
-    { label: 'Polygon', value: 'Polygon' },
-    { label: 'SA0001', value: 'SA0001' },
-  ];
+  onboardedOptions: OnboardedOption[] = [];
+  applications: BuyerApplication[] = [];
 
-  allApplications: BuyerApplication[] = [
-    {
-      cusId: 'CUS-00001',
-      name: 'Alexander Vance',
-      onboarded: 'Polygon',
-      company: 'Apex Agro Imports Ltd',
-      createdAt: new Date(2026, 10, 5, 13, 55),
-      customerContact: '07845787866',
-      companyContact: '07845787866',
-      status: 'To Review',
-      documentsUrl: '#',
-    },
-    {
-      cusId: 'CUS-00002',
-      name: 'Elena Rostova',
-      onboarded: 'SA0001',
-      company: 'Zenith Food Corp',
-      createdAt: new Date(2026, 10, 5, 14, 55),
-      customerContact: '07845787866',
-      companyContact: '07845787866',
-      status: 'To Review',
-      documentsUrl: '#',
-    },
-    {
-      cusId: 'CUS-00003',
-      name: 'Marcus Brody',
-      onboarded: 'SA0001',
-      company: 'Golden Harvest Wholesale',
-      createdAt: new Date(2026, 10, 5, 15, 55),
-      customerContact: '07845787866',
-      companyContact: '07845787866',
-      status: 'To Review',
-      documentsUrl: '#',
-    },
-    {
-      cusId: 'CUS-00004',
-      name: 'Farhan Malik',
-      onboarded: 'SA0001',
-      company: 'Ceylon Spice Traders',
-      createdAt: new Date(2026, 10, 5, 16, 55),
-      customerContact: '07845787866',
-      companyContact: '07845787866',
-      status: 'To Review',
-      documentsUrl: '#',
-    },
-  ];
+  // pagination
+  page = 1;
+  limit = 10;
+  total = 0;
 
-  applications: BuyerApplication[] = [...this.allApplications];
+  constructor(
+    private location: Location,
+    private router: Router,
+    private salesDashService: SalesDashService
+  ) {}
 
-  constructor(private location: Location) {}
+  ngOnInit(): void {
+    this.loadOnboardedOptions();
+    this.fetchApplications();
+  }
 
   get hasData(): boolean {
     return this.applications.length > 0;
   }
 
   get totalItems(): string {
-    return this.applications.length.toString().padStart(2, '0');
+    return this.total.toString().padStart(2, '0');
+  }
+
+  get totalPages(): number {
+    return Math.max(1, Math.ceil(this.total / this.limit));
   }
 
   Back() {
     this.location.back();
   }
 
+  loadOnboardedOptions() {
+    this.salesDashService.getOnboardedOptions().subscribe({
+      next: (res) => (this.onboardedOptions = res.options),
+      error: (err) => console.error('Failed to load onboarded options', err),
+    });
+  }
+
+  fetchApplications() {
+    this.isLoading = true;
+    this.salesDashService
+      .getPendingWholesaleBuyers(
+        this.page,
+        this.limit,
+        this.searchText.trim(),
+        this.selectedOnboarded ?? '',
+        'To Review'
+      )
+      .subscribe({
+        next: (res) => {
+          this.applications = res.items;
+          this.total = res.total;
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.error('Failed to load applications', err);
+          this.applications = [];
+          this.total = 0;
+          this.isLoading = false;
+        },
+      });
+  }
+
+  // Filter / search always reset to the first page
   applyFilters() {
-    const term = this.searchText.trim().toLowerCase();
-    this.applications = this.allApplications.filter(
-      (a) =>
-        (!this.selectedOnboarded || a.onboarded === this.selectedOnboarded) &&
-        (!term ||
-          a.name.toLowerCase().includes(term) ||
-          a.customerContact.includes(term) ||
-          a.companyContact.includes(term)),
-    );
+    this.page = 1;
+    this.fetchApplications();
   }
 
   onSearch() {
@@ -117,7 +104,20 @@ export class BuyerApprovalsComponent {
     this.applyFilters();
   }
 
+  changePage(newPage: number) {
+    if (newPage < 1 || newPage > this.totalPages || newPage === this.page) return;
+    this.page = newPage;
+    this.fetchApplications();
+  }
+
+  trackByApplication(_: number, item: BuyerApplication) {
+    return item.applicationId;
+  }
+
+  // Pass the userId on to the documents screen
   openDocuments(item: BuyerApplication) {
-    window.open(item.documentsUrl, '_blank');
+    this.router.navigate(['/sales-dash/buyer-documents', item.userId], {
+      queryParams: { applicationId: item.applicationId },
+    });
   }
 }

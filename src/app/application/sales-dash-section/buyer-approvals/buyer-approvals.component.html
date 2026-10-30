@@ -53,7 +53,7 @@
         </div>
 
         <!-- Empty state -->
-        <div *ngIf="!hasData" class="flex flex-col items-center w-full px-10 py-7 mt-6">
+        <div *ngIf="!hasData && !isLoading" class="flex flex-col items-center w-full px-10 py-7 mt-6">
             <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
             <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
         </div>
@@ -64,68 +64,28 @@
             <table class="min-w-full border-separate border-spacing-0 table-auto whitespace-nowrap">
                 <thead class="bg-white dark:bg-tileBlack [&_th]:bg-white dark:[&_th]:bg-tileBlack">
                     <tr class="sticky top-0 z-40 bg-white dark:bg-tileBlack">
-                        <th
-                            class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
-                            Customer ID</th>
-                        <th
-                            class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
-                            Customer Name</th>
-                        <th
-                            class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
-                            Onboarded</th>
-                        <th
-                            class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
-                            Company Name</th>
-                        <th
-                            class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
-                            Created At</th>
-                        <th
-                            class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
-                            Customer Contact</th>
-                        <th
-                            class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
-                            Company Contact</th>
-                        <th
-                            class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
-                            Status</th>
-                        <th
-                            class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
-                            Documents</th>
+                        <th class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Customer ID</th>
+                        <th class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 font-normal text-textLight dark:text-textDark text-left">Customer Name</th>
+                        <th class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 font-normal text-textLight dark:text-textDark text-left">Onboarded</th>
+                        <th class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 font-normal text-textLight dark:text-textDark text-left">Company Name</th>
+                        <th class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 font-normal text-textLight dark:text-textDark text-left">Created At</th>
+                        <th class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Customer Contact</th>
+                        <th class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Company Contact</th>
+                        <th class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Status</th>
+                        <th class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Documents</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let item of applications">
-                        <td
-                            class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 text-center text-textLight dark:text-textDark">
-                            {{ item.cusId }}
-                        </td>
-                        <td
-                            class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 text-left text-textLight dark:text-textDark">
-                            {{ item.name }}
-                        </td>
-                        <td
-                            class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 text-left text-textLight dark:text-textDark">
-                            {{ item.onboarded }}
-                        </td>
-                        <td
-                            class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 text-left text-textLight dark:text-textDark">
-                            {{ item.company }}
-                        </td>
-                        <td
-                            class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 text-left text-textLight dark:text-textDark">
-                            {{ item.createdAt | date : "d MMM, y h:mma" }}
-                        </td>
-                        <td
-                            class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 text-center text-textLight dark:text-textDark">
-                            {{ item.customerContact }}
-                        </td>
-                        <td
-                            class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 text-center text-textLight dark:text-textDark">
-                            {{ item.companyContact }}
-                        </td>
+                    <tr *ngFor="let item of applications; trackBy: trackByApplication">
+                        <td class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.cusId }}</td>
+                        <td class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 text-left text-textLight dark:text-textDark">{{ item.name }}</td>
+                        <td class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 text-left text-textLight dark:text-textDark">{{ item.onboarded }}</td>
+                        <td class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 text-left text-textLight dark:text-textDark">{{ item.company }}</td>
+                        <td class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 text-left text-textLight dark:text-textDark">{{ item.createdAt | date : "d MMM, y h:mma" }}</td>
+                        <td class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.customerContact }}</td>
+                        <td class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.companyContact }}</td>
 
-                        <td
-                            class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 text-center text-textLight dark:text-textDark">
+                        <td class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 text-center text-textLight dark:text-textDark">
                             <span [ngClass]="{
                   'bg-[#EFF6FF] text-[#2563EB]': item.status === 'To Review',
                   'bg-[#BBFFC6] text-[#308233]': item.status === 'Approved',
@@ -143,6 +103,19 @@
                     </tr>
                 </tbody>
             </table>
+        </div>
+
+        <!-- Pagination -->
+        <div *ngIf="hasData" class="flex items-center justify-end gap-4 mt-4 text-textLight dark:text-textDark">
+            <button type="button" class="px-3 py-1 rounded disabled:opacity-40"
+                [disabled]="page === 1" (click)="changePage(page - 1)">
+                <i class="fa-solid fa-chevron-left"></i> Prev
+            </button>
+            <span>Page {{ page }} of {{ totalPages }}</span>
+            <button type="button" class="px-3 py-1 rounded disabled:opacity-40"
+                [disabled]="page === totalPages" (click)="changePage(page + 1)">
+                Next <i class="fa-solid fa-chevron-right"></i>
+            </button>
         </div>
     </div>
 </div>

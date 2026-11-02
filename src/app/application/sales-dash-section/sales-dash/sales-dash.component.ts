@@ -47,5 +47,10 @@ export class SalesDashComponent {
     this.router.navigate(['/sales-dash/action/agent-ratings']).then(() => {
     });
   }
+
+  viewOnboardWBuyers(): void {
+    this.router.navigate(['/sales-dash/action/onboard-w-buyers']).then(() => {
+    });
+  }
   
 }

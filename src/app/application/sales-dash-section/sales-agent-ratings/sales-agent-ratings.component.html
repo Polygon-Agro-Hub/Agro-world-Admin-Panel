@@ -55,11 +55,11 @@
                                 style="white-space: nowrap">
                                 Agent Name
                             </th>
-                            <th class="px-4 py-3 font-normal text-sm text-[#5C5C5C] dark:text-textDark text-left"
+                            <th class="px-2 py-3 font-normal text-sm text-[#5C5C5C] dark:text-textDark text-left"
                                 style="white-space: nowrap">
                                 Completion
                             </th>
-                            <th class="px-4 py-3 font-normal text-sm text-[#5C5C5C] dark:text-textDark text-left"
+                            <th class="w-full px-4 py-3 font-normal text-sm text-[#5C5C5C] dark:text-textDark text-left"
                                 style="white-space: nowrap">
                                 Date
                             </th>
@@ -74,7 +74,7 @@
                             <td class="px-4 py-4 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
                                 {{ item.name }}
                             </td>
-                            <td class="px-4 py-4 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
+                            <td class="px-2 py-4 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
                                 <span *ngIf="item.completed !== null && item.target !== null; else noCompletion">
                                     {{ item.completed }}/{{ item.target }}
                                 </span>

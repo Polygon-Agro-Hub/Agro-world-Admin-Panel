@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import {
   AbstractControl,
@@ -9,6 +9,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
+import Swal from 'sweetalert2';
 import { SalesDashService } from '../../../services/sales-dash/sales-dash.service';
 
 interface Option {
@@ -23,14 +24,13 @@ interface Option {
   templateUrl: './onboard-w-buyers.component.html',
   styleUrl: './onboard-w-buyers.component.css',
 })
-export class OnboardWBuyersComponent {
+export class OnboardWBuyersComponent implements OnInit {
   isLoading = false;
   isDragging = false;
   submitted = false;
 
   form: FormGroup;
 
-  // TODO: replace with agents loaded from your service
   agentOptions: Option[] = [];
 
   titleOptions: Option[] = [
@@ -109,18 +109,18 @@ export class OnboardWBuyersComponent {
   }
 
   loadAgents(): void {
-  this.isLoading = true;
-  this.salesAgentService.getSalesAgents().subscribe({
-    next: (res) => {
-      this.agentOptions = res.salesAgents;   // was res.options
-      this.isLoading = false;
-    },
-    error: (err) => {
-      console.error('Error loading agents', err);
-      this.isLoading = false;
-    },
-  });
-}
+    this.isLoading = true;
+    this.salesAgentService.getSalesAgents().subscribe({
+      next: (res) => {
+        this.agentOptions = res.salesAgents;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error loading agents', err);
+        this.isLoading = false;
+      },
+    });
+  }
 
   get isNic(): boolean {
     return this.form.get('identificationType')?.value === 'NIC';
@@ -263,24 +263,45 @@ export class OnboardWBuyersComponent {
 
     const v = this.form.value;
     const formData = new FormData();
-    formData.append('agent', v.agent);
+    formData.append('salesAgent', v.agent);
     formData.append('title', v.title);
     formData.append('firstName', v.firstName);
     formData.append('lastName', v.lastName);
-    formData.append('phoneNumber', `${v.phoneCode}${v.phoneNumber}`);
+    formData.append('phoneCode', v.phoneCode);
+    formData.append('phoneNumber', v.phoneNumber);
     formData.append('email', v.email);
-    formData.append('identificationType', v.identificationType);
-    formData.append('identificationNumber', v.identificationNumber);
+    formData.append('docType', v.identificationType);
+    formData.append('nic', v.identificationNumber);
     formData.append('companyName', v.companyName);
-    formData.append(
-      'companyPhoneNumber',
-      `${v.companyPhoneCode}${v.companyPhoneNumber}`,
-    );
-    formData.append('brDocument', this.selectedFile);
+    formData.append('companyPhoneCode', v.companyPhoneCode);
+    formData.append('companyPhone', v.companyPhoneNumber);
+    formData.append('brDocument', this.selectedFile); // must match multer field name
 
-    // TODO: call your service, e.g.
-    // this.isLoading = true;
-    // this.service.onboardWholesaleCustomer(formData).subscribe({ ... });
-    console.log('Send to approve', v, this.selectedFile);
+    this.isLoading = true;
+    this.salesAgentService.onboardWholesaleCustomer(formData).subscribe({
+      next: (res) => {
+        this.isLoading = false;
+        Swal.fire({
+          icon: 'success',
+          title: 'Sent for Approval',
+          text:
+            res?.message ||
+            'Wholesale customer onboarded and sent for approval.',
+          confirmButtonColor: '#3980C0',
+        }).then(() => {
+          this.location.back();
+        });
+      },
+      error: (err) => {
+        this.isLoading = false;
+        // 409 = duplicate email/phone/NIC, 400 = validation error
+        Swal.fire({
+          icon: 'error',
+          title: 'Could not onboard customer',
+          text: err?.error?.error || 'Something went wrong. Please try again.',
+          confirmButtonColor: '#3980C0',
+        });
+      },
+    });
   }
 }

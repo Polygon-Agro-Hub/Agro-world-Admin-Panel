@@ -66,7 +66,7 @@ export interface OnboardedOption {
 
 export interface SalesAgentOption {
   label: string;
-  value: string;
+  value: string | number;
 }
 
 export interface OnboardedOptionsResponse {
@@ -255,4 +255,10 @@ export class SalesDashService {
       { headers }
     );
   }
+
+  onboardWholesaleCustomer(formData: FormData): Observable<any> {
+  const url = `${this.apiUrl}sales-agent-dash/onboard-wholesale-customer`;
+
+  return this.http.post(url, formData);
+}
 }

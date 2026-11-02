@@ -153,6 +153,64 @@ export class OnboardWBuyersComponent implements OnInit {
     return this.isInvalid(name) && !!this.form.get(name)?.errors?.[error];
   }
 
+  /** Same messages as the inline errors, collected for the popup. */
+  private collectValidationMessages(): string[] {
+    const msgs: string[] = [];
+    const err = (name: string, key: string) =>
+      !!this.form.get(name)?.errors?.[key];
+
+    if (err('agent', 'required')) msgs.push('Agent is required.');
+
+    if (err('firstName', 'required')) msgs.push('First name is required.');
+    else if (err('firstName', 'pattern'))
+      msgs.push('First name should only contain letters.');
+
+    if (err('lastName', 'required')) msgs.push('Last name is required.');
+    else if (err('lastName', 'pattern'))
+      msgs.push('Last name should only contain letters.');
+
+    if (err('phoneNumber', 'required')) msgs.push('Phone number is required.');
+    else if (err('phoneNumber', 'pattern'))
+      msgs.push('Enter a valid mobile number (7XXXXXXXX).');
+
+    if (err('email', 'required')) msgs.push('Email address is required.');
+    else if (err('email', 'email')) msgs.push('Enter a valid email address.');
+
+    if (err('identificationNumber', 'required'))
+      msgs.push(`${this.idLabel} is required.`);
+    else if (err('identificationNumber', 'pattern'))
+      msgs.push(
+        this.isNic
+          ? "Enter a valid NIC number (12 digits, or 9 digits followed by 'V')."
+          : 'Enter a valid passport ID (1 letter followed by 7 digits).',
+      );
+
+    if (err('companyName', 'required')) msgs.push('Company name is required.');
+
+    if (err('companyPhoneNumber', 'required'))
+      msgs.push('Company phone number is required.');
+    else if (err('companyPhoneNumber', 'pattern'))
+      msgs.push('Enter a valid company phone number (9 digits).');
+
+    if (!this.selectedFile) msgs.push('BR document is required.');
+    else if (this.fileError) msgs.push(this.fileError);
+
+    return msgs;
+  }
+
+  private showValidationPopup(messages: string[]): void {
+    const items = messages
+      .map((m) => `<li style="margin-bottom:6px;">${m}</li>`)
+      .join('');
+
+    Swal.fire({
+      icon: 'warning',
+      title: 'Please fix the following',
+      html: `<ul style="text-align:left; padding-left:1.25rem; list-style:disc;">${items}</ul>`,
+      confirmButtonColor: '#3980C0',
+    });
+  }
+
   onDigitsOnlyKeyPress(event: KeyboardEvent): void {
     if (!/[0-9]/.test(event.key)) event.preventDefault();
   }
@@ -256,10 +314,15 @@ export class OnboardWBuyersComponent implements OnInit {
     this.submitted = true;
     this.form.markAllAsTouched();
 
-    if (!this.selectedFile) {
+    if (!this.selectedFile && !this.fileError) {
       this.fileError = 'BR document is required.';
     }
-    if (this.form.invalid || !this.selectedFile) return;
+
+    // Inline messages stay on the form; the popup lists the same messages
+    if (this.form.invalid || !this.selectedFile) {
+      this.showValidationPopup(this.collectValidationMessages());
+      return;
+    }
 
     const v = this.form.value;
     const formData = new FormData();

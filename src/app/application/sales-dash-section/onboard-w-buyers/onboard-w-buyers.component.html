@@ -1,4 +1,4 @@
-<button class="mb-5 text-textLight dark:text-textDark underline text-sm font-medium" (click)="back()">
+<button class="mb-5 text-textLight dark:text-textDark text-sm font-medium" (click)="back()">
     <i class="fa-solid fa-arrow-left no-underline"></i>
     Back
 </button>
@@ -22,11 +22,11 @@
         <!-- Title / First name / Last name -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-6 mb-6">
             <div class="flex gap-3">
-                <div class="w-[84px] shrink-0">
+                <div class="w-[100px] shrink-0">
                     <label class="block text-base font-semibold text-gray-700 dark:text-textDark mb-2">Title</label>
                     <p-dropdown formControlName="title" [options]="titleOptions" optionLabel="label" optionValue="value"
                         [showClear]="false" styleClass="w-full" panelStyleClass="custom-dropdown-panel"
-                        class="p-dropdown-custom">
+                        class="p-dropdown-custom compact-dropdown">
                     </p-dropdown>
                 </div>
                 <div class="flex-1">
@@ -61,10 +61,10 @@
                     class="block text-base font-semibold text-gray-700 dark:text-textDark mb-2">Phone
                     Number</label>
                 <div class="flex gap-3">
-                    <div class="w-[84px] shrink-0">
+                    <div class="w-[100px] shrink-0">
                         <p-dropdown formControlName="phoneCode" [options]="countryCodeOptions" optionLabel="label"
                             optionValue="value" [showClear]="false" styleClass="w-full"
-                            panelStyleClass="custom-dropdown-panel" class="p-dropdown-custom">
+                            panelStyleClass="custom-dropdown-panel" class="p-dropdown-custom compact-dropdown">
                         </p-dropdown>
                     </div>
                     <input id="phoneNumber" formControlName="phoneNumber" maxlength="9" inputmode="numeric"
@@ -136,10 +136,10 @@
                 <label for="companyPhoneNumber"
                     class="block text-base font-semibold text-gray-700 dark:text-textDark mb-2">Phone Number</label>
                 <div class="flex gap-3">
-                    <div class="w-[84px] shrink-0">
+                    <div class="w-[100px] shrink-0">
                         <p-dropdown formControlName="companyPhoneCode" [options]="countryCodeOptions"
                             optionLabel="label" optionValue="value" [showClear]="false" styleClass="w-full"
-                            panelStyleClass="custom-dropdown-panel" class="p-dropdown-custom">
+                            panelStyleClass="custom-dropdown-panel" class="p-dropdown-custom compact-dropdown">
                         </p-dropdown>
                     </div>
                     <input id="companyPhoneNumber" formControlName="companyPhoneNumber" maxlength="9"

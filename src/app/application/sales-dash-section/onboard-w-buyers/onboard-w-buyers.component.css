@@ -146,3 +146,25 @@
 ::ng-deep .dark .p-dropdown .p-dropdown-label:not(.p-placeholder) {
     color: white;
 }
+
+:host ::ng-deep .compact-dropdown .p-dropdown-label {
+  padding-left: 0.75rem;
+  padding-right: 0;
+}
+
+:host ::ng-deep .compact-dropdown .p-dropdown-trigger {
+  width: 2rem;
+}
+
+/* Match every dropdown's height to the text inputs (p-2.5 → 46px) */
+:host ::ng-deep .p-dropdown-custom .p-dropdown {
+  height: 2.875rem; /* 46px */
+  align-items: center;
+}
+
+:host ::ng-deep .p-dropdown-custom .p-dropdown .p-dropdown-label {
+  padding-top: 0;
+  padding-bottom: 0;
+  display: flex;
+  align-items: center;
+}

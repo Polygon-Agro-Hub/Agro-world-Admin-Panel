@@ -63,7 +63,7 @@ export class ProcurementShortageHistoryComponent implements OnInit {
         renderer: 'svg',
         loop: true,
         autoplay: true,
-        path: 'assets/lottie/your-animation.json', // same file as Shortage Today
+        path: 'assets/json/blue_loading.json',
       });
     } else if (!el && this.animation) {
       this.animation.destroy();

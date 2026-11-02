@@ -116,8 +116,8 @@ export class BuyerApprovalsComponent implements OnInit {
 
   // Pass the userId on to the documents screen
   openDocuments(item: BuyerApplication) {
-    this.router.navigate(['/sales-dash/buyer-documents', item.userId], {
-      queryParams: { applicationId: item.applicationId },
+    this.router.navigate(['/sales-dash/action/wholesale-buyer/document/', item.userId], {
+      // queryParams: { applicationId: item.applicationId },
     });
   }
 }

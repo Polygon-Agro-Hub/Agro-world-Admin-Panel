@@ -107,7 +107,7 @@ export class ViewCollectiveOfficerComponent {
     public permissionService: PermissionService,
     private collectionOfficerService: CollectionOfficerService,
     private route: ActivatedRoute,
-  ) {}
+  ) { }
 
   fetchAllCollectionOfficer(
     page: number = 1,
@@ -187,7 +187,7 @@ export class ViewCollectiveOfficerComponent {
       (response) => {
         this.centerNames = response;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -239,19 +239,23 @@ export class ViewCollectiveOfficerComponent {
 
   onPageChange(event: number) {
     this.page = event;
+    this.searchNIC = '';
     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
   }
 
   applyFilters() {
+    this.page = 1;
     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
   }
 
   applyCenterStatusFilters() {
+    this.page = 1;
     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
   }
 
   clearCenterStatusFilter() {
     this.selectCenterStatus = '';
+    this.page = 1;
     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
   }
 
@@ -532,11 +536,13 @@ export class ViewCollectiveOfficerComponent {
 
   onSearch() {
     this.searchNIC = this.searchNIC?.trim() || '';
+    this.page = 1;
     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
   }
 
   offSearch() {
     this.searchNIC = '';
+    this.page = 1;
     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
   }
 
@@ -698,11 +704,13 @@ export class ViewCollectiveOfficerComponent {
   }
 
   applyStatusFilters() {
+    this.page = 1;
     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
   }
 
   clearStatusFilter() {
     this.selectStatus = '';
+    this.page = 1;
     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
   }
 

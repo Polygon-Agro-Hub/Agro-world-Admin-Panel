@@ -187,23 +187,27 @@ export class AdminUsersComponent implements OnInit {
   }
 
   applyFilter() {
-    this.fetchAllAdmins(this.page, this.itemsPerPage);
-  }
+  this.page = 1;
+  this.fetchAllAdmins(1, this.itemsPerPage);
+}
 
-  onSearch() {
-    this.searchText = this.searchText.trim();
-    this.fetchAllAdmins(this.page, this.itemsPerPage);
-  }
+onSearch() {
+  this.searchText = this.searchText.trim();
+  this.page = 1;
+  this.fetchAllAdmins(1, this.itemsPerPage);
+}
 
-  offSearch() {
-    this.searchText = '';
-    this.fetchAllAdmins(this.page, this.itemsPerPage);
-  }
+offSearch() {
+  this.searchText = '';
+  this.page = 1;
+  this.fetchAllAdmins(1, this.itemsPerPage);
+}
 
-  clearSearch(): void {
-    this.statusFilter = '';
-    this.fetchAllAdmins();
-  }
+clearSearch(): void {
+  this.statusFilter = '';
+  this.page = 1;
+  this.fetchAllAdmins(1, this.itemsPerPage);
+}
 
   getAllRoles() {
     const token = this.tokenService.getToken();

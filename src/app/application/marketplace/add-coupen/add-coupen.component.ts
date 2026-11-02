@@ -20,6 +20,7 @@ export class AddCoupenComponent {
   checkfixAmountValueMessage: string = '';
   minDate: Date = new Date();
   priceLimitDisplay: string = '';
+  fixDiscountDisplay: string = '';
 
   constructor(
     private marketSrv: MarketPlaceService,
@@ -434,6 +435,55 @@ onPriceLimitInput(event: Event): void {
     }
   }
   input.setSelectionRange(newCaret, newCaret);
+}
+
+private formatAmountInput(input: HTMLInputElement): { formatted: string; numeric: number | null } {
+  const original = input.value;
+  const caret = input.selectionStart ?? original.length;
+  const sigBeforeCaret = original.slice(0, caret).replace(/[^0-9.]/g, '').length;
+
+  let raw = original.replace(/[^0-9.]/g, '');
+  const firstDot = raw.indexOf('.');
+  if (firstDot !== -1) {
+    raw = raw.slice(0, firstDot + 1) + raw.slice(firstDot + 1).replace(/\./g, '');
+  }
+
+  let [intPart, decPart] = raw.split('.');
+  intPart = intPart.replace(/^0+(?=\d)/, '');
+  if (intPart === '' && decPart !== undefined) intPart = '0';
+  if (decPart !== undefined) decPart = decPart.slice(0, 2);
+
+  const formattedInt = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  const formatted = decPart !== undefined ? `${formattedInt}.${decPart}` : formattedInt;
+
+  input.value = formatted;
+
+  let sigSeen = 0;
+  let newCaret = formatted.length;
+  if (sigBeforeCaret === 0) {
+    newCaret = 0;
+  } else {
+    for (let i = 0; i < formatted.length; i++) {
+      if (formatted[i] !== ',') sigSeen++;
+      if (sigSeen >= sigBeforeCaret) {
+        newCaret = i + 1;
+        break;
+      }
+    }
+  }
+  input.setSelectionRange(newCaret, newCaret);
+
+  const numeric = formatted.replace(/,/g, '');
+  return {
+    formatted,
+    numeric: numeric !== '' && numeric !== '.' ? parseFloat(numeric) : null,
+  };
+}
+
+onFixDiscountInput(event: Event): void {
+  const { formatted, numeric } = this.formatAmountInput(event.target as HTMLInputElement);
+  this.fixDiscountDisplay = formatted;
+  this.coupenObj.fixDiscount = numeric!;
 }
 }
 

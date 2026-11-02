@@ -32,8 +32,8 @@ export class ProfitRiskTabComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('---------------------------------------------------------------');
-    console.log(this.profitRiskObj);
+    // console.log('---------------------------------------------------------------');
+    // console.log(this.profitRiskObj);
     
     
   }

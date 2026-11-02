@@ -32,7 +32,7 @@ export class AssignCenterTargetComponent {
   dateError: boolean = false;
   selectDate: Date | null = new Date();
 
-  constructor(private TargetSrv: TargetService) {}
+  constructor(private TargetSrv: TargetService) { }
 
   ngOnInit(): void {
     const today = new Date();
@@ -78,13 +78,13 @@ export class AssignCenterTargetComponent {
     ).subscribe((res) => {
       this.isLoading = false;
 
-        this.assignCropsArr = res.products.map((p: AssignCrops) => ({
-          ...p,
-          editingA: false,
-          editingB: false,
-          editingC: false,
-          originalTotal: (p.targetA || 0) + (p.targetB || 0) + (p.targetC || 0),
-        }));
+      this.assignCropsArr = res.products.map((p: AssignCrops) => ({
+        ...p,
+        editingA: false,
+        editingB: false,
+        editingC: false,
+        originalTotal: (p.targetA || 0) + (p.targetB || 0) + (p.targetC || 0),
+      }));
       this.officerName = res.officerName;
       this.countCrops = res.products.length;
       this.companyCenterId = res.companyCenterId;
@@ -488,6 +488,14 @@ export class AssignCenterTargetComponent {
     return `${day}${suffix} ${month}`;
   }
 
+  onGradeBlur(item: AssignCrops, grade: 'A' | 'B' | 'C'): void {
+    const targetKey = `target${grade}` as 'targetA' | 'targetB' | 'targetC';
+    if (item[targetKey] == null) {
+      item[targetKey] = 0;
+    }
+    this.validateForm();
+  }
+
   checkNegativeValue(item: AssignCrops, grade: string) {
     if (this.isDateValid) {
       if (item.targetA < 0 || item.targetB < 0 || item.targetC < 0) {
@@ -582,6 +590,19 @@ export class AssignCenterTargetComponent {
     const selected = new Date(this.selectDate);
     selected.setHours(0, 0, 0, 0);
     return selected < today;
+  }
+
+  blockInvalidKeys(event: KeyboardEvent): void {
+    if (['-', '+', 'e', 'E'].includes(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  blockInvalidPaste(event: ClipboardEvent): void {
+    const pasted = event.clipboardData?.getData('text') ?? '';
+    if (/[-+eE]/.test(pasted)) {
+      event.preventDefault();
+    }
   }
 }
 

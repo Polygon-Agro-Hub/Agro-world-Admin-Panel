@@ -249,36 +249,39 @@ export class AddFiealdOfficerComponent implements OnInit {
   }
 
   updateEmployeeType(selectedType: string): void {
-    this.empType = selectedType;
-    this.personalData.empType = selectedType;
-  }
+  this.empType = selectedType;
+  this.personalData.empType = selectedType;
+  this.empTypeTouched = true;
+}
 
   isEmpTypeSelected(): boolean {
     return !!this.empType;
   }
 
   onCheckboxChange(lang: string, event: any) {
-    if (event.target.checked) {
-      if (this.personalData.language) {
-        if (!this.personalData.language.includes(lang)) {
-          this.personalData.language += this.personalData.language
-            ? `,${lang}`
-            : lang;
-        }
-      } else {
-        this.personalData.language = lang;
+  this.languagesTouched = true;
+
+  if (event.target.checked) {
+    if (this.personalData.language) {
+      if (!this.personalData.language.includes(lang)) {
+        this.personalData.language += this.personalData.language
+          ? `,${lang}`
+          : lang;
       }
     } else {
-      const languagesArray = this.personalData.language.split(',');
-      const index = languagesArray.indexOf(lang);
-      if (index !== -1) {
-        languagesArray.splice(index, 1);
-      }
-      this.personalData.language = languagesArray.join(',');
+      this.personalData.language = lang;
     }
-
-    this.validateLanguages();
+  } else {
+    const languagesArray = this.personalData.language.split(',');
+    const index = languagesArray.indexOf(lang);
+    if (index !== -1) {
+      languagesArray.splice(index, 1);
+    }
+    this.personalData.language = languagesArray.join(',');
   }
+
+  this.validateLanguages();
+}
 
   validateLanguages() {
     this.languagesRequired =
@@ -402,51 +405,46 @@ export class AddFiealdOfficerComponent implements OnInit {
   }
 
   capitalizeNames() {
-    if (this.personalData.firstName) {
-      this.personalData.firstName =
-        this.personalData.firstName.charAt(0).toUpperCase() +
-        this.personalData.firstName.slice(1);
-    }
-    if (this.personalData.lastName) {
-      this.personalData.lastName =
-        this.personalData.lastName.charAt(0).toUpperCase() +
-        this.personalData.lastName.slice(1);
-    }
+  const clean = (v: string) =>
+    v.replace(/[^A-Za-z ]/g, '').replace(/^\s+/, '').replace(/\s{2,}/g, ' ');
+
+  if (this.personalData.firstName) {
+    const v = clean(this.personalData.firstName);
+    this.personalData.firstName = v.charAt(0).toUpperCase() + v.slice(1);
   }
+  if (this.personalData.lastName) {
+    const v = clean(this.personalData.lastName);
+    this.personalData.lastName = v.charAt(0).toUpperCase() + v.slice(1);
+  }
+}
 
   // New method to check for non-English characters
   hasNonEnglishCharacters(fieldName: 'firstName' | 'lastName'): boolean {
-    const value = this.personalData[fieldName];
-
-    if (!value || !this.englishNameTouched[fieldName]) {
-      return false;
-    }
-
-    return this.englishNameErrors[fieldName];
+  const value = this.personalData[fieldName];
+  if (!value || !this.englishNameTouched[fieldName]) {
+    return false;
   }
+  return /[^A-Za-z ]/.test(value);
+}
 
   preventSpecialCharacters(event: KeyboardEvent): void {
-    const input = event.target as HTMLInputElement;
-    const char = String.fromCharCode(event.which || event.keyCode);
+  const input = event.target as HTMLInputElement;
+  const char = event.key;
 
-    // Block space if it's at the start (cursor at position 0)
-    if (char === ' ' && input.selectionStart === 0) {
-      event.preventDefault();
-      return;
-    }
+  // Allow control keys (Backspace, Arrow keys, Tab, etc.)
+  if (char.length !== 1) return;
 
-    // Allow only English letters, spaces, hyphens, and apostrophes
-    // Also prevent Sinhala and Tamil characters
-    const allowedPattern = /^[A-Za-z\s\-']$/;
-
-    // Check for Sinhala and Tamil characters specifically
-    const isSinhala = /[\u0D80-\u0DFF]/.test(char);
-    const isTamil = /[\u0B80-\u0BFF]/.test(char);
-
-    if (isSinhala || isTamil || !allowedPattern.test(char)) {
-      event.preventDefault();
-    }
+  // Block leading space and double spaces
+  if (char === ' ' && (input.selectionStart === 0 || input.value.endsWith(' '))) {
+    event.preventDefault();
+    return;
   }
+
+  // Only English letters and space
+  if (!/^[A-Za-z ]$/.test(char)) {
+    event.preventDefault();
+  }
+}
 
   // New method to validate English names when pasting
   onEnglishNamePaste(
@@ -459,7 +457,7 @@ export class AddFiealdOfficerComponent implements OnInit {
     const pastedText = event.clipboardData?.getData('text') || '';
 
     // Filter out non-English characters
-    const englishOnly = pastedText.replace(/[^A-Za-z\s\-']/g, '');
+    const englishOnly = pastedText.replace(/[^A-Za-z ]/g, '');
 
     // Update the value
     if (fieldName === 'firstName') {

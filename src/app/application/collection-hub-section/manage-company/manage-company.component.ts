@@ -28,7 +28,7 @@ export class ManageCompanyComponent {
     private router: Router,
     public tokenService: TokenService,
     public permissionService: PermissionService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.fetchAllCompanys();

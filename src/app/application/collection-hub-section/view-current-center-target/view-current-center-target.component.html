@@ -7,14 +7,11 @@
 
 <div
     class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
-
     <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
-
         <div class="flex justify-between items-center mb-5 mt-3" *ngIf="
-      permissionService.hasPermission('Download Current Centre Target') ||
-      tokenService.getUserDetails().role === '1'
-    ">
-
+            permissionService.hasPermission('Download Current Centre Target') ||
+            tokenService.getUserDetails().role === '1'
+        ">
             <button
                 class="bg-[#415CFF] text-white shadow-md font-medium rounded-lg py-2 px-5 mr-5 text-lg flex items-center"
                 (click)="downloadTemplate1()" [disabled]="!hasData">
@@ -95,9 +92,9 @@
                         <td class="px-6 py-4 text-gray-[#000000] font-medium text-center dark:text-gray-300">
                             {{item.grade}}</td>
                         <td class="px-6 py-4 text-gray-[#000000] font-medium dark:text-gray-300">{{item.target |
-    number: '1.3-3' }}</td>
-<td class="px-6 py-4 text-gray-[#000000] font-medium dark:text-gray-300">{{item.complete |
-    number: '1.3-3'}}</td>
+                            number: '1.3-3' }}</td>
+                        <td class="px-6 py-4 text-gray-[#000000] font-medium dark:text-gray-300">{{item.complete |
+                            number: '1.3-3'}}</td>
                         <td class="px-6 py-4 text-gray-[#000000] dark:text-gray-300">
                             <div class="flex justify-center">
                                 <span *ngIf="item.status === 'Pending'"

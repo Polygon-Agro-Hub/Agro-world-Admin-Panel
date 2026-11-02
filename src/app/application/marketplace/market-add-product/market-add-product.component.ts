@@ -58,6 +58,11 @@ export class MarketAddProductComponent implements OnInit {
     { label: 'WholeSale', value: 'WholeSale' },
   ];
 
+  priceDisplay: Record<string, string> = {
+    normalPrice: '',
+    salePrice: '',
+    comPrice: '',
+  };
   productTypeOptions: { label: string; value: number }[] = [];
 
   private integerOnlyFields = ['discountedPrice'];
@@ -93,6 +98,46 @@ export class MarketAddProductComponent implements OnInit {
       },
       (error) => {},
     );
+  }
+
+  formatPrice(value: number): string {
+    return (value || 0).toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  }
+
+  syncPriceDisplay() {
+    (['normalPrice', 'salePrice', 'comPrice'] as const).forEach((f) => {
+      this.priceDisplay[f] = this.productObj[f]
+        ? this.formatPrice(this.productObj[f])
+        : '';
+    });
+  }
+
+  onPriceInput(event: Event, field: 'normalPrice' | 'salePrice' | 'comPrice') {
+    const input = event.target as HTMLInputElement;
+    let clean = input.value.replace(/[^0-9.]/g, '');
+    const [intPart, ...rest] = clean.split('.');
+    clean = rest.length ? `${intPart}.${rest.join('').slice(0, 2)}` : intPart;
+
+    input.value = clean;
+    this.priceDisplay[field] = clean;
+    this.productObj[field] = clean ? parseFloat(clean) || 0 : 0;
+    this.calculeSalePrice();
+  }
+
+  onPriceFocus(field: 'normalPrice' | 'salePrice' | 'comPrice') {
+    this.priceDisplay[field] = this.productObj[field]
+      ? String(this.productObj[field])
+      : '';
+  }
+
+  onPriceBlur(field: 'normalPrice' | 'salePrice' | 'comPrice') {
+    this.priceDisplay[field] = this.productObj[field]
+      ? this.formatPrice(this.productObj[field])
+      : '';
+    this.calculeSalePrice();
   }
 
   loadProductTypes() {
@@ -188,7 +233,7 @@ export class MarketAddProductComponent implements OnInit {
     this.productObj.normalPrice = 0;
     this.productObj.salePrice = 0;
     this.productObj.discountedPrice = 0;
-    this.productObj.discountedPrice = 0;
+    this.syncPriceDisplay();
   }
 
   applyDiscount() {
@@ -202,6 +247,7 @@ export class MarketAddProductComponent implements OnInit {
     this.isNoDiscount = true;
     this.productObj.salePrice =
       this.productObj.normalPrice - this.productObj.discount;
+    this.syncPriceDisplay();
   }
 
   onCancel() {

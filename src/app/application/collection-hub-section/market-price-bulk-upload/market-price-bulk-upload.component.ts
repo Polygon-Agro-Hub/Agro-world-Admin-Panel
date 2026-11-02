@@ -37,7 +37,7 @@ export class MarketPriceBulkUploadComponent {
     private http: HttpClient,
     private marketPriceService: MarketPriceService,
     private router: Router,
-  ) {}
+  ) { }
 
   onFileSelected(event: any): void {
     const file = event.target.files[0];

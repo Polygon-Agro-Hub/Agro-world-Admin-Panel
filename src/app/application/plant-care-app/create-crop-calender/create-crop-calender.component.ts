@@ -582,7 +582,7 @@ export class CreateCropCalenderComponent implements OnInit {
     }
   }
 
-        openXlsxUploadDialog(cropId: number) {
+  openXlsxUploadDialog(cropId: number) {
     Swal.fire({
       title: 'Upload XLSX File',
       html: `
@@ -726,8 +726,8 @@ export class CreateCropCalenderComponent implements OnInit {
         if (this.cropCalender[0]) {
           const selectedAreas = this.cropCalender[0].suitableAreas
             ? this.cropCalender[0].suitableAreas
-                .split(', ')
-                .map((area: string) => area.trim())
+              .split(', ')
+              .map((area: string) => area.trim())
             : [];
 
           this.cropForm.patchValue({
@@ -789,7 +789,7 @@ export class CreateCropCalenderComponent implements OnInit {
     });
   }
 
-    deleteCropCalender(id: number, isUploadCancelled: boolean = false) {
+  deleteCropCalender(id: number, isUploadCancelled: boolean = false) {
     this.isLoading = true;
     this.cropCalendarService.deleteCropCalender(id).subscribe({
       next: () => {
@@ -936,7 +936,7 @@ export class CreateCropCalenderComponent implements OnInit {
     }
   }
 
-    private async validateXlsxFile(file: File): Promise<string | null> {
+  private async validateXlsxFile(file: File): Promise<string | null> {
     try {
       const buffer = await file.arrayBuffer();
       const workbook = XLSX.read(buffer, { type: 'array' });
@@ -972,7 +972,8 @@ export class CreateCropCalenderComponent implements OnInit {
 
       // 2. Columns that exist but have empty cells
       const emptyCellErrors: string[] = [];
-      REQUIRED_XLSX_COLUMNS.forEach((col) => {
+
+      NON_EMPTY_XLSX_COLUMNS.forEach((col) => {
         const colIndex = headers.indexOf(col.trim().toLowerCase());
         const emptyRows: number[] = [];
 

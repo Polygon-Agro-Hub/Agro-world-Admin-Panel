@@ -169,8 +169,12 @@ export class ShortageTodayComponent
     }
   }
 
-  formatNumber(value: number): string {
-    // Convert to string and remove trailing zeros
-    return value.toString().replace(/\.?0+$/, '');
+  // Max 3 decimal places, trailing zeros removed (12.3456 -> 12.346, 12.5 -> 12.5, 12 -> 12)
+  formatNumber(value: number | string | null | undefined): string {
+    const num = Number(value);
+    if (value === null || value === undefined || isNaN(num)) {
+      return '0';
+    }
+    return num.toFixed(3).replace(/\.?0+$/, '');
   }
 }

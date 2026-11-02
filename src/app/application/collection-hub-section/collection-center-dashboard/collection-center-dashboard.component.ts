@@ -35,7 +35,7 @@ export class CollectionCenterDashboardComponent {
     private TargetSrv: CollectionCenterService,
     public tokenService: TokenService,
     public permissionService: PermissionService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.centerId = this.route.snapshot.params['id'];

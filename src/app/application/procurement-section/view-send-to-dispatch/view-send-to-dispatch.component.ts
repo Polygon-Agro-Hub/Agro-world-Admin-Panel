@@ -26,7 +26,7 @@ export class ViewSendToDispatchComponent implements OnInit {
   isLoading = false;
   orders: any[] = [];
   page: number = 1;
-  itemsPerPage: number = 10;
+  itemsPerPage: number = 20;
   totalItems: number = 0;
 
   statusFilter: string = '';

@@ -1,0 +1,99 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<!-- Back Button -->
+<button (click)="back()" class="mb-5 text-textLight dark:text-textDark">
+    <i class="fa-solid fa-arrow-left"></i>
+    <span class="ml-1">Back</span>
+</button>
+
+<div class="w-full bg-transparent overflow-hidden">
+    <!-- Header Section -->
+    <div
+        class="flex flex-row justify-between items-center mb-5 p-7 bg-white dark:bg-tileBlack rounded-lg shadow-md gap-10 dark:text-textDark">
+        <div class="flex flex-row gap-x-10">
+            <div class="flex flex-col">
+                <span class="text-[#7E7E7E] dark:text-[#C8C8C8] font-inter font-[400] mb-1">Customer Name :</span>
+                <span class="dark:text-[#FFFFFF] font-inter font-[500]">{{ buyerDocument.customerName }}</span>
+            </div>
+            <div class="flex flex-col">
+                <span class="text-[#7E7E7E] dark:text-[#C8C8C8] font-inter font-[400] mb-1">Customer Contact :</span>
+                <span class="dark:text-[#FFFFFF] font-inter font-[500]">{{ buyerDocument.customerContact }}</span>
+            </div>
+            <div class="flex flex-col">
+                <span class="text-[#7E7E7E] dark:text-[#C8C8C8] font-inter font-[400] mb-1">Company Contact :</span>
+                <span class="dark:text-[#FFFFFF] font-inter font-[500]">{{ buyerDocument.companyContact }}</span>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex gap-4">
+            <button *ngIf="buyerDocument.status === 'To Review'" (click)="openApprovePopup()"
+                [disabled]="isLoading || isSubmitting"
+                class="px-8 py-2 bg-[#3980C0] text-white font-medium rounded-md transition-colors duration-200 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed">
+                Approve
+            </button>
+
+            <button *ngIf="buyerDocument.status === 'To Review'" (click)="openRejectPopup()"
+                [disabled]="isLoading || isSubmitting"
+                class="px-8 py-2 bg-[#C40D0D] text-white font-medium rounded-md transition-colors duration-200 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed">
+                Reject
+            </button>
+        </div>
+    </div>
+
+    <!-- Document Section -->
+    <div class="relative pt-5 pb-5 w-full bg-white dark:bg-tileBlack shadow-lg rounded-lg overflow-hidden">
+
+        <!-- Title -->
+        <div class="flex items-center justify-start gap-4 pb-4 px-6 border-b border-gray-200">
+            <span class="text-base font-inter font-[500] text-gray-900 dark:text-white">
+                {{ buyerDocument.documentTitle }}
+            </span>
+        </div>
+
+        <!-- Content Display Area -->
+        <div class="p-4">
+            <!-- Image Viewer -->
+            <div *ngIf="!isPDF && modalImage"
+                class="bg-white dark:bg-gray-700 w-full min-h-[600px] flex items-center justify-center overflow-hidden relative"
+                [style.cursor]="isPanning ? 'grabbing' : (scale > 1 ? 'grab' : 'default')"
+                (mousedown)="onMouseDown($event)" (mousemove)="onMouseMove($event)" (mouseup)="onMouseUp()"
+                (mouseleave)="onMouseLeave()">
+                <img [src]="modalImage" (error)="onImageError($event)" [style.transform]="getImageTransform()"
+                    class="max-w-full object-contain transition-transform select-none"
+                    style="pointer-events: none; transform-origin: center center;" [alt]="modalTitle"
+                    draggable="false" />
+
+                <!-- Zoom Buttons -->
+                <div class="absolute right-4 bottom-6 flex flex-col gap-3">
+                    <button (click)="zoomOut()" [disabled]="scale <= 1" aria-label="Zoom out" class="w-[52px] h-[55px] rounded-[5px] bg-white dark:bg-gray-600
+                        border dark:border-gray-500 shadow text-xl dark:text-textDark
+                        hover:bg-gray-100 dark:hover:bg-gray-500
+                        disabled:opacity-50 disabled:cursor-not-allowed">
+                        −
+                    </button>
+                    <button (click)="zoomIn()" [disabled]="scale >= 3" aria-label="Zoom in" class="w-[52px] h-[55px] rounded-[5px] bg-white dark:bg-gray-600
+                        border dark:border-gray-500 shadow text-xl dark:text-textDark
+                        hover:bg-gray-100 dark:hover:bg-gray-500
+                        disabled:opacity-50 disabled:cursor-not-allowed">
+                        +
+                    </button>
+                </div>
+            </div>
+
+            <!-- No document fallback -->
+            <div *ngIf="!isPDF && !modalImage"
+                class="bg-white dark:bg-gray-700 w-full min-h-[600px] flex items-center justify-center">
+                <span class="text-gray-500 dark:text-gray-400 font-inter">
+                    No document available
+                </span>
+            </div>
+
+            <!-- PDF Viewer -->
+            <div *ngIf="isPDF && sanitizedUrl" class="w-full bg-white dark:bg-gray-700 overflow-hidden">
+                <iframe [src]="sanitizedUrl" class="w-full h-[800px]" frameborder="0" style="border: none;"
+                    title="BR Document PDF"></iframe>
+            </div>
+        </div>
+    </div>
+</div>

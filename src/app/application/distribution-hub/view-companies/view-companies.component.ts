@@ -29,7 +29,7 @@ export class ViewCompaniesComponent implements OnInit {
     public tokenService: TokenService,
     public permissionService: PermissionService,
     private location: Location,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.fetchAllCompanys(); // Initial fetch
@@ -216,5 +216,6 @@ class CompanyDetails {
   ownedCentersCount!: number;
   managerCount!: number;
   officerCount!: number;
+  headCount!: number;
   modifyBy!: string;
 }

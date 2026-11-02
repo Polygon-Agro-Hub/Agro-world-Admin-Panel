@@ -171,12 +171,11 @@
         <label class="text-[#534E4E] dark:text-textDark">{{
           isNoDiscount === true ? "Price Per kg *" : "Actual Price Per kg *"
           }}</label>
-        <input type="number" min="0" step="0.01" id="normalPrice" name="normalPrice" (change)="calculeSalePrice()"
-          (input)="validatePriceInput($event, 'normalPrice')" (keydown)="preventInvalidChars($event)"
-          [(ngModel)]="productObj.normalPrice"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          #normalPriceField="ngModel" required />
-        <div *ngIf="normalPriceField.invalid && normalPriceField.touched" class="text-red-500 text-sm mt-1">
+        <input type="text" inputmode="decimal" id="normalPrice" name="normalPrice" [value]="priceDisplay['normalPrice']"
+          (input)="onPriceInput($event, 'normalPrice')" (focus)="onPriceFocus('normalPrice')"
+          (blur)="onPriceBlur('normalPrice')"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        <div *ngIf="formSubmitted && !productObj.normalPrice" class="text-red-500 text-sm mt-1">
           Price Per kg is required.
         </div>
         <div *ngIf="productObj.normalPrice < 0" class="text-red-500 text-sm mt-1">
@@ -186,17 +185,17 @@
 
       <div class="mb-6" *ngIf="productObj.promo && productObj.displaytype === 'AP&SP&D'">
         <label class="text-[#534E4E] dark:text-textDark">Sale Price *</label>
-        <input type="number" min="0.00" step="0.01" id="salePrice" [value]="productObj.salePrice" readonly
+        <input type="text" id="salePrice" [value]="formatPrice(productObj.salePrice)" readonly
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
       </div>
 
       <div class="mb-6" *ngIf="productObj.promo && productObj.displaytype === 'AP&SP'">
         <label class="text-[#534E4E] dark:text-textDark">Sale Price *</label>
-        <input type="number" min="0" step="0.01" id="salePrice" name="salePrice" [(ngModel)]="productObj.salePrice"
-          (change)="calculeSalePrice()" (input)="validatePriceInput($event, 'salePrice')"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          #salePriceField="ngModel" required />
-        <div *ngIf="salePriceField.invalid && salePriceField.touched" class="text-red-500 text-sm mt-1">
+        <input type="text" inputmode="decimal" id="salePrice" name="salePrice" [value]="priceDisplay['salePrice']"
+          (input)="onPriceInput($event, 'salePrice')" (focus)="onPriceFocus('salePrice')"
+          (blur)="onPriceBlur('salePrice')"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        <div *ngIf="formSubmitted && !productObj.salePrice" class="text-red-500 text-sm mt-1">
           Sale Price is required.
         </div>
         <div *ngIf="productObj.salePrice < 0" class="text-red-500 text-sm mt-1">
@@ -206,12 +205,11 @@
 
       <div class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">Competitor Price per kg *</label>
-        <input type="number" min="0" step="0.01" id="competitorPrice" name="competitorPrice"
-          [(ngModel)]="productObj.comPrice" (input)="validatePriceInput($event, 'comPrice')"
-          (keydown)="preventInvalidChars($event)"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          #competitorPriceField="ngModel" required />
-        <div *ngIf="competitorPriceField.invalid && competitorPriceField.touched" class="text-red-500 text-sm mt-1">
+        <input type="text" inputmode="decimal" id="competitorPrice" name="competitorPrice"
+          [value]="priceDisplay['comPrice']" (input)="onPriceInput($event, 'comPrice')"
+          (focus)="onPriceFocus('comPrice')" (blur)="onPriceBlur('comPrice')"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        <div *ngIf="formSubmitted && !productObj.comPrice" class="text-red-500 text-sm mt-1">
           Competitor Price is required.
         </div>
         <div *ngIf="productObj.comPrice < 0" class="text-red-500 text-sm mt-1">

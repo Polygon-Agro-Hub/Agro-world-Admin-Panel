@@ -24,7 +24,7 @@ export class DistributionhubComponent {
     private router: Router,
     public permissionService: PermissionService,
     public tokenService: TokenService
-  ) {}
+  ) { }
 
   togglePopupNews() {
     this.popupVisibleNews = !this.popupVisibleNews;

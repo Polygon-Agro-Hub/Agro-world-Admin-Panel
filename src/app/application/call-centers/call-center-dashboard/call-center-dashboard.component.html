@@ -1,20 +1,44 @@
-<div class="w-full mb-6">
-    <app-row-one></app-row-one>
+@if (isLoading) {
+<div class="w-full flex flex-col items-center justify-center py-32 text-slate-500">
+    <div class="h-10 w-10 rounded-full border-4 border-slate-200 border-t-emerald-700 animate-spin"></div>
+    <p class="mt-4 text-sm">Loading dashboard…</p>
 </div>
-<div class="w-full mb-6">
-    <app-row-two></app-row-two>
+} @else if (!data) {
+<div class="w-full flex flex-col items-center justify-center py-32">
+    <p class="text-slate-700 font-semibold">{{ errorMessage }}</p>
+    <button (click)="retry()" class="mt-4 rounded-lg bg-blue-700 px-5 py-2 text-sm font-semibold text-white">Retry</button>
 </div>
-<div class="flex w-full h-auto mb-6">
-    <div class="w-3/5 mr-3">
-        <app-left-column></app-left-column>
+} @else {
+@if (errorMessage) {
+<div class="w-full mb-4 flex items-center justify-between rounded-lg bg-red-50 px-4 py-2 text-sm text-red-700">
+    <span>{{ errorMessage }}</span>
+    <button (click)="retry()" class="font-semibold underline">Retry</button>
+</div>
+}
+<div class="w-full relative" [class.opacity-70]="isRefreshing" [class.pointer-events-none]="isRefreshing">
+    <div class="w-full mb-6">
+        <app-row-one [header]="data.header" [trends]="data.trends"></app-row-one>
     </div>
-    <div class="w-2/5 ml-3">
-        <app-colum-right></app-colum-right>
+    <div class="w-full mb-6">
+        <app-row-two [topCards]="data.topCards" [summaryCards]="data.summaryCards"></app-row-two>
+    </div>
+    <div class="flex w-full h-auto mb-6">
+        <div class="w-3/5 mr-3">
+            <app-left-column [timeline]="data.timeline" [hourly]="data.hourlyDistribution" [trends]="data.trends"
+                (hourChange)="onHourChange($event)" (rangeChange)="onRangeChange($event)"></app-left-column>
+        </div>
+        <div class="w-2/5 ml-3">
+            <app-colum-right [timeline]="data.timeline" [callSummary]="data.callSummary"
+                [serviceQuality]="data.serviceQuality"></app-colum-right>
+        </div>
+    </div>
+    <div class="w-full h-auto mb-6">
+        <app-row-four [monthly]="data.monthlyOverview"></app-row-four>
+    </div>
+    <div class="w-full h-auto">
+        <app-table-row [recentCalls]="data.recentCalls" [search]="query.search || ''"
+            (searchChange)="onSearchChange($event)" (pageChange)="onPageChange($event)"
+            (exportCsv)="onExport()"></app-table-row>
     </div>
 </div>
-<div class="w-full h-auto mb-6">
-    <app-row-four></app-row-four>
-</div>
-<div class="w-full h-auto">
-    <app-table-row></app-table-row>
-</div>
+}

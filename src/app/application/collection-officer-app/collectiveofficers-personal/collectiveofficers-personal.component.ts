@@ -163,9 +163,10 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     const requiredFields: (keyof Personal)[] = [
       'firstNameEnglish', 'lastNameEnglish', 'firstNameSinhala', 'lastNameSinhala',
       'firstNameTamil', 'lastNameTamil', 'phoneNumber01', 'phoneNumber02',
-      'nic', 'email', 'companyId', 'centerId', 'jobRole', 'houseNumber',
-      'streetName', 'city', 'district', 'province', 'accHolderName',
-      'accNumber', 'confirmAccNumber'
+      'nic', 'email', 'companyId', 'centerId', 'jobRole', 'irmId',
+      'houseNumber', 'streetName', 'city', 'district', 'province',
+      'accHolderName', 'accNumber', 'confirmAccNumber',
+      'bankName', 'branchName'
     ];
 
     requiredFields.forEach(field => {
@@ -174,6 +175,11 @@ export class CollectiveofficersPersonalComponent implements OnInit {
 
     this.languagesTouched = true;
     this.empTypeTouched = true;
+    this.jobRoleTouched = true;
+
+    // Needed so the "Confirm Account Number is a required field" /
+    // "Account Numbers do not match" messages show on submit
+    this.validateConfirmAccNumber();
   }
 
   markPageOneFieldsAsTouched(): void {
@@ -499,18 +505,18 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     });
   }
 
-  capitalizeNames() {
-    if (this.personalData.firstNameEnglish) {
-      this.personalData.firstNameEnglish =
-        this.personalData.firstNameEnglish.charAt(0).toUpperCase() +
-        this.personalData.firstNameEnglish.slice(1);
-    }
-    if (this.personalData.lastNameEnglish) {
-      this.personalData.lastNameEnglish =
-        this.personalData.lastNameEnglish.charAt(0).toUpperCase() +
-        this.personalData.lastNameEnglish.slice(1);
-    }
-  }
+  // capitalizeNames() {
+  //   if (this.personalData.firstNameEnglish) {
+  //     this.personalData.firstNameEnglish =
+  //       this.personalData.firstNameEnglish.charAt(0).toUpperCase() +
+  //       this.personalData.firstNameEnglish.slice(1);
+  //   }
+  //   if (this.personalData.lastNameEnglish) {
+  //     this.personalData.lastNameEnglish =
+  //       this.personalData.lastNameEnglish.charAt(0).toUpperCase() +
+  //       this.personalData.lastNameEnglish.slice(1);
+  //   }
+  // }
 
   blockSpaces(event: KeyboardEvent) {
     if (event.key === ' ') {
@@ -800,8 +806,8 @@ export class CollectiveofficersPersonalComponent implements OnInit {
         html: `"<b>${this.escapeHtml(fileName)}</b>" is not a supported file type.<br>
            Only <b>PNG</b>, <b>JPG</b>, and <b>JPEG</b> files are allowed.`,
         confirmButtonText: 'OK',
-        width: 450,       
-        padding: '1rem',  
+        width: 450,
+        padding: '1rem',
         customClass,
       });
     } else {
@@ -810,7 +816,7 @@ export class CollectiveofficersPersonalComponent implements OnInit {
         title: 'Error',
         text: 'File size should not exceed 5MB',
         confirmButtonText: 'OK',
-        width: 450,       
+        width: 450,
         padding: '1rem',
         customClass,
       });
@@ -924,22 +930,23 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     this.personalData.empType = selectedType;
   }
 
-  formatName(fieldName: 'firstNameEnglish' | 'lastNameEnglish'): void {
-    let value = this.personalData[fieldName];
-    if (value) {
-      value = value.replace(/[^a-zA-Z\s]/g, '');
+  // formatName(fieldName: 'firstNameEnglish' | 'lastNameEnglish'): void {
+  //   let value = this.personalData[fieldName];
+  //   if (value) {
+  //     value = value.replace(/[^a-zA-Z\s]/g, '');
 
-      value = value.replace(/^\s+/, '');
+  //     value = value.replace(/^\s+/, '');
 
-      value = value.replace(/\s{2,}/g, ' ');
+  //     value = value.replace(/\s{2,}/g, ' ');
 
-      if (value.length > 0) {
-        value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
-      }
+  //     if (value.length > 0) {
+  //       value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+  //     }
 
-      this.personalData[fieldName] = value;
-    }
-  }
+  //     this.personalData[fieldName] = value;
+  //   }
+  // }
+
   onLetterKeyPress(event: KeyboardEvent) {
     const input = event.target as HTMLInputElement;
     const char = event.key;
@@ -967,27 +974,27 @@ export class CollectiveofficersPersonalComponent implements OnInit {
   }
 
 
-  formatSinhalaName(fieldName: 'firstNameSinhala' | 'lastNameSinhala'): void {
-    let value = this.personalData[fieldName];
-    if (value) {
-      value = value.replace(/[^\u0D80-\u0DFF\s]/g, '');
+  // formatSinhalaName(fieldName: 'firstNameSinhala' | 'lastNameSinhala'): void {
+  //   let value = this.personalData[fieldName];
+  //   if (value) {
+  //     value = value.replace(/[^\u0D80-\u0DFF\s]/g, '');
 
-      value = value.replace(/^\s+/, '');
+  //     value = value.replace(/^\s+/, '');
 
-      value = value.replace(/\s{2,}/g, ' ');
+  //     value = value.replace(/\s{2,}/g, ' ');
 
-      this.personalData[fieldName] = value;
-    }
-  }
+  //     this.personalData[fieldName] = value;
+  //   }
+  // }
 
-  formatTamilName(fieldName: 'firstNameTamil' | 'lastNameTamil'): void {
-    let value = this.personalData[fieldName];
-    if (value) {
-      value = value.replace(/[^\u0B80-\u0BFF ]/g, '');
-      value = value.trim().replace(/\s{2,}/g, ' ');
-      this.personalData[fieldName] = value;
-    }
-  }
+  // formatTamilName(fieldName: 'firstNameTamil' | 'lastNameTamil'): void {
+  //   let value = this.personalData[fieldName];
+  //   if (value) {
+  //     value = value.replace(/[^\u0B80-\u0BFF ]/g, '');
+  //     value = value.trim().replace(/\s{2,}/g, ' ');
+  //     this.personalData[fieldName] = value;
+  //   }
+  // }
 
 
 
@@ -1464,7 +1471,6 @@ export class CollectiveofficersPersonalComponent implements OnInit {
 
   }
 
-
   preventNonSinhalaCharacters(event: KeyboardEvent): void {
     if (!this.handleSpaceRestrictions(event)) {
       return;
@@ -1571,7 +1577,59 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     }
   }
 
+  private readonly nameKeyPattern: Record<NameLang, RegExp> = {
+    english: /^[a-zA-Z]$/,
+    sinhala: /^[a-zA-Z\u0D80-\u0DFF\u200D]$/,
+    tamil: /^[a-zA-Z\u0B80-\u0BFF]$/,
+  };
+
+  private readonly nameStripPattern: Record<NameLang, RegExp> = {
+    english: /[^a-zA-Z ]/g,
+    sinhala: /[^a-zA-Z\u0D80-\u0DFF\u200D ]/g,
+    tamil: /[^a-zA-Z\u0B80-\u0BFF ]/g,
+  };
+
+  onNameKeyPress(event: KeyboardEvent, lang: NameLang): void {
+    if (event.ctrlKey || event.metaKey || event.key.length > 1) return;
+
+    const input = event.target as HTMLInputElement;
+
+    if (event.key === ' ') {
+      const pos = input.selectionStart ?? 0;
+      if (pos === 0 || input.value.charAt(pos - 1) === ' ') {
+        event.preventDefault();
+      }
+      return;
+    }
+
+    if (!this.nameKeyPattern[lang].test(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  onNameInput(event: Event, field: NameField, lang: NameLang): void {
+    const input = event.target as HTMLInputElement;
+
+    let value = input.value
+      .replace(this.nameStripPattern[lang], '')
+      .replace(/^\s+/, '')
+      .replace(/\s{2,}/g, ' ');
+
+    if (lang === 'english' && value.length > 0) {
+      value = value.charAt(0).toUpperCase() + value.slice(1);
+    }
+
+    this.personalData[field] = value;
+    input.value = value;
+  }
 }
+
+type NameField =
+  | 'firstNameEnglish' | 'lastNameEnglish'
+  | 'firstNameSinhala' | 'lastNameSinhala'
+  | 'firstNameTamil' | 'lastNameTamil';
+
+type NameLang = 'english' | 'sinhala' | 'tamil';
 
 class Personal {
   jobRole: string = '';

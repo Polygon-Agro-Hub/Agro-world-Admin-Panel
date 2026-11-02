@@ -959,8 +959,6 @@ export class PostinvoiceService {
     const invoiceStatus = String(rawStatus).trim().toLowerCase();
     const isDelivered = invoiceStatus === 'delivered';
 
-    console.log('Invoice status for label:', rawStatus, '=> delivered:', isDelivered);
-
     const cashLabel = isPickup
       ? 'Cash On Pickup'
       : isDelivered

@@ -218,9 +218,15 @@ export class MarketEditPackagesComponent {
       return;
     }
 
+    const payload: any = {
+      ...this.packageObj,
+      startDate: this.toDateString(this.packageObj.startDate),
+      endDate: this.toDateString(this.packageObj.endDate),
+    };
+
     try {
       this.marketSrv
-        .editPackage(this.packageObj, this.selectedImage, this.packageId)
+        .editPackage(payload, this.selectedImage, this.packageId)
         .subscribe(
           (res) => {
             if (res.status) {
@@ -481,6 +487,15 @@ export class MarketEditPackagesComponent {
   private isEmptyValue(value: any): boolean {
     return value === null || value === undefined || value === '';
   }
+
+  private toDateString(d: Date | null | undefined): string | null {
+    if (!d) return null;
+    const date = new Date(d);
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  }
 }
 
 class Package {
@@ -512,7 +527,7 @@ class ProductType {
 class PackageItems {
   id!: number | null;
   productTypeId!: number | null;
-  typeName!: string | null; // ✅ Fixed type
+  typeName!: string | null;
   qty!: number | null;
   isValid!: number;
 }

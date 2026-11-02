@@ -51,19 +51,19 @@
               [optionValue]="'dialCode'"
               styleClass="border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-gray-800 dark:text-white custom-dropdown"
               [style]="{ width: '100%' }">
-            <ng-template let-country pTemplate="item">
-              <div class="flex items-center gap-2">
-                <img [src]="getFlagUrl(country.code)" width="24" height="18" alt="{{ country.name }}" />
-                <span>{{ country.dialCode }}</span>
-              </div>
-            </ng-template>
+              <ng-template let-country pTemplate="item">
+                <div class="flex items-center gap-2">
+                  <img [src]="getFlagUrl(country.code)" width="24" height="18" alt="{{ country.name }}" />
+                  <span>{{ country.dialCode }}</span>
+                </div>
+              </ng-template>
 
-            <ng-template let-country pTemplate="selectedItem">
-              <div class="flex items-center gap-2" *ngIf="country">
-                <img [src]="getFlagUrl(country.code)" width="24" height="18" alt="{{ country.name }}" />
-                <span>{{ country.dialCode }}</span>
-              </div>
-            </ng-template>
+              <ng-template let-country pTemplate="selectedItem">
+                <div class="flex items-center gap-2" *ngIf="country">
+                  <img [src]="getFlagUrl(country.code)" width="24" height="18" alt="{{ country.name }}" />
+                  <span>{{ country.dialCode }}</span>
+                </div>
+              </ng-template>
             </p-dropdown>
           </div>
 
@@ -106,19 +106,19 @@
               [optionValue]="'dialCode'"
               styleClass="border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-gray-800 dark:text-white custom-dropdown"
               [style]="{ width: '100%' }">
-            <ng-template let-country pTemplate="item">
-              <div class="flex items-center gap-2">
-                <img [src]="getFlagUrl(country.code)" width="24" height="18" alt="{{ country.name }}" />
-                <span>{{ country.dialCode }}</span>
-              </div>
-            </ng-template>
+              <ng-template let-country pTemplate="item">
+                <div class="flex items-center gap-2">
+                  <img [src]="getFlagUrl(country.code)" width="24" height="18" alt="{{ country.name }}" />
+                  <span>{{ country.dialCode }}</span>
+                </div>
+              </ng-template>
 
-            <ng-template let-country pTemplate="selectedItem">
-              <div class="flex items-center gap-2" *ngIf="country">
-                <img [src]="getFlagUrl(country.code)" width="24" height="18" alt="{{ country.name }}" />
-                <span>{{ country.dialCode }}</span>
-              </div>
-            </ng-template>
+              <ng-template let-country pTemplate="selectedItem">
+                <div class="flex items-center gap-2" *ngIf="country">
+                  <img [src]="getFlagUrl(country.code)" width="24" height="18" alt="{{ country.name }}" />
+                  <span>{{ country.dialCode }}</span>
+                </div>
+              </ng-template>
             </p-dropdown>
           </div>
 

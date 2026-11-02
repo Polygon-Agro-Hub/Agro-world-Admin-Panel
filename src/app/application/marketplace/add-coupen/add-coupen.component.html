@@ -81,10 +81,11 @@
       <!-- Fixed Amount -->
       <div *ngIf="coupenObj.type === 'Fixed Amount'" class="mb-6">
   <label class="text-[#534E4E] dark:text-textDark">Discount Amount *</label>
-  <input type="number" id="fixDiscount" name="fixDiscount" [(ngModel)]="coupenObj.fixDiscount"
-    #fixDiscountInput="ngModel" required min="0" (input)="validateDecimalInput($event, 'fixDiscount')"
-    (change)="checkFixAmountValue(coupenObj.fixDiscount)" (keydown)="blockLeadingZero($event)"
-    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack no-spinner" />
+  <input type="text" inputmode="decimal" id="fixDiscount" name="fixDiscount"
+  [ngModel]="fixDiscountDisplay" #fixDiscountInput="ngModel" required
+  (input)="onFixDiscountInput($event)"
+  (change)="checkFixAmountValue(coupenObj.fixDiscount)" (keydown)="blockLeadingZero($event)"
+  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack no-spinner" />
   <div *ngIf="fixDiscountInput.touched && fixDiscountInput.errors?.['required']"
     class="text-red-500 text-sm mt-1">
     Discount amount is required.

@@ -46,7 +46,7 @@ export class AddDailyTargetComponent {
     private location: Location,
     public tokenService: TokenService,
     public permissionService: PermissionService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.dailyTartgetObj.centerId = this.route.snapshot.params['id'];

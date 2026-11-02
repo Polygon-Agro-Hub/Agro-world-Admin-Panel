@@ -117,4 +117,28 @@ export class SalesAgentsService {
     let url = `${this.apiUrl}dash/update-status/${id}/${status}`;
     return this.http.get<any>(url, { headers });
   }
+
+  viewWholesaleBuyerDocument(userId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}dash/view-wholesale-buyer-document/${userId}`;
+    return this.http.get<any>(url, { headers });
+  }
+
+  updateWholesaleBuyerStatus(
+  userId: number,
+  status: 'Approved' | 'Rejected',
+  reason?: string,
+): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
+
+  const url = `${this.apiUrl}dash/update-wholesale-buyer-status/${userId}`;
+  return this.http.patch<any>(url, { status, reason }, { headers });
+}
 }

@@ -20,7 +20,7 @@
         <!-- Header -->
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-[16px] font-normal text-[#292929] dark:text-textDark whitespace-nowrap">
-                Shortage Today Finalization ({{ shortageItems.length | number:'2.0' }})
+                Shortage Today Finalization ({{ shortageItems.length === 0 ? '0' : (shortageItems.length | number:'2.0') }})
             </h2>
         </div>
 
@@ -86,9 +86,12 @@
                     </div>
 
                     <!-- 1st Assigned By -->
-                    <div class="w-32 shrink-0">
+                    <div class="w-32 shrink-0 min-w-0 pr-2">
                         <div class="text-xs text-[#000000] dark:text-textDark mb-1">1st Assigned By</div>
-                        <div class="text-[#000000] dark:text-textDark font-semibold max-w-[100px]">{{ item.assignedBy }}</div>
+                        <div class="text-[#000000] dark:text-textDark font-semibold w-full truncate cursor-default"
+                            [attr.title]="item.assignedBy">
+                            {{ item.assignedBy }}
+                        </div>
                     </div>
 
                     <!-- Finalize Button -->
@@ -149,9 +152,13 @@
                         </div>
                     </div>
 
-                    <div class="w-32 shrink-0">
+                    <!-- 1st Assigned By -->
+                    <div class="w-32 shrink-0 min-w-0 pr-2">
                         <div class="text-xs text-[#000000] dark:text-textDark mb-1">1st Assigned By</div>
-                        <div class="text-[#000000] dark:text-textDark font-semibold">{{ item.assignedBy }}</div>
+                        <div class="text-[#000000] dark:text-textDark font-semibold w-full truncate cursor-default"
+                            [attr.title]="item.assignedBy">
+                            {{ item.assignedBy }}
+                        </div>
                     </div>
 
                     <div class="shrink-0">

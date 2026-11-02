@@ -50,7 +50,7 @@
           <div>
             <label for="firstName" class="block text-sm font-medium text-textLight dark:text-textDark">First Name
               *</label>
-            <input formControlName="firstName" id="firstName" (input)="onNameInput($event, 'firstName')"
+            <input formControlName="firstName" id="firstName" (input)="onNameInput($event, 'firstName')" (keypress)="onNameKeyPress($event)"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
             <div *ngIf="
       userForm.get('firstName')!.invalid &&
@@ -69,7 +69,7 @@
           <div>
             <label for="lastName" class="block text-sm font-medium text-textLight dark:text-textDark">Last Name
               *</label>
-            <input formControlName="lastName" id="lastName" (input)="onNameInput($event, 'lastName')"
+            <input formControlName="lastName" id="lastName" (input)="onNameInput($event, 'lastName')" (keypress)="onNameKeyPress($event)"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
             <div *ngIf="
       userForm.get('lastName')!.invalid &&
@@ -292,7 +292,7 @@
           <div>
             <label for="firstName" class="block text-sm font-medium text-textLight dark:text-textDark text-left">First
               Name *</label>
-            <input formControlName="firstName" id="firstName" (input)="onNameInput($event, 'firstName')"
+            <input formControlName="firstName" id="firstName" (input)="onNameInput($event, 'firstName')" (keypress)="onNameKeyPress($event)"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
             <div *ngIf="
       userForm.get('firstName')!.invalid &&
@@ -311,7 +311,7 @@
           <div>
             <label for="lastName" class="block text-sm font-medium text-textLight dark:text-textDark text-left">Last
               Name *</label>
-            <input formControlName="lastName" id="lastName" (input)="onNameInput($event, 'lastName')"
+            <input formControlName="lastName" id="lastName" (input)="onNameInput($event, 'lastName')" (keypress)="onNameKeyPress($event)"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
             <div *ngIf="
       userForm.get('lastName')!.invalid &&

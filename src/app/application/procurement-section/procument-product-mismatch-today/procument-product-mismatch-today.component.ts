@@ -106,18 +106,8 @@ export class ProcumentProductMismatchTodayComponent implements OnInit {
             id: details.transferCode ?? '',
             transportId: details.transportId ?? null,
             loadedFrom: details.centerName ?? '',
-            loadedTime: details.createdAt
-              ? new Date(details.createdAt).toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit',
-              })
-              : '',
-            unloadedTime: details.unloadTime
-              ? new Date(details.unloadTime).toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit',
-              })
-              : '',
+            loadedTime: this.formatTime(details.createdAt),
+            unloadedTime: this.formatTime(details.unloadTime),
             driver: {
               id: details.driverEmpId ?? '',
               name: [details.driverFirstName, details.driverLastName]
@@ -179,6 +169,15 @@ export class ProcumentProductMismatchTodayComponent implements OnInit {
     if (this.isSubmitting) return;
     this.showApproveModal = false;
     this.recommendation = '';
+  }
+
+  private formatTime(value: string | Date | null | undefined): string {
+    if (!value) return '';
+    return new Date(value).toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    });
   }
 
   submitApproval(): void {

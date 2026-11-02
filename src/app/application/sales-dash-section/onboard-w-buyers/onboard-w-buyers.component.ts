@@ -9,6 +9,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
+import { SalesDashService } from '../../../services/sales-dash/sales-dash.service';
 
 interface Option {
   label: string;
@@ -63,6 +64,7 @@ export class OnboardWBuyersComponent {
   constructor(
     private fb: FormBuilder,
     private location: Location,
+    private salesAgentService: SalesDashService,
   ) {
     this.form = this.fb.group({
       agent: [null, Validators.required],
@@ -101,6 +103,24 @@ export class OnboardWBuyersComponent {
       ctrl.updateValueAndValidity();
     });
   }
+
+  ngOnInit(): void {
+    this.loadAgents();
+  }
+
+  loadAgents(): void {
+  this.isLoading = true;
+  this.salesAgentService.getSalesAgents().subscribe({
+    next: (res) => {
+      this.agentOptions = res.salesAgents;   // was res.options
+      this.isLoading = false;
+    },
+    error: (err) => {
+      console.error('Error loading agents', err);
+      this.isLoading = false;
+    },
+  });
+}
 
   get isNic(): boolean {
     return this.form.get('identificationType')?.value === 'NIC';

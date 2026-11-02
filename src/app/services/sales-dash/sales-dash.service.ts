@@ -64,9 +64,19 @@ export interface OnboardedOption {
   value: string;
 }
 
+export interface SalesAgentOption {
+  label: string;
+  value: string;
+}
+
 export interface OnboardedOptionsResponse {
   status: boolean;
   options: OnboardedOption[];
+}
+
+export interface SalesAgentsResponse {
+  status: boolean;
+  salesAgents: { label: string; value: string }[];
 }
 
 @Injectable({
@@ -231,6 +241,17 @@ export class SalesDashService {
 
     return this.http.get<OnboardedOptionsResponse>(
       `${this.apiUrl}sales-agent-dash/get-onboarded-options`,
+      { headers }
+    );
+  }
+
+  getSalesAgents(): Observable<SalesAgentsResponse> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+
+    return this.http.get<SalesAgentsResponse>(
+      `${this.apiUrl}sales-agent-dash/get-sales-agents`,
       { headers }
     );
   }

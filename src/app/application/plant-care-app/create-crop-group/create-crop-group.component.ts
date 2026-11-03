@@ -50,6 +50,7 @@ export class CreateCropGroupComponent {
   incomeFeildDisplay = '';
   imageTouched = false;
   itemCount: number | null = null; // new
+  isSubmitting = false;
 
   allowOnlyEnglish(event: KeyboardEvent): void {
     const input = event.target as HTMLInputElement;
@@ -238,6 +239,20 @@ export class CreateCropGroupComponent {
   }
 
   onSubmit() {
+    if (this.isSubmitting) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'A network error may have occurred. Please check the Crop Group List to see if the Crop Group was already created before retrying.\n\nNote: Multiple submissions are not allowed.',
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        },
+      });
+      return;
+    }
+
     if (this.cropForm) {
       Object.keys(this.cropForm.controls).forEach((key) => {
         this.cropForm.controls[key].markAsTouched();
@@ -329,6 +344,7 @@ export class CreateCropGroupComponent {
       return;
     }
 
+    this.isSubmitting = true;
     this.isLoading = true;
 
     const formData = new FormData();
@@ -371,6 +387,7 @@ export class CreateCropGroupComponent {
           });
           this.router.navigate(['/plant-care/action/view-crop-group']);
         } else {
+          this.isSubmitting = false;
           Swal.fire({
             icon: 'error',
             title: 'Unsuccess',
@@ -384,11 +401,12 @@ export class CreateCropGroupComponent {
         }
       },
       error: (error) => {
+        this.isSubmitting = false;
         this.isLoading = false;
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: 'Something went wrong!',
+          text: 'A network error may have occurred. Please check the Crop Group List to see if the Crop Group was already created before retrying.\n\nNote: Multiple submissions are not allowed.',
           customClass: {
             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
             title: 'font-semibold',

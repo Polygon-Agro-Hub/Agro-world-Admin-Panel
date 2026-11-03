@@ -346,8 +346,10 @@
           class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md">
           Cancel
         </button>
-        <button type="submit" (click)="onSubmit()" class="px-6 py-2 mx-4 bg-[#3980C0] text-white rounded-md">
-          Save
+        <button type="submit" (click)="onSubmit()" [attr.aria-busy]="isSubmitting"
+          [class.opacity-50]="isSubmitting"
+          class="px-6 py-2 mx-4 bg-[#3980C0] text-white rounded-md">
+          {{ isSubmitting ? 'Saving...' : 'Save' }}
         </button>
       </div>
     </div>

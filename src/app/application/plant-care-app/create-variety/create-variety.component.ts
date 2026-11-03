@@ -57,6 +57,7 @@ export class CreateVarietyComponent implements OnInit {
   };
 
   isLoading = false;
+  isSubmitting = false;
   selectedFileName: string | null = null;
   selectedImage: string | ArrayBuffer | null = null;
   selectedFile: File | null = null;
@@ -309,6 +310,20 @@ export class CreateVarietyComponent implements OnInit {
   }
 
   onSubmit() {
+    if (this.isSubmitting) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'A network error may have occurred. Please check the Crop Variety List to see if the Crop Variety was already created before retrying.\n\nNote: Multiple submissions are not allowed.',
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        },
+      });
+      return;
+    }
+
     // Mark all form controls as touched to trigger validation
     Object.keys(this.cropForm.controls).forEach((key) => {
       this.cropForm.get(key)?.markAsTouched();
@@ -406,6 +421,7 @@ export class CreateVarietyComponent implements OnInit {
     }
 
     // If form is valid, proceed with submission
+    this.isSubmitting = true;
     this.isLoading = true;
     const formData = new FormData();
 
@@ -434,18 +450,24 @@ export class CreateVarietyComponent implements OnInit {
             this.location.back();
           });
         } else {
+          this.isSubmitting = false;
           this.isLoading = false;
           Swal.fire('Unsuccess', response.message, 'error');
         }
       },
       error: (error) => {
+        this.isSubmitting = false;
         this.isLoading = false;
-        Swal.fire(
-          'Error',
-          error.error?.message ||
-            'An error occurred while creating the crop variety.',
-          'error',
-        );
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'A network error may have occurred. Please check the Crop Variety List to see if the Crop Variety was already created before retrying.\n\nNote: Multiple submissions are not allowed.',
+          confirmButtonText: 'OK',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+          },
+        });
       },
     });
   }

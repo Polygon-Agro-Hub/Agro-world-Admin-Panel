@@ -1896,6 +1896,27 @@ export const routes: Routes = [
               {
                 path: 'onboard-w-buyers',
                 component:OnboardWBuyersComponent,
+              },
+              {
+                path: 'sales-agent',
+                children: [
+                  {
+                    path: '',
+                    component: ViewSalesAgentsComponent,
+                  },
+                  {
+                    path: 'preview-sales-agents/:id',
+                    component: PreviewSalesAgentsComponent,
+                    // canActivate: [PermissionGuard],
+                    // data: { permission: ['View individual sales agent'] },
+                  },
+                  {
+                    path: 'edit-sales-agents/:id',
+                    component: EditSalesAgentComponent,
+                    // canActivate: [PermissionGuard],
+                    // data: { permission: 'Edit sales agent' },
+                  },
+                ]
               }
             ],
           },

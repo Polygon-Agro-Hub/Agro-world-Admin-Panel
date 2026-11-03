@@ -15,6 +15,7 @@ import { CommonModule, Location  } from '@angular/common';
 export class AddProductTypesComponent {
   productObj: ProductType = new ProductType();
   existingProductTypes: ProductType[] = [];
+  isSubmitting = false;
 
   constructor(
     private marketSrv: MarketPlaceService,
@@ -109,7 +110,16 @@ onShortCodeInput(event: Event): void {
 }
 
 createType() {
-  // Check if fields are empty
+  if (this.isSubmitting) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'A network error may have occurred. Please check the Product Type List to see if the product type was already created before retrying.\n\nNote: Multiple submissions are not allowed.',
+    });
+    return;
+  }
+
+// Check if fields are empty
   const missingFields: string[] = [];
   
   if (!this.productObj.typeName) {
@@ -184,6 +194,7 @@ createType() {
   }
 
   // Proceed with API call
+  this.isSubmitting = true;
   this.marketSrv.createProductType(this.productObj).subscribe({
     next: (res) => {
       if (res.status) {
@@ -194,6 +205,7 @@ createType() {
         });
         this.router.navigate(['/market/action/view-product-types']);
       } else {
+        this.isSubmitting = false;
         Swal.fire({
           icon: 'error',
           title: 'Error',
@@ -202,6 +214,7 @@ createType() {
       }
     },
     error: (err) => {
+      this.isSubmitting = false;
       console.error(err);
       Swal.fire({
         icon: 'error',

@@ -50,6 +50,7 @@ export class MarketAddProductComponent implements OnInit {
   tagsTouched = false;
   isNoDiscount: boolean = true;
   formSubmitted = false;
+  isSubmitting = false;
 
   text: string = 'Kg';
 
@@ -288,6 +289,20 @@ export class MarketAddProductComponent implements OnInit {
   }
 
   onSubmit() {
+    if (this.isSubmitting) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'A network error may have occurred. Please check the Product List to see if the product was already created before retrying.\n\nNote: Multiple submissions are not allowed.',
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        },
+      });
+      return;
+    }
+
     this.formSubmitted = true;
     this.tagsTouched = true;
 
@@ -643,6 +658,7 @@ export class MarketAddProductComponent implements OnInit {
     }
 
     // Submit the form
+    this.isSubmitting = true;
     this.marketSrv.createProduct(this.productObj).subscribe(
       (res) => {
         if (res.status === true) {
@@ -660,7 +676,7 @@ export class MarketAddProductComponent implements OnInit {
           this.isLoading = false;
           this.router.navigate(['/market/action/view-products-list']);
         } else {
-          this.isLoading = false;
+          this.isSubmitting = false;
           Swal.fire({
             icon: 'error',
             title: 'Error',
@@ -675,12 +691,13 @@ export class MarketAddProductComponent implements OnInit {
         }
       },
       (error) => {
+        this.isSubmitting = false;
         console.error('Product creation error:', error);
         this.isLoading = false;
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: error.message,
+          text: 'A network error may have occurred. Please check the Product List to see if the product was already created before retrying.\n\nNote: Multiple submissions are not allowed.',
           confirmButtonText: 'OK',
           customClass: {
             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',

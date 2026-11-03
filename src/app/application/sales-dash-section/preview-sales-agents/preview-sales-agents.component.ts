@@ -73,6 +73,7 @@ export class PreviewSalesAgentsComponent implements OnInit {
   invalidFields: Set<string> = new Set();
   confirmAccountNumberError: boolean = false;
   confirmAccountNumberRequired: boolean = false;
+  firstUrlSegment: string = '';
 
   districts = [
     { name: 'Ampara', province: 'Eastern' },
@@ -118,13 +119,17 @@ export class PreviewSalesAgentsComponent implements OnInit {
     private collectionCenterSrv: CollectionCenterService,
     private collectionOfficerService: CollectionOfficerService,
     private salesAgentService: SalesAgentsService,
-  ) {}
+  ) { }
 
   getFlagUrl(countryCode: string): string {
     return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
   }
 
   ngOnInit(): void {
+    const fullUrl = this.router.url;
+    const segments = fullUrl.split('/').filter(Boolean);
+    this.firstUrlSegment = segments[0] || '';
+
     this.loadBanks();
     this.loadBranches();
     this.itemId = this.route.snapshot.params['id'];
@@ -328,7 +333,8 @@ export class PreviewSalesAgentsComponent implements OnInit {
       cancelButtonText: 'No, Keep Editing',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.navigatePath('/steckholders/action/sales-agents');
+        if (this.firstUrlSegment === 'sales-dash') this.navigatePath('/sales-dash/action/sales-agent');
+        else this.navigatePath('/steckholders/action/sales-agents');
       }
     });
   }
@@ -377,7 +383,8 @@ export class PreviewSalesAgentsComponent implements OnInit {
                 'Sales Agent Updated Successfully',
                 'success',
               );
-              this.navigatePath('/steckholders/action/sales-agents');
+              if (this.firstUrlSegment === 'sales-dash') this.navigatePath('/sales-dash/action/sales-agent');
+              else this.navigatePath('/steckholders/action/sales-agents');
             },
             (error: any) => {
               this.isLoading = false;

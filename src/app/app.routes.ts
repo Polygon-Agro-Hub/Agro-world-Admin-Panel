@@ -1891,7 +1891,28 @@ export const routes: Routes = [
                 component: SalesAgentRatingsComponent,
                 // canActivate: [PermissionGuard],
                 // data: { permission: 'Sales Dash agent ratings' },
-              } 
+              },
+              {
+                path: 'sales-agent',
+                children: [
+                  {
+                    path: '',
+                    component: ViewSalesAgentsComponent,
+                  },
+                  {
+                    path: 'preview-sales-agents/:id',
+                    component: PreviewSalesAgentsComponent,
+                    // canActivate: [PermissionGuard],
+                    // data: { permission: ['View individual sales agent'] },
+                  },
+                  {
+                    path: 'edit-sales-agents/:id',
+                    component: EditSalesAgentComponent,
+                    // canActivate: [PermissionGuard],
+                    // data: { permission: 'Edit sales agent' },
+                  },
+                ]
+              }
             ],
           },
         ],

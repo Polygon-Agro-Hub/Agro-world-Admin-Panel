@@ -265,6 +265,7 @@ export class AddPackageComponent implements OnInit {
   }
 
   async onSubmit() {
+    this.isLoading = true;
     this.submitAttempted = true;
 
     // Mark all fields as touched
@@ -380,7 +381,7 @@ export class AddPackageComponent implements OnInit {
         .createPackage(payload, this.selectedImage)
         .subscribe(
           (res) => {
-            this.isLoading = false;
+            this.isLoading = true;
             if (res.status) {
               Swal.fire({
                 icon: 'success',

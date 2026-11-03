@@ -54,7 +54,7 @@ export class DefinePackageViewComponent implements OnInit {
   loading = true;
   error = '';
   packagePrice: number = 0;
-  isLoading: boolean = true;
+  isLoading: boolean = false;
   formSubmitted = false; // Track form submission for validation
 
   constructor(
@@ -388,6 +388,7 @@ export class DefinePackageViewComponent implements OnInit {
   }
 
   async onSave() {
+    this.isLoading = true;
     this.formSubmitted = true;
 
     if (!this.isFormValid()) {

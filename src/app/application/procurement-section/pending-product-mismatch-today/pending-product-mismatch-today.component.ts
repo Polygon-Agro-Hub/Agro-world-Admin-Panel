@@ -6,17 +6,18 @@ import { CalendarModule } from 'primeng/calendar';
 import { ProcumentsService, MismatchReport } from '../../../services/procuments/procuments.service';
 import { TokenService } from '../../../services/token/services/token.service';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-pending-product-mismatch-today',
   standalone: true,
-  imports: [CommonModule, FormsModule, CalendarModule],
+  imports: [CommonModule, FormsModule, CalendarModule, LoadingSpinnerComponent],
   templateUrl: './pending-product-mismatch-today.component.html',
   styleUrl: './pending-product-mismatch-today.component.css',
 })
 export class PendingProductMismatchTodayComponent implements OnInit {
   reports: MismatchReport[] = [];
-  isLoading = false;
+  isLoading = true;
   errorMessage = '';
 
   today: Date = new Date();
@@ -86,5 +87,9 @@ export class PendingProductMismatchTodayComponent implements OnInit {
 
   isAllFound(crates: string): boolean {
     return crates.toLowerCase().includes('all found');
+  }
+
+  absValue(value: number | null | undefined): number {
+    return Math.abs(Number(value) || 0);
   }
 }

@@ -1,3 +1,4 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 <button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
   <i class="fa-solid fa-arrow-left"></i>
   Back
@@ -74,8 +75,8 @@
 
               <div
                 class="w-[106px] min-w-[106px] flex flex-col items-start justify-center bg-[#FFE5E5] dark:bg-[#4A1F1F] text-sm px-3 py-1.5 rounded-md whitespace-nowrap leading-tight">
-                <span class="text-black text-xs dark:text-red-200">Missing</span>
-                <span class="text-black dark:text-red-100 font-semibold">{{ report.missing.toFixed(2) }} kg</span>
+                <span class="text-black text-xs dark:text-red-200">Unequal</span>
+                <span class="text-black dark:text-red-100 font-semibold">{{ absValue(report.missing).toFixed(2) }} kg</span>
               </div>
 
               <div

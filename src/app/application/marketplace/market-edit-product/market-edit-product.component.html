@@ -445,7 +445,7 @@
         </div>
 
         <div *ngIf="productObj.category === 'WholeSale'" class="my-3">
-          <label class="text-lg text-[#534E4E] dark:text-textDark">Maximum Quantity *</label>
+          <label class="text-lg text-[#534E4E] dark:text-textDark">Maximum Quantity in kg *</label>
           <input type="text" id="maxQuantity" name="maxQuantity" [(ngModel)]="productObj.maxQuantity"
             (keydown)="validateDecimalInput($event)" (blur)="formatPrice($event, 'maxQuantity')"
             (input)="validateMaxQuantity($event)" pattern="^\d+(\.\d{1,2})?$" required

@@ -43,6 +43,8 @@ export class ViewSalesAgentsComponent implements OnInit {
   searchText: string = '';
   statusFilter: string = '';
 
+  firstUrlSegment: string = '';
+
   statusArr = [
     { status: 'Approved', value: 'Approved' },
     { status: 'Rejected', value: 'Rejected' },
@@ -56,9 +58,13 @@ export class ViewSalesAgentsComponent implements OnInit {
     public permissionService: PermissionService,
     public tokenService: TokenService,
     private salesAgentsService: SalesAgentsService,
-  ) {}
+  ) { }
 
   ngOnInit() {
+    const fullUrl = this.router.url;
+    const segments = fullUrl.split('/').filter(Boolean);
+    this.firstUrlSegment = segments[0] || '';
+
     this.fetchAllSalesAgents();
   }
 
@@ -86,7 +92,7 @@ export class ViewSalesAgentsComponent implements OnInit {
       );
   }
 
-    onPageChange(event: number) {
+  onPageChange(event: number) {
     this.page = event;
     this.searchText = '';
     this.fetchAllSalesAgents(
@@ -131,13 +137,13 @@ export class ViewSalesAgentsComponent implements OnInit {
   }
 
   Back(): void {
-    this.router.navigate(['/steckholders/action']);
+    if (this.firstUrlSegment === 'sales-dash') this.router.navigate(['/sales-dash/action']);
+    else this.router.navigate(['/steckholders/action']);
   }
 
   editCompanyHead(id: number) {
-    this.navigatePath(
-      `/steckholders/action/sales-agents/edit-sales-agents/${id}`,
-    );
+    if (this.firstUrlSegment === 'sales-dash') this.navigatePath(`/sales-dash/action/sales-agent/edit-sales-agents/${id}`);
+    else this.navigatePath(`/steckholders/action/sales-agents/edit-sales-agents/${id}`);
   }
 
   navigatePath(path: string) {
@@ -361,9 +367,9 @@ export class ViewSalesAgentsComponent implements OnInit {
   }
 
   viewSalesAgent(id: number) {
-    this.navigatePath(
-      `/steckholders/action/sales-agents/preview-sales-agents/${id}`,
-    );
+    if (this.firstUrlSegment === 'sales-dash') this.navigatePath(`/sales-dash/action/sales-agent/preview-sales-agents/${id}`);
+    else this.navigatePath(`/steckholders/action/sales-agents/preview-sales-agents/${id}`);
+    
   }
 
   onKeyDown(event: KeyboardEvent) {

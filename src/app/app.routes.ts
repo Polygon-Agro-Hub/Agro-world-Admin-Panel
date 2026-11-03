@@ -74,6 +74,7 @@ import { MonthlyReportComponent } from './application/report-section/monthly-rep
 import { CreateCompanyComponent } from './application/collection-hub-section/create-company/create-company.component';
 import { ManageCompanyComponent } from './application/collection-hub-section/manage-company/manage-company.component';
 import { CollectiveofficersEditComponent } from './application/collection-officer-app/collectiveofficers-edit/collectiveofficers-edit.component';
+import { SalesDashDbComponent } from './application/sales-dash-section/sales-dash-db/sales-dash-db.component';
 import { SalesDashComponent } from './application/sales-dash-section/sales-dash/sales-dash.component';
 import { ComplaintsDashbordComponent } from './application/Complaints/complaints-dashbord/complaints-dashbord.component';
 import { OptOutFeedbacksComponent } from './application/plant-care-app/opt-out-feedbacks/opt-out-feedbacks.component';
@@ -323,6 +324,11 @@ import { PendingProductMismatchTodayComponent } from './application/procurement-
 import { IvrCallSummaryComponent } from './application/call-centers/action/ivr-call-summary/ivr-call-summary.component';
 import { AddNewContainerComponent } from './application/procurement-section/add-new-container/add-new-container.component';
 import { ManageContainerSizesComponent } from './application/procurement-section/manage-container-sizes/manage-container-sizes.component';
+import { BuyerApprovalsComponent } from './application/sales-dash-section/buyer-approvals/buyer-approvals.component';
+import { TotalBuyerValueComponent } from './application/sales-dash-section/total-buyer-value/total-buyer-value.component';
+import { WholesaleBuyerViewDocumentComponent } from './application/sales-dash-section/wholesale-buyer-view-document/wholesale-buyer-view-document.component';
+import { SalesAgentRatingsComponent } from './application/sales-dash-section/sales-agent-ratings/sales-agent-ratings.component';
+import { OnboardWBuyersComponent } from './application/sales-dash-section/onboard-w-buyers/onboard-w-buyers.component';
 
 export const routes: Routes = [
   {
@@ -1829,32 +1835,90 @@ export const routes: Routes = [
         path: 'sales-dash',
         children: [
           {
-            path: '',
-            component: SalesDashComponent,
+            path: 'dashboard',
+            component: SalesDashDbComponent,
           },
           {
-            path: 'customer',
-            component: CustomersComponent,
-            canActivate: [PermissionGuard],
-            data: { permission: 'Sales Dash customer' },
-          },
+            path: 'action',
+            children: [
+              {
+                path: '',
+                component: SalesDashComponent,
+              },
+              {
+                path: 'customer',
+                component: CustomersComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Sales Dash customer' },
+              },
 
-          {
-            path: 'view-orders',
-            component: ViewOrdersComponent,
-            canActivate: [PermissionGuard],
-            data: { permission: 'Sales Dash view orders' },
-          },
+              {
+                path: 'view-orders',
+                component: ViewOrdersComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Sales Dash view orders' },
+              },
 
-          {
-            path: 'sales-targets',
-            component: SalesTargetComponent,
-            canActivate: [PermissionGuard],
-            data: { permission: 'Sales Dash sales targets' },
-          },
-          {
-            path: 'customers-orders/:id',
-            component: CustomerOrdersComponent,
+              {
+                path: 'sales-targets',
+                component: SalesTargetComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Sales Dash sales targets' },
+              },
+              {
+                path: 'customers-orders/:id',
+                component: CustomerOrdersComponent,
+              },
+              {
+                path: 'buyer-approvals',
+                component: BuyerApprovalsComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Sales Dash buyer approvals' },
+              },
+              {
+                path: 'total-buyer-value',
+                component: TotalBuyerValueComponent,
+                // canActivate: [PermissionGuard],
+                // data: { permission: 'Sales Dash total buyer value' },
+              },
+              {
+                path: 'wholesale-buyer/document/:id',
+                component: WholesaleBuyerViewDocumentComponent,
+                // canActivate: [PermissionGuard],
+                // data: { permission: 'Sales Dash buyer approvals' },
+              },
+              {
+                path: 'agent-ratings',
+                component: SalesAgentRatingsComponent,
+                // canActivate: [PermissionGuard],
+                // data: { permission: 'Sales Dash agent ratings' },
+              },
+              {
+                path: 'onboard-w-buyers',
+                component:OnboardWBuyersComponent,
+              },
+              {
+                path: 'sales-agent',
+                children: [
+                  {
+                    path: '',
+                    component: ViewSalesAgentsComponent,
+                  },
+                  {
+                    path: 'preview-sales-agents/:id',
+                    component: PreviewSalesAgentsComponent,
+                    // canActivate: [PermissionGuard],
+                    // data: { permission: ['View individual sales agent'] },
+                  },
+                  {
+                    path: 'edit-sales-agents/:id',
+                    component: EditSalesAgentComponent,
+                    // canActivate: [PermissionGuard],
+                    // data: { permission: 'Edit sales agent' },
+                  },
+                ]
+              }
+            ],
           },
         ],
       },

@@ -6,6 +6,7 @@ import {
   SalesDashboardTotals,
   SalesDashService,
 } from '../../../services/sales-dash/sales-dash.service';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
 interface BuyerCard {
   label: string;
@@ -23,7 +24,7 @@ interface SummaryCard {
 @Component({
   selector: 'app-sales-dash-db',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, LoadingSpinnerComponent],
   templateUrl: './sales-dash-db.component.html',
   host: { class: 'block min-h-full' },
 })
@@ -31,7 +32,6 @@ export class SalesDashDbComponent implements OnInit {
   data: SalesDashboardData | null = null;
   summaryCards: SummaryCard[] = [];
   loading = false;
-  error = false;
 
   readonly buyerCards: BuyerCard[] = [
     { label: 'Total Buyers', key: 'totalBuyers', bgClass: 'bg-[#0d9488]' },
@@ -42,8 +42,8 @@ export class SalesDashDbComponent implements OnInit {
     { label: 'Wholesale Requests', key: 'wholesaleRequests', bgClass: 'bg-[#b78e00]' },
   ];
 
-  trackByLabel = (_: number, card: SummaryCard) => card.label;
-  trackByKey = (_: number, card: BuyerCard) => card.key;
+  // Built once (placeholders first), rebuilt only when data arrives
+  summaryCards: SummaryCard[] = this.buildSummaryCards();
 
   constructor(
     private dashboardService: SalesDashService,
@@ -56,41 +56,27 @@ export class SalesDashDbComponent implements OnInit {
 
   loadDashboard(): void {
     this.loading = true;
-    this.error = false;
     this.dashboardService.getDashboard()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
           if (response.status && response.data && Array.isArray(response.data.packages)) {
             this.data = response.data;
-            this.buildSummaryCards();
+            this.summaryCards = this.buildSummaryCards();
           } else {
-            this.summaryCards = [];
-            this.error = true;
+            console.error('Sales dashboard: unexpected response', response);
           }
           this.loading = false;
         },
-        error: () => {
-          this.summaryCards = [];
-          this.error = true;
+        error: (err) => {
+          console.error('Sales dashboard: request failed', err);
           this.loading = false;
         },
       });
   }
 
-  private buildSummaryCards(): void {
-    this.summaryCards = [
-      { label: 'Total Value of New Buyers', value: this.valueFor('newBuyersValue'), type: 'currency', icon: 'fa-solid fa-money-bill-1-wave' },
-      { label: 'Total Value of Existing Buyers', value: this.valueFor('existingBuyersValue'), type: 'currency', icon: 'fa-solid fa-money-bill-1-wave' },
-      { label: 'Total Orders Placed', value: this.valueFor('totalOrdersPlaced'), type: 'orders', icon: 'fa-solid fa-box' },
-      ...(this.data?.packages ?? []).map((pkg): SummaryCard => ({
-        label: pkg.name,
-        value: pkg.purchases,
-        type: 'purchases',
-        icon: 'fa-solid fa-bag-shopping',
-      })),
-    ];
-  }
+  trackByKey = (_: number, card: BuyerCard) => card.key;
+  trackByLabel = (_: number, card: SummaryCard) => card.label;
 
   valueFor(key: keyof SalesDashboardTotals): number | null {
     const value = this.data?.[key];
@@ -106,5 +92,19 @@ export class SalesDashDbComponent implements OnInit {
     if (card.type === 'currency') return `Rs. ${formatted}`;
     if (card.type === 'purchases') return `${formatted} Purchases`;
     return formatted;
+  }
+
+  private buildSummaryCards(): SummaryCard[] {
+    return [
+      { label: 'Total Value of New Buyers', value: this.valueFor('newBuyersValue'), type: 'currency', icon: 'fa-solid fa-money-bill-1-wave' },
+      { label: 'Total Value of Existing Buyers', value: this.valueFor('existingBuyersValue'), type: 'currency', icon: 'fa-solid fa-money-bill-1-wave' },
+      { label: 'Total Orders Placed', value: this.valueFor('totalOrdersPlaced'), type: 'orders', icon: 'fa-solid fa-box' },
+      ...(this.data?.packages ?? []).map((pkg): SummaryCard => ({
+        label: pkg.name,
+        value: pkg.purchases,
+        type: 'purchases',
+        icon: 'fa-solid fa-bag-shopping',
+      })),
+    ];
   }
 }

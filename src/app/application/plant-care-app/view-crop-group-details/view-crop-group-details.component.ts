@@ -94,4 +94,8 @@ export class ViewCropGroupDetailsComponent implements OnInit {
         return '—';
     }
   }
+
+  isSalesOnly(displayFor?: string | null): boolean {
+    return displayFor === 'Sales';
+  }
 }

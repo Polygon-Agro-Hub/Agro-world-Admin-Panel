@@ -60,7 +60,7 @@
       </div>
 
       <!-- Crop Name Sinhala -->
-      <div>
+      <div *ngIf="!isSalesOnly(cropGroup.displayFor)">
         <label for="cropNameSin" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Crop Name By Sinhala *
         </label>
@@ -81,7 +81,7 @@
       </div>
 
       <!-- Crop Name Tamil -->
-      <div>
+      <div *ngIf="!isSalesOnly(cropGroup.displayFor)">
         <label for="cropNameTam" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Crop Name By Tamil *
         </label>
@@ -110,7 +110,7 @@
     'border-red-500':
       !cropGroup.parentCategory && parentCategoryInput?.touched,
   }" class="block w-full mt-2 text-gray-700 dark:text-textDark bg-tileLight dark:bg-tileBlack rounded-md py-2 shadow-sm p-dropdown-custom parent-category-dropdown"
-          #parentCategoryInput="ngModel" panelStyleClass="custom-dropdown-panel" styleClass="w-full">
+          #parentCategoryInput="ngModel" panelStyleClass="custom-dropdown-panel" styleClass="w-full" appendTo="body">
         </p-dropdown>
 
         <!-- Validation Error -->
@@ -122,7 +122,7 @@
         </div>
       </div>
 
-      <div>
+      <div *ngIf="!isSalesOnly(cropGroup.displayFor)">
         <label for="costPerAcre" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Cost per acre field (Rs.) *
         </label>
@@ -142,7 +142,7 @@
         </div>
       </div>
 
-      <div>
+      <div *ngIf="!isSalesOnly(cropGroup.displayFor)">
         <label for="incomePerAcre" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Income per acre field (Rs.) *
         </label>
@@ -164,7 +164,7 @@
       </div>
 
       <!-- Seed Rate -->
-      <div>
+      <div *ngIf="!isSalesOnly(cropGroup.displayFor)">
         <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Recommended Seed Rate per Unit (kg/ha) *
         </label>
@@ -189,7 +189,7 @@
       </div>
 
       <!-- Row Spacing -->
-      <div>
+      <div *ngIf="!isSalesOnly(cropGroup.displayFor)">
         <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Row Spacing (cm) *
         </label>
@@ -214,7 +214,7 @@
       </div>
 
       <!-- Plant Spacing -->
-      <div>
+      <div *ngIf="!isSalesOnly(cropGroup.displayFor)">
         <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Plant Spacing (cm) *
         </label>
@@ -239,7 +239,7 @@
       </div>
 
       <!-- Average Yield -->
-      <div>
+      <div *ngIf="!isSalesOnly(cropGroup.displayFor)">
         <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Average Yield per Plant (kg) *
         </label>
@@ -264,7 +264,7 @@
       </div>
 
       <!-- NPK Ratio -->
-      <div>
+      <div *ngIf="!isSalesOnly(cropGroup.displayFor)">
         <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Recommended NPK Ratio (kg/ha) *
         </label>
@@ -370,7 +370,7 @@
     <form #cropForm="ngForm">
       <div class="space-y-4">
         <!-- Display (only when no marketplace items exist for this crop group) -->
-        <div *ngIf="newsItems.length && itemCount === 0">
+        <div *ngIf="newsItems.length && itemCount === 0 && !isSalesOnly(newsItems[0]?.displayFor)">
           <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Display *
           </label>
@@ -414,7 +414,7 @@
         </div>
 
         <!-- Crop Name Sinhala -->
-        <div>
+        <div *ngIf="!isSalesOnly(newsItems[0]?.displayFor)">
           <label for="cropName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Crop Name By Sinhala
             *</label>
           <input type="text" id="cropNameSinhala" [(ngModel)]="newsItems[0].cropNameSinhala" name="cropNameSinhala"
@@ -434,7 +434,7 @@
         </div>
 
         <!-- Crop Name Tamil -->
-        <div>
+        <div *ngIf="!isSalesOnly(newsItems[0]?.displayFor)">
           <label for="cropName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Crop Name By Tamil
             *</label>
           <input type="text" id="cropNameTamil" [(ngModel)]="newsItems[0].cropNameTamil" name="cropNameTamil"
@@ -474,7 +474,7 @@
         </div>
 
         <!-- Edit Section - Cost per acre field -->
-        <div>
+        <div *ngIf="!isSalesOnly(newsItems[0]?.displayFor)">
           <label for="costPerAcreEdit" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Cost per acre field (Rs.) *
           </label>
@@ -495,7 +495,7 @@
         </div>
 
         <!-- Edit Section - Income per acre field -->
-        <div>
+        <div *ngIf="!isSalesOnly(newsItems[0]?.displayFor)">
           <label for="incomePerAcreEdit" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Income per acre field (Rs.) *
           </label>
@@ -516,7 +516,7 @@
         </div>
 
         <!-- Seed Rate Edit -->
-        <div>
+        <div *ngIf="!isSalesOnly(newsItems[0]?.displayFor)">
           <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Recommended Seed Rate per Unit (kg/ha) *
           </label>
@@ -541,7 +541,7 @@
         </div>
 
         <!-- Row Spacing Edit -->
-        <div>
+        <div *ngIf="!isSalesOnly(newsItems[0]?.displayFor)">
           <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Row Spacing (cm) *
           </label>
@@ -566,7 +566,7 @@
         </div>
 
         <!-- Plant Spacing Edit -->
-        <div>
+        <div *ngIf="!isSalesOnly(newsItems[0]?.displayFor)">
           <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Plant Spacing (cm) *
           </label>
@@ -592,7 +592,7 @@
         </div>
 
         <!-- Average Yield Edit -->
-        <div>
+        <div *ngIf="!isSalesOnly(newsItems[0]?.displayFor)">
           <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Average Yield per Plant (kg) *
           </label>
@@ -617,7 +617,7 @@
         </div>
 
         <!-- NPK Ratio Edit -->
-        <div>
+        <div *ngIf="!isSalesOnly(newsItems[0]?.displayFor)">
           <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Recommended NPK Ratio (kg/ha) *
           </label>

@@ -21,10 +21,6 @@ export class AssetsService {
       Authorization: `Bearer ${this.token}`,
     });
 
-    console.log("itemId", itemId);
-    console.log("category", category);
-    console.log("farmId", farmId);
-
     let url = `${this.apiUrl}auth/get-fixed-assets/${itemId}/${category}/${farmId}`;
 
     return this.http.get<any>(url, { headers });
@@ -35,8 +31,6 @@ export class AssetsService {
       Authorization: `Bearer ${this.token}`,
     });
 
-    console.log("buildingAssetId", buildingAssetId);
-
     let url = `${this.apiUrl}auth/get-fixed-assets/building-ownership/${buildingAssetId}`;
 
     return this.http.get<any>(url, { headers });
@@ -46,8 +40,6 @@ export class AssetsService {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-
-    console.log("landAssetId", landAssetId);
 
     let url = `${this.apiUrl}auth/get-fixed-assets/land-ownership/${landAssetId}`;
 
@@ -71,7 +63,6 @@ export class AssetsService {
     });
     let url = `${this.apiUrl}auth/get-current-assets-view/${userId}/${category}/${farmId}`;
     let res = this.http.get<any>(url, { headers });
-    console.log(res);
 
     return res;
   }
@@ -82,7 +73,6 @@ export class AssetsService {
     });
     let url = `${this.apiUrl}auth/get-current-asset-report/${id}`;
     let res = this.http.get<any>(url, { headers });
-    console.log(res);
 
     return res;
   }

@@ -390,7 +390,7 @@ export class CreateCropGroupComponent {
           this.isSubmitting = false;
           Swal.fire({
             icon: 'error',
-            title: 'Unsuccess',
+            title: 'Validation Error',
             text: response.message,
             customClass: {
               popup:

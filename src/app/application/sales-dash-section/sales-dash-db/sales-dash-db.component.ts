@@ -43,7 +43,7 @@ export class SalesDashDbComponent implements OnInit {
   ];
 
   // Built once (placeholders first), rebuilt only when data arrives
-  summaryCards: SummaryCard[] = this.buildSummaryCards();
+  // summaryCards: SummaryCard[] = this.buildSummaryCards();
 
   constructor(
     private dashboardService: SalesDashService,

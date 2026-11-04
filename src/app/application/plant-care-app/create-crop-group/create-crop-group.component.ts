@@ -320,14 +320,14 @@ export class CreateCropGroupComponent {
       }
     }
 
-    if (!this.cropGroup.bgColor) {
-      errors.push('Please choose a Background Color');
-    }
-
-    const onlyNumbersPattern = /^[0-9]+$/;
+        const onlyNumbersPattern = /^[0-9]+$/;
 
     if (!this.selectedFile) {
       errors.push('Please select an image file');
+    }
+
+    if (!this.cropGroup.bgColor) {
+      errors.push('Please choose a Background Color');
     }
 
     if (errors.length > 0) {

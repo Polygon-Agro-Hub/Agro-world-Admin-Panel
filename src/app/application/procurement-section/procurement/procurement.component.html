@@ -1,6 +1,5 @@
-<div class="flex justify-center items-start">
-  <div
-    class="grid grid-cols-[310px] sm:grid-cols-[repeat(2,310px)] md:grid-cols-[repeat(3,310px)] gap-8 lg:gap-16 justify-items-start">
+<div class="flex justify-center items-center">
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 lg:gap-16">
 
     <!-- Dispatch Packages -->
     <div (click)="definePackages()" class="flex justify-center cursor-pointer" *ngIf="
@@ -54,7 +53,7 @@
     </div>
 
     <!-- Product Shortage + popup -->
-    <div class="relative" *ngIf="
+    <div class="relative flex justify-center" *ngIf="
         permissionService.hasPermission('Procurement product shortage') ||
         tokenService.getUserDetails().role === '1'
       ">
@@ -138,7 +137,7 @@
 
       <!-- Pending Load Alerts popup -->
       <div *ngIf="istogglePopupLoadMismatchView"
-        class="absolute top-full left-1/2 -translate-x-1/2 mt-2 z-50 rounded-lg shadow-[0_3px_10px_rgb(0,0,0,0.2)] bg-white w-[310px] dark:bg-tileBlack dark:text-gray-200">
+        class="absolute top-full left-0 mt-2 z-50 rounded-lg shadow-[0_3px_10px_rgb(0,0,0,0.2)] bg-white w-[310px] dark:bg-tileBlack dark:text-gray-200">
         <div
           class="flex items-center justify-between rounded-lg dark:bg-iconCoverDark dark:hover:bg-tileHoverDark hover:bg-tileHoverLight px-4 py-2 cursor-pointer"
           (click)="loadmismatch()">
@@ -150,7 +149,7 @@
     </div>
 
     <!-- Container Sizes + popup -->
-    <div class="relative" *ngIf="
+    <div class="relative flex justify-center" *ngIf="
         permissionService.hasPermission('Procurement container sizes') ||
         tokenService.getUserDetails().role === '1'
       ">

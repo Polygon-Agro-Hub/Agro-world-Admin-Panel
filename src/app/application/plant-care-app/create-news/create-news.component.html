@@ -82,6 +82,7 @@
         </label>
         <input
   type="text"
+  maxlength="255"
   id="titleEnglish"
   [(ngModel)]="createNewsObj.titleEnglish"
   (ngModelChange)="onEnglishTitleChange($event)"
@@ -131,6 +132,7 @@
         </label>
         <input
   type="text"
+  maxLength="255"
   id="titleSinhala"
   [(ngModel)]="createNewsObj.titleSinhala"
   (ngModelChange)="onSinhalaTitleChange($event)"
@@ -176,6 +178,7 @@
         </label>
         <input
   type="text"
+  maxlength="255"
   id="titleTamil"
   [(ngModel)]="createNewsObj.titleTamil"
   (ngModelChange)="onTamilTitleChange($event)"
@@ -355,6 +358,7 @@
         </label>
         <input
   type="text"
+  maxlength="255"
   id="titleEnglishEdit"
   [(ngModel)]="newsItems[0].titleEnglish"
   (ngModelChange)="onEnglishTitleChange($event)"
@@ -424,6 +428,7 @@
         </label>
         <input
   type="text"
+  maxLength="255"
   id="titleSinhalaEdit"
   [(ngModel)]="newsItems[0].titleSinhala"
   (ngModelChange)="onSinhalaTitleChange($event)"
@@ -491,6 +496,7 @@
         </label>
         <input
   type="text"
+  maxLength="255"
   id="titleTamilEdit"
   [(ngModel)]="newsItems[0].titleTamil"
   (ngModelChange)="onTamilTitleChange($event)"

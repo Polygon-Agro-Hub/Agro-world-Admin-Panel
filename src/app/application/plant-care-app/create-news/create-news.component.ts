@@ -152,19 +152,15 @@ export class CreateNewsComponent {
   ) {}
 
   validateTitleEnglish(value: string): void {
-    // Trim leading spaces
+    // Trim leading spaces only (no language validation)
     const trimmedValue = value.trimStart();
     if (trimmedValue !== value) {
-      // Update the model with trimmed value
       if (this.itemId === null) {
         this.createNewsObj.titleEnglish = trimmedValue;
       } else {
         this.newsItems[0].titleEnglish = trimmedValue;
       }
     }
-
-    const regex = /[a-zA-Z!@#$%^&*(),.?":{}|<>]/;
-    this.isEnglishValid = regex.test(trimmedValue);
   }
 
   isEnglishOnly(input: string): string {
@@ -327,19 +323,17 @@ export class CreateNewsComponent {
       return;
     }
 
-    // Validate language-specific fields
+    // Validate language-specific fields (titles are no longer language-restricted)
     const formData = new FormData();
     const titleEnglish = this.isEnglishOnly(this.createNewsObj.titleEnglish);
     const descriptionEnglish = this.isEnglishOnly(
       this.createNewsObj.descriptionEnglish,
     );
-    const titleSinhala = this.isSinhalaAndNumberOnly(
-      this.createNewsObj.titleSinhala,
-    );
+    const titleSinhala = this.createNewsObj.titleSinhala.trimStart();
     const descriptionSinhala = this.isSinhalaAndNumberOnly(
       this.createNewsObj.descriptionSinhala,
     );
-    const titleTamil = this.isTamilAndNumberOnly(this.createNewsObj.titleTamil);
+    const titleTamil = this.createNewsObj.titleTamil;
     const descriptionTamil = this.isTamilAndNumberOnly(
       this.createNewsObj.descriptionTamil,
     );
@@ -816,19 +810,17 @@ export class CreateNewsComponent {
       return;
     }
 
-    // Validate language-specific fields
+    // Validate language-specific fields (titles are no longer language-restricted)
     const formData = new FormData();
     const titleEnglish = this.isEnglishOnly(this.newsItems[0].titleEnglish);
     const descriptionEnglish = this.isEnglishOnly(
       this.newsItems[0].descriptionEnglish,
     );
-    const titleSinhala = this.isSinhalaAndNumberOnly(
-      this.newsItems[0].titleSinhala,
-    );
+    const titleSinhala = this.newsItems[0].titleSinhala.trimStart();
     const descriptionSinhala = this.isSinhalaAndNumberOnly(
       this.newsItems[0].descriptionSinhala,
     );
-    const titleTamil = this.isTamilAndNumberOnly(this.newsItems[0].titleTamil);
+    const titleTamil = this.newsItems[0].titleTamil;
     const descriptionTamil = this.isTamilAndNumberOnly(
       this.newsItems[0].descriptionTamil,
     );
@@ -1450,6 +1442,7 @@ export class CreateNewsComponent {
       }
     }
   }
+
   onSinhalaTitleChange(value: string): void {
     const trimmedValue = value.trimStart();
     if (this.itemId === null) {
@@ -1457,7 +1450,6 @@ export class CreateNewsComponent {
     } else {
       this.newsItems[0].titleSinhala = trimmedValue;
     }
-    this.isSinhalaAndNumberOnly(trimmedValue);
   }
 
   onTamilTitleChange(value: string): void {
@@ -1467,7 +1459,6 @@ export class CreateNewsComponent {
     } else {
       this.newsItems[0].titleTamil = trimmedValue;
     }
-    this.isTamilAndNumberOnly(trimmedValue);
   }
 
   // Add this property to your component
@@ -1538,7 +1529,8 @@ export class CreateNewsComponent {
 
       plainText
         .split(/\s+/)
-        .map((w) => w.replace(/[^a-zA-Z0-9\u0D80-\u0DFF\u0B80-\u0BFF]/g, ''))
+        // Keep letters, combining marks and digits from any language
+        .map((w) => w.replace(/[^\p{L}\p{M}\p{N}]/gu, ''))
         .filter((w) => w.length > 0)
         .forEach((word) => wordMap.push({ word, label: field.label }));
     });

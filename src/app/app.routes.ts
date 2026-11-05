@@ -1917,6 +1917,12 @@ export const routes: Routes = [
                     // canActivate: [PermissionGuard],
                     // data: { permission: 'Edit sales agent' },
                   },
+                  {
+                    path: 'create-sales-agents',
+                    component: CreateSalesAgentsComponent,
+                    // canActivate: [PermissionGuard],
+                    // data: { permission: ['Onboard sales agent'] },
+                  },
                 ]
               }
             ],

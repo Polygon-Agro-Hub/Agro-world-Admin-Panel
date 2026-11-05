@@ -7,12 +7,12 @@
 
 <div class="fixed-width-container">
     <div class="pt-5 pr-12 pl-12 pb-5 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
-        <div class="flex justify-between items-center mb-8 mt-4">
+        <div class="flex flex-wrap justify-between items-center gap-4 mb-8 mt-4">
             <div class="flex items-center">
                 <h2 class="text-xl font-normal text-[#292929] dark:text-textDark">
                     COP Transactions ({{ totalItems < 10 ? "0" + totalItems : totalItems }}) </h2>
             </div>
-            <div class="flex items-center">
+            <div class="flex flex-wrap items-center gap-y-3 ml-auto">
                 <i class="mr-6 w-6 h-6 fill-current text-gray-500">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                         <path
@@ -43,7 +43,7 @@
                         [appendTo]="'body'" />
                 </div>
 
-                <div class="flex items-center rounded-full px-4 py-2 w-72 bg-[#F1F1F1] dark:bg-[#272F45]">
+                <div class="flex items-center rounded-full px-4 py-2 w-72 max-w-full bg-[#F1F1F1] dark:bg-[#272F45]">
                     <input type="text" placeholder="Search" title="Search by Transaction ID, Employee ID"
                         class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
                         [(ngModel)]="searchItem" (input)="onSearchInput($event)"
@@ -142,7 +142,8 @@
                             class="px-2 py-3 text-center text-[#000000] dark:text-textDark">
                             <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
                                 (click)="viewAllOrders(item.id)">
-                                <i class="fa-solid fa-arrow-up-right-from-square text-[#000000] text-lg"></i>
+                                <i
+                                    class="fa-solid fa-arrow-up-right-from-square text-[#000000] dark:text-textDark text-lg"></i>
                             </button>
                         </td>
 

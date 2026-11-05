@@ -18,6 +18,7 @@ export class AddComplainCategoriesComponent implements OnInit {
   roleArr: Roles[] = [];
   appsArr: Apps[] = [];
   complainObj: ComplainCategory = new ComplainCategory();
+  submitted = false;
 
   constructor(
     private router: Router,
@@ -62,12 +63,13 @@ export class AddComplainCategoriesComponent implements OnInit {
   }
 
   onSubmit() {
+    this.submitted = true;
     const validationErrors = this.validateForm();
-    
+
     if (validationErrors.length > 0) {
       const errorList = validationErrors.map(error => `<li class="text-left">${error}</li>`).join('');
       const errorHtml = `<ul class="text-left list-disc pl-5">${errorList}</ul>`;
-      
+
       Swal.fire({
         icon: 'warning',
         title: 'Validation Error',
@@ -81,7 +83,7 @@ export class AddComplainCategoriesComponent implements OnInit {
       });
       return;
     }
-  
+
     this.complaintSrv.AddNewComplainCategory(this.complainObj).subscribe(
       (res) => {
         if (res.status) {
@@ -136,7 +138,7 @@ export class AddComplainCategoriesComponent implements OnInit {
       }
     );
   }
-  
+
   back(): void {
     Swal.fire({
       icon: 'warning',
@@ -224,9 +226,9 @@ export class AddComplainCategoriesComponent implements OnInit {
   }
 
   isFieldInvalid(field: any): boolean {
-    return field?.invalid && (field?.dirty || field?.touched);
+    return this.submitted && !!field?.invalid;
   }
-
+  
   markTouched(field: any) {
     field.control.markAsTouched();
     field.control.updateValueAndValidity();

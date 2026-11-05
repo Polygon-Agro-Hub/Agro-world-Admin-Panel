@@ -185,126 +185,132 @@ export class CollectionReportComponent {
   }
 
   downloadTemplate1() {
-  // Both dates are required to download
-  if (!this.fromDate || !this.toDate) {
-    return;
-  }
+    // Both dates are required to download
+    if (!this.fromDate || !this.toDate) {
+      return;
+    }
 
-  this.isDownloading = true;
+    this.isDownloading = true;
 
-  let queryParams: string[] = [];
+    let queryParams: string[] = [];
 
-  if (this.selectedCenter) {
-    queryParams.push(`centerId=${this.selectedCenter.id}`);
-  }
+    if (this.selectedCenter) {
+      queryParams.push(`centerId=${this.selectedCenter.id}`);
+    }
 
-  // Convert Date objects to formatted strings for download
-  const formattedFromDate = this.datePipe.transform(
-    this.fromDate,
-    'yyyy-MM-dd',
-  );
-  const formattedToDate = this.datePipe.transform(this.toDate, 'yyyy-MM-dd');
+    // Convert Date objects to formatted strings for download
+    const formattedFromDate = this.datePipe.transform(
+      this.fromDate,
+      'yyyy-MM-dd',
+    );
+    const formattedToDate = this.datePipe.transform(this.toDate, 'yyyy-MM-dd');
 
-  if (formattedFromDate) {
-    queryParams.push(`startDate=${formattedFromDate}`);
-  }
+    if (formattedFromDate) {
+      queryParams.push(`startDate=${formattedFromDate}`);
+    }
 
-  if (formattedToDate) {
-    queryParams.push(`endDate=${formattedToDate}`);
-  }
+    if (formattedToDate) {
+      queryParams.push(`endDate=${formattedToDate}`);
+    }
 
-  if (this.search) {
-    queryParams.push(`search=${encodeURIComponent(this.search)}`);
-  }
+    if (this.search) {
+      queryParams.push(`search=${encodeURIComponent(this.search)}`);
+    }
 
-  const queryString =
-    queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
-  const apiUrl = `${environment.API_URL}auth/download-collection-report${queryString}`;
+    const queryString =
+      queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
+    const apiUrl = `${environment.API_URL}auth/download-collection-report${queryString}`;
 
-  // Capture the selected center's code now, so the filename stays correct
-  // even if the user changes the filter while the download is in progress
-  const centerCode = this.selectedCenter?.regCode?.trim() || '';
+    // Capture the selected center's code now, so the filename stays correct
+    // even if the user changes the filter while the download is in progress
+    const centerCode = this.selectedCenter?.regCode?.trim() || '';
 
-  fetch(apiUrl, {
-    method: 'GET',
-  })
-    .then((response) => {
-      if (response.ok) {
-        return response.blob();
-      } else {
-        throw new Error('Failed to download the file');
-      }
+    fetch(apiUrl, {
+      method: 'GET',
     })
-    .then((blob) => {
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
+      .then((response) => {
+        if (response.ok) {
+          return response.blob();
+        } else {
+          throw new Error('Failed to download the file');
+        }
+      })
+      .then((blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
 
-      // // Generate filename
-      // let filename = '';
+        // // Generate filename
+        // let filename = '';
 
-      // // Prefix with collection centre code when a center is selected
-      // if (centerCode) {
-      //   filename += `${centerCode} `;
-      // }
+        // // Prefix with collection centre code when a center is selected
+        // if (centerCode) {
+        //   filename += `${centerCode} `;
+        // }
 
-      // filename += 'Collection Report';
+        // filename += 'Collection Report';
 
-      // const fromDateFormatted = this.formatDateForFilename(
-      //   new Date(this.fromDate!),
-      // );
-      // const toDateFormatted = this.formatDateForFilename(
-      //   new Date(this.toDate!),
-      // );
-      // filename += ` from ${fromDateFormatted} to ${toDateFormatted}`;
+        // const fromDateFormatted = this.formatDateForFilename(
+        //   new Date(this.fromDate!),
+        // );
+        // const toDateFormatted = this.formatDateForFilename(
+        //   new Date(this.toDate!),
+        // );
+        // filename += ` from ${fromDateFormatted} to ${toDateFormatted}`;
 
-      // // Add generation timestamp: YYYY-MM-DD HH.MM AM/PM
-      // const now = new Date();
-      // const generatedDate = this.formatDateForGeneration(now);
-      // const generatedTime = this.formatTimeForFilename(now);
+        // // Add generation timestamp: YYYY-MM-DD HH.MM AM/PM
+        // const now = new Date();
+        // const generatedDate = this.formatDateForGeneration(now);
+        // const generatedTime = this.formatTimeForFilename(now);
 
-      // filename += ` Generated at ${generatedDate} ${generatedTime}`;
+        // filename += ` Generated at ${generatedDate} ${generatedTime}`;
 
-      // filename += '.xlsx';
+        // filename += '.xlsx';
 
-      // // Remove characters that are invalid in file names
-      // a.download = filename.replace(/[\\/:*?"<>|]/g, '-');
+        // // Remove characters that are invalid in file names
+        // a.download = filename.replace(/[\\/:*?"<>|]/g, '-');
 
-      // Generate filename: <Centre Code> Collection Report From YYYY-MM-DD To YYYY-MM-DD
-      const fromDateFormatted = this.datePipe.transform(this.fromDate!, 'yyyy-MM-dd');
-      const toDateFormatted = this.datePipe.transform(this.toDate!, 'yyyy-MM-dd');
+        // Generate filename: <Centre Code> Collection Report From YYYY-MM-DD To YYYY-MM-DD
+        const fromDateFormatted = this.datePipe.transform(
+          this.fromDate!,
+          'yyyy-MM-dd',
+        );
+        const toDateFormatted = this.datePipe.transform(
+          this.toDate!,
+          'yyyy-MM-dd',
+        );
 
-      let filename = '';
-      
-      if (centerCode) {
-        filename += `${centerCode} `;
-      }
+        let filename = '';
 
-      filename += `Collection Report From ${fromDateFormatted} To ${toDateFormatted}.xlsx`;
+        if (centerCode) {
+          filename += `${centerCode} `;
+        }
 
-      // Remove characters that are invalid in file names
-      a.download = filename.replace(/[\\/:*?"<>|]/g, '-');
-      a.click();
-      window.URL.revokeObjectURL(url);
-      a.click();
-      window.URL.revokeObjectURL(url);
+        filename += `Collection Report From ${fromDateFormatted} To ${toDateFormatted}.xlsx`;
 
-      Swal.fire({
-        icon: 'success',
-        title: 'Downloaded',
-        text: 'Please check your downloads folder',
+        // Remove characters that are invalid in file names
+        a.download = filename.replace(/[\\/:*?"<>|]/g, '-');
+        a.click();
+        window.URL.revokeObjectURL(url);
+        a.click();
+        window.URL.revokeObjectURL(url);
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Downloaded',
+          text: 'Please check your downloads folder',
+        });
+        this.isDownloading = false;
+      })
+      .catch((error) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Download Failed',
+          text: error.message,
+        });
+        this.isDownloading = false;
       });
-      this.isDownloading = false;
-    })
-    .catch((error) => {
-      Swal.fire({
-        icon: 'error',
-        title: 'Download Failed',
-        text: error.message,
-      });
-      this.isDownloading = false;
-    });
-}
+  }
 
   // Format date for filename (returns format like "10th February")
   private formatDateForFilename(date: Date): string {
@@ -355,11 +361,11 @@ export class CollectionReportComponent {
 
   // Method to handle from date selection
   onFromDateChange() {
-  // Always reset To date and hide old data when From date changes
-  this.toDate = null;
-  this.minToDate = this.fromDate;
-  this.clearData();
-}
+    // Always reset To date and hide old data when From date changes
+    this.toDate = null;
+    this.minToDate = this.fromDate;
+    this.clearData();
+  }
 
   // Getter to check if from date is selected
   get isFromDateSelected(): boolean {
@@ -393,16 +399,16 @@ export class CollectionReportComponent {
   }
 
   onFromDateModelChange(value: Date | null): void {
-  this.toDate = null;
-  this.minToDate = value;
-  this.clearData();
-}
-
-onToDateModelChange(value: Date | null): void {
-  if (!value) {
+    this.toDate = null;
+    this.minToDate = value;
     this.clearData();
   }
-}
+
+  onToDateModelChange(value: Date | null): void {
+    if (!value) {
+      this.clearData();
+    }
+  }
 }
 
 class Centers {

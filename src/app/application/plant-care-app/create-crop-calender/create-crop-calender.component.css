@@ -590,3 +590,88 @@
   background-color: #1e40af !important;
   color: #ffffff !important;
 }
+
+/* =====================================================
+   Suitable Areas multiselect panel – dark theme fix
+   (panelStyleClass="crop-form-multiselect-panel")
+===================================================== */
+::ng-deep .dark .p-multiselect-panel.crop-form-multiselect-panel {
+  background-color: #374151 !important;
+  color: #f9fafb !important;
+  border: 1px solid #6b7280 !important;
+}
+
+::ng-deep .dark .crop-form-multiselect-panel .p-multiselect-header {
+  background-color: #4b5563 !important;
+  color: #f9fafb !important;
+  border-bottom: 1px solid #6b7280 !important;
+}
+
+/* filter input + icons */
+::ng-deep .dark .crop-form-multiselect-panel .p-multiselect-filter {
+  background-color: #4b5563 !important;
+  border: 1px solid #6b7280 !important;
+  color: #f9fafb !important;
+}
+
+::ng-deep .dark .crop-form-multiselect-panel .p-multiselect-filter-icon,
+::ng-deep .dark .crop-form-multiselect-panel .p-multiselect-close,
+::ng-deep .dark .crop-form-multiselect-panel .p-multiselect-close-icon {
+  color: #f9fafb !important;
+}
+
+/* option rows + text */
+::ng-deep .dark .crop-form-multiselect-panel .p-multiselect-items-wrapper,
+::ng-deep .dark .crop-form-multiselect-panel .p-multiselect-items {
+  background-color: #374151 !important;
+}
+
+::ng-deep .dark .crop-form-multiselect-panel .p-multiselect-items .p-multiselect-item,
+::ng-deep .dark .crop-form-multiselect-panel .p-multiselect-items .p-multiselect-item span {
+  color: #f9fafb !important;
+  background-color: transparent;
+}
+
+::ng-deep .dark .crop-form-multiselect-panel .p-multiselect-items .p-multiselect-item:hover {
+  background-color: #4b5563 !important;
+}
+
+::ng-deep .dark .crop-form-multiselect-panel .p-multiselect-items .p-multiselect-item.p-highlight {
+  background-color: #1e40af !important;
+  color: #ffffff !important;
+}
+
+::ng-deep .dark .crop-form-multiselect-panel .p-multiselect-empty-message {
+  color: #f9fafb !important;
+}
+
+/* checkboxes (header "select all" + each option) */
+::ng-deep .dark .crop-form-multiselect-panel .p-checkbox .p-checkbox-box {
+  background-color: #374151 !important;
+  border: 1px solid #6b7280 !important;
+}
+
+::ng-deep .dark .crop-form-multiselect-panel .p-checkbox .p-checkbox-box.p-highlight {
+  background-color: #2563eb !important;
+  border-color: #2563eb !important;
+}
+
+/* scrollbar (the white one in your screenshot) */
+::ng-deep .dark .crop-form-multiselect-panel .p-multiselect-items-wrapper {
+  scrollbar-width: thin;
+  scrollbar-color: #6b7280 #374151;
+  color-scheme: dark;
+}
+
+::ng-deep .dark .crop-form-multiselect-panel .p-multiselect-items-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+::ng-deep .dark .crop-form-multiselect-panel .p-multiselect-items-wrapper::-webkit-scrollbar-track {
+  background: #374151;
+}
+
+::ng-deep .dark .crop-form-multiselect-panel .p-multiselect-items-wrapper::-webkit-scrollbar-thumb {
+  background: #6b7280;
+  border-radius: 9999px;
+}

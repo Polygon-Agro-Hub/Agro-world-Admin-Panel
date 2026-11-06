@@ -25,7 +25,9 @@
 
   <div class="flex flex-row justify-between">
     <!-- form component -->
-    <div class="bg-[#FFFFFF] dark:bg-tileBlack p-5 shadow-md rounded-md w-[60%]">
+    <div class="flex flex-col gap-6 w-[60%]">
+    <!-- Product details card -->
+    <div class="bg-[#FFFFFF] dark:bg-tileBlack p-5 shadow-md rounded-md">
       <div class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">Category *</label>
         <p-dropdown id="category" name="category" [(ngModel)]="productObj.category" required [options]="categoryOptions"
@@ -89,6 +91,10 @@
         </div>
       </div>
 
+    </div>
+
+    <!-- Price card -->
+    <div class="bg-[#FFFFFF] dark:bg-tileBlack p-5 shadow-md rounded-md">
       <div class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">Price *</label>
         <div class="flex items-center space-x-4 mt-3">
@@ -221,8 +227,10 @@
         </div>
       </div>
 
-      <div class="border-t border-gray-300 dark:border-gray-600 my-10"></div>
+    </div>
 
+    <!-- Tags card -->
+    <div class="bg-[#FFFFFF] dark:bg-tileBlack p-5 shadow-md rounded-md">
       <div class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">
           Tags *
@@ -256,6 +264,7 @@
           At least one keyword is required.
         </p>
       </div>
+    </div>
     </div>
 
     <!-- <p *ngIf="productObj.unitType === 'Kg' " class="text-[#4B5563] text-base font-[500] my-1">

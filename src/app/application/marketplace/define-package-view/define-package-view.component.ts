@@ -32,7 +32,8 @@ interface MarketplaceItem {
   id: number;
   displayName: string;
   normalPrice: number;
-  discountedPrice: number;
+  // discountedPrice: number;
+  pkgBasePrice: number;
   productTypeId: number;
   isValid: number;
   isEnable: number;
@@ -213,10 +214,11 @@ export class DefinePackageViewComponent implements OnInit {
           id: item.id,
           displayName: item.displayName,
           normalPrice: item.normalPrice,
-          discountedPrice: item.discountedPrice,
+          // discountedPrice: item.discountedPrice,
           productTypeId: item.productTypeId,
           isValid: item.isValid,
           isEnable: item.isEnable,
+          pkgBasePrice: item.pkgBasePrice,
         }));
         if (callback) callback();
       },
@@ -238,12 +240,12 @@ export class DefinePackageViewComponent implements OnInit {
 
     if (selectedProduct) {
       productType.productId = selectedProduct.id;
-      productType.selectedProductPrice = selectedProduct.discountedPrice;
+      productType.selectedProductPrice = selectedProduct.pkgBasePrice;
       productType.selectedProductIsValid = selectedProduct.isValid;
       productType.selectedProductIsEnable = selectedProduct.isEnable;
       productType.calculatedPrice = productType.quantity
-        ? productType.quantity * selectedProduct.discountedPrice
-        : selectedProduct.discountedPrice;
+        ? productType.quantity * selectedProduct.pkgBasePrice
+        : selectedProduct.pkgBasePrice;
     } else {
       productType.productId = null;
       productType.selectedProductPrice = undefined;

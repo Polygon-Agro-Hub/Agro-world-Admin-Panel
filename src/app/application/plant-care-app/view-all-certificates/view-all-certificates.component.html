@@ -14,30 +14,30 @@
 <div class="w-full min-w-0 max-w-full overflow-x-hidden">
   <div class="w-full min-w-0 max-w-full overflow-hidden rounded-lg bg-tileLight px-8 py-5 shadow-lg dark:bg-tileBlack">
     <!-- Header: wraps so the filters + search bar are never cut off -->
-    <div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 mb-2">
-      <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
+    <div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 mb-5">
+      <h2 class="text-2xl font-normal leading-10 text-textLight dark:text-textDark">
         View Certificates ({{ (certificateArr.length || 0) < 10 ? '0' + (certificateArr.length || 0) :
           (certificateArr.length || 0) }}) </h2>
 
           <div class="flex flex-wrap items-center justify-end gap-3 min-w-0 max-w-full">
             <p-dropdown
-              styleClass="mb-5 border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF]"
+              styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF]"
               [options]="QuestionsFilter" [(ngModel)]="selectQaction" optionLabel="label" optionValue="value"
               [showClear]="!!selectQaction" placeholder="Questions" (onChange)="fetchData()"></p-dropdown>
 
             <p-dropdown
-              styleClass="mb-5 border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF]"
+              styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF]"
               [options]="serviceAreasOptions" [(ngModel)]="selectArea" optionLabel="name" optionValue="value"
               [showClear]="!!selectArea" placeholder="Area" (onChange)="fetchData()"></p-dropdown>
 
             <p-dropdown
-              styleClass="mb-5 border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF]"
+              styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF]"
               [options]="companyArr" [(ngModel)]="selectCompany" optionLabel="companyName" optionValue="id"
               [showClear]="!!selectCompany" placeholder="Company" (onChange)="fetchData()"></p-dropdown>
 
             <!-- Search bar -->
             <div
-              class="flex items-center rounded-full px-4 py-2 w-full sm:w-72 xl:w-80 min-w-0 max-w-full bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark mb-5">
+              class="flex items-center rounded-full px-4 py-2 w-full sm:w-72 xl:w-80 min-w-0 max-w-full bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark">
               <input type="text" placeholder="Search by Certificate Number / Name" [(ngModel)]="searchText"
                 (keyup.enter)="onSearch()" (keyup.esc)="offSearch()"
                 class="bg-transparent outline-none w-full min-w-0 text-textLight dark:text-textDark" />

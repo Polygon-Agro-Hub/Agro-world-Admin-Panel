@@ -262,14 +262,14 @@ if (result.isConfirmed) {
     switch (fieldName) {
       case 'roleId':
         return 'Complaint Assignee Admin Category is required';
-      case 'appId':
-        return 'Displaying application is required';
       case 'categoryEnglish':
         return 'Category name in English is required';
       case 'categorySinhala':
         return 'Category name in Sinhala is required';
       case 'categoryTamil':
         return 'Category name in Tamil is required';
+      case 'appId':
+        return 'Displaying application is required';
       default:
         return '';
     }

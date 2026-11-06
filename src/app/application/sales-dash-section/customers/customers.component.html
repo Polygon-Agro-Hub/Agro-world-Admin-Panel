@@ -226,7 +226,7 @@
         </tbody>
       </table>
     </div>
-    <div class="dark:bg-[#262f45]">
+    <div *ngIf="hasData" class="dark:bg-[#262f45]">
       <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
         [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
         [screenReaderCurrentLabel]="'Youre on page'">

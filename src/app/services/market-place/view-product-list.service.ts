@@ -14,7 +14,7 @@ export class ViewProductListService {
   constructor(
     private http: HttpClient,
     private tokenService: TokenService,
-  ) {}
+  ) { }
 
   getProductList(
     page: number,

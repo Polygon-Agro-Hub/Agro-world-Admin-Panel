@@ -329,6 +329,7 @@ import { TotalBuyerValueComponent } from './application/sales-dash-section/total
 import { WholesaleBuyerViewDocumentComponent } from './application/sales-dash-section/wholesale-buyer-view-document/wholesale-buyer-view-document.component';
 import { SalesAgentRatingsComponent } from './application/sales-dash-section/sales-agent-ratings/sales-agent-ratings.component';
 import { OnboardWBuyersComponent } from './application/sales-dash-section/onboard-w-buyers/onboard-w-buyers.component';
+import { UploadProductsListPricesComponent } from './application/marketplace/upload-products-list-prices/upload-products-list-prices.component';
 
 export const routes: Routes = [
   {
@@ -1827,6 +1828,20 @@ export const routes: Routes = [
                 component: ViewWholwsaleOrdersComponent,
                 canActivate: [PermissionGuard],
                 data: { permission: 'View wholesale orders' },
+              },
+              {
+                path: 'upload-retail-products-list-prices',
+                component: UploadProductsListPricesComponent,
+                data: { type: 'retail' },
+                // canActivate: [PermissionGuard],
+                // data: { permission: 'Upload retail products list prices' },
+              },
+              {
+                path: 'upload-wholesale-products-list-prices',
+                component: UploadProductsListPricesComponent,
+                data: { type: 'wholesale' },
+                // canActivate: [PermissionGuard],
+                // data: { permission: 'Upload wholesale products list prices' },
               },
             ],
           },

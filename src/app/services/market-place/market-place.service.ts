@@ -14,7 +14,7 @@ export interface BuyerRow {
   orders: number;
   orderValue: number;
 }
- 
+
 export interface TotalBuyerValueResponse {
   items: BuyerRow[];
   total: number;
@@ -895,6 +895,21 @@ export class MarketPlaceService {
     }
 
     return this.http.get<TotalBuyerValueResponse>(url, { headers: headers });
+  }
+
+  getPriceList(type: 'retail' | 'wholesale'): Observable<any> {
+    const headers = new HttpHeaders({ Authorization: `Bearer ${this.token}` });
+    return this.http.get<any>(`${this.apiUrl}market-place/get-price-list/${type}`, { headers });
+  }
+
+  uploadPriceList(type: 'retail' | 'wholesale', items: any[]): Observable<any> {
+    const headers = new HttpHeaders({ Authorization: `Bearer ${this.token}` });
+    return this.http.post<any>(`${this.apiUrl}market-place/upload-price-list/${type}`, { items }, { headers });
+  }
+
+  checkPriceListIds(type: 'retail' | 'wholesale', items: { rowNo: number; productId: number }[]): Observable<any> {
+    const headers = new HttpHeaders({ Authorization: `Bearer ${this.token}` });
+    return this.http.post<any>(`${this.apiUrl}market-place/check-price-list-ids/${type}`, { items }, { headers });
   }
 }
 

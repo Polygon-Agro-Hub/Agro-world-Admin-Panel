@@ -270,10 +270,6 @@ export class CreateCropGroupComponent {
       errors.push('Please fill the Crop Name in English');
     }
 
-    if (!this.cropGroup.parentCategory) {
-      errors.push('Please select a Parent Category');
-    }
-
     if (!this.isSalesOnly(this.cropGroup.displayFor)) {
       if (!this.cropGroup.cropNameSinahala) {
         errors.push('Please fill the Crop Name in Sinhala');
@@ -283,11 +279,21 @@ export class CreateCropGroupComponent {
         errors.push('Please fill the Crop Name in Tamil');
       }
 
-      if (!this.cropGroup.costFeild || parseFloat(this.cropGroup.costFeild) <= 0) {
+      if (!this.cropGroup.parentCategory) {
+        errors.push('Please select a Parent Category');
+      }
+
+      if (
+        !this.cropGroup.costFeild ||
+        parseFloat(this.cropGroup.costFeild) <= 0
+      ) {
         errors.push('Please fill the Cost per acre field');
       }
 
-      if (!this.cropGroup.incomeFeild || parseFloat(this.cropGroup.incomeFeild) <= 0) {
+      if (
+        !this.cropGroup.incomeFeild ||
+        parseFloat(this.cropGroup.incomeFeild) <= 0
+      ) {
         errors.push('Please fill the Income per acre field');
       }
 
@@ -312,15 +318,18 @@ export class CreateCropGroupComponent {
       }
 
       if (
-        (this.cropGroup.nitrogen && !this.isValidNPKValue(this.cropGroup.nitrogen)) ||
-        (this.cropGroup.phosphorus && !this.isValidNPKValue(this.cropGroup.phosphorus)) ||
-        (this.cropGroup.potassium && !this.isValidNPKValue(this.cropGroup.potassium))
+        (this.cropGroup.nitrogen &&
+          !this.isValidNPKValue(this.cropGroup.nitrogen)) ||
+        (this.cropGroup.phosphorus &&
+          !this.isValidNPKValue(this.cropGroup.phosphorus)) ||
+        (this.cropGroup.potassium &&
+          !this.isValidNPKValue(this.cropGroup.potassium))
       ) {
         errors.push('NPK values must be whole numbers between 0 and 99');
       }
     }
 
-        const onlyNumbersPattern = /^[0-9]+$/;
+    const onlyNumbersPattern = /^[0-9]+$/;
 
     if (!this.selectedFile) {
       errors.push('Please select an image file');
@@ -416,7 +425,7 @@ export class CreateCropGroupComponent {
     });
   }
 
-      onCancel() {
+  onCancel() {
     Swal.fire({
       icon: 'warning',
       title: 'Are you sure?',
@@ -511,11 +520,17 @@ export class CreateCropGroupComponent {
         errors.push('Please fill the Crop Name in Tamil');
       }
 
-      if (!this.newsItems[0].costFeild || parseFloat(this.newsItems[0].costFeild) <= 0) {
+      if (
+        !this.newsItems[0].costFeild ||
+        parseFloat(this.newsItems[0].costFeild) <= 0
+      ) {
         errors.push('Please fill the Cost per acre field');
       }
 
-      if (!this.newsItems[0].incomeFeild || parseFloat(this.newsItems[0].incomeFeild) <= 0) {
+      if (
+        !this.newsItems[0].incomeFeild ||
+        parseFloat(this.newsItems[0].incomeFeild) <= 0
+      ) {
         errors.push('Please fill the Income per acre field');
       }
 
@@ -540,9 +555,12 @@ export class CreateCropGroupComponent {
       }
 
       if (
-        (this.newsItems[0].nitrogen && !this.isValidNPKValue(this.newsItems[0].nitrogen)) ||
-        (this.newsItems[0].phosphorus && !this.isValidNPKValue(this.newsItems[0].phosphorus)) ||
-        (this.newsItems[0].potassium && !this.isValidNPKValue(this.newsItems[0].potassium))
+        (this.newsItems[0].nitrogen &&
+          !this.isValidNPKValue(this.newsItems[0].nitrogen)) ||
+        (this.newsItems[0].phosphorus &&
+          !this.isValidNPKValue(this.newsItems[0].phosphorus)) ||
+        (this.newsItems[0].potassium &&
+          !this.isValidNPKValue(this.newsItems[0].potassium))
       ) {
         errors.push('NPK values must be whole numbers between 0 and 99');
       }
@@ -728,7 +746,7 @@ export class CreateCropGroupComponent {
     }
   }
 
-    allowOnlyNumbers(event: KeyboardEvent): void {
+  allowOnlyNumbers(event: KeyboardEvent): void {
     const input = event.target as HTMLInputElement;
     const char = event.key;
 
@@ -765,7 +783,13 @@ export class CreateCropGroupComponent {
     const input = event.target as HTMLInputElement;
     const char = event.key;
     const allowedKeys = [
-      'Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'ArrowLeft', 'ArrowRight',
+      'Backspace',
+      'Delete',
+      'Tab',
+      'Escape',
+      'Enter',
+      'ArrowLeft',
+      'ArrowRight',
     ];
 
     if (allowedKeys.includes(char)) return;
@@ -787,7 +811,8 @@ export class CreateCropGroupComponent {
 
     const start = input.selectionStart ?? input.value.length;
     const end = input.selectionEnd ?? input.value.length;
-    const newValue = input.value.slice(0, start) + char + input.value.slice(end);
+    const newValue =
+      input.value.slice(0, start) + char + input.value.slice(end);
 
     const num = parseInt(newValue, 10);
     if (!isNaN(num) && num > 99) {
@@ -798,7 +823,7 @@ export class CreateCropGroupComponent {
   sanitizeNPKInput(
     event: Event,
     model: { nitrogen: string; phosphorus: string; potassium: string },
-    field: 'nitrogen' | 'phosphorus' | 'potassium'
+    field: 'nitrogen' | 'phosphorus' | 'potassium',
   ): void {
     const input = event.target as HTMLInputElement;
     const rawValue = input.value.trim();

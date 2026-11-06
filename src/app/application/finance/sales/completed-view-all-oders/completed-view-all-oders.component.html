@@ -6,32 +6,33 @@
 </button>
 
 <div class="max-w-full mx-auto">
-    <!-- Header Card: Title + Date Filters -->
-    <div class="mb-6 p-10 w-full bg-white dark:bg-tileBlack rounded-lg shadow-md">
-        <span class="text-[20px] font-semibold text-[#000000] dark:text-textDark ">
+    <div class="mb-6 p-6 lg:p-10 w-full bg-white dark:bg-tileBlack rounded-lg shadow-md">
+        <span class="text-[20px] font-semibold text-[#000000] dark:text-textDark">
             Completed Orders
         </span>
 
-        <div class="flex items-center justify-center mt-6 gap-10">
+        <div class="flex flex-wrap items-center justify-center mt-6 gap-x-8 gap-y-4">
             <!-- From Date -->
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-3 min-w-0">
                 <label for="fromDate"
                     class="text-[18px] text-[#000000] font-normal dark:text-textDark whitespace-nowrap">From :</label>
                 <p-calendar id="fromDate" [(ngModel)]="fromDate" dateFormat="yy/mm/dd" placeholder="--Select Date--"
-                    [showIcon]="true" [showClear]="true" [showButtonBar]="true" [maxDate]="maxFromDate"
-                    iconDisplay="input" [style]="{ width: '15rem', height: '2.5rem' }"
-                    title="Select Order Completed Date"
+                    appendTo="body" panelStyleClass="calendar-popup-small custom-calendar" [showIcon]="true"
+                    [showClear]="true" [showButtonBar]="true" [maxDate]="maxFromDate" iconDisplay="input"
+                    appendTo="body" [style]="{ width: '14rem', height: '2.5rem' }" title="Select Order Completed Date"
                     inputStyleClass="px-3 py-2 border border-gray-200 cursor-pointer rounded-md bg-white dark:bg-[#272F45] text-textLight dark:text-textDark w-full h-10 text-[16px]"
                     (onSelect)="onFromDateChange()" (onClear)="onFromDateClear()" />
             </div>
 
             <!-- To Date -->
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-3 min-w-0">
                 <label for="toDate"
                     class="text-[18px] text-[#000000] font-normal dark:text-textDark whitespace-nowrap">To :</label>
-                <p-calendar id="toDate" [(ngModel)]="toDate" dateFormat="yy/mm/dd" placeholder="--Select Date--" title="Select Order Completed Date"
-                    [showIcon]="true" [showClear]="true" [showButtonBar]="true" [minDate]="minToDate"
-                    iconDisplay="input" [style]="{ width: '15rem', height: '2.5rem' }" [disabled]="!fromDate"
+                <p-calendar id="toDate" [(ngModel)]="toDate" dateFormat="yy/mm/dd" placeholder="--Select Date--"
+                    appendTo="body" panelStyleClass="calendar-popup-small custom-calendar"
+                    title="Select Order Completed Date" [showIcon]="true" [showClear]="true" [showButtonBar]="true"
+                    [minDate]="minToDate" iconDisplay="input" appendTo="body"
+                    [style]="{ width: '14rem', height: '2.5rem' }" [disabled]="!fromDate"
                     inputStyleClass="px-3 py-2 border border-gray-200 cursor-pointer rounded-md bg-white dark:bg-[#272F45] text-textLight dark:text-textDark w-full h-10 text-[16px]"
                     [ngClass]="{ 'opacity-50 cursor-not-allowed': !fromDate }" (onClear)="onToDateClear()" />
             </div>
@@ -48,30 +49,30 @@
     <!-- Results Card -->
     <div class="p-10 w-full bg-white dark:bg-tileBlack rounded-lg shadow-md">
 
-    <!-- Top row: show whenever a date range is selected (even if search returns nothing) -->
-    <div *ngIf="isFromDateSelected && (hasData || search)">
-        <div class="grid grid-cols-3 items-start mb-6">
-            <div class="flex flex-col gap-3">
-                <h3 class="text-[20px] font-semibold text-[#000000] dark:text-textDark">
-                    All ({{ totalItems.toString().padStart(2, '0') }})
-                </h3>
-                <button
-                    *ngIf="hasData && (permissionService.hasPermission('Download completed sales orders') || tokenService.getUserDetails().role === '1')"
-                    class="bg-[#3980C0] text-white text-[15px] font-medium py-1.5 px-4 rounded-md flex items-center gap-2 w-fit"
-                    (click)="downloadTemplate1()" [disabled]="isDownloading"
-                    [ngClass]="{ 'opacity-50 cursor-not-allowed': isDownloading }">
-                    <i class="fa-solid fa-download" *ngIf="!isDownloading"></i>
-                    <i class="fa-solid fa-spinner fa-spin" *ngIf="isDownloading"></i>
-                    {{ isDownloading ? "Downloading..." : "Download" }}
-                </button>
-            </div>
+        <!-- Top row: show whenever a date range is selected (even if search returns nothing) -->
+        <div *ngIf="isFromDateSelected && (hasData || search)">
+            <div class="grid grid-cols-3 items-start mb-6">
+                <div class="flex flex-col gap-3">
+                    <h3 class="text-[20px] font-semibold text-[#000000] dark:text-textDark">
+                        All ({{ totalItems.toString().padStart(2, '0') }})
+                    </h3>
+                    <button
+                        *ngIf="hasData && (permissionService.hasPermission('Download completed sales orders') || tokenService.getUserDetails().role === '1')"
+                        class="bg-[#3980C0] text-white text-[15px] font-medium py-1.5 px-4 rounded-md flex items-center gap-2 w-fit"
+                        (click)="downloadTemplate1()" [disabled]="isDownloading"
+                        [ngClass]="{ 'opacity-50 cursor-not-allowed': isDownloading }">
+                        <i class="fa-solid fa-download" *ngIf="!isDownloading"></i>
+                        <i class="fa-solid fa-spinner fa-spin" *ngIf="isDownloading"></i>
+                        {{ isDownloading ? "Downloading..." : "Download" }}
+                    </button>
+                </div>
 
                 <div class="flex justify-center">
                     <div class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-1.5 w-80">
                         <input type="text" placeholder="Search By Invoice No.."
                             class="bg-transparent outline-none w-full text-sm text-gray-600 dark:text-textDark"
                             [(ngModel)]="search" (keydown.enter)="applysearch()" (keydown)="preventLeadingSpace($event)"
-                            (input)="onSearchInput($event)"/>
+                            (input)="onSearchInput($event)" />
                         <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none"
                             (click)="applysearch()">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"

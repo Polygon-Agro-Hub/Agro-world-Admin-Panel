@@ -348,6 +348,7 @@ export const routes: Routes = [
     path: '',
     component: MainLayoutComponent,
     canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
     children: [
       {
         path: 'admin-users/edit-admin-me-user',
@@ -1915,6 +1916,12 @@ export const routes: Routes = [
                     component: EditSalesAgentComponent,
                     // canActivate: [PermissionGuard],
                     // data: { permission: 'Edit sales agent' },
+                  },
+                  {
+                    path: 'create-sales-agents',
+                    component: CreateSalesAgentsComponent,
+                    // canActivate: [PermissionGuard],
+                    // data: { permission: ['Onboard sales agent'] },
                   },
                 ]
               }

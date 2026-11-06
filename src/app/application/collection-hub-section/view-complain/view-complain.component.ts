@@ -117,7 +117,7 @@ export class ViewComplainComponent implements OnInit {
         this.filterCategory?.type,
         this.filterComCategory?.id,
         this.searchText,
-        this.rpst
+        this.rpst || ''
       )
       .subscribe(
         (res) => {
@@ -141,25 +141,24 @@ export class ViewComplainComponent implements OnInit {
   }
 
   applyFilters() {
+    this.page = 1;
     this.fetchAllComplain(this.page, this.itemsPerPage);
-    if (this.dropdown) {
-      this.dropdown.hide();
-    }
   }
-
 
   regStatusFil() {
-    this.fetchAllComplain(this.page, this.itemsPerPage);
-  }
-
-  searchComplain() {
-    this.searchText = this.searchText?.trim() || '';
     this.page = 1;
     this.fetchAllComplain(this.page, this.itemsPerPage);
   }
 
   clearSearch(): void {
     this.searchText = "";
+    this.page = 1;
+    this.fetchAllComplain(this.page, this.itemsPerPage);
+  }
+
+  searchComplain() {
+    this.searchText = this.searchText?.trim() || '';
+    this.page = 1;
     this.fetchAllComplain(this.page, this.itemsPerPage);
   }
 

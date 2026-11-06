@@ -104,7 +104,7 @@ export class CollectionCenterViewComplainComponent implements OnInit {
         this.filterComCategory?.id,
         this.filterCompany?.id,
         this.searchText,
-        this.rpst
+        this.rpst || ''
       )
       .subscribe(
         (res) => {
@@ -121,6 +121,18 @@ export class CollectionCenterViewComplainComponent implements OnInit {
   }
 
   regStatusFil() {
+    this.page = 1;
+    this.fetchAllComplain(this.page, this.itemsPerPage);
+  }
+
+  applyFilters() {
+    this.page = 1;
+    this.fetchAllComplain(this.page, this.itemsPerPage);
+  }
+
+  clearSearch(): void {
+    this.searchText = "";
+    this.page = 1;
     this.fetchAllComplain(this.page, this.itemsPerPage);
   }
 
@@ -129,20 +141,8 @@ export class CollectionCenterViewComplainComponent implements OnInit {
     this.fetchAllComplain(this.page, this.itemsPerPage);
   }
 
-  applyFilters() {
-    this.fetchAllComplain(this.page, this.itemsPerPage);
-    if (this.dropdown) {
-      this.dropdown.hide();
-    }
-  }
-
   searchComplain() {
     this.page = 1;
-    this.fetchAllComplain(this.page, this.itemsPerPage);
-  }
-
-  clearSearch(): void {
-    this.searchText = "";
     this.fetchAllComplain(this.page, this.itemsPerPage);
   }
 
@@ -151,7 +151,6 @@ export class CollectionCenterViewComplainComponent implements OnInit {
       `/complaints/view-center-complain/${id}`,
     ]);
   }
-
 
   fetchComplain(id: any, farmerName: string, language: string) {
     this.isLoading = true;

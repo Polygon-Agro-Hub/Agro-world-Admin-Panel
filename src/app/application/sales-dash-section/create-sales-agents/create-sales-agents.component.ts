@@ -77,6 +77,8 @@ export class CreateSalesAgentsComponent implements OnInit {
   duplicateErrors: string[] = [];
   isCheckingDuplicates: boolean = false;
 
+  firstUrlSegment: string = '';
+
   getFlagUrl(countryCode: string): string {
     return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
   }
@@ -128,9 +130,13 @@ export class CreateSalesAgentsComponent implements OnInit {
     private http: HttpClient,
     private router: Router,
     private salesAgentService: SalesAgentsService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
+    const fullUrl = this.router.url;
+    const segments = fullUrl.split('/').filter(Boolean);
+    this.firstUrlSegment = segments[0] || '';
+
     this.EpmloyeIdCreate();
     this.loadBanks();
     this.loadBranches();
@@ -163,7 +169,8 @@ export class CreateSalesAgentsComponent implements OnInit {
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.router.navigate(['/steckholders/action/sales-agents']);
+        if (this.firstUrlSegment === 'sales-dash') this.navigatePath('/sales-dash/action/sales-agent');
+        else this.router.navigate(['/steckholders/action/sales-agents']);
       }
     });
   }
@@ -183,7 +190,8 @@ export class CreateSalesAgentsComponent implements OnInit {
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.navigatePath('/steckholders/action/sales-agents');
+        if (this.firstUrlSegment === 'sales-dash') this.navigatePath('/sales-dash/action/sales-agent');
+        else this.router.navigate(['/steckholders/action/sales-agents']);
       }
     });
   }
@@ -209,7 +217,7 @@ export class CreateSalesAgentsComponent implements OnInit {
     fileInput?.click();
   }
 
-    validateFile(file: File): boolean {
+  validateFile(file: File): boolean {
     if (file.size > 3145728) {
       Swal.fire({
         title: 'Error',
@@ -778,7 +786,8 @@ export class CreateSalesAgentsComponent implements OnInit {
                     'bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700',
                 },
               });
-              this.navigatePath('/steckholders/action/sales-agents');
+              if (this.firstUrlSegment === 'sales-dash') this.navigatePath('/sales-dash/action/sales-agent');
+              else this.router.navigate(['/steckholders/action/sales-agents']);
             },
             (error: any) => {
               this.isLoading = false;

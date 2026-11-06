@@ -369,7 +369,7 @@ export class ViewSalesAgentsComponent implements OnInit {
   viewSalesAgent(id: number) {
     if (this.firstUrlSegment === 'sales-dash') this.navigatePath(`/sales-dash/action/sales-agent/preview-sales-agents/${id}`);
     else this.navigatePath(`/steckholders/action/sales-agents/preview-sales-agents/${id}`);
-    
+
   }
 
   onKeyDown(event: KeyboardEvent) {
@@ -383,6 +383,14 @@ export class ViewSalesAgentsComponent implements OnInit {
     const target = event.target as HTMLInputElement;
     // Trim leading spaces from the input value
     this.searchText = target.value.trimStart();
+  }
+
+  navigateToCreateSalesAgent() {
+    if (this.firstUrlSegment === 'sales-dash') {
+      this.router.navigate(['/sales-dash/action/sales-agent/create-sales-agents']);
+    } else {
+      this.router.navigate(['/steckholders/action/sales-agents/create-sales-agents']);
+    }
   }
 }
 

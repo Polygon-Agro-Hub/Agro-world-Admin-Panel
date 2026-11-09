@@ -328,6 +328,8 @@ import { BuyerApprovalsComponent } from './application/sales-dash-section/buyer-
 import { TotalBuyerValueComponent } from './application/sales-dash-section/total-buyer-value/total-buyer-value.component';
 import { WholesaleBuyerViewDocumentComponent } from './application/sales-dash-section/wholesale-buyer-view-document/wholesale-buyer-view-document.component';
 import { SalesAgentRatingsComponent } from './application/sales-dash-section/sales-agent-ratings/sales-agent-ratings.component';
+import { OnboardWBuyersComponent } from './application/sales-dash-section/onboard-w-buyers/onboard-w-buyers.component';
+import { UploadProductsListPricesComponent } from './application/marketplace/upload-products-list-prices/upload-products-list-prices.component';
 
 export const routes: Routes = [
   {
@@ -347,6 +349,7 @@ export const routes: Routes = [
     path: '',
     component: MainLayoutComponent,
     canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
     children: [
       {
         path: 'admin-users/edit-admin-me-user',
@@ -1826,6 +1829,20 @@ export const routes: Routes = [
                 canActivate: [PermissionGuard],
                 data: { permission: 'View wholesale orders' },
               },
+              {
+                path: 'upload-retail-products-list-prices',
+                component: UploadProductsListPricesComponent,
+                data: { type: 'retail' },
+                // canActivate: [PermissionGuard],
+                // data: { permission: 'Upload retail products list prices' },
+              },
+              {
+                path: 'upload-wholesale-products-list-prices',
+                component: UploadProductsListPricesComponent,
+                data: { type: 'wholesale' },
+                // canActivate: [PermissionGuard],
+                // data: { permission: 'Upload wholesale products list prices' },
+              },
             ],
           },
         ],
@@ -1891,7 +1908,38 @@ export const routes: Routes = [
                 component: SalesAgentRatingsComponent,
                 // canActivate: [PermissionGuard],
                 // data: { permission: 'Sales Dash agent ratings' },
-              } 
+              },
+              {
+                path: 'onboard-w-buyers',
+                component:OnboardWBuyersComponent,
+              },
+              {
+                path: 'sales-agent',
+                children: [
+                  {
+                    path: '',
+                    component: ViewSalesAgentsComponent,
+                  },
+                  {
+                    path: 'preview-sales-agents/:id',
+                    component: PreviewSalesAgentsComponent,
+                    // canActivate: [PermissionGuard],
+                    // data: { permission: ['View individual sales agent'] },
+                  },
+                  {
+                    path: 'edit-sales-agents/:id',
+                    component: EditSalesAgentComponent,
+                    // canActivate: [PermissionGuard],
+                    // data: { permission: 'Edit sales agent' },
+                  },
+                  {
+                    path: 'create-sales-agents',
+                    component: CreateSalesAgentsComponent,
+                    // canActivate: [PermissionGuard],
+                    // data: { permission: ['Onboard sales agent'] },
+                  },
+                ]
+              }
             ],
           },
         ],

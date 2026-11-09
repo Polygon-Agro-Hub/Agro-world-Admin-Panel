@@ -114,10 +114,21 @@ export class BuyerApprovalsComponent implements OnInit {
     return item.applicationId;
   }
 
+  // Adds a "." after the title if it's missing: "Mr Kasun" -> "Mr. Kasun"
+  formatName(name: string | null | undefined): string {
+    if (!name) return '';
+    return name
+      .trim()
+      .replace(
+        /^(mr|mrs|ms|miss|dr|prof|rev|ven)(?!\.)(?=\s)/i,
+        (title) => title + '.'
+      );
+  }
+
   // Pass the userId on to the documents screen
   openDocuments(item: BuyerApplication) {
-    this.router.navigate(['/sales-dash/buyer-documents', item.userId], {
-      queryParams: { applicationId: item.applicationId },
+    this.router.navigate(['/sales-dash/action/wholesale-buyer/document/', item.userId], {
+      // queryParams: { applicationId: item.applicationId },
     });
   }
 }

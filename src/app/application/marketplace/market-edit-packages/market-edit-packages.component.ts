@@ -152,6 +152,7 @@ export class MarketEditPackagesComponent {
   }
 
   async onSubmit() {
+    this.isLoading = true;
     if (
       !this.packageObj.displayName ||
       !this.packageObj.description ||
@@ -225,6 +226,7 @@ export class MarketEditPackagesComponent {
     };
 
     try {
+      this.isLoading = true;
       this.marketSrv
         .editPackage(payload, this.selectedImage, this.packageId)
         .subscribe(

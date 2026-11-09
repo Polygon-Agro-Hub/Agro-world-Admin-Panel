@@ -6,17 +6,12 @@
 </button>
 
 <div class="fixed-width-container">
-  <div class="bg-white dark:bg-tileBlack shadow-lg rounded-lg relative p-8">
+  <div class="w-full min-w-0 max-w-full bg-white dark:bg-tileBlack shadow-lg rounded-lg relative p-8">
     <div class="flex items-center mb-8 flex-wrap gap-6">
       <div class="flex items-center whitespace-nowrap">
         <h2 class="text-[20px] font-normal text-[#292929] dark:text-textDark">
           Shortage History ({{ getTotalRecords() }})
         </h2>
-        <!-- <span
-          class="ml-2 mr-5 font-normal text-2xl text-[#292929] dark:text-white"
-        >
-          ({{ getTotalRecords() }})
-        </span> -->
       </div>
       <div class="flex items-center flex-wrap gap-5">
         <i class="ml-5 w-5 h-5 fill-current text-[#4A4A4A]">
@@ -88,69 +83,74 @@
           Assigned ({{ getAssignedCount() }})
         </h3>
 
-        <div class="flex flex-col gap-4 overflow-x-auto">
-          <div *ngFor="let item of assignedItems"
-            class="grid grid-cols-[minmax(180px,1.6fr)_100px_minmax(160px,1.4fr)_minmax(130px,1fr)_90px_minmax(130px,1fr)_minmax(130px,1fr)] items-center gap-x-6 min-w-[1000px] w-full border border-[#C3C3D2] dark:border-[#3A3F55] rounded-lg px-5 py-4">
+        <!-- Scrolls horizontally only on very narrow screens -->
+        <div class="w-full max-w-full overflow-x-auto pb-2">
+          <div class="flex flex-col gap-4 min-w-[900px]">
+            <div *ngFor="let item of assignedItems"
+              class="grid w-full grid-cols-[minmax(0,2fr)_minmax(90px,auto)_minmax(0,1.5fr)_minmax(0,1.2fr)_minmax(0,0.8fr)_minmax(0,1.2fr)_minmax(0,1.2fr)] items-center gap-x-4 box-border border border-[#C3C3D2] dark:border-[#3A3F55] rounded-lg px-5 py-4">
 
-            <!-- Image + Name -->
-            <div class="flex items-center gap-4 min-w-0">
-              <img [src]="item.imageUrl" [alt]="item.itemName"
-                class="w-12 h-12 rounded-md object-cover flex-shrink-0" />
-              <span class="font-medium text-[#000000] dark:text-textDark text-sm leading-tight break-words"
-                [title]="item.itemName">
-                {{ item.itemName }}
-              </span>
-            </div>
+              <!-- Image + Name -->
+              <div class="flex items-center gap-3 min-w-0">
+                <img [src]="item.imageUrl" [alt]="item.itemName"
+                  class="w-12 h-12 rounded-md object-cover flex-shrink-0" />
+                <span class="font-medium text-[#000000] dark:text-textDark text-sm leading-tight break-words min-w-0"
+                  [title]="item.itemName">
+                  {{ item.itemName }}
+                </span>
+              </div>
 
-            <!-- Shortage -->
-            <div>
-              <div class="bg-[#FBEFE4] dark:bg-[#3A3F55] rounded px-3 py-1 w-fit">
-                <p class="text-xs text-[#000000] dark:text-textDark mb-1">Shortage</p>
-                <p class="text-sm font-medium text-[#000000] dark:text-textDark whitespace-nowrap">
-                  {{ item.assignedQty }} {{ item.unit }}
+              <!-- Shortage -->
+              <div>
+                <div class="bg-[#FBEFE4] dark:bg-[#3A3F55] rounded px-3 py-1 w-fit">
+                  <p class="text-xs text-[#000000] dark:text-textDark mb-1">Shortage</p>
+                  <p class="text-sm font-medium text-[#000000] dark:text-textDark whitespace-nowrap">
+                    {{ item.assignedQty }} {{ item.unit }}
+                  </p>
+                </div>
+              </div>
+
+              <!-- Assigned Centre -->
+              <div class="min-w-0">
+                <p class="text-xs text-[#000000] dark:text-textDark mb-1">Assigned Centre</p>
+                <p class="font-medium text-[#292929] dark:text-textDark break-words"
+                  [title]="item.assignedCentre || '----'">
+                  {{ item.assignedCentre || "----" }}
                 </p>
               </div>
-            </div>
 
-            <!-- Assigned Centre -->
-            <div class="min-w-0">
-              <p class="text-xs text-[#000000] dark:text-textDark mb-1">Assigned Centre</p>
-              <p class="font-medium text-[#292929] dark:text-textDark truncate" [title]="item.assignedCentre || '----'">
-                {{ item.assignedCentre || "----" }}
-              </p>
-            </div>
+              <!-- Market Price -->
+              <div class="min-w-0">
+                <p class="text-xs text-[#000000] dark:text-textDark mb-1">Market Price per kg</p>
+                <p class="font-semibold text-[#292929] dark:text-textDark break-words">
+                  Rs. {{ formatCurrency(item.marketPricePerKg) }}
+                </p>
+              </div>
 
-            <!-- Market Price -->
-            <div>
-              <p class="text-xs text-[#000000] dark:text-textDark mb-1">Market Price per kg</p>
-              <p class="font-semibold text-[#292929] dark:text-textDark whitespace-nowrap">
-                Rs. {{ formatCurrency(item.marketPricePerKg) }}
-              </p>
-            </div>
+              <!-- Ceiling -->
+              <div class="text-center min-w-0">
+                <p class="text-xs text-[#000000] dark:text-textDark mb-1">Ceiling (%)</p>
+                <p class="font-semibold text-[#292929] dark:text-textDark">
+                  {{ item.ceilingPercentage ?? "----" }}
+                </p>
+              </div>
 
-            <!-- Ceiling -->
-            <div class="text-center">
-              <p class="text-xs text-[#000000] dark:text-textDark mb-1">Ceiling (%)</p>
-              <p class="font-semibold text-[#292929] dark:text-textDark">
-                {{ item.ceilingPercentage ?? "----" }}
-              </p>
-            </div>
+              <!-- 1st Assigned By -->
+              <div class="min-w-0">
+                <p class="text-xs text-[#000000] dark:text-textDark mb-1">1st Assigned By</p>
+                <p class="font-semibold text-[#292929] dark:text-textDark break-words"
+                  [title]="item.firstAssignedBy || '----'">
+                  {{ item.firstAssignedBy || "----" }}
+                </p>
+              </div>
 
-            <!-- 1st Assigned By -->
-            <div class="min-w-0">
-              <p class="text-xs text-[#000000] dark:text-textDark mb-1">1st Assigned By</p>
-              <p class="font-semibold text-[#292929] dark:text-textDark truncate"
-                [title]="item.firstAssignedBy || '----'">
-                {{ item.firstAssignedBy || "----" }}
-              </p>
-            </div>
-
-            <!-- Finalized By -->
-            <div class="min-w-0">
-              <p class="text-xs text-[#000000] dark:text-textDark mb-1">Finalized By</p>
-              <p class="font-semibold text-[#292929] dark:text-textDark truncate" [title]="item.finalizedBy || '----'">
-                {{ item.finalizedBy || "----" }}
-              </p>
+              <!-- Finalized By -->
+              <div class="min-w-0">
+                <p class="text-xs text-[#000000] dark:text-textDark mb-1">Finalized By</p>
+                <p class="font-semibold text-[#292929] dark:text-textDark break-words"
+                  [title]="item.finalizedBy || '----'">
+                  {{ item.finalizedBy || "----" }}
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -173,3 +173,4 @@
       </div>
     </div>
   </div>
+</div>

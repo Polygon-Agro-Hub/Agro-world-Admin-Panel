@@ -32,6 +32,15 @@ import { DropdownModule } from 'primeng/dropdown';
 export class MarketEditProductComponent implements OnInit {
   @ViewChild('comPriceInput') comPriceInputRef?: ElementRef<HTMLInputElement>;
   @ViewChild('salePriceInput') salePriceInputRef?: ElementRef<HTMLInputElement>;
+  @ViewChild('packagePriceInput') packagePriceInputRef?: ElementRef<HTMLInputElement>;
+
+  // Retail only: which pricing tab is visible in the Product Pricing card
+  pricingTab: 'standalone' | 'package' = 'standalone';
+  formSubmitted = false;
+
+  get isRetail(): boolean {
+    return this.productObj.category === 'Retail';
+  }
 
   readonly templateKeywords = signal<string[]>([]);
   announcer = inject(LiveAnnouncer);
@@ -166,6 +175,7 @@ export class MarketEditProductComponent implements OnInit {
         this.productObj.maxQuantity = parseFloat(res.maxQuantity);
       }
       this.productObj.comPrice = parseFloat(res.comPrice) || 0;
+      this.productObj.packagePrice = parseFloat(res.packagePrice) || 0;
 
       // 🔧 FIX: force discountedPrice to a plain integer so it doesn't
       // render as "10.00" when the API returns it as a decimal/string
@@ -200,6 +210,10 @@ export class MarketEditProductComponent implements OnInit {
           this.salePriceInputRef.nativeElement.value =
             this.productObj.salePrice.toFixed(2);
         }
+        if (this.packagePriceInputRef?.nativeElement && this.productObj.packagePrice) {
+          this.packagePriceInputRef.nativeElement.value =
+            this.productObj.packagePrice.toFixed(2);
+        }
       });
     });
   }
@@ -216,8 +230,15 @@ export class MarketEditProductComponent implements OnInit {
     );
   }
 
+  onCategoryChange() {
+    // The package tab only exists for Retail; reset so Wholesale shows standalone pricing
+    if (!this.isRetail) {
+      this.pricingTab = 'standalone';
+    }
+  }
+
   onCropChange() {
-    
+
     const sample = this.cropsObj.filter(
       (crop) => crop.cropId === +this.productObj.selectId,
     );
@@ -289,6 +310,7 @@ export class MarketEditProductComponent implements OnInit {
   }
 
   onSubmit() {
+    this.formSubmitted = true;
     this.updateTags();
     
 
@@ -314,10 +336,11 @@ export class MarketEditProductComponent implements OnInit {
       (this.productObj.displaytype === 'D&AP' ||
         this.productObj.displaytype === 'AP&SP&D')
     ) {
+      // Empty is reported in the Missing Required Fields popup below
       if (
-        !this.productObj.discountedPrice ||
-        this.productObj.discountedPrice < 1 ||
-        this.productObj.discountedPrice > 99
+        this.productObj.discountedPrice &&
+        (this.productObj.discountedPrice < 1 ||
+          this.productObj.discountedPrice > 99)
       ) {
         Swal.fire({
           icon: 'error',
@@ -349,11 +372,37 @@ export class MarketEditProductComponent implements OnInit {
   emptyFields.push('Competitor Price');
 }
 
+    if (this.isRetail && !this.productObj.packagePrice) {
+      emptyFields.push('Package Based Price');
+    }
+
     if (
       this.productObj.category === 'WholeSale' &&
       (!this.productObj.maxQuantity || this.productObj.maxQuantity <= 0.0)
     ) {
       emptyFields.push('Maximum Quantity');
+    }
+
+    // Discount-related fields (same as Add Product)
+    if (this.productObj.promo) {
+      if (!this.productObj.displaytype) {
+        emptyFields.push('Display Type');
+      } else {
+        if (
+          (this.productObj.displaytype === 'D&AP' ||
+            this.productObj.displaytype === 'AP&SP&D') &&
+          !this.productObj.discountedPrice
+        ) {
+          emptyFields.push('Discount Percentage');
+        }
+        if (
+          (this.productObj.displaytype === 'AP&SP' ||
+            this.productObj.displaytype === 'AP&SP&D') &&
+          !this.productObj.salePrice
+        ) {
+          emptyFields.push('Sale Price');
+        }
+      }
     }
 
     let salePriceForComparison = 0;
@@ -400,6 +449,49 @@ if (this.productObj.comPrice <= salePriceForComparison) {
         confirmButtonText: 'OK',
       });
       return;
+    }
+
+    // Sale price validations (same as Add Product)
+    if (this.productObj.promo) {
+      if (this.productObj.salePrice <= 0) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Invalid Value',
+          text: 'Sale Price must be greater than 0, check the discount you applied',
+          confirmButtonText: 'OK',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+          },
+        });
+        return;
+      }
+
+      if (
+        this.productObj.displaytype === 'AP&SP' &&
+        this.productObj.salePrice >= this.productObj.normalPrice
+      ) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Invalid Value',
+          text: 'Sale Price must be less than Actual Price',
+          confirmButtonText: 'OK',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+          },
+        });
+        return;
+      }
+    }
+
+    // Package based price applies to Retail only
+    if (this.isRetail) {
+      this.productObj.packagePrice = parseFloat(
+        this.productObj.packagePrice.toFixed(2),
+      );
+    } else {
+      this.productObj.packagePrice = 0;
     }
 
     this.marketSrv.updateProduct(this.productObj, this.productId).subscribe(
@@ -671,7 +763,8 @@ if (this.productObj.comPrice <= salePriceForComparison) {
       } else if (
         fieldName === 'normalPrice' ||
         fieldName === 'salePrice' ||
-        fieldName === 'comPrice'
+        fieldName === 'comPrice' ||
+        fieldName === 'packagePrice'
       ) {
         formattedValue = numericValue.toFixed(2);
       } else if (
@@ -707,6 +800,9 @@ if (this.productObj.comPrice <= salePriceForComparison) {
           break;
         case 'comPrice':
           this.productObj.comPrice = parseFloat(formattedValue);
+          break;
+        case 'packagePrice':
+          this.productObj.packagePrice = parseFloat(formattedValue);
           break;
       }
 
@@ -822,6 +918,9 @@ if (this.productObj.comPrice <= salePriceForComparison) {
     case 'comPrice':
       this.productObj.comPrice = value;
       break;
+    case 'packagePrice':
+      this.productObj.packagePrice = value;
+      break;
     case 'startValue':
       this.productObj.startValue = value;
       break;
@@ -866,6 +965,7 @@ class MarketPrice {
   productTypeId!: number;
   productTypeName!: string;
   comPrice: number = 0;
+  packagePrice: number = 0;
 }
 
 class Variety {

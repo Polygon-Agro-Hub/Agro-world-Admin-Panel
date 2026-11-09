@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { TokenService } from '../../../services/token/services/token.service';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
- 
+
 @Component({
   selector: 'app-sales-dash',
   standalone: true,
@@ -14,7 +14,7 @@ import { PermissionService } from '../../../services/roles-permission/permission
 export class SalesDashComponent {
 
   constructor(private router: Router, public tokenService: TokenService,
-      public permissionService: PermissionService,){}
+    public permissionService: PermissionService,) { }
 
   viewOrders(): void {
     this.router.navigate(['/sales-dash/action/view-orders']).then(() => {
@@ -22,13 +22,13 @@ export class SalesDashComponent {
   }
 
 
-    viewCustomers(): void {
+  viewCustomers(): void {
     this.router.navigate(['/sales-dash/action/customer']).then(() => {
     });
   }
 
 
-      viewTargets(): void {
+  viewTargets(): void {
     this.router.navigate(['/sales-dash/action/sales-targets']).then(() => {
     });
   }
@@ -47,5 +47,14 @@ export class SalesDashComponent {
     this.router.navigate(['/sales-dash/action/agent-ratings']).then(() => {
     });
   }
-  
+
+  viewOnboardWBuyers(): void {
+    this.router.navigate(['/sales-dash/action/onboard-w-buyers']).then(() => {
+    });
+  }
+
+  navigateToViewSalesAgents(): void {
+    this.router.navigate(['/sales-dash/action/sales-agent']);
+  }
+
 }

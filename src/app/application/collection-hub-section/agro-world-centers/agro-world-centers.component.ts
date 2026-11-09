@@ -136,7 +136,7 @@ export class AgroWorldCentersComponent {
     private collectionService: CollectionCenterService,
     public tokenService: TokenService,
     public permissionService: PermissionService,
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
@@ -146,13 +146,42 @@ export class AgroWorldCentersComponent {
       value: p.province,
     })).sort((a, b) => a.label.localeCompare(b.label));
 
-    this.districtOptions = this.ProvinceData.flatMap((p) => p.district)
+    this.districtOptions = this.getAllDistrictOptions();
+  }
+
+  // ---------- Helpers ----------
+
+  private getAllDistrictOptions(): any[] {
+    return this.ProvinceData.flatMap((p) => p.district)
       .map((d) => ({
         label: d.districtName,
         value: d.districtName,
       }))
       .sort((a, b) => a.label.localeCompare(b.label));
   }
+
+  private getDistrictOptionsForProvince(province: string): any[] {
+    const selected = this.ProvinceData.find((p) => p.province === province);
+    return (
+      selected?.district
+        .map((d) => ({
+          label: d.districtName,
+          value: d.districtName,
+        }))
+        .sort((a, b) => a.label.localeCompare(b.label)) || []
+    );
+  }
+
+  /**
+   * Any time the filter or search changes, the result set changes,
+   * so we must always go back to page 1 before fetching.
+   */
+  private resetPageAndFetch(): void {
+    this.page = 1;
+    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+  }
+
+  // ---------- Data fetching ----------
 
   fetchAllCollectionCenter(
     page: number = this.page,
@@ -172,6 +201,7 @@ export class AgroWorldCentersComponent {
           this.totalItems = response.total;
         },
         (error) => {
+          this.isLoading = false;
           if (error.status === 401) {
           }
         },
@@ -208,7 +238,12 @@ export class AgroWorldCentersComponent {
                 },
                 confirmButtonColor: '#2563eb',
               });
-              this.fetchAllCollectionCenter();
+
+              // If the deleted item was the last one on this page, go back one page
+              if (this.collectionObj.length === 1 && this.page > 1) {
+                this.page = this.page - 1;
+              }
+              this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
             }
           },
           (error) => {
@@ -229,47 +264,42 @@ export class AgroWorldCentersComponent {
     });
   }
 
+  // ---------- Pagination ----------
+
   onPageChange(event: number) {
     this.page = event;
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
   }
 
+  // ---------- Search ----------
+
   searchPlantCareUsers() {
     this.searchItem = this.searchItem.trim();
-    this.page = 1;
-    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+    this.resetPageAndFetch();
   }
 
   clearSearch(): void {
     this.searchItem = '';
-    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+    this.resetPageAndFetch();
   }
+
+  // ---------- Filters ----------
 
   applyProvinceFilters() {
     if (this.selectProvince) {
-      const selected = this.ProvinceData.find(
-        (p) => p.province === this.selectProvince,
+      this.districtOptions = this.getDistrictOptionsForProvince(
+        this.selectProvince,
       );
-
-      this.districtOptions =
-        selected?.district
-          .map((d) => ({
-            label: d.districtName,
-            value: d.districtName,
-          }))
-          .sort((a, b) => a.label.localeCompare(b.label)) || [];
-
+      // District may not belong to the newly selected province
       this.selectDistrict = '';
     } else {
-      this.districtOptions = this.ProvinceData.flatMap((p) => p.district)
-        .map((d) => ({
-          label: d.districtName,
-          value: d.districtName,
-        }))
-        .sort((a, b) => a.label.localeCompare(b.label));
+      // Province cleared (null / '')
+      this.selectProvince = '';
+      this.selectDistrict = '';
+      this.districtOptions = this.getAllDistrictOptions();
     }
 
-    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+    this.resetPageAndFetch();
   }
 
   applyDistrictFilters() {
@@ -280,33 +310,36 @@ export class AgroWorldCentersComponent {
 
       if (matchingProvince) {
         this.selectProvince = matchingProvince.province;
-
-        this.districtOptions = matchingProvince.district.map((d) => ({
-          label: d.districtName,
-          value: d.districtName,
-        }));
+        this.districtOptions = this.getDistrictOptionsForProvince(
+          matchingProvince.province,
+        );
       }
+    } else {
+      // District cleared (null / '')
+      this.selectDistrict = '';
+
+      // If a province is still selected keep its districts, otherwise show all
+      this.districtOptions = this.selectProvince
+        ? this.getDistrictOptionsForProvince(this.selectProvince)
+        : this.getAllDistrictOptions();
     }
 
-    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+    this.resetPageAndFetch();
   }
 
   clearDistrictFilter() {
     this.selectDistrict = '';
-    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+    this.resetPageAndFetch();
   }
 
   clearProvinceFilter() {
     this.selectProvince = '';
     this.selectDistrict = '';
-    this.districtOptions = this.ProvinceData.flatMap((p) => p.district).map(
-      (d) => ({
-        label: d.districtName,
-        value: d.districtName,
-      }),
-    );
-    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+    this.districtOptions = this.getAllDistrictOptions();
+    this.resetPageAndFetch();
   }
+
+  // ---------- Navigation ----------
 
   navigateEdit(id: number) {
     this.router.navigate([`/collection-hub/update-collection-center/${id}`]);
@@ -343,6 +376,7 @@ export class AgroWorldCentersComponent {
       ) ?? false
     );
   }
+
   navigate() {
     this.router.navigate([`/collection-hub`]);
   }

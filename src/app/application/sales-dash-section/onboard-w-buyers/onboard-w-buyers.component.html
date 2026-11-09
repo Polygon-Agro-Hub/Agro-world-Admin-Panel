@@ -1,0 +1,208 @@
+<button class="mb-5 text-textLight dark:text-textDark text-sm font-medium" (click)="back()">
+    <i class="fa-solid fa-arrow-left no-underline"></i>
+    Back
+</button>
+
+<div class="max-w-[900px] p-10 bg-tileLight dark:bg-tileBlack shadow-lg rounded-2xl">
+    <h2 class="text-xl font-semibold text-textLight dark:text-textDark mb-8">
+        Onboard Wholesale Customer
+    </h2>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <!-- Select Agent -->
+        <div class="mb-6 w-full md:w-[calc(50%-1.25rem)]">
+            <label class="block text-base font-semibold text-gray-700 dark:text-textDark mb-2">Select Agent</label>
+            <p-dropdown formControlName="agent" [options]="agentOptions" optionLabel="label" optionValue="value"
+                [filter]="true" filterBy="label" [showClear]="false" placeholder="Select From Here" styleClass="w-full"
+                panelStyleClass="custom-dropdown-panel" class="p-dropdown-custom">
+            </p-dropdown>
+            <div *ngIf="isInvalid('agent')" class="text-red-500 text-sm mt-1">Agent is required.</div>
+        </div>
+
+        <!-- Title / First name / Last name -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-6 mb-6">
+            <div class="flex gap-3">
+                <div class="w-[100px] shrink-0">
+                    <label class="block text-base font-semibold text-gray-700 dark:text-textDark mb-2">Title</label>
+                    <p-dropdown formControlName="title" [options]="titleOptions" optionLabel="label" optionValue="value"
+                        [showClear]="false" styleClass="w-full" panelStyleClass="custom-dropdown-panel"
+                        class="p-dropdown-custom compact-dropdown">
+                    </p-dropdown>
+                </div>
+                <div class="flex-1">
+                    <label for="firstName"
+                        class="block text-base font-semibold text-gray-700 dark:text-textDark mb-2">First
+                        Name</label>
+                    <input id="firstName" formControlName="firstName" (input)="onNameInput($event, 'firstName')"
+                        class="block w-full p-2.5 border border-gray-300 rounded-lg bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
+                    <div *ngIf="isInvalid('firstName')" class="text-red-500 text-sm mt-1">
+                        <div *ngIf="hasError('firstName', 'required')">First name is required.</div>
+                        <div *ngIf="hasError('firstName', 'pattern')">First name should only contain letters.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <label for="lastName" class="block text-base font-semibold text-gray-700 dark:text-textDark mb-2">Last
+                    Name</label>
+                <input id="lastName" formControlName="lastName" (input)="onNameInput($event, 'lastName')"
+                    class="block w-full p-2.5 border border-gray-300 rounded-lg bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
+                <div *ngIf="isInvalid('lastName')" class="text-red-500 text-sm mt-1">
+                    <div *ngIf="hasError('lastName', 'required')">Last name is required.</div>
+                    <div *ngIf="hasError('lastName', 'pattern')">Last name should only contain letters.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phone / Email -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-6 mb-6">
+            <div>
+                <label for="phoneNumber"
+                    class="block text-base font-semibold text-gray-700 dark:text-textDark mb-2">Phone
+                    Number</label>
+                <div class="flex gap-3">
+                    <div class="w-[100px] shrink-0">
+                        <p-dropdown formControlName="phoneCode" [options]="countryCodeOptions" optionLabel="label"
+                            optionValue="value" [showClear]="false" styleClass="w-full"
+                            panelStyleClass="custom-dropdown-panel" class="p-dropdown-custom compact-dropdown">
+                        </p-dropdown>
+                    </div>
+                    <input id="phoneNumber" formControlName="phoneNumber" maxlength="9" inputmode="numeric"
+                        (keypress)="onDigitsOnlyKeyPress($event)" (input)="onDigitsOnlyInput($event, 'phoneNumber', 9)"
+                        class="block flex-1 min-w-0 p-2.5 border border-gray-300 rounded-lg bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
+                </div>
+                <div *ngIf="isInvalid('phoneNumber')" class="text-red-500 text-sm mt-1">
+                    <div *ngIf="hasError('phoneNumber', 'required')">Phone number is required.</div>
+                    <div *ngIf="hasError('phoneNumber', 'pattern')">Enter a valid mobile number (7XXXXXXXX).</div>
+                </div>
+            </div>
+
+            <div>
+                <label for="email" class="block text-base font-semibold text-gray-700 dark:text-textDark mb-2">Email
+                    Address</label>
+                <input id="email" type="email" formControlName="email"
+                    class="block w-full p-2.5 border border-gray-300 rounded-lg bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
+                <div *ngIf="isInvalid('email')" class="text-red-500 text-sm mt-1">
+                    <div *ngIf="hasError('email', 'required')">Email address is required.</div>
+                    <div *ngIf="hasError('email', 'email')">Enter a valid email address.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Identification -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-6 mb-8">
+            <div>
+                <label
+                    class="block text-base font-semibold text-gray-700 dark:text-textDark mb-2">Identification</label>
+                <p-dropdown formControlName="identificationType" [options]="identificationOptions" optionLabel="label"
+                    optionValue="value" [showClear]="false" styleClass="w-full" panelStyleClass="custom-dropdown-panel"
+                    class="p-dropdown-custom">
+                </p-dropdown>
+            </div>
+
+            <div>
+                <label for="identificationNumber"
+                    class="block text-base font-semibold text-gray-700 dark:text-textDark mb-2">{{ idLabel }}</label>
+                <input id="identificationNumber" formControlName="identificationNumber" [placeholder]="idPlaceholder"
+                    (input)="onIdentificationInput($event)"
+                    class="block w-full p-2.5 border border-gray-300 rounded-lg bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark placeholder:text-gray-400" />
+                <div *ngIf="isInvalid('identificationNumber')" class="text-red-500 text-sm mt-1">
+                    <div *ngIf="hasError('identificationNumber', 'required')">{{ idLabel }} is required.</div>
+                    <div *ngIf="hasError('identificationNumber', 'pattern')">
+                        <ng-container *ngIf="isNic; else passportMsg">
+                            Enter a valid NIC number (12 digits, or 9 digits followed by 'V').
+                        </ng-container>
+                        <ng-template #passportMsg>Enter a valid passport ID (1 letter followed by 7
+                            digits).</ng-template>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="border-t border-gray-300 my-8"></div>
+
+        <!-- Company -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-6 mb-6">
+            <div>
+                <label for="companyName"
+                    class="block text-base font-semibold text-gray-700 dark:text-textDark mb-2">Company
+                    Name</label>
+                <input id="companyName" formControlName="companyName"
+                    class="block w-full p-2.5 border border-gray-300 rounded-lg bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
+                <div *ngIf="isInvalid('companyName')" class="text-red-500 text-sm mt-1">Company name is required.</div>
+            </div>
+
+            <div>
+                <label for="companyPhoneNumber"
+                    class="block text-base font-semibold text-gray-700 dark:text-textDark mb-2">Phone Number</label>
+                <div class="flex gap-3">
+                    <div class="w-[100px] shrink-0">
+                        <p-dropdown formControlName="companyPhoneCode" [options]="countryCodeOptions"
+                            optionLabel="label" optionValue="value" [showClear]="false" styleClass="w-full"
+                            panelStyleClass="custom-dropdown-panel" class="p-dropdown-custom compact-dropdown">
+                        </p-dropdown>
+                    </div>
+                    <input id="companyPhoneNumber" formControlName="companyPhoneNumber" maxlength="9"
+                        inputmode="numeric" (keypress)="onDigitsOnlyKeyPress($event)"
+                        (input)="onDigitsOnlyInput($event, 'companyPhoneNumber', 9)"
+                        class="block flex-1 min-w-0 p-2.5 border border-gray-300 rounded-lg bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
+                </div>
+                <div *ngIf="isInvalid('companyPhoneNumber')" class="text-red-500 text-sm mt-1">
+                    <div *ngIf="hasError('companyPhoneNumber', 'required')">Phone number is required.</div>
+                    <div *ngIf="hasError('companyPhoneNumber', 'pattern')">Enter a valid phone number (9 digits).</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BR Document -->
+        <div class="mb-8">
+            <label class="block text-base font-semibold text-gray-700 dark:text-textDark mb-3">BR Document</label>
+
+            <input type="file" accept=".jpg,.jpeg,.png,.pdf" class="hidden" #fileInput
+                (change)="onFileSelected($event)" />
+
+            <!-- Drop zone (no file selected) -->
+            <div *ngIf="!selectedFile"
+                class="flex flex-col justify-center items-center py-14 border-2 border-dashed rounded-lg cursor-pointer transition-colors"
+                [ngClass]="isDragging ? 'bg-[#DCEEFF] border-[#0090FF]' : 'bg-[#EBF5FF] border-[#3B9BF5]'"
+                (click)="fileInput.click()" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
+                (drop)="onDrop($event)">
+                <div class="w-[68px] h-[68px] rounded-full bg-gray-200 flex items-center justify-center mb-6">
+                    <i class="fa-solid fa-cloud-arrow-up text-3xl text-white"></i>
+                </div>
+                <p class="text-lg font-semibold text-[#3B9BF5]">Select a .jpg, .png or .pdf file to upload</p>
+                <p class="text-sm text-[#3B9BF5] mt-1">or drag and drop it here</p>
+            </div>
+
+            <!-- File chip (file selected) -->
+            <div *ngIf="selectedFile"
+                class="inline-flex items-center gap-3 w-[280px] px-3 py-2.5 border border-[#3B9BF5] rounded-lg bg-white dark:bg-tileBlack">
+                <i class="text-4xl text-[#3B82F6]" [ngClass]="isPdf ? 'fa-solid fa-file-pdf' : 'fa-solid fa-image'"></i>
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-semibold text-gray-900 dark:text-textDark truncate">{{ selectedFile.name }}
+                    </p>
+                    <p class="text-xs text-gray-500">{{ fileSizeLabel }}</p>
+                </div>
+                <button type="button" (click)="removeFile($event)" aria-label="Remove file"
+                    class="text-gray-500 hover:text-gray-700">
+                    <i class="fa-solid fa-circle-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div *ngIf="fileError" class="text-red-500 text-sm mt-2">{{ fileError }}</div>
+        </div>
+
+
+        <!-- Actions -->
+        <div class="flex justify-end gap-8 mt-10">
+            <button type="button" (click)="onCancel()"
+                class="px-8 py-2.5 text-lg font-semibold text-gray-500 bg-[#EBEBEB] rounded-lg">
+                Cancel
+            </button>
+            <button type="submit" [disabled]="isLoading"
+                class="px-5 py-2.5 text-lg bg-[#3980C0] text-white rounded-lg disabled:opacity-60">
+                Send to Approve
+            </button>
+        </div>
+    </form>
+</div>

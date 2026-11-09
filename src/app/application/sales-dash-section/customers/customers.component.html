@@ -11,7 +11,7 @@
 <div class="fixed-width-container">
   <div class="pt-5 pr-12 pl-12 pb-5 min-w-full bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
     <!-- Header Section -->
-    <div class="flex justify-between items-center mb-8">
+    <div class="flex flex-wrap justify-between items-center gap-4 mb-8">
       <div class="flex items-center">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
           All Customers ({{
@@ -20,10 +20,10 @@
           : totalItems < 10 ? "0" + totalItems : totalItems }}) </h2>
       </div>
 
-      <div class="flex items-center gap-3">
+      <div class="flex flex-wrap items-center gap-3 ml-auto">
         <!-- Agent Filter Dropdown -->
 
-        <p-dropdown
+        <p-dropdown [style]="{ width: '12rem' }"
           styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#D1D5DB] dark:border-[#AFAFAF]"
           [options]="agentFilterOptions" optionLabel="label" optionValue="value" [showClear]="!!selectedAgentFilter"
           placeholder="Agent" [(ngModel)]="selectedAgentFilter" (onChange)="applyAgentFilter()"></p-dropdown>
@@ -51,7 +51,8 @@
         </p-dropdown>
 
         <!-- Search Bar -->
-        <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96 relative group">
+        <div
+          class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96 max-w-full relative group">
           <div
             class="absolute top-full mt-2 bg-gray-800 dark:bg-gray-700 text-white dark:text-gray-200 text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
             Search by Customer ID, Name, Phone Number, City
@@ -89,7 +90,8 @@
     <!-- Table Section -->
     <div *ngIf="hasData"
       class="relative isolate w-full overflow-auto max-h-[60vh] scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
-      <table class="min-w-max border-separate border-spacing-0 divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap">
+      <table
+        class="min-w-max border-separate border-spacing-0 divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap">
         <thead class="bg-white dark:bg-tileBlack">
           <tr class="sticky top-0 z-40 bg-white dark:bg-tileBlack">
             <th
@@ -100,40 +102,31 @@
               class="sticky left-[140px] z-50 w-[220px] min-w-[220px] bg-white dark:bg-tileBlack px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
               Customer Name
             </th>
-            <th
-              class="bg-white dark:bg-tileBlack px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th class="bg-white dark:bg-tileBlack px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
               Agent ID
             </th>
-            <th
-              class="bg-white dark:bg-tileBlack px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
+            <th class="bg-white dark:bg-tileBlack px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
               Nearest City
             </th>
-            <th
-              class="bg-white dark:bg-tileBlack px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th class="bg-white dark:bg-tileBlack px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
               Created At
             </th>
-            <th
-              class="bg-white dark:bg-tileBlack px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th class="bg-white dark:bg-tileBlack px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
               Contact
             </th>
-            <th
-              class="bg-white dark:bg-tileBlack px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th class="bg-white dark:bg-tileBlack px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
               No. of Orders
             </th>
-            <th
-              class="bg-white dark:bg-tileBlack px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th class="bg-white dark:bg-tileBlack px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
               Customer Details
             </th>
-            <th
-              class="bg-white dark:bg-tileBlack px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th class="bg-white dark:bg-tileBlack px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
               Orders Details
             </th>
-            <th
-              class="bg-white dark:bg-tileBlack px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th class="bg-white dark:bg-tileBlack px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
               Ratings
             </th>
-            <th
-              class="bg-white dark:bg-tileBlack px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th class="bg-white dark:bg-tileBlack px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
               Edit Ratings
             </th>
           </tr>
@@ -233,7 +226,7 @@
         </tbody>
       </table>
     </div>
-    <div class="dark:bg-[#262f45]">
+    <div *ngIf="hasData" class="dark:bg-[#262f45]">
       <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
         [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
         [screenReaderCurrentLabel]="'Youre on page'">

@@ -62,7 +62,7 @@
                             style="white-space: nowrap">
                             Customer ID
                         </th>
-                        <th class="sticky top-0 z-20 bg-white dark:bg-tileBlack px-4 py-3 font-normal text-sm text-[#5C5C5C] dark:text-textDark text-left"
+                        <th class="sticky top-0 z-20 bg-white dark:bg-tileBlack px-4 py-3 font-normal text-sm text-[#5C5C5C] dark:text-textDark text-left w-[220px] max-w-[220px]"
                             style="white-space: nowrap">
                             Customer Name
                         </th>
@@ -101,8 +101,10 @@
                         <td class="px-4 py-4 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
                             {{ buyer.customerId }}
                         </td>
-                        <td class="px-4 py-4 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
-                            {{ buyer.customerName }}
+                        <td class="px-4 py-4 text-left w-[220px] max-w-[220px] text-[#000000] dark:text-textDark">
+                            <div class="truncate" [title]="buyer.customerName">
+                                {{ buyer.customerName }}
+                            </div>
                         </td>
                         <td class="px-4 py-4 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
                             {{ buyer.agent }}

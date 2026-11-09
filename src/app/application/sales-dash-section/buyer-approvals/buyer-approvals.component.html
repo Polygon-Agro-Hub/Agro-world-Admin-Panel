@@ -78,7 +78,7 @@
                 <tbody>
                     <tr *ngFor="let item of applications; trackBy: trackByApplication">
                         <td class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.cusId }}</td>
-                        <td class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 text-left text-textLight dark:text-textDark">{{ item.name }}</td>
+                        <td class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 text-left text-textLight dark:text-textDark">{{ formatName(item.name) }}</td>
                         <td class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 text-left text-textLight dark:text-textDark">{{ item.onboarded }}</td>
                         <td class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 text-left text-textLight dark:text-textDark">{{ item.company }}</td>
                         <td class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 text-left text-textLight dark:text-textDark">{{ item.createdAt | date : "d MMM, y h:mma" }}</td>
@@ -105,7 +105,7 @@
             </table>
         </div>
 
-        <!-- Pagination -->
+        <!-- Pagination
         <div *ngIf="hasData" class="flex items-center justify-end gap-4 mt-4 text-textLight dark:text-textDark">
             <button type="button" class="px-3 py-1 rounded disabled:opacity-40"
                 [disabled]="page === 1" (click)="changePage(page - 1)">
@@ -116,6 +116,6 @@
                 [disabled]="page === totalPages" (click)="changePage(page + 1)">
                 Next <i class="fa-solid fa-chevron-right"></i>
             </button>
-        </div>
+        </div> -->
     </div>
 </div>

@@ -13,35 +13,37 @@
 
 <div class="overflow-hidden">
   <div class="pt-5 pr-12 pl-12 pb-5 w-full bg-white dark:bg-tileBlack shadow-lg rounded-lg relative">
-    <div class="flex justify-between items-center mb-8">
-      <h4 class="text-2xl font-normal text-[#292929] dark:text-textDark">
+    <div class="flex flex-col 2xl:flex-row 2xl:items-center 2xl:justify-between gap-4 mb-8">
+      <h4 class="text-2xl font-normal text-[#292929] dark:text-textDark whitespace-nowrap shrink-0">
         Payment History ({{ totalItems < 10 ? "0" + totalItems : totalItems }}) </h4>
 
-          <div class="flex items-center">
-            <i class="mr-3 w-6 h-6 fill-current text-gray-500">
+          <div class="flex flex-nowrap items-center justify-start 2xl:justify-end gap-4 min-w-0 w-full 2xl:w-auto">
+            <i class="w-6 h-6 fill-current text-gray-500 shrink-0">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                 <path
                   d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z" />
               </svg>
             </i>
 
-            <span class="mr-6 text-gray-700 dark:text-gray-300 font-medium">Filter By</span>
+            <span class="text-gray-700 dark:text-gray-300 font-medium whitespace-nowrap shrink-0">Filter By</span>
 
-            <div class="mx-6">
+            <!-- Receivers -->
+            <div class="w-44 shrink-0">
               <p-dropdown
-                styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-                [options]="receiverOptions" [(ngModel)]="selectedReceiver" optionLabel="label"
-                [showClear]="!!selectedReceiver" placeholder="Receivers" (onChange)="onReceiverChange()" />
+                styleClass="w-full border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+                [style]="{ width: '100%' }" appendTo="body" [options]="receiverOptions" [(ngModel)]="selectedReceiver"
+                optionLabel="label" [showClear]="!!selectedReceiver" placeholder="Receivers"
+                (onChange)="onReceiverChange()" />
             </div>
 
-            <div class="flex items-center gap-2 relative">
+            <div class="flex items-center gap-2 relative shrink-0">
               <p-calendar id="issuedDate" [(ngModel)]="selectedIssuedDate" (onSelect)="onIssuedDateChange()"
                 (onClear)="onIssuedDateChange()" placeholder="Issued Date" [showIcon]="false" [showClear]="false"
                 [showButtonBar]="false" appendTo="body" [style]="{ width: '145px' }" [inputStyle]="{
-    width: '145px',
-    padding: '0.5rem 2.5rem 0.5rem 0.75rem',
-    fontSize: '0.875rem',
-  }" panelStyleClass="dark:bg-gray-800 dark:border dark:border-gray-700 dark:text-white"
+                  width: '145px',
+                  padding: '0.5rem 2.5rem 0.5rem 0.75rem',
+                  fontSize: '0.875rem'
+                }" panelStyleClass="dark:bg-gray-800 dark:border dark:border-gray-700 dark:text-white"
                 inputStyleClass="text-[16px] h-10 rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-2 border-[#E5E5E5] dark:border-[#AFAFAF] placeholder:text-[#9CA3AF] dark:placeholder:text-[#9CA3AF] focus:outline-none focus:border-blue-500 dark:focus:border-blue-400" />
 
               <button *ngIf="selectedIssuedDate" type="button"
@@ -57,13 +59,13 @@
                 class="fa-solid fa-chevron-down absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 pointer-events-none"></i>
             </div>
 
-            <div class="w-5"></div>
-
-            <div class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-96">
+            <!-- Search bar -->
+            <div
+              class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-72 min-w-[220px] max-w-full shrink">
               <input type="text" title="Search By Issued By Name & Payment Reference" placeholder="Search..."
-                class="bg-transparent outline-none w-full text-textLight dark:text-textDark placeholder:text-[#9CA3AF] dark:placeholder:text-[#9CA3AF]"
+                class="bg-transparent outline-none w-full min-w-0 text-textLight dark:text-textDark placeholder:text-[#9CA3AF] dark:placeholder:text-[#9CA3AF]"
                 [(ngModel)]="search" (keydown.enter)="applySearch()" />
-              <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+              <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2 shrink-0"
                 (click)="applySearch()">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                   stroke="currentColor">
@@ -72,7 +74,7 @@
                 </svg>
               </button>
               <button *ngIf="search" (click)="clearSearch()" type="button"
-                class="text-gray-500 hover:text-gray-700 focus:outline-none">
+                class="text-gray-500 hover:text-gray-700 focus:outline-none shrink-0">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                   stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />

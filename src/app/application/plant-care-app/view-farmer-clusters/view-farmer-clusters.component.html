@@ -6,7 +6,8 @@
 </button>
 
 
-<div class="mb-5" *ngIf="permissionService.hasPermission('Add farmer clusters') || tokenService.getUserDetails().role === '1'">
+<div class="mb-5"
+  *ngIf="permissionService.hasPermission('Add farmer clusters') || tokenService.getUserDetails().role === '1'">
   <button (click)="addNew()" class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex items-center">
     <i class="fa-solid fa-plus mr-2"></i>
     Add New Cluster
@@ -49,124 +50,145 @@
       </div>
 
       <div *ngIf="hasData"
-        class="isolate max-h-[60vh] w-full overflow-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
-        <table class="min-w-[1700px] border-collapse divide-y divide-gray-200 dark:divide-[#4B555A] table-fixed whitespace-nowrap">
+        class="isolate max-h-[60vh] w-full min-w-0 max-w-full overflow-x-auto overflow-y-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
+        <table class="min-w-[1700px] w-full border-collapse table-fixed whitespace-nowrap">
+          <!-- The View Members <col> uses the same permission check as its <th>/<td>,
+               so the column widths always line up with the visible columns -->
           <colgroup>
             <col style="width: 64px" />
             <col style="width: 220px" />
             <col style="width: 180px" />
             <col style="width: 240px" />
             <col style="width: 150px" />
-            <col style="width: 140px" />
+            <col
+              *ngIf="permissionService.hasPermission('View cluster member') || tokenService.getUserDetails().role === '1'"
+              style="width: 140px" />
             <col style="width: 170px" />
             <col style="width: 200px" />
             <col style="width: 200px" />
             <col style="width: 120px" />
           </colgroup>
-          <thead class="sticky top-0 z-40 bg-white dark:bg-tileBlack">
-          <tr class="bg-white dark:bg-tileBlack">
-            <th class="sticky left-0 z-50 box-border w-[64px] min-w-[64px] max-w-[64px] bg-white px-4 py-3 font-normal text-textLight dark:bg-tileBlack dark:text-textDark text-left">
-              No
-            </th>
-            <th class="sticky left-[64px] z-50 box-border w-[220px] min-w-[220px] max-w-[220px] bg-white px-4 py-3 font-normal text-textLight dark:bg-tileBlack dark:text-textDark text-left">
-              Cluster Name
-            </th>
-            <th class="sticky left-[284px] z-50 box-border w-[180px] min-w-[180px] max-w-[180px] bg-white px-4 py-3 font-normal text-textLight dark:bg-tileBlack dark:text-textDark text-left">
-              District
-            </th>
-            <th class="sticky left-[464px] z-50 box-border w-[240px] min-w-[240px] max-w-[240px] bg-white px-4 py-3 font-normal text-textLight dark:bg-tileBlack dark:text-textDark text-left">
-              Certificate Name
-            </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
-              Member Count
-            </th>
-            <th *ngIf="permissionService.hasPermission('View cluster member') || tokenService.getUserDetails().role === '1'" class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
-              View Members
-            </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
-              Status
-            </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
-              Last Modified By
-            </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
-              Last Modified On
-            </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"></th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-300 dark:divide-[#4B555A]">
-          <tr *ngFor="let cluster of clusters; let i = index"
-            class="border-b border-gray-200 dark:border-[#4B555A] hover:bg-gray-50 dark:hover:bg-gray-700">
-            <td class="sticky left-0 z-30 box-border w-[64px] min-w-[64px] max-w-[64px] bg-tileLight px-4 py-3 text-left text-textLight dark:bg-tileBlack dark:text-textDark">
-              {{ ("0" + (i + 1)).slice(-2) }}
-            </td>
-            <td class="sticky left-[64px] z-30 box-border w-[220px] min-w-[220px] max-w-[220px] bg-tileLight px-4 py-3 text-left text-textLight dark:bg-tileBlack dark:text-textDark">
-              {{ cluster.clusterName }}
-            </td>
-            <td class="sticky left-[284px] z-30 box-border w-[180px] min-w-[180px] max-w-[180px] bg-tileLight px-4 py-3 text-left text-textLight dark:bg-tileBlack dark:text-textDark">
-              {{ cluster.district || "--" }}
-            </td>
-            <td class="sticky left-[464px] z-30 box-border w-[240px] min-w-[240px] max-w-[240px] bg-tileLight px-4 py-3 text-left text-textLight dark:bg-tileBlack dark:text-textDark">
-              {{ cluster.certificateName || "No Certificate" }}
-            </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              {{ cluster.memberCount ? (cluster.memberCount | number : "2.0-0") : "00" }}
-            </td>
-            <td *ngIf="permissionService.hasPermission('View cluster member') || tokenService.getUserDetails().role === '1'" class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              <button (click)="viewMembers(cluster.clusterId!)"
-                class="text-blue-500 hover:text-blue-700 transition-colors" title="View Cluster Members">
-                <i class="fa-solid fa-users text-xl"></i>
-              </button>
-            </td>
-            <td class="px-4 py-3 text-center">
-              <button *ngIf="cluster.status === 'Started'" [disabled]="!permissionService.hasPermission('Cluster start') && tokenService.getUserDetails().role !== '1'"
-                class="bg-[#BBFFC6] text-[#308233] px-3 py-1 rounded-lg text-sm cursor-default w-36 shadow-lg">
-                Started
-              </button>
-              <button *ngIf="cluster.status !== 'Started'" (click)="openStatusConfirmation(cluster)" [disabled]="!permissionService.hasPermission('Cluster start') && tokenService.getUserDetails().role !== '1'"
-                class="bg-[#F8FFA6] text-[#A8A100] px-3 py-1 rounded-lg text-sm transition-colors w-36 shadow-lg">
-                {{ cluster.status || "Not Started" }}
-              </button>
-            </td>
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{ cluster.lastModifiedBy || "--" }}
-            </td>
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{ cluster.lastModifiedOn ? (cluster.lastModifiedOn | date : "yyyy-MM-dd hh:mm:ss a") : "--" }}
-            </td>
-            <td class="px-4 py-3 text-center">
-              <div class="flex space-x-3 justify-center">
-                <!-- EDIT -->
-                <button *ngIf="permissionService.hasPermission('Edit farmer clusters') || tokenService.getUserDetails().role === '1'"
-                  class="text-[#367bfa] hover:text-[#83aefd] flex items-center justify-center w-6 h-6 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  (click)="editCluster(cluster.clusterId!)" [disabled]="isLoading || cluster.status === 'Started'"
-                  title="Edit Cluster">
-                  <svg width="20" height="20" fill="currentColor" viewBox="0 0 32 32"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <title>Edit</title>
-                    <path
-                      d="M7.263 19.051l-1.656 5.797c-0.03 0.102-0.048 0.22-0.048 0.342 0 0.691 0.559 1.251 1.25 1.252h0c0.126-0 0.248-0.019 0.363-0.053l-0.009 0.002 5.622-1.656c0.206-0.063 0.383-0.17 0.527-0.311l-0 0 17.568-17.394c0.229-0.227 0.371-0.541 0.371-0.889 0-0.345-0.14-0.657-0.365-0.883l-4.141-4.142c-0.227-0.226-0.539-0.366-0.885-0.366s-0.658 0.14-0.885 0.366v0l-17.394 17.394c-0.146 0.146-0.256 0.329-0.316 0.532l-0.002 0.009zM25.859 3.768l2.369 2.369-2.369 2.346-2.37-2.345zM9.578 20.049l12.144-12.144 2.361 2.336-12.307 12.184-3.141 0.924zM30 12.75c-0.69 0-1.25 0.56-1.25 1.25v14.75h-25.5v-25.5h14.75c0.69 0 1.25-0.56 1.25-1.25s-0.56-1.25-1.25-1.25v0h-16c-0.69 0-1.25 0.56-1.25 1.25v0 28c0 0.69 0.56 1.25 1.25 1.25h28c0.69-0.001 1.249-0.56 1.25-1.25v-16c-0-0.69-0.56-1.25-1.25-1.25h-0z">
-                    </path>
-                  </svg>
+          <thead class="sticky top-0 z-40 bg-tileLight dark:bg-tileBlack">
+            <tr class="bg-tileLight dark:bg-tileBlack border-b border-gray-300 dark:border-[#4B555A]">
+              <th
+                class="lg:sticky left-0 z-50 box-border bg-tileLight px-4 py-3 font-normal text-textLight dark:bg-tileBlack dark:text-textDark text-left align-middle">
+                No
+              </th>
+              <th
+                class="lg:sticky left-[64px] z-50 box-border bg-tileLight px-4 py-3 font-normal text-textLight dark:bg-tileBlack dark:text-textDark text-left align-middle lg:shadow-[2px_0_0_0_#e5e7eb] dark:lg:shadow-[2px_0_0_0_#4B555A]">
+                Cluster Name
+              </th>
+              <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left align-middle">
+                District
+              </th>
+              <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left align-middle">
+                Certificate Name
+              </th>
+              <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center align-middle">
+                Member Count
+              </th>
+              <th
+                *ngIf="permissionService.hasPermission('View cluster member') || tokenService.getUserDetails().role === '1'"
+                class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center align-middle">
+                View Members
+              </th>
+              <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center align-middle">
+                Status
+              </th>
+              <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left align-middle">
+                Last Modified By
+              </th>
+              <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left align-middle">
+                Last Modified On
+              </th>
+              <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center align-middle"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let cluster of clusters; let i = index"
+              class="group border-b border-gray-200 dark:border-[#4B555A] hover:bg-gray-50 dark:hover:bg-gray-700">
+              <td
+                class="lg:sticky left-0 z-30 box-border bg-tileLight px-4 py-3 text-left align-middle text-textLight dark:bg-tileBlack dark:text-textDark group-hover:bg-gray-50 dark:group-hover:bg-gray-700">
+                {{ ("0" + (i + 1)).slice(-2) }}
+              </td>
+              <td
+                class="lg:sticky left-[64px] z-30 box-border truncate bg-tileLight px-4 py-3 text-left align-middle text-textLight dark:bg-tileBlack dark:text-textDark group-hover:bg-gray-50 dark:group-hover:bg-gray-700 lg:shadow-[2px_0_0_0_#e5e7eb] dark:lg:shadow-[2px_0_0_0_#4B555A]"
+                [title]="cluster.clusterName">
+                {{ cluster.clusterName }}
+              </td>
+              <td class="truncate px-4 py-3 text-left align-middle text-textLight dark:text-textDark"
+                [title]="cluster.district || '--'">
+                {{ cluster.district || "--" }}
+              </td>
+              <td class="truncate px-4 py-3 text-left align-middle text-textLight dark:text-textDark"
+                [title]="cluster.certificateName || 'No Certificate'">
+                {{ cluster.certificateName || "No Certificate" }}
+              </td>
+              <td class="px-4 py-3 text-center align-middle text-textLight dark:text-textDark">
+                {{ cluster.memberCount ? (cluster.memberCount | number : "2.0-0") : "00" }}
+              </td>
+              <td
+                *ngIf="permissionService.hasPermission('View cluster member') || tokenService.getUserDetails().role === '1'"
+                class="px-4 py-3 text-center align-middle text-textLight dark:text-textDark">
+                <button (click)="viewMembers(cluster.clusterId!)"
+                  class="inline-flex items-center justify-center w-8 h-8 text-blue-500 hover:text-blue-700 transition-colors"
+                  title="View Cluster Members">
+                  <i class="fa-solid fa-users text-xl"></i>
                 </button>
+              </td>
+              <td class="px-4 py-3 text-center align-middle">
+                <button *ngIf="cluster.status === 'Started'"
+                  [disabled]="!permissionService.hasPermission('Cluster start') && tokenService.getUserDetails().role !== '1'"
+                  class="inline-flex items-center justify-center bg-[#BBFFC6] text-[#308233] px-3 py-1 rounded-lg text-sm cursor-default w-36 h-8 shadow-lg">
+                  Started
+                </button>
+                <button *ngIf="cluster.status !== 'Started'" (click)="openStatusConfirmation(cluster)"
+                  [disabled]="!permissionService.hasPermission('Cluster start') && tokenService.getUserDetails().role !== '1'"
+                  class="inline-flex items-center justify-center bg-[#F8FFA6] text-[#A8A100] px-3 py-1 rounded-lg text-sm transition-colors w-36 h-8 shadow-lg">
+                  {{ cluster.status || "Not Started" }}
+                </button>
+              </td>
+              <td class="truncate px-4 py-3 text-left align-middle text-textLight dark:text-textDark"
+                [title]="cluster.lastModifiedBy || '--'">
+                {{ cluster.lastModifiedBy || "--" }}
+              </td>
+              <td class="px-4 py-3 text-left align-middle text-textLight dark:text-textDark">
+                {{ cluster.lastModifiedOn ? (cluster.lastModifiedOn | date : "yyyy-MM-dd hh:mm:ss a") : "--" }}
+              </td>
+              <td class="px-4 py-3 text-center align-middle">
+                <div class="flex space-x-3 justify-center items-center">
+                  <!-- EDIT -->
+                  <button
+                    *ngIf="permissionService.hasPermission('Edit farmer clusters') || tokenService.getUserDetails().role === '1'"
+                    class="text-[#367bfa] hover:text-[#83aefd] flex items-center justify-center w-6 h-6 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    (click)="editCluster(cluster.clusterId!)" [disabled]="isLoading || cluster.status === 'Started'"
+                    title="Edit Cluster">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 32 32"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <title>Edit</title>
+                      <path
+                        d="M7.263 19.051l-1.656 5.797c-0.03 0.102-0.048 0.22-0.048 0.342 0 0.691 0.559 1.251 1.25 1.252h0c0.126-0 0.248-0.019 0.363-0.053l-0.009 0.002 5.622-1.656c0.206-0.063 0.383-0.17 0.527-0.311l-0 0 17.568-17.394c0.229-0.227 0.371-0.541 0.371-0.889 0-0.345-0.14-0.657-0.365-0.883l-4.141-4.142c-0.227-0.226-0.539-0.366-0.885-0.366s-0.658 0.14-0.885 0.366v0l-17.394 17.394c-0.146 0.146-0.256 0.329-0.316 0.532l-0.002 0.009zM25.859 3.768l2.369 2.369-2.369 2.346-2.37-2.345zM9.578 20.049l12.144-12.144 2.361 2.336-12.307 12.184-3.141 0.924zM30 12.75c-0.69 0-1.25 0.56-1.25 1.25v14.75h-25.5v-25.5h14.75c0.69 0 1.25-0.56 1.25-1.25s-0.56-1.25-1.25-1.25v0h-16c-0.69 0-1.25 0.56-1.25 1.25v0 28c0 0.69 0.56 1.25 1.25 1.25h28c0.69-0.001 1.249-0.56 1.25-1.25v-16c-0-0.69-0.56-1.25-1.25-1.25h-0z">
+                      </path>
+                    </svg>
+                  </button>
 
-                <!-- DELETE -->
-                <button *ngIf="permissionService.hasPermission('Delete farmer clusters') || tokenService.getUserDetails().role === '1'"
-                  class="text-red-500 hover:text-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  (click)="deleteCluster(cluster.clusterId!)" [disabled]="cluster.status === 'Started'"
-                  title="Delete Cluster">
-                  <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                    viewBox="0 0 24 24">
-                    <title>Delete</title>
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1 1 1H7a1 1 0 0 1-1-1V7Z" />
-                  </svg>
-                </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
+                  <!-- DELETE -->
+                  <button
+                    *ngIf="permissionService.hasPermission('Delete farmer clusters') || tokenService.getUserDetails().role === '1'"
+                    class="text-red-500 hover:text-red-700 flex items-center justify-center w-6 h-6 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    (click)="deleteCluster(cluster.clusterId!)" [disabled]="cluster.status === 'Started'"
+                    title="Delete Cluster">
+                    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                      viewBox="0 0 24 24">
+                      <title>Delete</title>
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1 1 1H7a1 1 0 0 1-1-1V7Z" />
+                    </svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
         </table>
       </div>
       <div *ngIf="!hasData" class="flex flex-col items-center w-full px-10 py-7 mt-6 ">

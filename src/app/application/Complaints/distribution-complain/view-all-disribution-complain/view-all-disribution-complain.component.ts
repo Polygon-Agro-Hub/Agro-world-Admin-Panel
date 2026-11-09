@@ -106,8 +106,9 @@ export class ViewAllDisributionComplainComponent {
   }
 
   regStatusFil() {
-    this.fetchAllComplain(this.page, this.itemsPerPage);
-  }
+  this.page = 1;
+  this.fetchAllComplain(this.page, this.itemsPerPage);
+}
 
   onPageChange(event: number) {
     this.page = event;
@@ -115,11 +116,12 @@ export class ViewAllDisributionComplainComponent {
   }
 
   applyFilters() {
-    this.fetchAllComplain(this.page, this.itemsPerPage);
-    if (this.dropdown) {
-      this.dropdown.hide();
-    }
+  this.page = 1;
+  this.fetchAllComplain(this.page, this.itemsPerPage);
+  if (this.dropdown) {
+    this.dropdown.hide();
   }
+}
 
   searchComplain() {
     this.searchText = this.searchText?.trim() || ''
@@ -128,9 +130,10 @@ export class ViewAllDisributionComplainComponent {
   }
 
   clearSearch(): void {
-    this.searchText = "";
-    this.fetchAllComplain(this.page, this.itemsPerPage);
-  }
+  this.searchText = "";
+  this.page = 1;
+  this.fetchAllComplain(this.page, this.itemsPerPage);
+}
 
   navigateSelectComplain(id: string) {
     this.router.navigate([
@@ -241,11 +244,10 @@ export class ViewAllDisributionComplainComponent {
   }
 
   closeReplyPopUp() {
-    this.isPopUpVisible = false;
-    this.selectedOfficerName = 'English';
-    this.selectedLanguage = '';
-
-  }
+  this.isPopUpVisible = false;
+  this.selectedOfficerName = '';
+  this.selectedLanguage = 'English';
+}
 }
 
 

@@ -8,7 +8,8 @@
 <div
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
   <div class="pt-5 pb-5 min-w-[1200px] bg-white dark:bg-tileBlack shadow-lg rounded-lg">
-    <div class="flex space-x-4 pb-5 pr-12 pl-12 border-b border-gray-300 overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
+    <div
+      class="flex space-x-4 pb-5 pr-12 pl-12 border-b border-gray-300 overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
       <button [ngClass]="
           activeButton === 'assigned'
             ? 'border border-[#415CFF] text-[#415CFF]'
@@ -174,7 +175,8 @@
               <td class="px-3 py-3 text-left dark:text-textDark whitespace-nowrap">{{ order.sheduleType }}</td>
               <td class="px-3 py-3 text-left dark:text-textDark whitespace-nowrap">{{ getPaymentLabel(order) }}</td>
               <td class="px-3 py-3 text-center">
-                <span [ngClass]="getPaymentStatusClass(order)">
+                <span [ngClass]="getPaymentStatusClass(order)"
+                  class="inline-flex items-center justify-center w-[110px] h-9 px-3 rounded-xl text-sm whitespace-nowrap">
                   {{ getPaymentStatusText(order) }}
                 </span>
               </td>

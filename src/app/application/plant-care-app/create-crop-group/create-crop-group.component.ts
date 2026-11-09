@@ -50,6 +50,7 @@ export class CreateCropGroupComponent {
   incomeFeildDisplay = '';
   imageTouched = false;
   itemCount: number | null = null; // new
+  isSubmitting = false;
 
   allowOnlyEnglish(event: KeyboardEvent): void {
     const input = event.target as HTMLInputElement;
@@ -152,6 +153,10 @@ export class CreateCropGroupComponent {
     { label: 'Legumes', value: 'Legumes' },
   ];
 
+  isSalesOnly(displayFor?: string | null): boolean {
+    return displayFor === 'Sales';
+  }
+
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
       this.itemId = params['id'] ? +params['id'] : null;
@@ -234,14 +239,31 @@ export class CreateCropGroupComponent {
   }
 
   onSubmit() {
+    if (this.isSubmitting) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'A network error may have occurred. Please check the Crop Group List to see if the Crop Group was already created before retrying.\n\nNote: Multiple submissions are not allowed.',
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        },
+      });
+      return;
+    }
+
+    // Show every inline error, even if the user never touched the fields
     if (this.cropForm) {
+      this.cropForm.form.markAllAsTouched();
       Object.keys(this.cropForm.controls).forEach((key) => {
         this.cropForm.controls[key].markAsTouched();
       });
     }
     this.imageTouched = true;
 
-    if (this.isInputClicked && !this.selectedFile) {
+    // Image error no longer depends on the user having clicked "Add Image"
+    if (!this.selectedFile) {
       this.errorMassage = 'Please select an image';
     }
 
@@ -251,62 +273,73 @@ export class CreateCropGroupComponent {
       errors.push('Please fill the Crop Name in English');
     }
 
-    if (!this.cropGroup.cropNameSinahala) {
-      errors.push('Please fill the Crop Name in Sinhala');
-    }
+    if (!this.isSalesOnly(this.cropGroup.displayFor)) {
+      if (!this.cropGroup.cropNameSinahala) {
+        errors.push('Please fill the Crop Name in Sinhala');
+      }
 
-    if (!this.cropGroup.cropNameTamil) {
-      errors.push('Please fill the Crop Name in Tamil');
-    }
+      if (!this.cropGroup.cropNameTamil) {
+        errors.push('Please fill the Crop Name in Tamil');
+      }
 
-    if (!this.cropGroup.parentCategory) {
-      errors.push('Please select a Parent Category');
-    }
+      if (!this.cropGroup.parentCategory) {
+        errors.push('Please select a Parent Category');
+      }
 
-    if (!this.cropGroup.costFeild || parseFloat(this.cropGroup.costFeild) <= 0) {
-      errors.push('Please fill the Cost per acre field');
-    }
+      if (
+        !this.cropGroup.costFeild ||
+        parseFloat(this.cropGroup.costFeild) <= 0
+      ) {
+        errors.push('Please fill the Cost per acre field');
+      }
 
-    if (!this.cropGroup.incomeFeild || parseFloat(this.cropGroup.incomeFeild) <= 0) {
-      errors.push('Please fill the Income per acre field');
-    }
+      if (
+        !this.cropGroup.incomeFeild ||
+        parseFloat(this.cropGroup.incomeFeild) <= 0
+      ) {
+        errors.push('Please fill the Income per acre field');
+      }
 
-    if (!this.cropGroup.seedRate) {
-      errors.push('Please fill the Recommended Seed Rate');
-    }
-    if (!this.cropGroup.rowSpace) {
-      errors.push('Please fill the Row Spacing');
-    }
-    if (!this.cropGroup.plantSpace) {
-      errors.push('Please fill the Plant Spacing');
-    }
-    if (!this.cropGroup.AvgYield) {
-      errors.push('Please fill the Average Yield');
-    }
-    if (
-      !this.cropGroup.nitrogen ||
-      !this.cropGroup.phosphorus ||
-      !this.cropGroup.potassium
-    ) {
-      errors.push('Please fill all NPK Ratio values');
-    }
+      if (!this.cropGroup.seedRate) {
+        errors.push('Please fill the Recommended Seed Rate');
+      }
+      if (!this.cropGroup.rowSpace) {
+        errors.push('Please fill the Row Spacing');
+      }
+      if (!this.cropGroup.plantSpace) {
+        errors.push('Please fill the Plant Spacing');
+      }
+      if (!this.cropGroup.AvgYield) {
+        errors.push('Please fill the Average Yield');
+      }
+      if (
+        !this.cropGroup.nitrogen ||
+        !this.cropGroup.phosphorus ||
+        !this.cropGroup.potassium
+      ) {
+        errors.push('Please fill all NPK Ratio values');
+      }
 
-    if (
-      (this.cropGroup.nitrogen && !this.isValidNPKValue(this.cropGroup.nitrogen)) ||
-      (this.cropGroup.phosphorus && !this.isValidNPKValue(this.cropGroup.phosphorus)) ||
-      (this.cropGroup.potassium && !this.isValidNPKValue(this.cropGroup.potassium))
-    ) {
-      errors.push('NPK values must be whole numbers between 0 and 99');
-    }
-
-    if (!this.cropGroup.bgColor) {
-      errors.push('Please choose a Background Color');
+      if (
+        (this.cropGroup.nitrogen &&
+          !this.isValidNPKValue(this.cropGroup.nitrogen)) ||
+        (this.cropGroup.phosphorus &&
+          !this.isValidNPKValue(this.cropGroup.phosphorus)) ||
+        (this.cropGroup.potassium &&
+          !this.isValidNPKValue(this.cropGroup.potassium))
+      ) {
+        errors.push('NPK values must be whole numbers between 0 and 99');
+      }
     }
 
     const onlyNumbersPattern = /^[0-9]+$/;
 
     if (!this.selectedFile) {
       errors.push('Please select an image file');
+    }
+
+    if (!this.cropGroup.bgColor) {
+      errors.push('Please choose a Background Color');
     }
 
     if (errors.length > 0) {
@@ -323,6 +356,7 @@ export class CreateCropGroupComponent {
       return;
     }
 
+    this.isSubmitting = true;
     this.isLoading = true;
 
     const formData = new FormData();
@@ -365,9 +399,10 @@ export class CreateCropGroupComponent {
           });
           this.router.navigate(['/plant-care/action/view-crop-group']);
         } else {
+          this.isSubmitting = false;
           Swal.fire({
             icon: 'error',
-            title: 'Unsuccess',
+            title: 'Validation Error',
             text: response.message,
             customClass: {
               popup:
@@ -378,11 +413,12 @@ export class CreateCropGroupComponent {
         }
       },
       error: (error) => {
+        this.isSubmitting = false;
         this.isLoading = false;
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: 'Something went wrong!',
+          text: 'A network error may have occurred. Please check the Crop Group List to see if the Crop Group was already created before retrying.\n\nNote: Multiple submissions are not allowed.',
           customClass: {
             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
             title: 'font-semibold',
@@ -392,7 +428,7 @@ export class CreateCropGroupComponent {
     });
   }
 
-      onCancel() {
+  onCancel() {
     Swal.fire({
       icon: 'warning',
       title: 'Are you sure?',
@@ -474,52 +510,63 @@ export class CreateCropGroupComponent {
       errors.push('Please fill the Crop Name in English');
     }
 
-    if (!this.newsItems[0].cropNameSinhala) {
-      errors.push('Please fill the Crop Name in Sinhala');
-    }
-
-    if (!this.newsItems[0].cropNameTamil) {
-      errors.push('Please fill the Crop Name in Tamil');
-    }
-
     if (!this.newsItems[0].category) {
       errors.push('Please select a Parent Category');
     }
 
-    if (!this.newsItems[0].costFeild || parseFloat(this.newsItems[0].costFeild) <= 0) {
-      errors.push('Please fill the Cost per acre field');
-    }
+    if (!this.isSalesOnly(this.newsItems[0].displayFor)) {
+      if (!this.newsItems[0].cropNameSinhala) {
+        errors.push('Please fill the Crop Name in Sinhala');
+      }
 
-    if (!this.newsItems[0].incomeFeild || parseFloat(this.newsItems[0].incomeFeild) <= 0) {
-      errors.push('Please fill the Income per acre field');
-    }
+      if (!this.newsItems[0].cropNameTamil) {
+        errors.push('Please fill the Crop Name in Tamil');
+      }
 
-    if (!this.newsItems[0].seedRate) {
-      errors.push('Please fill the Recommended Seed Rate');
-    }
-    if (!this.newsItems[0].rowSpace) {
-      errors.push('Please fill the Row Spacing');
-    }
-    if (!this.newsItems[0].plantSpace) {
-      errors.push('Please fill the Plant Spacing');
-    }
-    if (!this.newsItems[0].AvgYield) {
-      errors.push('Please fill the Average Yield');
-    }
-    if (
-      !this.newsItems[0].nitrogen ||
-      !this.newsItems[0].phosphorus ||
-      !this.newsItems[0].potassium
-    ) {
-      errors.push('Please fill all NPK Ratio values');
-    }
+      if (
+        !this.newsItems[0].costFeild ||
+        parseFloat(this.newsItems[0].costFeild) <= 0
+      ) {
+        errors.push('Please fill the Cost per acre field');
+      }
 
-    if (
-      (this.newsItems[0].nitrogen && !this.isValidNPKValue(this.newsItems[0].nitrogen)) ||
-      (this.newsItems[0].phosphorus && !this.isValidNPKValue(this.newsItems[0].phosphorus)) ||
-      (this.newsItems[0].potassium && !this.isValidNPKValue(this.newsItems[0].potassium))
-    ) {
-      errors.push('NPK values must be whole numbers between 0 and 99');
+      if (
+        !this.newsItems[0].incomeFeild ||
+        parseFloat(this.newsItems[0].incomeFeild) <= 0
+      ) {
+        errors.push('Please fill the Income per acre field');
+      }
+
+      if (!this.newsItems[0].seedRate) {
+        errors.push('Please fill the Recommended Seed Rate');
+      }
+      if (!this.newsItems[0].rowSpace) {
+        errors.push('Please fill the Row Spacing');
+      }
+      if (!this.newsItems[0].plantSpace) {
+        errors.push('Please fill the Plant Spacing');
+      }
+      if (!this.newsItems[0].AvgYield) {
+        errors.push('Please fill the Average Yield');
+      }
+      if (
+        !this.newsItems[0].nitrogen ||
+        !this.newsItems[0].phosphorus ||
+        !this.newsItems[0].potassium
+      ) {
+        errors.push('Please fill all NPK Ratio values');
+      }
+
+      if (
+        (this.newsItems[0].nitrogen &&
+          !this.isValidNPKValue(this.newsItems[0].nitrogen)) ||
+        (this.newsItems[0].phosphorus &&
+          !this.isValidNPKValue(this.newsItems[0].phosphorus)) ||
+        (this.newsItems[0].potassium &&
+          !this.isValidNPKValue(this.newsItems[0].potassium))
+      ) {
+        errors.push('NPK values must be whole numbers between 0 and 99');
+      }
     }
 
     if (!this.newsItems[0].bgColor) {
@@ -702,7 +749,7 @@ export class CreateCropGroupComponent {
     }
   }
 
-    allowOnlyNumbers(event: KeyboardEvent): void {
+  allowOnlyNumbers(event: KeyboardEvent): void {
     const input = event.target as HTMLInputElement;
     const char = event.key;
 
@@ -739,7 +786,13 @@ export class CreateCropGroupComponent {
     const input = event.target as HTMLInputElement;
     const char = event.key;
     const allowedKeys = [
-      'Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'ArrowLeft', 'ArrowRight',
+      'Backspace',
+      'Delete',
+      'Tab',
+      'Escape',
+      'Enter',
+      'ArrowLeft',
+      'ArrowRight',
     ];
 
     if (allowedKeys.includes(char)) return;
@@ -761,7 +814,8 @@ export class CreateCropGroupComponent {
 
     const start = input.selectionStart ?? input.value.length;
     const end = input.selectionEnd ?? input.value.length;
-    const newValue = input.value.slice(0, start) + char + input.value.slice(end);
+    const newValue =
+      input.value.slice(0, start) + char + input.value.slice(end);
 
     const num = parseInt(newValue, 10);
     if (!isNaN(num) && num > 99) {
@@ -772,7 +826,7 @@ export class CreateCropGroupComponent {
   sanitizeNPKInput(
     event: Event,
     model: { nitrogen: string; phosphorus: string; potassium: string },
-    field: 'nitrogen' | 'phosphorus' | 'potassium'
+    field: 'nitrogen' | 'phosphorus' | 'potassium',
   ): void {
     const input = event.target as HTMLInputElement;
     const rawValue = input.value.trim();

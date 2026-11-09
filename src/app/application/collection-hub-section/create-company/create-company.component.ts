@@ -1118,6 +1118,10 @@ export class CreateCompanyComponent implements OnInit {
 
       const missingFields: string[] = [];
 
+      if (!this.companyData.logo)
+        missingFields.push('Company Logo is Required');
+      if (!this.companyData.favicon)
+        missingFields.push('Company Favicon is Required');
       if (!this.companyData.regNumber)
         missingFields.push('Company Register Number is Required');
       if (!this.companyData.companyNameEnglish)
@@ -1128,11 +1132,6 @@ export class CreateCompanyComponent implements OnInit {
         missingFields.push('Company Name (Tamil) is Required');
       if (!this.companyData.email)
         missingFields.push('Company Email is Required');
-      if (!this.companyData.logo)
-        missingFields.push('Company Logo is Required');
-      if (!this.companyData.favicon)
-        missingFields.push('Company Favicon is Required');
-
       if (
         this.companyData.email &&
         !this.isValidEmail(this.companyData.email)

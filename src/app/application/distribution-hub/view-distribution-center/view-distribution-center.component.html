@@ -216,13 +216,13 @@
           <tr *ngFor="
               let item of distributionCentreObj
                 | paginate
-                  : {
-                      itemsPerPage: itemsPerPage,
-                      currentPage: page,
-                      totalItems: totalItems
-                    };
-              let i = index
-            ">
+              : {
+                  itemsPerPage: itemsPerPage,
+                  currentPage: page,
+                  totalItems: totalItems
+                };
+              let i = index"           
+              class="[&>td]:border-b [&>td]:border-gray-200 dark:[&>td]:border-gray-700">
             <td
               class="sticky left-0 z-30 box-border w-[70px] min-w-[70px] max-w-[70px] border-b border-gray-200 bg-tileLight px-4 py-3 text-left text-[#000000] dark:border-gray-700 dark:bg-tileBlack dark:text-textDark shadow-[2px_0_0_0_#ffffff] dark:shadow-[2px_0_0_0_#272F45]">
               {{ (page - 1) * itemsPerPage + i + 1 }}

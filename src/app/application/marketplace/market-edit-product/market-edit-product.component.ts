@@ -37,6 +37,8 @@ export class MarketEditProductComponent implements OnInit {
   // Retail only: which pricing tab is visible in the Product Pricing card
   pricingTab: 'standalone' | 'package' = 'standalone';
   formSubmitted = false;
+  tagDraft = '';
+  tagsTouched = false;
 
   get isRetail(): boolean {
     return this.productObj.category === 'Retail';
@@ -81,7 +83,7 @@ export class MarketEditProductComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     public themeService: ThemeService,
-  ) {}
+  ) { }
 
   back(): void {
     Swal.fire({
@@ -146,7 +148,7 @@ export class MarketEditProductComponent implements OnInit {
 
   getProduct() {
     this.marketSrv.getProductById(this.productId).subscribe((res) => {
-      
+
       this.storedDisplayType = res.displaytype;
       this.productObj = res;
       this.productObj.productTypeId = res.productTypeId;
@@ -222,10 +224,10 @@ export class MarketEditProductComponent implements OnInit {
     this.marketSrv.getCropVerity().subscribe(
       (res) => {
         this.cropsObj = res;
-        
+
       },
       (error) => {
-        
+
       },
     );
   }
@@ -242,15 +244,15 @@ export class MarketEditProductComponent implements OnInit {
     const sample = this.cropsObj.filter(
       (crop) => crop.cropId === +this.productObj.selectId,
     );
-    
+
     if (sample.length > 0) {
       this.selectedVarieties = sample[0].variety;
       this.isVerityVisible = true;
-      
+
     } else {
       this.selectedVarieties = [];
       this.isVerityVisible = false;
-      
+
     }
     // Update the selected image after changing varieties
     this.selectVerityImage();
@@ -259,7 +261,7 @@ export class MarketEditProductComponent implements OnInit {
   selectVerityImage() {
     if (!this.productObj.varietyId) {
       this.selectedImage = null;
-      
+
       return;
     }
 
@@ -267,11 +269,11 @@ export class MarketEditProductComponent implements OnInit {
       (v) => v.id === Number(this.productObj.varietyId),
     );
     this.selectedImage = selectedVariety ? selectedVariety.image : null;
-    
+
   }
 
   onCancel() {
-    
+
     Swal.fire({
       icon: 'warning',
       title: 'Are you sure?',
@@ -311,8 +313,9 @@ export class MarketEditProductComponent implements OnInit {
 
   onSubmit() {
     this.formSubmitted = true;
+    this.tagsTouched = true;
     this.updateTags();
-    
+
 
     if (
       this.productObj.category === 'WholeSale' &&
@@ -351,7 +354,7 @@ export class MarketEditProductComponent implements OnInit {
             title: 'font-semibold',
           },
           confirmButtonText: 'OK',
-      });
+        });
         return;
       }
     }
@@ -369,8 +372,8 @@ export class MarketEditProductComponent implements OnInit {
       emptyFields.push('Increase/Decrease by');
 
     if (!this.productObj.comPrice || this.productObj.comPrice <= 0) {
-  emptyFields.push('Competitor Price');
-}
+      emptyFields.push('Competitor Price');
+    }
 
     if (this.isRetail && !this.productObj.packagePrice) {
       emptyFields.push('Package Based Price');
@@ -407,35 +410,35 @@ export class MarketEditProductComponent implements OnInit {
 
     let salePriceForComparison = 0;
 
-if (this.productObj.promo) {
-  if (
-    this.productObj.displaytype === 'D&AP' ||
-    this.productObj.displaytype === 'AP&SP&D'
-  ) {
-    salePriceForComparison = this.productObj.salePrice;
-  } else if (this.productObj.displaytype === 'AP&SP') {
-    salePriceForComparison = this.productObj.salePrice;
-  } else {
-    salePriceForComparison =
-      this.productObj.salePrice || this.productObj.normalPrice;
-  }
-} else {
-  salePriceForComparison = this.productObj.normalPrice;
-}
+    if (this.productObj.promo) {
+      if (
+        this.productObj.displaytype === 'D&AP' ||
+        this.productObj.displaytype === 'AP&SP&D'
+      ) {
+        salePriceForComparison = this.productObj.salePrice;
+      } else if (this.productObj.displaytype === 'AP&SP') {
+        salePriceForComparison = this.productObj.salePrice;
+      } else {
+        salePriceForComparison =
+          this.productObj.salePrice || this.productObj.normalPrice;
+      }
+    } else {
+      salePriceForComparison = this.productObj.normalPrice;
+    }
 
-if (this.productObj.comPrice <= salePriceForComparison) {
-  Swal.fire({
-    icon: 'error',
-    title: 'Invalid Competitor Price',
-    html: 'Competitor price cannot be equal or lower than the Sale Price.',
-    confirmButtonText: 'OK',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-  });
-  return;
-}
+    if (this.productObj.comPrice <= salePriceForComparison) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Competitor Price',
+        html: 'Competitor price cannot be equal or lower than the Sale Price.',
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        },
+      });
+      return;
+    }
 
     if (emptyFields.length > 0) {
       Swal.fire({
@@ -544,7 +547,7 @@ if (this.productObj.comPrice <= salePriceForComparison) {
       },
     );
 
-    
+
   }
 
   updateTags() {
@@ -582,7 +585,7 @@ if (this.productObj.comPrice <= salePriceForComparison) {
   applyDiscount() {
     this.isNoDiscount = false;
     this.productObj.displaytype = this.storedDisplayType;
-    
+
 
     if (this.productObj.discountedPrice === 0) {
       this.productObj.discountedPrice = this.storedDiscountPercentage;
@@ -593,9 +596,9 @@ if (this.productObj.comPrice <= salePriceForComparison) {
       this.productObj.discount =
         (this.productObj.normalPrice * this.productObj.discountedPrice) / 100;
     }
-    
 
-    
+
+
   }
 
   announceTagAdded(event: any) {
@@ -668,39 +671,39 @@ if (this.productObj.comPrice <= salePriceForComparison) {
   }
 
   validateDecimalInput(event: KeyboardEvent): boolean {
-  const input = event.target as HTMLInputElement;
-  const value = input.value;
-  const key = event.key;
-  const fieldName = input.id;
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+    const key = event.key;
+    const fieldName = input.id;
 
-  const controlKeys = [
-    'Backspace', 'Delete', 'Tab', 'Escape', 'Enter',
-    'Home', 'End', 'ArrowLeft', 'ArrowRight', 'Clear', 'Copy', 'Paste',
-  ];
-  if (controlKeys.includes(key)) {
-    return true;
-  }
+    const controlKeys = [
+      'Backspace', 'Delete', 'Tab', 'Escape', 'Enter',
+      'Home', 'End', 'ArrowLeft', 'ArrowRight', 'Clear', 'Copy', 'Paste',
+    ];
+    if (controlKeys.includes(key)) {
+      return true;
+    }
 
-  // discountedPrice is integer-only: no decimal point allowed at all
-  if (fieldName === 'discountedPrice') {
-    if (!/^[0-9]$/.test(key)) {
+    // discountedPrice is integer-only: no decimal point allowed at all
+    if (fieldName === 'discountedPrice') {
+      if (!/^[0-9]$/.test(key)) {
+        event.preventDefault();
+        return false;
+      }
+      return true;
+    }
+
+    // Allow numbers and decimal point for all other fields
+    if (!/^[0-9.]$/.test(key)) {
       event.preventDefault();
       return false;
     }
-    return true;
-  }
 
-  // Allow numbers and decimal point for all other fields
-  if (!/^[0-9.]$/.test(key)) {
-    event.preventDefault();
-    return false;
-  }
-
-  // Prevent multiple decimal points
-  if (key === '.' && value.includes('.')) {
-    event.preventDefault();
-    return false;
-  }
+    // Prevent multiple decimal points
+    if (key === '.' && value.includes('.')) {
+      event.preventDefault();
+      return false;
+    }
 
     // Check decimal places only when the caret is AFTER the decimal point
     if (value.includes('.') && input.type === 'text') {
@@ -721,13 +724,13 @@ if (this.productObj.comPrice <= salePriceForComparison) {
       }
     }
 
-  if (key === '.' && value === '') {
-    event.preventDefault();
-    return false;
-  }
+    if (key === '.' && value === '') {
+      event.preventDefault();
+      return false;
+    }
 
-  return true;
-}
+    return true;
+  }
 
   validatePriceFormat(value: any, fieldName: string): boolean {
     if (value === null || value === undefined || value === '') {
@@ -749,69 +752,69 @@ if (this.productObj.comPrice <= salePriceForComparison) {
   }
 
   formatPrice(event: any, fieldName: string): void {
-  const input = event.target;
-  let value = input.value;
+    const input = event.target;
+    let value = input.value;
 
-  if (value && !isNaN(value)) {
-    const numericValue = parseFloat(value);
-    if (numericValue >= 0) {
-      let formattedValue;
+    if (value && !isNaN(value)) {
+      const numericValue = parseFloat(value);
+      if (numericValue >= 0) {
+        let formattedValue;
 
-      if (fieldName === 'discountedPrice') {
-        // Integer only, no decimals
-        formattedValue = Math.round(numericValue).toString();
-      } else if (
-        fieldName === 'normalPrice' ||
-        fieldName === 'salePrice' ||
-        fieldName === 'comPrice' ||
-        fieldName === 'packagePrice'
-      ) {
-        formattedValue = numericValue.toFixed(2);
-      } else if (
-        fieldName === 'startValue' ||
-        fieldName === 'changeby' ||
-        fieldName === 'maxQuantity'
-      ) {
-        formattedValue = numericValue.toFixed(3);
-      } else {
-        formattedValue = numericValue.toFixed(2);
-      }
+        if (fieldName === 'discountedPrice') {
+          // Integer only, no decimals
+          formattedValue = Math.round(numericValue).toString();
+        } else if (
+          fieldName === 'normalPrice' ||
+          fieldName === 'salePrice' ||
+          fieldName === 'comPrice' ||
+          fieldName === 'packagePrice'
+        ) {
+          formattedValue = numericValue.toFixed(2);
+        } else if (
+          fieldName === 'startValue' ||
+          fieldName === 'changeby' ||
+          fieldName === 'maxQuantity'
+        ) {
+          formattedValue = numericValue.toFixed(3);
+        } else {
+          formattedValue = numericValue.toFixed(2);
+        }
 
-      input.value = formattedValue;
+        input.value = formattedValue;
 
-      switch (fieldName) {
-        case 'normalPrice':
-          this.productObj.normalPrice = parseFloat(formattedValue);
-          break;
-        case 'discountedPrice':
-          this.productObj.discountedPrice = parseInt(formattedValue, 10);
-          break;
-        case 'salePrice':
-          this.productObj.salePrice = parseFloat(formattedValue);
-          break;
-        case 'startValue':
-          this.productObj.startValue = parseFloat(formattedValue);
-          break;
-        case 'changeby':
-          this.productObj.changeby = parseFloat(formattedValue);
-          break;
-        case 'maxQuantity':
-          this.productObj.maxQuantity = parseFloat(formattedValue);
-          break;
-        case 'comPrice':
-          this.productObj.comPrice = parseFloat(formattedValue);
-          break;
-        case 'packagePrice':
-          this.productObj.packagePrice = parseFloat(formattedValue);
-          break;
-      }
+        switch (fieldName) {
+          case 'normalPrice':
+            this.productObj.normalPrice = parseFloat(formattedValue);
+            break;
+          case 'discountedPrice':
+            this.productObj.discountedPrice = parseInt(formattedValue, 10);
+            break;
+          case 'salePrice':
+            this.productObj.salePrice = parseFloat(formattedValue);
+            break;
+          case 'startValue':
+            this.productObj.startValue = parseFloat(formattedValue);
+            break;
+          case 'changeby':
+            this.productObj.changeby = parseFloat(formattedValue);
+            break;
+          case 'maxQuantity':
+            this.productObj.maxQuantity = parseFloat(formattedValue);
+            break;
+          case 'comPrice':
+            this.productObj.comPrice = parseFloat(formattedValue);
+            break;
+          case 'packagePrice':
+            this.productObj.packagePrice = parseFloat(formattedValue);
+            break;
+        }
 
-      if (fieldName === 'normalPrice' || fieldName === 'discountedPrice') {
-        this.calculeSalePrice();
+        if (fieldName === 'normalPrice' || fieldName === 'discountedPrice') {
+          this.calculeSalePrice();
+        }
       }
     }
   }
-}
 
   validateMinMaxQuantities(): boolean {
     if (
@@ -870,72 +873,94 @@ if (this.productObj.comPrice <= salePriceForComparison) {
   }
 
   clampMinValue(event: Event, fieldName: string): void {
-  const input = event.target as HTMLInputElement;
-  const rawValue = input.value;
+    const input = event.target as HTMLInputElement;
+    const rawValue = input.value;
 
-  // Let the user clear the field to type a new value
-  if (rawValue === '') {
-    return;
-  }
+    // Let the user clear the field to type a new value
+    if (rawValue === '') {
+      return;
+    }
 
     // Lock decimals to 2 places (discountedPrice has none)
-  let cleanRaw = rawValue;
+    let cleanRaw = rawValue;
 
-  if (fieldName !== 'discountedPrice' && rawValue.includes('.')) {
-    const [intPart, decPart] = rawValue.split('.');
-    if (decPart.length > 2) {
-      cleanRaw = `${intPart}.${decPart.slice(0, 2)}`;
-      input.value = cleanRaw;
+    if (fieldName !== 'discountedPrice' && rawValue.includes('.')) {
+      const [intPart, decPart] = rawValue.split('.');
+      if (decPart.length > 2) {
+        cleanRaw = `${intPart}.${decPart.slice(0, 2)}`;
+        input.value = cleanRaw;
+      }
+    }
+
+    let value = parseFloat(cleanRaw);
+
+    // Only clamp if it's a real negative number, not just "in progress" typing
+    if (!isNaN(value) && value < 0) {
+      value = 0;
+      input.value = '0';
+    }
+
+    if (isNaN(value)) {
+      return; // still typing (e.g. "0.")
+    }
+
+    switch (fieldName) {
+      case 'discountedPrice':
+        this.productObj.discountedPrice = value;
+        if (value > 99) {
+          this.productObj.discountedPrice = 99;
+          input.value = '99';
+        }
+        break;
+      case 'normalPrice':
+        this.productObj.normalPrice = value;
+        break;
+      case 'salePrice':
+        this.productObj.salePrice = value;
+        break;
+      case 'comPrice':
+        this.productObj.comPrice = value;
+        break;
+      case 'packagePrice':
+        this.productObj.packagePrice = value;
+        break;
+      case 'startValue':
+        this.productObj.startValue = value;
+        break;
+      case 'changeby':
+        this.productObj.changeby = value;
+        break;
+      case 'maxQuantity':
+        this.productObj.maxQuantity = value;
+        break;
+    }
+
+    if (fieldName === 'normalPrice' || fieldName === 'discountedPrice') {
+      this.calculeSalePrice();
     }
   }
 
-  let value = parseFloat(cleanRaw);
+  onTagEnter(event: Event) {
+    event.preventDefault();
+    const value = (this.tagDraft || '').trim();
+    if (!value) return;
 
-  // Only clamp if it's a real negative number, not just "in progress" typing
-  if (!isNaN(value) && value < 0) {
-    value = 0;
-    input.value = '0';
+    const exists = this.templateKeywords().some(
+      (k) => k.toLowerCase() === value.toLowerCase(),
+    );
+    if (!exists) {
+      this.templateKeywords.update((keywords) => [...keywords, value]);
+      this.updateTags();
+    }
+    this.tagDraft = '';
   }
 
-  if (isNaN(value)) {
-    return; // still typing (e.g. "0.")
+  onTagBackspace() {
+    if (!this.tagDraft && this.templateKeywords().length > 0) {
+      const last = this.templateKeywords()[this.templateKeywords().length - 1];
+      this.removeTemplateKeyword(last);
+    }
   }
-
-  switch (fieldName) {
-    case 'discountedPrice':
-      this.productObj.discountedPrice = value;
-      if (value > 99) {
-        this.productObj.discountedPrice = 99;
-        input.value = '99';
-      }
-      break;
-    case 'normalPrice':
-      this.productObj.normalPrice = value;
-      break;
-    case 'salePrice':
-      this.productObj.salePrice = value;
-      break;
-    case 'comPrice':
-      this.productObj.comPrice = value;
-      break;
-    case 'packagePrice':
-      this.productObj.packagePrice = value;
-      break;
-    case 'startValue':
-      this.productObj.startValue = value;
-      break;
-    case 'changeby':
-      this.productObj.changeby = value;
-      break;
-    case 'maxQuantity':
-      this.productObj.maxQuantity = value;
-      break;
-  }
-
-  if (fieldName === 'normalPrice' || fieldName === 'discountedPrice') {
-    this.calculeSalePrice();
-  }
-}
 }
 
 class Crop {

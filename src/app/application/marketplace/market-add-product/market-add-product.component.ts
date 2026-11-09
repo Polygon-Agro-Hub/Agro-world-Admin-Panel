@@ -55,6 +55,7 @@ export class MarketAddProductComponent implements OnInit {
   text: string = 'Kg';
 
   isunitTypeKg!: boolean;
+  tagDraft = '';
 
   // In your component.ts
   categoryOptions = [
@@ -1038,6 +1039,28 @@ export class MarketAddProductComponent implements OnInit {
     this.productObj.comPrice = parseFloat(
       this.productObj.comPrice.toFixed(2)
     );
+  }
+
+  onTagEnter(event: Event) {
+    event.preventDefault(); 
+    const value = (this.tagDraft || '').trim();
+    if (!value) return;
+
+    const exists = this.templateKeywords().some(
+      (k) => k.toLowerCase() === value.toLowerCase(),
+    );
+    if (!exists) {
+      this.templateKeywords.update((keywords) => [...keywords, value]);
+      this.updateTags();
+    }
+    this.tagDraft = '';
+  }
+
+  onTagBackspace() {
+    if (!this.tagDraft && this.templateKeywords().length > 0) {
+      const last = this.templateKeywords()[this.templateKeywords().length - 1];
+      this.removeTemplateKeyword(last);
+    }
   }
 }
 

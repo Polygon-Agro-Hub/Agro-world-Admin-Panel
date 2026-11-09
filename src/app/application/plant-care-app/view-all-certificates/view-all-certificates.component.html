@@ -136,9 +136,11 @@
               class="sticky left-[80px] z-40 box-border w-[220px] min-w-[220px] max-w-[220px] border-b border-gray-200 bg-tileLight px-4 py-3 text-left text-textLight dark:border-[#4B555A] dark:bg-tileBlack dark:text-textDark shadow-[2px_0_0_0_#ffffff] dark:shadow-[2px_0_0_0_#272F45]">
               {{ item.srtNumber }}
             </td>
-            <td
-              class="sticky left-[300px] z-40 box-border w-[280px] min-w-[280px] max-w-[280px] border-b border-gray-200 bg-tileLight px-4 py-3 text-left text-textLight dark:border-[#4B555A] dark:bg-tileBlack dark:text-textDark shadow-[2px_0_0_0_#ffffff] dark:shadow-[2px_0_0_0_#272F45]">
-              {{ item.srtName }}
+                        <td
+              class="sticky left-[300px] z-40 box-border w-[280px] min-w-[280px] max-w-[280px] overflow-hidden border-b border-gray-200 bg-tileLight px-4 py-3 text-left text-textLight dark:border-[#4B555A] dark:bg-tileBlack dark:text-textDark shadow-[2px_0_0_0_#ffffff] dark:shadow-[2px_0_0_0_#272F45]">
+              <span class="block w-full truncate" [title]="item.srtName">
+                {{ item.srtName }}
+              </span>
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.companyName }}

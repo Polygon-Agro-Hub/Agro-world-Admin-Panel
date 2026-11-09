@@ -7,34 +7,100 @@
 
 /* Dark mode dropdown */
 :host-context(.dark) ::ng-deep .p-dropdown {
+  background-color: var(--tileBlack, #1f1f1f) !important;
   color: #ffffff !important;
   border: 1px solid #ffffff;
 }
 
 /* Dropdown label text (selected value) in dark mode */
 :host-context(.dark) ::ng-deep .p-dropdown-label {
+  background-color: transparent !important;
   color: #ffffff !important;
 }
 
-/* Dropdown trigger icon (arrow) in dark mode */
+/* Dropdown trigger (arrow) in dark mode */
 :host-context(.dark) ::ng-deep .p-dropdown-trigger {
+  background-color: transparent !important;
   color: #ffffff !important;
 }
 
 /* Dropdown panel (options list) in dark mode */
 :host-context(.dark) ::ng-deep .p-dropdown-panel {
-  background-color: var(--tileBlack, #1f1f1f);
+  background-color: var(--tileBlack, #1f1f1f) !important;
   color: #ffffff !important;
-  border-color: #4b5563;
+  border: 1px solid #4b5563;
 }
 
-/* Each dropdown option text in dark mode */
-:host-context(.dark) ::ng-deep .p-dropdown-item {
+/* Each dropdown option in dark mode */
+:host-context(.dark) ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  background-color: transparent !important;
   color: #ffffff !important;
 }
 
 /* Hover effect in dark mode */
-:host-context(.dark) ::ng-deep .p-dropdown-item:hover {
-  background-color: #374151; /* gray-700 */
+:host-context(.dark) ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item:hover {
+  background-color: #374151 !important;
+  /* gray-700 */
+  color: #ffffff !important;
+}
+
+/* Selected option in dark mode */
+:host-context(.dark) ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
+  background-color: #374151 !important;
+  color: #ffffff !important;
+}
+
+/* Light mode dropdown */
+::ng-deep .p-dropdown {
+  background-color: var(--tileLight, #f9f9f9);
+  color: var(--textLight, #111);
+  border: 1px solid #d1d5db;
+}
+
+/* Dark mode dropdown: no background */
+:host-context(.dark) ::ng-deep .p-dropdown,
+:host-context(.dark) ::ng-deep .p-dropdown.p-component,
+:host-context(.dark) ::ng-deep .p-dropdown.p-inputwrapper-filled,
+:host-context(.dark) ::ng-deep .p-dropdown.p-inputwrapper-focus {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: #ffffff !important;
+  border: 1px solid #ffffff;
+}
+
+/* Selected value */
+:host-context(.dark) ::ng-deep .p-dropdown .p-dropdown-label {
+  background: transparent !important;
+  color: #ffffff !important;
+}
+
+/* Arrow */
+:host-context(.dark) ::ng-deep .p-dropdown .p-dropdown-trigger {
+  background: transparent !important;
+  color: #ffffff !important;
+}
+
+/* Options panel (keeps a solid dark background so it stays readable) */
+:host-context(.dark) ::ng-deep .p-dropdown-panel {
+  background-color: var(--tileBlack, #1f1f1f) !important;
+  color: #ffffff !important;
+  border: 1px solid #4b5563;
+}
+
+/* Options */
+:host-context(.dark) ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  background-color: transparent !important;
+  color: #ffffff !important;
+}
+
+/* Hover */
+:host-context(.dark) ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item:hover {
+  background-color: #374151 !important;
+  color: #ffffff !important;
+}
+
+/* Selected option */
+:host-context(.dark) ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
+  background-color: #374151 !important;
   color: #ffffff !important;
 }

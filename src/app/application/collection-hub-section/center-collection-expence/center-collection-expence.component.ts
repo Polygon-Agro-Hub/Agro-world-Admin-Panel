@@ -55,7 +55,7 @@ export class CenterCollectionExpenceComponent implements OnInit {
     private location: Location,
     public tokenService: TokenService,
     public permissionService: PermissionService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.centerId = this.route.snapshot.params['id'];

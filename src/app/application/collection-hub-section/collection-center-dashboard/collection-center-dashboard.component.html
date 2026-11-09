@@ -49,9 +49,10 @@
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-8 mb-6">
     <!-- Current Target Card -->
     <div *ngIf="
-    permissionService.hasPermission('View Current Centre Target') ||
-    tokenService.getUserDetails().role === '1'
-  " class="relative flex flex-col justify-center items-center gap-y-3 p-4 bg-tileLight dark:bg-[#363636] shadow-lg rounded-lg cursor-pointer"
+        permissionService.hasPermission('View Current Centre Target') ||
+        tokenService.getUserDetails().role === '1'
+      "
+      class="relative flex flex-col justify-center items-center gap-y-3 p-4 bg-tileLight dark:bg-[#363636] shadow-lg rounded-lg cursor-pointer"
       (click)="navigateToTarget()">
       <i class="fa-solid fa-bullseye text-[#415CFF] text-5xl"></i>
 

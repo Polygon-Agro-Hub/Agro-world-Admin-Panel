@@ -127,34 +127,39 @@ export class ViewRetailOrdersComponent implements OnInit {
 
   clearSearch(): void {
     this.searchItem = '';
+    this.page = 1;
     this.fetchAllRetailOrders();
   }
 
   applyMethodFilters() {
+    this.page = 1;
     this.fetchAllRetailOrders();
   }
 
   clearMethodFilter() {
     this.selectMethod = '';
+    this.page = 1;
     this.fetchAllRetailOrders();
   }
 
   applyStatusFilters() {
+    this.page = 1;
     this.fetchAllRetailOrders();
   }
 
   clearStatusFilter() {
     this.selectStatus = '';
+    this.page = 1;
     this.fetchAllRetailOrders();
   }
 
   applyDateFilter() {
-    
     if (this.selectDate instanceof Date) {
       const year = this.selectDate.getFullYear();
       const month = String(this.selectDate.getMonth() + 1).padStart(2, '0');
       const day = String(this.selectDate.getDate()).padStart(2, '0');
       this.formattedDate = `${year}-${month}-${day}`;
+      this.page = 1;
       this.fetchAllRetailOrders();
     }
   }
@@ -165,6 +170,7 @@ export class ViewRetailOrdersComponent implements OnInit {
 
   onDateClear() {
     this.formattedDate = '';
+    this.page = 1;
     this.fetchAllRetailOrders();
   }
 

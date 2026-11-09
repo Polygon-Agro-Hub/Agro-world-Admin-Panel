@@ -331,7 +331,7 @@ export class TransportReasonsToHoldComponent implements OnInit {
     this.distributionService.updateHoldReasonIndexes(indexData).subscribe({
       next: (response) => {
         if (response.status) {
-          console.log('Indexes updated successfully');
+          // console.log('Indexes updated successfully');
         }
       },
       error: (error) => {

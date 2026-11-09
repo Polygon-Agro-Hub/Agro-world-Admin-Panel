@@ -18,7 +18,7 @@ export class PersonalInfoTabComponent implements OnChanges {
   // sortedPersonalArr: IPersonal[] = [];
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(this.personalObj);
+    // console.log(this.personalObj);
   }
 
   onNextPage(): void {

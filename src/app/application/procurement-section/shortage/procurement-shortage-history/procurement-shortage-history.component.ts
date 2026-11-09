@@ -1,15 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CalendarModule } from 'primeng/calendar';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 import { ProcumentsService } from '../../../../services/procuments/procuments.service'; // adjust path/name as needed
+import Lottie, { AnimationItem } from 'lottie-web';
 
 interface ShortageItem {
   id: number;
-   shortageId: number;
-   assignedQty: number;
+  shortageId: number;
+  assignedQty: number;
   itemName: string;
   imageUrl: string;
   shortageQty: number;
@@ -34,6 +35,8 @@ export class ProcurementShortageHistoryComponent implements OnInit {
   isLoading = false;
   hasData: boolean = true;
 
+  private animation?: AnimationItem;
+
   shortageItems: ShortageItem[] = [];
   notAssignedItems: ShortageItem[] = [];
   assignedItems: ShortageItem[] = [];
@@ -41,7 +44,6 @@ export class ProcurementShortageHistoryComponent implements OnInit {
   selectedDate: Date | null = null;
   maxSelectableDate!: Date;
 
-  // Fallback images for known items — update the paths to match your assets folder
   private readonly itemImageMap: { [key: string]: string } = {
     garlic: 'assets/items/garlic.png',
     turmeric: 'assets/items/turmeric.png',
@@ -52,7 +54,26 @@ export class ProcurementShortageHistoryComponent implements OnInit {
   constructor(
     private router: Router,
     private procurementService: ProcumentsService,
-  ) {}
+  ) { }
+
+  @ViewChild('lottieContainer') set lottieContainer(el: ElementRef | undefined) {
+    if (el && !this.animation) {
+      this.animation = Lottie.loadAnimation({
+        container: el.nativeElement,
+        renderer: 'svg',
+        loop: true,
+        autoplay: true,
+        path: 'assets/json/blue_loading.json',
+      });
+    } else if (!el && this.animation) {
+      this.animation.destroy();
+      this.animation = undefined;
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.animation?.destroy();
+  }
 
   ngOnInit(): void {
     const maxDate = new Date();
@@ -99,50 +120,50 @@ export class ProcurementShortageHistoryComponent implements OnInit {
     const centreParts = [row.regCode, row.centerName].filter(Boolean);
 
     return {
-    id: isAssigned ? row.id : row.shortageId,
-    shortageId: row.shortageId,
-    assignedQty: Number(row.assignedQty) || 0,
-    itemName: row.displayName || '',
-    imageUrl: row.image || this.getItemImage(row.displayName),
-    shortageQty: Number(row.shortageQty) || 0, // backend already returns the REMAINING qty
-    unit: row.unit || 'kg',
-    marketPricePerKg: row.buyPrice,
-    isAssigned,
-    assignedCentre: isAssigned ? centreParts.join(' ') : undefined,
-    ceilingPercentage: isAssigned ? row.ceilling : undefined,
-    firstAssignedBy: isAssigned ? (row.assignedByName || row.assignOfficerName) : undefined,
-    finalizedBy: isAssigned ? (row.finalizedByName || row.finalizedOfficerName) : undefined,
-    createdAt: row.shortageCreatedAt,
-  };
+      id: isAssigned ? row.id : row.shortageId,
+      shortageId: row.shortageId,
+      assignedQty: Number(row.assignedQty) || 0,
+      itemName: row.displayName || '',
+      imageUrl: row.image || this.getItemImage(row.displayName),
+      shortageQty: Number(row.shortageQty) || 0, // backend already returns the REMAINING qty
+      unit: row.unit || 'kg',
+      marketPricePerKg: row.buyPrice,
+      isAssigned,
+      assignedCentre: isAssigned ? centreParts.join(' ') : undefined,
+      ceilingPercentage: isAssigned ? row.ceilling : undefined,
+      firstAssignedBy: isAssigned ? (row.assignedByName || row.assignOfficerName) : undefined,
+      finalizedBy: isAssigned ? (row.finalizedByName || row.finalizedOfficerName) : undefined,
+      createdAt: row.shortageCreatedAt,
+    };
   }
 
   private splitByAssignment(): void {
-  // Assigned table: unchanged — every real assignment record still shows here.
-  this.assignedItems = this.shortageItems.filter((item) => item.isAssigned);
+    // Assigned table: unchanged — every real assignment record still shows here.
+    this.assignedItems = this.shortageItems.filter((item) => item.isAssigned);
 
-  // Not-assigned table: one entry per shortage that STILL has qty left
-  // to assign, even if it already has partial assignment(s). A shortage
-  // with multiple assignments produces multiple rows in shortageItems,
-  // so dedupe by shortageId.
-  const seen = new Set<number>();
-  this.notAssignedItems = [];
+    // Not-assigned table: one entry per shortage that STILL has qty left
+    // to assign, even if it already has partial assignment(s). A shortage
+    // with multiple assignments produces multiple rows in shortageItems,
+    // so dedupe by shortageId.
+    const seen = new Set<number>();
+    this.notAssignedItems = [];
 
-  for (const item of this.shortageItems) {
-    if (item.shortageQty <= 0) continue; // fully covered — nothing outstanding
-    if (seen.has(item.shortageId)) continue;
-    seen.add(item.shortageId);
+    for (const item of this.shortageItems) {
+      if (item.shortageQty <= 0) continue; // fully covered — nothing outstanding
+      if (seen.has(item.shortageId)) continue;
+      seen.add(item.shortageId);
 
-    this.notAssignedItems.push({
-      ...item,
-      id: item.shortageId,
-      isAssigned: false,
-      assignedCentre: undefined,
-      ceilingPercentage: undefined,
-      firstAssignedBy: undefined,
-      finalizedBy: undefined,
-    });
+      this.notAssignedItems.push({
+        ...item,
+        id: item.shortageId,
+        isAssigned: false,
+        assignedCentre: undefined,
+        ceilingPercentage: undefined,
+        firstAssignedBy: undefined,
+        finalizedBy: undefined,
+      });
+    }
   }
-}
 
   onDateChange(event: any): void {
     this.selectedDate = event;
@@ -173,8 +194,9 @@ export class ProcurementShortageHistoryComponent implements OnInit {
   }
 
   getTotalRecords(): string {
-    return this.shortageItems.length.toString().padStart(2, '0');
-  }
+  const count = this.shortageItems.length;
+  return count === 0 ? '0' : count.toString().padStart(2, '0');
+}
 
   getNotAssignedCount(): string {
     return this.notAssignedItems.length.toString().padStart(2, '0');

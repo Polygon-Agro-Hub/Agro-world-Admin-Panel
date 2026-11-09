@@ -286,7 +286,7 @@ export class EditCollectionCenterComponent implements OnInit {
         this.CompanyData = res;
         this.updateSelectedCompanies();
       },
-      () => {},
+      () => { },
     );
   }
 
@@ -579,7 +579,7 @@ export class EditCollectionCenterComponent implements OnInit {
                     res.message === 'This RegCode already exists!'
                       ? 'The registration code is already in use.'
                       : res.message ||
-                        'Something went wrong while updating the Collection Centre.',
+                      'Something went wrong while updating the Collection Centre.',
                   confirmButtonText: 'OK',
                   customClass: {
                     popup:

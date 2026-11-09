@@ -10,8 +10,8 @@
     Package Payments
   </h2>
 
-  <div class="flex justify-center items-center gap-4">
-    <div class="flex items-center gap-3">
+  <div class="flex flex-wrap justify-center items-center gap-4">
+    <div class="flex items-center gap-3 max-w-full">
       <label
         class="text-sm font-medium text-gray-700 dark:text-textDark whitespace-nowrap min-w-[45px]"
         >From:</label
@@ -27,7 +27,7 @@
         [showButtonBar]="true"
         iconDisplay="input"
         [maxDate]="maxDate"
-        [style]="{ width: '20rem', height: '2.5rem' }"
+        [style]="{ width: '16rem', height: '2.5rem', maxWidth: '100%' }"
         panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
                  [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
                  [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
@@ -39,7 +39,7 @@
       />
     </div>
 
-    <div class="flex items-center gap-3">
+    <div class="flex items-center gap-3 max-w-full">
       <label
         class="text-sm font-medium text-gray-700 dark:text-textDark whitespace-nowrap min-w-[30px]"
         >To:</label
@@ -56,7 +56,7 @@
         [maxDate]="maxDate"
         [minDate]="minToDate"
         [disabled]="!fromDate"
-        [style]="{ width: '20rem', height: '2.5rem' }"
+        [style]="{ width: '16rem', height: '2.5rem', maxWidth: '100%' }"
         panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
                  [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
                  [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
@@ -70,7 +70,7 @@
 
     <button
       (click)="applyDateFilter()"
-      class="bg-[#3980C0] text-white px-8 py-2 rounded-md hover:bg-[#2c6ba0] transition duration-200 h-10 ml-2"
+      class="bg-[#3980C0] text-white px-8 py-2 rounded-md hover:bg-[#2c6ba0] transition duration-200 h-10 shrink-0"
     >
       Go
     </button>

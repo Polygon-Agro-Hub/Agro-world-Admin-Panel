@@ -117,7 +117,7 @@ export class ViewCenterHeadComponent {
     private router: Router,
     private collectionCenterSrv: CollectionCenterService,
     private collectionOfficerService: CollectionOfficerService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadBanks();
@@ -183,7 +183,7 @@ export class ViewCenterHeadComponent {
       (data) => {
         this.banks = data.sort((a, b) => a.name.localeCompare(b.name));
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -195,7 +195,7 @@ export class ViewCenterHeadComponent {
         });
         this.allBranches = data;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 

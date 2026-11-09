@@ -4,24 +4,26 @@
   <i class="fa-solid fa-arrow-left"></i> Back
 </button>
 
-<button *ngIf="permissionService.hasPermission('Add new container') || tokenService.getUserDetails().role === '1'" class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center" type="button"
+<button *ngIf="permissionService.hasPermission('Add new container') || tokenService.getUserDetails().role === '1'"
+  class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center" type="button"
   (click)="addNew()">
   <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M4 12H20M12 4V20" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-      stroke-linejoin="round" />
+    <path d="M4 12H20M12 4V20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
   </svg>
   Add New
 </button>
 
-<section class="bg-white dark:bg-tileBlack border border-[#e1e5ea] dark:border-gray-700 rounded-[9px] px-7 pt-5 pb-[42px]">
+<section
+  class="bg-white dark:bg-tileBlack border border-[#e1e5ea] dark:border-gray-700 rounded-[9px] px-7 pt-5 pb-[42px]">
   <h1 class="text-[#171717] dark:text-textDark text-[19px] font-medium mb-[26px]">
     Manage Container Sizes ({{ containerSizes.length | number: '2.0-0' }})
   </h1>
 
   <div *ngIf="!isLoading && containerSizes.length; else emptyState" cdkDropList class="grid gap-[26px]"
-    (cdkDropListDropped)="drop($event)"
-    >
-    <article [cdkDragDisabled]="!(permissionService.hasPermission('Change container order') || tokenService.getUserDetails().role === '1')" *ngFor="let container of containerSizes; let index = index; trackBy: trackById"
+    (cdkDropListDropped)="drop($event)">
+    <article
+      [cdkDragDisabled]="!(permissionService.hasPermission('Change container order') || tokenService.getUserDetails().role === '1')"
+      *ngFor="let container of containerSizes; let index = index; trackBy: trackById"
       class="relative flex items-center border border-[#e1e5ea] dark:border-gray-700 rounded-lg pl-[14px] pr-[18px] py-4 bg-white dark:bg-tileBlack"
       cdkDrag>
 
@@ -43,17 +45,20 @@
           </span>
           <span class="text-[#a5adb7] text-xs">•</span>
           <span class="text-[#414751] dark:text-textDark">Weight :
-            <span class="text-[#101C2B] dark:text-textDark font-medium">{{ container.weight | number: '1.0-2' }} kg</span>
+            <span class="text-[#101C2B] dark:text-textDark font-medium">{{ container.weight | number: '1.0-2' }}
+              kg</span>
           </span>
         </div>
 
         <div class="flex items-center flex-wrap gap-x-2.5 gap-y-1 text-[11px] text-[#414751] dark:text-textDark mt-1.5">
           <span>Last modified by:
-            <span class="text-[#101C2B] dark:text-textDark font-medium">{{ container.modifyByName || container.modifyBy }}</span>
+            <span class="text-[#101C2B] dark:text-textDark font-medium">{{ container.modifyByName || container.modifyBy
+              }}</span>
           </span>
           <span class="px-1">|</span>
           <span>Last modified at:
-            <span class="text-[#101C2B] dark:text-textDark font-medium">{{ container.modifyAt | date: 'MMM dd, yyyy | hh:mm a' }}</span>
+            <span class="text-[#101C2B] dark:text-textDark font-medium">{{ container.modifyAt | date: 'MMM dd, yyyy |
+              hh:mm a' }}</span>
           </span>
         </div>
       </div>
@@ -63,7 +68,8 @@
           aria-label="Delete container size" (click)="deleteContainer(container.id)">
           <i class="fa-solid fa-trash text-xl"></i>
         </button> -->
-        <button *ngIf="permissionService.hasPermission('Edit container') || tokenService.getUserDetails().role === '1'" type="button" class="bg-transparent border-0 cursor-pointer text-[#3980c0] text-sm"
+        <button *ngIf="permissionService.hasPermission('Edit container') || tokenService.getUserDetails().role === '1'"
+          type="button" class="bg-transparent border-0 cursor-pointer text-[#3980c0] text-sm"
           aria-label="Edit container size" (click)="editContainer(container.id)">
           <i class="fa-solid fa-pen text-xl"></i>
         </button>
@@ -83,9 +89,9 @@
   </ng-template>
 </section>
 
-  <ng-template #emptyState>
-    <div *ngIf="!isLoading" class="flex flex-col items-center w-full px-10 py-10 dark:text-textDark">
-      <p class="text-[#494949] my-6 dark:text-textDark">There is no added crate sizes yet.</p>
-      <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
-    </div>
-  </ng-template>
+<ng-template #emptyState>
+  <div *ngIf="!isLoading" class="flex flex-col items-center w-full px-10 py-10 dark:text-textDark">
+    <p class="text-[#494949] my-6 dark:text-textDark">There is no added crate sizes yet.</p>
+    <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+  </div>
+</ng-template>

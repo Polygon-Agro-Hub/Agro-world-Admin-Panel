@@ -381,34 +381,8 @@ export class CreateAdminUserComponent implements OnInit {
 
   // Updated updateAdmin method
   updateAdmin(itemId: number | null) {
-    // Log form values to verify
-
-    const missingFields: string[] = [];
-
-    // Validate form fields
-    if (this.userForm.get('userName')?.invalid) {
-      if (this.userForm.get('userName')?.errors?.['required']) {
-        missingFields.push('User Name');
-      } else if (this.userForm.get('userName')?.errors?.['pattern']) {
-        missingFields.push('User Name - Must contain only letters and spaces');
-      }
-    }
-
-    if (this.userForm.get('mail')?.invalid) {
-      if (this.userForm.get('mail')?.errors?.['required']) {
-        missingFields.push('Email');
-      } else if (this.userForm.get('mail')?.errors?.['email']) {
-        missingFields.push('Email - Invalid format (e.g., example@domain.com)');
-      }
-    }
-
-    if (this.userForm.get('role')?.invalid) {
-      missingFields.push('Department');
-    }
-
-    if (this.userForm.get('position')?.invalid) {
-      missingFields.push('Position');
-    }
+    this.userForm.markAllAsTouched(); // shows inline errors immediately
+    const missingFields = this.getMissingFields();
 
     // If errors, show popup and stop submission
     if (missingFields.length > 0) {
@@ -429,12 +403,6 @@ export class CreateAdminUserComponent implements OnInit {
           title: 'font-semibold text-lg',
           htmlContainer: 'text-left',
         },
-      });
-
-      // Mark all fields as touched to show real-time errors
-      Object.keys(this.userForm.controls).forEach((key) => {
-        const control = this.userForm.get(key);
-        control!.markAsTouched();
       });
       return;
     }
@@ -474,7 +442,7 @@ export class CreateAdminUserComponent implements OnInit {
         this.http
           .post(
             `${environment.API_URL}auth/update-admin/${itemId}`,
-            this.userForm.value,
+            this.userForm.getRawValue(), // includes disabled position for Super Admin
             { headers },
           )
           .subscribe(
@@ -504,44 +472,10 @@ export class CreateAdminUserComponent implements OnInit {
     });
   }
 
-  // Updated createAdmin method
   createAdmin() {
-    // Log form values to verify
+    this.userForm.markAllAsTouched();
 
-    const missingFields: string[] = [];
-
-    // Validate form fields
-    if (this.userForm.get('userName')?.invalid) {
-      if (this.userForm.get('userName')?.errors?.['required']) {
-        missingFields.push('User Name');
-      } else if (this.userForm.get('userName')?.errors?.['pattern']) {
-        missingFields.push('User Name - Must contain only letters and spaces');
-      }
-    }
-
-    if (this.userForm.get('mail')?.invalid) {
-      if (this.userForm.get('mail')?.errors?.['required']) {
-        missingFields.push('Email');
-      } else if (this.userForm.get('mail')?.errors?.['email']) {
-        missingFields.push('Email - Invalid format (e.g., example@domain.com)');
-      }
-    }
-
-    if (this.userForm.get('role')?.invalid) {
-      missingFields.push('Department');
-    }
-
-    if (!this.isSuperAdminSelected && this.userForm.get('position')?.invalid) {
-      missingFields.push('Position');
-    }
-
-    if (this.userForm.get('password')?.invalid) {
-      if (this.userForm.get('password')?.errors?.['required']) {
-        missingFields.push('Password');
-      } else if (this.userForm.get('password')?.errors?.['minlength']) {
-        missingFields.push('Password - Must be at least 8 characters');
-      }
-    }
+    const missingFields = this.getMissingFields();
 
     // If errors, show popup and stop submission
     if (missingFields.length > 0) {
@@ -562,12 +496,6 @@ export class CreateAdminUserComponent implements OnInit {
           title: 'font-semibold text-lg',
           htmlContainer: 'text-left',
         },
-      });
-
-      // Mark all fields as touched to show real-time errors
-      Object.keys(this.userForm.controls).forEach((key) => {
-        const control = this.userForm.get(key);
-        control!.markAsTouched();
       });
       return;
     }
@@ -607,7 +535,7 @@ export class CreateAdminUserComponent implements OnInit {
         this.http
           .post(
             `${environment.API_URL}auth/create-admin`,
-            this.userForm.value,
+            this.userForm.getRawValue(),
             { headers },
           )
           .subscribe(
@@ -672,6 +600,34 @@ export class CreateAdminUserComponent implements OnInit {
 
   navigatePath(path: string) {
     this.router.navigate([path]);
+  }
+
+  private getMissingFields(): string[] {
+    const labels: Record<string, string> = {
+      userName: 'User Name',
+      mail: 'Email',
+      role: 'Department',
+      position: 'Position',
+      password: 'Password',
+    };
+    const result: string[] = [];
+
+    Object.keys(labels).forEach((key) => {
+      if (key === 'password' && this.itemId) return; // not part of the edit form
+
+      const control = this.userForm.get(key);
+      // skip valid or disabled controls (position is disabled for Super Admin)
+      if (!control || control.valid || control.disabled) return;
+
+      if (control.hasError('required')) {
+        result.push(labels[key]);
+      } else {
+        const msg = this.getErrorMessage(key);
+        if (msg) result.push(`${labels[key]} - ${msg}`);
+      }
+    });
+
+    return Array.from(new Set(result));
   }
 }
 

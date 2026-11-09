@@ -88,18 +88,10 @@ export class FinalinvoiceService {
   ): Promise<void> {
     try {
       const response = await this.getInvoiceDetails(id).toPromise();
-      console.log('Full API Response:', response);
 
       const apiInvoiceNo = response.data?.invoice?.invoiceNumber;
-      console.log(
-        'API InvoiceNo:',
-        apiInvoiceNo,
-        'Table InvoiceNo:',
-        tableInvoiceNo,
-      );
 
       const finalInvoiceNo = tableInvoiceNo || apiInvoiceNo || 'N/A';
-      console.log('Using InvoiceNo:', finalInvoiceNo);
 
       if (!finalInvoiceNo || finalInvoiceNo === 'N/A') {
         console.error('No valid invoice number found');
@@ -188,7 +180,6 @@ export class FinalinvoiceService {
         discount: invoiceDetails.orderDiscount || '0.00',
       };
 
-      console.log('Final Invoice Data:', invoiceData);
       await this.generatePDF(invoiceData);
     } catch (error) {
       console.error('Error generating invoice:', error);

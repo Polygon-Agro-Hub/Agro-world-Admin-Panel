@@ -180,10 +180,23 @@ export const navbarData = [
     ],
   },
   {
-    RouterLink: '/sales-dash',
+    RouterLink: 'sales-dash',
     icon: 'fa-solid fa-bullseye',
     label: 'Sales Dash',
+    expanded: false,
     Permission: 'Sales Dash Tab',
+    children: [
+      {
+        RouterLink: '/sales-dash/dashboard',
+        childIcon: 'fa-solid fa-gauge',
+        label: 'Dashboard',
+      },
+      {
+        RouterLink: '/sales-dash/action',
+        childIcon: 'fa-brands fa-creative-commons-nd',
+        label: 'Action',
+      },
+    ],
   },
   {
     RouterLink: '/complaints',

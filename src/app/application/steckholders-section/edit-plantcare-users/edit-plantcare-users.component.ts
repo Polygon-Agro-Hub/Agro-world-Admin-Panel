@@ -403,28 +403,24 @@ export class EditPlantcareUsersComponent implements OnInit {
   }
 
   onNameInput(event: any, fieldName: string): void {
-    let value = event.target.value;
-    value = value.replace(/^\s+/, '').replace(/\s{2,}/g, ' ');
+    let value: string = event.target.value;
+
+    value = value.replace(/[^a-zA-Z]/g, '');
+
     if (value.length > 0) {
       value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
-      this.userForm.get(fieldName)?.setValue(value, { emitEvent: false });
-      event.target.value = value;
     }
+
+    this.userForm.get(fieldName)?.setValue(value, { emitEvent: false });
+    event.target.value = value;
   }
 
   onNameKeyPress(event: KeyboardEvent): void {
-    const charCode = event.which ? event.which : event.keyCode;
-    if (!this.handleSpaceRestrictions(event)) return;
-    if (
-      (charCode < 65 || charCode > 90) &&
-      (charCode < 97 || charCode > 122) &&
-      charCode !== 8 &&
-      charCode !== 9 &&
-      charCode !== 46 &&
-      charCode !== 37 &&
-      charCode !== 39 &&
-      charCode !== 32
-    ) {
+    if (event.ctrlKey || event.metaKey || event.key.length > 1) {
+      return;
+    }
+
+    if (!/^[a-zA-Z]$/.test(event.key)) {
       event.preventDefault();
     }
   }

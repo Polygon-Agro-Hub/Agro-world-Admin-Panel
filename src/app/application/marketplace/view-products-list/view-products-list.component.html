@@ -1,8 +1,7 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
 <div class="fixed-width-container w-full">
-  <button class="mb-5 text-textLight dark:text-textDark" (click)="back()"
-    class="mb-5 text-textLight dark:text-textDark">
+  <button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
     <i class="fa-solid fa-arrow-left"></i>
     Back
   </button>
@@ -21,36 +20,36 @@
     class="py-5 w-full bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg overflow-hidden">
     <div class="px-12">
 
-      <div class="flex justify-left items-center mb-8">
+      <div class="flex flex-wrap items-center gap-5 mb-8">
         <div class="flex items-center">
           <h2 class="text-2xl font-normal text-textLight dark:text-textDark whitespace-nowrap">
             All Products ({{ this.totalItems }})
           </h2>
         </div>
-        <div class="flex items-center mx-5">
-          <div class="mr-5">
+
+        <div class="flex flex-wrap items-center gap-5">
+          <div>
             <p-dropdown
-              styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+              styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark dark:border-[#AFAFAF]"
               [options]="categoryOption" [(ngModel)]="selectedCategoryOption" (onChange)="onDisplayTypeChange()"
               [checkmark]="false" optionLabel="name" [showClear]="true" placeholder="Category"></p-dropdown>
           </div>
 
-          <div class="mr-5">
+          <div>
             <p-dropdown
-              styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] w-full sm:w-auto"
+              styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark dark:border-[#AFAFAF] w-full sm:w-auto"
               [options]="productTypeOptions" [(ngModel)]="selectedProductType" (onChange)="onProductTypeChange()"
-              [checkmark]="false" optionLabel="name" [showClear]="true" placeholder="Type">
-            </p-dropdown>
+              [checkmark]="false" optionLabel="name" [showClear]="true" placeholder="Type"></p-dropdown>
           </div>
 
-          <div class="mr-5">
+          <div>
             <p-dropdown
-              styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] w-full sm:w-auto"
+              styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark dark:border-[#AFAFAF] w-full sm:w-auto"
               [options]="displayOptions" [(ngModel)]="selectedDisplayType" (onChange)="onDisplayTypeChange()"
               [checkmark]="false" optionLabel="name" [showClear]="true" placeholder="Display"></p-dropdown>
           </div>
 
-          <div class="flex items-center rounded-full px-4 py-2 w-full sm:w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
+          <div class="flex items-center rounded-full px-4 h-10 w-full sm:w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
             <input type="text" placeholder="Search by Display Name, Crop / Variety"
               class="bg-transparent outline-none w-full text-textLight dark:text-textDark" [(ngModel)]="searchVariety"
               (keydown.enter)="searchProduct()" />
@@ -106,7 +105,7 @@
                   Variety
                 </th>
                 <th
-                  class="sticky top-0 z-20 bg-tileLight dark:bg-tileBlack py-3 px-4 font-normal text-[#5C5C5C] text-left whitespace-nowrap">
+                  class="sticky top-0 z-20 bg-tileLight dark:bg-tileBlack py-3 px-4 font-normal text-[#5C5C5C] text-center whitespace-nowrap">
                   Status
                 </th>
                 <th
@@ -151,9 +150,9 @@
                   Last Modified By
                 </th>
                 <th
-                  class="sticky top-0 z-20 bg-tileLight dark:bg-tileBlack py-3 px-4 font-normal text-gray-500 text-center">
+                  class="sticky top-0 z-20 bg-tileLight dark:bg-tileBlack py-3 px-4 font-normal text-gray-500 text-center"
+                  *ngIf="permissionService.hasPermission('Edit product') || tokenService.getUserDetails().role === '1'">
                 </th>
-                <!-- <th class="py-3 px-4 font-normal text-gray-500 text-center"></th> -->
               </tr>
             </thead>
             <tbody>
@@ -223,13 +222,13 @@
                   </ng-container>
                 </td>
 
-                <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
+                <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
                   {{ item.normalPrice }}
                 </td>
-                <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
+                <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
                   {{ item.discountedPrice || "----" }}
                 </td>
-                <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
+                <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
                   {{ item.comPrice || "----" }}
                 </td>
                 <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
@@ -244,7 +243,7 @@
                 <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
                   {{ formatNumber(item.changeby) }}
                 </td>
-                <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
+                <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
                   {{ item.modifyBy || '----' }}
                 </td>
                 <td class="py-3 px-4 text-center"
@@ -258,16 +257,6 @@
                     </svg>
                   </button>
                 </td>
-                <!-- <td class="px-4 py-3 text-center"
-                *ngIf="permissionService.hasPermission('Delete product') || tokenService.getUserDetails().role === '1'">
-                <button class="w-6 h-6 ml-3 text-[#fc3636] hover:text-[#f38f8f]" (click)="deleteProduct(item.id)">
-                  <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                    viewBox="0 0 24 24">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
-                  </svg>
-                </button>
-              </td> -->
               </tr>
             </tbody>
           </table>
@@ -282,6 +271,7 @@
 
     </div>
   </div>
+
   <div *ngIf="showStatusConfirm" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
     <div class="bg-white dark:bg-[#363636] rounded-2xl shadow-xl w-full max-w-md mx-4 px-8 py-6">
       <p class="text-lg text-center text-gray-900 dark:text-textDark">

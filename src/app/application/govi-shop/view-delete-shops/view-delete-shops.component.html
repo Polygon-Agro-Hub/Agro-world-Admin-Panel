@@ -6,12 +6,12 @@
 </button>
 
 <div class="pt-5 pr-8 pl-8 pb-5 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg mb-11">
-    <div class="flex justify-between items-center mb-6">
-        <h2 class="text-[20px] font-normal text-[#292929] dark:text-textDark">
+    <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
+        <h2 class="text-[20px] font-normal text-[#292929] dark:text-textDark whitespace-nowrap shrink-0">
             Deleted Shops ({{ totalCount | number: "2.0"}})
         </h2>
 
-        <div class="flex items-center gap-3">
+        <div class="flex flex-wrap items-center gap-3">
             <p-dropdown [(ngModel)]="businessType" [options]="businessTypes" optionLabel="label" optionValue="value"
                 placeholder="Business Type" (onChange)="onBusinessTypeChange()"
                 [showClear]="businessType ? true : false"
@@ -21,7 +21,7 @@
                 }">
             </p-dropdown>
 
-            <div class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-96 group relative">
+            <div class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-80 max-w-full group relative">
                 <input type="text" [(ngModel)]="searchItem" (keyup.enter)="onSearch()"
                     placeholder="Search Shop Name, Phone..."
                     class="bg-transparent outline-none w-full text-gray-600 dark:text-gray-300 text-sm" />
@@ -93,6 +93,7 @@
                             " class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 whitespace-nowrap text-center">
                         Reason
                     </th>
+                </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let shop of deletedShops; let i = index"

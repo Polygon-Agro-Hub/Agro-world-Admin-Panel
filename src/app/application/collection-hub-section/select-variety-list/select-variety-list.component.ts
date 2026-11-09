@@ -59,13 +59,13 @@ export class SelectVarietyListComponent {
     if (this.searchText) {
       this.searchText = this.searchText.trimStart();
     }
-    this.page = 1; 
+    this.page = 1;
     this.fetchCenterCrops();
   }
 
   offSearchVarity() {
     this.searchText = '';
-    this.page = 1; 
+    this.page = 1;
     this.fetchCenterCrops();
   }
 

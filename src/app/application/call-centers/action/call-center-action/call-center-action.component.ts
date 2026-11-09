@@ -37,7 +37,7 @@ export class CallCenterActionComponent {
     event.stopPropagation();
     this.isCallLogsMenuOpen = false;
     this.router
-      .navigate(['/call-centers/action/call-logs/ivr-live-call-log'])
+      .navigate(['/call-centers/action/ivr-live-call-log'])
       .then(() => {});
   }
 

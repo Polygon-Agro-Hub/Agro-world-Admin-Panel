@@ -127,7 +127,8 @@ export class PurchaseReportComponent {
 
   submitGo() {
     this.hasDate = true;
-    this.fetchAllPurchaseReport();
+    this.page = 1;
+    this.fetchAllPurchaseReport(this.page, this.itemsPerPage);
   }
 
   fetchAllPurchaseReport(page: number = 1, limit: number = this.itemsPerPage) {
@@ -187,6 +188,7 @@ export class PurchaseReportComponent {
     this.totalItems = 0;
     this.grandTotal = 0;
     this.page = 1;
+    this.hasData = false;
   }
 
   onPageChange(event: number) {
@@ -198,32 +200,37 @@ export class PurchaseReportComponent {
     this.router.navigate(['/reports']);
   }
 
+
   applyFiltersCrop() {
-    this.fetchAllPurchaseReport();
+    this.page = 1;
+    this.fetchAllPurchaseReport(this.page, this.itemsPerPage);
   }
 
   applyFiltersMonth() {
     this.createdDate = '';
-    this.fetchAllPurchaseReport();
+    this.page = 1;
+    this.fetchAllPurchaseReport(this.page, this.itemsPerPage);
   }
 
   applysearch() {
-    // Trim the search string before applying
     this.search = this.search.trim();
     this.selectedMonth = null;
     this.createdDate = '';
-    this.fetchAllPurchaseReport();
+    this.page = 1;
+    this.fetchAllPurchaseReport(this.page, this.itemsPerPage);
   }
 
   clearSearch(): void {
     this.search = '';
     this.createdDate = new Date().toISOString().split('T')[0];
-    this.fetchAllPurchaseReport();
+    this.page = 1;
+    this.fetchAllPurchaseReport(this.page, this.itemsPerPage);
   }
 
   onDateChange(): void {
     this.selectedMonth = null;
-    this.fetchAllPurchaseReport();
+    this.page = 1;
+    this.fetchAllPurchaseReport(this.page, this.itemsPerPage);
   }
 
   // New method to handle when fromDate is cleared
@@ -286,7 +293,7 @@ export class PurchaseReportComponent {
     }
 
     if (this.search) {
-      queryParams.push(`search=${this.search}`);
+      queryParams.push(`search=${encodeURIComponent(this.search)}`);
     }
 
     const queryString =

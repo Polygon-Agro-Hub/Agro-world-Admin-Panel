@@ -129,11 +129,12 @@ export class ViewSalesDashComplaintsComponent implements OnInit {
   }
 
   applyFilters() {
-    this.fetchAllComplain(this.page, this.itemsPerPage);
-    if (this.dropdown) {
-      this.dropdown.hide();
-    }
+  this.page = 1; // reset to first page whenever a filter changes
+  this.fetchAllComplain(this.page, this.itemsPerPage);
+  if (this.dropdown) {
+    this.dropdown.hide();
   }
+}
 
   searchComplain() {
     this.page = 1;
@@ -141,9 +142,10 @@ export class ViewSalesDashComplaintsComponent implements OnInit {
   }
 
   clearSearch(): void {
-    this.searchText = '';
-    this.fetchAllComplain(this.page, this.itemsPerPage);
-  }
+  this.searchText = '';
+  this.page = 1; // reset here too
+  this.fetchAllComplain(this.page, this.itemsPerPage);
+}
 
   navigationPath(path: string) {
     this.router.navigate([path]);

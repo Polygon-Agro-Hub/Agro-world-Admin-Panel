@@ -14,7 +14,8 @@
       <div>
         <div class="flex justify-center pt-3 pb-9">
           <div class="relative">
-            <input type="file" id="imageUpload" accept=".jpg,.jpeg,.png,image/jpeg,image/png" class="hidden" (change)="onFileSelected($event)" />
+            <input type="file" id="imageUpload" accept=".jpg,.jpeg,.png,image/jpeg,image/png" class="hidden"
+              (change)="onFileSelected($event)" />
 
             <!-- Display default image if no file is selected -->
             <div *ngIf="!selectedImage"
@@ -442,11 +443,11 @@
               *</label>
             <input (blur)="onBlur('houseNumber')" id="houseNumber" name="houseNumber"
               [(ngModel)]="personalData.houseNumber" #houseNumberInput="ngModel" required (input)="
-    onTrimInput($event, personalData, 'houseNumber');
-    personalData.houseNumber = personalData.houseNumber
-      ? personalData.houseNumber.charAt(0).toUpperCase() + personalData.houseNumber.slice(1)
-      : '';
-  " class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+                onTrimInput($event, personalData, 'houseNumber');
+                personalData.houseNumber = personalData.houseNumber
+                ? personalData.houseNumber.charAt(0).toUpperCase() + personalData.houseNumber.slice(1)
+                : '';
+                " class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
             <div
               *ngIf="houseNumberInput.touched && (houseNumberInput.errors?.['required'] || !personalData.houseNumber)"
@@ -465,11 +466,11 @@
             <label for="street" class="block text-sm font-medium text-gray-700 dark:text-textDark">Street Name *</label>
             <input (blur)="onBlur('streetName')" id="streetName" name="streetName" [(ngModel)]="personalData.streetName"
               #streetNameInput="ngModel" required (input)="
-    onTrimInput($event, personalData, 'streetName');
-    personalData.streetName = personalData.streetName
-      ? personalData.streetName.charAt(0).toUpperCase() + personalData.streetName.slice(1)
-      : '';
-  " class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+              onTrimInput($event, personalData, 'streetName');
+              personalData.streetName = personalData.streetName
+              ? personalData.streetName.charAt(0).toUpperCase() + personalData.streetName.slice(1)
+              : '';
+              " class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
             <div *ngIf="streetNameInput.touched && (streetNameInput.errors?.['required'] || !personalData.streetName)"
               class="text-red-500 text-sm mt-1">
               Street Name is required
@@ -485,11 +486,11 @@
             <label for="city" class="block text-sm font-medium text-gray-700 dark:text-textDark">City *</label>
             <input (blur)="onBlur('city')" id="city" name="city" [(ngModel)]="personalData.city" #cityInput="ngModel"
               required (input)="
-    onTrimInput($event, personalData, 'city');
-    personalData.city = personalData.city
-      ? personalData.city.charAt(0).toUpperCase() + personalData.city.slice(1)
-      : '';
-  " class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+              onTrimInput($event, personalData, 'city');
+              personalData.city = personalData.city
+              ? personalData.city.charAt(0).toUpperCase() + personalData.city.slice(1)
+              : '';
+              " class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
             <div *ngIf="cityInput.touched && (cityInput.errors?.['required'] || !personalData.city)"
               class="text-red-500 text-sm mt-1">
@@ -588,9 +589,6 @@
             Account Numbers do not match.
           </div>
         </div>
-
-
-
 
         <div class="pb-6">
           <label for="bankDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">

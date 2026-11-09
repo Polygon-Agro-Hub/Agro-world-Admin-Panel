@@ -54,7 +54,7 @@ export class AllTodaysDeleveriesComponent implements OnChanges {
     //   this.filterDeliveries();
     // }
     this.filterDeliveries();
-    
+
 
   }
 
@@ -78,33 +78,33 @@ export class AllTodaysDeleveriesComponent implements OnChanges {
   }
 
   filterDeliveries(): void {
-  this.isLoading = true;
-  
-  setTimeout(() => {
+    this.isLoading = true;
 
-    let filtered = [...this.deliveries];
+    setTimeout(() => {
 
-    if (this.selectedStatus && this.selectedStatus !== 'ALL') {
-      filtered = filtered.filter(
-        (delivery) => delivery.status === this.selectedStatus
-      );
-    }
+      let filtered = [...this.deliveries];
 
-    if (this.searchText) {
-      const searchLower = this.searchText.trim().toLowerCase();
-      filtered = filtered.filter(
-        (delivery) =>
-          delivery.invNo?.toLowerCase().includes(searchLower) ||
-          delivery.regCode?.toLowerCase().includes(searchLower) ||
-          delivery.sheduleTime?.toLowerCase().includes(searchLower)
-      );
-    }
+      if (this.selectedStatus && this.selectedStatus !== 'ALL') {
+        filtered = filtered.filter(
+          (delivery) => delivery.status === this.selectedStatus
+        );
+      }
 
-    this.displayedDeliveries = filtered;
-    this.isLoading = false;
+      if (this.searchText) {
+        const searchLower = this.searchText.trim().toLowerCase();
+        filtered = filtered.filter(
+          (delivery) =>
+            delivery.invNo?.toLowerCase().includes(searchLower) ||
+            delivery.regCode?.toLowerCase().includes(searchLower) ||
+            delivery.sheduleTime?.toLowerCase().includes(searchLower)
+        );
+      }
 
-  }, 200); 
-}
+      this.displayedDeliveries = filtered;
+      this.isLoading = false;
+
+    }, 200);
+  }
 
   onStatusChange(): void {
     this.filterDeliveries();

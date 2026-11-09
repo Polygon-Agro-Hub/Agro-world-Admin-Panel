@@ -37,7 +37,7 @@ export class AddNewContainerComponent implements OnInit {
     private route: ActivatedRoute,
     private location: Location,
     private procumentService: ProcumentsService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -268,7 +268,7 @@ export class AddNewContainerComponent implements OnInit {
   }
 
   // Capitalizes the first letter of the label as the user types / pastes
-    // Capitalizes the first letter of every word as the user types / pastes
+  // Capitalizes the first letter of every word as the user types / pastes
   onLabelInput(event: Event): void {
     const input = event.target as HTMLInputElement;
     const capitalized = this.capitalizeWords(input.value);
@@ -283,7 +283,7 @@ export class AddNewContainerComponent implements OnInit {
     this.containerData.labelName = input.value;
   }
 
-    // "50l sack" -> "50L Sack"
+  // "50l sack" -> "50L Sack"
   private capitalizeWords(value: string): string {
     return value
       ? value.replace(/(^|[\s\d])(\p{L})/gu, (_m, prev, char) => prev + char.toUpperCase())

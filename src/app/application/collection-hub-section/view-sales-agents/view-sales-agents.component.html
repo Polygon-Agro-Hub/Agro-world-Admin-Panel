@@ -7,9 +7,7 @@
 <button *ngIf="
     permissionService.hasPermission('Onboard sales agent') ||
     tokenService.getUserDetails().role === '1'
-  " class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center" (click)="
-    navigatePath('/steckholders/action/sales-agents/create-sales-agents')
-  ">
+  " class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center" (click)="navigateToCreateSalesAgent()">
   <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M4 12H20M12 4V20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
   </svg>

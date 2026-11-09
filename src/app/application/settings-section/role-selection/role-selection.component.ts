@@ -180,7 +180,7 @@ export class RoleSelectionComponent {
     this.roleSelectionService.getAllRoles()?.subscribe(
       (response) => {
         this.isLoading = false;
-        this.rolesList = response.roles;
+        this.rolesList = response.roles.filter((role: any) => role.id !== 1);;
       },
       (error) => {
         console.error('Error fetching rols', error);

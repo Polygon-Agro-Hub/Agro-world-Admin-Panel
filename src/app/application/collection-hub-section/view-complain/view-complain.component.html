@@ -24,37 +24,30 @@
 
         <p class="md:text-2xl lg:text-lg dark:text-textDark whitespace-nowrap flex-shrink-0 mr-5">Filter By</p>
 
-
-
         <div class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
             [autoZIndex]="true" [baseZIndex]="1000" appendTo="body" [options]="comCategories"
-            [(ngModel)]="filterComCategory" optionLabel="categoryEnglish"
-            [showClear]="filterComCategory === '' ? false : true" placeholder="Category" (onChange)="applyFilters()"
-            appendTo="body"></p-dropdown>
+            [(ngModel)]="filterComCategory" optionLabel="categoryEnglish" [showClear]="!!filterComCategory"
+            placeholder="Category" (onChange)="applyFilters()">
+          </p-dropdown>
         </div>
 
         <div class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
             [autoZIndex]="true" [baseZIndex]="1000" appendTo="body" [options]="status" [(ngModel)]="filterStatus"
-            optionLabel="type" [showClear]="filterStatus === '' ? false : true" placeholder="Status"
-            (onChange)="applyFilters()" appendTo="body"></p-dropdown>
+            optionLabel="type" [showClear]="!!filterStatus" placeholder="Status" (onChange)="applyFilters()">
+          </p-dropdown>
         </div>
-
 
         <div class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="replyStatus" optionLabel="status" optionValue="value"
-            [showClear]="rpst === '' ? false : true" placeholder="Reply" [(ngModel)]="rpst"
-            (onChange)="regStatusFil()" />
+            [autoZIndex]="true" [baseZIndex]="1000" appendTo="body" [options]="replyStatus" optionLabel="status"
+            optionValue="value" [showClear]="!!rpst" placeholder="Reply" [(ngModel)]="rpst" (onChange)="regStatusFil()">
+          </p-dropdown>
         </div>
-
-
-
-
 
         <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
           <input type="text" placeholder="Search by Ref No, NIC, First/Last Name" [(ngModel)]="searchText"
@@ -118,7 +111,8 @@
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser">
               Reply
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser" *ngIf="permissionService.hasPermission('View GoviCare complaint') || tokenService.getUserDetails().role === '1'">
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser"
+              *ngIf="permissionService.hasPermission('View GoviCare complaint') || tokenService.getUserDetails().role === '1'">
               View Reply
             </th>
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
@@ -194,7 +188,8 @@
                 class="px-4 py-3 underline text-center text-textLight dark:text-textDark">Yes</span>
             </td>
 
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark" *ngIf="permissionService.hasPermission('View GoviCare complaint') || tokenService.getUserDetails().role === '1'">
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark"
+              *ngIf="permissionService.hasPermission('View GoviCare complaint') || tokenService.getUserDetails().role === '1'">
               <div *ngIf="item.reply === null">
                 <button disabled class="w-5 h-5 text-blue-100"
                   (click)="fetchComplain(item.id, item.farmerName, item.lastName,  item.language)">

@@ -79,6 +79,8 @@ export class EditSalesAgentComponent implements OnInit {
   confirmAccountNumberRequired: boolean = false;
   nicError: boolean = false;
 
+  firstUrlSegment: string = '';
+
   countries: PhoneCode[] = [
     { code: 'LK', dialCode: '+94', name: 'Sri Lanka' },
     { code: 'VN', dialCode: '+84', name: 'Vietnam' },
@@ -124,9 +126,13 @@ export class EditSalesAgentComponent implements OnInit {
     private collectionCenterSrv: CollectionCenterService,
     private collectionOfficerService: CollectionOfficerService,
     private salesAgentService: SalesAgentsService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
+    const fullUrl = this.router.url;
+    const segments = fullUrl.split('/').filter(Boolean);
+    this.firstUrlSegment = segments[0] || '';
+
     this.loadBanks();
     this.loadBranches();
     this.itemId = this.route.snapshot.params['id'];
@@ -412,7 +418,7 @@ export class EditSalesAgentComponent implements OnInit {
       (data) => {
         this.banks = data.sort((a, b) => a.name.localeCompare(b.name));
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -424,7 +430,7 @@ export class EditSalesAgentComponent implements OnInit {
         });
         this.allBranches = data;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -469,7 +475,8 @@ export class EditSalesAgentComponent implements OnInit {
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.navigatePath('/steckholders/action/sales-agents');
+        if (this.firstUrlSegment === 'sales-dash') this.navigatePath('/sales-dash/action/sales-agent');
+        else this.navigatePath('/steckholders/action/sales-agents');
       }
     });
   }
@@ -489,12 +496,13 @@ export class EditSalesAgentComponent implements OnInit {
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.router.navigate(['/steckholders/action/sales-agents']);
+        if (this.firstUrlSegment === 'sales-dash') this.router.navigate(['/sales-dash/action/sales-agent']);
+        else this.router.navigate(['/steckholders/action/sales-agents']);
       }
     });
   }
 
-    validateFile(file: File): boolean {
+  validateFile(file: File): boolean {
     if (file.size > 3145728) {
       Swal.fire({
         title: 'Error',
@@ -823,7 +831,8 @@ export class EditSalesAgentComponent implements OnInit {
                     'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
                 },
               });
-              this.navigatePath('/steckholders/action/sales-agents');
+              if (this.firstUrlSegment === 'sales-dash') this.navigatePath('/sales-dash/action/sales-agent');
+              else this.navigatePath('/steckholders/action/sales-agents');
             },
             (error: any) => {
               this.isLoading = false;

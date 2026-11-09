@@ -115,7 +115,9 @@ export class SidenavComponent implements OnInit {
   }
 
   logout(): void {
+    console.log('logout called');
     if (isPlatformBrowser(this.platformId)) {
+      console.log('platform browser');
       
 
       // Show a logout confirmation
@@ -133,9 +135,14 @@ export class SidenavComponent implements OnInit {
           title: 'font-semibold',
         },
       }).then((result) => {
+        console.log('logout confirmation result', result);
         if (result.isConfirmed) {
           this.tokenService.clearLoginDetails();
-          this.router.navigate(['login']);
+          this.router.navigate(['login']).then(() => {
+            console.log('refreshed')
+            window.location.reload();
+
+          });
         }
       });
     }

@@ -65,9 +65,10 @@
 
     <div *ngIf="errorMessage" class="text-red-500 mb-4">{{ errorMessage }}</div>
 
-    <div class="w-full py-4">
+    <div class="w-full pb-4 max-h-[60vh] overflow-y-auto">
       <table class="min-w-full w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-fixed">
-        <thead *ngIf="deliveryCharges.length > 0 || isLoading">
+        <thead *ngIf="deliveryCharges.length > 0 || isLoading"
+  class="sticky top-0 z-10 bg-tileLight dark:bg-tileBlack">
           <tr>
             <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left w-[8%]">No</th>
             <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left w-[15%]">Province</th>

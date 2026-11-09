@@ -11,26 +11,24 @@ export class TargetService {
   private apiUrl = `${environment.API_URL}target`;
   private token = this.tokenService.getToken();
 
-  constructor(private http: HttpClient, private tokenService: TokenService) {}
+  constructor(private http: HttpClient, private tokenService: TokenService) { }
 
   getSavedCenterCrops(
 
     id: number,
     date: string = '',
     searchText: string = ''
-    
+
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
 
-    console.log('date', date)
-    
     let url = `${this.apiUrl}/get-saved-center-crops/${id}?page=${1}`;
     if (date) {
       url += `&date=${date}`;
     }
-    
+
     if (searchText) {
       url += `&searchText=${searchText}`;
     }

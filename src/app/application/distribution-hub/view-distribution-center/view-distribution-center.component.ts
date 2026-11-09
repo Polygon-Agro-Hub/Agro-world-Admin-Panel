@@ -115,7 +115,7 @@ export class ViewDistributionCenterComponent implements OnInit {
     private DestributionSrv: DestributionService,
     public tokenService: TokenService,
     public permissionService: PermissionService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);

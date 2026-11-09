@@ -24,9 +24,9 @@
     </div>
   </div>
 
-  <div class="flex flex-row justify-between">
+  <div class="flex flex-col lg:flex-row items-start gap-6">
     <!-- Main Form -->
-    <div class="bg-white dark:bg-tileBlack py-10 px-14 shadow-md rounded-md w-[70%]">
+    <div class="bg-white dark:bg-tileBlack py-10 px-6 lg:px-14 shadow-md rounded-md w-full lg:flex-1 min-w-0">
       <!-- Top Row -->
       <div class="flex flex-row justify-between items-center mb-6">
         <div class="w-[70%]">
@@ -57,7 +57,7 @@
       <!-- Pricing -->
       <div class="grid grid-cols-3 gap-8 mb-6">
         <div>
-          <label class="block text-sm text-[#534E4E] dark:text-textDark mb-2">Total Package Price (Rs.)*</label>
+          <label class="block text-sm text-[#534E4E] dark:text-textDark mb-2">Price of Products (Rs.)*</label>
           <input type="text" [(ngModel)]="packageObj.productPrice" name="productPrice"
             (blur)="validateDecimalInput($event)" (keypress)="allowDecimalNumbers($event)"
             (change)="calculateApproximatedPrice()"
@@ -125,18 +125,28 @@
     </div>
 
     <!-- Sidebar -->
-    <div class="flex flex-col px-6 py-3 mx-6 w-[30%]">
-      <div class="rounded-lg  px-12 py-6" style="border: 1px solid #CFCFCF;">
+    <div class="flex flex-col w-full lg:w-[300px] xl:w-[340px] lg:shrink-0">
+      <div class="rounded-lg px-4 py-4 border border-[#CFCFCF] dark:border-gray-600">
         <p class="text-lg text-black dark:text-textDark font-normal">Preview</p>
-        <div class="flex flex-col justify-center items-center my-3 bg-white dark:bg-gray-900 px-5 py-3 rounded-xl">
-          <img [src]="selectedImage" class="w-full h-auto object-cover px-4 py-2 mt-8" />
-          <div class="flex flex-col items-center gap-y-2">
-            <p class="text-lg text-[#393939] dark:text-white font-medium"
+
+        <div class="flex flex-col items-center my-3 bg-white dark:bg-gray-900 px-4 py-4 rounded-xl shadow-md w-full">
+
+          <div class="w-full flex justify-center items-center">
+            <img *ngIf="selectedImage; else defaultIcon" [src]="selectedImage" class="w-full h-40 object-contain" />
+            <ng-template #defaultIcon>
+              <div class="flex items-center justify-center w-full h-40 text-gray-400">
+                <i class="fa-solid fa-image text-6xl lg:text-7xl"></i>
+              </div>
+            </ng-template>
+          </div>
+
+          <div class="flex flex-col items-center gap-y-2 mt-3 w-full">
+            <p class="text-base lg:text-lg text-[#393939] dark:text-white font-medium text-center break-words w-full"
               *ngIf="packageObj.displayName; else noDisplayName">
               {{ packageObj.displayName }}
             </p>
             <ng-template #noDisplayName>
-              <p class="text-lg text-gray-500 italic">--Package Name--</p>
+              <p class="text-base lg:text-lg text-gray-500 italic text-center">--Package Name--</p>
             </ng-template>
 
             <p class="text-base sm:text-lg text-[#00957D] font-bold"

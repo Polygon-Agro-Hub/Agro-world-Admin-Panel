@@ -32,6 +32,7 @@
         <label class="text-[#534E4E] dark:text-textDark">Category *</label>
         <p-dropdown id="category" name="category" [(ngModel)]="productObj.category" required [options]="categoryOptions"
           optionLabel="label" optionValue="value" placeholder="--Display type--" #categoryField="ngModel"
+          (onChange)="onCategoryChange()"
           [styleClass]="'w-full border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'">
         </p-dropdown>
         <div *ngIf="categoryField.invalid && categoryField.touched" class="text-red-500 text-sm mt-1">
@@ -94,10 +95,51 @@
     </div>
 
     <!-- Price card -->
-    <div class="bg-[#FFFFFF] dark:bg-tileBlack p-5 shadow-md rounded-md">
-      <div class="mb-6">
-        <label class="text-[#534E4E] dark:text-textDark">Price *</label>
-        <div class="flex items-center space-x-4 mt-3">
+    <div class="bg-[#FFFFFF] dark:bg-tileBlack shadow-md rounded-md">
+      <!-- Card header -->
+      <div class="flex flex-row flex-wrap justify-between items-center gap-4 px-5 py-4 border-b border-gray-200 dark:border-gray-600">
+        <div>
+          <p class="text-lg font-semibold text-black dark:text-textDark">Product Pricing</p>
+          <p *ngIf="isRetail" class="text-sm text-gray-500 dark:text-gray-400">
+            Set prices for individual purchases and package deals.
+          </p>
+        </div>
+
+        <!-- Standalone / Package toggle (Retail only) -->
+        <div *ngIf="isRetail" class="flex bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg p-1"
+          role="tablist">
+          <button type="button" role="tab" [attr.aria-selected]="pricingTab === 'standalone'"
+            (click)="pricingTab = 'standalone'"
+            class="px-5 py-1.5 rounded-md text-sm font-semibold leading-tight text-center transition-colors"
+            [ngClass]="pricingTab === 'standalone'
+              ? 'bg-white dark:bg-tileBlack text-[#3980C0] shadow-sm'
+              : 'text-gray-600 dark:text-gray-300'">
+            Standalone<br />Price
+          </button>
+          <button type="button" role="tab" [attr.aria-selected]="pricingTab === 'package'"
+            (click)="pricingTab = 'package'"
+            class="relative px-5 py-1.5 rounded-md text-sm font-semibold leading-tight text-center transition-colors"
+            [ngClass]="pricingTab === 'package'
+              ? 'bg-white dark:bg-tileBlack text-[#3980C0] shadow-sm'
+              : 'text-gray-600 dark:text-gray-300'">
+            Package Based<br />Price
+            <!-- Flags a missing package price while the user is on the other tab -->
+            <span *ngIf="formSubmitted && !productObj.packagePrice && pricingTab !== 'package'"
+              class="absolute top-1 right-1 w-2 h-2 rounded-full bg-red-500"></span>
+          </button>
+        </div>
+      </div>
+
+      <div class="p-5">
+      <!-- Standalone pricing (always shown for Wholesale) -->
+      <div [class.hidden]="isRetail && pricingTab === 'package'">
+      <div *ngIf="isRetail" class="mb-6 p-4 rounded-lg border border-blue-100 bg-blue-50 text-blue-800 dark:bg-blue-900/30 dark:border-blue-800 dark:text-blue-200">
+        <span class="font-semibold">Standalone Purchase:</span>
+        Standard selling price when customers buy this single item independently from ala carte section.
+      </div>
+
+      <div>
+        <div class="flex items-center space-x-4">
           <div class="flex items-center space-x-2">
             <!-- With Discount Radio Button -->
             <input class="w-5 h-5 cursor-pointer" type="radio" id="withDiscount" name="priceType"
@@ -117,7 +159,7 @@
         </div>
       </div>
 
-      <div class="border-t border-gray-300 dark:border-gray-600 my-10"></div>
+      <div class="border-t border-gray-300 dark:border-gray-600 mt-3 mb-6"></div>
 
       <div class="mb-6" *ngIf="productObj.promo">
         <label class="text-[#534E4E] dark:text-textDark">Display Type *</label>
@@ -225,6 +267,27 @@
         <div *ngIf="productObj.comPrice < 0" class="text-red-500 text-sm mt-1">
           Competitor Price cannot be negative.
         </div>
+      </div>
+      </div>
+
+      <!-- Package based pricing (Retail only) -->
+      <div *ngIf="isRetail && pricingTab === 'package'">
+        <div class="mb-6 p-4 rounded-lg border border-yellow-200 bg-yellow-50 text-yellow-900 dark:bg-yellow-900/30 dark:border-yellow-800 dark:text-yellow-200">
+          <span class="font-semibold">Package Based purchase:</span>
+          Selling price when sold as part of subscription packages.
+        </div>
+
+        <div class="mb-6">
+          <label class="text-[#534E4E] dark:text-textDark">Package Based Price per kg *</label>
+          <input type="text" inputmode="decimal" id="packagePrice" name="packagePrice"
+            [value]="priceDisplay['packagePrice']" (input)="onPriceInput($event, 'packagePrice')"
+            (focus)="onPriceFocus('packagePrice')" (blur)="onPriceBlur('packagePrice')"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <div *ngIf="formSubmitted && !productObj.packagePrice" class="text-red-500 text-sm mt-1">
+            Package Based Price is required.
+          </div>
+        </div>
+      </div>
       </div>
 
     </div>

@@ -37,7 +37,8 @@
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
             [options]="provinceOptions" optionLabel="label" optionValue="value" [showClear]="!!selectProvince"
-            placeholder="Province" [(ngModel)]="selectProvince" (onChange)="applyProvinceFilters()"></p-dropdown>
+            placeholder="Province" [(ngModel)]="selectProvince"
+            (onChange)="page = 1; applyProvinceFilters()"></p-dropdown>
         </div>
 
 
@@ -45,22 +46,24 @@
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
             [options]="districtOptions" optionLabel="label" optionValue="value" [showClear]="!!selectDistrict"
-            placeholder="District" [(ngModel)]="selectDistrict" (onChange)="applyDistrictFilters()"></p-dropdown>
+            placeholder="District" [(ngModel)]="selectDistrict"
+            (onChange)="page = 1; applyDistrictFilters()"></p-dropdown>
         </div>
 
         <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
           <input type="text" placeholder="Search by Reg Code, Centre Name, City.."
             class="bg-transparent outline-none w-full text-textLight dark:text-textDark" [(ngModel)]="searchItem"
-            (keydown.enter)="searchPlantCareUsers()" />
+            (keydown.enter)="page = 1; searchPlantCareUsers()" />
           <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-            (click)="searchPlantCareUsers()">
+            (click)="page = 1; searchPlantCareUsers()">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
               stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
             </svg>
           </button>
-          <button type="button" (click)="clearSearch()" class="text-gray-500 hover:text-gray-700 focus:outline-none">
+          <button type="button" (click)="page = 1; clearSearch()"
+            class="text-gray-500 hover:text-gray-700 focus:outline-none">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
               stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />

@@ -39,40 +39,49 @@
           <thead>
             <tr>
               <th class="py-3 px-3 font-normal text-gray-500 dark:text-textDark ">No</th>
-              <th class="py-3 font-normal text-gray-500 dark:text-textDark  text-left">Farm ID</th>
-              <th class="py-3 font-normal text-gray-500 dark:text-textDark  text-left">Farm Name</th>
+              <th class="py-3 px-4 font-normal text-gray-500 dark:text-textDark text-left whitespace-nowrap">Farm ID
+              </th>
+              <th class="py-3 px-4 font-normal text-gray-500 dark:text-textDark text-left whitespace-nowrap">Farm Name
+              </th>
               <th class="py-3 px-3 font-normal text-gray-500 dark:text-textDark text-center">Area (AC)</th>
-              <th class="py-3 font-normal text-gray-500 dark:text-textDark text-left">District</th>
-              <th class="py-3 font-normal text-gray-500 dark:text-textDark text-center">No. of Staff</th>
-              <th class="py-3 font-normal text-gray-500 dark:text-textDark text-center">No. of Cultivations</th>
-              <th class="py-3 font-normal text-gray-500 dark:text-textDark text-center"
+              <th class="py-3 px-4 font-normal text-gray-500 dark:text-textDark text-left whitespace-nowrap">District
+              </th>
+              <th class="py-3 px-6 font-normal text-gray-500 dark:text-textDark text-center whitespace-nowrap">No. of
+                Staff</th>
+              <th class="py-3 px-6 font-normal text-gray-500 dark:text-textDark text-center whitespace-nowrap">No. of
+                Cultivations</th>
+              <th class="py-3 px-6 font-normal text-gray-500 dark:text-textDark text-center whitespace-nowrap"
                 *ngIf="permissionService.hasPermission('View ongoing cultivation farm cultivation') ||tokenService.getUserDetails().role === '1'">
                 Cultivation</th>
               <th class="py-3 px-3 font-normal text-gray-500 dark:text-textDark text-left">Created Date</th>
-
+              <th
+                *ngIf="permissionService.hasPermission('Delete ongoing cultivation farms') ||tokenService.getUserDetails().role === '1'">
+              </th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let farm of farms" class="border-b border-gray-200 dark:border-[#4B555A]">
               <td class="py-3 px-3 dark:text-textDark text-center ">{{ farm.no | number:'2.0' }}</td>
-              <td class="py-3 dark:text-textDark text-left ">{{ farm.regCode }}</td>
-              <td class="py-3 dark:text-textDark text-left">{{ farm.farmName }}</td>
+              <td class="py-3 px-4 dark:text-textDark text-left whitespace-nowrap">{{ farm.regCode }}</td>
+              <td class="py-3 px-4 dark:text-textDark text-left whitespace-nowrap">{{ farm.farmName }}</td>
               <td class="py-3 px-3 dark:text-textDark text-center">{{ farm.area }}</td>
-              <td class="py-3 dark:text-textDark text-left">{{ farm.district }}</td>
-              <td class="py-3 dark:text-textDark text-center">{{ farm.staffCount }}</td>
-              <td class="py-3 dark:text-textDark text-center">{{ farm.cultivationCount }}</td>
+              <td class="py-3 px-4 dark:text-textDark text-left whitespace-nowrap">{{ farm.district }}</td>
+              <td class="py-3 px-6 dark:text-textDark text-center">{{ farm.staffCount }}</td>
+              <td class="py-3 px-6 dark:text-textDark text-center">{{ farm.cultivationCount }}</td>
 
               <td
                 *ngIf="permissionService.hasPermission('View ongoing cultivation farm cultivation') ||tokenService.getUserDetails().role === '1'"
-                class="py-3 dark:text-textDark text-center">
-                <button class="text-blue-500 hover:text-blue-700 mr-2" (click)="viewTaskByUsers(farm.farmId, userId)"
-                  [disabled]="!farm.farmId || !userId  || farm.cultivationCount <= 0"   [ngClass]="{ 'opacity-50 cursor-not-allowed': !farm.farmId || !userId  || farm.cultivationCount <= 0 }">
+                class="py-3 px-6 dark:text-textDark text-center">
+                <button class="text-blue-500 hover:text-blue-700" (click)="viewTaskByUsers(farm.farmId, userId)"
+                  [disabled]="!farm.farmId || !userId || farm.cultivationCount <= 0"
+                  [ngClass]="{ 'opacity-50 cursor-not-allowed': !farm.farmId || !userId || farm.cultivationCount <= 0 }">
                   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5">
                     <path
                       d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
                       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                   </svg>
                 </button>
+              </td>
 
               <td class="py-3 px-3 dark:text-textDark text-left">{{ farm.createdDate }}</td>
               <td
@@ -92,3 +101,4 @@
       </div>
     </div>
   </div>
+</div>

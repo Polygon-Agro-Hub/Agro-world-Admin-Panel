@@ -187,4 +187,59 @@ export class CollectionOfficerService {
     return this.http.get<any>(url, { headers });
   }
 
+  getDriverRegistrationDetails(id: number | string): Observable<any> {
+    const headers = new HttpHeaders({ Authorization: `Bearer ${this.token}` });
+
+    return this.http.get<any>(
+      `${this.apiUrl}auth/driver/get-driver-registration-details/${id}`,
+      { headers }
+    );
+  }
+
+  getDriverDistributionCenterNames(): Observable<any> {
+    const headers = new HttpHeaders({ Authorization: `Bearer ${this.token}` });
+
+    return this.http.get<any>(
+      `${this.apiUrl}auth/driver/get-all-distribution-center-names`,
+      { headers }
+    );
+  }
+
+  getDriverDistributionManagerNames(centerId: number | string): Observable<any> {
+    const headers = new HttpHeaders({ Authorization: `Bearer ${this.token}` });
+
+    return this.http.get<any>(
+      `${this.apiUrl}auth/driver/get-all-distribution-manager-names/${centerId}`,
+      { headers }
+    );
+  }
+
+  approveDriver(
+    id: number | string,
+    data: {
+      distributedCenterId: number;
+      irmId: number;
+      empType: 'Permanent' | 'Temporary';
+      driverCategoryId: number;
+    }
+  ): Observable<any> {
+    const headers = new HttpHeaders({ Authorization: `Bearer ${this.token}` });
+
+    return this.http.post<any>(
+      `${this.apiUrl}auth/driver/approve-driver/${id}`,
+      data,
+      { headers }
+    );
+  }
+
+  rejectDriver(id: number | string, reason: string): Observable<any> {
+    const headers = new HttpHeaders({ Authorization: `Bearer ${this.token}` });
+
+    return this.http.post<any>(
+      `${this.apiUrl}auth/driver/reject-driver/${id}`,
+      { reason },
+      { headers }
+    );
+  }
+
 }

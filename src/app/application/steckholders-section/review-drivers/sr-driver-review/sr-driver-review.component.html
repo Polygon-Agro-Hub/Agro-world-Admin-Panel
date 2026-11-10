@@ -1,6 +1,7 @@
 <div class="mb-4">
-    <button (click)="back()" class="flex items-center gap-3 underline dark:text-textDark">
-        <i class="fa-solid fa-arrow-left-long"></i> Back
+    <button (click)="back()" class="flex items-center gap-3 dark:text-textDark">
+        <i class="fa-solid fa-arrow-left-long"></i>
+        <span class="underline">Back</span>
     </button>
 </div>
 
@@ -11,14 +12,15 @@
         <div class="flex flex-row gap-x-10">
             <div class="flex flex-col">
                 <span class="text-[#7E7E7E] dark:text-[#C8C8C8]">Driver Name :</span>
-                <span class="dark:text-[#FFFFFF]">{{ driverName }}</span>
+                <span class="dark:text-[#FFFFFF]">{{ driverName || '-' }}</span>
             </div>
             <div class="flex flex-col">
                 <span class="text-[#7E7E7E] dark:text-[#C8C8C8]">Submitted At :</span>
-                <span class="dark:text-[#FFFFFF]">
+                <span class="dark:text-[#FFFFFF]" *ngIf="submittedAt; else noSubmittedAt">
                     {{ submittedAt | date: 'h:mm a, d' }}<sup>{{ getOrdinal(submittedAt) }}</sup>{{ submittedAt | date:
                     ' MMMM y' }}
                 </span>
+                <ng-template #noSubmittedAt><span class="dark:text-[#FFFFFF]">-</span></ng-template>
             </div>
         </div>
 
@@ -51,6 +53,15 @@
         </div>
 
         <div class="p-6 min-h-[300px]">
+            <div *ngIf="isLoading" class="flex justify-center items-center h-[300px] dark:text-textDark">
+                <i class="fa-solid fa-spinner fa-spin text-2xl"></i>
+            </div>
+
+            <div *ngIf="!isLoading && errorMessage" class="flex justify-center items-center h-[300px] text-[#C40D0D]">
+                {{ errorMessage }}
+            </div>
+
+            <ng-container *ngIf="!isLoading && !errorMessage && driverData">
             <div *ngIf="activeTab === 'Personal'">
                 <app-driver-personal-info-tab [personalObj]="driverData.Personal"></app-driver-personal-info-tab>
             </div>
@@ -65,6 +76,7 @@
             <div *ngIf="activeTab === 'Vehicle'">
                 <app-driver-vehicale-info [vehicleObj]="driverData.Vehicle"></app-driver-vehicale-info>
             </div>
+            </ng-container>
         </div>
 
         <!-- Pagination -->
@@ -81,6 +93,141 @@
                 class="w-10 h-10 rounded-md flex items-center justify-center text-white transition-colors"
                 [ngClass]="getCurrentTabIndex() === tabs.length - 1 ? 'bg-[#A9AFC3] cursor-not-allowed' : 'bg-[#3980C0] hover:bg-[#306797]'">
                 <i class="fa-solid fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Approve popup -->
+<div *ngIf="isApprovePopupOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
+    (click)="closeApprovePopUp()">
+    <div class="w-full max-w-[650px] max-h-[90vh] overflow-y-auto bg-white dark:bg-tileBlack rounded-2xl shadow-xl dark:text-textDark"
+        (click)="$event.stopPropagation()">
+        <!-- Header -->
+        <div class="flex items-center gap-4 px-8 py-6 border-b border-gray-200 dark:border-gray-600">
+            <div class="w-11 h-11 rounded-lg bg-[#EAF2FF] flex items-center justify-center">
+                <i class="fa-solid fa-user text-[#2D7CF6] text-lg"></i>
+            </div>
+            <h2 class="text-xl font-semibold text-[#111827] dark:text-white">Driver Approval &amp; Centre Allocation</h2>
+        </div>
+
+        <!-- Body -->
+        <div class="px-8 py-6 flex flex-col gap-5">
+            <div>
+                <label class="block font-semibold mb-2">01. Select Distribution Centre *</label>
+                <select [(ngModel)]="approveForm.centerId" (ngModelChange)="onCenterChange()"
+                    class="w-full h-12 px-4 rounded-xl border border-gray-300 bg-white dark:bg-[#2C2C2C] dark:border-gray-600 focus:outline-none focus:border-[#2D7CF6]">
+                    <option [ngValue]="null" disabled>Select From Here</option>
+                    <option *ngFor="let c of centerList" [ngValue]="c.id">
+                        {{ c.regCode ? c.regCode + ' - ' : '' }}{{ c.centerName }}
+                    </option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block font-semibold mb-2">02. Select Distribution Manager *</label>
+                <select [(ngModel)]="approveForm.managerId" [disabled]="approveForm.centerId == null || isManagersLoading"
+                    class="w-full h-12 px-4 rounded-xl border border-gray-300 bg-white dark:bg-[#2C2C2C] dark:border-gray-600 focus:outline-none focus:border-[#2D7CF6] disabled:opacity-60 disabled:cursor-not-allowed">
+                    <option [ngValue]="null" disabled>
+                        {{ isManagersLoading ? 'Loading...' : (approveForm.centerId != null && managerList.length === 0 ?
+                        'No managers for this centre' : 'Select From Here') }}
+                    </option>
+                    <option *ngFor="let m of managerList" [ngValue]="m.id">
+                        {{ m.firstNameEnglish }} {{ m.lastNameEnglish }}{{ m.empId ? ' (' + m.empId + ')' : '' }}
+                    </option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block font-semibold mb-2">03. Employment Type (Permanent / Temporary) *</label>
+                <div class="grid grid-cols-2 gap-4">
+                    <button type="button" *ngFor="let t of ['Permanent', 'Temporary']"
+                        (click)="setEmpType($any(t))"
+                        class="h-12 px-4 rounded-xl flex items-center justify-between font-semibold transition-colors"
+                        [ngClass]="approveForm.empType === t
+                            ? 'border-2 border-[#2D7CF6]'
+                            : 'border border-gray-300 dark:border-gray-600'">
+                        {{ t }}
+                        <span class="w-5 h-5 rounded-full flex items-center justify-center"
+                            [ngClass]="approveForm.empType === t ? 'border-2 border-[#2D7CF6]' : 'border border-gray-300'">
+                            <span *ngIf="approveForm.empType === t" class="w-2.5 h-2.5 rounded-full bg-[#2D7CF6]"></span>
+                        </span>
+                    </button>
+                </div>
+            </div>
+
+            <div>
+                <label class="block font-semibold mb-2">04. Select Driver Category *</label>
+                <select [(ngModel)]="approveForm.categoryId"
+                    class="w-full h-12 px-4 rounded-xl border border-gray-300 bg-white dark:bg-[#2C2C2C] dark:border-gray-600 focus:outline-none focus:border-[#2D7CF6]">
+                    <option [ngValue]="null" disabled>Select From Here</option>
+                    <option *ngFor="let cat of categoryList" [ngValue]="cat.id">{{ cat.catName }}</option>
+                </select>
+            </div>
+
+            <div class="flex gap-3 p-4 rounded-xl border border-[#FDE68A] bg-[#FFFBEB] text-[#92400E] text-sm">
+                <i class="fa-solid fa-circle-info mt-0.5"></i>
+                <span>Upon approval, an active driver profile will be automatically generated, and the login credentials
+                    will be sent via SMS and email.</span>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="flex justify-end gap-4 px-8 py-5 border-t border-gray-200 dark:border-gray-600">
+            <button type="button" (click)="closeApprovePopUp()" [disabled]="isSubmitting"
+                class="px-6 h-12 rounded-xl bg-[#74788D] hover:bg-[#5f6274] text-white font-semibold">
+                Cancel
+            </button>
+            <button type="button" (click)="confirmApprove()" [disabled]="!isApproveFormValid || isSubmitting"
+                class="px-7 h-12 rounded-xl text-white font-semibold flex items-center gap-2 transition-colors"
+                [ngClass]="isApproveFormValid && !isSubmitting
+                    ? 'bg-[#3980C0] hover:bg-[#306797]'
+                    : 'bg-[#C4C4C4] cursor-not-allowed'">
+                <i class="fa-solid" [ngClass]="isSubmitting ? 'fa-spinner fa-spin' : 'fa-check'"></i>
+                Confirm &amp; Approve
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Reject popup -->
+<div *ngIf="isRejectPopupOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
+    (click)="closeRejectPopUp()">
+    <div class="w-full max-w-[900px] bg-white dark:bg-tileBlack rounded-2xl shadow-xl p-8 dark:text-textDark"
+        (click)="$event.stopPropagation()">
+        <h2 class="text-2xl font-semibold text-center mb-6 dark:text-white">
+            Are you sure you want to reject this driver application?
+        </h2>
+
+        <p class="text-[#3A3A3A] dark:text-textDark mb-4">
+            Please provide a reason for rejection below. The driver will be notified of the rejection and the reason
+            via SMS.
+        </p>
+        <p class="font-medium mb-5 dark:text-white">
+            Please Note : Once you reject this application, it will be permanently deleted and cannot be recovered.
+        </p>
+
+        <div class="relative">
+            <textarea [(ngModel)]="rejectReason" [maxlength]="rejectReasonMaxLength" placeholder="Mention Reason.."
+                rows="4"
+                class="w-full p-4 pb-8 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#2C2C2C] resize-none focus:outline-none focus:border-[#2D7CF6]"></textarea>
+            <span class="absolute bottom-3 right-4 text-sm text-gray-500">
+                {{ rejectReason.length }}/{{ rejectReasonMaxLength }}
+            </span>
+        </div>
+
+        <div class="flex justify-between mt-8">
+            <button type="button" (click)="closeRejectPopUp()" [disabled]="isSubmitting"
+                class="px-12 h-14 rounded-xl bg-[#74788D] hover:bg-[#5f6274] text-white text-lg font-medium">
+                Cancel
+            </button>
+            <button type="button" (click)="confirmReject()" [disabled]="!isRejectReasonValid || isSubmitting"
+                class="px-12 h-14 rounded-xl text-white text-lg font-medium flex items-center gap-2 transition-colors"
+                [ngClass]="isRejectReasonValid && !isSubmitting
+                    ? 'bg-[#C40D0D] hover:bg-[#980808]'
+                    : 'bg-[#C4C4C4] cursor-not-allowed'">
+                <i *ngIf="isSubmitting" class="fa-solid fa-spinner fa-spin"></i>
+                Reject
             </button>
         </div>
     </div>

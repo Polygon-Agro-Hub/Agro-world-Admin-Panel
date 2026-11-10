@@ -14,7 +14,7 @@ export interface IDriverVehicle {
 interface Field {
   label: string;
   type: 'text' | 'image';
-  value: string | null | undefined;
+  value: string | number | null | undefined;
 }
 
 @Component({
@@ -35,18 +35,32 @@ export class DriverVehicaleInfoComponent {
   get fields(): Field[] {
     const d = this.vehicleObj;
     return [
-      { label: 'Vehicle Registration Number', type: 'text', value: d?.registrationNumber },
+      {
+        label: 'Vehicle Registration Number',
+        type: 'text',
+        value: d?.registrationNumber,
+      },
       { label: 'Vehicle Type', type: 'text', value: d?.vehicleType },
       { label: 'Vehicle Capacity', type: 'text', value: d?.capacity },
       { label: 'Vehicle’s Front Image', type: 'image', value: d?.frontImage },
       { label: 'Vehicle’s Back Image', type: 'image', value: d?.backImage },
-      { label: 'Vehicle’s Side-1 (Left) Image', type: 'image', value: d?.side1Image },
-      { label: 'Vehicle’s Side-2 (Right) Image', type: 'image', value: d?.side2Image },
+      {
+        label: 'Vehicle’s Side-1 (Left) Image',
+        type: 'image',
+        value: d?.side1Image,
+      },
+      {
+        label: 'Vehicle’s Side-2 (Right) Image',
+        type: 'image',
+        value: d?.side2Image,
+      },
     ];
   }
 
-  show(value: string | null | undefined): string {
-    return value && value.trim() ? value : '----';
+  show(value: string | number | null | undefined): string {
+    if (value === null || value === undefined) return '----';
+    const text = String(value).trim();
+    return text ? text : '----';
   }
 
   pad(n: number): string {

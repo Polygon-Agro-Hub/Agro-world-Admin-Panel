@@ -24,7 +24,7 @@ export interface IDriverResidentialBank {
 export class DriverResidentialBankInfoComponent {
   @Input() residentialBankObj!: IDriverResidentialBank;
 
-  get fields(): { label: string; value: string | null | undefined }[] {
+  get fields(): { label: string; value: string | number | null | undefined }[] {
     const d = this.residentialBankObj;
     return [
       { label: 'House / Plot number', value: d?.houseNumber },
@@ -40,8 +40,10 @@ export class DriverResidentialBankInfoComponent {
     ];
   }
 
-  show(value: string | null | undefined): string {
-    return value && value.trim() ? value : '----';
+  show(value: string | number | null | undefined): string {
+    if (value === null || value === undefined) return '----';
+    const text = String(value).trim();
+    return text ? text : '----';
   }
 
   pad(n: number): string {

@@ -69,8 +69,10 @@ export class DriverLicenseInsuranceInfoComponent {
     ];
   }
 
-  show(value: string | null | undefined): string {
-    return value && value.trim() ? value : '----';
+  show(value: string | number | null | undefined): string {
+    if (value === null || value === undefined) return '----';
+    const text = String(value).trim();
+    return text ? text : '----';
   }
 
   pad(n: number): string {

@@ -64,7 +64,7 @@ export class SelectedwholesaleComplaintsComponent implements OnInit {
     private route: ActivatedRoute,
     private datePipe: DatePipe,
     private sanitizer: DomSanitizer
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.complainId = this.route.snapshot.params['id'];
@@ -103,7 +103,7 @@ export class SelectedwholesaleComplaintsComponent implements OnInit {
           lastName: data.lastName || '',
           fullName: `${data.firstName || ''} ${data.lastName || ''}`.trim(),
           farmerPhone: data.ContactNumber || '',
-          complain: data.complain || '',
+          complain: this.convertBrToNewLine(data.complain),
           complainCategory: data.categoryEnglish || '',
           language: this.inferLanguage(data),
           createdAt: this.datePipe.transform(data.createdAt, 'yyyy-MM-dd hh:mm:ss a') || '',
@@ -112,7 +112,7 @@ export class SelectedwholesaleComplaintsComponent implements OnInit {
           companyNameEnglish: data.companyName,
           companyContactEnglish: data.companyContactNumber,
         };
-        
+
         this.messageContent = data.reply || '';
 
         this.sanitizedImageUrls = this.complain.imageUrls.map(url =>
@@ -129,7 +129,7 @@ export class SelectedwholesaleComplaintsComponent implements OnInit {
           errorMessage = `Complaint with ID ${this.complainId} not found.`;
         } else if (err.status === 401) {
           errorMessage = 'Unauthorized access. Please log in again.';
-         
+
         } else if (err.status === 0) {
           errorMessage = 'Unable to connect to the server. Please check if the backend is running.';
         } else if (err.status >= 500) {
@@ -178,10 +178,10 @@ export class SelectedwholesaleComplaintsComponent implements OnInit {
             icon: 'success',
             title: 'Success',
             text: 'Reply was sent successfully!',
-                                      customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+            },
           });
           this.fetchComplain();
           this.hideDialog();
@@ -192,10 +192,10 @@ export class SelectedwholesaleComplaintsComponent implements OnInit {
             icon: 'error',
             title: 'Unsuccessful',
             text: response.message || 'Failed to send reply.',
-             customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+            },
           });
         }
         this.isLoading = false;
@@ -218,10 +218,10 @@ export class SelectedwholesaleComplaintsComponent implements OnInit {
           icon: 'error',
           title: 'Unsuccessful',
           text: errorMessage,
-           customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+          },
         });
         this.isLoading = false;
       },
@@ -253,6 +253,14 @@ export class SelectedwholesaleComplaintsComponent implements OnInit {
     if (this.modalVisible && this.sanitizedImageUrls.length > 0) {
       this.currentIndex = (this.currentIndex - 1 + this.sanitizedImageUrls.length) % this.sanitizedImageUrls.length;
     }
+  }
+
+  private convertBrToNewLine(text: string | undefined): string {
+    if (!text) return '';
+    return text
+      .replace(/<br\s*\/?>/gi, '\n')
+      .replace(/&nbsp;/gi, ' ')
+      .trim();
   }
 
   submitReply() {

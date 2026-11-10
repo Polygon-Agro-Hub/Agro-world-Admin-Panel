@@ -254,8 +254,15 @@ export class UploadProductsListPricesComponent {
     return data
       .filter(d => {
         const competitor = this.toPrice(d.competitor);
+        if (competitor === null) return true;
+
         const sale = this.toPrice(d.sale);
-        return competitor === null || (sale !== null && competitor <= sale);
+        if (sale === null) return false;
+
+        const actual = this.toPrice(d.actual);
+        if (actual !== null && sale > actual + 0.005) return false;
+
+        return competitor <= sale;
       })
       .map(d => d.rowNo);
   }
@@ -288,6 +295,9 @@ export class UploadProductsListPricesComponent {
     add(this.invalidActualPrice(data), 'Invalid Actual Price. Please enter a valid Actual Price greater than 0.');
     add(this.mismatchedNoDiscountPrices(data), NO_DISCOUNT_MISMATCH_MESSAGE);
     add(this.invalidCompetitorPrice(data), 'Invalid Competitor Price. Please enter a valid Competitor Price greater than the Sale Price.');
+    add(this.invalidSalePrice(data), 'Invalid Sale Price. Please enter a valid Sale Price greater than 0.');
+    add(this.saleExceedsActual(data), 'Invalid Sale Price. Sale Price cannot be greater than the Actual Price.');
+    add(this.invalidActualPrice(data), 'Invalid Actual Price. Please enter a valid Actual Price greater than 0.');
 
     if (this.isRetail) {
       add(this.invalidPackageBasedPrice(data), 'Invalid Package Based Price. Please enter a valid Package Based Price greater than 0.');
@@ -300,6 +310,18 @@ export class UploadProductsListPricesComponent {
     if (v === '' || v === null || v === undefined) return null;
     const n = typeof v === 'number' ? v : Number(String(v).replace(/,/g, '').trim());
     return Number.isFinite(n) && n > 0 ? n : null;
+  }
+
+  private saleExceedsActual(data: ParsedRow[]): number[] {
+    return data
+      .filter(d => {
+        if (String(d.display ?? '').trim().toLowerCase() === 'no discount') return false;
+        const sale = this.toPrice(d.sale);
+        const actual = this.toPrice(d.actual);
+        if (sale === null || actual === null) return false;
+        return sale > actual + 0.005;
+      })
+      .map(d => d.rowNo);
   }
 
   private async addNotFoundError(data: ParsedRow[]): Promise<void> {

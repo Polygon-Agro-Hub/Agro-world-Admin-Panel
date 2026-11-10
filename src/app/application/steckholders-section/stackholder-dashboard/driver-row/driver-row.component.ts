@@ -20,6 +20,7 @@ export class DriverRowComponent implements OnChanges {
 
   drivers: number = 0;
   newDriver: number = 0;
+  reviewRequests: number = 0;
 
   ngOnChanges(): void {
     this.fetchDriverData(this.sixthRow);
@@ -28,10 +29,12 @@ export class DriverRowComponent implements OnChanges {
   fetchDriverData(data: any) {
     this.drivers = data.distributionOfficersByPosition?.DRV?.officerCount ?? 0;
     this.newDriver = data?.newDistributionOfficers ?? 0;
+    this.reviewRequests = data?.selfRegisteredDriversCount ?? 0;
 
     this.driverDataEmitted.emit({
       driver: this.drivers,
       newDriver: this.newDriver,
+      reviewRequests: this.reviewRequests,
     });
   }
 }

@@ -54,7 +54,7 @@ export class BuyerApprovalsComponent implements OnInit {
   }
 
   Back() {
-    this.location.back();
+     this.router.navigate(['sales-dash/action']);
   }
 
   loadOnboardedOptions() {

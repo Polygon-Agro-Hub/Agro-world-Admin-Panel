@@ -18,7 +18,7 @@ export class CollectionOfficerService {
   constructor(
     private http: HttpClient,
     private tokenService: TokenService,
-  ) {}
+  ) { }
 
   createCollectiveOfficer(person: any, selectedImage: any): Observable<any> {
     const formData = new FormData();
@@ -129,7 +129,7 @@ export class CollectionOfficerService {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-  
+
     return this.http.put(
       `${this.apiUrl}auth/claim-officer/${id}`,
       payload, // Include the payload in the request body
@@ -138,40 +138,53 @@ export class CollectionOfficerService {
   }
 
   getAllDriveCategories(search: string = ''): Observable<any> {
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${this.token}`,
-  });
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
 
-  let url = `${this.apiUrl}auth/driver/get-all-drive-categories`;
+    let url = `${this.apiUrl}auth/driver/get-all-drive-categories`;
 
-  if (search) {
-    url += `?search=${search}`;
+    if (search) {
+      url += `?search=${search}`;
+    }
+
+    return this.http.get<any>(url, { headers });
   }
 
-  return this.http.get<any>(url, { headers });
-}
+  getDriveCategoryById(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
 
-getDriveCategoryById(id: number): Observable<any> {
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${this.token}`,
-  });
+    return this.http.get<any>(`${this.apiUrl}auth/driver/get-drive-category/${id}`, { headers });
+  }
 
-  return this.http.get<any>(`${this.apiUrl}auth/driver/get-drive-category/${id}`, { headers });
-}
+  addDriveCategory(data: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
 
-addDriveCategory(data: any): Observable<any> {
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${this.token}`,
-  });
+    return this.http.post<any>(`${this.apiUrl}auth/driver/add-drive-category`, data, { headers });
+  }
 
-  return this.http.post<any>(`${this.apiUrl}auth/driver/add-drive-category`, data, { headers });
-}
+  updateDriveCategory(id: number, data: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
 
-updateDriveCategory(id: number, data: any): Observable<any> {
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${this.token}`,
-  });
+    return this.http.put<any>(`${this.apiUrl}auth/driver/update-drive-category/${id}`, data, { headers });
+  }
 
-  return this.http.put<any>(`${this.apiUrl}auth/driver/update-drive-category/${id}`, data, { headers });
-}
+  getSelfRegisteredDrivers(search: string = '', role: string = ''): Observable<any> {
+    const headers = new HttpHeaders({ Authorization: `Bearer ${this.token}` });
+
+    let url = `${this.apiUrl}auth/get-self-registered-drivers?`;
+    const params: string[] = [];
+    if (search) params.push(`search=${encodeURIComponent(search)}`);
+    if (role) params.push(`role=${encodeURIComponent(role)}`);
+    url += params.join('&');
+
+    return this.http.get<any>(url, { headers });
+  }
+
 }

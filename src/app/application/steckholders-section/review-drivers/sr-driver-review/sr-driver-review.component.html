@@ -55,13 +55,15 @@
                 <app-driver-personal-info-tab [personalObj]="driverData.Personal"></app-driver-personal-info-tab>
             </div>
             <div *ngIf="activeTab === 'ResidentialBank'">
-                <app-driver-residential-bank-info></app-driver-residential-bank-info>
+                <app-driver-residential-bank-info
+                    [residentialBankObj]="driverData.ResidentialBank"></app-driver-residential-bank-info>
             </div>
             <div *ngIf="activeTab === 'LicenseInsurance'">
-                <app-driver-license-insurance-info></app-driver-license-insurance-info>
+                <app-driver-license-insurance-info
+                    [licenseInsuranceObj]="driverData.LicenseInsurance"></app-driver-license-insurance-info>
             </div>
             <div *ngIf="activeTab === 'Vehicle'">
-                <app-driver-vehicale-info></app-driver-vehicale-info>
+                <app-driver-vehicale-info [vehicleObj]="driverData.Vehicle"></app-driver-vehicale-info>
             </div>
         </div>
 

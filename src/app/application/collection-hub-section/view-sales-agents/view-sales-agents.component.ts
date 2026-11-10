@@ -52,8 +52,6 @@ export class ViewSalesAgentsComponent implements OnInit {
   ];
 
   constructor(
-    private route: ActivatedRoute,
-    private http: HttpClient,
     private router: Router,
     public permissionService: PermissionService,
     public tokenService: TokenService,

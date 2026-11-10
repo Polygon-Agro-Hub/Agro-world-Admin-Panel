@@ -280,9 +280,8 @@
           </p>
         </div>
 
-        <p *ngIf="selectedComplaint.reply" class="pre-filled-reply text-wrap">
-          {{ selectedComplaint.reply }}
-        </p>
+        <textarea *ngIf="selectedComplaint.reply" [value]="selectedComplaint.reply" readonly rows="6"
+  class="pre-filled-reply w-full resize-none border-0 p-0 bg-transparent text-[16px] md:text-[18px] text-[#000000] dark:text-white focus:outline-none focus:ring-0 cursor-default caret-transparent"></textarea>
 
         <p>
           If you have any further concerns or questions, feel free to reach out.

@@ -4,15 +4,13 @@
             {{ pad(i + 1) }}. {{ field.label }}
         </label>
 
-        <!-- text -->
         <div *ngIf="field.type === 'text'"
             class="w-full bg-white dark:bg-tileBlack border border-[#E1E6F5] dark:border-gray-600 rounded-lg px-4 py-2 text-sm">
             {{ show(field.value) }}
         </div>
 
-        <!-- image -->
         <ng-container *ngIf="field.type === 'image'">
-            <button *ngIf="field.value" type="button" (click)="openImage(field.value!, field.label)"
+            <button *ngIf="field.value" type="button" (click)="openImage($any(field.value), field.label)"
                 class="flex items-center gap-2 bg-black text-white text-sm font-medium px-5 py-2 rounded-lg hover:bg-gray-800 transition-colors">
                 <i class="fa-solid fa-eye"></i> View Photo
             </button>

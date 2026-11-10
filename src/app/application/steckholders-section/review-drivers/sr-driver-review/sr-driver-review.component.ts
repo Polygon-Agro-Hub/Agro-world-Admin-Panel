@@ -89,7 +89,7 @@ export class SrDriverReviewComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private collectionOfficerService: CollectionOfficerService
+    private collectionOfficerService: CollectionOfficerService,
   ) {}
 
   ngOnInit(): void {
@@ -117,7 +117,8 @@ export class SrDriverReviewComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error fetching driver details:', err);
-        this.errorMessage = err?.error?.error || 'Failed to load driver details.';
+        this.errorMessage =
+          err?.error?.error || 'Failed to load driver details.';
         this.isLoading = false;
       },
     });
@@ -126,7 +127,9 @@ export class SrDriverReviewComponent implements OnInit {
   // API returns an array of single-key section objects:
   // [{ personalInfo }, { residentialAndBankInfo }, { licenseAndInsuranceInfo }, { vehicleInfo }]
   private mapDriverData(data: any): void {
-    const sections: any = Array.isArray(data) ? Object.assign({}, ...data) : data;
+    const sections: any = Array.isArray(data)
+      ? Object.assign({}, ...data)
+      : data;
 
     const p = sections.personalInfo || {};
     const rb = sections.residentialAndBankInfo || {};
@@ -134,7 +137,9 @@ export class SrDriverReviewComponent implements OnInit {
     const v = sections.vehicleInfo || {};
 
     this.companyId = p.companyId != null ? Number(p.companyId) : null;
-    this.driverName = [p.firstNameEnglish, p.lastNameEnglish].filter(Boolean).join(' ');
+    this.driverName = [p.firstNameEnglish, p.lastNameEnglish]
+      .filter(Boolean)
+      .join(' ');
     this.submittedAt = p.createdAt ? new Date(p.createdAt) : null;
 
     this.driverData = {
@@ -184,7 +189,10 @@ export class SrDriverReviewComponent implements OnInit {
     console.log('Mapped driver data:', this.driverData);
   }
 
-  private formatPhone(code: string | null, number: string | null): string | null {
+  private formatPhone(
+    code: string | null,
+    number: string | null,
+  ): string | null {
     if (!number) return null;
     return `${code ?? ''}${number}`;
   }
@@ -356,7 +364,7 @@ export class SrDriverReviewComponent implements OnInit {
           this.showAlert(
             'success',
             'Approved!',
-            res?.message || 'Driver approved successfully.'
+            res?.message || 'Driver approved successfully.',
           ).then(() => this.back());
         },
         error: (err) => {
@@ -365,7 +373,7 @@ export class SrDriverReviewComponent implements OnInit {
           this.showAlert(
             'error',
             'Error!',
-            err?.error?.error || 'Failed to approve the driver.'
+            err?.error?.error || 'Failed to approve the driver.',
           );
         },
       });
@@ -388,7 +396,8 @@ export class SrDriverReviewComponent implements OnInit {
   }
 
   confirmReject(): void {
-    if (!this.driverId || !this.isRejectReasonValid || this.isSubmitting) return;
+    if (!this.driverId || !this.isRejectReasonValid || this.isSubmitting)
+      return;
 
     this.isSubmitting = true;
     this.collectionOfficerService
@@ -400,7 +409,7 @@ export class SrDriverReviewComponent implements OnInit {
           this.showAlert(
             'success',
             'Rejected!',
-            res?.message || 'Driver application rejected.'
+            res?.message || 'Driver application rejected.',
           ).then(() => this.back());
         },
         error: (err) => {
@@ -409,7 +418,7 @@ export class SrDriverReviewComponent implements OnInit {
           this.showAlert(
             'error',
             'Error!',
-            err?.error?.error || 'Failed to reject the driver.'
+            err?.error?.error || 'Failed to reject the driver.',
           );
         },
       });

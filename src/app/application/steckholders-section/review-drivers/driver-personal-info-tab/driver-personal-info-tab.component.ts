@@ -27,13 +27,22 @@ export class DriverPersonalInfoTabComponent {
   zoom: number = 1;
 
   get languagesText(): string {
-    const l = this.personalObj?.languages;
+    let l: any = this.personalObj?.languages;
     if (!l) return '----';
-    return Array.isArray(l) ? l.join(' , ') : l;
+    if (typeof l === 'string' && l.trim().startsWith('[')) {
+      try {
+        l = JSON.parse(l);
+      } catch {
+        /* keep as string */
+      }
+    }
+    return Array.isArray(l) ? l.join(' , ') : String(l);
   }
 
-  show(value: string | null | undefined): string {
-    return value && value.trim() ? value : '----';
+  show(value: string | number | null | undefined): string {
+    if (value === null || value === undefined) return '----';
+    const text = String(value).trim();
+    return text ? text : '----';
   }
 
   openImage(): void {

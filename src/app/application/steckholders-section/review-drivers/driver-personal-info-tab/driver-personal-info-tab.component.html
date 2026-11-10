@@ -1,109 +1,108 @@
 <div class="flex flex-col gap-6 px-4 md:px-10 dark:text-textDark" *ngIf="personalObj">
-  <!-- 01 -->
-  <div class="bg-[#F8F9FB] dark:bg-[#2A2A2A] rounded-xl p-4">
-    <label class="block mb-2 text-sm text-[#4B5563] dark:text-[#C8C8C8]">01. First Name</label>
-    <div class="w-full bg-white dark:bg-tileBlack border border-[#E1E6F5] dark:border-gray-600 rounded-lg px-4 py-2 text-sm">
-      {{ show(personalObj.firstName) }}
+    <div class="bg-[#F8F9FB] dark:bg-[#2A2A2A] rounded-xl p-4">
+        <label class="block mb-2 text-sm text-[#4B5563] dark:text-[#C8C8C8]">01. First Name</label>
+        <div
+            class="w-full bg-white dark:bg-tileBlack border border-[#E1E6F5] dark:border-gray-600 rounded-lg px-4 py-2 text-sm">
+            {{ show(personalObj.firstName) }}
+        </div>
     </div>
-  </div>
 
-  <!-- 02 -->
-  <div class="bg-[#F8F9FB] dark:bg-[#2A2A2A] rounded-xl p-4">
-    <label class="block mb-2 text-sm text-[#4B5563] dark:text-[#C8C8C8]">02. Last Name</label>
-    <div class="w-full bg-white dark:bg-tileBlack border border-[#E1E6F5] dark:border-gray-600 rounded-lg px-4 py-2 text-sm">
-      {{ show(personalObj.lastName) }}
+    <div class="bg-[#F8F9FB] dark:bg-[#2A2A2A] rounded-xl p-4">
+        <label class="block mb-2 text-sm text-[#4B5563] dark:text-[#C8C8C8]">02. Last Name</label>
+        <div
+            class="w-full bg-white dark:bg-tileBlack border border-[#E1E6F5] dark:border-gray-600 rounded-lg px-4 py-2 text-sm">
+            {{ show(personalObj.lastName) }}
+        </div>
     </div>
-  </div>
 
-  <!-- 03 -->
-  <div class="bg-[#F8F9FB] dark:bg-[#2A2A2A] rounded-xl p-4">
-    <label class="block mb-2 text-sm text-[#4B5563] dark:text-[#C8C8C8]">03. Driver Role</label>
-    <div class="w-full bg-white dark:bg-tileBlack border border-[#E1E6F5] dark:border-gray-600 rounded-lg px-4 py-2 text-sm">
-      {{ show(personalObj.driverRole) }}
+    <div class="bg-[#F8F9FB] dark:bg-[#2A2A2A] rounded-xl p-4">
+        <label class="block mb-2 text-sm text-[#4B5563] dark:text-[#C8C8C8]">03. Driver Role</label>
+        <div
+            class="w-full bg-white dark:bg-tileBlack border border-[#E1E6F5] dark:border-gray-600 rounded-lg px-4 py-2 text-sm">
+            {{ show(personalObj.driverRole) }}
+        </div>
     </div>
-  </div>
 
-  <!-- 04 -->
-  <div class="bg-[#F8F9FB] dark:bg-[#2A2A2A] rounded-xl p-4">
-    <label class="block mb-2 text-sm text-[#4B5563] dark:text-[#C8C8C8]">04. Preferred Languages</label>
-    <div class="w-full bg-white dark:bg-tileBlack border border-[#E1E6F5] dark:border-gray-600 rounded-lg px-4 py-2 text-sm">
-      {{ languagesText }}
+    <div class="bg-[#F8F9FB] dark:bg-[#2A2A2A] rounded-xl p-4">
+        <label class="block mb-2 text-sm text-[#4B5563] dark:text-[#C8C8C8]">04. Preferred Languages</label>
+        <div
+            class="w-full bg-white dark:bg-tileBlack border border-[#E1E6F5] dark:border-gray-600 rounded-lg px-4 py-2 text-sm">
+            {{ languagesText }}
+        </div>
     </div>
-  </div>
 
-  <!-- 05 Profile -->
-  <div class="bg-[#F8F9FB] dark:bg-[#2A2A2A] rounded-xl p-4">
-    <label class="block mb-2 text-sm text-[#4B5563] dark:text-[#C8C8C8]">05. Profile</label>
-    <button *ngIf="personalObj.profileImage" type="button" (click)="openImage()"
-      class="flex items-center gap-2 bg-black text-white text-sm font-medium px-5 py-2 rounded-lg hover:bg-gray-800 transition-colors">
-      <i class="fa-solid fa-eye"></i> View Photo
-    </button>
-    <p *ngIf="!personalObj.profileImage" class="text-sm py-2">--No Profile Image--</p>
-  </div>
-
-  <!-- 06 -->
-  <div class="bg-[#F8F9FB] dark:bg-[#2A2A2A] rounded-xl p-4">
-    <label class="block mb-2 text-sm text-[#4B5563] dark:text-[#C8C8C8]">06. Mobile Number - 1</label>
-    <div class="w-full bg-white dark:bg-tileBlack border border-[#E1E6F5] dark:border-gray-600 rounded-lg px-4 py-2 text-sm">
-      {{ show(personalObj.mobile1) }}
+    <div class="bg-[#F8F9FB] dark:bg-[#2A2A2A] rounded-xl p-4">
+        <label class="block mb-2 text-sm text-[#4B5563] dark:text-[#C8C8C8]">05. Profile</label>
+        <button *ngIf="personalObj.profileImage" type="button" (click)="openImage()"
+            class="flex items-center gap-2 bg-black text-white text-sm font-medium px-5 py-2 rounded-lg hover:bg-gray-800 transition-colors">
+            <i class="fa-solid fa-eye"></i> View Photo
+        </button>
+        <p *ngIf="!personalObj.profileImage" class="text-sm py-2">--No Profile Image--</p>
     </div>
-  </div>
 
-  <!-- 07 -->
-  <div class="bg-[#F8F9FB] dark:bg-[#2A2A2A] rounded-xl p-4">
-    <label class="block mb-2 text-sm text-[#4B5563] dark:text-[#C8C8C8]">07. Mobile Number - 2</label>
-    <div class="w-full bg-white dark:bg-tileBlack border border-[#E1E6F5] dark:border-gray-600 rounded-lg px-4 py-2 text-sm">
-      {{ show(personalObj.mobile2) }}
+    <div class="bg-[#F8F9FB] dark:bg-[#2A2A2A] rounded-xl p-4">
+        <label class="block mb-2 text-sm text-[#4B5563] dark:text-[#C8C8C8]">06. Mobile Number - 1</label>
+        <div
+            class="w-full bg-white dark:bg-tileBlack border border-[#E1E6F5] dark:border-gray-600 rounded-lg px-4 py-2 text-sm">
+            {{ show(personalObj.mobile1) }}
+        </div>
     </div>
-  </div>
 
-  <!-- 08 -->
-  <div class="bg-[#F8F9FB] dark:bg-[#2A2A2A] rounded-xl p-4">
-    <label class="block mb-2 text-sm text-[#4B5563] dark:text-[#C8C8C8]">08. NIC Number</label>
-    <div class="w-full bg-white dark:bg-tileBlack border border-[#E1E6F5] dark:border-gray-600 rounded-lg px-4 py-2 text-sm">
-      {{ show(personalObj.nic) }}
+    <div class="bg-[#F8F9FB] dark:bg-[#2A2A2A] rounded-xl p-4">
+        <label class="block mb-2 text-sm text-[#4B5563] dark:text-[#C8C8C8]">07. Mobile Number - 2</label>
+        <div
+            class="w-full bg-white dark:bg-tileBlack border border-[#E1E6F5] dark:border-gray-600 rounded-lg px-4 py-2 text-sm">
+            {{ show(personalObj.mobile2) }}
+        </div>
     </div>
-  </div>
 
-  <!-- 09 -->
-  <div class="bg-[#F8F9FB] dark:bg-[#2A2A2A] rounded-xl p-4">
-    <label class="block mb-2 text-sm text-[#4B5563] dark:text-[#C8C8C8]">09. Email Address</label>
-    <div class="w-full bg-white dark:bg-tileBlack border border-[#E1E6F5] dark:border-gray-600 rounded-lg px-4 py-2 text-sm">
-      {{ show(personalObj.email) }}
+    <div class="bg-[#F8F9FB] dark:bg-[#2A2A2A] rounded-xl p-4">
+        <label class="block mb-2 text-sm text-[#4B5563] dark:text-[#C8C8C8]">08. NIC Number</label>
+        <div
+            class="w-full bg-white dark:bg-tileBlack border border-[#E1E6F5] dark:border-gray-600 rounded-lg px-4 py-2 text-sm">
+            {{ show(personalObj.nic) }}
+        </div>
     </div>
-  </div>
+
+    <div class="bg-[#F8F9FB] dark:bg-[#2A2A2A] rounded-xl p-4">
+        <label class="block mb-2 text-sm text-[#4B5563] dark:text-[#C8C8C8]">09. Email Address</label>
+        <div
+            class="w-full bg-white dark:bg-tileBlack border border-[#E1E6F5] dark:border-gray-600 rounded-lg px-4 py-2 text-sm">
+            {{ show(personalObj.email) }}
+        </div>
+    </div>
 </div>
 
 <!-- Profile Image Modal -->
 <div *ngIf="isImageOpen" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-  (click)="closeImage()">
-  <div class="relative bg-white dark:bg-tileBlack rounded-2xl shadow-lg p-6 w-[90%] max-w-[560px]"
-    (click)="$event.stopPropagation()">
+    (click)="closeImage()">
+    <div class="relative bg-white dark:bg-tileBlack rounded-2xl shadow-lg p-6 w-[90%] max-w-[560px]"
+        (click)="$event.stopPropagation()">
 
-    <h3 class="text-center font-semibold mb-4 dark:text-textDark">Profile Image</h3>
+        <h3 class="text-center font-semibold mb-4 dark:text-textDark">Profile Image</h3>
 
-    <button type="button" (click)="closeImage()"
-      class="absolute top-4 right-4 w-9 h-9 rounded-full bg-[#D9D9D9] text-white flex items-center justify-center hover:bg-gray-400 transition-colors">
-      <i class="fa-solid fa-xmark"></i>
-    </button>
-
-    <div class="relative border border-[#E1E6F5] dark:border-gray-600 rounded-xl p-4">
-      <div class="overflow-auto max-h-[60vh] rounded-md">
-        <img [src]="personalObj.profileImage" alt="Profile Image"
-          class="w-full h-auto origin-top-left transition-transform duration-200"
-          [style.transform]="'scale(' + zoom + ')'" />
-      </div>
-
-      <div class="absolute bottom-6 right-6 flex flex-col gap-2">
-        <button type="button" (click)="zoomOut()"
-          class="w-10 h-10 bg-white rounded-md shadow-md flex items-center justify-center hover:bg-gray-100">
-          <i class="fa-solid fa-minus"></i>
+        <button type="button" (click)="closeImage()"
+            class="absolute top-4 right-4 w-9 h-9 rounded-full bg-[#D9D9D9] text-white flex items-center justify-center hover:bg-gray-400 transition-colors">
+            <i class="fa-solid fa-xmark"></i>
         </button>
-        <button type="button" (click)="zoomIn()"
-          class="w-10 h-10 bg-white rounded-md shadow-md flex items-center justify-center hover:bg-gray-100">
-          <i class="fa-solid fa-plus"></i>
-        </button>
-      </div>
+
+        <div class="relative border border-[#E1E6F5] dark:border-gray-600 rounded-xl p-4">
+            <div class="overflow-auto max-h-[60vh] rounded-md">
+                <img [src]="personalObj.profileImage" alt="Profile Image"
+                    class="w-full h-auto origin-top-left transition-transform duration-200"
+                    [style.transform]="'scale(' + zoom + ')'" />
+            </div>
+
+            <div class="absolute bottom-6 right-6 flex flex-col gap-2">
+                <button type="button" (click)="zoomOut()"
+                    class="w-10 h-10 bg-white rounded-md shadow-md flex items-center justify-center hover:bg-gray-100">
+                    <i class="fa-solid fa-minus"></i>
+                </button>
+                <button type="button" (click)="zoomIn()"
+                    class="w-10 h-10 bg-white rounded-md shadow-md flex items-center justify-center hover:bg-gray-100">
+                    <i class="fa-solid fa-plus"></i>
+                </button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>

@@ -108,13 +108,13 @@
             <div class="w-11 h-11 rounded-lg bg-[#EAF2FF] flex items-center justify-center">
                 <i class="fa-solid fa-user text-[#2D7CF6] text-lg"></i>
             </div>
-            <h2 class="text-xl font-semibold text-[#111827] dark:text-white">Driver Approval &amp; Centre Allocation</h2>
+            <h2 class="text-[18px] font-[700] text-[#0F172A] dark:text-white">Driver Approval &amp; Centre Allocation</h2>
         </div>
 
         <!-- Body -->
         <div class="px-8 py-6 flex flex-col gap-5">
             <div>
-                <label class="block font-semibold mb-2">01. Select Distribution Centre *</label>
+                <label class="block font-[600] text-[14px] text-[#000000] mb-2">01. Select Distribution Centre *</label>
                 <select [(ngModel)]="approveForm.centerId" (ngModelChange)="onCenterChange()"
                     class="w-full h-12 px-4 rounded-xl border border-gray-300 bg-white dark:bg-[#2C2C2C] dark:border-gray-600 focus:outline-none focus:border-[#2D7CF6]">
                     <option [ngValue]="null" disabled>Select From Here</option>
@@ -125,7 +125,7 @@
             </div>
 
             <div>
-                <label class="block font-semibold mb-2">02. Select Distribution Manager *</label>
+                <label class="block font-[600] text-[14px] text-[#000000] mb-2">02. Select Distribution Manager *</label>
                 <select [(ngModel)]="approveForm.managerId" [disabled]="approveForm.centerId == null || isManagersLoading"
                     class="w-full h-12 px-4 rounded-xl border border-gray-300 bg-white dark:bg-[#2C2C2C] dark:border-gray-600 focus:outline-none focus:border-[#2D7CF6] disabled:opacity-60 disabled:cursor-not-allowed">
                     <option [ngValue]="null" disabled>
@@ -139,11 +139,11 @@
             </div>
 
             <div>
-                <label class="block font-semibold mb-2">03. Employment Type (Permanent / Temporary) *</label>
+                <label class="block font-[600] text-[14px] text-[#000000] mb-2">03. Employment Type (Permanent / Temporary) *</label>
                 <div class="grid grid-cols-2 gap-4">
                     <button type="button" *ngFor="let t of ['Permanent', 'Temporary']"
                         (click)="setEmpType($any(t))"
-                        class="h-12 px-4 rounded-xl flex items-center justify-between font-semibold transition-colors"
+                        class="h-12 px-4 rounded-xl flex items-center justify-between font-[600] text-[14px] text-[#000000] transition-colors"
                         [ngClass]="approveForm.empType === t
                             ? 'border-2 border-[#2D7CF6]'
                             : 'border border-gray-300 dark:border-gray-600'">
@@ -157,7 +157,7 @@
             </div>
 
             <div>
-                <label class="block font-semibold mb-2">04. Select Driver Category *</label>
+                <label class="block font-[600] text-[14px] text-[#000000] mb-2">04. Select Driver Category *</label>
                 <select [(ngModel)]="approveForm.categoryId"
                     class="w-full h-12 px-4 rounded-xl border border-gray-300 bg-white dark:bg-[#2C2C2C] dark:border-gray-600 focus:outline-none focus:border-[#2D7CF6]">
                     <option [ngValue]="null" disabled>Select From Here</option>

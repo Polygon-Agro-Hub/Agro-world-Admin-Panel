@@ -63,7 +63,7 @@
     </div>
 
     <div *ngIf="
-        permissionService.hasPermission('Sales Dash onboard w. buyers') ||
+        permissionService.hasPermission('Sales Dash onboard wholesale buyer') ||
         tokenService.getUserDetails().role === '1'
       " class="flex justify-center cursor-pointer">
       <div (click)="viewOnboardWBuyers()"

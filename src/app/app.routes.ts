@@ -331,6 +331,7 @@ import { SalesAgentRatingsComponent } from './application/sales-dash-section/sal
 import { OnboardWBuyersComponent } from './application/sales-dash-section/onboard-w-buyers/onboard-w-buyers.component';
 import { UploadProductsListPricesComponent } from './application/marketplace/upload-products-list-prices/upload-products-list-prices.component';
 import { ViewReviewDriversComponent } from './application/steckholders-section/review-drivers/view-review-drivers/view-review-drivers.component';
+import { SrDriverReviewComponent } from './application/steckholders-section/review-drivers/sr-driver-review/sr-driver-review.component';
 
 export const routes: Routes = [
   {
@@ -1336,6 +1337,10 @@ export const routes: Routes = [
                 path: 'view-review-drivers',
                 component: ViewReviewDriversComponent,
               },
+              {
+                path: 'self-registered-drivers-review/:id',
+                component: SrDriverReviewComponent,
+              }
             ],
           },
         ],

@@ -6,6 +6,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { SalesAgentsService } from '../../../services/dash/sales-agents.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 interface BuyerDocument {
   id: number;
@@ -72,6 +74,8 @@ export class WholesaleBuyerViewDocumentComponent implements OnInit {
     private route: ActivatedRoute,
     private sanitizer: DomSanitizer,
     private salesAgentsService: SalesAgentsService,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
   ) {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {

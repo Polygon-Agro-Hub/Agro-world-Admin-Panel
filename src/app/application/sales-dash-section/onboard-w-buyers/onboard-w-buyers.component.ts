@@ -59,7 +59,10 @@ export class OnboardWBuyersComponent implements OnInit {
   readonly maxFileSize = 5 * 1024 * 1024; // 5MB
 
   private readonly nicPattern = /^([0-9]{9}[vV]|[0-9]{12})$/;
-  private readonly passportPattern = /^[A-Za-z][0-9]{7}$/;
+  private readonly passportPattern = /^[A-Za-z0-9]+$/;
+  private readonly lkMobilePattern = /^7[0-9]{8}$/;
+  private readonly lkCompanyPattern = /^[0-9]{9}$/;
+  private readonly digitsPattern = /^[0-9]+$/;
 
   constructor(
     private fb: FormBuilder,
@@ -69,39 +72,26 @@ export class OnboardWBuyersComponent implements OnInit {
     this.form = this.fb.group({
       agent: [null, Validators.required],
       title: ['Mr.', Validators.required],
-      firstName: [
-        '',
-        [Validators.required, Validators.pattern(/^[A-Za-z\s]+$/)],
-      ],
-      lastName: [
-        '',
-        [Validators.required, Validators.pattern(/^[A-Za-z\s]+$/)],
-      ],
+      firstName: ['', [Validators.required, Validators.pattern(/^[A-Za-z\s]+$/)]],
+      lastName: ['', [Validators.required, Validators.pattern(/^[A-Za-z\s]+$/)]],
       phoneCode: ['+94', Validators.required],
-      phoneNumber: [
-        '',
-        [Validators.required, Validators.pattern(/^7[0-9]{8}$/)],
-      ],
+      phoneNumber: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       identificationType: ['NIC', Validators.required],
-      identificationNumber: [
-        '',
-        [Validators.required, this.idValidator.bind(this)],
-      ],
+      identificationNumber: ['', [Validators.required, this.idValidator.bind(this)]],
       companyName: ['', Validators.required],
       companyPhoneCode: ['+94', Validators.required],
-      companyPhoneNumber: [
-        '',
-        [Validators.required, Validators.pattern(/^[0-9]{9}$/)],
-      ],
+      companyPhoneNumber: ['', Validators.required],
     });
 
-    // Reset the ID number when switching between NIC and Passport
     this.form.get('identificationType')!.valueChanges.subscribe(() => {
       const ctrl = this.form.get('identificationNumber')!;
       ctrl.reset('');
       ctrl.updateValueAndValidity();
     });
+
+    this.setupPhoneValidation('phoneCode', 'phoneNumber', this.lkMobilePattern);
+    this.setupPhoneValidation('companyPhoneCode', 'companyPhoneNumber', this.lkCompanyPattern);
   }
 
   ngOnInit(): void {
@@ -182,10 +172,22 @@ export class OnboardWBuyersComponent implements OnInit {
       msgs.push(
         this.isNic
           ? "Enter a valid NIC number (12 digits, or 9 digits followed by 'V')."
-          : 'Enter a valid passport ID (1 letter followed by 7 digits).',
+          : 'Passport ID can only contain letters and digits.',
       );
 
     if (err('companyName', 'required')) msgs.push('Company name is required.');
+
+    if (err('phoneNumber', 'required')) msgs.push('Phone number is required.');
+    else if (err('phoneNumber', 'pattern'))
+      msgs.push(this.form.get('phoneCode')?.value === '+94'
+        ? 'Enter a valid mobile number (7XXXXXXXX).'
+        : 'Phone number can only contain digits.');
+
+    if (err('companyPhoneNumber', 'required')) msgs.push('Company phone number is required.');
+    else if (err('companyPhoneNumber', 'pattern'))
+      msgs.push(this.form.get('companyPhoneCode')?.value === '+94'
+        ? 'Enter a valid company phone number (9 digits).'
+        : 'Company phone number can only contain digits.');
 
     if (err('companyPhoneNumber', 'required'))
       msgs.push('Company phone number is required.');
@@ -215,31 +217,42 @@ export class OnboardWBuyersComponent implements OnInit {
     if (!/[0-9]/.test(event.key)) event.preventDefault();
   }
 
-  onDigitsOnlyInput(
-    event: Event,
-    controlName: string,
-    maxLength: number,
-  ): void {
+  onDigitsOnlyInput(event: Event, controlName: string, maxLength: number | null): void {
     const input = event.target as HTMLInputElement;
-    const cleaned = input.value.replace(/[^0-9]/g, '').slice(0, maxLength);
+    let cleaned = input.value.replace(/[^0-9]/g, '');
+    if (maxLength !== null) cleaned = cleaned.slice(0, maxLength);
     input.value = cleaned;
     this.form.get(controlName)?.setValue(cleaned, { emitEvent: false });
   }
 
+  private capitalizeWords(value: string): string {
+    return value.replace(/(^|\s)([a-z])/g, (_, space, ch) => space + ch.toUpperCase());
+  }
+
   onNameInput(event: Event, controlName: string): void {
     const input = event.target as HTMLInputElement;
-    const cleaned = input.value.replace(/[^A-Za-z\s]/g, '');
+    const pos = input.selectionStart ?? input.value.length;
+    const cleaned = this.capitalizeWords(
+      input.value.replace(/[^A-Za-z\s]/g, '').replace(/^\s+/, ''),
+    );
     input.value = cleaned;
+    input.setSelectionRange(Math.min(pos, cleaned.length), Math.min(pos, cleaned.length));
+    this.form.get(controlName)?.setValue(cleaned, { emitEvent: false });
+  }
+
+  onCapitalizeInput(event: Event, controlName: string): void {
+    const input = event.target as HTMLInputElement;
+    const pos = input.selectionStart ?? input.value.length;
+    const cleaned = this.capitalizeWords(input.value.replace(/^\s+/, ''));
+    input.value = cleaned;
+    input.setSelectionRange(Math.min(pos, cleaned.length), Math.min(pos, cleaned.length));
     this.form.get(controlName)?.setValue(cleaned, { emitEvent: false });
   }
 
   onIdentificationInput(event: Event): void {
     const input = event.target as HTMLInputElement;
-    const max = this.isNic ? 12 : 8;
-    const cleaned = input.value
-      .replace(/[^0-9A-Za-z]/g, '')
-      .toUpperCase()
-      .slice(0, max);
+    let cleaned = input.value.replace(/[^0-9A-Za-z]/g, '').toUpperCase();
+    if (this.isNic) cleaned = cleaned.slice(0, 12);
     input.value = cleaned;
     this.form.get('identificationNumber')?.setValue(cleaned);
   }
@@ -366,5 +379,29 @@ export class OnboardWBuyersComponent implements OnInit {
         });
       },
     });
+  }
+
+  private setupPhoneValidation(codeName: string, numberName: string, lkPattern: RegExp): void {
+    const codeCtrl = this.form.get(codeName)!;
+    const numCtrl = this.form.get(numberName)!;
+
+    const apply = () => {
+      const isLk = codeCtrl.value === '+94';
+      numCtrl.setValidators([
+        Validators.required,
+        Validators.pattern(isLk ? lkPattern : this.digitsPattern),
+      ]);
+      if (isLk && numCtrl.value && numCtrl.value.length > 9) {
+        numCtrl.setValue(numCtrl.value.slice(0, 9), { emitEvent: false });
+      }
+      numCtrl.updateValueAndValidity({ emitEvent: false });
+    };
+
+    apply();
+    codeCtrl.valueChanges.subscribe(apply);
+  }
+
+  phoneMaxLength(codeName: string): number | null {
+    return this.form.get(codeName)?.value === '+94' ? 9 : null;
   }
 }

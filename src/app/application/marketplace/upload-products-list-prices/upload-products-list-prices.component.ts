@@ -256,6 +256,8 @@ export class UploadProductsListPricesComponent {
         const competitor = this.toPrice(d.competitor);
         if (competitor === null) return true;
 
+        if (this.isNoDiscountMismatch(d)) return false;
+
         const sale = this.toPrice(d.sale);
         if (sale === null) return false;
 
@@ -292,12 +294,10 @@ export class UploadProductsListPricesComponent {
     add(this.invalidIds(data), 'Invalid Product IDs found.');
     this.duplicateIds(data).forEach(rows => add(rows, 'Duplicate Product IDs found.'));
     add(this.invalidSalePrice(data), 'Invalid Sale Price. Please enter a valid Sale Price greater than 0.');
+    add(this.saleExceedsActual(data), 'Invalid Sale Price. Sale Price cannot be greater than the Actual Price.');
     add(this.invalidActualPrice(data), 'Invalid Actual Price. Please enter a valid Actual Price greater than 0.');
     add(this.mismatchedNoDiscountPrices(data), NO_DISCOUNT_MISMATCH_MESSAGE);
     add(this.invalidCompetitorPrice(data), 'Invalid Competitor Price. Please enter a valid Competitor Price greater than the Sale Price.');
-    add(this.invalidSalePrice(data), 'Invalid Sale Price. Please enter a valid Sale Price greater than 0.');
-    add(this.saleExceedsActual(data), 'Invalid Sale Price. Sale Price cannot be greater than the Actual Price.');
-    add(this.invalidActualPrice(data), 'Invalid Actual Price. Please enter a valid Actual Price greater than 0.');
 
     if (this.isRetail) {
       add(this.invalidPackageBasedPrice(data), 'Invalid Package Based Price. Please enter a valid Package Based Price greater than 0.');
@@ -345,6 +345,14 @@ export class UploadProductsListPricesComponent {
     } catch {
 
     }
+  }
+
+  private isNoDiscountMismatch(d: ParsedRow): boolean {
+    if (String(d.display ?? '').trim().toLowerCase() !== 'no discount') return false;
+    const actual = this.toPrice(d.actual);
+    const sale = this.toPrice(d.sale);
+    if (actual === null || sale === null) return false;
+    return Math.abs(actual - sale) >= 0.005;
   }
 
   private uploadToBackend(data: ParsedRow[]): void {

@@ -9,6 +9,8 @@ import {
   OnboardedOption,
   SalesDashService,
 } from '../../../services/sales-dash/sales-dash.service';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-buyer-approvals',
@@ -33,8 +35,10 @@ export class BuyerApprovalsComponent implements OnInit {
   constructor(
     private location: Location,
     private router: Router,
-    private salesDashService: SalesDashService
-  ) {}
+    private salesDashService: SalesDashService,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
+  ) { }
 
   ngOnInit(): void {
     this.loadOnboardedOptions();

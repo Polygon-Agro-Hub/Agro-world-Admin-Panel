@@ -55,6 +55,7 @@ export class MarketAddProductComponent implements OnInit {
   text: string = 'Kg';
 
   isunitTypeKg!: boolean;
+  tagDraft = '';
 
   // In your component.ts
   categoryOptions = [
@@ -66,7 +67,15 @@ export class MarketAddProductComponent implements OnInit {
     normalPrice: '',
     salePrice: '',
     comPrice: '',
+    packagePrice: '',
   };
+
+  // Retail only: which pricing tab is visible in the Product Pricing card
+  pricingTab: 'standalone' | 'package' = 'standalone';
+
+  get isRetail(): boolean {
+    return this.productObj.category === 'Retail';
+  }
   productTypeOptions: { label: string; value: number }[] = [];
 
   private integerOnlyFields = ['discountedPrice'];
@@ -112,14 +121,14 @@ export class MarketAddProductComponent implements OnInit {
   }
 
   syncPriceDisplay() {
-    (['normalPrice', 'salePrice', 'comPrice'] as const).forEach((f) => {
+    (['normalPrice', 'salePrice', 'comPrice', 'packagePrice'] as const).forEach((f) => {
       this.priceDisplay[f] = this.productObj[f]
         ? this.formatPrice(this.productObj[f])
         : '';
     });
   }
 
-  onPriceInput(event: Event, field: 'normalPrice' | 'salePrice' | 'comPrice') {
+  onPriceInput(event: Event, field: PriceField) {
     const input = event.target as HTMLInputElement;
     let clean = input.value.replace(/[^0-9.]/g, '');
     const [intPart, ...rest] = clean.split('.');
@@ -131,13 +140,13 @@ export class MarketAddProductComponent implements OnInit {
     this.calculeSalePrice();
   }
 
-  onPriceFocus(field: 'normalPrice' | 'salePrice' | 'comPrice') {
+  onPriceFocus(field: PriceField) {
     this.priceDisplay[field] = this.productObj[field]
       ? String(this.productObj[field])
       : '';
   }
 
-  onPriceBlur(field: 'normalPrice' | 'salePrice' | 'comPrice') {
+  onPriceBlur(field: PriceField) {
     this.priceDisplay[field] = this.productObj[field]
       ? this.formatPrice(this.productObj[field])
       : '';
@@ -161,6 +170,13 @@ export class MarketAddProductComponent implements OnInit {
         console.error('Failed to load product types', error);
       },
     );
+  }
+
+  onCategoryChange() {
+    // The package tab only exists for Retail; reset so Wholesale shows standalone pricing
+    if (!this.isRetail) {
+      this.pricingTab = 'standalone';
+    }
   }
 
   onProductTypeChange(selectedId: number) {
@@ -335,7 +351,25 @@ export class MarketAddProductComponent implements OnInit {
       return;
     }
 
-    // Round all decimal values to 2 places
+    // A cleared number input sets its model to null. Treat empty values as 0 so the
+    // rounding below can't crash (leaving the spinner stuck) and the empty-field
+    // checks can list them in the popup.
+    (
+      [
+        'normalPrice',
+        'discountedPrice',
+        'salePrice',
+        'startValue',
+        'changeby',
+        'maxQuantity',
+        'comPrice',
+        'packagePrice',
+      ] as const
+    ).forEach((field) => {
+      const value = Number(this.productObj[field]);
+      this.productObj[field] = Number.isFinite(value) ? value : 0;
+    });
+
     // Round all decimal values to appropriate places
     this.productObj.normalPrice = parseFloat(
       this.productObj.normalPrice.toFixed(2),
@@ -364,6 +398,15 @@ export class MarketAddProductComponent implements OnInit {
       this.productObj.comPrice.toFixed(2)
     );
 
+    // Package based price applies to Retail only
+    if (this.isRetail) {
+      this.productObj.packagePrice = parseFloat(
+        this.productObj.packagePrice.toFixed(2)
+      );
+    } else {
+      this.productObj.packagePrice = 0;
+    }
+
     this.updateTags();
 
     // Check for empty required fields - INCLUDING ALL QUANTITY SECTION FIELDS
@@ -382,6 +425,8 @@ export class MarketAddProductComponent implements OnInit {
       emptyFields.push('Price Per kg');
     if (!this.productObj.comPrice && this.productObj.comPrice === 0)
       emptyFields.push('Competitor Price');
+    if (this.isRetail && !this.productObj.packagePrice)
+      emptyFields.push('Package Based Price');
 
     // QUANTITY SECTION FIELDS - All required fields
     if (!this.productObj.unitType) emptyFields.push('Default Unit Type');
@@ -995,6 +1040,28 @@ export class MarketAddProductComponent implements OnInit {
       this.productObj.comPrice.toFixed(2)
     );
   }
+
+  onTagEnter(event: Event) {
+    event.preventDefault(); 
+    const value = (this.tagDraft || '').trim();
+    if (!value) return;
+
+    const exists = this.templateKeywords().some(
+      (k) => k.toLowerCase() === value.toLowerCase(),
+    );
+    if (!exists) {
+      this.templateKeywords.update((keywords) => [...keywords, value]);
+      this.updateTags();
+    }
+    this.tagDraft = '';
+  }
+
+  onTagBackspace() {
+    if (!this.tagDraft && this.templateKeywords().length > 0) {
+      const last = this.templateKeywords()[this.templateKeywords().length - 1];
+      this.removeTemplateKeyword(last);
+    }
+  }
 }
 
 class Crop {
@@ -1023,7 +1090,10 @@ class MarketPrice {
   discountValue: number = 0;
   productTypeId: number = 0;
   comPrice: number = 0;
+  packagePrice: number = 0;
 }
+
+type PriceField = 'normalPrice' | 'salePrice' | 'comPrice' | 'packagePrice';
 
 class Variety {
   id!: number;

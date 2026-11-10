@@ -38,3 +38,27 @@
   background-color: #374151; /* gray-700 */
   color: #ffffff !important;
 }
+
+/* Phone code dropdown – light */
+::ng-deep .custom-dropdown.p-dropdown {
+  background-color: var(--tile-tileLight);
+  border: 1px solid #d1d5db;
+}
+
+::ng-deep .custom-dropdown .p-dropdown-label,
+::ng-deep .custom-dropdown .p-dropdown-trigger-icon {
+  color: var(--text-textLight);
+}
+
+/* Phone code dropdown – dark */
+::ng-deep .dark .custom-dropdown.p-dropdown {
+  background-color: var(--tile-tileBlack);
+  border-color: #4b5563;
+}
+
+::ng-deep .dark .custom-dropdown .p-dropdown-label,
+::ng-deep .dark .custom-dropdown .p-dropdown-label span,
+::ng-deep .dark .custom-dropdown .p-dropdown-trigger,
+::ng-deep .dark .custom-dropdown .p-dropdown-trigger-icon {
+  color: var(--text-textDark) !important;
+}

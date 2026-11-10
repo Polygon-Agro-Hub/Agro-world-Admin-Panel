@@ -219,3 +219,160 @@
 ::ng-deep .p-datepicker .p-datepicker-title .p-datepicker-year {
   margin-left: 2px !important;
 }
+
+/* ===== DARK THEME: CALENDAR ===== */
+
+/* Input */
+::ng-deep .dark .p-calendar .p-inputtext {
+  background-color: #272f45 !important;
+  color: #e5e7eb !important;
+  border-color: #afafaf !important;
+}
+
+::ng-deep .dark .p-calendar .p-inputtext:focus {
+  border-color: #60a5fa !important;
+  box-shadow: none !important;
+}
+
+/* Popup panel */
+::ng-deep .dark .p-datepicker {
+  background-color: #2d354d !important;
+  color: #d1d5db !important;
+  border: 1px solid #4b5563 !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Header */
+::ng-deep .dark .p-datepicker .p-datepicker-header {
+  background-color: #2d354d !important;
+  color: #e5e7eb !important;
+  border-bottom: 1px solid #4b5563 !important;
+}
+
+::ng-deep .dark .p-datepicker .p-datepicker-header .p-datepicker-title,
+::ng-deep .dark .p-datepicker .p-datepicker-header .p-datepicker-title button {
+  color: #e5e7eb !important;
+  background: transparent !important;
+}
+
+::ng-deep .dark .p-datepicker .p-datepicker-header .p-datepicker-title button:hover {
+  color: #60a5fa !important;
+}
+
+/* Prev / Next arrows */
+::ng-deep .dark .p-datepicker .p-datepicker-header .p-datepicker-prev,
+::ng-deep .dark .p-datepicker .p-datepicker-header .p-datepicker-next {
+  color: #d1d5db !important;
+  background: transparent !important;
+}
+
+::ng-deep .dark .p-datepicker .p-datepicker-header .p-datepicker-prev:hover,
+::ng-deep .dark .p-datepicker .p-datepicker-header .p-datepicker-next:hover {
+  background-color: #3a4160 !important;
+  color: #ffffff !important;
+}
+
+/* Weekday names */
+::ng-deep .dark .p-datepicker table th,
+::ng-deep .dark .p-datepicker table th > span {
+  color: #9ca3af !important;
+}
+
+/* Day cells */
+::ng-deep .dark .p-datepicker table td {
+  color: #d1d5db !important;
+}
+
+::ng-deep .dark .p-datepicker table td > span {
+  color: #d1d5db !important;
+  background: transparent !important;
+}
+
+::ng-deep .dark .p-datepicker table td > span:not(.p-disabled):not(.p-highlight):hover {
+  background-color: #3a4160 !important;
+  color: #ffffff !important;
+}
+
+/* Days from previous / next month */
+::ng-deep .dark .p-datepicker table td.p-datepicker-other-month > span {
+  color: #6b7280 !important;
+}
+
+/* Disabled days */
+::ng-deep .dark .p-datepicker table td > span.p-disabled {
+  color: #4b5563 !important;
+  opacity: 0.6;
+}
+
+/* Today */
+::ng-deep .dark .p-datepicker table td.p-datepicker-today > span {
+  background-color: #374151 !important;
+  color: #ffffff !important;
+  border: 1px solid #6b7280 !important;
+}
+
+/* Selected date */
+::ng-deep .dark .p-datepicker table td > span.p-highlight,
+::ng-deep .dark .p-datepicker table td.p-datepicker-today > span.p-highlight {
+  background-color: #3b82f6 !important;
+  color: #ffffff !important;
+  border-color: #3b82f6 !important;
+}
+
+/* Month and year pickers */
+::ng-deep .dark .p-datepicker .p-monthpicker .p-monthpicker-month,
+::ng-deep .dark .p-datepicker .p-yearpicker .p-yearpicker-year {
+  color: #d1d5db !important;
+  background: transparent !important;
+}
+
+::ng-deep .dark .p-datepicker .p-monthpicker .p-monthpicker-month:not(.p-disabled):hover,
+::ng-deep .dark .p-datepicker .p-yearpicker .p-yearpicker-year:not(.p-disabled):hover {
+  background-color: #3a4160 !important;
+  color: #ffffff !important;
+}
+
+::ng-deep .dark .p-datepicker .p-monthpicker .p-monthpicker-month.p-highlight,
+::ng-deep .dark .p-datepicker .p-yearpicker .p-yearpicker-year.p-highlight {
+  background-color: #3b82f6 !important;
+  color: #ffffff !important;
+}
+
+/* Button bar (Today / Clear) */
+::ng-deep .dark .p-datepicker .p-datepicker-buttonbar {
+  border-top: 1px solid #4b5563 !important;
+}
+
+::ng-deep .dark .p-datepicker .p-datepicker-buttonbar .p-button {
+  background: transparent !important;
+  color: #60a5fa !important;
+}
+
+::ng-deep .dark .p-datepicker .p-datepicker-buttonbar .p-button:hover {
+  background-color: #3a4160 !important;
+}
+
+/* Divider between time / date parts */
+::ng-deep .dark .p-datepicker .p-timepicker {
+  border-top: 1px solid #4b5563 !important;
+}
+
+::ng-deep .dark .p-datepicker .p-timepicker button {
+  color: #d1d5db !important;
+}
+
+/* Clear (x) icon inside input */
+::ng-deep .dark .p-calendar .p-calendar-clear-icon {
+  color: #9ca3af !important;
+}
+
+::ng-deep .dark .p-calendar .p-calendar-clear-icon:hover {
+  color: #ffffff !important;
+}
+
+/* Calendar icon button (if showIcon is ever enabled) */
+::ng-deep .dark .p-calendar .p-datepicker-trigger {
+  background-color: #272f45 !important;
+  color: #d1d5db !important;
+  border-color: #afafaf !important;
+}

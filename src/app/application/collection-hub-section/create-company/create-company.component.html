@@ -262,7 +262,8 @@
           </label>
           <p-dropdown id="bankDropdown" name="bankDropdown" [(ngModel)]="selectedBankId" #bankDropdown="ngModel"
             [options]="banks" optionLabel="name" optionValue="ID" [filter]="true" filterBy="name"
-            placeholder="Select a bank" [showClear]="false" required class="w-full" (onChange)="onBankChange()"
+            placeholder="Select a bank" [showClear]="false" required class="w-full" styleClass="custom-form-dropdown"
+            (onChange)="onBankChange()"
             [ngClass]="{'p-invalid': bankDropdown.invalid && (bankDropdown.dirty || bankDropdown.touched)}">
           </p-dropdown>
 
@@ -282,7 +283,7 @@
           <p-dropdown [(ngModel)]="selectedBranchId" name="branchDropdown" #branchDropdown="ngModel"
             (onChange)="onBranchChange()" [options]="branches" optionLabel="name" optionValue="ID" [filter]="true"
             filterBy="name" placeholder="Select a branch" [showClear]="false" [disabled]="!selectedBankId"
-            [required]="true" class="w-full"
+            [required]="true" class="w-full" styleClass="custom-form-dropdown"
             [ngClass]="{'p-invalid': branchDropdown.invalid && (branchDropdown.dirty || branchDropdown.touched)}">
           </p-dropdown>
 
@@ -667,7 +668,7 @@
           </label>
           <p-dropdown id="bankDropdown" [(ngModel)]="selectedBankId" (onChange)="onBankChange()" [options]="banks"
             optionLabel="name" optionValue="ID" [filter]="true" filterBy="name" placeholder="Select a bank"
-            [showClear]="false" class="w-full" [ngClass]="{
+            [showClear]="false" class="w-full" styleClass="custom-form-dropdown" [ngClass]="{
               'p-invalid': isFieldInvalid('bankName')
             }">
           </p-dropdown>
@@ -682,7 +683,8 @@
           </label>
           <p-dropdown id="branchDropdown" [(ngModel)]="selectedBranchId" (onChange)="onBranchChange()"
             [options]="branches" optionLabel="name" optionValue="ID" [filter]="true" filterBy="name"
-            placeholder="Select a branch" [showClear]="false" [disabled]="!selectedBankId" class="w-full" [ngClass]="{
+            placeholder="Select a branch" [showClear]="false" [disabled]="!selectedBankId" class="w-full"
+            styleClass="custom-form-dropdown" [ngClass]="{
               'p-invalid': isFieldInvalid('branchName')
             }">
           </p-dropdown>

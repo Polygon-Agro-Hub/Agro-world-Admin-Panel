@@ -1,45 +1,109 @@
-/* Hide the native dropdown arrow in most browsers */
+/* =====================================================
+   Native <select> fields (Country, Province, District)
+===================================================== */
+
+/* Hide the native dropdown arrow in most browsers. */
 .no-arrow {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
   background-image: none !important;
-  background-color: inherit;
 }
 
+/* Light theme – disabled (view mode) */
 select.no-arrow:disabled {
-  color: #000 !important;
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
   opacity: 1 !important;
-  -webkit-text-fill-color: #000 !important;
-}
-
-:host-context(.dark) select.no-arrow:disabled {
-  color: var(--text-textDark) !important;
-  -webkit-text-fill-color: var(--text-textDark) !important;
+  cursor: default;
 }
 
 select.no-arrow:disabled option {
-  color: #000 !important;
+  color: #000000 !important;
+  background-color: #ffffff;
 }
 
-:host-context(.dark) select.no-arrow:disabled option {
-  color: var(--text-textDark) !important;
+/* Dark theme – transparent background */
+::ng-deep .dark select.no-arrow {
+  color-scheme: dark;
+  background-color: transparent !important;
+  border-color: #4b5563;
 }
 
+::ng-deep .dark select.no-arrow:disabled {
+  color: #f9fafb !important;
+  -webkit-text-fill-color: #f9fafb !important;
+  opacity: 1 !important;
+  background-color: transparent !important;
+}
+
+/* Keep the option list readable */
+::ng-deep .dark select.no-arrow:disabled option {
+  color: #f9fafb !important;
+  background-color: var(--tile-tileBlack, #1f2937);
+}
+
+/* =====================================================
+   p-dropdown (country code) – disabled, view mode
+===================================================== */
 ::ng-deep .p-dropdown.p-disabled {
   opacity: 1 !important;
-  background-color: inherit !important;
   cursor: default !important;
 }
 
-::ng-deep .p-dropdown.p-disabled .p-dropdown-label {
-  color: inherit !important;
-}
-
+/* Hide the arrow */
 ::ng-deep .p-dropdown .p-dropdown-trigger {
-  display: none !important;  /* hides the arrow */
+  display: none !important;
 }
 
+/* Light theme */
+::ng-deep .custom-dropdown.p-dropdown {
+  background-color: #f9fafb;
+}
+
+/* Text left aligned */
+::ng-deep .custom-dropdown .p-dropdown-label,
+::ng-deep .custom-dropdown .p-dropdown-label * {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  opacity: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  text-align: left !important;
+  height: 100% !important;
+}
+
+/* Dark theme – transparent background */
+::ng-deep .dark .custom-dropdown.p-dropdown,
+::ng-deep .dark .custom-dropdown.p-dropdown.p-disabled {
+  background: transparent !important;
+  background-color: transparent !important;
+  border-color: #4b5563 !important;
+}
+
+::ng-deep .dark .custom-dropdown .p-dropdown-label,
+::ng-deep .dark .custom-dropdown .p-dropdown-label * {
+  color: #f9fafb !important;
+  -webkit-text-fill-color: #f9fafb !important;
+  background: transparent !important;
+}
+
+/* Panel (only matters if the dropdown is ever enabled) */
+::ng-deep .custom-dropdown .p-dropdown-panel {
+  min-width: 100% !important;
+}
+
+::ng-deep .custom-dropdown .p-dropdown-items-wrapper .p-dropdown-item {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  text-align: left !important;
+}
+
+/* =====================================================
+   Utilities
+===================================================== */
 .no-focus:focus {
   outline: none;
   box-shadow: none;
@@ -51,38 +115,4 @@ select.no-arrow:disabled option {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
-}
-
-/* Center content in dropdown items and selected item */
-.custom-dropdown .p-dropdown-label {
-  color: #000 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-align: center !important;
-  height: 100% !important;
-}
-
-:host-context(.dark) .custom-dropdown .p-dropdown-label {
-  color: var(--text-textDark) !important;
-}
-
-/* Center the dropdown panel items */
-.custom-dropdown .p-dropdown-items-wrapper .p-dropdown-item {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-align: center !important;
-}
-
-/* Ensure the dropdown panel itself has proper styling */
-.custom-dropdown .p-dropdown-panel {
-  min-width: 100% !important;
-}
-
-/* Make sure the dropdown trigger is properly centered */
-.custom-dropdown .p-dropdown-trigger {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
 }

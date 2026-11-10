@@ -260,12 +260,9 @@ export class AddPackageComponent implements OnInit {
     // Convert to number, default to 0 if invalid
     const numValue = Number(target.value) || 0;
     this.packageObj.quantities[id] = numValue;
-
-
   }
 
   async onSubmit() {
-    this.isLoading = true;
     this.submitAttempted = true;
 
     // Mark all fields as touched

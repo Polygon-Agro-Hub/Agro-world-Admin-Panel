@@ -1,4 +1,3 @@
-
 import { CommonModule, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -12,7 +11,7 @@ import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
   standalone: true,
   imports: [CommonModule, FormsModule, DropdownModule],
   templateUrl: './add-complain-categories.component.html',
-  styleUrls: ['./add-complain-categories.component.css']
+  styleUrls: ['./add-complain-categories.component.css'],
 })
 export class AddComplainCategoriesComponent implements OnInit {
   roleArr: Roles[] = [];
@@ -23,20 +22,18 @@ export class AddComplainCategoriesComponent implements OnInit {
   constructor(
     private router: Router,
     private complaintSrv: ComplaintsService,
-    private location: Location
-  ) { }
+    private location: Location,
+  ) {}
 
   ngOnInit(): void {
     this.fetchComplainCategory();
   }
 
   fetchComplainCategory() {
-    this.complaintSrv.getAdminComplainCategoryForCreate().subscribe(
-      (res) => {
-        this.roleArr = res.adminRoles;
-        this.appsArr = res.systemApps;
-      }
-    );
+    this.complaintSrv.getAdminComplainCategoryForCreate().subscribe((res) => {
+      this.roleArr = res.adminRoles;
+      this.appsArr = res.systemApps;
+    });
   }
 
   validateForm(): string[] {
@@ -45,9 +42,6 @@ export class AddComplainCategoriesComponent implements OnInit {
 
     if (!c.roleId || c.roleId === 0) {
       errors.push('Complaint Assignee Admin Category is required');
-    }
-    if (!c.appId || c.appId === 0) {
-      errors.push('Select Displaying Application is required');
     }
     if (!c.categoryEnglish || c.categoryEnglish.trim() === '') {
       errors.push('Category name in English is required');
@@ -58,6 +52,9 @@ export class AddComplainCategoriesComponent implements OnInit {
     if (!c.categoryTamil || c.categoryTamil.trim() === '') {
       errors.push('Category name in Tamil is required');
     }
+    if (!c.appId || c.appId === 0) {
+      errors.push('Select Displaying Application is required');
+    }
 
     return errors;
   }
@@ -67,7 +64,9 @@ export class AddComplainCategoriesComponent implements OnInit {
     const validationErrors = this.validateForm();
 
     if (validationErrors.length > 0) {
-      const errorList = validationErrors.map(error => `<li class="text-left">${error}</li>`).join('');
+      const errorList = validationErrors
+        .map((error) => `<li class="text-left">${error}</li>`)
+        .join('');
       const errorHtml = `<ul class="text-left list-disc pl-5">${errorList}</ul>`;
 
       Swal.fire({
@@ -78,8 +77,8 @@ export class AddComplainCategoriesComponent implements OnInit {
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
           title: 'font-semibold',
-          confirmButton: 'bg-[#3980C0] text-white px-4 py-2 rounded-lg'
-        }
+          confirmButton: 'bg-[#3980C0] text-white px-4 py-2 rounded-lg',
+        },
       });
       return;
     }
@@ -92,12 +91,13 @@ export class AddComplainCategoriesComponent implements OnInit {
             title: 'Success',
             text: 'Complaint category created successfully!',
             customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold',
-              confirmButton: 'bg-[#3980C0] text-white px-4 py-2 rounded-lg'
-            }
+              confirmButton: 'bg-[#3980C0] text-white px-4 py-2 rounded-lg',
+            },
           });
-          window.history.back()
+          window.history.back();
         } else {
           if (res.message === 'Category already added') {
             Swal.fire({
@@ -105,10 +105,11 @@ export class AddComplainCategoriesComponent implements OnInit {
               title: 'Info',
               text: 'This complaint category already exists.',
               customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                 title: 'font-semibold',
-                confirmButton: 'bg-[#3980C0] text-white px-4 py-2 rounded-lg'
-              }
+                confirmButton: 'bg-[#3980C0] text-white px-4 py-2 rounded-lg',
+              },
             });
           } else {
             Swal.fire({
@@ -116,10 +117,11 @@ export class AddComplainCategoriesComponent implements OnInit {
               title: 'Error',
               text: 'Error occurred while creating complaint category!',
               customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                 title: 'font-semibold',
-                confirmButton: 'bg-[#3980C0] text-white px-4 py-2 rounded-lg'
-              }
+                confirmButton: 'bg-[#3980C0] text-white px-4 py-2 rounded-lg',
+              },
             });
           }
         }
@@ -132,10 +134,10 @@ export class AddComplainCategoriesComponent implements OnInit {
           customClass: {
             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
             title: 'font-semibold',
-            confirmButton: 'bg-[#3980C0] text-white px-4 py-2 rounded-lg'
-          }
+            confirmButton: 'bg-[#3980C0] text-white px-4 py-2 rounded-lg',
+          },
         });
-      }
+      },
     );
   }
 
@@ -151,7 +153,7 @@ export class AddComplainCategoriesComponent implements OnInit {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold',
         confirmButton: 'bg-[#3980C0] text-white px-4 py-2 rounded-lg mr-2',
-        cancelButton: 'bg-[#74788D] text-[#D3D3D3] px-4 py-2 rounded-lg'
+        cancelButton: 'bg-[#74788D] text-[#D3D3D3] px-4 py-2 rounded-lg',
       },
     }).then((result) => {
       if (result.isConfirmed) {
@@ -162,21 +164,21 @@ export class AddComplainCategoriesComponent implements OnInit {
 
   onCancel() {
     Swal.fire({
-      icon: "warning",
-      title: "Are you sure?",
-      text: "You may lose the added data after canceling!",
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after canceling!',
       showCancelButton: true,
-      confirmButtonText: "Yes, Cancel",
-      cancelButtonText: "No, Keep Editing",
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Keep Editing',
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold',
         confirmButton: 'bg-[#3980C0] text-white px-4 py-2 rounded-lg mr-2',
-        cancelButton: 'bg-[#74788D] text-[#D3D3D3] px-4 py-2 rounded-lg'
+        cancelButton: 'bg-[#74788D] text-[#D3D3D3] px-4 py-2 rounded-lg',
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        window.history.back()
+        window.history.back();
       }
     });
   }
@@ -228,7 +230,7 @@ export class AddComplainCategoriesComponent implements OnInit {
   isFieldInvalid(field: any): boolean {
     return this.submitted && !!field?.invalid;
   }
-  
+
   markTouched(field: any) {
     field.control.markAsTouched();
     field.control.updateValueAndValidity();

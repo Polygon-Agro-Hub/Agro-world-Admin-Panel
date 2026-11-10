@@ -527,6 +527,16 @@ export class CreateCropCalenderComponent implements OnInit {
     }
   }
 
+  private readonly FIELD_ORDER: string[] = [
+    'groupId',
+    'varietyId',
+    'cultivationMethod',
+    'natureOfCultivation',
+    'cropDuration',
+    'specialNotes',
+    'suitableAreas',
+  ];
+
   private getMissingFields(): string[] {
     const missingFields: string[] = [];
     const controls = this.cropForm.controls;
@@ -536,11 +546,11 @@ export class CreateCropCalenderComponent implements OnInit {
       cultivationMethod: 'Cultivation Method is Required',
       natureOfCultivation: 'Nature of Cultivation is Required',
       cropDuration: 'Crop Duration is Required',
-      suitableAreas: 'Suitable Areas are Required',
       specialNotes: 'Special Notes is Required',
+      suitableAreas: 'Suitable Areas are Required',
     };
 
-    for (const controlName in controls) {
+    for (const controlName of this.FIELD_ORDER) {
       // Skip groupId and varietyId validation in edit mode since they're not shown in the form
       if (
         this.cropId !== null &&
@@ -549,7 +559,7 @@ export class CreateCropCalenderComponent implements OnInit {
         continue;
       }
 
-      if (controls[controlName].invalid && fieldLabels[controlName]) {
+      if (controls[controlName]?.invalid && fieldLabels[controlName]) {
         missingFields.push(fieldLabels[controlName]);
       }
     }
@@ -558,7 +568,7 @@ export class CreateCropCalenderComponent implements OnInit {
 
   private getFirstInvalidField(): string | null {
     const controls = this.cropForm.controls;
-    for (const controlName in controls) {
+    for (const controlName of this.FIELD_ORDER) {
       // Skip hidden fields in edit mode
       if (
         this.cropId !== null &&
@@ -567,7 +577,7 @@ export class CreateCropCalenderComponent implements OnInit {
         continue;
       }
 
-      if (controls[controlName].invalid) {
+      if (controls[controlName]?.invalid) {
         return controlName;
       }
     }

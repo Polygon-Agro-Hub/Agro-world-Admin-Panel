@@ -99,9 +99,10 @@
 </div>
 
 <!-- Approve popup -->
-<div *ngIf="isApprovePopupOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
+<div *ngIf="isApprovePopupOpen" class="fixed inset-0 z-50 overflow-y-auto bg-black/50"
     (click)="closeApprovePopUp()">
-    <div class="w-full max-w-[650px] max-h-[90vh] overflow-y-auto bg-white dark:bg-tileBlack rounded-2xl shadow-xl dark:text-textDark"
+    <div class="flex min-h-full items-center justify-center px-4 py-8">
+    <div class="w-full max-w-[650px] bg-white dark:bg-tileBlack rounded-2xl shadow-xl dark:text-textDark"
         (click)="$event.stopPropagation()">
         <!-- Header -->
         <div class="flex items-center gap-4 px-8 py-6 border-b border-gray-200 dark:border-gray-600">
@@ -115,27 +116,20 @@
         <div class="px-8 py-6 flex flex-col gap-5">
             <div>
                 <label class="block font-[600] text-[14px] text-[#000000] mb-2">01. Select Distribution Centre *</label>
-                <select [(ngModel)]="approveForm.centerId" (ngModelChange)="onCenterChange()"
-                    class="w-full h-12 px-4 rounded-xl border border-gray-300 bg-white dark:bg-[#2C2C2C] dark:border-gray-600 focus:outline-none focus:border-[#2D7CF6]">
-                    <option [ngValue]="null" disabled>Select From Here</option>
-                    <option *ngFor="let c of centerList" [ngValue]="c.id">
-                        {{ c.regCode ? c.regCode + ' - ' : '' }}{{ c.centerName }}
-                    </option>
-                </select>
+                <p-dropdown [options]="centerList" [(ngModel)]="approveForm.centerId" (onChange)="onCenterChange()"
+                    optionLabel="label" optionValue="id" [filter]="true" filterBy="label"
+                    placeholder="Select From Here" emptyFilterMessage="No centres found"
+                    class="w-full bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
             </div>
 
             <div>
                 <label class="block font-[600] text-[14px] text-[#000000] mb-2">02. Select Distribution Manager *</label>
-                <select [(ngModel)]="approveForm.managerId" [disabled]="approveForm.centerId == null || isManagersLoading"
-                    class="w-full h-12 px-4 rounded-xl border border-gray-300 bg-white dark:bg-[#2C2C2C] dark:border-gray-600 focus:outline-none focus:border-[#2D7CF6] disabled:opacity-60 disabled:cursor-not-allowed">
-                    <option [ngValue]="null" disabled>
-                        {{ isManagersLoading ? 'Loading...' : (approveForm.centerId != null && managerList.length === 0 ?
-                        'No managers for this centre' : 'Select From Here') }}
-                    </option>
-                    <option *ngFor="let m of managerList" [ngValue]="m.id">
-                        {{ m.firstNameEnglish }} {{ m.lastNameEnglish }}{{ m.empId ? ' (' + m.empId + ')' : '' }}
-                    </option>
-                </select>
+                <p-dropdown [options]="managerList" [(ngModel)]="approveForm.managerId"
+                    optionLabel="label" optionValue="id" [filter]="true" filterBy="label"
+                    [disabled]="approveForm.centerId == null || isManagersLoading"
+                    [placeholder]="isManagersLoading ? 'Loading...' : 'Select From Here'"
+                    emptyMessage="No managers for this centre" emptyFilterMessage="No managers found"
+                    class="w-full bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
             </div>
 
             <div>
@@ -158,11 +152,10 @@
 
             <div>
                 <label class="block font-[600] text-[14px] text-[#000000] mb-2">04. Select Driver Category *</label>
-                <select [(ngModel)]="approveForm.categoryId"
-                    class="w-full h-12 px-4 rounded-xl border border-gray-300 bg-white dark:bg-[#2C2C2C] dark:border-gray-600 focus:outline-none focus:border-[#2D7CF6]">
-                    <option [ngValue]="null" disabled>Select From Here</option>
-                    <option *ngFor="let cat of categoryList" [ngValue]="cat.id">{{ cat.catName }}</option>
-                </select>
+                <p-dropdown [options]="categoryList" [(ngModel)]="approveForm.categoryId"
+                    optionLabel="catName" optionValue="id" [filter]="true" filterBy="catName"
+                    placeholder="Select From Here" emptyFilterMessage="No categories found"
+                    class="w-full bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
             </div>
 
             <div class="flex gap-3 p-4 rounded-xl border border-[#FDE68A] bg-[#FFFBEB] text-[#92400E] text-sm">
@@ -187,6 +180,7 @@
                 Confirm &amp; Approve
             </button>
         </div>
+    </div>
     </div>
 </div>
 

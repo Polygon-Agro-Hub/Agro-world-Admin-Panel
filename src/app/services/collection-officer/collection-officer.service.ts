@@ -196,20 +196,32 @@ export class CollectionOfficerService {
     );
   }
 
-  getDriverDistributionCenterNames(): Observable<any> {
+  getDistributionCenterNamesByCompany(companyId: number | string): Observable<any> {
     const headers = new HttpHeaders({ Authorization: `Bearer ${this.token}` });
 
     return this.http.get<any>(
-      `${this.apiUrl}auth/driver/get-all-distribution-center-names`,
+      `${this.apiUrl}auth/driver/get-distribution-center-names-by-company/${companyId}`,
       { headers }
     );
   }
 
-  getDriverDistributionManagerNames(centerId: number | string): Observable<any> {
+  getDriverCategoryNames(): Observable<any> {
     const headers = new HttpHeaders({ Authorization: `Bearer ${this.token}` });
 
     return this.http.get<any>(
-      `${this.apiUrl}auth/driver/get-all-distribution-manager-names/${centerId}`,
+      `${this.apiUrl}auth/driver/get-driver-category-names`,
+      { headers }
+    );
+  }
+
+  getDistributionManagerNamesByCompany(
+    companyId: number | string,
+    centerId: number | string
+  ): Observable<any> {
+    const headers = new HttpHeaders({ Authorization: `Bearer ${this.token}` });
+
+    return this.http.get<any>(
+      `${this.apiUrl}auth/driver/get-distribution-manager-names-by-company/${companyId}/${centerId}`,
       { headers }
     );
   }

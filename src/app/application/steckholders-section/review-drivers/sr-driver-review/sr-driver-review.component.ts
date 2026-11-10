@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
+import { DropdownModule } from 'primeng/dropdown';
 import { CollectionOfficerService } from '../../../../services/collection-officer/collection-officer.service';
 import {
   DriverPersonalInfoTabComponent,
@@ -27,6 +28,7 @@ import {
   imports: [
     CommonModule,
     FormsModule,
+    DropdownModule,
     DriverPersonalInfoTabComponent,
     DriverResidentialBankInfoComponent,
     DriverLicenseInsuranceInfoComponent,
@@ -41,6 +43,7 @@ export class SrDriverReviewComponent implements OnInit {
   activeTab: string = 'Personal';
 
   driverId: string | null = null;
+  companyId: number | null = null;
   driverName: string = '';
   submittedAt: Date | null = null;
 
@@ -61,12 +64,13 @@ export class SrDriverReviewComponent implements OnInit {
   // Approve popup state
   isApprovePopupOpen: boolean = false;
   isManagersLoading: boolean = false;
-  centerList: { id: number; regCode: string; centerName: string }[] = [];
+  centerList: { id: number; regCode: string; centerName: string; label: string }[] = [];
   managerList: {
     id: number;
     firstNameEnglish: string;
     lastNameEnglish: string;
     empId: string;
+    label: string;
   }[] = [];
   categoryList: { id: number; catName: string }[] = [];
   approveForm: {
@@ -129,6 +133,7 @@ export class SrDriverReviewComponent implements OnInit {
     const li = sections.licenseAndInsuranceInfo || {};
     const v = sections.vehicleInfo || {};
 
+    this.companyId = p.companyId != null ? Number(p.companyId) : null;
     this.driverName = [p.firstNameEnglish, p.lastNameEnglish].filter(Boolean).join(' ');
     this.submittedAt = p.createdAt ? new Date(p.createdAt) : null;
 
@@ -254,10 +259,22 @@ export class SrDriverReviewComponent implements OnInit {
   }
 
   loadCenters(): void {
-    this.collectionOfficerService.getDriverDistributionCenterNames().subscribe({
+    if (this.companyId == null) {
+      this.centerList = [];
+      return;
+    }
+
+    this.collectionOfficerService
+      .getDistributionCenterNamesByCompany(this.companyId)
+      .subscribe({
       next: (res) => {
-        const list = Array.isArray(res) ? res : res?.data ?? [];
-        this.centerList = list.filter((c: any) => c?.id != null);
+        const list = res?.data ?? [];
+        this.centerList = list
+          .filter((c: any) => c?.id != null)
+          .map((c: any) => ({
+            ...c,
+            label: c.regCode ? `${c.regCode} - ${c.centerName}` : c.centerName,
+          }));
       },
       error: (err) => {
         console.error('Error fetching distribution centres:', err);
@@ -269,14 +286,19 @@ export class SrDriverReviewComponent implements OnInit {
   onCenterChange(): void {
     this.approveForm.managerId = null;
     this.managerList = [];
-    if (this.approveForm.centerId == null) return;
+    if (this.approveForm.centerId == null || this.companyId == null) return;
 
     this.isManagersLoading = true;
     this.collectionOfficerService
-      .getDriverDistributionManagerNames(this.approveForm.centerId)
+      .getDistributionManagerNamesByCompany(this.companyId, this.approveForm.centerId)
       .subscribe({
         next: (res) => {
-          this.managerList = res?.data ?? [];
+          this.managerList = (res?.data ?? []).map((m: any) => ({
+            ...m,
+            label:
+              [m.firstNameEnglish, m.lastNameEnglish].filter(Boolean).join(' ') +
+              (m.empId ? ` (${m.empId})` : ''),
+          }));
           this.isManagersLoading = false;
         },
         error: (err) => {
@@ -288,9 +310,12 @@ export class SrDriverReviewComponent implements OnInit {
   }
 
   loadCategories(): void {
-    this.collectionOfficerService.getAllDriveCategories().subscribe({
+    this.collectionOfficerService.getDriverCategoryNames().subscribe({
       next: (res) => {
-        this.categoryList = Array.isArray(res) ? res : res?.data ?? [];
+        this.categoryList = (res?.data ?? []).map((c: any) => ({
+          id: c.id,
+          catName: c.catName,
+        }));
       },
       error: (err) => {
         console.error('Error fetching driver categories:', err);

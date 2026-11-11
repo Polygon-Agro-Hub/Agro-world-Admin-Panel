@@ -26,7 +26,7 @@
         </div>
 
         <!-- Action Buttons -->
-        <div  *ngIf="permissionService.hasPermission('Approve or reject wholesale buyer') || tokenService.getUserDetails().role === '1'" class="flex gap-4">
+        <div class="flex gap-4">
             <button *ngIf="buyerDocument.status === 'To Review'" (click)="openApprovePopup()"
                 [disabled]="isLoading || isSubmitting"
                 class="px-8 py-2 bg-[#3980C0] text-white font-medium rounded-md transition-colors duration-200 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed">

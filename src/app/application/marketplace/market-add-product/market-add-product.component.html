@@ -5,7 +5,7 @@
   Back
 </button>
 
-<form>
+<form #productForm="ngForm">
   <!-- save button -->
   <div class="flex flex-row justify-between items-center mb-6">
     <p class="text-lg text-black font-semibold dark:text-textDark">
@@ -15,9 +15,8 @@
       <button class="bg-[#74788D] text-lg text-white px-3 py-1 rounded-lg mx-2" (click)="onCancel()">
         Cancel
       </button>
-      <button class="bg-[#3980C0] text-lg text-white px-5 py-1 rounded-lg mx-2"
-        type="button" (click)="onSubmit()" [attr.aria-busy]="isSubmitting"
-        [class.opacity-50]="isSubmitting">
+      <button class="bg-[#3980C0] text-lg text-white px-5 py-1 rounded-lg mx-2" type="button" (click)="onSubmit()"
+        [attr.aria-busy]="isSubmitting" [class.opacity-50]="isSubmitting">
         {{ isSubmitting ? 'Saving...' : 'Save' }}
       </button>
     </div>
@@ -26,144 +25,149 @@
   <div class="flex flex-row justify-between">
     <!-- form component -->
     <div class="flex flex-col gap-6 w-[60%]">
-    <!-- Product details card -->
-    <div class="bg-[#FFFFFF] dark:bg-tileBlack p-5 shadow-md rounded-md">
-      <div class="mb-6">
-        <label class="text-[#534E4E] dark:text-textDark">Category *</label>
-        <p-dropdown id="category" name="category" [(ngModel)]="productObj.category" required [options]="categoryOptions"
-          optionLabel="label" optionValue="value" placeholder="--Display type--" #categoryField="ngModel"
-          (onChange)="onCategoryChange()"
-          [styleClass]="'w-full border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'">
-        </p-dropdown>
-        <div *ngIf="categoryField.invalid && categoryField.touched" class="text-red-500 text-sm mt-1">
-          Category is required.
-        </div>
-      </div>
-
-      <div class="mb-6">
-        <label class="text-[#534E4E] dark:text-textDark">Display Name *</label>
-        <input type="text" id="cropName" name="cropName" [(ngModel)]="productObj.cropName" (blur)="trimDisplayName()"
-          (keydown)="preventLeadingSpace($event,productObj.cropName)"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          #cropNameField="ngModel" required />
-        <div *ngIf="cropNameField.invalid && cropNameField.touched" class="text-red-500 text-sm mt-1">
-          Display Name is required.
-        </div>
-      </div>
-
-      <div class="mb-6">
-        <label class="text-[#534E4E] dark:text-textDark">Product Type *</label>
-        <p-dropdown id="category" name="category" [(ngModel)]="productObj.productTypeId"
-          (ngModelChange)="onProductTypeChange($event)" required [options]="productTypeOptions" optionLabel="label"
-          optionValue="value" placeholder="--Select Product Type--" #categoryField="ngModel"
-          [styleClass]="'w-full border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'">
-        </p-dropdown>
-        <div *ngIf="categoryField.invalid && categoryField.touched" class="text-red-500 text-sm mt-1">
-          Product Type is required.
-        </div>
-      </div>
-
-      <!-- Crop Selection -->
-      <div class="mb-6">
-        <label class="text-[#534E4E] dark:text-textDark">Crop *</label>
-        <p-dropdown id="selectId" name="selectId" [(ngModel)]="productObj.selectId" [options]="cropsObj"
-          optionLabel="cropNameEnglish" optionValue="cropId" [filter]="true" filterBy="cropNameEnglish"
-          placeholder="Select Crop" [showClear]="false" (onChange)="onCropChange()" #cropField="ngModel" required
-          [class]="'mt-2 w-full rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'"
-          [panelStyleClass]="'bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'">
-        </p-dropdown>
-        <div *ngIf="cropField.invalid && cropField.touched" class="text-red-500 text-sm mt-1">
-          Crop selection is required.
-        </div>
-      </div>
-
-      <div class="mb-6">
-        <label class="text-[#534E4E] dark:text-textDark">Variety *</label>
-        <p-dropdown id="variety" name="variety" [(ngModel)]="productObj.varietyId" [options]="selectedVarieties"
-          optionLabel="varietyEnglish" optionValue="id" [filter]="true" filterBy="varietyEnglish"
-          placeholder="Select Variety" [showClear]="!!productObj.varietyId" (onChange)="selectVerityImage()"
-          #varietyField="ngModel" required
-          [class]="'mt-2 w-full rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'"
-          [panelStyleClass]="'bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'"
-          [disabled]="!isVerityVisible">
-        </p-dropdown>
-        <div *ngIf="varietyField.invalid && varietyField.touched" class="text-red-500 text-sm mt-1">
-          Variety selection is required.
-        </div>
-      </div>
-
-    </div>
-
-    <!-- Price card -->
-    <div class="bg-[#FFFFFF] dark:bg-tileBlack shadow-md rounded-md">
-      <!-- Card header -->
-      <div class="flex flex-row flex-wrap justify-between items-center gap-4 px-5 py-4 border-b border-gray-200 dark:border-gray-600">
-        <div>
-          <p class="text-lg font-semibold text-black dark:text-textDark">Product Pricing</p>
-          <p *ngIf="isRetail" class="text-sm text-gray-500 dark:text-gray-400">
-            Set prices for individual purchases and package deals.
-          </p>
-        </div>
-
-        <!-- Standalone / Package toggle (Retail only) -->
-        <div *ngIf="isRetail" class="flex bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg p-1"
-          role="tablist">
-          <button type="button" role="tab" [attr.aria-selected]="pricingTab === 'standalone'"
-            (click)="pricingTab = 'standalone'"
-            class="px-5 py-1.5 rounded-md text-sm font-semibold leading-tight text-center transition-colors"
-            [ngClass]="pricingTab === 'standalone'
-              ? 'bg-white dark:bg-tileBlack text-[#3980C0] shadow-sm'
-              : 'text-gray-600 dark:text-gray-300'">
-            Standalone<br />Price
-          </button>
-          <button type="button" role="tab" [attr.aria-selected]="pricingTab === 'package'"
-            (click)="pricingTab = 'package'"
-            class="relative px-5 py-1.5 rounded-md text-sm font-semibold leading-tight text-center transition-colors"
-            [ngClass]="pricingTab === 'package'
-              ? 'bg-white dark:bg-tileBlack text-[#3980C0] shadow-sm'
-              : 'text-gray-600 dark:text-gray-300'">
-            Package Based<br />Price
-            <!-- Flags a missing package price while the user is on the other tab -->
-            <span *ngIf="formSubmitted && !productObj.packagePrice && pricingTab !== 'package'"
-              class="absolute top-1 right-1 w-2 h-2 rounded-full bg-red-500"></span>
-          </button>
-        </div>
-      </div>
-
-      <div class="p-5">
-      <!-- Standalone pricing (always shown for Wholesale) -->
-      <div [class.hidden]="isRetail && pricingTab === 'package'">
-      <div *ngIf="isRetail" class="mb-6 p-4 rounded-lg border border-blue-100 bg-blue-50 text-blue-800 dark:bg-blue-900/30 dark:border-blue-800 dark:text-blue-200">
-        <span class="font-semibold">Standalone Purchase:</span>
-        Standard selling price when customers buy this single item independently from ala carte section.
-      </div>
-
-      <div>
-        <div class="flex items-center space-x-4">
-          <div class="flex items-center space-x-2">
-            <!-- With Discount Radio Button -->
-            <input class="w-5 h-5 cursor-pointer" type="radio" id="withDiscount" name="priceType"
-              [(ngModel)]="productObj.promo" [value]="true" (change)="applyDiscount()" />
-            <label for="withDiscount" class="block text-sm font-medium text-gray-700 dark:text-textDark cursor-pointer">
-              With Discount
-            </label>
-          </div>
-          <div class="flex items-center space-x-2">
-            <!-- No Discount Radio Button -->
-            <input class="w-5 h-5 cursor-pointer" type="radio" id="noDiscount" name="priceType"
-              [(ngModel)]="productObj.promo" [value]="false" (change)="compaireDiscount()" />
-            <label for="noDiscount" class="block text-sm font-medium text-gray-700 dark:text-textDark cursor-pointer">
-              No Discount
-            </label>
+      <!-- Product details card -->
+      <div class="bg-[#FFFFFF] dark:bg-tileBlack p-5 shadow-md rounded-md">
+        <div class="mb-6">
+          <label class="text-[#534E4E] dark:text-textDark">Category *</label>
+          <p-dropdown id="category" name="category" [(ngModel)]="productObj.category" required
+            [options]="categoryOptions" optionLabel="label" optionValue="value" placeholder="--Display type--"
+            #categoryField="ngModel" (onChange)="onCategoryChange()"
+            [styleClass]="'w-full border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'">
+          </p-dropdown>
+          <div *ngIf="formSubmitted && !productObj.category" class="text-red-500 text-sm mt-1">
+            Category is required.
           </div>
         </div>
+
+        <div class="mb-6">
+          <label class="text-[#534E4E] dark:text-textDark">Display Name *</label>
+          <input type="text" id="cropName" name="cropName" [(ngModel)]="productObj.cropName" (blur)="trimDisplayName()"
+            (keydown)="preventLeadingSpace($event,productObj.cropName)"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            #cropNameField="ngModel" required />
+          <div *ngIf="formSubmitted && !productObj.cropName?.trim()" class="text-red-500 text-sm mt-1">
+            Display Name is required.
+          </div>
+        </div>
+
+        <div class="mb-6">
+          <label class="text-[#534E4E] dark:text-textDark">Product Type *</label>
+          <p-dropdown id="productType" name="productType" [(ngModel)]="productObj.productTypeId"
+            (ngModelChange)="onProductTypeChange($event)" required [options]="productTypeOptions" optionLabel="label"
+            optionValue="value" placeholder="--Select Product Type--" #productTypeField="ngModel"
+            [styleClass]="'w-full border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'">
+          </p-dropdown>
+          <div *ngIf="formSubmitted && !productObj.productTypeId" class="text-red-500 text-sm mt-1">
+            Product Type is required.
+          </div>
+        </div>
+
+        <!-- Crop Selection -->
+        <div class="mb-6">
+          <label class="text-[#534E4E] dark:text-textDark">Crop *</label>
+          <p-dropdown id="selectId" name="selectId" [(ngModel)]="productObj.selectId" [options]="cropsObj"
+            optionLabel="cropNameEnglish" optionValue="cropId" [filter]="true" filterBy="cropNameEnglish"
+            placeholder="Select Crop" [showClear]="false" (onChange)="onCropChange()" #cropField="ngModel" required
+            [class]="'mt-2 w-full rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'"
+            [panelStyleClass]="'bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'">
+          </p-dropdown>
+          <div *ngIf="formSubmitted && !productObj.selectId" class="text-red-500 text-sm mt-1">
+            Crop selection is required.
+          </div>
+        </div>
+
+        <div class="mb-6">
+          <label class="text-[#534E4E] dark:text-textDark">Variety *</label>
+          <p-dropdown id="variety" name="variety" [(ngModel)]="productObj.varietyId" [options]="selectedVarieties"
+            optionLabel="varietyEnglish" optionValue="id" [filter]="true" filterBy="varietyEnglish"
+            placeholder="Select Variety" [showClear]="!!productObj.varietyId" (onChange)="selectVerityImage()"
+            #varietyField="ngModel" required
+            [class]="'mt-2 w-full rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'"
+            [panelStyleClass]="'bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'"
+            [disabled]="!isVerityVisible">
+          </p-dropdown>
+          <div *ngIf="formSubmitted && !productObj.varietyId" class="text-red-500 text-sm mt-1">
+            Variety selection is required.
+          </div>
+        </div>
+
       </div>
 
-      <div class="border-t border-gray-300 dark:border-gray-600 mt-3 mb-6"></div>
+      <!-- Price card -->
+      <div class="bg-[#FFFFFF] dark:bg-tileBlack shadow-md rounded-md">
+        <!-- Card header -->
+        <div
+          class="flex flex-row flex-wrap justify-between items-center gap-4 px-5 py-4 border-b border-gray-200 dark:border-gray-600">
+          <div>
+            <p class="text-lg font-semibold text-black dark:text-textDark">Product Pricing</p>
+            <p *ngIf="isRetail" class="text-sm text-gray-500 dark:text-gray-400">
+              Set prices for individual purchases and package deals.
+            </p>
+          </div>
 
-      <div class="mb-6" *ngIf="productObj.promo">
-        <label class="text-[#534E4E] dark:text-textDark">Display Type *</label>
-        <!-- <select id="displaytype" name="displaytype" (change)="changeType()" [(ngModel)]="productObj.displaytype"
+          <!-- Standalone / Package toggle (Retail only) -->
+          <div *ngIf="isRetail"
+            class="flex bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg p-1"
+            role="tablist">
+            <button type="button" role="tab" [attr.aria-selected]="pricingTab === 'standalone'"
+              (click)="pricingTab = 'standalone'"
+              class="px-5 py-1.5 rounded-md text-sm font-semibold leading-tight text-center transition-colors"
+              [ngClass]="pricingTab === 'standalone'
+              ? 'bg-white dark:bg-tileBlack text-[#3980C0] shadow-sm'
+              : 'text-gray-600 dark:text-gray-300'">
+              Standalone<br />Price
+            </button>
+            <button type="button" role="tab" [attr.aria-selected]="pricingTab === 'package'"
+              (click)="pricingTab = 'package'"
+              class="relative px-5 py-1.5 rounded-md text-sm font-semibold leading-tight text-center transition-colors"
+              [ngClass]="pricingTab === 'package'
+              ? 'bg-white dark:bg-tileBlack text-[#3980C0] shadow-sm'
+              : 'text-gray-600 dark:text-gray-300'">
+              Package Based<br />Price
+              <!-- Flags a missing package price while the user is on the other tab -->
+              <span *ngIf="formSubmitted && !productObj.packagePrice && pricingTab !== 'package'"
+                class="absolute top-1 right-1 w-2 h-2 rounded-full bg-red-500"></span>
+            </button>
+          </div>
+        </div>
+
+        <div class="p-5">
+          <!-- Standalone pricing (always shown for Wholesale) -->
+          <div [class.hidden]="isRetail && pricingTab === 'package'">
+            <div *ngIf="isRetail"
+              class="mb-6 p-4 rounded-lg border border-blue-100 bg-blue-50 text-blue-800 dark:bg-blue-900/30 dark:border-blue-800 dark:text-blue-200">
+              <span class="font-semibold">Standalone Purchase:</span>
+              Standard selling price when customers buy this single item independently from ala carte section.
+            </div>
+
+            <div>
+              <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-2">
+                  <!-- With Discount Radio Button -->
+                  <input class="w-5 h-5 cursor-pointer" type="radio" id="withDiscount" name="priceType"
+                    [(ngModel)]="productObj.promo" [value]="true" (change)="applyDiscount()" />
+                  <label for="withDiscount"
+                    class="block text-sm font-medium text-gray-700 dark:text-textDark cursor-pointer">
+                    With Discount
+                  </label>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <!-- No Discount Radio Button -->
+                  <input class="w-5 h-5 cursor-pointer" type="radio" id="noDiscount" name="priceType"
+                    [(ngModel)]="productObj.promo" [value]="false" (change)="compaireDiscount()" />
+                  <label for="noDiscount"
+                    class="block text-sm font-medium text-gray-700 dark:text-textDark cursor-pointer">
+                    No Discount
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="border-t border-gray-300 dark:border-gray-600 mt-3 mb-6"></div>
+
+            <div class="mb-6" *ngIf="productObj.promo">
+              <label class="text-[#534E4E] dark:text-textDark">Display Type *</label>
+              <!-- <select id="displaytype" name="displaytype" (change)="changeType()" [(ngModel)]="productObj.displaytype"
           class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           #displayTypeField="ngModel" required>
           <option selected disabled value="">--Select Display Type--</option>
@@ -173,41 +177,42 @@
             With Actual Price,Sale Price and Discount
           </option>
         </select> -->
-        <p-dropdown id="displaytype" name="displaytype" [(ngModel)]="productObj.displaytype" (onChange)="changeType()"
-          [options]="displayTypeOptions" optionLabel="label" optionValue="value" placeholder="--Select Display Type--"
-          #displayTypeField="ngModel" required [showClear]="false"
-          [class]="'mt-2 w-full rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'"
-          [panelStyleClass]="'bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'">
-        </p-dropdown>
-        <div *ngIf="displayTypeField.invalid && displayTypeField.touched" class="text-red-500 text-sm mt-1">
-          Display Type is required.
-        </div>
-      </div>
+              <p-dropdown id="displaytype" name="displaytype" [(ngModel)]="productObj.displaytype"
+                (onChange)="changeType()" [options]="displayTypeOptions" optionLabel="label" optionValue="value"
+                placeholder="--Select Display Type--" #displayTypeField="ngModel" required [showClear]="false"
+                [class]="'mt-2 w-full rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'"
+                [panelStyleClass]="'bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'">
+              </p-dropdown>
+              <div *ngIf="formSubmitted && !productObj.displaytype" class="text-red-500 text-sm mt-1">
+                Display Type is required.
+              </div>
+            </div>
 
-      <div class="mb-6" *ngIf="
-    (productObj.displaytype === 'D&AP' ||
-      productObj.displaytype === 'AP&SP&D') &&
-    productObj.promo
-  ">
-        <label class="text-[#534E4E] dark:text-textDark">Discount Percentage *</label>
-        <input type="number" min="1" max="99" step="1" id="discountedPrice" name="discountedPrice"
-          (change)="calculeSalePrice()" (input)="validatePriceInput($event, 'discountedPrice')"
-          (keydown)="preventInvalidChars($event, 'discountedPrice')" [(ngModel)]="productObj.discountedPrice"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          #discountField="ngModel" required />
-        <div *ngIf="discountField.errors?.['required'] && discountField.touched" class="text-red-500 text-sm mt-1">
-          Discount Percentage is required.
-        </div>
-        <div *ngIf="discountField.touched && productObj.discountedPrice !== null && productObj.discountedPrice < 1"
-          class="text-red-500 text-sm mt-1">
-          Discount Percentage must be at least 1%.
-        </div>
-        <div *ngIf="productObj.discountedPrice > 99" class="text-red-500 text-sm mt-1">
-          Discount Percentage cannot exceed 99%.
-        </div>
-      </div>
+            <div class="mb-6" *ngIf="
+                (productObj.displaytype === 'D&AP' ||
+                productObj.displaytype === 'AP&SP&D') &&
+                productObj.promo
+              ">
+              <label class="text-[#534E4E] dark:text-textDark">Discount Percentage *</label>
+              <input type="number" min="1" max="99" step="1" id="discountedPrice" name="discountedPrice"
+                (change)="calculeSalePrice()" (input)="validatePriceInput($event, 'discountedPrice')"
+                (keydown)="preventInvalidChars($event, 'discountedPrice')" [(ngModel)]="productObj.discountedPrice"
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+                #discountField="ngModel" required />
+              <div *ngIf="formSubmitted && !productObj.discountedPrice" class="text-red-500 text-sm mt-1">
+                Discount Percentage is required.
+              </div>
+              <div
+                *ngIf="discountField.touched && productObj.discountedPrice !== null && productObj.discountedPrice < 1"
+                class="text-red-500 text-sm mt-1">
+                Discount Percentage must be at least 1%.
+              </div>
+              <div *ngIf="productObj.discountedPrice > 99" class="text-red-500 text-sm mt-1">
+                Discount Percentage cannot exceed 99%.
+              </div>
+            </div>
 
-      <!-- <div class="mb-6" *ngIf="productObj.displaytype === 'AP&SP' && productObj.promo">
+            <!-- <div class="mb-6" *ngIf="productObj.displaytype === 'AP&SP' && productObj.promo">
         <label class="text-[#534E4E]">Discount Value*</label>
         <input
           type="number"
@@ -219,115 +224,117 @@
         />
       </div> -->
 
-      <div class="mb-6">
-        <label class="text-[#534E4E] dark:text-textDark">{{
-          isNoDiscount === true ? "Price Per kg *" : "Actual Price Per kg *"
-          }}</label>
-        <input type="text" inputmode="decimal" id="normalPrice" name="normalPrice" [value]="priceDisplay['normalPrice']"
-          (input)="onPriceInput($event, 'normalPrice')" (focus)="onPriceFocus('normalPrice')"
-          (blur)="onPriceBlur('normalPrice')"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-        <div *ngIf="formSubmitted && !productObj.normalPrice" class="text-red-500 text-sm mt-1">
-          Price Per kg is required.
-        </div>
-        <div *ngIf="productObj.normalPrice < 0" class="text-red-500 text-sm mt-1">
-          Price cannot be negative.
-        </div>
-      </div>
+            <div class="mb-6">
+              <label class="text-[#534E4E] dark:text-textDark">{{
+                isNoDiscount === true ? "Price Per kg *" : "Actual Price Per kg *"
+                }}</label>
+              <input type="text" inputmode="decimal" id="normalPrice" name="normalPrice"
+                [value]="priceDisplay['normalPrice']" (input)="onPriceInput($event, 'normalPrice')"
+                (focus)="onPriceFocus('normalPrice')" (blur)="onPriceBlur('normalPrice')"
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+              <div *ngIf="formSubmitted && !productObj.normalPrice" class="text-red-500 text-sm mt-1">
+                Price Per kg is required.
+              </div>
+              <div *ngIf="productObj.normalPrice < 0" class="text-red-500 text-sm mt-1">
+                Price cannot be negative.
+              </div>
+            </div>
 
-      <div class="mb-6" *ngIf="productObj.promo && productObj.displaytype === 'AP&SP&D'">
-        <label class="text-[#534E4E] dark:text-textDark">Sale Price *</label>
-        <input type="text" id="salePrice" [value]="formatPrice(productObj.salePrice)" readonly
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-      </div>
+            <div class="mb-6" *ngIf="productObj.promo && productObj.displaytype === 'AP&SP&D'">
+              <label class="text-[#534E4E] dark:text-textDark">Sale Price *</label>
+              <input type="text" id="salePrice" [value]="formatPrice(productObj.salePrice)" readonly
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+            </div>
 
-      <div class="mb-6" *ngIf="productObj.promo && productObj.displaytype === 'AP&SP'">
-        <label class="text-[#534E4E] dark:text-textDark">Sale Price *</label>
-        <input type="text" inputmode="decimal" id="salePrice" name="salePrice" [value]="priceDisplay['salePrice']"
-          (input)="onPriceInput($event, 'salePrice')" (focus)="onPriceFocus('salePrice')"
-          (blur)="onPriceBlur('salePrice')"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-        <div *ngIf="formSubmitted && !productObj.salePrice" class="text-red-500 text-sm mt-1">
-          Sale Price is required.
-        </div>
-        <div *ngIf="productObj.salePrice < 0" class="text-red-500 text-sm mt-1">
-          Sale Price cannot be negative.
-        </div>
-      </div>
+            <div class="mb-6" *ngIf="productObj.promo && productObj.displaytype === 'AP&SP'">
+              <label class="text-[#534E4E] dark:text-textDark">Sale Price *</label>
+              <input type="text" inputmode="decimal" id="salePrice" name="salePrice" [value]="priceDisplay['salePrice']"
+                (input)="onPriceInput($event, 'salePrice')" (focus)="onPriceFocus('salePrice')"
+                (blur)="onPriceBlur('salePrice')"
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+              <div *ngIf="formSubmitted && !productObj.salePrice" class="text-red-500 text-sm mt-1">
+                Sale Price is required.
+              </div>
+              <div *ngIf="productObj.salePrice < 0" class="text-red-500 text-sm mt-1">
+                Sale Price cannot be negative.
+              </div>
+            </div>
 
-      <div class="mb-6">
-        <label class="text-[#534E4E] dark:text-textDark">Competitor Price per kg *</label>
-        <input type="text" inputmode="decimal" id="competitorPrice" name="competitorPrice"
-          [value]="priceDisplay['comPrice']" (input)="onPriceInput($event, 'comPrice')"
-          (focus)="onPriceFocus('comPrice')" (blur)="onPriceBlur('comPrice')"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-        <div *ngIf="formSubmitted && !productObj.comPrice" class="text-red-500 text-sm mt-1">
-          Competitor Price is required.
-        </div>
-        <div *ngIf="productObj.comPrice < 0" class="text-red-500 text-sm mt-1">
-          Competitor Price cannot be negative.
-        </div>
-      </div>
-      </div>
+            <div class="mb-6">
+              <label class="text-[#534E4E] dark:text-textDark">Competitor Price per kg *</label>
+              <input type="text" inputmode="decimal" id="competitorPrice" name="competitorPrice"
+                [value]="priceDisplay['comPrice']" (input)="onPriceInput($event, 'comPrice')"
+                (focus)="onPriceFocus('comPrice')" (blur)="onPriceBlur('comPrice')"
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+              <div *ngIf="formSubmitted && !productObj.comPrice" class="text-red-500 text-sm mt-1">
+                Competitor Price is required.
+              </div>
+              <div *ngIf="productObj.comPrice < 0" class="text-red-500 text-sm mt-1">
+                Competitor Price cannot be negative.
+              </div>
+            </div>
+          </div>
 
-      <!-- Package based pricing (Retail only) -->
-      <div *ngIf="isRetail && pricingTab === 'package'">
-        <div class="mb-6 p-4 rounded-lg border border-yellow-200 bg-yellow-50 text-yellow-900 dark:bg-yellow-900/30 dark:border-yellow-800 dark:text-yellow-200">
-          <span class="font-semibold">Package Based purchase:</span>
-          Selling price when sold as part of subscription packages.
-        </div>
+          <!-- Package based pricing (Retail only) -->
+          <div *ngIf="isRetail && pricingTab === 'package'">
+            <div
+              class="mb-6 p-4 rounded-lg border border-yellow-200 bg-yellow-50 text-yellow-900 dark:bg-yellow-900/30 dark:border-yellow-800 dark:text-yellow-200">
+              <span class="font-semibold">Package Based purchase:</span>
+              Selling price when sold as part of subscription packages.
+            </div>
 
-        <div class="mb-6">
-          <label class="text-[#534E4E] dark:text-textDark">Package Based Price per kg *</label>
-          <input type="text" inputmode="decimal" id="packagePrice" name="packagePrice"
-            [value]="priceDisplay['packagePrice']" (input)="onPriceInput($event, 'packagePrice')"
-            (focus)="onPriceFocus('packagePrice')" (blur)="onPriceBlur('packagePrice')"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <div *ngIf="formSubmitted && !productObj.packagePrice" class="text-red-500 text-sm mt-1">
-            Package Based Price is required.
+            <div class="mb-6">
+              <label class="text-[#534E4E] dark:text-textDark">Package Based Price per kg *</label>
+              <input type="text" inputmode="decimal" id="packagePrice" name="packagePrice"
+                [value]="priceDisplay['packagePrice']" (input)="onPriceInput($event, 'packagePrice')"
+                (focus)="onPriceFocus('packagePrice')" (blur)="onPriceBlur('packagePrice')"
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+              <div *ngIf="formSubmitted && !productObj.packagePrice" class="text-red-500 text-sm mt-1">
+                Package Based Price is required.
+              </div>
+            </div>
           </div>
         </div>
+
       </div>
-      </div>
 
-    </div>
+      <!-- Tags card -->
+      <div class="bg-[#FFFFFF] dark:bg-tileBlack p-5 shadow-md rounded-md">
+        <div class="mb-2">
+          <label class="text-[#534E4E] dark:text-textDark font-medium">
+            Tags *
+            <span *ngIf="templateKeywords().length > 0">({{ templateKeywords().length }})</span>
+          </label>
 
-    <!-- Tags card -->
-    <div class="bg-[#FFFFFF] dark:bg-tileBlack p-5 shadow-md rounded-md">
-      <div class="mb-6">
-        <label class="text-[#534E4E] dark:text-textDark">
-          Tags *
-          <span *ngIf="templateKeywords().length > 0">({{ templateKeywords().length }})</span>
-        </label>
+          <div
+            class="mt-2 flex flex-wrap items-center gap-2 min-h-[150px] content-start p-4 rounded-xl border bg-white dark:bg-tileBlack cursor-text focus-within:border-[#3980C0] focus-within:ring-1 focus-within:ring-[#3980C0] transition-colors"
+            [ngClass]="(tagsTouched || formSubmitted) && templateKeywords().length === 0
+        ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'" (click)="tagInput.focus()">
 
-        <div class="chip-input-wrapper">
-          <mat-form-field class="w-full" color="primary">
-            <mat-label class="">Tags</mat-label>
-            <mat-chip-grid #templateChipGrid class="">
-              @for (keyword of templateKeywords(); track keyword) {
-              <mat-chip-row (removed)="removeTemplateKeyword(keyword)" class="">
-                {{ keyword }}
-                <button matChipRemove [attr.aria-label]="'remove ' + keyword">
-                  <mat-icon class="">cancel</mat-icon>
-                </button>
-              </mat-chip-row>
-              }
-            </mat-chip-grid>
+            <!-- Chips -->
+            <span *ngFor="let keyword of templateKeywords()"
+              class="inline-flex items-center gap-2 bg-[#EEF2F7] dark:bg-[#272F45] text-black dark:text-textDark rounded-lg px-3 py-2 text-base">
+              {{ keyword }}
+              <button type="button" (click)="removeTemplateKeyword(keyword); $event.stopPropagation()"
+                class="text-gray-400 hover:text-gray-700 dark:hover:text-white leading-none"
+                [attr.aria-label]="'remove ' + keyword">
+                <i class="fa-solid fa-xmark text-sm"></i>
+              </button>
+            </span>
 
-            <input matInput placeholder="New keyword..." [matChipInputFor]="templateChipGrid"
-              (matChipInputTokenEnd)="addTemplateKeyword($event)" class="" />
-          </mat-form-field>
+            <!-- Input -->
+            <input #tagInput type="text" [(ngModel)]="tagDraft" name="tagDraft"
+              placeholder="Type and hit Enter to add tag..." (keydown.enter)="onTagEnter($event)"
+              (keydown.backspace)="onTagBackspace()" (blur)="tagsTouched = true"
+              class="flex-1 min-w-[200px] bg-transparent outline-none text-textLight dark:text-textDark placeholder:text-gray-400 py-2" />
+          </div>
+
+          <p class="text-red-600 text-sm mt-1"
+            *ngIf="(tagsTouched || formSubmitted) && templateKeywords().length === 0">
+            At least one keyword is required.
+          </p>
         </div>
-
-
-
-        <!-- Validation message -->
-        <!-- Replace your current tags validation message with this -->
-        <p class="text-red-600 text-sm mt-1" *ngIf="(tagsTouched || formSubmitted) && templateKeywords().length === 0">
-          At least one keyword is required.
-        </p>
       </div>
-    </div>
     </div>
 
     <!-- <p *ngIf="productObj.unitType === 'Kg' " class="text-[#4B5563] text-base font-[500] my-1">
@@ -464,7 +471,7 @@
             (ngModelChange)="onUnitTypeChange()"
             [styleClass]="'w-full border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'">
           </p-dropdown>
-          <div *ngIf="unitTypeField.invalid && unitTypeField.touched" class="text-red-500 text-sm mt-1">
+          <div *ngIf="formSubmitted && !productObj.unitType" class="text-red-500 text-sm mt-1">
             Default Unit Type is required.
           </div>
         </div>
@@ -483,7 +490,7 @@
             Please enter a value greater than 0.
           </div>
 
-          <div *ngIf="!productObj.startValue && minimumQuantityInput.touched" class="text-red-500 text-sm mt-1">
+          <div *ngIf="formSubmitted && !productObj.startValue" class="text-red-500 text-sm mt-1">
             Minimum quantity is required.
           </div>
           <!-- Add this new validation message -->
@@ -509,7 +516,7 @@
             Please enter a value greater than 0.
           </div>
 
-          <div *ngIf="maxQuantityField.touched && !productObj.maxQuantity" class="text-red-500 text-sm mt-1">
+          <div *ngIf="formSubmitted && !productObj.maxQuantity" class="text-red-500 text-sm mt-1">
             Maximum quantity is required.
           </div>
 
@@ -534,8 +541,8 @@
             Please enter a value greater than 0.
           </div>
 
-          <div *ngIf="changeByField.touched && !productObj.changeby" class="text-red-500 text-sm mt-1">
-            Increase/Decrease by is required
+          <div *ngIf="formSubmitted && !productObj.changeby" class="text-red-500 text-sm mt-1">
+            Increase/Decrease by is required.
           </div>
         </div>
       </div>

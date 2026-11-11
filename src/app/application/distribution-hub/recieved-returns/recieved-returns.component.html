@@ -10,46 +10,55 @@
 
   <div class="pt-5 pr-12 pl-12 pb-4 min-w-full bg-white dark:bg-tileBlack shadow-lg rounded-lg">
 
-    <!-- Header -->
-    <div class="flex justify-between items-center mb-6">
-      <h2 class="text-2xl font-normal text-[#2B2B2B] dark:text-textDark">
-        Received Returns ({{ totalItems < 10 ? ('0'+totalItems) : totalItems}}) </h2>
+    <!-- Header + Filters -->
+    <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+      <h2 class="text-2xl font-normal text-[#2B2B2B] dark:text-textDark whitespace-nowrap shrink-0">
+        Received Returns ({{ totalItems < 10 ? ('0'+totalItems) : totalItems }}) </h2>
 
-          <!-- Filters -->
-          <div class="flex items-center gap-3">
-            <img src="assets/icons/filter_icon.png" alt="Filter" class="w-6 h-6 dark:invert dark:brightness-200" />
-            <span class="text-gray-500 dark:text-gray-400">Filter By</span>
+          <div class="flex flex-wrap items-center gap-3">
+            <!-- Filter label -->
+            <div class="flex items-center gap-3 shrink-0">
+              <img src="assets/icons/filter_icon.png" alt="Filter" class="w-6 h-6 dark:invert dark:brightness-200" />
+              <span class="text-gray-500 dark:text-gray-400 whitespace-nowrap">Filter By</span>
+            </div>
 
-            <p-dropdown
-              styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-              [options]="centreOptions" optionLabel="label" optionValue="value" [showClear]="!!centerId"
-              placeholder="Centre" [(ngModel)]="centerId" (onChange)="applyFilters()">
-            </p-dropdown>
+            <!-- Centre (fixed width so it doesn't grow after selecting) -->
+            <div class="w-52 shrink-0">
+              <p-dropdown
+                styleClass="w-full border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF]"
+                [options]="centreOptions" optionLabel="label" optionValue="value" [showClear]="!!centerId"
+                placeholder="Centre" [(ngModel)]="centerId" (onChange)="applyFilters()">
+              </p-dropdown>
+            </div>
 
-            <p-calendar [(ngModel)]="receivedDateModel" placeholder="Received Date" dateFormat="yy-mm-dd"
-              (onSelect)="onDateSelected($event)" (onClear)="clearDateFilter()" (ngModelChange)="onDateChange($event)"
-              [showClear]="true" [showIcon]="false" styleClass="calendar-compact dark-calendar"
-              [style]="{ width: '145px' }"
-              [inputStyle]="{ width: '145px', padding: '0.5rem 2.5rem 0.5rem 0.75rem', fontSize: '0.875rem' }"
-              inputStyleClass="text-[16px] h-10 rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-2 border-[#E5E5E5] dark:border-[#AFAFAF] placeholder:text-[#9CA3AF] dark:placeholder:text-[#9CA3AF] focus:outline-none focus:border-blue-500 dark:focus:border-blue-400"
-              panelStyleClass="dark:bg-gray-800 dark:border dark:border-gray-700 dark:text-white">
-            </p-calendar>
+            <!-- Received date -->
+            <div class="shrink-0">
+              <p-calendar [(ngModel)]="receivedDateModel" placeholder="Received Date" dateFormat="yy-mm-dd"
+                (onSelect)="onDateSelected($event)" (onClear)="clearDateFilter()" (ngModelChange)="onDateChange($event)"
+                [showClear]="true" [showIcon]="false" styleClass="calendar-compact dark-calendar"
+                [style]="{ width: '145px' }"
+                [inputStyle]="{ width: '145px', padding: '0.5rem 2.5rem 0.5rem 0.75rem', fontSize: '0.875rem' }"
+                inputStyleClass="text-[16px] h-10 rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-2 border-[#E5E5E5] dark:border-[#AFAFAF] placeholder:text-[#9CA3AF] dark:placeholder:text-[#9CA3AF] focus:outline-none focus:border-blue-500 dark:focus:border-blue-400"
+                panelStyleClass="dark:bg-gray-800 dark:border dark:border-gray-700 dark:text-white">
+              </p-calendar>
+            </div>
 
             <!-- Search -->
-            <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96">
+            <div
+              class="flex items-center h-10 w-96 max-w-full shrink-0 rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4">
               <input type="text" placeholder="Search by Order ID, Contact, Centre Name"
                 title="Search by Order ID, Contact Number, Centre Name"
-                class="bg-transparent outline-none w-full text-textLight dark:text-textDark placeholder:text-[#9CA3AF] dark:placeholder:text-[#9CA3AF]"
+                class="bg-transparent outline-none w-full min-w-0 text-textLight dark:text-textDark placeholder:text-[#9CA3AF] dark:placeholder:text-[#9CA3AF]"
                 [(ngModel)]="searchText" (keydown.enter)="searchOrders()" />
 
               <!-- Search button with tooltip -->
-              <button class="text-gray-500 dark:text-gray-400 mr-2" (click)="searchOrders()"
+              <button class="shrink-0 text-gray-500 dark:text-gray-400 mr-2" (click)="searchOrders()"
                 [title]="'Search by Order ID, Contact Number, Centre Code, Centre Name'">
                 <i class="fa-solid fa-magnifying-glass"></i>
               </button>
 
               <!-- Clear button with tooltip -->
-              <button *ngIf="searchText" class="text-gray-500 dark:text-gray-400" (click)="clearSearch()"
+              <button *ngIf="searchText" class="shrink-0 text-gray-500 dark:text-gray-400" (click)="clearSearch()"
                 title="Clear search">
                 <i class="fa-solid fa-xmark"></i>
               </button>

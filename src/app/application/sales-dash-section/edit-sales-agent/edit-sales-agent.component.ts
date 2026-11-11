@@ -9,6 +9,7 @@ import { CollectionOfficerService } from '../../../services/collection-officer/c
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { SalesAgentsService } from '../../../services/dash/sales-agents.service';
 import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
+import { forkJoin } from 'rxjs';
 
 interface Bank {
   ID: number;
@@ -119,12 +120,9 @@ export class EditSalesAgentComponent implements OnInit {
   ];
 
   constructor(
-    private fb: FormBuilder,
     private http: HttpClient,
     private route: ActivatedRoute,
     private router: Router,
-    private collectionCenterSrv: CollectionCenterService,
-    private collectionOfficerService: CollectionOfficerService,
     private salesAgentService: SalesAgentsService,
   ) { }
 
@@ -133,10 +131,66 @@ export class EditSalesAgentComponent implements OnInit {
     const segments = fullUrl.split('/').filter(Boolean);
     this.firstUrlSegment = segments[0] || '';
 
-    this.loadBanks();
-    this.loadBranches();
     this.itemId = this.route.snapshot.params['id'];
-    this.fetchData();
+    this.loadAllData();
+  }
+
+  loadAllData() {
+    this.isLoading = true;
+
+    forkJoin({
+      banks: this.http.get<Bank[]>('assets/json/banks.json'),
+      branches: this.http.get<BranchesData>('assets/json/branches.json'),
+      agent: this.salesAgentService.getSalesAgentReportById(this.itemId),
+    }).subscribe({
+      next: ({ banks, branches, agent }: any) => {
+        // Banks
+        this.banks = banks.sort((a: Bank, b: Bank) => a.name.localeCompare(b.name));
+
+        // Branches
+        Object.keys(branches).forEach((bankID) => {
+          branches[bankID].sort((a: Branch, b: Branch) => a.name.localeCompare(b.name));
+        });
+        this.allBranches = branches;
+
+        // Agent data
+        this.populatePersonalData(agent.officerData[0]);
+
+        // Now everything is ready
+        this.matchExistingBankToDropdown();
+        this.isLoading = false;
+      },
+      error: () => {
+        this.isLoading = false;
+      },
+    });
+  }
+
+  private populatePersonalData(officerData: any) {
+    this.personalData.empId = officerData.empId;
+    this.personalData.firstName = officerData.firstName || '';
+    this.personalData.lastName = officerData.lastName || '';
+    this.personalData.phoneCode1 = officerData.phoneCode1 || '+94';
+    this.personalData.phoneNumber1 = officerData.phoneNumber1 || '';
+    this.personalData.phoneCode2 = officerData.phoneCode2 || '+94';
+    this.personalData.phoneNumber2 = officerData.phoneNumber2 || '';
+    this.personalData.nic = officerData.nic || '';
+    this.personalData.email = officerData.email || '';
+    this.personalData.houseNumber = officerData.houseNumber || '';
+    this.personalData.streetName = officerData.streetName || '';
+    this.personalData.city = officerData.city || '';
+    this.personalData.district = officerData.district || '';
+    this.personalData.province = officerData.province || '';
+    this.personalData.bankName = officerData.bankName || '';
+    this.personalData.branchName = officerData.branchName || '';
+    this.personalData.accHolderName = officerData.accHolderName || '';
+    this.personalData.accNumber = officerData.accNumber || '';
+    this.personalData.empType = officerData.empType || '';
+    this.personalData.image = officerData.image || '';
+
+    this.empType = this.personalData.empType;
+    this.lastID = this.personalData.empId.slice(-5);
+    this.confirmAccNumber = this.personalData.accNumber;
   }
 
   fetchData() {

@@ -61,19 +61,36 @@
                     class="block text-base font-semibold text-gray-700 dark:text-textDark mb-2">Phone
                     Number</label>
                 <div class="flex gap-3">
-                    <div class="w-[100px] shrink-0">
-                        <p-dropdown formControlName="phoneCode" [options]="countryCodeOptions" optionLabel="label"
-                            optionValue="value" [showClear]="false" styleClass="w-full"
-                            panelStyleClass="custom-dropdown-panel" class="p-dropdown-custom compact-dropdown">
+                    <div class="w-[120px] shrink-0">
+                        <p-dropdown formControlName="phoneCode" [options]="countries" optionLabel="dialCode"
+                            optionValue="dialCode"
+                            styleClass="w-full border border-gray-300 rounded-l-md bg-white dark:bg-tileBlack text-gray-800 dark:text-textDark custom-dropdown country-code-dropdown"
+                            panelStyleClass="custom-dropdown-panel" class="p-dropdown-custom" [showClear]="false">
+                            <ng-template let-country pTemplate="item">
+                                <div class="flex items-center gap-2">
+                                    <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                                    <span>{{ country.dialCode }}</span>
+                                </div>
+                            </ng-template>
+                            <ng-template let-country pTemplate="selectedItem">
+                                <div class="flex items-center gap-2" *ngIf="country">
+                                    <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                                    <span>{{ country.dialCode }}</span>
+                                </div>
+                            </ng-template>
                         </p-dropdown>
                     </div>
-                    <input id="phoneNumber" formControlName="phoneNumber" maxlength="9" inputmode="numeric"
-                        (keypress)="onDigitsOnlyKeyPress($event)" (input)="onDigitsOnlyInput($event, 'phoneNumber', 9)"
+                    <input id="phoneNumber" formControlName="phoneNumber" [attr.maxlength]="phoneMaxLength('phoneCode')"
+                        inputmode="numeric" (keypress)="onDigitsOnlyKeyPress($event)"
+                        (input)="onDigitsOnlyInput($event, 'phoneNumber', phoneMaxLength('phoneCode'))"
                         class="block flex-1 min-w-0 p-2.5 border border-gray-300 rounded-lg bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
                 </div>
                 <div *ngIf="isInvalid('phoneNumber')" class="text-red-500 text-sm mt-1">
                     <div *ngIf="hasError('phoneNumber', 'required')">Phone number is required.</div>
-                    <div *ngIf="hasError('phoneNumber', 'pattern')">Enter a valid mobile number (7XXXXXXXX).</div>
+                    <div *ngIf="hasError('phoneNumber', 'pattern')">
+                        {{ form.get('phoneCode')?.value === '+94' ? 'Enter a valid mobile number (7XXXXXXXX).' : 'Phone
+                        number can only contain digits.' }}
+                    </div>
                 </div>
             </div>
 
@@ -112,8 +129,7 @@
                         <ng-container *ngIf="isNic; else passportMsg">
                             Enter a valid NIC number (12 digits, or 9 digits followed by 'V').
                         </ng-container>
-                        <ng-template #passportMsg>Enter a valid passport ID (1 letter followed by 7
-                            digits).</ng-template>
+                        <ng-template #passportMsg>Passport ID can only contain letters and digits.</ng-template>
                     </div>
                 </div>
             </div>
@@ -127,7 +143,7 @@
                 <label for="companyName"
                     class="block text-base font-semibold text-gray-700 dark:text-textDark mb-2">Company
                     Name</label>
-                <input id="companyName" formControlName="companyName"
+                <input id="companyName" formControlName="companyName" (input)="onCapitalizeInput($event, 'companyName')"
                     class="block w-full p-2.5 border border-gray-300 rounded-lg bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
                 <div *ngIf="isInvalid('companyName')" class="text-red-500 text-sm mt-1">Company name is required.</div>
             </div>
@@ -136,20 +152,37 @@
                 <label for="companyPhoneNumber"
                     class="block text-base font-semibold text-gray-700 dark:text-textDark mb-2">Phone Number</label>
                 <div class="flex gap-3">
-                    <div class="w-[100px] shrink-0">
-                        <p-dropdown formControlName="companyPhoneCode" [options]="countryCodeOptions"
-                            optionLabel="label" optionValue="value" [showClear]="false" styleClass="w-full"
-                            panelStyleClass="custom-dropdown-panel" class="p-dropdown-custom compact-dropdown">
+                    <div class="w-[120px] shrink-0">
+                        <p-dropdown formControlName="companyPhoneCode" [options]="countries" optionLabel="dialCode"
+                            optionValue="dialCode"
+                            styleClass="w-full border border-gray-300 rounded-l-md bg-white dark:bg-tileBlack text-gray-800 dark:text-textDark custom-dropdown country-code-dropdown"
+                            panelStyleClass="custom-dropdown-panel" class="p-dropdown-custom" [showClear]="false">
+                            <ng-template let-country pTemplate="item">
+                                <div class="flex items-center gap-2">
+                                    <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                                    <span>{{ country.dialCode }}</span>
+                                </div>
+                            </ng-template>
+                            <ng-template let-country pTemplate="selectedItem">
+                                <div class="flex items-center gap-2" *ngIf="country">
+                                    <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                                    <span>{{ country.dialCode }}</span>
+                                </div>
+                            </ng-template>
                         </p-dropdown>
                     </div>
-                    <input id="companyPhoneNumber" formControlName="companyPhoneNumber" maxlength="9"
-                        inputmode="numeric" (keypress)="onDigitsOnlyKeyPress($event)"
-                        (input)="onDigitsOnlyInput($event, 'companyPhoneNumber', 9)"
+                    <input id="companyPhoneNumber" formControlName="companyPhoneNumber"
+                        [attr.maxlength]="phoneMaxLength('companyPhoneCode')" inputmode="numeric"
+                        (keypress)="onDigitsOnlyKeyPress($event)"
+                        (input)="onDigitsOnlyInput($event, 'companyPhoneNumber', phoneMaxLength('companyPhoneCode'))"
                         class="block flex-1 min-w-0 p-2.5 border border-gray-300 rounded-lg bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
                 </div>
                 <div *ngIf="isInvalid('companyPhoneNumber')" class="text-red-500 text-sm mt-1">
                     <div *ngIf="hasError('companyPhoneNumber', 'required')">Phone number is required.</div>
-                    <div *ngIf="hasError('companyPhoneNumber', 'pattern')">Enter a valid phone number (9 digits).</div>
+                    <div *ngIf="hasError('companyPhoneNumber', 'pattern')">
+                        {{ form.get('companyPhoneCode')?.value === '+94' ? 'Enter a valid company phone number (9
+                        digits).' : 'Company phone number can only contain digits.' }}
+                    </div>
                 </div>
             </div>
         </div>

@@ -25,7 +25,6 @@ import Swal from 'sweetalert2';
   templateUrl: './view-polygon-centers.component.html',
   styleUrl: './view-polygon-centers.component.css',
 })
-
 export class ViewPolygonCentersComponent implements OnInit {
   companyId!: number;
   distributionCentreObj!: DistributionCentre[];
@@ -118,8 +117,8 @@ export class ViewPolygonCentersComponent implements OnInit {
     private DestributionSrv: DestributionService,
     public tokenService: TokenService,
     public permissionService: PermissionService,
-    private location: Location
-  ) { }
+    private location: Location,
+  ) {}
 
   ngOnInit(): void {
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
@@ -130,43 +129,61 @@ export class ViewPolygonCentersComponent implements OnInit {
       value: p.province,
     })).sort((a, b) => a.label.localeCompare(b.label));
 
-    // District dropdown (all districts initially, sorted alphabetically)
-    this.districtOptions = this.ProvinceData.flatMap((p) => p.district)
+    this.districtOptions = this.getAllDistrictOptions();
+
+    this.urlSegment = this.router.url
+      .split('/')
+      .filter((segment) => segment.length > 0)[0];
+  }
+
+  // ---------- Helpers ----------
+
+  private getAllDistrictOptions(): any[] {
+    return this.ProvinceData.flatMap((p) => p.district)
       .map((d) => ({
         label: d.districtName,
         value: d.districtName,
       }))
       .sort((a, b) => a.label.localeCompare(b.label));
-
-    this.urlSegment = this.router.url.split('/').filter(segment => segment.length > 0)[0];
   }
 
-  // back(): void {
-  //   this.router.navigate(['/distribution-hub/action/view-destribition-center'], {
-  //     queryParams: {
-  //       id: 2,
-  //       companyName: 'agroworld Distribution (Pvt) Ltd'
-  //     }
-  //   });
-  // }
+  private getDistrictOptionsForProvince(province: string): any[] {
+    const selected = this.ProvinceData.find((p) => p.province === province);
+    return (
+      selected?.district
+        .map((d) => ({
+          label: d.districtName,
+          value: d.districtName,
+        }))
+        .sort((a, b) => a.label.localeCompare(b.label)) || []
+    );
+  }
+
+  /**
+   * Any time a filter or the search changes, the result set changes,
+   * so we must always go back to page 1 before fetching.
+   */
+  private resetPageAndFetch(): void {
+    this.page = 1;
+    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+  }
+
+  // ---------- Data fetching ----------
+
   fetchCompanies(): void {
-    this.isLoading = true;
     this.DestributionSrv.getCompanies().subscribe({
       next: (response) => {
-
         if (response.success && response.data) {
           this.companyOptions = response.data
             .map((company) => ({
-              label: company.companyNameEnglish, // Use companyNameEnglish directly
-              value: company.companyNameEnglish, // Use name as value since ID isn't returned
+              label: company.companyNameEnglish,
+              value: company.companyNameEnglish,
             }))
             .sort((a, b) => a.label.localeCompare(b.label));
         }
-        this.isLoading = false;
       },
       error: (error) => {
         console.error('Error fetching companies:', error);
-        this.isLoading = false;
         Swal.fire({
           icon: 'error',
           title: 'Error',
@@ -176,16 +193,6 @@ export class ViewPolygonCentersComponent implements OnInit {
     });
   }
 
-  applyCompanyFilter(): void {
-    this.page = 1;
-    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
-  }
-
-  clearCompanyFilter(): void {
-    this.selectCompany = '';
-    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
-  }
-
   fetchAllCollectionCenter(
     page: number = this.page,
     limit: number = this.itemsPerPage,
@@ -193,7 +200,7 @@ export class ViewPolygonCentersComponent implements OnInit {
     province: string = this.selectProvince,
     company: string = this.selectCompany,
     searchItem: string = this.searchItem,
-    centerType: string = 'polygon' // Default to 'polygon' type
+    centerType: string = 'polygon', // Default to 'polygon' type
   ) {
     this.isLoading = true;
     this.DestributionSrv.getAllDistributionCentre(
@@ -203,7 +210,7 @@ export class ViewPolygonCentersComponent implements OnInit {
       province,
       company,
       searchItem,
-      centerType
+      centerType,
     ).subscribe(
       (response) => {
         this.isLoading = false;
@@ -212,96 +219,102 @@ export class ViewPolygonCentersComponent implements OnInit {
         this.totalItems = response.total;
       },
       (error) => {
+        this.isLoading = false;
         if (error.status === 401) {
           // Unauthorized access handling (left empty intentionally)
         }
-      }
+      },
     );
   }
 
+  // ---------- Pagination ----------
+
   onPageChange(event: number) {
     this.page = event;
-    this.fetchAllCollectionCenter();
+    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
   }
 
+  // ---------- Search ----------
+
   searchPlantCareUsers() {
-    this.page = 1;
-    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+    this.searchItem = (this.searchItem || '').trim();
+    this.resetPageAndFetch();
   }
 
   clearSearch(): void {
     this.searchItem = '';
-    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+    this.resetPageAndFetch();
+  }
+
+  // ---------- Filters ----------
+
+  applyCompanyFilter(): void {
+    if (!this.selectCompany) {
+      this.selectCompany = '';
+    }
+    this.resetPageAndFetch();
+  }
+
+  clearCompanyFilter(): void {
+    this.selectCompany = '';
+    this.resetPageAndFetch();
   }
 
   applyProvinceFilters() {
     if (this.selectProvince) {
-      const selected = this.ProvinceData.find(
-        (p) => p.province === this.selectProvince
+      this.districtOptions = this.getDistrictOptionsForProvince(
+        this.selectProvince,
       );
-
-      // Filter and sort districts for selected province
-      this.districtOptions =
-        selected?.district
-          .map((d) => ({
-            label: d.districtName,
-            value: d.districtName,
-          }))
-          .sort((a, b) => a.label.localeCompare(b.label)) || [];
-
-      // Reset district selection
+      // District may not belong to the newly selected province
       this.selectDistrict = '';
     } else {
-      // Province cleared → show all districts, sorted
-      this.districtOptions = this.ProvinceData.flatMap((p) => p.district)
-        .map((d) => ({
-          label: d.districtName,
-          value: d.districtName,
-        }))
-        .sort((a, b) => a.label.localeCompare(b.label));
+      // Province cleared (null / '')
+      this.selectProvince = '';
+      this.selectDistrict = '';
+      this.districtOptions = this.getAllDistrictOptions();
     }
 
-
-    this.fetchAllCollectionCenter();
+    this.resetPageAndFetch();
   }
 
   applyDistrictFilters() {
     if (this.selectDistrict) {
       const matchingProvince = this.ProvinceData.find((p) =>
-        p.district.some((d) => d.districtName === this.selectDistrict)
+        p.district.some((d) => d.districtName === this.selectDistrict),
       );
 
       if (matchingProvince) {
         this.selectProvince = matchingProvince.province;
-
-        // Filter district list for this province
-        this.districtOptions = matchingProvince.district.map((d) => ({
-          label: d.districtName,
-          value: d.districtName,
-        }));
+        this.districtOptions = this.getDistrictOptionsForProvince(
+          matchingProvince.province,
+        );
       }
+    } else {
+      // District cleared (null / '')
+      this.selectDistrict = '';
+
+      // If a province is still selected keep its districts, otherwise show all
+      this.districtOptions = this.selectProvince
+        ? this.getDistrictOptionsForProvince(this.selectProvince)
+        : this.getAllDistrictOptions();
     }
 
-    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+    this.resetPageAndFetch();
   }
 
   clearDistrictFilter() {
     this.selectDistrict = '';
-    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+    this.resetPageAndFetch();
   }
 
   clearProvinceFilter() {
     this.selectProvince = '';
     this.selectDistrict = '';
-    this.districtOptions = this.ProvinceData.flatMap((p) => p.district).map(
-      (d) => ({
-        label: d.districtName,
-        value: d.districtName,
-      })
-    );
-    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+    this.districtOptions = this.getAllDistrictOptions();
+    this.resetPageAndFetch();
   }
 
+  // ---------- Actions ----------
 
   add(): void {
     this.router.navigate(['/distribution-hub/action/add-destribition-center']);
@@ -324,7 +337,7 @@ export class ViewPolygonCentersComponent implements OnInit {
         title: 'font-semibold',
       },
       confirmButtonColor: '#2563eb', // Blue confirm
-      cancelButtonColor: '#dc2626',  // Red cancel
+      cancelButtonColor: '#dc2626', // Red cancel
     }).then((result) => {
       if (result.isConfirmed) {
         this.DestributionSrv.deleteDistributedCenter(id).subscribe(
@@ -335,19 +348,26 @@ export class ViewPolygonCentersComponent implements OnInit {
                 text: 'The centre has been deleted.',
                 icon: 'success',
                 customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  popup:
+                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                   title: 'font-semibold',
                 },
                 confirmButtonColor: '#2563eb',
               });
-              this.fetchAllCollectionCenter();
+
+              // If the deleted item was the last one on this page, go back one page
+              if (this.distributionCentreObj.length === 1 && this.page > 1) {
+                this.page = this.page - 1;
+              }
+              this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
             } else {
               Swal.fire({
                 title: 'Error!',
                 text: 'Failed to delete the center.',
                 icon: 'error',
                 customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  popup:
+                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                   title: 'font-semibold',
                 },
                 confirmButtonColor: '#2563eb',
@@ -361,12 +381,13 @@ export class ViewPolygonCentersComponent implements OnInit {
               text: 'Failed to delete the center.',
               icon: 'error',
               customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                 title: 'font-semibold',
               },
               confirmButtonColor: '#2563eb',
             });
-          }
+          },
         );
       }
     });
@@ -390,12 +411,18 @@ export class ViewPolygonCentersComponent implements OnInit {
     ]);
   }
 
-  viewDistributionCenterDashboard(id: number, name: string, regCode: string): void {
+  viewDistributionCenterDashboard(
+    id: number,
+    name: string,
+    regCode: string,
+  ): void {
     this.router.navigate(
-      [`/distribution-hub/action/view-polygon-centers/distribution-center-dashboard/${id}`],
+      [
+        `/distribution-hub/action/view-polygon-centers/distribution-center-dashboard/${id}`,
+      ],
       {
-        queryParams: { name, regCode }
-      }
+        queryParams: { name, regCode },
+      },
     );
   }
 

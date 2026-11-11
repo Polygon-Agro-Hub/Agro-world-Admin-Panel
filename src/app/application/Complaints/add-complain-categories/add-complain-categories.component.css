@@ -146,17 +146,35 @@
     color: white;
 }
 
-/* In your component's CSS file or global styles */
+/* Host element: make it a block so it fills the card width with no extra gap */
+:host ::ng-deep p-dropdown {
+  display: block;
+  width: 100%;
+}
+
+/* The dropdown box: same height as the other inputs, content centred vertically */
 :host ::ng-deep .p-dropdown {
-  height: 45px !important; /* Adjust this value as needed */
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 42px;              /* matches the native select / p-2 inputs */
+  box-sizing: border-box;
 }
 
+/* Label (placeholder and selected value): centre the text vertically */
 :host ::ng-deep .p-dropdown .p-dropdown-label {
-  padding-top: 0.5rem !important;
-  padding-bottom: 0.5rem !important;
-  min-height: 36px !important;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 0.5rem;         /* horizontal padding only, so no top/bottom offset */
+  line-height: 1;
 }
 
+/* Arrow button: fill the full height and centre the icon */
 :host ::ng-deep .p-dropdown .p-dropdown-trigger {
-  width: 2.5rem !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 2.5rem;
 }

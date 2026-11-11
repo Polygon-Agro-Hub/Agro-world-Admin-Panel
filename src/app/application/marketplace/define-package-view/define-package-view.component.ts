@@ -23,6 +23,7 @@ interface ProductTypes {
   productId: number | null;
   selectedProductPrice?: number;
   quantity?: number;
+  quantityText?: string;
   calculatedPrice?: number;
   selectedProductIsValid?: number;
   selectedProductIsEnable?: number;
@@ -32,7 +33,8 @@ interface MarketplaceItem {
   id: number;
   displayName: string;
   normalPrice: number;
-  discountedPrice: number;
+  // discountedPrice: number;
+  pkgBasePrice: number;
   productTypeId: number;
   isValid: number;
   isEnable: number;
@@ -61,7 +63,7 @@ export class DefinePackageViewComponent implements OnInit {
     private marketplaceService: MarketPlaceService,
     private router: Router,
     private route: ActivatedRoute,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.queryParamMap.subscribe((params) => {
@@ -132,53 +134,53 @@ export class DefinePackageViewComponent implements OnInit {
   }
 
   fetchOrderDetails(id: string) {
-  this.loading = true;
-  this.error = '';
+    this.loading = true;
+    this.error = '';
 
-  this.marketplaceService.getOrderDetailsById(id).subscribe({
-    next: (response) => {
-      if (!response?.success || !response.data?.packages) {
-        throw new Error('Invalid response structure from API');
-      }
+    this.marketplaceService.getOrderDetailsById(id).subscribe({
+      next: (response) => {
+        if (!response?.success || !response.data?.packages) {
+          throw new Error('Invalid response structure from API');
+        }
 
-      this.orderDetails = response.data.packages.map((pkg: any) => ({
-        packageId: pkg.packageId,
-        displayName: pkg.displayName,
-        productPrice: pkg.productPrice ? parseFloat(pkg.productPrice) : null,
-        productTypes: pkg.productTypes
-          .map((pt: any) => ({
-            id: pt.id,
-            typeName: pt.typeName,
-            shortCode: pt.shortCode,
-            qty: pt.qty,
-            productId: null,
-            selectedProductPrice: undefined,
-            quantity: undefined,
-            calculatedPrice: undefined,
-            selectedProductIsValid: undefined,
-            selectedProductIsEnable: undefined,
-          }))
-          .sort((a: ProductTypes, b: ProductTypes) =>
-            (a.shortCode || '').localeCompare(b.shortCode || ''),
-          ),
-      }));
+        this.orderDetails = response.data.packages.map((pkg: any) => ({
+          packageId: pkg.packageId,
+          displayName: pkg.displayName,
+          productPrice: pkg.productPrice ? parseFloat(pkg.productPrice) : null,
+          productTypes: pkg.productTypes
+            .map((pt: any) => ({
+              id: pt.id,
+              typeName: pt.typeName,
+              shortCode: pt.shortCode,
+              qty: pt.qty,
+              productId: null,
+              selectedProductPrice: undefined,
+              quantity: undefined,
+              calculatedPrice: undefined,
+              selectedProductIsValid: undefined,
+              selectedProductIsEnable: undefined,
+            }))
+            .sort((a: ProductTypes, b: ProductTypes) =>
+              (a.shortCode || '').localeCompare(b.shortCode || ''),
+            ),
+        }));
 
-      this.packagePrice = response.data.packages[0].productPrice || 0;
+        this.packagePrice = response.data.packages[0].productPrice || 0;
 
-      this.applyInitialProductTypeStatus();
+        this.applyInitialProductTypeStatus();
 
-      this.calculateTotalPrice();
-      this.loading = false;
-    },
+        this.calculateTotalPrice();
+        this.loading = false;
+      },
 
-    error: (err) => {
-      console.error('Error fetching order details:', err);
-      this.error =
-        err.error?.message || err.message || 'Failed to load order details';
-      this.loading = false;
-    },
-  });
-}
+      error: (err) => {
+        console.error('Error fetching order details:', err);
+        this.error =
+          err.error?.message || err.message || 'Failed to load order details';
+        this.loading = false;
+      },
+    });
+  }
 
   private applyInitialProductTypeStatus(): void {
     this.orderDetails.forEach((pkg) => {
@@ -189,7 +191,7 @@ export class DefinePackageViewComponent implements OnInit {
           const hasValidOption = optionsForType.some(
             (item) => item.isValid !== 0,
           );
-  
+
           const hasEnabledOption = optionsForType.some(
             (item) => item.isEnable !== 0,
           );
@@ -201,7 +203,7 @@ export class DefinePackageViewComponent implements OnInit {
           if (!hasEnabledOption) {
             pt.selectedProductIsEnable = 0;
           }
-        } 
+        }
       });
     });
   }
@@ -213,10 +215,11 @@ export class DefinePackageViewComponent implements OnInit {
           id: item.id,
           displayName: item.displayName,
           normalPrice: item.normalPrice,
-          discountedPrice: item.discountedPrice,
+          // discountedPrice: item.discountedPrice,
           productTypeId: item.productTypeId,
           isValid: item.isValid,
           isEnable: item.isEnable,
+          pkgBasePrice: item.pkgBasePrice,
         }));
         if (callback) callback();
       },
@@ -238,12 +241,12 @@ export class DefinePackageViewComponent implements OnInit {
 
     if (selectedProduct) {
       productType.productId = selectedProduct.id;
-      productType.selectedProductPrice = selectedProduct.discountedPrice;
+      productType.selectedProductPrice = selectedProduct.pkgBasePrice;
       productType.selectedProductIsValid = selectedProduct.isValid;
       productType.selectedProductIsEnable = selectedProduct.isEnable;
       productType.calculatedPrice = productType.quantity
-        ? productType.quantity * selectedProduct.discountedPrice
-        : selectedProduct.discountedPrice;
+        ? productType.quantity * selectedProduct.pkgBasePrice
+        : selectedProduct.pkgBasePrice;
     } else {
       productType.productId = null;
       productType.selectedProductPrice = undefined;
@@ -268,53 +271,40 @@ export class DefinePackageViewComponent implements OnInit {
   }
 
   onQuantityChanged(productType: ProductTypes, event: Event) {
-    const inputElement = event.target as HTMLInputElement;
-    let value = inputElement.value;
+    const input = event.target as HTMLInputElement;
+    const rawValue = input.value;
+    const caret = input.selectionStart ?? rawValue.length;
 
-    // Remove any extra decimal points
-    if ((value.match(/\./g) || []).length > 1) {
-      value = value.substring(0, value.lastIndexOf('.'));
-      inputElement.value = value;
+    let cleaned = rawValue.replace(/[^\d.]/g, '');
+    const firstDot = cleaned.indexOf('.');
+    if (firstDot !== -1) {
+      const intPart = cleaned.substring(0, firstDot);
+      const decPart = cleaned
+        .substring(firstDot + 1)
+        .replace(/\./g, '')
+        .substring(0, 3);
+      cleaned = intPart + '.' + decPart;
     }
 
-    // Enforce max 3 decimal places
-    if (value.includes('.')) {
-      const parts = value.split('.');
-      if (parts[1].length > 3) {
-        value = parts[0] + '.' + parts[1].substring(0, 3);
-        inputElement.value = value;
-      }
+    if (cleaned !== rawValue) {
+      const removed = rawValue.length - cleaned.length;
+      input.value = cleaned;
+      const newCaret = Math.max(0, caret - removed);
+      input.setSelectionRange(newCaret, newCaret);
     }
 
-    const quantity = parseFloat(value);
+    productType.quantityText = cleaned;
 
+    const quantity = parseFloat(cleaned);
     if (isNaN(quantity)) {
       productType.quantity = undefined;
       productType.calculatedPrice = undefined;
-      inputElement.value = '';
-      this.calculateTotalPrice();
-      return;
     } else {
-      // if (quantity < 0) {
-      //   productType.quantity = undefined;
-      //   productType.calculatedPrice = undefined;
-      //   inputElement.value = '';
-      //   Swal.fire({
-      //     icon: 'warning',
-      //     title: 'Warning',
-      //     text: 'Quantity must be greater than 0!',
-      //     customClass: {
-      //       popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      //       title: 'font-semibold',
-      //       confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
-      //     },
-      //   });
-      //   return;
-      // }
       productType.quantity = quantity;
       productType.calculatedPrice =
         quantity * (productType.selectedProductPrice || 0);
     }
+
     this.calculateTotalPrice();
   }
 
@@ -388,7 +378,6 @@ export class DefinePackageViewComponent implements OnInit {
   }
 
   async onSave() {
-    this.isLoading = true;
     this.formSubmitted = true;
 
     if (!this.isFormValid()) {
@@ -540,8 +529,6 @@ export class DefinePackageViewComponent implements OnInit {
         '.',
         'ArrowLeft',
         'ArrowRight',
-        'ArrowUp',
-        'ArrowDown',
       ].includes(key) ||
       // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
       (event.ctrlKey === true &&
@@ -581,7 +568,7 @@ export class DefinePackageViewComponent implements OnInit {
     const filteredItems = this.marketplaceItems.filter(
       (item) => item.productTypeId === typeId,
     );
-    
+
     return filteredItems;
   }
 
@@ -610,5 +597,9 @@ export class DefinePackageViewComponent implements OnInit {
           pt.selectedProductIsValid === 0 || pt.selectedProductIsEnable === 0,
       ),
     );
+  }
+
+  onWheel(event: WheelEvent) {
+    (event.target as HTMLInputElement).blur();
   }
 }

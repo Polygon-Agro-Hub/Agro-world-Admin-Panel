@@ -14,7 +14,13 @@ import { SalesDashService } from '../../../services/sales-dash/sales-dash.servic
 
 interface Option {
   label: string;
-  value: string;
+  value: string | number;
+}
+
+interface Country {
+  name: string;
+  code: string; // ISO 3166-1 alpha-2
+  dialCode: string;
 }
 
 @Component({
@@ -32,6 +38,7 @@ export class OnboardWBuyersComponent implements OnInit {
   form: FormGroup;
 
   agentOptions: Option[] = [];
+  cityOptions: Option[] = [];
 
   titleOptions: Option[] = [
     { label: 'Mr.', value: 'Mr.' },
@@ -40,16 +47,20 @@ export class OnboardWBuyersComponent implements OnInit {
     { label: 'Rev.', value: 'Rev.' },
   ];
 
-  countryCodeOptions: Option[] = [
-    { label: '+94', value: '+94' },
-    { label: '+91', value: '+91' },
-    { label: '+1', value: '+1' },
-    { label: '+44', value: '+44' },
+  countries: Country[] = [
+    { code: 'LK', dialCode: '+94', name: 'Sri Lanka' },
+    { code: 'VN', dialCode: '+84', name: 'Vietnam' },
+    { code: 'KH', dialCode: '+855', name: 'Cambodia' },
+    { code: 'BD', dialCode: '+880', name: 'Bangladesh' },
+    { code: 'IN', dialCode: '+91', name: 'India' },
+    { code: 'NL', dialCode: '+31', name: 'Netherlands' },
+    { code: 'GB', dialCode: '+44', name: 'United Kingdom' },
+    { code: 'US', dialCode: '+1', name: 'United States' },
   ];
 
   identificationOptions: Option[] = [
     { label: 'NIC Number', value: 'NIC' },
-    { label: 'Passport ID', value: 'PASSPORT' },
+    { label: 'Passport ID', value: 'PASS' },
   ];
 
   // BR document
@@ -72,16 +83,26 @@ export class OnboardWBuyersComponent implements OnInit {
     this.form = this.fb.group({
       agent: [null, Validators.required],
       title: ['Mr.', Validators.required],
-      firstName: ['', [Validators.required, Validators.pattern(/^[A-Za-z\s]+$/)]],
-      lastName: ['', [Validators.required, Validators.pattern(/^[A-Za-z\s]+$/)]],
+      firstName: [
+        '',
+        [Validators.required, Validators.pattern(/^[A-Za-z\s]+$/)],
+      ],
+      lastName: [
+        '',
+        [Validators.required, Validators.pattern(/^[A-Za-z\s]+$/)],
+      ],
       phoneCode: ['+94', Validators.required],
       phoneNumber: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       identificationType: ['NIC', Validators.required],
-      identificationNumber: ['', [Validators.required, this.idValidator.bind(this)]],
+      identificationNumber: [
+        '',
+        [Validators.required, this.idValidator.bind(this)],
+      ],
       companyName: ['', Validators.required],
       companyPhoneCode: ['+94', Validators.required],
       companyPhoneNumber: ['', Validators.required],
+      nearestCity: ['', Validators.required],
     });
 
     this.form.get('identificationType')!.valueChanges.subscribe(() => {
@@ -91,7 +112,11 @@ export class OnboardWBuyersComponent implements OnInit {
     });
 
     this.setupPhoneValidation('phoneCode', 'phoneNumber', this.lkMobilePattern);
-    this.setupPhoneValidation('companyPhoneCode', 'companyPhoneNumber', this.lkCompanyPattern);
+    this.setupPhoneValidation(
+      'companyPhoneCode',
+      'companyPhoneNumber',
+      this.lkCompanyPattern,
+    );
   }
 
   ngOnInit(): void {
@@ -103,6 +128,7 @@ export class OnboardWBuyersComponent implements OnInit {
     this.salesAgentService.getSalesAgents().subscribe({
       next: (res) => {
         this.agentOptions = res.salesAgents;
+        this.cityOptions = res.cities;
         this.isLoading = false;
       },
       error: (err) => {
@@ -110,6 +136,10 @@ export class OnboardWBuyersComponent implements OnInit {
         this.isLoading = false;
       },
     });
+  }
+
+  getFlagUrl(countryCode: string): string {
+    return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
   }
 
   get isNic(): boolean {
@@ -128,8 +158,7 @@ export class OnboardWBuyersComponent implements OnInit {
     const value = (control.value || '').toString().trim();
     if (!value) return null; // handled by required
     const type = this.form?.get('identificationType')?.value;
-    const pattern =
-      type === 'PASSPORT' ? this.passportPattern : this.nicPattern;
+    const pattern = type === 'PASS' ? this.passportPattern : this.nicPattern;
     return pattern.test(value) ? null : { pattern: true };
   }
 
@@ -150,6 +179,7 @@ export class OnboardWBuyersComponent implements OnInit {
       !!this.form.get(name)?.errors?.[key];
 
     if (err('agent', 'required')) msgs.push('Agent is required.');
+    if (err('nearestCity', 'required')) msgs.push('Customer’s City is required.');
 
     if (err('firstName', 'required')) msgs.push('First name is required.');
     else if (err('firstName', 'pattern'))
@@ -161,7 +191,11 @@ export class OnboardWBuyersComponent implements OnInit {
 
     if (err('phoneNumber', 'required')) msgs.push('Phone number is required.');
     else if (err('phoneNumber', 'pattern'))
-      msgs.push('Enter a valid mobile number (7XXXXXXXX).');
+      msgs.push(
+        this.form.get('phoneCode')?.value === '+94'
+          ? 'Enter a valid mobile number (7XXXXXXXX).'
+          : 'Phone number can only contain digits.',
+      );
 
     if (err('email', 'required')) msgs.push('Email address is required.');
     else if (err('email', 'email')) msgs.push('Enter a valid email address.');
@@ -177,22 +211,14 @@ export class OnboardWBuyersComponent implements OnInit {
 
     if (err('companyName', 'required')) msgs.push('Company name is required.');
 
-    if (err('phoneNumber', 'required')) msgs.push('Phone number is required.');
-    else if (err('phoneNumber', 'pattern'))
-      msgs.push(this.form.get('phoneCode')?.value === '+94'
-        ? 'Enter a valid mobile number (7XXXXXXXX).'
-        : 'Phone number can only contain digits.');
-
-    if (err('companyPhoneNumber', 'required')) msgs.push('Company phone number is required.');
-    else if (err('companyPhoneNumber', 'pattern'))
-      msgs.push(this.form.get('companyPhoneCode')?.value === '+94'
-        ? 'Enter a valid company phone number (9 digits).'
-        : 'Company phone number can only contain digits.');
-
     if (err('companyPhoneNumber', 'required'))
       msgs.push('Company phone number is required.');
     else if (err('companyPhoneNumber', 'pattern'))
-      msgs.push('Enter a valid company phone number (9 digits).');
+      msgs.push(
+        this.form.get('companyPhoneCode')?.value === '+94'
+          ? 'Enter a valid company phone number (9 digits).'
+          : 'Company phone number can only contain digits.',
+      );
 
     if (!this.selectedFile) msgs.push('BR document is required.');
     else if (this.fileError) msgs.push(this.fileError);
@@ -217,7 +243,11 @@ export class OnboardWBuyersComponent implements OnInit {
     if (!/[0-9]/.test(event.key)) event.preventDefault();
   }
 
-  onDigitsOnlyInput(event: Event, controlName: string, maxLength: number | null): void {
+  onDigitsOnlyInput(
+    event: Event,
+    controlName: string,
+    maxLength: number | null,
+  ): void {
     const input = event.target as HTMLInputElement;
     let cleaned = input.value.replace(/[^0-9]/g, '');
     if (maxLength !== null) cleaned = cleaned.slice(0, maxLength);
@@ -226,7 +256,10 @@ export class OnboardWBuyersComponent implements OnInit {
   }
 
   private capitalizeWords(value: string): string {
-    return value.replace(/(^|\s)([a-z])/g, (_, space, ch) => space + ch.toUpperCase());
+    return value.replace(
+      /(^|\s)([a-z])/g,
+      (_, space, ch) => space + ch.toUpperCase(),
+    );
   }
 
   onNameInput(event: Event, controlName: string): void {
@@ -236,7 +269,10 @@ export class OnboardWBuyersComponent implements OnInit {
       input.value.replace(/[^A-Za-z\s]/g, '').replace(/^\s+/, ''),
     );
     input.value = cleaned;
-    input.setSelectionRange(Math.min(pos, cleaned.length), Math.min(pos, cleaned.length));
+    input.setSelectionRange(
+      Math.min(pos, cleaned.length),
+      Math.min(pos, cleaned.length),
+    );
     this.form.get(controlName)?.setValue(cleaned, { emitEvent: false });
   }
 
@@ -245,7 +281,10 @@ export class OnboardWBuyersComponent implements OnInit {
     const pos = input.selectionStart ?? input.value.length;
     const cleaned = this.capitalizeWords(input.value.replace(/^\s+/, ''));
     input.value = cleaned;
-    input.setSelectionRange(Math.min(pos, cleaned.length), Math.min(pos, cleaned.length));
+    input.setSelectionRange(
+      Math.min(pos, cleaned.length),
+      Math.min(pos, cleaned.length),
+    );
     this.form.get(controlName)?.setValue(cleaned, { emitEvent: false });
   }
 
@@ -340,6 +379,7 @@ export class OnboardWBuyersComponent implements OnInit {
     const v = this.form.value;
     const formData = new FormData();
     formData.append('salesAgent', v.agent);
+    formData.append('nearestCity', v.nearestCity);
     formData.append('title', v.title);
     formData.append('firstName', v.firstName);
     formData.append('lastName', v.lastName);
@@ -381,7 +421,11 @@ export class OnboardWBuyersComponent implements OnInit {
     });
   }
 
-  private setupPhoneValidation(codeName: string, numberName: string, lkPattern: RegExp): void {
+  private setupPhoneValidation(
+    codeName: string,
+    numberName: string,
+    lkPattern: RegExp,
+  ): void {
     const codeCtrl = this.form.get(codeName)!;
     const numCtrl = this.form.get(numberName)!;
 

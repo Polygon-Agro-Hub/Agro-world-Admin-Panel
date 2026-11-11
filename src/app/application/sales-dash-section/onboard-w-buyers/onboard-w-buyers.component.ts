@@ -14,7 +14,7 @@ import { SalesDashService } from '../../../services/sales-dash/sales-dash.servic
 
 interface Option {
   label: string;
-  value: string;
+  value: string | number;
 }
 
 interface Country {
@@ -38,6 +38,7 @@ export class OnboardWBuyersComponent implements OnInit {
   form: FormGroup;
 
   agentOptions: Option[] = [];
+  cityOptions: Option[] = [];
 
   titleOptions: Option[] = [
     { label: 'Mr.', value: 'Mr.' },
@@ -101,6 +102,7 @@ export class OnboardWBuyersComponent implements OnInit {
       companyName: ['', Validators.required],
       companyPhoneCode: ['+94', Validators.required],
       companyPhoneNumber: ['', Validators.required],
+      nearestCity: ['', Validators.required],
     });
 
     this.form.get('identificationType')!.valueChanges.subscribe(() => {
@@ -126,6 +128,7 @@ export class OnboardWBuyersComponent implements OnInit {
     this.salesAgentService.getSalesAgents().subscribe({
       next: (res) => {
         this.agentOptions = res.salesAgents;
+        this.cityOptions = res.cities;
         this.isLoading = false;
       },
       error: (err) => {
@@ -176,6 +179,7 @@ export class OnboardWBuyersComponent implements OnInit {
       !!this.form.get(name)?.errors?.[key];
 
     if (err('agent', 'required')) msgs.push('Agent is required.');
+    if (err('nearestCity', 'required')) msgs.push('Customer’s City is required.');
 
     if (err('firstName', 'required')) msgs.push('First name is required.');
     else if (err('firstName', 'pattern'))
@@ -375,6 +379,7 @@ export class OnboardWBuyersComponent implements OnInit {
     const v = this.form.value;
     const formData = new FormData();
     formData.append('salesAgent', v.agent);
+    formData.append('nearestCity', v.nearestCity);
     formData.append('title', v.title);
     formData.append('firstName', v.firstName);
     formData.append('lastName', v.lastName);

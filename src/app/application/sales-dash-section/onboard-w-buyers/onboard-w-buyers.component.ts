@@ -48,7 +48,11 @@ export class OnboardWBuyersComponent implements OnInit {
 
   countries: Country[] = [
     { code: 'LK', dialCode: '+94', name: 'Sri Lanka' },
+    { code: 'VN', dialCode: '+84', name: 'Vietnam' },
+    { code: 'KH', dialCode: '+855', name: 'Cambodia' },
+    { code: 'BD', dialCode: '+880', name: 'Bangladesh' },
     { code: 'IN', dialCode: '+91', name: 'India' },
+    { code: 'NL', dialCode: '+31', name: 'Netherlands' },
     { code: 'GB', dialCode: '+44', name: 'United Kingdom' },
     { code: 'US', dialCode: '+1', name: 'United States' },
   ];

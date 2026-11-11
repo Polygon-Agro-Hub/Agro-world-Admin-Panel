@@ -18,25 +18,28 @@
 <div class="w-full min-w-0 max-w-full overflow-x-hidden">
   <div
     class="w-full min-w-0 max-w-full overflow-hidden rounded-lg bg-tileLight pt-5 pr-12 pl-12 pb-5 shadow-lg dark:bg-tileBlack">
-    <div class="flex justify-between items-center mb-8">
-      <div class="flex items-center">
-        <h2 class="text-2xl font-normal text-[#292929] dark:text-textDark whitespace-nowrap mr-5">
-          <!-- Other Distribution Centres ({{ this.totalItems }}) -->
+
+    <!-- Header + filters -->
+    <div class="flex flex-wrap items-center justify-between gap-4 mb-8">
+      <div class="flex items-center shrink-0">
+        <h2 class="text-2xl font-normal text-[#292929] dark:text-textDark whitespace-nowrap">
           Other Centres ({{ formatCount(totalItems) }})
         </h2>
       </div>
-      <div class="flex items-center">
-        <div class="mr-5">
+
+      <div class="flex flex-wrap items-center gap-3">
+        <!-- Company -->
+        <div class="w-44 shrink-0">
           <p-dropdown styleClass="
-            border border-2 rounded-xl h-8 items-center 
-            bg-[#F1F1F1] dark:bg-[#272F45] 
-            text-textLight dark:text-textDark 
-            border-[#yourLightColor] dark:border-[#AFAFAF]
+            w-full h-10 flex items-center
+            border border-2 rounded-xl border-gray-300 dark:border-[#AFAFAF]
+            bg-[#F1F1F1] dark:bg-[#272F45]
+            text-textLight dark:text-textDark
             [&_.p-dropdown-label]:text-textLight [&_.p-dropdown-label]:dark:text-textDark
             [&_.p-dropdown-trigger]:text-textLight [&_.p-dropdown-trigger]:dark:text-textDark
             [&_.p-dropdown-clear-icon]:text-textLight [&_.p-dropdown-clear-icon]:dark:text-textDark
           " panelStyleClass="
-            bg-white dark:bg-[#272F45] 
+            bg-white dark:bg-[#272F45]
             border border-gray-200 dark:border-[#AFAFAF]
             [&_.p-dropdown-item]:text-textLight [&_.p-dropdown-item]:dark:text-textDark
             [&_.p-dropdown-item]:bg-white [&_.p-dropdown-item]:dark:bg-[#272F45]
@@ -45,22 +48,23 @@
             [&_.p-dropdown-item.p-highlight]:text-white [&_.p-dropdown-item.p-highlight]:dark:text-white
             [&_.p-dropdown-empty-message]:text-textLight [&_.p-dropdown-empty-message]:dark:text-textDark
             [&_.p-dropdown-empty-message]:bg-white [&_.p-dropdown-empty-message]:dark:bg-[#272F45]
-            " [options]="companyOptions" [checkmark]="false" optionLabel="label" optionValue="value"
+          " [options]="companyOptions" [checkmark]="false" optionLabel="label" optionValue="value"
             [showClear]="!!selectCompany" placeholder="Company" [(ngModel)]="selectCompany"
             (onChange)="applyCompanyFilter()"></p-dropdown>
         </div>
 
-        <div class="mr-5">
+        <!-- Province -->
+        <div class="w-44 shrink-0">
           <p-dropdown styleClass="
-            border border-2 rounded-xl h-8 items-center 
-            bg-[#F1F1F1] dark:bg-[#272F45] 
-            text-textLight dark:text-textDark 
-            border-[#yourLightColor] dark:border-[#AFAFAF]
+            w-full h-10 flex items-center
+            border border-2 rounded-xl border-gray-300 dark:border-[#AFAFAF]
+            bg-[#F1F1F1] dark:bg-[#272F45]
+            text-textLight dark:text-textDark
             [&_.p-dropdown-label]:text-textLight [&_.p-dropdown-label]:dark:text-textDark
             [&_.p-dropdown-trigger]:text-textLight [&_.p-dropdown-trigger]:dark:text-textDark
             [&_.p-dropdown-clear-icon]:text-textLight [&_.p-dropdown-clear-icon]:dark:text-textDark
-            " panelStyleClass="
-            bg-white dark:bg-[#272F45] 
+          " panelStyleClass="
+            bg-white dark:bg-[#272F45]
             border border-gray-200 dark:border-[#AFAFAF]
             [&_.p-dropdown-item]:text-textLight [&_.p-dropdown-item]:dark:text-textDark
             [&_.p-dropdown-item]:bg-white [&_.p-dropdown-item]:dark:bg-[#272F45]
@@ -69,22 +73,23 @@
             [&_.p-dropdown-item.p-highlight]:text-white [&_.p-dropdown-item.p-highlight]:dark:text-white
             [&_.p-dropdown-empty-message]:text-textLight [&_.p-dropdown-empty-message]:dark:text-textDark
             [&_.p-dropdown-empty-message]:bg-white [&_.p-dropdown-empty-message]:dark:bg-[#272F45]
-            " [options]="provinceOptions" [checkmark]="false" optionLabel="label" optionValue="value"
+          " [options]="provinceOptions" [checkmark]="false" optionLabel="label" optionValue="value"
             [showClear]="!!selectProvince" placeholder="Province" [(ngModel)]="selectProvince"
             (onChange)="applyProvinceFilters()"></p-dropdown>
         </div>
 
-        <div class="mr-5">
+        <!-- District -->
+        <div class="w-44 shrink-0">
           <p-dropdown styleClass="
-            border border-2 rounded-xl h-8 items-center 
-            bg-[#F1F1F1] dark:bg-[#272F45] 
-            text-textLight dark:text-textDark 
-            border-[#yourLightColor] dark:border-[#AFAFAF]
+            w-full h-10 flex items-center
+            border border-2 rounded-xl border-gray-300 dark:border-[#AFAFAF]
+            bg-[#F1F1F1] dark:bg-[#272F45]
+            text-textLight dark:text-textDark
             [&_.p-dropdown-label]:text-textLight [&_.p-dropdown-label]:dark:text-textDark
             [&_.p-dropdown-trigger]:text-textLight [&_.p-dropdown-trigger]:dark:text-textDark
             [&_.p-dropdown-clear-icon]:text-textLight [&_.p-dropdown-clear-icon]:dark:text-textDark
-            " panelStyleClass="
-            bg-white dark:bg-[#272F45] 
+          " panelStyleClass="
+            bg-white dark:bg-[#272F45]
             border border-gray-200 dark:border-[#AFAFAF]
             [&_.p-dropdown-item]:text-textLight [&_.p-dropdown-item]:dark:text-textDark
             [&_.p-dropdown-item]:bg-white [&_.p-dropdown-item]:dark:bg-[#272F45]
@@ -93,21 +98,24 @@
             [&_.p-dropdown-item.p-highlight]:text-white [&_.p-dropdown-item.p-highlight]:dark:text-white
             [&_.p-dropdown-empty-message]:text-textLight [&_.p-dropdown-empty-message]:dark:text-textDark
             [&_.p-dropdown-empty-message]:bg-white [&_.p-dropdown-empty-message]:dark:bg-[#272F45]
-            " [options]="districtOptions" [checkmark]="false" optionLabel="label" optionValue="value"
+          " [options]="districtOptions" [checkmark]="false" optionLabel="label" optionValue="value"
             [showClear]="!!selectDistrict" placeholder="District" [(ngModel)]="selectDistrict"
             (onChange)="applyDistrictFilters()"></p-dropdown>
         </div>
 
-        <div class="flex items-center rounded-full px-4 py-2 w-full bg-[#F1F1F1] dark:bg-[#272F45] group relative">
+        <!-- Search -->
+        <div
+          class="flex items-center h-10 w-64 shrink-0 rounded-full px-4 bg-[#F1F1F1] dark:bg-[#272F45] group relative">
           <input type="text" placeholder="Search.."
-            class="bg-transparent outline-none w-full text-textLight dark:text-textDark" [(ngModel)]="searchItem"
-            (keydown.enter)="searchPlantCareUsers()" (keydown)="preventLeadingSpace($event)"
+            class="bg-transparent outline-none w-full min-w-0 text-textLight dark:text-textDark"
+            [(ngModel)]="searchItem" (keydown.enter)="searchPlantCareUsers()" (keydown)="preventLeadingSpace($event)"
             (input)="trimLeadingSpaces($event)" />
           <div
-            class="absolute top-full mt-2 bg-gray-800 dark:bg-gray-700 text-white dark:text-gray-200 text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
+            class="absolute top-full right-0 mt-2 bg-gray-800 dark:bg-gray-700 text-white dark:text-gray-200 text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10 pointer-events-none">
             Search by Company, Centre Name, City
           </div>
-          <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+          <button type="button"
+            class="flex items-center justify-center shrink-0 text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
             (click)="searchPlantCareUsers()" title="Search">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
               stroke="currentColor">
@@ -115,7 +123,8 @@
                 d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
             </svg>
           </button>
-          <button type="button" (click)="clearSearch()" class="text-gray-500 hover:text-gray-700 focus:outline-none"
+          <button type="button" (click)="clearSearch()"
+            class="flex items-center justify-center shrink-0 text-gray-500 hover:text-gray-700 focus:outline-none"
             title="Clear search">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
               stroke="currentColor">
@@ -125,6 +134,8 @@
         </div>
       </div>
     </div>
+
+    <!-- Table -->
     <div
       class="relative isolate h-[60vh] max-h-[60vh] w-full min-w-0 max-w-full overflow-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
       <table class="w-max min-w-[1700px] table-fixed border-separate border-spacing-0 whitespace-nowrap"
@@ -164,7 +175,7 @@
             </th>
 
             <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left">
-              Provine
+              Province
             </th>
 
             <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left">
@@ -205,13 +216,13 @@
           <tr *ngFor="
               let item of distributionCentreObj
                 | paginate
-                  : {
-                      itemsPerPage: itemsPerPage,
-                      currentPage: page,
-                      totalItems: totalItems
-                    };
-              let i = index
-            ">
+              : {
+                  itemsPerPage: itemsPerPage,
+                  currentPage: page,
+                  totalItems: totalItems
+                };
+              let i = index"           
+              class="[&>td]:border-b [&>td]:border-gray-200 dark:[&>td]:border-gray-700">
             <td
               class="sticky left-0 z-30 box-border w-[70px] min-w-[70px] max-w-[70px] border-b border-gray-200 bg-tileLight px-4 py-3 text-left text-[#000000] dark:border-gray-700 dark:bg-tileBlack dark:text-textDark shadow-[2px_0_0_0_#ffffff] dark:shadow-[2px_0_0_0_#272F45]">
               {{ (page - 1) * itemsPerPage + i + 1 }}
@@ -240,7 +251,6 @@
             </td>
 
             <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
-              <!-- {{ item.code1 }} {{ item.contact01 }} -->
               <span *ngIf="item.contact01 === null">-</span>
               <span *ngIf="item.contact01 != null">{{ item.code1 }}{{ " " + item.contact01 }}</span>
             </td>
@@ -254,11 +264,9 @@
                   item.longitude
                 }}" target="_blank" class="text-red-600 hover:text-blue-800 text-xl" title="View on map">
                 <i class="fas fa-map-marker-alt"></i>
-                <!-- Font Awesome map pin icon -->
               </a>
               <span *ngIf="!item.longitude || !item.latitude" class="text-gray-400">
                 <i class="fas fa-map-marker-alt"></i>
-                <!-- Disabled/grayed out icon when no coordinates -->
               </span>
             </td>
 

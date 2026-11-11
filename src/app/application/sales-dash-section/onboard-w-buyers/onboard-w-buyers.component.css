@@ -168,3 +168,18 @@
   display: flex;
   align-items: center;
 }
+
+:host ::ng-deep .country-code-dropdown {
+  width: 100%;
+}
+
+:host ::ng-deep .country-code-dropdown .p-dropdown-label {
+  padding-left: 0.5rem;
+  padding-right: 0;
+  overflow: visible;
+  text-overflow: clip;
+}
+
+:host ::ng-deep .country-code-dropdown .p-dropdown-trigger {
+  width: 2rem;
+}

@@ -153,6 +153,7 @@ export class SrDriverReviewComponent implements OnInit {
         mobile2: this.formatPhone(p.phoneCode02, p.phoneNumber02),
         nic: p.nic ?? '',
         email: p.email ?? '',
+        createdAt: p.createdAt ?? null
       },
       ResidentialBank: {
         houseNumber: rb.houseNumber ?? '',

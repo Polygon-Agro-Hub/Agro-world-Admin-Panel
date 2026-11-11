@@ -77,6 +77,7 @@ export interface OnboardedOptionsResponse {
 export interface SalesAgentsResponse {
   status: boolean;
   salesAgents: { label: string; value: string }[];
+  cities: { label: string; value: string | number }[];
 }
 
 @Injectable({

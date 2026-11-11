@@ -17,6 +17,12 @@ interface Option {
   value: string;
 }
 
+interface Country {
+  name: string;
+  code: string; // ISO 3166-1 alpha-2
+  dialCode: string;
+}
+
 @Component({
   selector: 'app-onboard-w-buyers',
   standalone: true,
@@ -40,11 +46,11 @@ export class OnboardWBuyersComponent implements OnInit {
     { label: 'Rev.', value: 'Rev.' },
   ];
 
-  countryCodeOptions: Option[] = [
-    { label: '+94', value: '+94' },
-    { label: '+91', value: '+91' },
-    { label: '+1', value: '+1' },
-    { label: '+44', value: '+44' },
+  countries: Country[] = [
+    { code: 'LK', dialCode: '+94', name: 'Sri Lanka' },
+    { code: 'IN', dialCode: '+91', name: 'India' },
+    { code: 'GB', dialCode: '+44', name: 'United Kingdom' },
+    { code: 'US', dialCode: '+1', name: 'United States' },
   ];
 
   identificationOptions: Option[] = [
@@ -123,6 +129,10 @@ export class OnboardWBuyersComponent implements OnInit {
         this.isLoading = false;
       },
     });
+  }
+
+  getFlagUrl(countryCode: string): string {
+    return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
   }
 
   get isNic(): boolean {

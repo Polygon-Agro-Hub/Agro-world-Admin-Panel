@@ -61,10 +61,23 @@
                     class="block text-base font-semibold text-gray-700 dark:text-textDark mb-2">Phone
                     Number</label>
                 <div class="flex gap-3">
-                    <div class="w-[100px] shrink-0">
-                        <p-dropdown formControlName="phoneCode" [options]="countryCodeOptions" optionLabel="label"
-                            optionValue="value" [showClear]="false" styleClass="w-full"
-                            panelStyleClass="custom-dropdown-panel" class="p-dropdown-custom compact-dropdown">
+                    <div class="w-[120px] shrink-0">
+                        <p-dropdown formControlName="phoneCode" [options]="countries" optionLabel="dialCode"
+                            optionValue="dialCode"
+                            styleClass="w-full border border-gray-300 rounded-l-md bg-white dark:bg-tileBlack text-gray-800 dark:text-textDark custom-dropdown country-code-dropdown"
+                            panelStyleClass="custom-dropdown-panel" class="p-dropdown-custom" [showClear]="false">
+                            <ng-template let-country pTemplate="item">
+                                <div class="flex items-center gap-2">
+                                    <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                                    <span>{{ country.dialCode }}</span>
+                                </div>
+                            </ng-template>
+                            <ng-template let-country pTemplate="selectedItem">
+                                <div class="flex items-center gap-2" *ngIf="country">
+                                    <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                                    <span>{{ country.dialCode }}</span>
+                                </div>
+                            </ng-template>
                         </p-dropdown>
                     </div>
                     <input id="phoneNumber" formControlName="phoneNumber" [attr.maxlength]="phoneMaxLength('phoneCode')"
@@ -139,10 +152,23 @@
                 <label for="companyPhoneNumber"
                     class="block text-base font-semibold text-gray-700 dark:text-textDark mb-2">Phone Number</label>
                 <div class="flex gap-3">
-                    <div class="w-[100px] shrink-0">
-                        <p-dropdown formControlName="companyPhoneCode" [options]="countryCodeOptions"
-                            optionLabel="label" optionValue="value" [showClear]="false" styleClass="w-full"
-                            panelStyleClass="custom-dropdown-panel" class="p-dropdown-custom compact-dropdown">
+                    <div class="w-[120px] shrink-0">
+                        <p-dropdown formControlName="companyPhoneCode" [options]="countries" optionLabel="dialCode"
+                            optionValue="dialCode"
+                            styleClass="w-full border border-gray-300 rounded-l-md bg-white dark:bg-tileBlack text-gray-800 dark:text-textDark custom-dropdown country-code-dropdown"
+                            panelStyleClass="custom-dropdown-panel" class="p-dropdown-custom" [showClear]="false">
+                            <ng-template let-country pTemplate="item">
+                                <div class="flex items-center gap-2">
+                                    <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                                    <span>{{ country.dialCode }}</span>
+                                </div>
+                            </ng-template>
+                            <ng-template let-country pTemplate="selectedItem">
+                                <div class="flex items-center gap-2" *ngIf="country">
+                                    <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                                    <span>{{ country.dialCode }}</span>
+                                </div>
+                            </ng-template>
                         </p-dropdown>
                     </div>
                     <input id="companyPhoneNumber" formControlName="companyPhoneNumber"

@@ -72,13 +72,22 @@ export class OnboardWBuyersComponent implements OnInit {
     this.form = this.fb.group({
       agent: [null, Validators.required],
       title: ['Mr.', Validators.required],
-      firstName: ['', [Validators.required, Validators.pattern(/^[A-Za-z\s]+$/)]],
-      lastName: ['', [Validators.required, Validators.pattern(/^[A-Za-z\s]+$/)]],
+      firstName: [
+        '',
+        [Validators.required, Validators.pattern(/^[A-Za-z\s]+$/)],
+      ],
+      lastName: [
+        '',
+        [Validators.required, Validators.pattern(/^[A-Za-z\s]+$/)],
+      ],
       phoneCode: ['+94', Validators.required],
       phoneNumber: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       identificationType: ['NIC', Validators.required],
-      identificationNumber: ['', [Validators.required, this.idValidator.bind(this)]],
+      identificationNumber: [
+        '',
+        [Validators.required, this.idValidator.bind(this)],
+      ],
       companyName: ['', Validators.required],
       companyPhoneCode: ['+94', Validators.required],
       companyPhoneNumber: ['', Validators.required],
@@ -91,7 +100,11 @@ export class OnboardWBuyersComponent implements OnInit {
     });
 
     this.setupPhoneValidation('phoneCode', 'phoneNumber', this.lkMobilePattern);
-    this.setupPhoneValidation('companyPhoneCode', 'companyPhoneNumber', this.lkCompanyPattern);
+    this.setupPhoneValidation(
+      'companyPhoneCode',
+      'companyPhoneNumber',
+      this.lkCompanyPattern,
+    );
   }
 
   ngOnInit(): void {
@@ -161,7 +174,11 @@ export class OnboardWBuyersComponent implements OnInit {
 
     if (err('phoneNumber', 'required')) msgs.push('Phone number is required.');
     else if (err('phoneNumber', 'pattern'))
-      msgs.push('Enter a valid mobile number (7XXXXXXXX).');
+      msgs.push(
+        this.form.get('phoneCode')?.value === '+94'
+          ? 'Enter a valid mobile number (7XXXXXXXX).'
+          : 'Phone number can only contain digits.',
+      );
 
     if (err('email', 'required')) msgs.push('Email address is required.');
     else if (err('email', 'email')) msgs.push('Enter a valid email address.');
@@ -177,22 +194,14 @@ export class OnboardWBuyersComponent implements OnInit {
 
     if (err('companyName', 'required')) msgs.push('Company name is required.');
 
-    if (err('phoneNumber', 'required')) msgs.push('Phone number is required.');
-    else if (err('phoneNumber', 'pattern'))
-      msgs.push(this.form.get('phoneCode')?.value === '+94'
-        ? 'Enter a valid mobile number (7XXXXXXXX).'
-        : 'Phone number can only contain digits.');
-
-    if (err('companyPhoneNumber', 'required')) msgs.push('Company phone number is required.');
-    else if (err('companyPhoneNumber', 'pattern'))
-      msgs.push(this.form.get('companyPhoneCode')?.value === '+94'
-        ? 'Enter a valid company phone number (9 digits).'
-        : 'Company phone number can only contain digits.');
-
     if (err('companyPhoneNumber', 'required'))
       msgs.push('Company phone number is required.');
     else if (err('companyPhoneNumber', 'pattern'))
-      msgs.push('Enter a valid company phone number (9 digits).');
+      msgs.push(
+        this.form.get('companyPhoneCode')?.value === '+94'
+          ? 'Enter a valid company phone number (9 digits).'
+          : 'Company phone number can only contain digits.',
+      );
 
     if (!this.selectedFile) msgs.push('BR document is required.');
     else if (this.fileError) msgs.push(this.fileError);
@@ -217,7 +226,11 @@ export class OnboardWBuyersComponent implements OnInit {
     if (!/[0-9]/.test(event.key)) event.preventDefault();
   }
 
-  onDigitsOnlyInput(event: Event, controlName: string, maxLength: number | null): void {
+  onDigitsOnlyInput(
+    event: Event,
+    controlName: string,
+    maxLength: number | null,
+  ): void {
     const input = event.target as HTMLInputElement;
     let cleaned = input.value.replace(/[^0-9]/g, '');
     if (maxLength !== null) cleaned = cleaned.slice(0, maxLength);
@@ -226,7 +239,10 @@ export class OnboardWBuyersComponent implements OnInit {
   }
 
   private capitalizeWords(value: string): string {
-    return value.replace(/(^|\s)([a-z])/g, (_, space, ch) => space + ch.toUpperCase());
+    return value.replace(
+      /(^|\s)([a-z])/g,
+      (_, space, ch) => space + ch.toUpperCase(),
+    );
   }
 
   onNameInput(event: Event, controlName: string): void {
@@ -236,7 +252,10 @@ export class OnboardWBuyersComponent implements OnInit {
       input.value.replace(/[^A-Za-z\s]/g, '').replace(/^\s+/, ''),
     );
     input.value = cleaned;
-    input.setSelectionRange(Math.min(pos, cleaned.length), Math.min(pos, cleaned.length));
+    input.setSelectionRange(
+      Math.min(pos, cleaned.length),
+      Math.min(pos, cleaned.length),
+    );
     this.form.get(controlName)?.setValue(cleaned, { emitEvent: false });
   }
 
@@ -245,7 +264,10 @@ export class OnboardWBuyersComponent implements OnInit {
     const pos = input.selectionStart ?? input.value.length;
     const cleaned = this.capitalizeWords(input.value.replace(/^\s+/, ''));
     input.value = cleaned;
-    input.setSelectionRange(Math.min(pos, cleaned.length), Math.min(pos, cleaned.length));
+    input.setSelectionRange(
+      Math.min(pos, cleaned.length),
+      Math.min(pos, cleaned.length),
+    );
     this.form.get(controlName)?.setValue(cleaned, { emitEvent: false });
   }
 
@@ -381,7 +403,11 @@ export class OnboardWBuyersComponent implements OnInit {
     });
   }
 
-  private setupPhoneValidation(codeName: string, numberName: string, lkPattern: RegExp): void {
+  private setupPhoneValidation(
+    codeName: string,
+    numberName: string,
+    lkPattern: RegExp,
+  ): void {
     const codeCtrl = this.form.get(codeName)!;
     const numCtrl = this.form.get(numberName)!;
 

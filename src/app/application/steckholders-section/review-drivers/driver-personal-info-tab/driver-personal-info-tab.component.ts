@@ -11,6 +11,7 @@ export interface IDriverPersonal {
   mobile2: string | null;
   nic: string;
   email: string;
+  createdAt: Date;
 }
 
 @Component({

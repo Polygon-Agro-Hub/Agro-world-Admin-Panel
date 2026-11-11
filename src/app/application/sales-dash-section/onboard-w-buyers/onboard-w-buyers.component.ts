@@ -59,7 +59,7 @@ export class OnboardWBuyersComponent implements OnInit {
 
   identificationOptions: Option[] = [
     { label: 'NIC Number', value: 'NIC' },
-    { label: 'Passport ID', value: 'PASSPORT' },
+    { label: 'Passport ID', value: 'PASS' },
   ];
 
   // BR document
@@ -155,8 +155,7 @@ export class OnboardWBuyersComponent implements OnInit {
     const value = (control.value || '').toString().trim();
     if (!value) return null; // handled by required
     const type = this.form?.get('identificationType')?.value;
-    const pattern =
-      type === 'PASSPORT' ? this.passportPattern : this.nicPattern;
+    const pattern = type === 'PASS' ? this.passportPattern : this.nicPattern;
     return pattern.test(value) ? null : { pattern: true };
   }
 

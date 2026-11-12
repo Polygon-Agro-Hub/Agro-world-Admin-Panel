@@ -88,8 +88,8 @@
                         <th
                             class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
                             Status</th>
-                        <th class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
-                            *ngIf="permissionService.hasPermission('View wholesale buyer document') || tokenService.getUserDetails().role === '1'">
+                        <th
+                            class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
                             Documents</th>
                     </tr>
                 </thead>
@@ -128,8 +128,7 @@
                             </span>
                         </td>
 
-                        <td *ngIf="permissionService.hasPermission('View wholesale buyer document') || tokenService.getUserDetails().role === '1'"
-                            class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 text-center">
+                        <td class="border-b border-gray-200 dark:border-[#4B555A] px-4 py-3 text-center">
                             <button type="button" (click)="openDocuments(item)">
                                 <i class="fa-solid fa-arrow-up-right-from-square text-xl text-blue-500"></i>
                             </button>

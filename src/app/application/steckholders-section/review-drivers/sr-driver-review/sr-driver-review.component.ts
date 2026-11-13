@@ -78,7 +78,7 @@ export class SrDriverReviewComponent implements OnInit {
     managerId: number | null;
     empType: 'Permanent' | 'Temporary' | null;
     categoryId: number | null;
-  } = { centerId: null, managerId: null, empType: null, categoryId: null };
+  } = { centerId: null, managerId: null, empType: 'Temporary', categoryId: null };
 
   // Reject popup state
   isRejectPopupOpen: boolean = false;
@@ -253,7 +253,7 @@ export class SrDriverReviewComponent implements OnInit {
     this.approveForm = {
       centerId: null,
       managerId: null,
-      empType: null,
+      empType: 'Temporary',
       categoryId: null,
     };
     this.managerList = [];
@@ -303,12 +303,15 @@ export class SrDriverReviewComponent implements OnInit {
       .getDistributionManagerNamesByCompany(this.companyId, this.approveForm.centerId)
       .subscribe({
         next: (res) => {
-          this.managerList = (res?.data ?? []).map((m: any) => ({
-            ...m,
-            label:
-              [m.firstNameEnglish, m.lastNameEnglish].filter(Boolean).join(' ') +
-              (m.empId ? ` (${m.empId})` : ''),
-          }));
+          this.managerList = (res?.data ?? []).map((m: any) => {
+            const fullName = [m.firstNameEnglish, m.lastNameEnglish]
+              .filter(Boolean)
+              .join(' ');
+            return {
+              ...m,
+              label: m.empId ? `${m.empId} - ${fullName}` : fullName,
+            };
+          });
           this.isManagersLoading = false;
         },
         error: (err) => {

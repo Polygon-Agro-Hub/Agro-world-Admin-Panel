@@ -24,7 +24,13 @@ export interface IDriverResidentialBank {
 export class DriverResidentialBankInfoComponent {
   @Input() residentialBankObj!: IDriverResidentialBank;
 
-  get fields(): { label: string; value: string | number | null | undefined }[] {
+  fields: { label: string; value: string | number | null | undefined }[] = [];
+
+  ngOnChanges(): void {
+    this.fields = this.buildFields();
+  }
+
+  private buildFields(): { label: string; value: string | number | null | undefined }[] {
     const d = this.residentialBankObj;
     return [
       { label: 'House / Plot number', value: d?.houseNumber },

@@ -279,7 +279,7 @@ export class PostinvoiceService {
     // Company Info
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
-    doc.text('Polygon Holdings (Private) Ltd', 15, 25);
+    doc.text('Polygon Holdings (Private) Limited', 15, 25);
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
     doc.text('Level 2, Building 2, No. 46/42, Nawam Mawatha, Colombo 02.', 15, 30);
@@ -726,7 +726,7 @@ export class PostinvoiceService {
           },
         ],
         ...invoice.additionalItems.map((it, i) => {
-          const unitPrice = parseFloat(it.unitPrice || '0');
+          const unitPrice = parseFloat(it.normalPrice || '0') / (parseFloat(it.quantity || '1') || 1);
           const itemDiscount = parseFloat(it.itemDiscount || '0');
           const quantity = parseFloat(
             it.quantity === '0.00' ? '1' : it.quantity || '1',

@@ -101,7 +101,7 @@ export class PostinvoiceService {
       const familyPacks = response.data?.items?.familyPacks || [];
       const additionalItems = response.data?.items?.additionalItems || [];
       const pickupCenter = response.data?.pickupCenter || null;
-      const deliveryCharge = response.data?.deliveryCharge || null;
+      const deliveryCharge = response.data?.invoice?.deliveryFee || '0.00';
 
       const apiInvoiceNo = invoiceDetails.invoiceNumber;
       const finalInvoiceNo = tableInvoiceNo || apiInvoiceNo || 'N/A';
@@ -128,7 +128,7 @@ export class PostinvoiceService {
       if (invoiceDetails.deliveryMethod === 'Pickup') {
         deliveryFee = '0.00';
       } else if (deliveryCharge) {
-        deliveryFee = deliveryCharge.charge || '0.00';
+        deliveryFee = deliveryCharge || '0.00';
       }
 
       // Calculate totals
@@ -730,27 +730,25 @@ export class PostinvoiceService {
           },
         ],
         ...invoice.additionalItems.map((it, i) => {
-          const unitPrice =
-            parseFloat(it.normalPrice || '0') /
-            (parseFloat(it.quantity || '1') || 1);
-          const itemDiscount = parseFloat(it.itemDiscount || '0');
-          const quantity = parseFloat(
-            it.quantity === '0.00' ? '1' : it.quantity || '1',
-          );
-          const normalPrice = parseFloat(it.normalPrice);
-          const unitPriceDisplay = unitPrice;
+          const rawQty = parseFloat(it.quantity || '1') || 1;
+          const quantity = it.quantity === '0.00' ? 1 : rawQty;
+          const amount = parseNum(it.normalPrice);
 
-          // Get unit for additional items from backend data
-          const unit = it.unit || '';
-          // Format quantity with unit
-          const qtyWithUnit = unit ? `${quantity}\u00A0${unit}` : `${quantity}`;
+          const isGrams =
+            String(it.unit || '')
+              .trim()
+              .toLowerCase() === 'g';
+
+          // Price per 1 Kg (or per item if not weight-based)
+          const qtyInBaseUnit = isGrams ? quantity / 1000 : quantity;
+          const unitPrice = amount / qtyInBaseUnit;
 
           return [
             `${i + 1}.`,
             it.name || 'N/A',
-            `Rs. ${formatNumberWithCommas(unitPriceDisplay.toFixed(2))}`,
-            qtyWithUnit, // Updated: quantity with unit
-            `Rs. ${formatNumberWithCommas(normalPrice.toFixed(2))}`,
+            `Rs. ${formatNumberWithCommas(unitPrice)}`,
+            `${quantity} ${it.unit || ''}`.trim(),
+            `Rs. ${formatNumberWithCommas(amount)}`,
           ];
         }),
       ];
@@ -883,7 +881,7 @@ export class PostinvoiceService {
       invoice.additionalItems.reduce(
         (total, item) => total + parseFloat(item.normalPrice || '0'),
         0,
-      );
+      ) - parseNum(invoice.deliveryFee);
 
     if (
       invoice.orderApp !== 'Marketplace' &&

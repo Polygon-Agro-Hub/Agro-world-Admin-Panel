@@ -204,6 +204,7 @@ export class SrDriverReviewComponent implements OnInit {
 
   selectTab(tabKey: string): void {
     this.activeTab = tabKey;
+    console.log('this.activeTab', this.activeTab)
   }
 
   getCurrentTabIndex(): number {

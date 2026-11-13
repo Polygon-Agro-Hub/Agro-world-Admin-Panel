@@ -856,7 +856,7 @@ export class FinalinvoiceService {
     const svrFee =
       parseNum(invoice.grandTotal) -
       invoice.additionalItems.reduce(
-        (total, item) => total + parseFloat(item.normalPrice || '0'),
+        (total, item) => total + parseFloat(item.amount || '0'),
         0,
       ) - parseNum(invoice.deliveryFee);
 

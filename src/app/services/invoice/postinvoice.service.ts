@@ -282,7 +282,11 @@ export class PostinvoiceService {
     doc.text('Polygon Holdings (Private) Limited', 15, 25);
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
-    doc.text('Level 2, Building 2, No. 46/42, Nawam Mawatha, Colombo 02.', 15, 30);
+    doc.text(
+      'Level 2, Building 2, No. 46/42, Nawam Mawatha, Colombo 02.',
+      15,
+      30,
+    );
     doc.text('Contact No: 011 431 3433', 15, 35);
     doc.text('Email Address: info@polygon.lk', 15, 40);
 
@@ -418,7 +422,7 @@ export class PostinvoiceService {
 
     yPosition += 3;
 
-   const deliveryMethodY = yPosition;
+    const deliveryMethodY = yPosition;
     doc.setFont('helvetica', 'bold');
     doc.text('Delivery Method:', 15, yPosition);
     doc.setFont('helvetica', 'normal');
@@ -504,7 +508,7 @@ export class PostinvoiceService {
     );
     doc.setFontSize(9);
 
-    const creditPaidAmount = parseNum(String(invoice.creditPaid ?? ""));
+    const creditPaidAmount = parseNum(String(invoice.creditPaid ?? ''));
     const grandTotalAmount = parseNum(invoice.grandTotal);
     const paymentTypeLabel =
       this.detectPaymentType(
@@ -512,7 +516,7 @@ export class PostinvoiceService {
         invoice.deliveryMethod,
         creditPaidAmount,
         grandTotalAmount,
-      ) || "N/A";
+      ) || 'N/A';
 
     doc.setFont('helvetica', 'bold');
     doc.text('Payment Method:', 140, paymentMethodLabelY);
@@ -726,7 +730,9 @@ export class PostinvoiceService {
           },
         ],
         ...invoice.additionalItems.map((it, i) => {
-          const unitPrice = parseFloat(it.normalPrice || '0') / (parseFloat(it.quantity || '1') || 1);
+          const unitPrice =
+            parseFloat(it.normalPrice || '0') /
+            (parseFloat(it.quantity || '1') || 1);
           const itemDiscount = parseFloat(it.itemDiscount || '0');
           const quantity = parseFloat(
             it.quantity === '0.00' ? '1' : it.quantity || '1',
@@ -872,13 +878,23 @@ export class PostinvoiceService {
     }
 
     // Add service fee between Discount and Coupon Discount
+    const svrFee =
+      parseNum(invoice.grandTotal) -
+      invoice.additionalItems.reduce(
+        (total, item) => total + parseFloat(item.normalPrice || '0'),
+        0,
+      );
+
     if (
       invoice.orderApp !== 'Marketplace' &&
       invoice.additionalItems &&
       invoice.additionalItems.length > 0 &&
       (!invoice.familyPackItems || invoice.familyPackItems.length === 0)
     ) {
-      grandTotalBody.push(['Service Fee', 'Rs. 180.00']);
+      grandTotalBody.push([
+        'Service Fee',
+        `Rs. ${formatNumberWithCommas(svrFee)}`,
+      ]);
     }
 
     // Add coupon discount only if it has a value greater than 0
@@ -935,7 +951,7 @@ export class PostinvoiceService {
 
     const borderRowIndex = grandTotalBody.length - 2;
 
-        const GREEN_COLOR: [number, number, number] = [22, 163, 74];
+    const GREEN_COLOR: [number, number, number] = [22, 163, 74];
     const ORANGE_COLOR: [number, number, number] = [217, 119, 6];
 
     const isPaid = Number(invoice.isPaid) === 1;
@@ -1057,7 +1073,7 @@ export class PostinvoiceService {
 
       const iconX = 16;
       const iconRadius = 1.6;
-      const textX = iconX + iconRadius + 2.5; 
+      const textX = iconX + iconRadius + 2.5;
 
       const iconY = yPosition - 1;
 
@@ -1214,7 +1230,7 @@ export class PostinvoiceService {
               ctx.imageSmoothingEnabled = true;
               ctx.imageSmoothingQuality = 'high';
               ctx.drawImage(img, 0, 0, width, height);
- 
+
               const optimizedDataUrl = canvas.toDataURL('image/png');
               resolve(optimizedDataUrl);
               return;
@@ -1238,20 +1254,20 @@ export class PostinvoiceService {
     creditPaid: number,
     grandTotal: number,
   ): string {
-    const isPickup = deliveryMethod?.toLowerCase().includes("pickup");
+    const isPickup = deliveryMethod?.toLowerCase().includes('pickup');
     const hasCredit = creditPaid > 0;
     const fullyCoveredByCredit = hasCredit && creditPaid >= grandTotal - 0.01;
 
     if (fullyCoveredByCredit) {
-      return "Credit Balance";
+      return 'Credit Balance';
     }
 
-    if (payType === "Card") {
-      return hasCredit ? "Online Transfer + Credit Balance" : "Online Transfer";
+    if (payType === 'Card') {
+      return hasCredit ? 'Online Transfer + Credit Balance' : 'Online Transfer';
     }
 
-  // Cash
-    const base = isPickup ? "Cash on Pickup" : "Cash on Delivery";
+    // Cash
+    const base = isPickup ? 'Cash on Pickup' : 'Cash on Delivery';
     return hasCredit ? `${base} + Credit Balance` : base;
   }
 }

@@ -151,7 +151,7 @@ export class OnboardWBuyersComponent implements OnInit {
   }
 
   get idPlaceholder(): string {
-    return this.isNic ? '123456789V or 123456789012' : 'N1234567';
+    return this.isNic ? '123456789V or 123456789012' : 'e.g. N1234567';
   }
 
   private idValidator(control: AbstractControl): ValidationErrors | null {

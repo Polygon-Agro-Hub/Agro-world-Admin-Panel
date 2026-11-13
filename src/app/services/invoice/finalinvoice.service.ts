@@ -199,20 +199,20 @@ export class FinalinvoiceService {
     creditPaid: number,
     grandTotal: number,
   ): string {
-    const isPickup = deliveryMethod?.toLowerCase().includes("pickup");
+    const isPickup = deliveryMethod?.toLowerCase().includes('pickup');
     const hasCredit = creditPaid > 0;
     const fullyCoveredByCredit = hasCredit && creditPaid >= grandTotal - 0.01;
 
     if (fullyCoveredByCredit) {
-      return "Credit Balance";
+      return 'Credit Balance';
     }
 
-    if (payType === "Card") {
-      return hasCredit ? "Online Transfer + Credit Balance" : "Online Transfer";
+    if (payType === 'Card') {
+      return hasCredit ? 'Online Transfer + Credit Balance' : 'Online Transfer';
     }
 
-  // Cash
-    const base = isPickup ? "Cash on Pickup" : "Cash on Delivery";
+    // Cash
+    const base = isPickup ? 'Cash on Pickup' : 'Cash on Delivery';
     return hasCredit ? `${base} + Credit Balance` : base;
   }
 
@@ -286,7 +286,11 @@ export class FinalinvoiceService {
     doc.text('Polygon Holdings (Private) Ltd', 15, 25);
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
-    doc.text('Level 2, Building 2, No. 46/42, Nawam Mawatha, Colombo 02.', 15, 30);
+    doc.text(
+      'Level 2, Building 2, No. 46/42, Nawam Mawatha, Colombo 02.',
+      15,
+      30,
+    );
     doc.text('Contact No: 011 431 3433', 15, 35);
     doc.text('Email Address: info@polygon.lk', 15, 40);
 
@@ -498,7 +502,7 @@ export class FinalinvoiceService {
     );
     doc.setFontSize(9);
 
-    const creditPaidAmount = parseNum(String(invoice.creditPaid ?? ""));
+    const creditPaidAmount = parseNum(String(invoice.creditPaid ?? ''));
     const grandTotalAmount = parseNum(invoice.grandTotal);
     const paymentTypeLabel =
       this.detectPaymentType(
@@ -506,7 +510,7 @@ export class FinalinvoiceService {
         invoice.deliveryMethod,
         creditPaidAmount,
         grandTotalAmount,
-      ) || "N/A";
+      ) || 'N/A';
 
     doc.setFont('helvetica', 'bold');
     doc.text('Payment Method:', 140, paymentMethodLabelY);
@@ -719,7 +723,9 @@ export class FinalinvoiceService {
           },
         ],
         ...invoice.additionalItems.map((it, i) => {
-          const unitPrice = parseFloat(it.unitPrice || '0');
+          const unitPrice =
+            parseFloat(it.normalPrice || '0') /
+            (parseFloat(it.quantity || '1') || 1);
           const quantity = parseFloat(
             it.quantity === '0.00' ? '1' : it.quantity || '1',
           );
@@ -844,13 +850,23 @@ export class FinalinvoiceService {
       ]);
     }
 
+    const svrFee =
+      parseNum(invoice.grandTotal) -
+      invoice.additionalItems.reduce(
+        (total, item) => total + parseFloat(item.normalPrice || '0'),
+        0,
+      );
+
     if (
       invoice.orderApp !== 'Marketplace' &&
       invoice.additionalItems &&
       invoice.additionalItems.length > 0 &&
       (!invoice.familyPackItems || invoice.familyPackItems.length === 0)
     ) {
-      grandTotalBody.push(['Service Fee', 'Rs. 180.00']);
+      grandTotalBody.push([
+        'Service Fee',
+        `Rs. ${formatNumberWithCommas(svrFee)}`,
+      ]);
     }
 
     if (parseNum(invoice.discount) > 0) {

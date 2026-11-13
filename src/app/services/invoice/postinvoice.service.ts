@@ -101,7 +101,7 @@ export class PostinvoiceService {
       const familyPacks = response.data?.items?.familyPacks || [];
       const additionalItems = response.data?.items?.additionalItems || [];
       const pickupCenter = response.data?.pickupCenter || null;
-      const deliveryCharge = response.data?.deliveryCharge || null;
+      const deliveryCharge = response.data?.invoice?.deliveryFee || '0.00';
 
       const apiInvoiceNo = invoiceDetails.invoiceNumber;
       const finalInvoiceNo = tableInvoiceNo || apiInvoiceNo || 'N/A';
@@ -128,7 +128,7 @@ export class PostinvoiceService {
       if (invoiceDetails.deliveryMethod === 'Pickup') {
         deliveryFee = '0.00';
       } else if (deliveryCharge) {
-        deliveryFee = deliveryCharge.charge || '0.00';
+        deliveryFee = deliveryCharge || '0.00';
       }
 
       // Calculate totals
@@ -881,7 +881,7 @@ export class PostinvoiceService {
       invoice.additionalItems.reduce(
         (total, item) => total + parseFloat(item.normalPrice || '0'),
         0,
-      );
+      ) - parseNum(invoice.deliveryFee);
 
     if (
       invoice.orderApp !== 'Marketplace' &&

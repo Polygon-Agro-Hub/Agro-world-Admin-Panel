@@ -114,7 +114,6 @@ export class FinalinvoiceService {
           .includes('free delivery');
 
       const deliveryFee =
-        response.data?.deliveryCharge?.charge ||
         invoiceDetails.deliveryFee ||
         '0.00';
 
@@ -859,7 +858,7 @@ export class FinalinvoiceService {
       invoice.additionalItems.reduce(
         (total, item) => total + parseFloat(item.normalPrice || '0'),
         0,
-      );
+      ) - parseNum(invoice.deliveryFee);
 
     if (
       invoice.orderApp !== 'Marketplace' &&

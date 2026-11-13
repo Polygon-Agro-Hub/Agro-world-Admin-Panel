@@ -723,21 +723,25 @@ export class FinalinvoiceService {
           },
         ],
         ...invoice.additionalItems.map((it, i) => {
-          const unitPrice =
-            parseFloat(it.normalPrice || '0') /
-            (parseFloat(it.quantity || '1') || 1);
-          const quantity = parseFloat(
-            it.quantity === '0.00' ? '1' : it.quantity || '1',
-          );
-          const amount = parseFloat(it.normalPrice);
-          const unitPriceDisplay = unitPrice;
+          const rawQty = parseFloat(it.quantity || '1') || 1;
+          const quantity = it.quantity === '0.00' ? 1 : rawQty;
+          const amount = parseNum(it.normalPrice);
+
+          const isGrams =
+            String(it.unit || '')
+              .trim()
+              .toLowerCase() === 'g';
+
+          // Price per 1 Kg (or per item if not weight-based)
+          const qtyInBaseUnit = isGrams ? quantity / 1000 : quantity;
+          const unitPrice = amount / qtyInBaseUnit;
 
           return [
             `${i + 1}.`,
             it.name || 'N/A',
-            `Rs. ${formatNumberWithCommas(unitPriceDisplay.toFixed(2))}`,
+            `Rs. ${formatNumberWithCommas(unitPrice)}`,
             `${quantity} ${it.unit || ''}`.trim(),
-            `Rs. ${formatNumberWithCommas(amount.toFixed(2))}`,
+            `Rs. ${formatNumberWithCommas(amount)}`,
           ];
         }),
       ];

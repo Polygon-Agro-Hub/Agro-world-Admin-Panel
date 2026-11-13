@@ -881,7 +881,8 @@ export class PostinvoiceService {
       invoice.additionalItems.reduce(
         (total, item) => total + parseFloat(item.amount || '0'),
         0,
-      ) - parseNum(invoice.deliveryFee);
+      ) -
+      parseNum(invoice.deliveryFee);
 
     if (
       invoice.orderApp !== 'Marketplace' &&
@@ -928,12 +929,7 @@ export class PostinvoiceService {
         ? 180
         : 0;
 
-    const finalGrandTotal =
-      familyPackTotal +
-      additionalItemsTotalAmount +
-      deliveryFeeTotal +
-      serviceFee -
-      couponValue;
+    const finalGrandTotal = parseNum(invoice.grandTotal);
 
     // Add final total
     grandTotalBody.push([

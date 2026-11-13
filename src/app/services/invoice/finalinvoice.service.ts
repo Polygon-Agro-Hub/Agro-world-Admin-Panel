@@ -913,12 +913,7 @@ export class FinalinvoiceService {
         ? 180
         : 0;
 
-    const finalGrandTotal =
-      familyPackTotal +
-      additionalItemsTotal +
-      deliveryFeeTotal +
-      serviceFee -
-      discountTotal;
+      const finalGrandTotal = parseNum(invoice.grandTotal);
 
     grandTotalBody.push([
       {

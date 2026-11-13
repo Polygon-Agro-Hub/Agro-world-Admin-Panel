@@ -719,7 +719,7 @@ export class FinalinvoiceService {
           },
         ],
         ...invoice.additionalItems.map((it, i) => {
-          const unitPrice = parseFloat(it.unitPrice || '0');
+          const unitPrice = parseFloat(it.normalPrice || '0') / (parseFloat(it.quantity || '1') || 1);
           const quantity = parseFloat(
             it.quantity === '0.00' ? '1' : it.quantity || '1',
           );

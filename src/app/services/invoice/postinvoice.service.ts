@@ -101,7 +101,7 @@ export class PostinvoiceService {
       const familyPacks = response.data?.items?.familyPacks || [];
       const additionalItems = response.data?.items?.additionalItems || [];
       const pickupCenter = response.data?.pickupCenter || null;
-      const deliveryCharge = response.data?.deliveryCharge || null;
+      const deliveryCharge = response.data?.invoice?.deliveryFee || '0.00';
 
       const apiInvoiceNo = invoiceDetails.invoiceNumber;
       const finalInvoiceNo = tableInvoiceNo || apiInvoiceNo || 'N/A';
@@ -128,7 +128,7 @@ export class PostinvoiceService {
       if (invoiceDetails.deliveryMethod === 'Pickup') {
         deliveryFee = '0.00';
       } else if (deliveryCharge) {
-        deliveryFee = deliveryCharge.charge || '0.00';
+        deliveryFee = deliveryCharge || '0.00';
       }
 
       // Calculate totals
@@ -279,10 +279,14 @@ export class PostinvoiceService {
     // Company Info
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
-    doc.text('Polygon Holdings (Private) Ltd', 15, 25);
+    doc.text('Polygon Holdings (Private) Limited', 15, 25);
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
-    doc.text('Level 2, Building 2, No. 46/42, Nawam Mawatha, Colombo 02.', 15, 30);
+    doc.text(
+      'Level 2, Building 2, No. 46/42, Nawam Mawatha, Colombo 02.',
+      15,
+      30,
+    );
     doc.text('Contact No: 011 431 3433', 15, 35);
     doc.text('Email Address: info@polygon.lk', 15, 40);
 
@@ -418,7 +422,7 @@ export class PostinvoiceService {
 
     yPosition += 3;
 
-   const deliveryMethodY = yPosition;
+    const deliveryMethodY = yPosition;
     doc.setFont('helvetica', 'bold');
     doc.text('Delivery Method:', 15, yPosition);
     doc.setFont('helvetica', 'normal');
@@ -504,7 +508,7 @@ export class PostinvoiceService {
     );
     doc.setFontSize(9);
 
-    const creditPaidAmount = parseNum(String(invoice.creditPaid ?? ""));
+    const creditPaidAmount = parseNum(String(invoice.creditPaid ?? ''));
     const grandTotalAmount = parseNum(invoice.grandTotal);
     const paymentTypeLabel =
       this.detectPaymentType(
@@ -512,7 +516,7 @@ export class PostinvoiceService {
         invoice.deliveryMethod,
         creditPaidAmount,
         grandTotalAmount,
-      ) || "N/A";
+      ) || 'N/A';
 
     doc.setFont('helvetica', 'bold');
     doc.text('Payment Method:', 140, paymentMethodLabelY);
@@ -726,25 +730,25 @@ export class PostinvoiceService {
           },
         ],
         ...invoice.additionalItems.map((it, i) => {
-          const unitPrice = parseFloat(it.unitPrice || '0');
-          const itemDiscount = parseFloat(it.itemDiscount || '0');
-          const quantity = parseFloat(
-            it.quantity === '0.00' ? '1' : it.quantity || '1',
-          );
-          const normalPrice = parseFloat(it.normalPrice);
-          const unitPriceDisplay = unitPrice;
+          const rawQty = parseFloat(it.quantity || '1') || 1;
+          const quantity = it.quantity === '0.00' ? 1 : rawQty;
+          const amount = parseNum(it.normalPrice);
 
-          // Get unit for additional items from backend data
-          const unit = it.unit || '';
-          // Format quantity with unit
-          const qtyWithUnit = unit ? `${quantity}\u00A0${unit}` : `${quantity}`;
+          const isGrams =
+            String(it.unit || '')
+              .trim()
+              .toLowerCase() === 'g';
+
+          // Price per 1 Kg (or per item if not weight-based)
+          const qtyInBaseUnit = isGrams ? quantity / 1000 : quantity;
+          const unitPrice = amount / qtyInBaseUnit;
 
           return [
             `${i + 1}.`,
             it.name || 'N/A',
-            `Rs. ${formatNumberWithCommas(unitPriceDisplay.toFixed(2))}`,
-            qtyWithUnit, // Updated: quantity with unit
-            `Rs. ${formatNumberWithCommas(normalPrice.toFixed(2))}`,
+            `Rs. ${formatNumberWithCommas(unitPrice)}`,
+            `${quantity} ${it.unit || ''}`.trim(),
+            `Rs. ${formatNumberWithCommas(amount)}`,
           ];
         }),
       ];
@@ -872,13 +876,24 @@ export class PostinvoiceService {
     }
 
     // Add service fee between Discount and Coupon Discount
+    const svrFee =
+      parseNum(invoice.grandTotal) -
+      invoice.additionalItems.reduce(
+        (total, item) => total + parseFloat(item.amount || '0'),
+        0,
+      ) -
+      parseNum(invoice.deliveryFee);
+
     if (
       invoice.orderApp !== 'Marketplace' &&
       invoice.additionalItems &&
       invoice.additionalItems.length > 0 &&
       (!invoice.familyPackItems || invoice.familyPackItems.length === 0)
     ) {
-      grandTotalBody.push(['Service Fee', 'Rs. 180.00']);
+      grandTotalBody.push([
+        'Service Fee',
+        `Rs. ${formatNumberWithCommas(svrFee)}`,
+      ]);
     }
 
     // Add coupon discount only if it has a value greater than 0
@@ -914,12 +929,7 @@ export class PostinvoiceService {
         ? 180
         : 0;
 
-    const finalGrandTotal =
-      familyPackTotal +
-      additionalItemsTotalAmount +
-      deliveryFeeTotal +
-      serviceFee -
-      couponValue;
+    const finalGrandTotal = parseNum(invoice.grandTotal);
 
     // Add final total
     grandTotalBody.push([
@@ -935,7 +945,7 @@ export class PostinvoiceService {
 
     const borderRowIndex = grandTotalBody.length - 2;
 
-        const GREEN_COLOR: [number, number, number] = [22, 163, 74];
+    const GREEN_COLOR: [number, number, number] = [22, 163, 74];
     const ORANGE_COLOR: [number, number, number] = [217, 119, 6];
 
     const isPaid = Number(invoice.isPaid) === 1;
@@ -1057,7 +1067,7 @@ export class PostinvoiceService {
 
       const iconX = 16;
       const iconRadius = 1.6;
-      const textX = iconX + iconRadius + 2.5; 
+      const textX = iconX + iconRadius + 2.5;
 
       const iconY = yPosition - 1;
 
@@ -1214,7 +1224,7 @@ export class PostinvoiceService {
               ctx.imageSmoothingEnabled = true;
               ctx.imageSmoothingQuality = 'high';
               ctx.drawImage(img, 0, 0, width, height);
- 
+
               const optimizedDataUrl = canvas.toDataURL('image/png');
               resolve(optimizedDataUrl);
               return;
@@ -1238,20 +1248,20 @@ export class PostinvoiceService {
     creditPaid: number,
     grandTotal: number,
   ): string {
-    const isPickup = deliveryMethod?.toLowerCase().includes("pickup");
+    const isPickup = deliveryMethod?.toLowerCase().includes('pickup');
     const hasCredit = creditPaid > 0;
     const fullyCoveredByCredit = hasCredit && creditPaid >= grandTotal - 0.01;
 
     if (fullyCoveredByCredit) {
-      return "Credit Balance";
+      return 'Credit Balance';
     }
 
-    if (payType === "Card") {
-      return hasCredit ? "Online Transfer + Credit Balance" : "Online Transfer";
+    if (payType === 'Card') {
+      return hasCredit ? 'Online Transfer + Credit Balance' : 'Online Transfer';
     }
 
-  // Cash
-    const base = isPickup ? "Cash on Pickup" : "Cash on Delivery";
+    // Cash
+    const base = isPickup ? 'Cash on Pickup' : 'Cash on Delivery';
     return hasCredit ? `${base} + Credit Balance` : base;
   }
 }

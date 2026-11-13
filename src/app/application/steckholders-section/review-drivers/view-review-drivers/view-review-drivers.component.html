@@ -82,15 +82,17 @@
                 <tbody class="divide-y divide-gray-300 dark:divide-[#4B555A]">
                     <tr *ngFor="let d of drivers; let i = index">
                         <td class="px-4 py-4 text-[#000000] dark:text-textDark">{{ i < 9 ? '0' + (i + 1) : i + 1 }}</td>
-                        <td class="px-4 py-4 text-[#000000] dark:text-textDark whitespace-nowrap">{{ d.firstNameEnglish
-                            }}</td>
-                        <td class="px-4 py-4 text-[#000000] dark:text-textDark whitespace-nowrap">{{ d.lastNameEnglish
-                            }}</td>
+                        <td class="px-4 py-4 text-[#000000] dark:text-textDark whitespace-nowrap">
+                            <div class="max-w-[150px] truncate" [title]="d.firstNameEnglish || ''">{{ d.firstNameEnglish }}</div>
+                        </td>
+                        <td class="px-4 py-4 text-[#000000] dark:text-textDark whitespace-nowrap">
+                            <div class="max-w-[150px] truncate" [title]="d.lastNameEnglish || ''">{{ d.lastNameEnglish }}</div>
+                        </td>
                         <td class="px-4 py-4 text-[#000000] dark:text-textDark text-center whitespace-nowrap">{{
                             d.jobRole }}</td>
-                        <td class="px-4 py-4 text-[#000000] dark:text-textDark font-mono whitespace-nowrap">{{
+                        <td class="px-4 py-4 text-[#000000] dark:text-textDark whitespace-nowrap">{{
                             formatPhone(d.phoneCode01, d.phoneNumber01) }}</td>
-                        <td class="px-4 py-4 text-[#000000] dark:text-textDark font-mono whitespace-nowrap">{{ d.nic }}
+                        <td class="px-4 py-4 text-[#000000] dark:text-textDark whitespace-nowrap">{{ d.nic }}
                         </td>
                         <td class="px-4 py-4 text-[#000000] dark:text-textDark">
                             {{ d.createdAt | date : 'hh:mm a' }},<br />

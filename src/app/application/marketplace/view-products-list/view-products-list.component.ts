@@ -379,6 +379,7 @@ class ProductList {
   varietyNameEnglish!: string;
   discountedPrice: number = -1;
   comPrice: number = -1;
+  pkgBasePrice!: number | null;
   startValue!: number;
   maxQuantity!: number;
   discount!: number;

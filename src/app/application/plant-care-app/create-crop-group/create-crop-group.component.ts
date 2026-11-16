@@ -253,17 +253,14 @@ export class CreateCropGroupComponent {
       return;
     }
 
-    // Show every inline error, even if the user never touched the fields
     if (this.cropForm) {
-      this.cropForm.form.markAllAsTouched();
       Object.keys(this.cropForm.controls).forEach((key) => {
         this.cropForm.controls[key].markAsTouched();
       });
     }
     this.imageTouched = true;
 
-    // Image error no longer depends on the user having clicked "Add Image"
-    if (!this.selectedFile) {
+    if (this.isInputClicked && !this.selectedFile) {
       this.errorMassage = 'Please select an image';
     }
 

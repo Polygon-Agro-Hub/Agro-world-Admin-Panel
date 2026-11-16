@@ -13,346 +13,354 @@
       Add Crop Group
     </h2>
 
-    <div class="space-y-4">
-      <!-- Display -->
-      <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
-          Display *
-        </label>
-        <div
-          class="mt-2 inline-flex items-center gap-8 px-5 py-2 border border-[#4A90E2] rounded-lg text-gray-700 dark:text-textDark">
-          <label class="flex items-center gap-2 cursor-pointer">
-            <input type="radio" name="displayFor" value="Farmery" [(ngModel)]="cropGroup.displayFor"
-              class="accent-[#4A90E2]" />
-            Farmers Only
+    <form #cropForm="ngForm">
+      <div class="space-y-4">
+        <!-- Display -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            Display *
           </label>
-          <label class="flex items-center gap-2 cursor-pointer">
-            <input type="radio" name="displayFor" value="Sales" [(ngModel)]="cropGroup.displayFor"
-              class="accent-[#4A90E2]" />
-            Sales Only
+          <div
+            class="mt-2 inline-flex items-center gap-8 px-5 py-2 border border-[#4A90E2] rounded-lg text-gray-700 dark:text-textDark">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="radio" name="displayFor" value="Farmery" [(ngModel)]="cropGroup.displayFor"
+                class="accent-[#4A90E2]" />
+              Farmers Only
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="radio" name="displayFor" value="Sales" [(ngModel)]="cropGroup.displayFor"
+                class="accent-[#4A90E2]" />
+              Sales Only
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="radio" name="displayFor" value="Both" [(ngModel)]="cropGroup.displayFor"
+                class="accent-[#4A90E2]" />
+              Both
+            </label>
+          </div>
+        </div>
+
+        <!-- Crop Name -->
+        <div>
+          <label for="cropName" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            Crop Name By English *
           </label>
-          <label class="flex items-center gap-2 cursor-pointer">
-            <input type="radio" name="displayFor" value="Both" [(ngModel)]="cropGroup.displayFor"
-              class="accent-[#4A90E2]" />
-            Both
+          <input type="text" id="cropName" name="cropName" [(ngModel)]="cropGroup.cropNameEnglish"
+            #cropEngNameInput="ngModel" (input)="capitalizeFirstLetter($event)" (keydown)="preventLeadingSpace($event)"
+            pattern="^(?!\d+$)[a-zA-Z\s]*$" required
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark" />
+
+          <!-- Validation Errors -->
+          <div *ngIf="cropEngNameInput.touched">
+            <div *ngIf="cropEngNameInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+              Crop Name By English is required
+            </div>
+            <!-- <div *ngIf="cropEngNameInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+              Crop name cannot be only numbers and special characters are not allowed
+            </div> -->
+          </div>
+        </div>
+
+        <!-- Crop Name Sinhala -->
+        <div *ngIf="!isSalesOnly(cropGroup.displayFor)">
+          <label for="cropNameSin" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            Crop Name By Sinhala *
           </label>
-        </div>
-      </div>
-      <!-- Crop Name -->
-      <div>
-        <label for="cropName" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-          Crop Name By English *
-        </label>
-        <input type="text" id="cropName" name="cropName" [(ngModel)]="cropGroup.cropNameEnglish"
-          #cropEngNameInput="ngModel" (input)="capitalizeFirstLetter($event)" (keydown)="preventLeadingSpace($event)"
-          pattern="^(?!\d+$)[a-zA-Z\s]*$" required
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark" />
+          <input type="text" id="cropNameSin" [(ngModel)]="cropGroup.cropNameSinahala" name="cropNameSinhala"
+            (keydown)="preventLeadingSpace($event)"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
+            #cropSinNameInput="ngModel" pattern="^(?!\d+$)[\u0D80-\u0DFF\s]*$" required />
 
-        <!-- Validation Errors -->
-        <div *ngIf="cropEngNameInput.touched">
-          <div *ngIf="cropEngNameInput.errors?.['required']" class="text-red-500 text-sm mt-1">
-            Crop Name By English is required
-          </div>
-          <!-- <div *ngIf="cropEngNameInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
-            Crop name cannot be only numbers and special characters are not allowed
-          </div> -->
-        </div>
-      </div>
-
-      <!-- Crop Name Sinhala -->
-      <div *ngIf="!isSalesOnly(cropGroup.displayFor)">
-        <label for="cropNameSin" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-          Crop Name By Sinhala *
-        </label>
-        <input type="text" id="cropNameSin" [(ngModel)]="cropGroup.cropNameSinahala" name="cropNameSinhala"
-          (keydown)="preventLeadingSpace($event)"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
-          #cropSinNameInput="ngModel" pattern="^(?!\d+$)[\u0D80-\u0DFF\s]*$" required />
-
-        <!-- Validation Errors -->
-        <div *ngIf="cropSinNameInput.touched">
-          <div *ngIf="cropSinNameInput.errors?.['required']" class="text-red-500 text-sm mt-1">
-            Sinhala Crop name is required
-          </div>
-          <!-- <div *ngIf="cropSinNameInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
-            Crop name cannot be only numbers and only Sinhala characters are allowed
-          </div> -->
-        </div>
-      </div>
-
-      <!-- Crop Name Tamil -->
-      <div *ngIf="!isSalesOnly(cropGroup.displayFor)">
-        <label for="cropNameTam" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-          Crop Name By Tamil *
-        </label>
-        <input type="text" id="cropNameTam" [(ngModel)]="cropGroup.cropNameTamil" name="cropNameTamil"
-          (keydown)="preventLeadingSpace($event)"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
-          #cropTamilNameInput="ngModel" pattern="^(?!\d+$)[\u0B80-\u0BFF\s]*$" required />
-
-        <!-- Validation Errors -->
-        <div *ngIf="cropTamilNameInput.touched">
-          <div *ngIf="cropTamilNameInput.errors?.['required']" class="text-red-500 text-sm mt-1">
-            Tamil Crop name is required
-          </div>
-          <!-- <div *ngIf="cropTamilNameInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
-            Crop name cannot be only numbers and only Tamil characters are allowed
-          </div> -->
-        </div>
-      </div>
-
-      <!-- Select Parent Category -->
-      <div>
-        <label for="parentCategory" class="block text-sm font-medium mb-1 text-gray-700 dark:text-textDark">Select
-          Parent Category *</label>
-        <p-dropdown id="parentCategory" [(ngModel)]="cropGroup.parentCategory" [options]="categories"
-          placeholder="Select Category" [filter]="true" showClear="true" [ngClass]="{
-    'border-red-500':
-      !cropGroup.parentCategory && parentCategoryInput?.touched,
-  }" class="block w-full mt-2 text-gray-700 dark:text-textDark bg-tileLight dark:bg-tileBlack rounded-md py-2 shadow-sm p-dropdown-custom parent-category-dropdown"
-          #parentCategoryInput="ngModel" panelStyleClass="custom-dropdown-panel" styleClass="w-full" appendTo="body">
-        </p-dropdown>
-
-        <!-- Validation Error -->
-        <div *ngIf="
-            parentCategoryInput.touched &&
-            parentCategoryInput.errors?.['required']
-          " class="text-red-500 text-sm mt-1">
-          Parent Category is required
-        </div>
-      </div>
-
-      <div *ngIf="!isSalesOnly(cropGroup.displayFor)">
-        <label for="costPerAcre" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-          Cost per acre field (Rs.) *
-        </label>
-        <input #costInput type="text" inputmode="decimal" id="costPerAcre" name="costFeild" [ngModel]="costFeildDisplay"
-          (ngModelChange)="onCostFieldChange($event, costInput)" (keydown)="allowOnlyNumbers($event)"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
-          #costperacreInput="ngModel" pattern="^(?![0,]*\.?0*$)\d{1,3}(,\d{3})*(\.\d{1,2})?$" required />
-
-        <!-- Validation Errors -->
-        <div *ngIf="costperacreInput.touched">
-          <div *ngIf="costperacreInput.errors?.['required']" class="text-red-500 text-sm mt-1">
-            Cost Per Acre is required
-          </div>
-          <div *ngIf="costperacreInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
-            Please enter a valid amount.
+          <!-- Validation Errors -->
+          <div *ngIf="cropSinNameInput.touched">
+            <div *ngIf="cropSinNameInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+              Sinhala Crop name is required
+            </div>
+            <!-- <div *ngIf="cropSinNameInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+              Crop name cannot be only numbers and only Sinhala characters are allowed
+            </div> -->
           </div>
         </div>
-      </div>
 
-      <div *ngIf="!isSalesOnly(cropGroup.displayFor)">
-        <label for="incomePerAcre" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-          Income per acre field (Rs.) *
-        </label>
-        <input #incomeInput type="text" inputmode="decimal" id="incomePerAcre" name="incomeFeild"
-          [ngModel]="incomeFeildDisplay" (ngModelChange)="onIncomeFieldChange($event, incomeInput)"
-          (keydown)="allowOnlyNumbers($event)"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
-          #incomeperacreInput="ngModel" pattern="^(?![0,]*\.?0*$)\d{1,3}(,\d{3})*(\.\d{1,2})?$" required />
+        <!-- Crop Name Tamil -->
+        <div *ngIf="!isSalesOnly(cropGroup.displayFor)">
+          <label for="cropNameTam" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            Crop Name By Tamil *
+          </label>
+          <input type="text" id="cropNameTam" [(ngModel)]="cropGroup.cropNameTamil" name="cropNameTamil"
+            (keydown)="preventLeadingSpace($event)"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
+            #cropTamilNameInput="ngModel" pattern="^(?!\d+$)[\u0B80-\u0BFF\s]*$" required />
 
-        <!-- Validation Errors -->
-        <div *ngIf="incomeperacreInput.touched">
-          <div *ngIf="incomeperacreInput.errors?.['required']" class="text-red-500 text-sm mt-1">
-            Income Per Acre is required
-          </div>
-          <div *ngIf="incomeperacreInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
-            Please enter a valid amount.
+          <!-- Validation Errors -->
+          <div *ngIf="cropTamilNameInput.touched">
+            <div *ngIf="cropTamilNameInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+              Tamil Crop name is required
+            </div>
+            <!-- <div *ngIf="cropTamilNameInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+              Crop name cannot be only numbers and only Tamil characters are allowed
+            </div> -->
           </div>
         </div>
-      </div>
 
-      <!-- Seed Rate -->
-      <div *ngIf="!isSalesOnly(cropGroup.displayFor)">
-        <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
-          Recommended Seed Rate per Unit (kg/ha) *
-        </label>
-        <input type="text" [(ngModel)]="cropGroup.seedRate" name="seedRate" (keydown)="allowDecimal3Places($event)"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
-          #seedRateInput="ngModel" pattern="^\d+(\.\d{1,3})?$" required />
-        <div *ngIf="seedRateInput.touched">
-          <div *ngIf="seedRateInput.errors?.['required']" class="text-red-500 text-sm mt-1">
-            Seed Rate is required
+        <!-- Select Parent Category -->
+        <div>
+          <label for="parentCategory" class="block text-sm font-medium mb-1 text-gray-700 dark:text-textDark">Select
+            Parent Category *</label>
+          <p-dropdown id="parentCategory" name="parentCategory" required [(ngModel)]="cropGroup.parentCategory"
+            [options]="categories" placeholder="Select Category" [filter]="true" showClear="true" [ngClass]="{
+              'border-red-500':
+                !cropGroup.parentCategory && parentCategoryInput?.touched,
+            }"
+            class="block w-full mt-2 text-gray-700 dark:text-textDark bg-tileLight dark:bg-tileBlack rounded-md py-2 shadow-sm p-dropdown-custom parent-category-dropdown"
+            #parentCategoryInput="ngModel" panelStyleClass="custom-dropdown-panel" styleClass="w-full" appendTo="body">
+          </p-dropdown>
+
+          <!-- Validation Error -->
+          <div *ngIf="
+              parentCategoryInput.touched &&
+              parentCategoryInput.errors?.['required']
+            " class="text-red-500 text-sm mt-1">
+            Parent Category is required
           </div>
-          <div *ngIf="seedRateInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
-            Max 3 decimal places allowed
+        </div>
+
+        <!-- Cost per acre -->
+        <div *ngIf="!isSalesOnly(cropGroup.displayFor)">
+          <label for="costPerAcre" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            Cost per acre field (Rs.) *
+          </label>
+          <input #costInput type="text" inputmode="decimal" id="costPerAcre" name="costFeild"
+            [ngModel]="costFeildDisplay" (ngModelChange)="onCostFieldChange($event, costInput)"
+            (keydown)="allowOnlyNumbers($event)"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
+            #costperacreInput="ngModel" pattern="^(?![0,]*\.?0*$)\d{1,3}(,\d{3})*(\.\d{1,2})?$" required />
+
+          <!-- Validation Errors -->
+          <div *ngIf="costperacreInput.touched">
+            <div *ngIf="costperacreInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+              Cost Per Acre is required
+            </div>
+            <div *ngIf="costperacreInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+              Please enter a valid amount.
+            </div>
+          </div>
+        </div>
+
+        <!-- Income per acre -->
+        <div *ngIf="!isSalesOnly(cropGroup.displayFor)">
+          <label for="incomePerAcre" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            Income per acre field (Rs.) *
+          </label>
+          <input #incomeInput type="text" inputmode="decimal" id="incomePerAcre" name="incomeFeild"
+            [ngModel]="incomeFeildDisplay" (ngModelChange)="onIncomeFieldChange($event, incomeInput)"
+            (keydown)="allowOnlyNumbers($event)"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
+            #incomeperacreInput="ngModel" pattern="^(?![0,]*\.?0*$)\d{1,3}(,\d{3})*(\.\d{1,2})?$" required />
+
+          <!-- Validation Errors -->
+          <div *ngIf="incomeperacreInput.touched">
+            <div *ngIf="incomeperacreInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+              Income Per Acre is required
+            </div>
+            <div *ngIf="incomeperacreInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+              Please enter a valid amount.
+            </div>
+          </div>
+        </div>
+
+        <!-- Seed Rate -->
+        <div *ngIf="!isSalesOnly(cropGroup.displayFor)">
+          <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            Recommended Seed Rate per Unit (kg/ha) *
+          </label>
+          <input type="text" [(ngModel)]="cropGroup.seedRate" name="seedRate" (keydown)="allowDecimal3Places($event)"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
+            #seedRateInput="ngModel" pattern="^\d+(\.\d{1,3})?$" required />
+          <div *ngIf="seedRateInput.touched">
+            <div *ngIf="seedRateInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+              Seed Rate is required
+            </div>
+            <div *ngIf="seedRateInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+              Max 3 decimal places allowed
+            </div>
+            <div *ngIf="
+                !seedRateInput.errors?.['required'] &&
+                !seedRateInput.errors?.['pattern'] &&
+                +seedRateInput.value < 0.001
+              " class="text-red-500 text-sm mt-1">
+              Minimum value is 0.001
+            </div>
+          </div>
+        </div>
+
+        <!-- Row Spacing -->
+        <div *ngIf="!isSalesOnly(cropGroup.displayFor)">
+          <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            Row Spacing (cm) *
+          </label>
+          <input type="text" [(ngModel)]="cropGroup.rowSpace" name="rowSpace" (keydown)="allowDecimal1Place($event)"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
+            #rowSpaceInput="ngModel" pattern="^\d+(\.\d{1})?$" required />
+          <div *ngIf="rowSpaceInput.touched">
+            <div *ngIf="rowSpaceInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+              Row Spacing is required
+            </div>
+            <div *ngIf="rowSpaceInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+              Max 1 decimal place allowed
+            </div>
+            <div *ngIf="
+                !rowSpaceInput.errors?.['required'] &&
+                !rowSpaceInput.errors?.['pattern'] &&
+                +rowSpaceInput.value < 0.1
+              " class="text-red-500 text-sm mt-1">
+              Minimum value is 0.1
+            </div>
+          </div>
+        </div>
+
+        <!-- Plant Spacing -->
+        <div *ngIf="!isSalesOnly(cropGroup.displayFor)">
+          <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            Plant Spacing (cm) *
+          </label>
+          <input type="text" [(ngModel)]="cropGroup.plantSpace" name="plantSpace" (keydown)="allowDecimal1Place($event)"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
+            #plantSpaceInput="ngModel" pattern="^\d+(\.\d{1})?$" required />
+          <div *ngIf="plantSpaceInput.touched">
+            <div *ngIf="plantSpaceInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+              Plant Spacing is required
+            </div>
+            <div *ngIf="plantSpaceInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+              Max 1 decimal place allowed
+            </div>
+            <div *ngIf="
+                !plantSpaceInput.errors?.['required'] &&
+                !plantSpaceInput.errors?.['pattern'] &&
+                +plantSpaceInput.value < 0.1
+              " class="text-red-500 text-sm mt-1">
+              Minimum value is 0.1
+            </div>
+          </div>
+        </div>
+
+        <!-- Average Yield -->
+        <div *ngIf="!isSalesOnly(cropGroup.displayFor)">
+          <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            Average Yield per Plant (kg) *
+          </label>
+          <input type="text" [(ngModel)]="cropGroup.AvgYield" name="AvgYield" (keydown)="allowDecimal3Places($event)"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
+            #avgYieldInput="ngModel" pattern="^\d+(\.\d{1,3})?$" required />
+          <div *ngIf="avgYieldInput.touched">
+            <div *ngIf="avgYieldInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+              Average Yield is required
+            </div>
+            <div *ngIf="avgYieldInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+              Max 3 decimal places allowed
+            </div>
+            <div *ngIf="
+                !avgYieldInput.errors?.['required'] &&
+                !avgYieldInput.errors?.['pattern'] &&
+                +avgYieldInput.value < 0.001
+              " class="text-red-500 text-sm mt-1">
+              Minimum value is 0.001
+            </div>
+          </div>
+        </div>
+
+        <!-- NPK Ratio -->
+        <div *ngIf="!isSalesOnly(cropGroup.displayFor)">
+          <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            Recommended NPK Ratio (kg/ha) *
+          </label>
+          <div class="flex items-center gap-4 mt-1 flex-wrap">
+            <span class="text-sm text-gray-700 dark:text-textDark">Nitrogen</span>
+            <input type="text" [(ngModel)]="cropGroup.nitrogen" name="nitrogen" (keydown)="allowNPKValue($event)"
+              (paste)="blockDecimalPaste($event)" (input)="sanitizeNPKInput($event, cropGroup, 'nitrogen')"
+              class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
+              #nitrogenInput="ngModel" pattern="^(?:[0-9]|[1-9][0-9])$" maxlength="2" autocomplete="off" required />
+            <span class="text-sm text-gray-700 dark:text-textDark">Phosphorus</span>
+            <input type="text" [(ngModel)]="cropGroup.phosphorus" name="phosphorus" (keydown)="allowNPKValue($event)"
+              (paste)="blockDecimalPaste($event)" (input)="sanitizeNPKInput($event, cropGroup, 'phosphorus')"
+              class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
+              #phosphorusInput="ngModel" pattern="^(?:[0-9]|[1-9][0-9])$" maxlength="2" autocomplete="off" required />
+            <span class="text-sm text-gray-700 dark:text-textDark">Potassium</span>
+            <input type="text" [(ngModel)]="cropGroup.potassium" name="potassium" (keydown)="allowNPKValue($event)"
+              (paste)="blockDecimalPaste($event)" (input)="sanitizeNPKInput($event, cropGroup, 'potassium')"
+              class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
+              #potassiumInput="ngModel" pattern="^(?:[0-9]|[1-9][0-9])$" maxlength="2" autocomplete="off" required />
           </div>
           <div *ngIf="
-              !seedRateInput.errors?.['required'] &&
-              !seedRateInput.errors?.['pattern'] &&
-              +seedRateInput.value < 0.001
+              (nitrogenInput.touched && nitrogenInput.errors?.['required']) ||
+              (phosphorusInput.touched && phosphorusInput.errors?.['required']) ||
+              (potassiumInput.touched && potassiumInput.errors?.['required'])
             " class="text-red-500 text-sm mt-1">
-            Minimum value is 0.001
-          </div>
-        </div>
-      </div>
-
-      <!-- Row Spacing -->
-      <div *ngIf="!isSalesOnly(cropGroup.displayFor)">
-        <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
-          Row Spacing (cm) *
-        </label>
-        <input type="text" [(ngModel)]="cropGroup.rowSpace" name="rowSpace" (keydown)="allowDecimal1Place($event)"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
-          #rowSpaceInput="ngModel" pattern="^\d+(\.\d{1})?$" required />
-        <div *ngIf="rowSpaceInput.touched">
-          <div *ngIf="rowSpaceInput.errors?.['required']" class="text-red-500 text-sm mt-1">
-            Row Spacing is required
-          </div>
-          <div *ngIf="rowSpaceInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
-            Max 1 decimal place allowed
+            All NPK values are required
           </div>
           <div *ngIf="
-              !rowSpaceInput.errors?.['required'] &&
-              !rowSpaceInput.errors?.['pattern'] &&
-              +rowSpaceInput.value < 0.1
+              (nitrogenInput.touched && nitrogenInput.errors?.['pattern']) ||
+              (phosphorusInput.touched && phosphorusInput.errors?.['pattern']) ||
+              (potassiumInput.touched && potassiumInput.errors?.['pattern'])
             " class="text-red-500 text-sm mt-1">
-            Minimum value is 0.1
+            NPK values must be whole numbers between 0 and 99
           </div>
         </div>
-      </div>
 
-      <!-- Plant Spacing -->
-      <div *ngIf="!isSalesOnly(cropGroup.displayFor)">
-        <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
-          Plant Spacing (cm) *
-        </label>
-        <input type="text" [(ngModel)]="cropGroup.plantSpace" name="plantSpace" (keydown)="allowDecimal1Place($event)"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
-          #plantSpaceInput="ngModel" pattern="^\d+(\.\d{1})?$" required />
-        <div *ngIf="plantSpaceInput.touched">
-          <div *ngIf="plantSpaceInput.errors?.['required']" class="text-red-500 text-sm mt-1">
-            Plant Spacing is required
-          </div>
-          <div *ngIf="plantSpaceInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
-            Max 1 decimal place allowed
-          </div>
-          <div *ngIf="
-              !plantSpaceInput.errors?.['required'] &&
-              !plantSpaceInput.errors?.['pattern'] &&
-              +plantSpaceInput.value < 0.1
-            " class="text-red-500 text-sm mt-1">
-            Minimum value is 0.1
-          </div>
-        </div>
-      </div>
+        <!-- Add Image -->
+        <input type="file" id="imageUpload" accept="image/*" class="hidden" (change)="onFileSelected($event)" />
 
-      <!-- Average Yield -->
-      <div *ngIf="!isSalesOnly(cropGroup.displayFor)">
-        <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
-          Average Yield per Plant (kg) *
-        </label>
-        <input type="text" [(ngModel)]="cropGroup.AvgYield" name="AvgYield" (keydown)="allowDecimal3Places($event)"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
-          #avgYieldInput="ngModel" pattern="^\d+(\.\d{1,3})?$" required />
-        <div *ngIf="avgYieldInput.touched">
-          <div *ngIf="avgYieldInput.errors?.['required']" class="text-red-500 text-sm mt-1">
-            Average Yield is required
-          </div>
-          <div *ngIf="avgYieldInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
-            Max 3 decimal places allowed
-          </div>
-          <div *ngIf="
-              !avgYieldInput.errors?.['required'] &&
-              !avgYieldInput.errors?.['pattern'] &&
-              +avgYieldInput.value < 0.001
-            " class="text-red-500 text-sm mt-1">
-            Minimum value is 0.001
-          </div>
-        </div>
-      </div>
-
-      <!-- NPK Ratio -->
-      <div *ngIf="!isSalesOnly(cropGroup.displayFor)">
-        <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
-          Recommended NPK Ratio (kg/ha) *
-        </label>
-        <div class="flex items-center gap-4 mt-1 flex-wrap">
-          <span class="text-sm text-gray-700 dark:text-textDark">Nitrogen</span>
-          <input type="text" [(ngModel)]="cropGroup.nitrogen" name="nitrogen" (keydown)="allowNPKValue($event)"
-            (paste)="blockDecimalPaste($event)" (input)="sanitizeNPKInput($event, cropGroup, 'nitrogen')"
-            class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
-            #nitrogenInput="ngModel" pattern="^(?:[0-9]|[1-9][0-9])$" maxlength="2" autocomplete="off" required />
-          <span class="text-sm text-gray-700 dark:text-textDark">Phosphorus</span>
-          <input type="text" [(ngModel)]="cropGroup.phosphorus" name="phosphorus" (keydown)="allowNPKValue($event)"
-            (paste)="blockDecimalPaste($event)" (input)="sanitizeNPKInput($event, cropGroup, 'phosphorus')"
-            class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
-            #phosphorusInput="ngModel" pattern="^(?:[0-9]|[1-9][0-9])$" maxlength="2" autocomplete="off" required />
-          <span class="text-sm text-gray-700 dark:text-textDark">Potassium</span>
-          <input type="text" [(ngModel)]="cropGroup.potassium" name="potassium" (keydown)="allowNPKValue($event)"
-            (paste)="blockDecimalPaste($event)" (input)="sanitizeNPKInput($event, cropGroup, 'potassium')"
-            class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-gray-700 dark:text-textDark"
-            #potassiumInput="ngModel" pattern="^(?:[0-9]|[1-9][0-9])$" maxlength="2" autocomplete="off" required />
-        </div>
-        <div *ngIf="
-            (nitrogenInput.touched && nitrogenInput.errors?.['required']) ||
-            (phosphorusInput.touched && phosphorusInput.errors?.['required']) ||
-            (potassiumInput.touched && potassiumInput.errors?.['required'])
-          " class="text-red-500 text-sm mt-1">
-          All NPK values are required
-        </div>
-        <div *ngIf="
-            (nitrogenInput.touched && nitrogenInput.errors?.['pattern']) ||
-            (phosphorusInput.touched && phosphorusInput.errors?.['pattern']) ||
-            (potassiumInput.touched && potassiumInput.errors?.['pattern'])
-          " class="text-red-500 text-sm mt-1">
-          NPK values must be whole numbers between 0 and 99
-        </div>
-      </div>
-
-      <!-- Add Image -->
-      <input type="file" id="imageUpload" accept="image/*" class="hidden" (change)="onFileSelected($event)" />
-
-      <!-- Button -->
-      <button class="flex items-center text-gray-700 dark:text-textDark" (click)="triggerFileInput($event)">
-        Add Image *
-        <span
-          class="flex justify-center items-center w-6 h-6 ml-2 border border-[#4A90E2] rounded text-blue-500 font-bold">
-          <i class="fa-solid fa-plus" style="color: #4a90e2"></i>
-        </span>
-      </button>
-
-      <!-- Image Validation Error -->
-      <div *ngIf="errorMassage" class="text-red-500 text-sm mt-1">
-        Please select an image
-      </div>
-
-      <div *ngIf="selectedFileName" class="mt-2 text-textLight dark:text-textDark w-full block">
-        <div class="w-full h-72 py-5 mt-2 content-center flex justify-center border">
-          <img [src]="selectedImage" alt="Crop Image" class="max-w-full w-auto object-contain" />
-        </div>
-        <div class="text-center mt-2 text-base font-medium">
-          {{ selectedFileName }}
-        </div>
-      </div>
-
-      <!-- Add Background Color -->
-      <div class="flex items-center space-x-4">
-        <label for="bgColor" class="block text-sm font-medium text-gray-700 dark:text-textDark pt-2">Color *</label>
-        <ngx-colors ngx-colors-trigger [(ngModel)]="cropGroup.bgColor" (colorChange)="onColorChange($event)"
-          style="display: inline-block; margin: 5px" #bgColorInput="ngModel" required>
-        </ngx-colors>
-
-        <!-- Validation Error -->
-        <div *ngIf="bgColorInput.touched && bgColorInput.errors?.['required']" class="text-red-500 text-sm mt-1">
-          Background Color is required
-        </div>
-      </div>
-
-      <!-- Buttons -->
-      <div class="flex justify-end space-x-4 mt-6">
-        <button type="button" (click)="onCancel()"
-          class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md">
-          Cancel
+        <!-- Button -->
+        <button type="button" class="flex items-center text-gray-700 dark:text-textDark"
+          (click)="triggerFileInput($event)">
+          Add Image *
+          <span
+            class="flex justify-center items-center w-6 h-6 ml-2 border border-[#4A90E2] rounded text-blue-500 font-bold">
+            <i class="fa-solid fa-plus" style="color: #4a90e2"></i>
+          </span>
         </button>
-        <button type="submit" (click)="onSubmit()" [attr.aria-busy]="isSubmitting"
-          [class.opacity-50]="isSubmitting"
-          class="px-6 py-2 mx-4 bg-[#3980C0] text-white rounded-md">
-          {{ isSubmitting ? 'Saving...' : 'Save' }}
-        </button>
+
+        <!-- Image Validation Error -->
+        <div *ngIf="errorMassage" class="text-red-500 text-sm mt-1">
+          Please select an image
+        </div>
+
+        <div *ngIf="selectedFileName" class="mt-2 text-textLight dark:text-textDark w-full block">
+          <div class="w-full h-72 py-5 mt-2 content-center flex justify-center border">
+            <img [src]="selectedImage" alt="Crop Image" class="max-w-full w-auto object-contain" />
+          </div>
+          <div class="text-center mt-2 text-base font-medium">
+            {{ selectedFileName }}
+          </div>
+        </div>
+
+        <!-- Add Background Color -->
+        <div class="flex items-center space-x-4">
+          <label for="bgColor" class="block text-sm font-medium text-gray-700 dark:text-textDark pt-2">Color *</label>
+          <ngx-colors ngx-colors-trigger name="bgColor" [(ngModel)]="cropGroup.bgColor"
+            (colorChange)="onColorChange($event)" style="display: inline-block; margin: 5px" #bgColorInput="ngModel"
+            required>
+          </ngx-colors>
+
+          <!-- Validation Error -->
+          <div *ngIf="bgColorInput.touched && bgColorInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+            Background Color is required
+          </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex justify-end space-x-4 mt-6">
+          <button type="button" (click)="onCancel()"
+            class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md">
+            Cancel
+          </button>
+          <button type="submit" (click)="onSubmit()" [attr.aria-busy]="isSubmitting" [class.opacity-50]="isSubmitting"
+            class="px-6 py-2 mx-4 bg-[#3980C0] text-white rounded-md">
+            {{ isSubmitting ? 'Saving...' : 'Save' }}
+          </button>
+        </div>
       </div>
-    </div>
+    </form>
   </div>
 </div>
 
@@ -395,6 +403,7 @@
             </label>
           </div>
         </div>
+
         <!-- Crop Name -->
         <div *ngIf="newsItems.length">
           <label for="cropNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">
@@ -461,12 +470,11 @@
             Parent Category *</label>
           <p-dropdown id="parentCategory" [(ngModel)]="newsItems[0].category" [options]="categories" name="category"
             placeholder="Select Category" optionLabel="label" optionValue="value" [filter]="true" showClear="false"
-            class="w-full mt-1 py-2 shadow-sm rounded-md text-gray-700 dark:text-textDark bg-tileLight dark:bg-tileBlack"
             [ngClass]="{
               'border-red-500':
                 !newsItems[0].category && categoryInput?.touched,
             }" #categoryInput="ngModel" required panelStyleClass="custom-dropdown-panel" styleClass="w-full"
-            class="block w-full p-dropdown-custom">
+            class="block w-full mt-1 py-2 shadow-sm rounded-md text-gray-700 dark:text-textDark bg-tileLight dark:bg-tileBlack p-dropdown-custom">
           </p-dropdown>
 
           <!-- Validation Error -->
@@ -668,7 +676,8 @@
         <input type="file" id="imageUpload" accept="image/*" class="hidden" (change)="onFileSelected($event)" />
 
         <!-- Button -->
-        <button class="flex items-center text-gray-700 dark:text-textDark" (click)="triggerFileInput($event)">
+        <button type="button" class="flex items-center text-gray-700 dark:text-textDark"
+          (click)="triggerFileInput($event)">
           Add Image *
           <span
             class="flex justify-center items-center w-6 h-6 ml-2 border border-[#4A90E2] rounded text-blue-500 font-bold">

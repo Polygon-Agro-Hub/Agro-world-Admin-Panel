@@ -263,6 +263,7 @@
           id="identificationNumber"
           formControlName="identificationNumber"
           [placeholder]="idPlaceholder"
+          maxlength="12"
           (input)="onIdentificationInput($event)"
           class="block w-full p-2.5 border border-gray-300 rounded-lg bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark placeholder:text-gray-400"
         />
@@ -278,7 +279,7 @@
               Enter a valid NIC number (12 digits, or 9 digits followed by 'V').
             </ng-container>
             <ng-template #passportMsg
-              >Passport ID can only contain letters and digits.</ng-template
+              >Passport ID must be 8 to 12 letters or digits.</ng-template
             >
           </div>
         </div>

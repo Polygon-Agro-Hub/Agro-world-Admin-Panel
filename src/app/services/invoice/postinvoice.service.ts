@@ -579,10 +579,10 @@ export class PostinvoiceService {
               content: 'Item Description',
               styles: { fillColor: [248, 248, 248], fontStyle: 'bold' },
             },
-            {
-              content: 'Unit Price (Rs.)',
-              styles: { fillColor: [248, 248, 248], fontStyle: 'bold' },
-            },
+            // {
+            //   content: 'Unit Price (Rs.)',
+            //   styles: { fillColor: [248, 248, 248], fontStyle: 'bold' },
+            // },
             {
               content: 'QTY',
               styles: { fillColor: [248, 248, 248], fontStyle: 'bold' },
@@ -593,15 +593,19 @@ export class PostinvoiceService {
             },
           ],
           ...(pack.packageDetails?.map((detail: any, i: number) => {
-            const qtyWithUnit = `${detail.qty || '0'}\u00A0Kg`;
+            const qtyKg = Number(detail.qty) || 0;
+            const unit = String(detail.unit || 'Kg').trim();
+            const isGrams = unit.toLowerCase() === 'g';
+            const displayQty =
+              detail.displayQty ?? (isGrams ? Math.round(qtyKg * 1000) : qtyKg);
 
             return [
               `${i + 1}.`,
               detail.typeName || 'N/A',
               detail.productName || 'N/A',
-              `Rs. ${formatNumberWithCommas((detail.price || 0).toFixed(2))}`,
-              qtyWithUnit,
-              `Rs. ${formatNumberWithCommas(((detail.qty || 0) * (detail.price || 0)).toFixed(2))}`,
+              // `Rs. ${formatNumberWithCommas(detail.price || 0)}`,   // Unit Price (commented)
+              `${displayQty}\u00A0${unit}`,
+              `Rs. ${formatNumberWithCommas(detail.price || 0)}`, // Amount = price value
             ];
           }) || []),
         ];
@@ -636,11 +640,10 @@ export class PostinvoiceService {
           showVerticalLines: false,
           columnStyles: {
             0: { cellWidth: 16, halign: 'left' }, // Index
-            1: { cellWidth: 36, overflow: 'linebreak' }, // Category
-            2: { cellWidth: 42, overflow: 'linebreak' }, // Item Description
-            3: { cellWidth: 31, halign: 'left' }, // Unit Price
-            4: { cellWidth: 20, overflow: 'visible', halign: 'left' }, // QTY
-            5: { cellWidth: 35, halign: 'left' }, // Amount
+            1: { cellWidth: 40, overflow: 'linebreak' }, // Category
+            2: { cellWidth: 50, overflow: 'linebreak' }, // Item Description
+            3: { cellWidth: 30, overflow: 'visible', halign: 'left' }, // QTY
+            4: { cellWidth: 44, halign: 'left' }, // Amount
           },
         });
 

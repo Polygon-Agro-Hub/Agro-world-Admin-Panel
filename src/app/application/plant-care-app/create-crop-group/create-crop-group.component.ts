@@ -44,6 +44,7 @@ interface NewsItem {
   styleUrl: './create-crop-group.component.css',
 })
 export class CreateCropGroupComponent {
+  // Resolves to whichever <form #cropForm> is rendered (create or edit area)
   @ViewChild('cropForm') cropForm!: NgForm;
 
   costFeildDisplay = '';
@@ -231,9 +232,9 @@ export class CreateCropGroupComponent {
       };
       reader.readAsDataURL(file);
     }
-    if (this.isInputClicked && !this.selectedFile) {
-      this.errorMassage = 'Please select an image';
-    } else if (this.isInputClicked && this.selectedFile) {
+
+    // Clear the image error once a file is chosen
+    if (this.selectedFile) {
       this.errorMassage = '';
     }
   }
@@ -253,6 +254,7 @@ export class CreateCropGroupComponent {
       return;
     }
 
+    // Mark every control as touched so the inline messages show
     if (this.cropForm) {
       Object.keys(this.cropForm.controls).forEach((key) => {
         this.cropForm.controls[key].markAsTouched();
@@ -260,7 +262,8 @@ export class CreateCropGroupComponent {
     }
     this.imageTouched = true;
 
-    if (this.isInputClicked && !this.selectedFile) {
+    // Show the image error even if "Add Image" was never clicked
+    if (!this.selectedFile) {
       this.errorMassage = 'Please select an image';
     }
 
@@ -442,6 +445,7 @@ export class CreateCropGroupComponent {
         this.selectedFile = null;
         this.selectedImage = null;
         this.imageTouched = false;
+        this.errorMassage = '';
         this.costFeildDisplay = '';
         this.incomeFeildDisplay = '';
         this.cropGroup = {

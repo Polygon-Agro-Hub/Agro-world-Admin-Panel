@@ -41,10 +41,10 @@ export class OnboardWBuyersComponent implements OnInit {
   cityOptions: Option[] = [];
 
   titleOptions: Option[] = [
-    { label: 'Mr.', value: 'Mr.' },
-    { label: 'Mrs.', value: 'Mrs.' },
-    { label: 'Ms.', value: 'Ms.' },
-    { label: 'Rev.', value: 'Rev.' },
+    { label: 'Mr.', value: 'Mr' },
+    { label: 'Mrs.', value: 'Mrs' },
+    { label: 'Ms.', value: 'Ms' },
+    { label: 'Rev.', value: 'Rev' },
   ];
 
   countries: Country[] = [
@@ -70,7 +70,7 @@ export class OnboardWBuyersComponent implements OnInit {
   readonly maxFileSize = 5 * 1024 * 1024; // 5MB
 
   private readonly nicPattern = /^([0-9]{9}[vV]|[0-9]{12})$/;
-  private readonly passportPattern = /^[A-Za-z0-9]+$/;
+  private readonly passportPattern = /^[A-Za-z0-9]{8,12}$/;
   private readonly lkMobilePattern = /^7[0-9]{8}$/;
   private readonly lkCompanyPattern = /^[0-9]{9}$/;
   private readonly digitsPattern = /^[0-9]+$/;
@@ -82,7 +82,7 @@ export class OnboardWBuyersComponent implements OnInit {
   ) {
     this.form = this.fb.group({
       agent: [null, Validators.required],
-      title: ['Mr.', Validators.required],
+      title: ['Mr', Validators.required],
       firstName: [
         '',
         [Validators.required, Validators.pattern(/^[A-Za-z\s]+$/)],
@@ -179,7 +179,8 @@ export class OnboardWBuyersComponent implements OnInit {
       !!this.form.get(name)?.errors?.[key];
 
     if (err('agent', 'required')) msgs.push('Agent is required.');
-    if (err('nearestCity', 'required')) msgs.push('Customer’s City is required.');
+    if (err('nearestCity', 'required'))
+      msgs.push('Customer’s City is required.');
 
     if (err('firstName', 'required')) msgs.push('First name is required.');
     else if (err('firstName', 'pattern'))
@@ -206,7 +207,7 @@ export class OnboardWBuyersComponent implements OnInit {
       msgs.push(
         this.isNic
           ? "Enter a valid NIC number (12 digits, or 9 digits followed by 'V')."
-          : 'Passport ID can only contain letters and digits.',
+          : 'Passport ID must be 8 to 12 letters or digits.',
       );
 
     if (err('companyName', 'required')) msgs.push('Company name is required.');
@@ -291,7 +292,7 @@ export class OnboardWBuyersComponent implements OnInit {
   onIdentificationInput(event: Event): void {
     const input = event.target as HTMLInputElement;
     let cleaned = input.value.replace(/[^0-9A-Za-z]/g, '').toUpperCase();
-    if (this.isNic) cleaned = cleaned.slice(0, 12);
+    cleaned = cleaned.slice(0, 12);
     input.value = cleaned;
     this.form.get('identificationNumber')?.setValue(cleaned);
   }
@@ -380,7 +381,7 @@ export class OnboardWBuyersComponent implements OnInit {
     const formData = new FormData();
     formData.append('salesAgent', v.agent);
     formData.append('nearestCity', v.nearestCity);
-    formData.append('title', v.title);
+   formData.append('title', (v.title ?? '').replace(/\./g, '').trim());
     formData.append('firstName', v.firstName);
     formData.append('lastName', v.lastName);
     formData.append('phoneCode', v.phoneCode);

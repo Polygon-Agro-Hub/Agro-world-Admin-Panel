@@ -41,10 +41,10 @@ export class OnboardWBuyersComponent implements OnInit {
   cityOptions: Option[] = [];
 
   titleOptions: Option[] = [
-    { label: 'Mr.', value: 'Mr.' },
-    { label: 'Mrs.', value: 'Mrs.' },
-    { label: 'Ms.', value: 'Ms.' },
-    { label: 'Rev.', value: 'Rev.' },
+    { label: 'Mr.', value: 'Mr' },
+    { label: 'Mrs.', value: 'Mrs' },
+    { label: 'Ms.', value: 'Ms' },
+    { label: 'Rev.', value: 'Rev' },
   ];
 
   countries: Country[] = [
@@ -82,7 +82,7 @@ export class OnboardWBuyersComponent implements OnInit {
   ) {
     this.form = this.fb.group({
       agent: [null, Validators.required],
-      title: ['Mr.', Validators.required],
+      title: ['Mr', Validators.required],
       firstName: [
         '',
         [Validators.required, Validators.pattern(/^[A-Za-z\s]+$/)],
@@ -381,7 +381,7 @@ export class OnboardWBuyersComponent implements OnInit {
     const formData = new FormData();
     formData.append('salesAgent', v.agent);
     formData.append('nearestCity', v.nearestCity);
-    formData.append('title', v.title);
+   formData.append('title', (v.title ?? '').replace(/\./g, '').trim());
     formData.append('firstName', v.firstName);
     formData.append('lastName', v.lastName);
     formData.append('phoneCode', v.phoneCode);

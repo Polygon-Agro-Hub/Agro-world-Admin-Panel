@@ -139,7 +139,7 @@ export class SalesDashService {
     searchText: string = '',
     date: string,
     agentFilter: number | string = '',
-
+    orderedDate: string = '',
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -173,6 +173,10 @@ export class SalesDashService {
 
     if (agentFilter) {
       url += `&agentFilter=${agentFilter}`;
+    }
+
+    if (orderedDate) {
+      url += `&orderedDate=${orderedDate}`;
     }
     return this.http.get<any>(url, { headers });
   }

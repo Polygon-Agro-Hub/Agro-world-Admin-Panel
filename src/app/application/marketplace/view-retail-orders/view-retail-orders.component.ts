@@ -45,6 +45,8 @@ export class ViewRetailOrdersComponent implements OnInit {
   selectStatus: string = '';
   selectDate: Date | null = null;
   formattedDate: string = '';
+  selectScheduleDate: Date | null = null;
+  formattedScheduleDate: string = '';
   errorMessage: string | null = null;
 
   isDateSelected = false;
@@ -88,7 +90,8 @@ export class ViewRetailOrdersComponent implements OnInit {
     status: string = this.selectStatus,
     method: string = this.selectMethod,
     searchItem: string = this.searchItem,
-    formattedDate: string = this.formattedDate
+    formattedDate: string = this.formattedDate,
+    scheduleDate: string = this.formattedScheduleDate
   ) {
     this.isLoading = true;
     this.MaketplaceSrv.getAllRetailOrders(
@@ -97,7 +100,8 @@ export class ViewRetailOrdersComponent implements OnInit {
       status,
       method,
       searchItem,
-      formattedDate
+      formattedDate,
+      scheduleDate
     ).subscribe(
       (response) => {
         this.isLoading = false;
@@ -170,6 +174,23 @@ export class ViewRetailOrdersComponent implements OnInit {
 
   onDateClear() {
     this.formattedDate = '';
+    this.page = 1;
+    this.fetchAllRetailOrders();
+  }
+
+  scheduleDateFilter() {
+    if (this.selectScheduleDate instanceof Date) {
+      const year = this.selectScheduleDate.getFullYear();
+      const month = String(this.selectScheduleDate.getMonth() + 1).padStart(2, '0');
+      const day = String(this.selectScheduleDate.getDate()).padStart(2, '0');
+      this.formattedScheduleDate = `${year}-${month}-${day}`;
+      this.page = 1;
+      this.fetchAllRetailOrders();
+    }
+  }
+
+  onScheduleDateClear() {
+    this.formattedScheduleDate = '';
     this.page = 1;
     this.fetchAllRetailOrders();
   }
@@ -284,6 +305,7 @@ class RetailOrders {
   invNo!: string;
   status!: string;
   orderdDate!: Date;
+  scheduleDate!: Date | null;
   qrCode!: string;
   paymentMethod!: string;
   creditPaid!: number;

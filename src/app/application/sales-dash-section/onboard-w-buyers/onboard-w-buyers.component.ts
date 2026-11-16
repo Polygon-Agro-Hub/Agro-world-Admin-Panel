@@ -11,6 +11,7 @@ import {
 import { DropdownModule } from 'primeng/dropdown';
 import Swal from 'sweetalert2';
 import { SalesDashService } from '../../../services/sales-dash/sales-dash.service';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
 interface Option {
   label: string;
@@ -26,7 +27,7 @@ interface Country {
 @Component({
   selector: 'app-onboard-w-buyers',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, DropdownModule],
+  imports: [CommonModule, ReactiveFormsModule, DropdownModule, LoadingSpinnerComponent],
   templateUrl: './onboard-w-buyers.component.html',
   styleUrl: './onboard-w-buyers.component.css',
 })

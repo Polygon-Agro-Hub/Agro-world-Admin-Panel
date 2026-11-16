@@ -846,6 +846,12 @@ export class CreateVarietyComponent implements OnInit {
       errorMessages.push('English variety name cannot exceed 50 characters');
     }
 
+     if (!newsItem.descriptionEnglish) {
+      errorMessages.push('English description is required');
+    } else if (newsItem.descriptionEnglish.length < 10) {
+      errorMessages.push('English description must be at least 10 characters');
+    }
+
     if (!newsItem.varietyNameSinhala) {
       errorMessages.push('Sinhala variety name is required');
     } else if (/^\d+$/.test(newsItem.varietyNameSinhala)) {
@@ -854,24 +860,18 @@ export class CreateVarietyComponent implements OnInit {
       errorMessages.push('Sinhala variety name cannot exceed 50 characters');
     }
 
+    if (!newsItem.descriptionSinhala) {
+      errorMessages.push('Sinhala description is required');
+    } else if (newsItem.descriptionSinhala.length < 10) {
+      errorMessages.push('Sinhala description must be at least 10 characters');
+    }
+
     if (!newsItem.varietyNameTamil) {
       errorMessages.push('Tamil variety name is required');
     } else if (/^\d+$/.test(newsItem.varietyNameTamil)) {
       errorMessages.push('Tamil variety name cannot be only numbers');
     } else if (newsItem.varietyNameTamil.length > 50) {
       errorMessages.push('Tamil variety name cannot exceed 50 characters');
-    }
-
-    if (!newsItem.descriptionEnglish) {
-      errorMessages.push('English description is required');
-    } else if (newsItem.descriptionEnglish.length < 10) {
-      errorMessages.push('English description must be at least 10 characters');
-    }
-
-    if (!newsItem.descriptionSinhala) {
-      errorMessages.push('Sinhala description is required');
-    } else if (newsItem.descriptionSinhala.length < 10) {
-      errorMessages.push('Sinhala description must be at least 10 characters');
     }
 
     if (!newsItem.descriptionTamil) {

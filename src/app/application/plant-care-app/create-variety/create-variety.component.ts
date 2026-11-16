@@ -886,23 +886,25 @@ export class CreateVarietyComponent implements OnInit {
 
     // If there are errors, show SweetAlert
     if (errorMessages.length > 0) {
-      Swal.fire({
-        title: 'Validation Errors',
-        html: `<div style="text-align: left;">
-      <p>Please fix the following issues:</p>
-      <ul>
-        ${errorMessages.map((msg) => `<li>${msg}</li>`).join('')}
-      </ul>
-    </div>`,
-        icon: 'warning',
-        confirmButtonText: 'OK',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold',
-        },
-      });
-      return false;
-    }
+  Swal.fire({
+    title: 'Validation Errors',
+    html: `
+      <div style="text-align: left;">
+        <p>Please fix the following issues:</p>
+        <ul style="list-style-type: disc; padding-left: 20px; margin-top: 10px;">
+          ${errorMessages.map((msg) => `<li>${msg}</li>`).join('')}
+        </ul>
+      </div>
+    `,
+    icon: 'warning',
+    confirmButtonText: 'OK',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+  });
+  return false;
+}
 
     return true;
   }

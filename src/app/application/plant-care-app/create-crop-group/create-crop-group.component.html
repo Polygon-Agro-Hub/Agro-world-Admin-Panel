@@ -380,7 +380,7 @@
     <form #cropForm="ngForm">
       <div class="space-y-4">
         <!-- Display (only when no marketplace items exist for this crop group) -->
-        <div *ngIf="newsItems.length && itemCount === 0 && !isSalesOnly(newsItems[0]?.displayFor)">
+        <div *ngIf="newsItems.length && itemCount === 0">
           <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Display *
           </label>

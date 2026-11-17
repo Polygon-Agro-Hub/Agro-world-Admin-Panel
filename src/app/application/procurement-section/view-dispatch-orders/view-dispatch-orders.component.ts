@@ -176,28 +176,40 @@ export class ViewDispatchOrdersComponent implements OnInit {
           discountedPrice: item.discountedPrice,
           isExcluded: false,
         }));
-        if (callback) callback();
-        this.isLoading = false;
+        // When a callback (fetchOrderDetails) follows, it keeps the loader on
+        // and turns it off once the order details arrive.
+        if (callback) {
+          callback();
+        } else {
+          this.isLoading = false;
+        }
       },
       error: (err) => {
         console.error('Error fetching marketplace items:', err);
         this.error = 'Failed to load product options';
-        if (callback) callback();
+        if (callback) {
+          callback();
+        } else {
+          this.isLoading = false;
+        }
       },
     });
   }
 
  fetchOrderDetails(id: string) {
     this.loading = true;
+    this.isLoading = true;
     this.error = '';
 
     this.procurementService.getOrderPackagesByOrderId(Number(id)).subscribe({
 
       next: (response) => {
-        this.additionalItems = response.additionalItems || [];
+        this.additionalItems = response?.additionalItems || [];
         this.additionalItemsCount = this.additionalItems.length;
 
         if (!response || !response.packages) {
+          this.loading = false;
+          this.isLoading = false;
           throw new Error('Invalid response structure from API');
         }
 
@@ -254,6 +266,7 @@ export class ViewDispatchOrdersComponent implements OnInit {
         this.invoiceNumber = response.invNo;
         this.calculateTotalPrice();
         this.loading = false;
+        this.isLoading = false;
         this.fetchPackageItems(id);
       },
       error: (err) => {
@@ -261,6 +274,7 @@ export class ViewDispatchOrdersComponent implements OnInit {
         this.error =
           err.error?.message || err.message || 'Failed to load order details';
         this.loading = false;
+        this.isLoading = false;
       },
     });
   }

@@ -101,7 +101,7 @@ export class PostinvoiceService {
       const familyPacks = response.data?.items?.familyPacks || [];
       const additionalItems = response.data?.items?.additionalItems || [];
       const pickupCenter = response.data?.pickupCenter || null;
-      const deliveryCharge = response.data?.deliveryCharge || null;
+      const deliveryCharge = response.data?.invoice?.deliveryFee || '0.00';
 
       const apiInvoiceNo = invoiceDetails.invoiceNumber;
       const finalInvoiceNo = tableInvoiceNo || apiInvoiceNo || 'N/A';
@@ -128,7 +128,7 @@ export class PostinvoiceService {
       if (invoiceDetails.deliveryMethod === 'Pickup') {
         deliveryFee = '0.00';
       } else if (deliveryCharge) {
-        deliveryFee = deliveryCharge.charge || '0.00';
+        deliveryFee = deliveryCharge || '0.00';
       }
 
       // Calculate totals
@@ -279,10 +279,14 @@ export class PostinvoiceService {
     // Company Info
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
-    doc.text('Polygon Holdings (Private) Ltd', 15, 25);
+    doc.text('Polygon Holdings (Private) Limited', 15, 25);
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
-    doc.text('Level 2, Building 2, No. 46/42, Nawam Mawatha, Colombo 02.', 15, 30);
+    doc.text(
+      'Level 2, Building 2, No. 46/42, Nawam Mawatha, Colombo 02.',
+      15,
+      30,
+    );
     doc.text('Contact No: 011 431 3433', 15, 35);
     doc.text('Email Address: info@polygon.lk', 15, 40);
 
@@ -418,12 +422,12 @@ export class PostinvoiceService {
 
     yPosition += 3;
 
-   const deliveryMethodY = yPosition;
+    const deliveryMethodY = yPosition;
     doc.setFont('helvetica', 'bold');
     doc.text('Delivery Method:', 15, yPosition);
     doc.setFont('helvetica', 'normal');
     doc.text(
-      invoice.deliveryMethod === 'Pickup' ? 'Instore Pickup' : 'Home Delivery',
+      invoice.deliveryMethod === 'Pickup' ? 'Instore Pickup' : 'Delivery',
       15,
       yPosition + 5,
     );
@@ -504,7 +508,7 @@ export class PostinvoiceService {
     );
     doc.setFontSize(9);
 
-    const creditPaidAmount = parseNum(String(invoice.creditPaid ?? ""));
+    const creditPaidAmount = parseNum(String(invoice.creditPaid ?? ''));
     const grandTotalAmount = parseNum(invoice.grandTotal);
     const paymentTypeLabel =
       this.detectPaymentType(
@@ -512,7 +516,7 @@ export class PostinvoiceService {
         invoice.deliveryMethod,
         creditPaidAmount,
         grandTotalAmount,
-      ) || "N/A";
+      ) || 'N/A';
 
     doc.setFont('helvetica', 'bold');
     doc.text('Payment Method:', 140, paymentMethodLabelY);
@@ -550,9 +554,51 @@ export class PostinvoiceService {
           15,
           yPosition,
         );
-        doc.text(`Rs. ${formatNumberWithCommas(pack.amount)}`, 195, yPosition, {
-          align: 'right',
-        });
+        // ---- Pack header price: calculated total (struck) + package price ----
+        const packPrice = parseNum(pack.amount);
+
+        const itemsTotal =
+          pack.packageDetails?.reduce(
+            (sum: number, d: any) => sum + parseNum(d.price),
+            0,
+          ) || 0;
+
+        const calculatedTotal =
+          itemsTotal + parseNum(pack.serviceFee) + parseNum(pack.packingFee);
+
+        // Package price (right aligned, black, bold)
+        const packPriceText = `Rs. ${formatNumberWithCommas(packPrice)}`;
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(9);
+        doc.setTextColor(0, 0, 0);
+        doc.text(packPriceText, 195, yPosition, { align: 'right' });
+        const packPriceWidth = doc.getTextWidth(packPriceText);
+
+        // Calculated total (struck through) only when it differs
+        if (Math.abs(calculatedTotal - packPrice) > 0.01) {
+          const oldText = `Rs. ${formatNumberWithCommas(calculatedTotal)}`;
+          const oldRightX = 195 - packPriceWidth - 3; // 3mm gap
+
+          doc.setFont('helvetica', 'normal');
+          doc.setTextColor(0, 0, 0); // #000000
+
+          doc.text(oldText, oldRightX, yPosition, { align: 'right' });
+
+          // strike-through line
+          const oldWidth = doc.getTextWidth(oldText);
+          doc.setDrawColor(0, 0, 0); // #000000
+          doc.setLineWidth(0.3);
+          doc.line(
+            oldRightX - oldWidth,
+            yPosition - 1.1,
+            oldRightX,
+            yPosition - 1.1,
+          );
+
+          // reset
+          doc.setFont('helvetica', 'bold');
+          doc.setTextColor(0, 0, 0);
+        }
         yPosition += 5;
 
         doc.setDrawColor(215, 215, 215);
@@ -575,10 +621,10 @@ export class PostinvoiceService {
               content: 'Item Description',
               styles: { fillColor: [248, 248, 248], fontStyle: 'bold' },
             },
-            {
-              content: 'Unit Price (Rs.)',
-              styles: { fillColor: [248, 248, 248], fontStyle: 'bold' },
-            },
+            // {
+            //   content: 'Unit Price (Rs.)',
+            //   styles: { fillColor: [248, 248, 248], fontStyle: 'bold' },
+            // },
             {
               content: 'QTY',
               styles: { fillColor: [248, 248, 248], fontStyle: 'bold' },
@@ -589,27 +635,45 @@ export class PostinvoiceService {
             },
           ],
           ...(pack.packageDetails?.map((detail: any, i: number) => {
-            const qtyWithUnit = `${detail.qty || '0'}\u00A0Kg`;
+            const qtyKg = Number(detail.qty) || 0;
+            const unit = String(detail.unit || 'Kg').trim();
+            const isGrams = unit.toLowerCase() === 'g';
+            const displayQty =
+              detail.displayQty ?? (isGrams ? Math.round(qtyKg * 1000) : qtyKg);
 
             return [
               `${i + 1}.`,
               detail.typeName || 'N/A',
               detail.productName || 'N/A',
-              `Rs. ${formatNumberWithCommas((detail.price || 0).toFixed(2))}`,
-              qtyWithUnit,
-              `Rs. ${formatNumberWithCommas(((detail.qty || 0) * (detail.price || 0)).toFixed(2))}`,
+              // `Rs. ${formatNumberWithCommas(detail.price || 0)}`,   // Unit Price (commented)
+              `${displayQty}\u00A0${unit}`,
+              `Rs. ${formatNumberWithCommas(detail.price || 0)}`, // Amount = price value
             ];
           }) || []),
         ];
+
+        // ---- Fees ----
+        const serviceFeeValue = parseNum(pack.serviceFee);
+        const packingFeeValue = parseNum(pack.packingFee);
+
+        const fees: Array<{ label: string; amount: number }> = [];
+        if (serviceFeeValue > 0)
+          fees.push({ label: 'Service Fee', amount: serviceFeeValue });
+        if (packingFeeValue > 0)
+          fees.push({ label: 'Packing Fee', amount: packingFeeValue });
+
+        const TABLE_X = 15;
+        const TABLE_W = 180;
+        const tableTopY = yPosition;
 
         (doc as any).autoTable({
           startY: yPosition,
           head: [packDetailsBody[0]],
           body: packDetailsBody.slice(1),
-          margin: { left: 15, right: 15 },
+          margin: { left: TABLE_X, right: 15 },
           styles: {
             fontSize: 9,
-            cellPadding: { top: 3, right: 4, bottom: 3, left: 4 },
+            cellPadding: { top: 5, right: 4, bottom: 5, left: 4 },
             textColor: [0, 0, 0],
             overflow: 'linebreak',
             valign: 'middle',
@@ -619,28 +683,109 @@ export class PostinvoiceService {
             textColor: [0, 0, 0],
             fontStyle: 'bold',
           },
-          bodyStyles: {
-            textColor: [0, 0, 0],
-          },
+          bodyStyles: { textColor: [0, 0, 0] },
           alternateRowStyles: {
             fillColor: [255, 255, 255],
             textColor: [0, 0, 0],
           },
-          tableLineColor: [209, 213, 219],
-          tableLineWidth: 0.5,
           showHorizontalLines: false,
           showVerticalLines: false,
           columnStyles: {
-            0: { cellWidth: 16, halign: 'left' }, // Index
-            1: { cellWidth: 36, overflow: 'linebreak' }, // Category
-            2: { cellWidth: 42, overflow: 'linebreak' }, // Item Description
-            3: { cellWidth: 31, halign: 'left' }, // Unit Price
-            4: { cellWidth: 20, overflow: 'visible', halign: 'left' }, // QTY
-            5: { cellWidth: 35, halign: 'left' }, // Amount
+            0: { cellWidth: 16, halign: 'left' },
+            1: { cellWidth: 40, overflow: 'linebreak' },
+            2: { cellWidth: 50, overflow: 'linebreak' },
+            3: { cellWidth: 30, overflow: 'visible', halign: 'left' },
+            4: { cellWidth: 44, halign: 'left' },
+          },
+
+          // Category values -> #676767
+          didParseCell: (data: any) => {
+            if (data.section === 'body' && data.column.index === 1) {
+              data.cell.styles.textColor = [103, 103, 103];
+            }
+          },
+
+          // Line under the header row
+          didDrawCell: (data: any) => {
+            if (data.section === 'head') {
+              doc.setDrawColor(215, 215, 215);
+              doc.setLineWidth(0.3);
+              doc.line(
+                data.cell.x,
+                data.cell.y + data.cell.height,
+                data.cell.x + data.cell.width,
+                data.cell.y + data.cell.height,
+              );
+            }
           },
         });
 
-        yPosition = (doc as any).lastAutoTable.finalY + 10;
+        let tableBottomY = (doc as any).lastAutoTable.finalY;
+
+        // ---- Additional Charges box ----
+        if (fees.length > 0) {
+          const ROW_H = 9;
+          const boxH = Math.max(fees.length * ROW_H + 8, 22);
+          const boxX = TABLE_X + 5;
+          const boxW = TABLE_W - 10;
+
+          // separator line between items and the box
+          doc.setDrawColor(229, 231, 235);
+          doc.setLineWidth(0.3);
+          doc.line(boxX, tableBottomY + 2, boxX + boxW, tableBottomY + 2);
+
+          const boxY = tableBottomY + 5;
+
+          // background #F2F6FE
+          doc.setFillColor(242, 246, 254);
+          doc.roundedRect(boxX, boxY, boxW, boxH, 3, 3, 'F');
+
+          // left text (#000000)
+          doc.setTextColor(0, 0, 0);
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(10);
+          doc.text('Additional Charges', boxX + 6, boxY + 8);
+
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(8);
+          doc.text('Service Fee & Packing Fee*', boxX + 6, boxY + 13);
+
+          // middle divider (#8097C7) at QTY column start
+          doc.setDrawColor(128, 151, 199);
+          doc.setLineWidth(0.3);
+          doc.line(121, boxY + 4, 121, boxY + boxH - 4);
+
+          // labels (QTY column) + amounts (Amount column)
+          doc.setFontSize(9);
+          doc.setFont('helvetica', 'normal');
+          fees.forEach((fee, i) => {
+            const textY = boxY + 9 + i * ROW_H;
+            doc.text(fee.label, 125, textY);
+            doc.text(`Rs. ${formatNumberWithCommas(fee.amount)}`, 155, textY);
+          });
+
+          tableBottomY = boxY + boxH + 4; // bottom padding inside the card
+        }
+
+        // ---- Outer rounded border (whole card) ----
+        doc.setDrawColor(215, 215, 215);
+        doc.setLineWidth(0.3);
+        doc.roundedRect(
+          TABLE_X,
+          tableTopY,
+          TABLE_W,
+          tableBottomY - tableTopY,
+          3,
+          3,
+          'S',
+        );
+
+        // reset for the next content
+        doc.setTextColor(0, 0, 0);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(9);
+
+        yPosition = tableBottomY + 10;
       }
     }
 
@@ -726,25 +871,25 @@ export class PostinvoiceService {
           },
         ],
         ...invoice.additionalItems.map((it, i) => {
-          const unitPrice = parseFloat(it.unitPrice || '0');
-          const itemDiscount = parseFloat(it.itemDiscount || '0');
-          const quantity = parseFloat(
-            it.quantity === '0.00' ? '1' : it.quantity || '1',
-          );
-          const normalPrice = parseFloat(it.normalPrice);
-          const unitPriceDisplay = unitPrice;
+          const rawQty = parseFloat(it.quantity || '1') || 1;
+          const quantity = it.quantity === '0.00' ? 1 : rawQty;
+          const amount = parseNum(it.normalPrice);
 
-          // Get unit for additional items from backend data
-          const unit = it.unit || '';
-          // Format quantity with unit
-          const qtyWithUnit = unit ? `${quantity}\u00A0${unit}` : `${quantity}`;
+          const isGrams =
+            String(it.unit || '')
+              .trim()
+              .toLowerCase() === 'g';
+
+          // Price per 1 Kg (or per item if not weight-based)
+          const qtyInBaseUnit = isGrams ? quantity / 1000 : quantity;
+          const unitPrice = amount / qtyInBaseUnit;
 
           return [
             `${i + 1}.`,
             it.name || 'N/A',
-            `Rs. ${formatNumberWithCommas(unitPriceDisplay.toFixed(2))}`,
-            qtyWithUnit, // Updated: quantity with unit
-            `Rs. ${formatNumberWithCommas(normalPrice.toFixed(2))}`,
+            `Rs. ${formatNumberWithCommas(unitPrice)}`,
+            `${quantity} ${it.unit || ''}`.trim(),
+            `Rs. ${formatNumberWithCommas(amount)}`,
           ];
         }),
       ];
@@ -872,13 +1017,24 @@ export class PostinvoiceService {
     }
 
     // Add service fee between Discount and Coupon Discount
+    const svrFee =
+      parseNum(invoice.grandTotal) -
+      invoice.additionalItems.reduce(
+        (total, item) => total + parseFloat(item.amount || '0'),
+        0,
+      ) -
+      parseNum(invoice.deliveryFee);
+
     if (
       invoice.orderApp !== 'Marketplace' &&
       invoice.additionalItems &&
       invoice.additionalItems.length > 0 &&
       (!invoice.familyPackItems || invoice.familyPackItems.length === 0)
     ) {
-      grandTotalBody.push(['Service Fee', 'Rs. 180.00']);
+      grandTotalBody.push([
+        'Service Fee',
+        `Rs. ${formatNumberWithCommas(svrFee)}`,
+      ]);
     }
 
     // Add coupon discount only if it has a value greater than 0
@@ -914,12 +1070,7 @@ export class PostinvoiceService {
         ? 180
         : 0;
 
-    const finalGrandTotal =
-      familyPackTotal +
-      additionalItemsTotalAmount +
-      deliveryFeeTotal +
-      serviceFee -
-      couponValue;
+    const finalGrandTotal = parseNum(invoice.grandTotal);
 
     // Add final total
     grandTotalBody.push([
@@ -935,7 +1086,7 @@ export class PostinvoiceService {
 
     const borderRowIndex = grandTotalBody.length - 2;
 
-        const GREEN_COLOR: [number, number, number] = [22, 163, 74];
+    const GREEN_COLOR: [number, number, number] = [22, 163, 74];
     const ORANGE_COLOR: [number, number, number] = [217, 119, 6];
 
     const isPaid = Number(invoice.isPaid) === 1;
@@ -990,7 +1141,7 @@ export class PostinvoiceService {
     };
 
     if (hasCreditPaid) {
-      pushPaymentRow('Credit Balance Used', creditPaidNum, GREEN_COLOR);
+      pushPaymentRow('Polygon Wallet Used', creditPaidNum, GREEN_COLOR);
 
       if (remainingAfterCredit > 0.01) {
         if (isPaid && isCardPayment) {
@@ -1057,7 +1208,7 @@ export class PostinvoiceService {
 
       const iconX = 16;
       const iconRadius = 1.6;
-      const textX = iconX + iconRadius + 2.5; 
+      const textX = iconX + iconRadius + 2.5;
 
       const iconY = yPosition - 1;
 
@@ -1214,7 +1365,7 @@ export class PostinvoiceService {
               ctx.imageSmoothingEnabled = true;
               ctx.imageSmoothingQuality = 'high';
               ctx.drawImage(img, 0, 0, width, height);
- 
+
               const optimizedDataUrl = canvas.toDataURL('image/png');
               resolve(optimizedDataUrl);
               return;
@@ -1238,20 +1389,20 @@ export class PostinvoiceService {
     creditPaid: number,
     grandTotal: number,
   ): string {
-    const isPickup = deliveryMethod?.toLowerCase().includes("pickup");
+    const isPickup = deliveryMethod?.toLowerCase().includes('pickup');
     const hasCredit = creditPaid > 0;
     const fullyCoveredByCredit = hasCredit && creditPaid >= grandTotal - 0.01;
 
     if (fullyCoveredByCredit) {
-      return "Credit Balance";
+      return 'Credit Balance';
     }
 
-    if (payType === "Card") {
-      return hasCredit ? "Online Transfer + Credit Balance" : "Online Transfer";
+    if (payType === 'Card') {
+      return hasCredit ? 'Online Transfer + Credit Balance' : 'Online Transfer';
     }
 
-  // Cash
-    const base = isPickup ? "Cash on Pickup" : "Cash on Delivery";
+    // Cash
+    const base = isPickup ? 'Cash on Pickup' : 'Cash on Delivery';
     return hasCredit ? `${base} + Credit Balance` : base;
   }
 }

@@ -32,7 +32,13 @@ export class DriverVehicaleInfoComponent {
   imageTitle: string = '';
   zoom: number = 1;
 
-  get fields(): Field[] {
+  fields: Field[] = [];
+
+  ngOnChanges(): void {
+    this.fields = this.buildFields();
+  }
+
+  private buildFields(): Field[] {
     const d = this.vehicleObj;
     return [
       {

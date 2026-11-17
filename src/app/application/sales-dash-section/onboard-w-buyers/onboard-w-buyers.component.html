@@ -1,3 +1,5 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
 <button
   class="mb-5 text-textLight dark:text-textDark text-sm font-medium"
   (click)="back()"
@@ -21,7 +23,7 @@
         <label
           class="block text-base font-semibold text-gray-700 dark:text-textDark mb-2"
         >
-          Select Agent
+          Select Agent *
         </label>
         <p-dropdown
           formControlName="agent"
@@ -47,7 +49,7 @@
         <label
           class="block text-base font-semibold text-gray-700 dark:text-textDark mb-2"
         >
-          Customer’s City
+          Customer’s City *
         </label>
         <p-dropdown
           formControlName="nearestCity"
@@ -93,7 +95,7 @@
           <label
             for="firstName"
             class="block text-base font-semibold text-gray-700 dark:text-textDark mb-2"
-            >First Name</label
+            >First Name *</label
           >
           <input
             id="firstName"
@@ -116,7 +118,7 @@
         <label
           for="lastName"
           class="block text-base font-semibold text-gray-700 dark:text-textDark mb-2"
-          >Last Name</label
+          >Last Name *</label
         >
         <input
           id="lastName"
@@ -141,7 +143,7 @@
         <label
           for="phoneNumber"
           class="block text-base font-semibold text-gray-700 dark:text-textDark mb-2"
-          >Phone Number</label
+          >Phone Number *</label
         >
         <div class="flex gap-3">
           <div class="w-[120px] shrink-0">
@@ -214,7 +216,7 @@
         <label
           for="email"
           class="block text-base font-semibold text-gray-700 dark:text-textDark mb-2"
-          >Email Address</label
+          >Email Address *</label
         >
         <input
           id="email"
@@ -238,7 +240,7 @@
       <div>
         <label
           class="block text-base font-semibold text-gray-700 dark:text-textDark mb-2"
-          >Identification</label
+          >Identification *</label
         >
         <p-dropdown
           formControlName="identificationType"
@@ -257,12 +259,13 @@
         <label
           for="identificationNumber"
           class="block text-base font-semibold text-gray-700 dark:text-textDark mb-2"
-          >{{ idLabel }}</label
+          >{{ idLabel }} *</label
         >
         <input
           id="identificationNumber"
           formControlName="identificationNumber"
           [placeholder]="idPlaceholder"
+          maxlength="12"
           (input)="onIdentificationInput($event)"
           class="block w-full p-2.5 border border-gray-300 rounded-lg bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark placeholder:text-gray-400"
         />
@@ -278,7 +281,7 @@
               Enter a valid NIC number (12 digits, or 9 digits followed by 'V').
             </ng-container>
             <ng-template #passportMsg
-              >Passport ID can only contain letters and digits.</ng-template
+              >Passport ID must be 8 to 12 letters or digits.</ng-template
             >
           </div>
         </div>
@@ -293,7 +296,7 @@
         <label
           for="companyName"
           class="block text-base font-semibold text-gray-700 dark:text-textDark mb-2"
-          >Company Name</label
+          >Company Name *</label
         >
         <input
           id="companyName"
@@ -310,7 +313,7 @@
         <label
           for="companyPhoneNumber"
           class="block text-base font-semibold text-gray-700 dark:text-textDark mb-2"
-          >Phone Number</label
+          >Phone Number *</label
         >
         <div class="flex gap-3">
           <div class="w-[120px] shrink-0">
@@ -387,7 +390,7 @@
     <div class="mb-8">
       <label
         class="block text-base font-semibold text-gray-700 dark:text-textDark mb-3"
-        >BR Document</label
+        >BR Document *</label
       >
 
       <input

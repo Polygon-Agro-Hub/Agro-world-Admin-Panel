@@ -83,7 +83,7 @@
               </select> -->
               <select
                 class="rounded-xl flex-1 px-4 py-4 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm appearance-none cursor-default"
-                readonly (change)="onProductSelected(typeItems, $event)" onfocus="this.blur()"
+                readonly onfocus="this.blur()"
                 style="pointer-events: none;">
                 <option value="">--Select Product--</option>
                 <option *ngFor="let product of marketplaceItems" [value]="product.id"
@@ -95,7 +95,8 @@
                 class="rounded-xl w-36 px-4 py-4 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-500 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 text-sm appearance-none"
                 readonly [value]="typeItems.quantity ? (typeItems.quantity | number:'1.0-3') : ''" />
               <div class="w-16 text-right text-sm text-gray-900 dark:text-gray-100">
-                Rs.{{ (typeItems.calculatedPrice ?? 0) | number:'1.2-2' }}
+                <!-- Rs.{{ (typeItems.calculatedPrice ?? 0) | number:'1.2-2' }} -->
+                Rs.{{ (typeItems.price ?? 0) | number:'1.2-2' }}
               </div>
             </div>
           </span>

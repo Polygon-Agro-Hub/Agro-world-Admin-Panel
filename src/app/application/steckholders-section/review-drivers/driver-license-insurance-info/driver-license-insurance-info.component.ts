@@ -32,7 +32,13 @@ export class DriverLicenseInsuranceInfoComponent {
   imageTitle: string = '';
   zoom: number = 1;
 
-  get fields(): Field[] {
+  fields: Field[] = [];
+
+  ngOnChanges(): void {
+    this.fields = this.buildFields();
+  }
+
+  private buildFields(): Field[] {
     const d = this.licenseInsuranceObj;
     return [
       { label: 'Driving License ID', type: 'text', value: d?.licenseId },

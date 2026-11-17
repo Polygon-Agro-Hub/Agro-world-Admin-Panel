@@ -35,6 +35,7 @@ import { SalesAgentsService } from '../../../services/dash/sales-agents.service'
 export class ViewOrdersComponent implements OnInit {
   ordersArr: Orders[] = [];
   date: Date | null = null;
+  orderedDate: Date | null = null;
   isLoading = false;
   isPopupVisible = false;
   page: number = 1;
@@ -120,6 +121,7 @@ export class ViewOrdersComponent implements OnInit {
         search,
         this.formatDateForBackend(this.date),
         this.selectedAgentFilter,
+        this.formatDateForBackend(this.orderedDate),
       )
       .subscribe(
         (data) => {
@@ -233,6 +235,17 @@ export class ViewOrdersComponent implements OnInit {
   }
 
   applyAgentFilter() {
+    this.page = 1;
+    this.fetchAllOrders(this.page, this.itemsPerPage);
+  }
+
+  orderedDateFilter() {
+    this.page = 1;
+    this.fetchAllOrders(this.page, this.itemsPerPage);
+  }
+
+  onOrderedDateClear() {
+    this.orderedDate = null;
     this.page = 1;
     this.fetchAllOrders(this.page, this.itemsPerPage);
   }

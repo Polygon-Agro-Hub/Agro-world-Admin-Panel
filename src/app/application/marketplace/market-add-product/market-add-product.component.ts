@@ -416,11 +416,11 @@ export class MarketAddProductComponent implements OnInit {
     // Basic product information fields
     if (!this.productObj.category) emptyFields.push('Category');
     if (!this.productObj.cropName) emptyFields.push('Display Name');
-    if (!this.productObj.selectId) emptyFields.push('Crop');
-    if (!this.productObj.varietyId) emptyFields.push('Variety');
     if (!this.productObj.productTypeId || this.productObj.productTypeId === 0) {
       emptyFields.push('Product Type');
     }
+    if (!this.productObj.selectId) emptyFields.push('Crop');
+    if (!this.productObj.varietyId) emptyFields.push('Variety');
     if (!this.productObj.normalPrice && this.productObj.normalPrice === 0)
       emptyFields.push('Price Per kg');
     if (!this.productObj.comPrice && this.productObj.comPrice === 0)

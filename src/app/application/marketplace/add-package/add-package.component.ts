@@ -274,6 +274,11 @@ export class AddPackageComponent implements OnInit {
     let errorMessages: string[] = [];
 
     // Required field validations
+
+    if (!this.selectedImage) {
+      errorMessages.push('Package Image is required');
+    }
+    
     if (!this.packageObj.displayName?.trim()) {
       errorMessages.push('Display Package Name is required');
     }
@@ -288,9 +293,6 @@ export class AddPackageComponent implements OnInit {
     }
     if (this.packageObj.serviceFee === undefined) {
       errorMessages.push('Service Fee is required');
-    }
-    if (!this.selectedImage) {
-      errorMessages.push('Package Image is required');
     }
 
     if (!this.packageObj.packageType) {

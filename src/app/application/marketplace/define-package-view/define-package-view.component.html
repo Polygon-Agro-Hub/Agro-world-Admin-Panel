@@ -5,11 +5,11 @@
   Back
 </button>
 
-<div class="flex space-x-2 justify-between">
+<div class="flex flex-wrap items-start justify-between gap-3">
   <p class="text-[#292929] dark:text-[#F1F4F5] text-xl font-medium">
     Define Package
   </p>
-  <div class="flex space-x-2 mb-4">
+  <div class="flex flex-wrap gap-2 mb-4">
     <button class="px-4 py-2 bg-[#74788D] text-white rounded" (click)="onCancel()">
       Cancel
     </button>
@@ -19,12 +19,12 @@
     </button>
   </div>
 </div>
-<div class="min-w-[1200px] bg-white dark:bg-tileBlack shadow-lg rounded-lg">
+<div class="w-full min-w-0 bg-white dark:bg-tileBlack shadow-lg rounded-lg">
   <!-- Content -->
   <span *ngFor="let item of orderDetails">
-    <div class="p-10 space-y-4">
+    <div class="p-4 sm:p-10 space-y-4">
       <div>
-        <div class="bg-[#F1F4F5] dark:bg-gray-700 flex items-center justify-between mb-3 p-4 rounded-xl">
+        <div class="bg-[#F1F4F5] dark:bg-gray-700 flex items-center justify-between mb-3 p-3 sm:p-4 rounded-xl">
           <span class="font-medium text-[#000000] dark:text-[#F1F4F5]">
             Package : {{ item.displayName }} (Rs.{{
             item.productPrice | number : "1.2-2"
@@ -35,21 +35,21 @@
         <div class="space-y-3">
           <form>
             <span *ngFor="let typeItems of item.productTypes">
-              <div class="flex items-center space-x-3 border-b-2 py-4 px-5">
-                <div class="w-8 font-medium" [ngClass]="getShortCodeTextClass(typeItems)">
+              <div class="flex flex-col gap-3 sm:flex-row sm:items-center border-b-2 py-4 px-3 sm:px-5">
+                <div class="w-full sm:w-8 shrink-0 font-medium" [ngClass]="getShortCodeTextClass(typeItems)">
                   {{ typeItems.shortCode }}
                 </div>
                 <p-dropdown [options]="filterMarketItemByTypeId(typeItems.id)" [(ngModel)]="typeItems.productId"
                   optionLabel="displayName" optionValue="id" placeholder="--Select Product--" [showClear]="false"
                   (onChange)="onProductSelected(typeItems, $event)" [style]="{'width': '100%'}"
-                  [ngClass]="getDropdownStatusClass(typeItems)" styleClass="custom-dropdown" class="flex-1"
+                  [ngClass]="getDropdownStatusClass(typeItems)" styleClass="custom-dropdown" class="w-full min-w-0 sm:flex-1"
                   [filter]="true" appendTo="body" scrollHeight="250px">
                 </p-dropdown>
                 <input type="text" inputmode="decimal" placeholder="--Quantity in kg--"
-                  class="rounded-xl text-sm w-40 px-4 py-4 bg-white dark:bg-gray-800 text-[#000000] dark:text-[#F1F4F5] placeholder-gray-500 dark:placeholder-gray-400 placeholder:italic focus:outline-none focus:ring-0"
+                  class="rounded-xl text-sm w-full sm:w-40 px-4 py-4 bg-white dark:bg-gray-800 text-[#000000] dark:text-[#F1F4F5] placeholder-gray-500 dark:placeholder-gray-400 placeholder:italic focus:outline-none focus:ring-0"
                   [ngClass]="getInputStatusBorderColor(typeItems)" (input)="onQuantityChanged(typeItems, $event)"
                   (keydown)="validateQuantityInput($event)" [value]="typeItems.quantityText ?? ''" />
-                <div class="w-16 text-right text-[#4B5563] dark:text-gray-100">
+                <div class="w-full sm:w-16 text-left sm:text-right text-[#4B5563] dark:text-gray-100">
                   Rs.{{ typeItems.calculatedPrice || "0.00" | number : "1.2-2" }}
                 </div>
               </div>
@@ -68,7 +68,7 @@
   </span>
 
   <!-- Combined Grand Total -->
-  <div class="px-10 pb-4 border-t border-gray-200 dark:border-gray-700 pt-4">
+  <div class="px-4 sm:px-10 pb-4 border-t border-gray-200 dark:border-gray-700 pt-4">
     <div class="flex justify-end space-x-8">
       <div class="text-right">
         <div class="text-[#4B5563] dark:text-gray-100 mb-1">

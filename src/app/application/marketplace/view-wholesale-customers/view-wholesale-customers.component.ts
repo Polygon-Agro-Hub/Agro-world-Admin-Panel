@@ -84,7 +84,7 @@ export class ViewWholesaleCustomersComponent implements OnInit {
     private router: Router,
     public permissionService: PermissionService,
     public tokenService: TokenService,
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.fetchWholesaleCustomers();

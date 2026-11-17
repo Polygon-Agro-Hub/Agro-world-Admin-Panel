@@ -57,7 +57,6 @@ interface ApiResponse {
   styleUrls: ['./retail-complaints.component.css'],
   providers: [DatePipe],
 })
-
 export class RetailComplaintsComponent implements OnInit {
   complaints: Complaint[] = [];
   filteredComplaints: Complaint[] = [];
@@ -91,8 +90,8 @@ export class RetailComplaintsComponent implements OnInit {
     private datePipe: DatePipe,
     private complaintsService: ComplaintsService,
     public tokenService: TokenService,
-    public permissionService: PermissionService
-  ) { }
+    public permissionService: PermissionService,
+  ) {}
 
   ngOnInit(): void {
     this.fetchComplaints();
@@ -106,25 +105,30 @@ export class RetailComplaintsComponent implements OnInit {
       next: (resp: ApiResponse) => {
         this.hasData = resp.data.length > 0;
         this.complaints = resp.data
-          .map(item => ({
+          .map((item) => ({
             id: item.id.toString(),
             refNo: item.refNo,
             complainCategory: item.categoryEnglish,
             firstName: item.firstName,
             lastName: item.lastName,
-            contactNumber: item.ContactNumber ? item.ContactNumber.replace(/-/g, '') : '',
+            contactNumber: item.ContactNumber
+              ? item.ContactNumber.replace(/-/g, '')
+              : '',
             createdAt: this.formatDate(item.createdAt),
             status: this.normalizeStatus(item.status, item.createdAt),
             reply: item.reply || undefined,
             complain: item.complain,
             replyBy: item.replyBy || null,
           }))
-          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+          .sort(
+            (a, b) =>
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+          );
         this.filteredComplaints = [...this.complaints];
         this.totalItems = this.filteredComplaints.length;
         this.status = Array.from(
-          new Set(this.complaints.map(c => c.status))
-        ).map(st => ({ label: st, value: st }));
+          new Set(this.complaints.map((c) => c.status)),
+        ).map((st) => ({ label: st, value: st }));
         this.isLoading = false;
       },
       error: (err) => {
@@ -161,10 +165,8 @@ export class RetailComplaintsComponent implements OnInit {
   //   });
   // }
 
-
   getAllComplainCategories() {
-
-    if (this.tokenService.getUserDetails().role === "1") {
+    if (this.tokenService.getUserDetails().role === '1') {
       const token = this.tokenService.getToken();
 
       if (!token) {
@@ -176,9 +178,12 @@ export class RetailComplaintsComponent implements OnInit {
       });
 
       this.http
-        .get<any>(`${environment.API_URL}auth/get-all-complain-category-list-super/3`, {
-          headers,
-        })
+        .get<any>(
+          `${environment.API_URL}auth/get-all-complain-category-list-super/3`,
+          {
+            headers,
+          },
+        )
         .subscribe(
           (response: { id: number; categoryEnglish: string }[]) => {
             this.comCategories = response.map((c) => ({
@@ -188,7 +193,7 @@ export class RetailComplaintsComponent implements OnInit {
           },
           (error) => {
             console.error('Error fetching news:', error);
-          }
+          },
         );
     } else {
       const token = this.tokenService.getToken();
@@ -202,9 +207,12 @@ export class RetailComplaintsComponent implements OnInit {
       });
 
       this.http
-        .get<any>(`${environment.API_URL}auth/get-all-complain-category-list/${this.tokenService.getUserDetails().role}/3`, {
-          headers,
-        })
+        .get<any>(
+          `${environment.API_URL}auth/get-all-complain-category-list/${this.tokenService.getUserDetails().role}/3`,
+          {
+            headers,
+          },
+        )
         .subscribe(
           (response: { id: number; categoryEnglish: string }[]) => {
             this.comCategories = response.map((c) => ({
@@ -214,21 +222,27 @@ export class RetailComplaintsComponent implements OnInit {
           },
           (error) => {
             console.error('Error fetching news:', error);
-          }
+          },
         );
     }
   }
 
   private formatDate(dateString: string): string {
-    return this.datePipe.transform(new Date(dateString), 'yyyy-MM-dd hh:mm a') || '';
+    return (
+      this.datePipe.transform(new Date(dateString), 'yyyy-MM-dd hh:mm a') || ''
+    );
   }
 
-  private normalizeStatus(status: string | null | undefined, createdAt: string): string {
+  private normalizeStatus(
+    status: string | null | undefined,
+    createdAt: string,
+  ): string {
     if (!status) {
       return 'Unknown';
     }
     if (status.toLowerCase() === 'opened') {
-      const diff = (Date.now() - new Date(createdAt).getTime()) / (1000 * 3600 * 24);
+      const diff =
+        (Date.now() - new Date(createdAt).getTime()) / (1000 * 3600 * 24);
       return diff >= 3 ? 'Pending' : 'Assigned';
     }
     return status;
@@ -243,29 +257,37 @@ export class RetailComplaintsComponent implements OnInit {
       const txt = this.searchText.trim().toLowerCase();
 
       this.filteredComplaints = this.complaints
-        .filter(item => {
-          const matchesSearch = !txt || [
-            item.refNo,
-            item.complainCategory,
-            item.firstName,
-            item.lastName,
-            item.contactNumber,
-          ].some(field => field?.toLowerCase().includes(txt));
+        .filter((item) => {
+          const matchesSearch =
+            !txt ||
+            [
+              item.refNo,
+              item.complainCategory,
+              item.firstName,
+              item.lastName,
+              item.contactNumber,
+            ].some((field) => field?.toLowerCase().includes(txt));
 
           const matchesReply =
-            this.rpst === 'Yes' ? !!item.reply :
-              this.rpst === 'No' ? !item.reply :
-                true;
+            this.rpst === 'Yes'
+              ? !!item.reply
+              : this.rpst === 'No'
+                ? !item.reply
+                : true;
 
           const matchesCat =
-            !this.filterComCategory || item.complainCategory === this.filterComCategory;
+            !this.filterComCategory ||
+            item.complainCategory === this.filterComCategory;
 
           const matchesStat =
             !this.filterStatus || item.status === this.filterStatus;
 
           return matchesSearch && matchesReply && matchesCat && matchesStat;
         })
-        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        .sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+        );
 
       this.totalItems = this.filteredComplaints.length;
       this.page = 1;
@@ -318,6 +340,5 @@ export class RetailComplaintsComponent implements OnInit {
     this.messageContent = '';
   }
 
-  submitReply(): void {
-  }
+  submitReply(): void {}
 }

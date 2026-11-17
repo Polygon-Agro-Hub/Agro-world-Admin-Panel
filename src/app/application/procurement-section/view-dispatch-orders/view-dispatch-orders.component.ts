@@ -10,7 +10,7 @@ interface OrderDetailItem {
   displayName: string;
   productPrice: number;
   invNo: string;
-  packageQty:number;
+  packageQty: number;
   productTypes: ProductTypes[];
 }
 
@@ -26,6 +26,7 @@ interface ProductTypes {
   productDescription?: string;
   productTypeId?: number;
   isExcluded?: boolean;
+  price: number;
 }
 
 interface MarketplaceItem {
@@ -196,7 +197,7 @@ export class ViewDispatchOrdersComponent implements OnInit {
     });
   }
 
- fetchOrderDetails(id: string) {
+  fetchOrderDetails(id: string) {
     this.loading = true;
     this.isLoading = true;
     this.error = '';
@@ -240,6 +241,7 @@ export class ViewDispatchOrdersComponent implements OnInit {
                 displayName: pt.displayName || undefined,
                 productDescription: pt.productDescription || undefined,
                 isExcluded: pt.isExcluded,
+                price: pt.price || 0,
               };
 
               if (!productType.productTypeId) {
@@ -278,7 +280,7 @@ export class ViewDispatchOrdersComponent implements OnInit {
       },
     });
   }
-  
+
   calculateTotalPrice() {
     if (this.orderDetails && this.orderDetails.length) {
       this.totalPrice = this.getCombinedProductPrice();
@@ -353,6 +355,10 @@ export class ViewDispatchOrdersComponent implements OnInit {
 
   openExcludedItemsModal() {
     this.showExcludedItemsModal = true;
+  }
+
+  calculateSum(items: any[]): number {
+    return items.reduce((sum, price) => sum + price, 0);
   }
 }
 

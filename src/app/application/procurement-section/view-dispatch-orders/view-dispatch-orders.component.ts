@@ -315,22 +315,6 @@ export class ViewDispatchOrdersComponent implements OnInit {
     this.calculateTotalPrice();
   }
 
-  onQuantityChanged(productType: ProductTypes, event: Event) {
-    const inputElement = event.target as HTMLInputElement;
-    const quantity = Number(inputElement.value);
-
-    if (isNaN(quantity) || quantity <= 0) {
-      productType.quantity = undefined;
-      productType.calculatedPrice = 0;
-    } else {
-      productType.quantity = quantity;
-      // Ensure we have a valid selectedProductPrice
-      const unitPrice = productType.selectedProductPrice || 0;
-      productType.calculatedPrice = quantity * unitPrice;
-    }
-    this.calculateTotalPrice();
-  }
-
   getPackageTotal(packageItem: OrderDetailItem): number {
     if (!packageItem.productTypes) return 0;
 
@@ -344,45 +328,6 @@ export class ViewDispatchOrdersComponent implements OnInit {
     if (value === null || value === undefined || value === '') return undefined;
     const n = Number(value);
     return Number.isFinite(n) ? n : undefined;
-  }
-
-  getAllowedLimit(packageItem: OrderDetailItem): string {
-    const allowedLimit = packageItem.productPrice * 1.08;
-    return allowedLimit.toFixed(2);
-  }
-
-  private getErrorMessage(error: any): string {
-    if (error?.error?.message) {
-      return error.error.message;
-    }
-    if (error?.message) {
-      return error.message;
-    }
-    return 'Unknown error occurred';
-  }
-
-  private saveItemsSequentially(items: any[], index = 0) {
-    if (index >= items.length) {
-      this.loading = false;
-      alert('All items saved successfully!');
-      this.goBack();
-      return;
-    }
-
-    // Provide an empty array or appropriate products array as the second argument
-    this.procurementService
-      .createOrderPackageItems(items[index], [])
-      .subscribe({
-        next: () => {
-          this.saveItemsSequentially(items, index + 1);
-
-        },
-        error: (err) => {
-          console.error(`Error saving item ${index}:`, err);
-          this.loading = false;
-          alert(`Failed to save item ${index + 1}. Please try again.`);
-        },
-      });
   }
 
   getCombinedProductPrice(): number {

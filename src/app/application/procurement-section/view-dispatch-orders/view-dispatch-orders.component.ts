@@ -147,6 +147,7 @@ export class ViewDispatchOrdersComponent implements OnInit {
         );
 
         if (matchingItem) {
+          console.log('matchingItem', matchingItem)
           productType.productId = matchingItem.productId;
           productType.quantity = matchingItem.qty;
           productType.selectedProductPrice = matchingItem.price;
@@ -205,10 +206,7 @@ export class ViewDispatchOrdersComponent implements OnInit {
             packageId: pkg.packageId,
             displayName: pkg.displayName,
             packageQty: pkg.packageQty,
-            productPrice:
-              typeof pkg.productPrice === 'string'
-                ? parseFloat(pkg.productPrice)
-                : pkg.productPrice,
+            productPrice: this.toNumber(pkg.productPrice) ?? 0,
             invNo: response.invNo,
             productTypes: [],
           };
@@ -221,10 +219,12 @@ export class ViewDispatchOrdersComponent implements OnInit {
                 shortCode: pt.shortCode,
                 productId: pt.productId || null,
                 productTypeId: pt.productTypeId,
-                selectedProductPrice: pt.price || undefined,
-                quantity: pt.qty || undefined,
-                calculatedPrice:
-                  pt.price && pt.qty ? pt.price * pt.qty : undefined,
+                // API returns DECIMAL columns as strings (e.g. "260.00") — convert to numbers
+                selectedProductPrice: this.toNumber(pt.price) || undefined,
+                quantity: this.toNumber(pt.qty) || undefined,
+                calculatedPrice: this.toNumber(pt.price),
+                // calculatedPrice:
+                //   pt.price && pt.qty ? pt.price * pt.qty : undefined,
                 displayName: pt.displayName || undefined,
                 productDescription: pt.productDescription || undefined,
                 isExcluded: pt.isExcluded,
@@ -335,8 +335,15 @@ export class ViewDispatchOrdersComponent implements OnInit {
     if (!packageItem.productTypes) return 0;
 
     return packageItem.productTypes.reduce((sum, productType) => {
-      return sum + (productType.calculatedPrice || 0);
+      return sum + (this.toNumber(productType.calculatedPrice) ?? 0);
     }, 0);
+  }
+
+  /** Converts API values (numbers or numeric strings like "260.00") to a number; undefined if not numeric. */
+  private toNumber(value: unknown): number | undefined {
+    if (value === null || value === undefined || value === '') return undefined;
+    const n = Number(value);
+    return Number.isFinite(n) ? n : undefined;
   }
 
   getAllowedLimit(packageItem: OrderDetailItem): string {
@@ -385,7 +392,7 @@ export class ViewDispatchOrdersComponent implements OnInit {
 
     // Sum of all package product prices
     return this.orderDetails.reduce(
-      (sum, pkg) => sum + (pkg.productPrice || 0),
+      (sum, pkg) => sum + (this.toNumber(pkg.productPrice) ?? 0),
       0
     );
   }

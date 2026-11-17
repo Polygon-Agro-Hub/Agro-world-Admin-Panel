@@ -286,35 +286,6 @@ export class ViewDispatchOrdersComponent implements OnInit {
     }
   }
 
-  onProductSelected(productType: ProductTypes, event: Event) {
-    const selectElement = event.target as HTMLSelectElement;
-    const selectedProductId = Number(selectElement.value);
-
-    const selectedProduct = this.marketplaceItems.find(
-      (item) => item.id === selectedProductId
-    );
-
-    if (selectedProduct) {
-      productType.productId = selectedProduct.id;
-      productType.selectedProductPrice = selectedProduct.discountedPrice;
-      productType.displayName = selectedProduct.displayName;
-
-      // Update calculated price based on current quantity
-      if (productType.quantity && productType.quantity > 0) {
-        productType.calculatedPrice =
-          productType.quantity * selectedProduct.discountedPrice;
-      } else {
-        productType.calculatedPrice = selectedProduct.discountedPrice; // Default to unit price
-      }
-    } else {
-      productType.productId = null;
-      productType.selectedProductPrice = 0;
-      productType.calculatedPrice = 0;
-      productType.quantity = undefined;
-    }
-    this.calculateTotalPrice();
-  }
-
   getPackageTotal(packageItem: OrderDetailItem): number {
     if (!packageItem.productTypes) return 0;
 

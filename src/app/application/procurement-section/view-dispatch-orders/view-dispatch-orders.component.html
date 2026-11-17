@@ -83,7 +83,7 @@
               </select> -->
               <select
                 class="rounded-xl flex-1 px-4 py-4 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm appearance-none cursor-default"
-                readonly (change)="onProductSelected(typeItems, $event)" onfocus="this.blur()"
+                readonly onfocus="this.blur()"
                 style="pointer-events: none;">
                 <option value="">--Select Product--</option>
                 <option *ngFor="let product of marketplaceItems" [value]="product.id"

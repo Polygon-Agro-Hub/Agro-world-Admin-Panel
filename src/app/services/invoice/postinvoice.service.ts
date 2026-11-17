@@ -427,7 +427,7 @@ export class PostinvoiceService {
     doc.text('Delivery Method:', 15, yPosition);
     doc.setFont('helvetica', 'normal');
     doc.text(
-      invoice.deliveryMethod === 'Pickup' ? 'Instore Pickup' : 'Home Delivery',
+      invoice.deliveryMethod === 'Pickup' ? 'Instore Pickup' : 'Delivery',
       15,
       yPosition + 5,
     );
@@ -554,9 +554,51 @@ export class PostinvoiceService {
           15,
           yPosition,
         );
-        doc.text(`Rs. ${formatNumberWithCommas(pack.amount)}`, 195, yPosition, {
-          align: 'right',
-        });
+        // ---- Pack header price: calculated total (struck) + package price ----
+        const packPrice = parseNum(pack.amount);
+
+        const itemsTotal =
+          pack.packageDetails?.reduce(
+            (sum: number, d: any) => sum + parseNum(d.price),
+            0,
+          ) || 0;
+
+        const calculatedTotal =
+          itemsTotal + parseNum(pack.serviceFee) + parseNum(pack.packingFee);
+
+        // Package price (right aligned, black, bold)
+        const packPriceText = `Rs. ${formatNumberWithCommas(packPrice)}`;
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(9);
+        doc.setTextColor(0, 0, 0);
+        doc.text(packPriceText, 195, yPosition, { align: 'right' });
+        const packPriceWidth = doc.getTextWidth(packPriceText);
+
+        // Calculated total (struck through) only when it differs
+        if (Math.abs(calculatedTotal - packPrice) > 0.01) {
+          const oldText = `Rs. ${formatNumberWithCommas(calculatedTotal)}`;
+          const oldRightX = 195 - packPriceWidth - 3; // 3mm gap
+
+          doc.setFont('helvetica', 'normal');
+          doc.setTextColor(0, 0, 0); // #000000
+
+          doc.text(oldText, oldRightX, yPosition, { align: 'right' });
+
+          // strike-through line
+          const oldWidth = doc.getTextWidth(oldText);
+          doc.setDrawColor(0, 0, 0); // #000000
+          doc.setLineWidth(0.3);
+          doc.line(
+            oldRightX - oldWidth,
+            yPosition - 1.1,
+            oldRightX,
+            yPosition - 1.1,
+          );
+
+          // reset
+          doc.setFont('helvetica', 'bold');
+          doc.setTextColor(0, 0, 0);
+        }
         yPosition += 5;
 
         doc.setDrawColor(215, 215, 215);
@@ -610,14 +652,28 @@ export class PostinvoiceService {
           }) || []),
         ];
 
+        // ---- Fees ----
+        const serviceFeeValue = parseNum(pack.serviceFee);
+        const packingFeeValue = parseNum(pack.packingFee);
+
+        const fees: Array<{ label: string; amount: number }> = [];
+        if (serviceFeeValue > 0)
+          fees.push({ label: 'Service Fee', amount: serviceFeeValue });
+        if (packingFeeValue > 0)
+          fees.push({ label: 'Packing Fee', amount: packingFeeValue });
+
+        const TABLE_X = 15;
+        const TABLE_W = 180;
+        const tableTopY = yPosition;
+
         (doc as any).autoTable({
           startY: yPosition,
           head: [packDetailsBody[0]],
           body: packDetailsBody.slice(1),
-          margin: { left: 15, right: 15 },
+          margin: { left: TABLE_X, right: 15 },
           styles: {
             fontSize: 9,
-            cellPadding: { top: 3, right: 4, bottom: 3, left: 4 },
+            cellPadding: { top: 5, right: 4, bottom: 5, left: 4 },
             textColor: [0, 0, 0],
             overflow: 'linebreak',
             valign: 'middle',
@@ -627,27 +683,109 @@ export class PostinvoiceService {
             textColor: [0, 0, 0],
             fontStyle: 'bold',
           },
-          bodyStyles: {
-            textColor: [0, 0, 0],
-          },
+          bodyStyles: { textColor: [0, 0, 0] },
           alternateRowStyles: {
             fillColor: [255, 255, 255],
             textColor: [0, 0, 0],
           },
-          tableLineColor: [209, 213, 219],
-          tableLineWidth: 0.5,
           showHorizontalLines: false,
           showVerticalLines: false,
           columnStyles: {
-            0: { cellWidth: 16, halign: 'left' }, // Index
-            1: { cellWidth: 40, overflow: 'linebreak' }, // Category
-            2: { cellWidth: 50, overflow: 'linebreak' }, // Item Description
-            3: { cellWidth: 30, overflow: 'visible', halign: 'left' }, // QTY
-            4: { cellWidth: 44, halign: 'left' }, // Amount
+            0: { cellWidth: 16, halign: 'left' },
+            1: { cellWidth: 40, overflow: 'linebreak' },
+            2: { cellWidth: 50, overflow: 'linebreak' },
+            3: { cellWidth: 30, overflow: 'visible', halign: 'left' },
+            4: { cellWidth: 44, halign: 'left' },
+          },
+
+          // Category values -> #676767
+          didParseCell: (data: any) => {
+            if (data.section === 'body' && data.column.index === 1) {
+              data.cell.styles.textColor = [103, 103, 103];
+            }
+          },
+
+          // Line under the header row
+          didDrawCell: (data: any) => {
+            if (data.section === 'head') {
+              doc.setDrawColor(215, 215, 215);
+              doc.setLineWidth(0.3);
+              doc.line(
+                data.cell.x,
+                data.cell.y + data.cell.height,
+                data.cell.x + data.cell.width,
+                data.cell.y + data.cell.height,
+              );
+            }
           },
         });
 
-        yPosition = (doc as any).lastAutoTable.finalY + 10;
+        let tableBottomY = (doc as any).lastAutoTable.finalY;
+
+        // ---- Additional Charges box ----
+        if (fees.length > 0) {
+          const ROW_H = 9;
+          const boxH = Math.max(fees.length * ROW_H + 8, 22);
+          const boxX = TABLE_X + 5;
+          const boxW = TABLE_W - 10;
+
+          // separator line between items and the box
+          doc.setDrawColor(229, 231, 235);
+          doc.setLineWidth(0.3);
+          doc.line(boxX, tableBottomY + 2, boxX + boxW, tableBottomY + 2);
+
+          const boxY = tableBottomY + 5;
+
+          // background #F2F6FE
+          doc.setFillColor(242, 246, 254);
+          doc.roundedRect(boxX, boxY, boxW, boxH, 3, 3, 'F');
+
+          // left text (#000000)
+          doc.setTextColor(0, 0, 0);
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(10);
+          doc.text('Additional Charges', boxX + 6, boxY + 8);
+
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(8);
+          doc.text('Service Fee & Packing Fee*', boxX + 6, boxY + 13);
+
+          // middle divider (#8097C7) at QTY column start
+          doc.setDrawColor(128, 151, 199);
+          doc.setLineWidth(0.3);
+          doc.line(121, boxY + 4, 121, boxY + boxH - 4);
+
+          // labels (QTY column) + amounts (Amount column)
+          doc.setFontSize(9);
+          doc.setFont('helvetica', 'normal');
+          fees.forEach((fee, i) => {
+            const textY = boxY + 9 + i * ROW_H;
+            doc.text(fee.label, 125, textY);
+            doc.text(`Rs. ${formatNumberWithCommas(fee.amount)}`, 155, textY);
+          });
+
+          tableBottomY = boxY + boxH + 4; // bottom padding inside the card
+        }
+
+        // ---- Outer rounded border (whole card) ----
+        doc.setDrawColor(215, 215, 215);
+        doc.setLineWidth(0.3);
+        doc.roundedRect(
+          TABLE_X,
+          tableTopY,
+          TABLE_W,
+          tableBottomY - tableTopY,
+          3,
+          3,
+          'S',
+        );
+
+        // reset for the next content
+        doc.setTextColor(0, 0, 0);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(9);
+
+        yPosition = tableBottomY + 10;
       }
     }
 
@@ -1003,7 +1141,7 @@ export class PostinvoiceService {
     };
 
     if (hasCreditPaid) {
-      pushPaymentRow('Credit Balance Used', creditPaidNum, GREEN_COLOR);
+      pushPaymentRow('Polygon Wallet Used', creditPaidNum, GREEN_COLOR);
 
       if (remainingAfterCredit > 0.01) {
         if (isPaid && isCardPayment) {

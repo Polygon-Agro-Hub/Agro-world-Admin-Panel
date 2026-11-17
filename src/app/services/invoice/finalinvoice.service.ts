@@ -424,7 +424,7 @@ export class FinalinvoiceService {
     doc.text('Delivery Method:', 15, yPosition);
     doc.setFont('helvetica', 'normal');
     doc.text(
-      invoice.deliveryMethod === 'Pickup' ? 'Instore Pickup' : 'Home Delivery',
+      invoice.deliveryMethod === 'Pickup' ? 'Instore Pickup' : 'Delivery',
       15,
       yPosition + 5,
     );
@@ -965,7 +965,7 @@ export class FinalinvoiceService {
     };
 
     if (hasCreditPaid) {
-      pushPaymentRow('Credit Balance Used', creditPaidNum, GREEN_COLOR);
+      pushPaymentRow('Polygon Wallet Used', creditPaidNum, GREEN_COLOR);
 
       if (remainingAfterCredit > 0.01) {
         if (isPaid) {

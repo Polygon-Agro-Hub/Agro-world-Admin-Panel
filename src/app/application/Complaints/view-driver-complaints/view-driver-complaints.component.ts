@@ -16,24 +16,29 @@ import { environment } from '../../../environment/environment';
 @Component({
   selector: 'app-view-driver-complaints',
   standalone: true,
-  imports: [CommonModule, DropdownModule, NgxPaginationModule, FormsModule, LoadingSpinnerComponent],
+  imports: [
+    CommonModule,
+    DropdownModule,
+    NgxPaginationModule,
+    FormsModule,
+    LoadingSpinnerComponent,
+  ],
   templateUrl: './view-driver-complaints.component.html',
-  styleUrl: './view-driver-complaints.component.css'
+  styleUrl: './view-driver-complaints.component.css',
 })
 export class ViewDriverComplaintsComponent {
-
   page: number = 1;
   totalItems: number = 0;
   itemsPerPage: number = 10;
 
-  filterStatus: any = "";
+  filterStatus: any = '';
   filterCategory: any = {};
   status!: Status[];
   category!: Category[];
   complainsData!: Complain[];
-  searchText: string = "";
+  searchText: string = '';
   isLoading = false;
-  messageContent: string = "";
+  messageContent: string = '';
   complain: ComplainN = new ComplainN();
   comCategories: ComCategories[] = [];
   company: Company[] = [];
@@ -45,7 +50,6 @@ export class ViewDriverComplaintsComponent {
   selectedLanguage: string = 'English';
   selectedOfficerName: string = '';
 
-
   rpst: string = '';
   replyStatus = [
     { status: 'Yes', value: 'Yes' },
@@ -56,28 +60,19 @@ export class ViewDriverComplaintsComponent {
     { label: 'Assigned', value: 'Opened' },
     { label: 'Closed', value: 'Closed' },
     { label: 'Pending', value: 'Pending' },
+  ];
 
-  ]
-
-  @ViewChild("dropdown") dropdown!: Dropdown;
-
-
-
+  @ViewChild('dropdown') dropdown!: Dropdown;
 
   constructor(
     private router: Router,
     private http: HttpClient,
     private distributedComplainSrv: ComplaintsService,
     public tokenService: TokenService,
-    public permissionService: PermissionService
-  ) { }
-
-
-
+    public permissionService: PermissionService,
+  ) {}
 
   ngOnInit(): void {
-
-
     this.fetchAllComplain(this.page, this.itemsPerPage);
     this.getAllComplainCategories();
     this.getAllCompanyForOfficerComplain();
@@ -94,12 +89,10 @@ export class ViewDriverComplaintsComponent {
         this.filterComCategory?.id,
         this.filterCompany?.id,
         this.searchText,
-        this.rpst
+        this.rpst,
       )
       .subscribe(
         (res) => {
-
-
           this.complainsData = res.results;
           this.totalItems = res.total;
           this.isLoading = false;
@@ -128,13 +121,13 @@ export class ViewDriverComplaintsComponent {
   }
 
   searchComplain() {
-    this.searchText = this.searchText?.trim() || ''
+    this.searchText = this.searchText?.trim() || '';
     this.page = 1;
     this.fetchAllComplain(this.page, this.itemsPerPage);
   }
 
   clearSearch(): void {
-    this.searchText = "";
+    this.searchText = '';
     this.fetchAllComplain(this.page, this.itemsPerPage);
   }
 
@@ -143,7 +136,6 @@ export class ViewDriverComplaintsComponent {
       `/complaints/driver-complaints/view-each-complain/${id}`,
     ]);
   }
-
 
   fetchComplain(item: any, farmerName: string, language: string) {
     this.complain = item;
@@ -157,8 +149,7 @@ export class ViewDriverComplaintsComponent {
   }
 
   getAllComplainCategories() {
-
-    if (this.tokenService.getUserDetails().role === "1") {
+    if (this.tokenService.getUserDetails().role === '1') {
       const token = this.tokenService.getToken();
 
       if (!token) {
@@ -170,16 +161,19 @@ export class ViewDriverComplaintsComponent {
       });
 
       this.http
-        .get<any>(`${environment.API_URL}auth/get-all-complain-category-list-super/7`, {
-          headers,
-        })
+        .get<any>(
+          `${environment.API_URL}auth/get-all-complain-category-list-super/7`,
+          {
+            headers,
+          },
+        )
         .subscribe(
           (response) => {
             this.comCategories = response;
           },
           (error) => {
             console.error('Error fetching news:', error);
-          }
+          },
         );
     } else {
       const token = this.tokenService.getToken();
@@ -193,23 +187,24 @@ export class ViewDriverComplaintsComponent {
       });
 
       this.http
-        .get<any>(`${environment.API_URL}auth/get-all-complain-category-list/${this.tokenService.getUserDetails().role}/7`, {
-          headers,
-        })
+        .get<any>(
+          `${environment.API_URL}auth/get-all-complain-category-list/${this.tokenService.getUserDetails().role}/7`,
+          {
+            headers,
+          },
+        )
         .subscribe(
           (response) => {
             this.comCategories = response;
           },
           (error) => {
             console.error('Error fetching news:', error);
-          }
+          },
         );
     }
-
   }
 
   getAllCompanyForOfficerComplain() {
-
     const token = this.tokenService.getToken();
 
     if (!token) {
@@ -221,18 +216,20 @@ export class ViewDriverComplaintsComponent {
     });
 
     this.http
-      .get<any>(`${environment.API_URL}complain/get-distribution-comppany-for-officer-complain`, {
-        headers,
-      })
+      .get<any>(
+        `${environment.API_URL}complain/get-distribution-comppany-for-officer-complain`,
+        {
+          headers,
+        },
+      )
       .subscribe(
         (response) => {
           this.company = response;
         },
         (error) => {
           console.error('Error fetching news:', error);
-        }
+        },
       );
-
   }
 
   back(): void {
@@ -243,10 +240,8 @@ export class ViewDriverComplaintsComponent {
     this.isPopUpVisible = false;
     this.selectedOfficerName = 'English';
     this.selectedLanguage = '';
-
   }
 }
-
 
 class Complain {
   id!: string;
@@ -280,7 +275,6 @@ class Category {
   type!: string;
 }
 
-
 class ComplainN {
   id!: string;
   refNo!: string;
@@ -301,7 +295,6 @@ class ComplainN {
   farmerName!: string;
 }
 
-
 class ComCategories {
   id!: number;
   categoryEnglish!: string;
@@ -311,4 +304,3 @@ class Company {
   id!: number;
   companyNameEnglish!: string;
 }
-

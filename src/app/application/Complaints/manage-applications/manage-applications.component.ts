@@ -1,6 +1,6 @@
-import { CommonModule } from "@angular/common";
-import { Component, OnInit } from "@angular/core";
-import { DropdownModule } from "primeng/dropdown";
+import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { DropdownModule } from 'primeng/dropdown';
 
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
@@ -9,15 +9,14 @@ import { environment } from '../../../environment/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ComplaintsService } from '../../../services/complaints/complaints.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
-import { PermissionService } from "../../../services/roles-permission/permission.service";
-
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
-  selector: "app-manage-applications",
+  selector: 'app-manage-applications',
   standalone: true,
   imports: [CommonModule, DropdownModule, LoadingSpinnerComponent],
   templateUrl: './manage-applications.component.html',
-  styleUrl: './manage-applications.component.css'
+  styleUrl: './manage-applications.component.css',
 })
 export class ManageApplicationsComponent {
   systemApplicationsArr!: SystemApplications[];
@@ -27,9 +26,8 @@ export class ManageApplicationsComponent {
     private router: Router,
     public tokenService: TokenService,
     private complaintSrv: ComplaintsService,
-    public permissionService: PermissionService
-
-  ) { }
+    public permissionService: PermissionService,
+  ) {}
 
   ngOnInit(): void {
     this.fetchAllSystemApplications();
@@ -42,18 +40,15 @@ export class ManageApplicationsComponent {
         this.systemApplicationsArr = res;
         this.isLoading = false;
       },
-      (error) => {
-      },
+      (error) => {},
     );
   }
 
   showAlert(systemAppId: number) {
-
     this.complaintSrv
       .getComplainCategoriesByAppId(systemAppId)
       .subscribe((res: any) => {
-
-        let htmlContent = "";
+        let htmlContent = '';
 
         if (res.length === 0) {
           htmlContent = `<p class="swal-content">No any complaint categories added.</p>`;
@@ -63,78 +58,78 @@ export class ManageApplicationsComponent {
               (x: any, index: number) =>
                 `<tr><td class="font-bold text-center">${index + 1}.</td><td class="text-start">${x.categoryEnglish}</td></tr>`,
             )
-            .join("");
+            .join('');
 
           htmlContent = `<table class="swal-table w-full">${categoryList}</table>`;
         }
 
         Swal.fire({
-          title: "Plant Care Complaint Categories",
+          title: 'Plant Care Complaint Categories',
           html: htmlContent,
           showConfirmButton: false,
           didOpen: () => {
             const swalPopup = document.querySelector(
-              ".swal2-popup",
+              '.swal2-popup',
             ) as HTMLElement;
             if (swalPopup) {
               swalPopup.classList.add(
-                "bg-gray-100",
-                "rounded-lg",
-                "shadow-lg",
-                "p-6",
-                "w-[400px]",
-                "dark:dark:bg-tileBlack",
+                'bg-gray-100',
+                'rounded-lg',
+                'shadow-lg',
+                'p-6',
+                'w-[400px]',
+                'dark:dark:bg-tileBlack',
               );
             }
 
             const swalTitle = document.querySelector(
-              ".swal2-title",
+              '.swal2-title',
             ) as HTMLElement;
             if (swalTitle) {
               swalTitle.classList.add(
-                "text-lg",
-                "font-semibold",
-                "text-gray-800",
-                "dark:text-textDark",
+                'text-lg',
+                'font-semibold',
+                'text-gray-800',
+                'dark:text-textDark',
               );
             }
 
             const swalContent = document.querySelector(
-              ".swal-content",
+              '.swal-content',
             ) as HTMLElement;
             if (swalContent) {
               swalContent.classList.add(
-                "text-gray-600",
-                "text-center",
-                "text-lg",
-                "dark:text-textDark",
+                'text-gray-600',
+                'text-center',
+                'text-lg',
+                'dark:text-textDark',
               );
             }
 
             const swalTable = document.querySelector(
-              ".swal-table",
+              '.swal-table',
             ) as HTMLElement;
             if (swalTable) {
               swalTable.classList.add(
-                "border-collapse",
-                "text-lg",
-                "w-full",
-                "dark:text-textDark",
+                'border-collapse',
+                'text-lg',
+                'w-full',
+                'dark:text-textDark',
               );
             }
 
-            const tableRows = document.querySelectorAll(".swal-table tr");
+            const tableRows = document.querySelectorAll('.swal-table tr');
             tableRows.forEach((row) => {
-              row.classList.add("border-b", "border-gray-300", "p-2");
+              row.classList.add('border-b', 'border-gray-300', 'p-2');
             });
 
-            const tableCells = document.querySelectorAll(".swal-table td");
+            const tableCells = document.querySelectorAll('.swal-table td');
             tableCells.forEach((cell) => {
               cell.classList.add(
-                "px-4",
-                "py-2",
-                "text-gray-700",
-                "dark:text-textDark",
+                'px-4',
+                'py-2',
+                'text-gray-700',
+                'dark:text-textDark',
               );
             });
           },
@@ -157,69 +152,75 @@ export class ManageApplicationsComponent {
       </div>
     `,
       showCancelButton: true,
-      confirmButtonText: "Add",
-      cancelButtonText: "Cancel",
+      confirmButtonText: 'Add',
+      cancelButtonText: 'Cancel',
       reverseButtons: true,
 
       customClass: {
-        popup: "rounded-card",
-        confirmButton: "add-btn",
-        cancelButton: "cancel-btn",
+        popup: 'rounded-card',
+        confirmButton: 'add-btn',
+        cancelButton: 'cancel-btn',
       },
 
       didRender: () => {
-        const popup = document.querySelector(".rounded-card");
+        const popup = document.querySelector('.rounded-card');
         if (popup) {
-          popup.classList.add("rounded-xl", "p-5", "dark:bg-tileBlack");
+          popup.classList.add('rounded-xl', 'p-5', 'dark:bg-tileBlack');
         }
 
-        const addBtn = document.querySelector(".add-btn");
+        const addBtn = document.querySelector('.add-btn');
         if (addBtn) {
           addBtn.classList.add(
-            "bg-blue-500",
-            "text-white",
-            "rounded-lg",
-            "px-4",
-            "py-2",
-            "text-sm",
-            "hover:bg-blue-600",
-            "transition",
-            "w-24"
+            'bg-blue-500',
+            'text-white',
+            'rounded-lg',
+            'px-4',
+            'py-2',
+            'text-sm',
+            'hover:bg-blue-600',
+            'transition',
+            'w-24',
           );
         }
 
-        const cancelBtn = document.querySelector(".cancel-btn");
+        const cancelBtn = document.querySelector('.cancel-btn');
         if (cancelBtn) {
           cancelBtn.classList.add(
-            "bg-gray-500",
-            "text-white",
-            "rounded-lg",
-            "px-4",
-            "py-2",
-            "text-sm",
-            "hover:bg-gray-600",
-            "transition",
-            "w-24"
+            'bg-gray-500',
+            'text-white',
+            'rounded-lg',
+            'px-4',
+            'py-2',
+            'text-sm',
+            'hover:bg-gray-600',
+            'transition',
+            'w-24',
           );
         }
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        const applicationName = (document.getElementById("appName") as HTMLInputElement)?.value.trim();
+        const applicationName = (
+          document.getElementById('appName') as HTMLInputElement
+        )?.value.trim();
 
         if (applicationName) {
           this.complaintSrv.addNewApplication(applicationName).subscribe(
             () => {
-              Swal.fire("Success!", "Application added successfully.", "success").then(() => {
+              Swal.fire(
+                'Success!',
+                'Application added successfully.',
+                'success',
+              ).then(() => {
                 window.location.reload();
               });
             },
             () => {
-              Swal.fire("Error!", "Application name already exists.", "error");
-            }
+              Swal.fire('Error!', 'Application name already exists.', 'error');
+            },
           );
         } else {
-          Swal.fire("Error!", "You must enter an application name.", "error");
+          Swal.fire('Error!', 'You must enter an application name.', 'error');
         }
       }
     });
@@ -238,111 +239,121 @@ export class ManageApplicationsComponent {
       </div>
     `,
       showCancelButton: true,
-      confirmButtonText: "Edit",
-      cancelButtonText: "Cancel",
+      confirmButtonText: 'Edit',
+      cancelButtonText: 'Cancel',
       reverseButtons: true,
       customClass: {
-        popup: "rounded-xl p-5 dark:bg-tileBlack",
-        confirmButton: "bg-blue-500 text-white rounded-lg px-4 py-2 text-sm hover:bg-blue-600 transition w-24",
-        cancelButton: "bg-gray-500 text-white rounded-lg px-4 py-2 text-sm hover:bg-gray-600 transition w-24"
+        popup: 'rounded-xl p-5 dark:bg-tileBlack',
+        confirmButton:
+          'bg-blue-500 text-white rounded-lg px-4 py-2 text-sm hover:bg-blue-600 transition w-24',
+        cancelButton:
+          'bg-gray-500 text-white rounded-lg px-4 py-2 text-sm hover:bg-gray-600 transition w-24',
       },
       didRender: () => {
-        const popup = document.querySelector(".swal2-popup");
-        if (popup) popup.classList.add("rounded-xl", "p-5", "dark:bg-tileBlack");
-      }
+        const popup = document.querySelector('.swal2-popup');
+        if (popup)
+          popup.classList.add('rounded-xl', 'p-5', 'dark:bg-tileBlack');
+      },
     }).then((result) => {
       if (result.isConfirmed) {
-        const inputElement = document.getElementById("appName") as HTMLInputElement;
+        const inputElement = document.getElementById(
+          'appName',
+        ) as HTMLInputElement;
         const applicationName = inputElement?.value.trim();
 
         if (!applicationName) {
-          Swal.fire("Error!", "Application name cannot be empty!", "error");
+          Swal.fire('Error!', 'Application name cannot be empty!', 'error');
           return;
         }
 
         if (!/^[A-Za-z\s]+$/.test(applicationName)) {
-          Swal.fire("Error!", "Only letters and spaces are allowed!", "error");
+          Swal.fire('Error!', 'Only letters and spaces are allowed!', 'error');
           return;
         }
 
-        this.complaintSrv.editApplication(systemAppId, applicationName).subscribe({
-          next: () => {
-            Swal.fire("Success!", "Application name updated successfully.", "success").then(() => {
-              window.location.reload();
-            });
-          },
-          error: (err) => {
-            console.error("Error updating app name:", err);
-            Swal.fire("Error!", "Already exists", "error");
-          }
-        });
+        this.complaintSrv
+          .editApplication(systemAppId, applicationName)
+          .subscribe({
+            next: () => {
+              Swal.fire(
+                'Success!',
+                'Application name updated successfully.',
+                'success',
+              ).then(() => {
+                window.location.reload();
+              });
+            },
+            error: (err) => {
+              console.error('Error updating app name:', err);
+              Swal.fire('Error!', 'Already exists', 'error');
+            },
+          });
       }
     });
   }
 
   deleteApp(systemAppId: number) {
     Swal.fire({
-      title: "Are you sure?",
-      text: "You are about to delete this application. This action cannot be undone!",
-      icon: "warning",
+      title: 'Are you sure?',
+      text: 'You are about to delete this application. This action cannot be undone!',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: "Delete",
-      cancelButtonText: "Cancel",
+      confirmButtonText: 'Delete',
+      cancelButtonText: 'Cancel',
       reverseButtons: true,
       customClass: {
-        confirmButton: "delete-btn",
-        cancelButton: "cancel-btn",
+        confirmButton: 'delete-btn',
+        cancelButton: 'cancel-btn',
       },
       willOpen: () => {
         document
-          .querySelector(".delete-btn")
+          .querySelector('.delete-btn')
           ?.classList.add(
-            "bg-red-500",
-            "text-white",
-            "rounded-lg",
-            "px-4",
-            "py-2",
-            "text-sm",
-            "hover:bg-red-600",
-            "transition",
-            "w-24",
+            'bg-red-500',
+            'text-white',
+            'rounded-lg',
+            'px-4',
+            'py-2',
+            'text-sm',
+            'hover:bg-red-600',
+            'transition',
+            'w-24',
           );
 
         document
-          .querySelector(".cancel-btn")
+          .querySelector('.cancel-btn')
           ?.classList.add(
-            "bg-gray-500",
-            "text-white",
-            "rounded-lg",
-            "px-4",
-            "py-2",
-            "text-sm",
-            "hover:bg-gray-600",
-            "transition",
-            "w-24",
+            'bg-gray-500',
+            'text-white',
+            'rounded-lg',
+            'px-4',
+            'py-2',
+            'text-sm',
+            'hover:bg-gray-600',
+            'transition',
+            'w-24',
           );
       },
     }).then((result) => {
       if (result.isConfirmed) {
         this.complaintSrv.deleteApplicationById(systemAppId).subscribe(
           (res: any) => {
+            let htmlContent = '';
 
-            let htmlContent = "";
-
-            if (res.message === "application not found") {
+            if (res.message === 'application not found') {
               htmlContent = `<p style="font-size: 18px; text-align: center;">Application could not be deleted. It was not found.</p>`;
               Swal.fire({
-                title: "Error",
+                title: 'Error',
                 html: htmlContent,
-                icon: "error",
+                icon: 'error',
                 showConfirmButton: true,
               });
             } else {
               htmlContent = `<p style="font-size: 18px; text-align: center;">Application successfully deleted.</p>`;
               Swal.fire({
-                title: "Success",
+                title: 'Success',
                 html: htmlContent,
-                icon: "success",
+                icon: 'success',
                 showConfirmButton: true,
               }).then(() => {
                 window.location.reload();
@@ -352,9 +363,9 @@ export class ManageApplicationsComponent {
           (error) => {
             console.error(error);
             Swal.fire({
-              title: "Error",
-              text: "There was an issue deleting the application.",
-              icon: "error",
+              title: 'Error',
+              text: 'There was an issue deleting the application.',
+              icon: 'error',
               showConfirmButton: true,
             });
           },
@@ -364,7 +375,7 @@ export class ManageApplicationsComponent {
   }
 
   goBack() {
-    this.router.navigate(["/complaints"]);
+    this.router.navigate(['/complaints']);
   }
 
   EditCategoris(id: number) {

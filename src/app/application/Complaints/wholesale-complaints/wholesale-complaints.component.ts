@@ -26,7 +26,7 @@ interface Complaint {
   reply?: string;
   complain: string;
   companyName?: string;
-  replyBy:string | null;
+  replyBy: string | null;
 }
 
 interface DropdownOption {
@@ -74,10 +74,9 @@ export class WholesaleComplaintsComponent implements OnInit {
   totalItems = 0;
   itemsPerPage = 10;
   page = 1;
-  roleCategory:string = this.tokenService.getUserDetails().role;
+  roleCategory: string = this.tokenService.getUserDetails().role;
 
   hasData: boolean = false;
-
 
   replyStatus: DropdownOption[] = [
     { label: 'Yes', value: 'Yes' },
@@ -97,7 +96,7 @@ export class WholesaleComplaintsComponent implements OnInit {
     public tokenService: TokenService,
     public permissionService: PermissionService,
     private http: HttpClient,
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.fetchComplaints();
@@ -107,44 +106,51 @@ export class WholesaleComplaintsComponent implements OnInit {
   private fetchComplaints(): void {
     this.isLoading = true;
 
-    this.complaintsService.fetchWholesaleComplaints(this.roleCategory).subscribe({
-      next: (resp: ApiResponse) => {
-        this.complaints = resp.data
-          .map(item => ({
-            id: item.id.toString(),
-            refNo: item.refNo,
-            complainCategory: item.categoryEnglish,
-            firstName: item.firstName,
-            companyName: item.companyName,
-            lastName: item.lastName,
-            contactNumber: item.ContactNumber,
-            createdAt: this.formatDate(item.createdAt),
-            status: this.normalizeStatus(item.status, item.createdAt),
-            reply: item.reply || undefined,
-            complain: item.complain,
-            replyBy: item.replyBy || null,
-          }))
-          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-        this.filteredComplaints = [...this.complaints];
-        this.totalItems = this.filteredComplaints.length;
+    this.complaintsService
+      .fetchWholesaleComplaints(this.roleCategory)
+      .subscribe({
+        next: (resp: ApiResponse) => {
+          this.complaints = resp.data
+            .map((item) => ({
+              id: item.id.toString(),
+              refNo: item.refNo,
+              complainCategory: item.categoryEnglish,
+              firstName: item.firstName,
+              companyName: item.companyName,
+              lastName: item.lastName,
+              contactNumber: item.ContactNumber,
+              createdAt: this.formatDate(item.createdAt),
+              status: this.normalizeStatus(item.status, item.createdAt),
+              reply: item.reply || undefined,
+              complain: item.complain,
+              replyBy: item.replyBy || null,
+            }))
+            .sort(
+              (a, b) =>
+                new Date(b.createdAt).getTime() -
+                new Date(a.createdAt).getTime(),
+            );
+          this.filteredComplaints = [...this.complaints];
+          this.totalItems = this.filteredComplaints.length;
 
-        
-        this.isLoading = false;
-        this.hasData = this.complaints.length > 0;
-      },
-      error: (err) => {
-        this.isLoading = false;
-        if (err.message.includes('No authentication token found')) {
-          alert('No authentication token found. Please log in.');
-          this.router.navigate(['login']);
-        } else if (err.status === 401) {
-          alert('You are not authorized. Please log in.');
-          this.router.navigate(['login']);
-        } else {
-          alert('Failed to load wholesale complaints. Please try again later.');
-        }
-      },
-    });
+          this.isLoading = false;
+          this.hasData = this.complaints.length > 0;
+        },
+        error: (err) => {
+          this.isLoading = false;
+          if (err.message.includes('No authentication token found')) {
+            alert('No authentication token found. Please log in.');
+            this.router.navigate(['login']);
+          } else if (err.status === 401) {
+            alert('You are not authorized. Please log in.');
+            this.router.navigate(['login']);
+          } else {
+            alert(
+              'Failed to load wholesale complaints. Please try again later.',
+            );
+          }
+        },
+      });
   }
 
   // private fetchComplaintCategories(): void {
@@ -167,72 +173,83 @@ export class WholesaleComplaintsComponent implements OnInit {
   // }
 
   getAllComplainCategories() {
-  
-      if (this.tokenService.getUserDetails().role === "1") {
-        const token = this.tokenService.getToken();
-  
-        if (!token) {
-          console.error('No token found');
-          return;
-        }
-        const headers = new HttpHeaders({
-          Authorization: `Bearer ${token}`,
-        });
-  
-        this.http
-          .get<any>(`${environment.API_URL}auth/get-all-complain-category-list-super/3`, {
-            headers,
-          })
-          .subscribe(
-            (response: { id: number; categoryEnglish: string }[]) => {
-              this.comCategories = response.map((c) => ({
-                label: c.categoryEnglish,
-                value: c.categoryEnglish,
-              }));
-            },
-            (error) => {
-              console.error('Error fetching news:', error);
-            }
-          );
-      } else {
-        const token = this.tokenService.getToken();
-  
-        if (!token) {
-          console.error('No token found');
-          return;
-        }
-        const headers = new HttpHeaders({
-          Authorization: `Bearer ${token}`,
-        });
-  
-        this.http
-          .get<any>(`${environment.API_URL}auth/get-all-complain-category-list/${this.tokenService.getUserDetails().role}/3`, {
-            headers,
-          })
-          .subscribe(
-            (response: { id: number; categoryEnglish: string }[]) => {
-              this.comCategories = response.map((c) => ({
-                label: c.categoryEnglish,
-                value: c.categoryEnglish,
-              }));
-            },
-            (error) => {
-              console.error('Error fetching news:', error);
-            }
-          );
-      } 
-    }
+    if (this.tokenService.getUserDetails().role === '1') {
+      const token = this.tokenService.getToken();
 
-  private formatDate(dateString: string): string {
-    return this.datePipe.transform(new Date(dateString), 'yyyy-MM-dd hh:mm a') || '';
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${token}`,
+      });
+
+      this.http
+        .get<any>(
+          `${environment.API_URL}auth/get-all-complain-category-list-super/3`,
+          {
+            headers,
+          },
+        )
+        .subscribe(
+          (response: { id: number; categoryEnglish: string }[]) => {
+            this.comCategories = response.map((c) => ({
+              label: c.categoryEnglish,
+              value: c.categoryEnglish,
+            }));
+          },
+          (error) => {
+            console.error('Error fetching news:', error);
+          },
+        );
+    } else {
+      const token = this.tokenService.getToken();
+
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${token}`,
+      });
+
+      this.http
+        .get<any>(
+          `${environment.API_URL}auth/get-all-complain-category-list/${this.tokenService.getUserDetails().role}/3`,
+          {
+            headers,
+          },
+        )
+        .subscribe(
+          (response: { id: number; categoryEnglish: string }[]) => {
+            this.comCategories = response.map((c) => ({
+              label: c.categoryEnglish,
+              value: c.categoryEnglish,
+            }));
+          },
+          (error) => {
+            console.error('Error fetching news:', error);
+          },
+        );
+    }
   }
 
-  private normalizeStatus(status: string | null | undefined, createdAt: string): string {
+  private formatDate(dateString: string): string {
+    return (
+      this.datePipe.transform(new Date(dateString), 'yyyy-MM-dd hh:mm a') || ''
+    );
+  }
+
+  private normalizeStatus(
+    status: string | null | undefined,
+    createdAt: string,
+  ): string {
     if (!status) {
       return 'Unknown';
     }
     if (status.toLowerCase() === 'opened') {
-      const diff = (Date.now() - new Date(createdAt).getTime()) / (1000 * 3600 * 24);
+      const diff =
+        (Date.now() - new Date(createdAt).getTime()) / (1000 * 3600 * 24);
       return diff >= 3 ? 'Pending' : 'Assigned';
     }
     return status;
@@ -240,66 +257,74 @@ export class WholesaleComplaintsComponent implements OnInit {
 
   private readonly FILTER_LOADING_DELAY = 300;
 
-applyFilters(): void {
-  this.isLoading = true;
+  applyFilters(): void {
+    this.isLoading = true;
 
-  setTimeout(() => {
-    const txt = this.searchText.trim().toLowerCase();
+    setTimeout(() => {
+      const txt = this.searchText.trim().toLowerCase();
 
-    this.filteredComplaints = this.complaints
-      .filter(item => {
-        const matchesSearch = !txt || [
-          item.refNo,
-          item.complainCategory,
-          item.firstName,
-          item.lastName,
-          item.contactNumber,
-        ].some(field => field?.toLowerCase().includes(txt));
+      this.filteredComplaints = this.complaints
+        .filter((item) => {
+          const matchesSearch =
+            !txt ||
+            [
+              item.refNo,
+              item.complainCategory,
+              item.firstName,
+              item.lastName,
+              item.contactNumber,
+            ].some((field) => field?.toLowerCase().includes(txt));
 
-        const matchesReply =
-          this.rpst === null ? true :
-            this.rpst === 'Yes' ? !!item.reply :
-              !item.reply;
+          const matchesReply =
+            this.rpst === null
+              ? true
+              : this.rpst === 'Yes'
+                ? !!item.reply
+                : !item.reply;
 
-        const matchesCat =
-          !this.filterComCategory || item.complainCategory === this.filterComCategory;
+          const matchesCat =
+            !this.filterComCategory ||
+            item.complainCategory === this.filterComCategory;
 
-        const matchesStat =
-          !this.filterStatus || item.status === this.filterStatus;
+          const matchesStat =
+            !this.filterStatus || item.status === this.filterStatus;
 
-        return matchesSearch && matchesReply && matchesCat && matchesStat;
-      })
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+          return matchesSearch && matchesReply && matchesCat && matchesStat;
+        })
+        .sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+        );
 
-    this.totalItems = this.filteredComplaints.length;
-    this.page = 1;
-    this.hasData = this.filteredComplaints.length > 0;
-    this.isLoading = false;
-  }, this.FILTER_LOADING_DELAY);
-}
+      this.totalItems = this.filteredComplaints.length;
+      this.page = 1;
+      this.hasData = this.filteredComplaints.length > 0;
+      this.isLoading = false;
+    }, this.FILTER_LOADING_DELAY);
+  }
 
   searchComplain(): void {
-  this.applyFilters();
-}
+    this.applyFilters();
+  }
 
   clearSearch(): void {
-  this.searchText = '';
-  this.rpst = null;
-  this.filterComCategory = null;
-  this.filterStatus = null;
-  this.applyFilters();
-}
+    this.searchText = '';
+    this.rpst = null;
+    this.filterComCategory = null;
+    this.filterStatus = null;
+    this.applyFilters();
+  }
 
   regStatusFil(): void {
-  this.applyFilters();
-}
+    this.applyFilters();
+  }
 
   onPageChange(p: number): void {
-  if (!this.hasData || this.isLoading) {
-    return;
+    if (!this.hasData || this.isLoading) {
+      return;
+    }
+    this.page = p;
   }
-  this.page = p;
-}
 
   goBack(): void {
     this.router.navigate(['/complaints']);
@@ -327,17 +352,19 @@ applyFilters(): void {
 
   submitReply(): void {
     if (this.selectedComplaint.id && this.messageContent) {
-      this.complaintsService.submitComplaint(this.selectedComplaint.id, this.messageContent).subscribe({
-        next: () => {
-          alert('Reply submitted successfully.');
-          this.hideDialog();
-          this.fetchComplaints();
-        },
-        error: (err) => {
-          alert('Failed to submit reply. Please try again.');
-          console.error('Reply submission error', err);
-        },
-      });
+      this.complaintsService
+        .submitComplaint(this.selectedComplaint.id, this.messageContent)
+        .subscribe({
+          next: () => {
+            alert('Reply submitted successfully.');
+            this.hideDialog();
+            this.fetchComplaints();
+          },
+          error: (err) => {
+            alert('Failed to submit reply. Please try again.');
+            console.error('Reply submission error', err);
+          },
+        });
     }
   }
 }

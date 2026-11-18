@@ -949,10 +949,9 @@ export class PostinvoiceService {
     // Create grand total body with individual packages
     const grandTotalBody: any[] = [];
 
-    // Handle family packages - show total if multiple, single package name if only one
+    // Show a singular package total for one package and a plural package total for multiple packages.
     if (invoice.familyPackItems && invoice.familyPackItems.length > 0) {
       if (invoice.familyPackItems.length > 1) {
-        // Calculate total for all packages
         const packagesTotal = invoice.familyPackItems.reduce(
           (total, pack) => total + parseNum(pack.amount),
           0,
@@ -962,10 +961,9 @@ export class PostinvoiceService {
           `Rs. ${formatNumberWithCommas(packagesTotal.toFixed(2))}`,
         ]);
       } else {
-        // Only one package - show its name
         const pack = invoice.familyPackItems[0];
         grandTotalBody.push([
-          pack.name || 'Family Pack',
+          'Total Price for Package',
           `Rs. ${formatNumberWithCommas(pack.amount)}`,
         ]);
       }

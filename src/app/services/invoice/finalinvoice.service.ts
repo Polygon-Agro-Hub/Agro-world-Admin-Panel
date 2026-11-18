@@ -816,7 +816,7 @@ export class FinalinvoiceService {
       } else {
         const pack = invoice.familyPackItems[0];
         grandTotalBody.push([
-          pack.name || 'Family Pack',
+          'Total Price for Package',
           `Rs. ${formatNumberWithCommas(pack.amount)}`,
         ]);
       }

@@ -203,16 +203,21 @@ export class FinalinvoiceService {
     const fullyCoveredByCredit = hasCredit && creditPaid >= grandTotal - 0.01;
 
     if (fullyCoveredByCredit) {
-      return 'Credit Balance';
+      return 'Polygon Wallet';
     }
 
-    if (payType === 'Card') {
-      return hasCredit ? 'Online Transfer + Credit Balance' : 'Online Transfer';
+    const normalizedPayType = String(payType || '').trim().toLowerCase();
+    if (
+      normalizedPayType.includes('card') ||
+      normalizedPayType.includes('credit') ||
+      normalizedPayType.includes('online')
+    ) {
+      return hasCredit ? 'Online Transfer + Polygon Wallet' : 'Online Transfer';
     }
 
     // Cash
     const base = isPickup ? 'Cash on Pickup' : 'Cash on Delivery';
-    return hasCredit ? `${base} + Credit Balance` : base;
+    return hasCredit ? `${base} + Polygon Wallet` : base;
   }
 
   private async generatePDF(invoice: InvoiceData): Promise<void> {
@@ -340,7 +345,7 @@ export class FinalinvoiceService {
       // Address display - updated to match the image examples
       if (invoice.buildingType === 'Apartment') {
         doc.setFont('helvetica', 'bold');
-        doc.text('Apartment Address:', 15, yPosition);
+        doc.text('Address:', 15, yPosition);
         yPosition += 5;
         doc.setFont('helvetica', 'normal');
 
@@ -349,7 +354,7 @@ export class FinalinvoiceService {
           `Name : ${invoice.billingInfo.buildingName || 'N/A'},`,
           `Flat : ${invoice.billingInfo.unitNo || 'N/A'},`,
           `Floor : ${invoice.billingInfo.floorNo || 'N/A'},`,
-          `House No : ${invoice.billingInfo.houseNo || 'N/A'},`,
+          `Plot No : ${invoice.billingInfo.houseNo || 'N/A'},`,
           `Street Name : ${invoice.billingInfo.street || 'N/A'},`,
           `City : ${invoice.billingInfo.city || 'N/A'}`,
         ];
@@ -370,12 +375,12 @@ export class FinalinvoiceService {
         });
       } else {
         doc.setFont('helvetica', 'bold');
-        doc.text('House Address:', 15, yPosition);
+        doc.text('Address:', 15, yPosition);
         yPosition += 5;
         doc.setFont('helvetica', 'normal');
 
         const houseAddress = [
-          `House No : ${invoice.billingInfo.houseNo || 'N/A'},`,
+          `Plot No : ${invoice.billingInfo.houseNo || 'N/A'},`,
           `Street Name : ${invoice.billingInfo.street || 'N/A'},`,
           `City : ${invoice.billingInfo.city || 'N/A'}`,
         ];
@@ -811,7 +816,7 @@ export class FinalinvoiceService {
       } else {
         const pack = invoice.familyPackItems[0];
         grandTotalBody.push([
-          pack.name || 'Family Pack',
+          'Total Price for Package',
           `Rs. ${formatNumberWithCommas(pack.amount)}`,
         ]);
       }
@@ -931,12 +936,14 @@ export class FinalinvoiceService {
     const ORANGE_COLOR: [number, number, number] = [217, 119, 6];
 
     const isPaid = Number(invoice.isPaid) === 1;
-    const isCardPayment = invoice.paymentMethod === 'Card';
-
-    // ✅ FIXED — derive from the same label shown in "Payment Method:",
-    // not the raw invoice.paymentMethod field, so this always agrees
-    // with what's displayed on the invoice.
-    const isOnlineTransfer = paymentTypeLabel === 'Online Transfer';
+    const normalizedPaymentMethod = String(invoice.paymentMethod || '')
+      .trim()
+      .toLowerCase();
+    const isCardPayment =
+      normalizedPaymentMethod.includes('card') ||
+      normalizedPaymentMethod.includes('credit') ||
+      paymentTypeLabel.includes('Online Transfer');
+    const isOnlineTransfer = paymentTypeLabel.includes('Online Transfer');
 
     const creditPaidNum = parseNum(invoice.creditPaid as any);
     const hasCreditPaid =
@@ -968,31 +975,29 @@ export class FinalinvoiceService {
       pushPaymentRow('Polygon Wallet Used', creditPaidNum, GREEN_COLOR);
 
       if (remainingAfterCredit > 0.01) {
-        if (isPaid) {
-          if (isCardPayment) {
-            pushPaymentRow(
-              'Online Transferred Amount',
-              remainingAfterCredit,
-              GREEN_COLOR,
-            );
-          } else {
-            pushPaymentRow(cashLabel, remainingAfterCredit, ORANGE_COLOR);
-          }
+        if (isCardPayment) {
+          pushPaymentRow(
+            'Online Transferred Amount',
+            remainingAfterCredit,
+            GREEN_COLOR,
+          );
+        } else if (isPaid) {
+          pushPaymentRow(cashLabel, remainingAfterCredit, ORANGE_COLOR);
         } else if (isPickup) {
           pushPaymentRow(
-            'Cash On Pickup (Pending)',
+            'Cash On Pickup',
             remainingAfterCredit,
             ORANGE_COLOR,
           );
         } else if (isOnlineTransfer) {
           pushPaymentRow(
-            'Online Transferred Amount (Pending)',
+            'Online Transferred Amount',
             remainingAfterCredit,
             ORANGE_COLOR,
           );
         } else {
           pushPaymentRow(
-            'Cash On Delivery (Pending)',
+            'Cash On Delivery',
             remainingAfterCredit,
             ORANGE_COLOR,
           );
@@ -1002,31 +1007,29 @@ export class FinalinvoiceService {
         }
       }
     } else {
-      if (isPaid) {
-        if (isCardPayment) {
-          pushPaymentRow(
-            'Online Transferred Amount',
-            finalGrandTotal,
-            GREEN_COLOR,
-          );
-        } else {
-          pushPaymentRow(cashLabel, finalGrandTotal, ORANGE_COLOR);
-        }
+      if (isCardPayment) {
+        pushPaymentRow(
+          'Online Transferred Amount',
+          finalGrandTotal,
+          GREEN_COLOR,
+        );
+      } else if (isPaid) {
+        pushPaymentRow(cashLabel, finalGrandTotal, ORANGE_COLOR);
       } else if (isPickup) {
         pushPaymentRow(
-          'Cash On Pickup (Pending)',
+          'Cash On Pickup',
           finalGrandTotal,
           ORANGE_COLOR,
         );
       } else if (isOnlineTransfer) {
         pushPaymentRow(
-          'Online Transferred Amount (Pending)',
+          'Online Transferred Amount',
           finalGrandTotal,
           ORANGE_COLOR,
         );
       } else {
         pushPaymentRow(
-          'Cash On Delivery (Pending)',
+          'Cash On Delivery',
           finalGrandTotal,
           ORANGE_COLOR,
         );

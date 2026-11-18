@@ -241,7 +241,7 @@ export class ViewDispatchOrdersComponent implements OnInit {
                 displayName: pt.displayName || undefined,
                 productDescription: pt.productDescription || undefined,
                 isExcluded: pt.isExcluded,
-                price: pt.price || 0,
+                price: this.toNumber(pt.price) ?? 0, // API sends "260.00" as a string
               };
 
               if (!productType.productTypeId) {

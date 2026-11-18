@@ -96,7 +96,7 @@
                 readonly [value]="typeItems.quantity ? (typeItems.quantity | number:'1.0-3') : ''" />
               <div class="w-16 text-right text-sm text-gray-900 dark:text-gray-100">
                 <!-- Rs.{{ (typeItems.calculatedPrice ?? 0) | number:'1.2-2' }} -->
-                Rs.{{ (typeItems.price ?? 0) | number:'1.2-2' }}
+                Rs.{{ typeItems.price | number:'1.2-2' }}
               </div>
             </div>
           </span>

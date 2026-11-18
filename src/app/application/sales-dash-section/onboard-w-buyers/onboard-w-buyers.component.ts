@@ -213,7 +213,7 @@ export class OnboardWBuyersComponent implements OnInit {
       msgs.push(
         this.isNic
           ? "Enter a valid NIC number (12 digits, or 9 digits followed by 'V')."
-          : 'Passport ID must be 8 to 12 letters or digits.',
+          : 'Passport ID must be 8 to 12 letters and digits.',
       );
 
     if (err('companyName', 'required')) msgs.push('Company name is required.');

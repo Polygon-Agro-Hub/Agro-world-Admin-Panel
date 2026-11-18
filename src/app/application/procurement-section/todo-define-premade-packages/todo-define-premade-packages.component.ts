@@ -98,6 +98,9 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
 
   isLoading: boolean = true;
 
+  // Set once the order has been dispatched successfully — blocks any further dispatch
+  isDispatched: boolean = false;
+
   selectPackageId: number | string = '';
   selectCategoryId: number | string = '';
   newItem: OrderItem = new OrderItem();
@@ -386,7 +389,10 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
   }
 
   onComplete() {
-    this.loading = true;
+    // Prevent a second dispatch while one is already in progress
+    if (this.isLoading || this.isDispatched) {
+      return;
+    }
 
     const hasInvalidProduct = this.orderdetailsArr.some((pkg, pkgIndex) => {
       return pkg.items.some((item, itemIndex) => {
@@ -487,9 +493,17 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
       return;
     }
 
+    // Validation passed — show the loader only while the dispatch request is running
+    this.loading = true;
+    this.isLoading = true;
+
     this.procurementService.updateDefinePackageItemData(this.orderdetailsArr, this.orderId).subscribe(
       (res) => {
         this.loading = false;
+        this.isLoading = false;
+        // Lock the page so the same order can't be dispatched again
+        this.isDispatched = true;
+
         // Show success message and redirect to sent tab
         Swal.fire({
           title: 'Success!',
@@ -500,17 +514,17 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
             title: 'font-semibold',
           },
-        }).then((result) => {
-          if (result.isConfirmed) {
-            // Redirect to define-packages component with sent tab
-            this.router.navigate(['/procurement/define-packages'], {
-              queryParams: { tab: 'sent' }
-            });
-          }
+        }).then(() => {
+          // Redirect however the popup is closed (OK, outside click or Esc),
+          // so the user is never left on an already-dispatched order
+          this.router.navigate(['/procurement/define-packages'], {
+            queryParams: { tab: 'sent' }
+          });
         });
       },
       (err) => {
         this.loading = false;
+        this.isLoading = false;
         console.error('Update failed:', err);
         Swal.fire({
           title: 'Error',
@@ -712,8 +726,8 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
   }
 
   confirmComplete() {
-    // Only show confirmation if within limit
-    if (!this.isWithinLimit) {
+    // Only show confirmation if within limit, and never for an order already being/been dispatched
+    if (!this.isWithinLimit || this.isLoading || this.isDispatched) {
       return;
     }
 

@@ -33,7 +33,9 @@
           <th class=" py-2 font-normal text-[#5C5C5C] text-left pr-8 dark:text-textDark ">No</th>
           <th class=" py-2 font-normal text-[#5C5C5C] text-left dark:text-textDark w-25">Application Name</th>
           <th class=" py-2 font-normal text-[#5C5C5C] text-center dark:text-textDark">No. of Categories</th>
-          <th class=" py-2 font-normal text-[#5C5C5C] text-center dark:text-textDark" *ngIf="permissionService.hasPermission('View complaint categories') || tokenService.getUserDetails().role === '1'">View Categories</th>
+          <th class=" py-2 font-normal text-[#5C5C5C] text-center dark:text-textDark"
+            *ngIf="permissionService.hasPermission('View complaint categories') || tokenService.getUserDetails().role === '1'">
+            View Categories</th>
           <!-- <th class=" py-2 font-normal text-[#5C5C5C] text-left dark:text-textDark whitespace-nowrap">Last Modified By
           </th>
           <th class="text-left py-2" *ngIf="permissionService.hasPermission('Edit application') || tokenService.getUserDetails().role === '1'"></th> -->
@@ -45,9 +47,11 @@
           <td class="py-2 vertical-align: middle text-start justify-items-center dark:text-white">{{ app.systemAppName
             }}</td>
           <td class="py-2 vertical-align: middle text-center dark:text-white text-gray-500">{{ app.categoryCount }}
-            <span class="italic size-16">added</span></td>
-          <td *ngIf="permissionService.hasPermission('View complaint categories') || tokenService.getUserDetails().role === '1'"
-          class="py-2 text-center d-flex justify-content-center align-items-center dark:text-white">
+            <span class="italic size-16">added</span>
+          </td>
+          <td
+            *ngIf="permissionService.hasPermission('View complaint categories') || tokenService.getUserDetails().role === '1'"
+            class="py-2 text-center d-flex justify-content-center align-items-center dark:text-white">
             <button (click)="EditCategoris(app.systemAppId)" class="w-5 h-5 text-blue-500 hover:text-blue-700">
               <svg viewBox="0 0 24 24" fill="none" width="24" height="24" stroke="#3980C0"
                 xmlns="http://www.w3.org/2000/svg">

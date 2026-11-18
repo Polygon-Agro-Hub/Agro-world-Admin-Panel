@@ -55,7 +55,6 @@ export class PikupOderRecordDetailsComponent implements OnInit, OnChanges {
   constructor(private pickupOrderService: DestributionService) {}
 
   ngOnInit(): void {
-    // console.log('Component initialized with orderId:', this.orderId);
   }
 
   ngOnChanges(changes: SimpleChanges): void {

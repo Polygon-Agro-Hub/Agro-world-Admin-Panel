@@ -371,9 +371,6 @@ export class TransportReasonsToReturnComponent implements OnInit {
 
     this.distributionService.updateReturnReasonIndexes(indexData).subscribe({
       next: (response) => {
-        if (response.status) {
-          // console.log('Indexes updated successfully');
-        }
       },
       error: (error) => {
         console.error('Error updating indexes:', error);

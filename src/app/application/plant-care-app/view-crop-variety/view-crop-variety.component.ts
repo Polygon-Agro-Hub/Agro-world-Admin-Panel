@@ -115,10 +115,8 @@ export class ViewCropVarietyComponent implements OnInit {
   }
 
   onCancel(): void {
-    console.log('Cancelled');
   }
 
   onSave(): void {
-    console.log('Saved:', this.variety);
   }
 }

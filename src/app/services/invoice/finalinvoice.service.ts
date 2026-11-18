@@ -985,19 +985,19 @@ export class FinalinvoiceService {
           pushPaymentRow(cashLabel, remainingAfterCredit, ORANGE_COLOR);
         } else if (isPickup) {
           pushPaymentRow(
-            'Cash On Pickup (Pending)',
+            'Cash On Pickup',
             remainingAfterCredit,
             ORANGE_COLOR,
           );
         } else if (isOnlineTransfer) {
           pushPaymentRow(
-            'Online Transferred Amount (Pending)',
+            'Online Transferred Amount',
             remainingAfterCredit,
             ORANGE_COLOR,
           );
         } else {
           pushPaymentRow(
-            'Cash On Delivery (Pending)',
+            'Cash On Delivery',
             remainingAfterCredit,
             ORANGE_COLOR,
           );
@@ -1017,19 +1017,19 @@ export class FinalinvoiceService {
         pushPaymentRow(cashLabel, finalGrandTotal, ORANGE_COLOR);
       } else if (isPickup) {
         pushPaymentRow(
-          'Cash On Pickup (Pending)',
+          'Cash On Pickup',
           finalGrandTotal,
           ORANGE_COLOR,
         );
       } else if (isOnlineTransfer) {
         pushPaymentRow(
-          'Online Transferred Amount (Pending)',
+          'Online Transferred Amount',
           finalGrandTotal,
           ORANGE_COLOR,
         );
       } else {
         pushPaymentRow(
-          'Cash On Delivery (Pending)',
+          'Cash On Delivery',
           finalGrandTotal,
           ORANGE_COLOR,
         );

@@ -1117,7 +1117,7 @@ export class PostinvoiceService {
       ? 'Cash On Pickup'
       : isDelivered
         ? 'Cash On Delivery'
-        : 'Cash On Delivery (Pending)';
+        : 'Cash On Delivery';
 
     // The "charges might change" note only makes sense before delivery
     let showDeliveryNote = false;

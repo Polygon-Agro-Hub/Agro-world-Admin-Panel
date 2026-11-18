@@ -341,7 +341,7 @@ export class PostinvoiceService {
 
       if (invoice.buildingType === 'Apartment') {
         doc.setFont('helvetica', 'bold');
-        doc.text('Apartment Address:', 15, yPosition);
+        doc.text('Address:', 15, yPosition);
         yPosition += 5;
         doc.setFont('helvetica', 'normal');
 
@@ -350,7 +350,7 @@ export class PostinvoiceService {
           `Name : ${invoice.billingInfo.buildingName || 'N/A'},`,
           `Flat : ${invoice.billingInfo.unitNo || 'N/A'},`,
           `Floor : ${invoice.billingInfo.floorNo || 'N/A'},`,
-          `House No : ${invoice.billingInfo.houseNo || 'N/A'},`,
+          `Plot No : ${invoice.billingInfo.houseNo || 'N/A'},`,
           `Street Name : ${invoice.billingInfo.street || 'N/A'},`,
           `City : ${invoice.billingInfo.city || 'N/A'}`,
         ];
@@ -371,12 +371,12 @@ export class PostinvoiceService {
         });
       } else {
         doc.setFont('helvetica', 'bold');
-        doc.text('House Address:', 15, yPosition);
+        doc.text('Address:', 15, yPosition);
         yPosition += 5;
         doc.setFont('helvetica', 'normal');
 
         const houseAddress = [
-          `House No : ${invoice.billingInfo.houseNo || 'N/A'},`,
+          `Plot No : ${invoice.billingInfo.houseNo || 'N/A'},`,
           `Street Name : ${invoice.billingInfo.street || 'N/A'},`,
           `City : ${invoice.billingInfo.city || 'N/A'}`,
         ];
@@ -1089,9 +1089,14 @@ export class PostinvoiceService {
     const GREEN_COLOR: [number, number, number] = [22, 163, 74];
     const ORANGE_COLOR: [number, number, number] = [217, 119, 6];
 
-    const isPaid = Number(invoice.isPaid) === 1;
-    const isCardPayment = invoice.paymentMethod === 'Card';
     const creditPaidNum = parseNum(invoice.creditPaid as any);
+    const normalizedPaymentMethod = String(invoice.paymentMethod || '')
+      .trim()
+      .toLowerCase();
+    const isCardPayment =
+      normalizedPaymentMethod.includes('card') ||
+      normalizedPaymentMethod.includes('credit') ||
+      paymentTypeLabel.includes('Online Transfer');
     const hasCreditPaid =
       invoice.creditPaid !== null &&
       invoice.creditPaid !== undefined &&
@@ -1144,7 +1149,7 @@ export class PostinvoiceService {
       pushPaymentRow('Polygon Wallet Used', creditPaidNum, GREEN_COLOR);
 
       if (remainingAfterCredit > 0.01) {
-        if (isPaid && isCardPayment) {
+        if (isCardPayment) {
           pushPaymentRow(
             'Online Transferred Amount',
             remainingAfterCredit,
@@ -1155,7 +1160,7 @@ export class PostinvoiceService {
         }
       }
     } else {
-      if (isPaid && isCardPayment) {
+      if (isCardPayment) {
         pushPaymentRow(
           'Online Transferred Amount',
           finalGrandTotal,
@@ -1394,15 +1399,20 @@ export class PostinvoiceService {
     const fullyCoveredByCredit = hasCredit && creditPaid >= grandTotal - 0.01;
 
     if (fullyCoveredByCredit) {
-      return 'Credit Balance';
+      return 'Polygon Wallet';
     }
 
-    if (payType === 'Card') {
-      return hasCredit ? 'Online Transfer + Credit Balance' : 'Online Transfer';
+    const normalizedPayType = String(payType || '').trim().toLowerCase();
+    if (
+      normalizedPayType.includes('card') ||
+      normalizedPayType.includes('credit') ||
+      normalizedPayType.includes('online')
+    ) {
+      return hasCredit ? 'Online Transfer + Polygon Wallet' : 'Online Transfer';
     }
 
     // Cash
     const base = isPickup ? 'Cash on Pickup' : 'Cash on Delivery';
-    return hasCredit ? `${base} + Credit Balance` : base;
+    return hasCredit ? `${base} + Polygon Wallet` : base;
   }
 }

@@ -127,8 +127,28 @@ export class PostinvoiceService {
       let deliveryFee = '0.00';
       if (invoiceDetails.deliveryMethod === 'Pickup') {
         deliveryFee = '0.00';
-      } else if (deliveryCharge) {
-        deliveryFee = deliveryCharge || '0.00';
+      } else {
+        const effectiveStatus =
+          String(
+            orderStatus ||
+              invoiceDetails.orderStatus ||
+              invoiceDetails.status ||
+              '',
+          ).trim();
+        const currentDeliveryCharge = invoiceDetails.currentDeliveryCharge;
+
+        if (
+          String(invoiceDetails.deliveryMethod).trim().toLowerCase() ===
+            'delivery' &&
+          effectiveStatus.toLowerCase() === 'delivered' &&
+          currentDeliveryCharge !== null &&
+          currentDeliveryCharge !== undefined &&
+          String(currentDeliveryCharge).trim() !== ''
+        ) {
+          deliveryFee = String(currentDeliveryCharge);
+        } else {
+          deliveryFee = deliveryCharge || '0.00';
+        }
       }
 
       // Calculate totals

@@ -555,23 +555,24 @@ export class PostinvoiceService {
           yPosition,
         );
         // ---- Pack header price: calculated total (struck) + package price ----
-        const packPrice = parseNum(pack.amount);
-
+        const reviewValue = parseNum(pack.reviewValue);
         const itemsTotal =
           pack.packageDetails?.reduce(
             (sum: number, d: any) => sum + parseNum(d.price),
             0,
           ) || 0;
 
-        const reviewValue = parseNum(pack.reviewValue);
-        const calculatedTotal =
+        const packPrice =
           reviewValue !== 0
-            ? packPrice +
+            ? itemsTotal +
               parseNum(pack.serviceFee) +
               parseNum(pack.packingFee)
-            : itemsTotal +
-              parseNum(pack.serviceFee) +
-              parseNum(pack.packingFee);
+            : parseNum(pack.amount);
+
+        const calculatedTotal =
+          itemsTotal +
+          parseNum(pack.serviceFee) +
+          parseNum(pack.packingFee);
 
         // Package price (right aligned, black, bold)
         const packPriceText = `Rs. ${formatNumberWithCommas(packPrice)}`;
@@ -583,9 +584,7 @@ export class PostinvoiceService {
 
         // Calculated total (struck through) only when it differs
         const shouldStrikeThrough =
-          reviewValue !== 0
-            ? calculatedTotal > packPrice + 0.01
-            : Math.abs(calculatedTotal - packPrice) > 0.01;
+          reviewValue === 0 && Math.abs(calculatedTotal - packPrice) > 0.01;
 
         if (shouldStrikeThrough) {
           const oldText = `Rs. ${formatNumberWithCommas(calculatedTotal)}`;
@@ -638,7 +637,7 @@ export class PostinvoiceService {
             //   styles: { fillColor: [248, 248, 248], fontStyle: 'bold' },
             // },
             {
-              content: 'QTY',
+              content: 'QTY (Kg)',
               styles: { fillColor: [248, 248, 248], fontStyle: 'bold' },
             },
             {
@@ -648,17 +647,12 @@ export class PostinvoiceService {
           ],
           ...(pack.packageDetails?.map((detail: any, i: number) => {
             const qtyKg = Number(detail.qty) || 0;
-            const unit = String(detail.unit || 'Kg').trim();
-            const isGrams = unit.toLowerCase() === 'g';
-            const displayQty =
-              detail.displayQty ?? (isGrams ? Math.round(qtyKg * 1000) : qtyKg);
 
             return [
               `${i + 1}.`,
               detail.typeName || 'N/A',
               detail.productName || 'N/A',
-              // `Rs. ${formatNumberWithCommas(detail.price || 0)}`,   // Unit Price (commented)
-              `${displayQty}\u00A0${unit}`,
+              `${qtyKg}\u00A0Kg`,
               `Rs. ${formatNumberWithCommas(detail.price || 0)}`, // Amount = price value
             ];
           }) || []),
@@ -964,15 +958,27 @@ export class PostinvoiceService {
     // Show each package individually instead of a combined package total.
     if (invoice.familyPackItems && invoice.familyPackItems.length > 0) {
       for (const pack of invoice.familyPackItems) {
+        const reviewValue = parseNum(pack.reviewValue);
+        const packageDetailsTotal =
+          pack.packageDetails?.reduce(
+            (sum: number, detail: any) => sum + parseNum(detail.price),
+            0,
+          ) || 0;
+        const effectivePackAmount =
+          reviewValue !== 0
+            ? packageDetailsTotal +
+              parseNum(pack.serviceFee) +
+              parseNum(pack.packingFee)
+            : parseNum(pack.amount);
+
         grandTotalBody.push([
           pack.name || 'Package',
           {
-            content: `Rs. ${formatNumberWithCommas(parseNum(pack.amount).toFixed(2))}`,
+            content: `Rs. ${formatNumberWithCommas(effectivePackAmount.toFixed(2))}`,
             styles: { halign: 'right' },
           },
         ]);
 
-        const reviewValue = parseNum(pack.reviewValue);
         if (reviewValue > 0) {
           grandTotalBody.push([
             {
@@ -1071,7 +1077,23 @@ export class PostinvoiceService {
     // Calculate final grand total
     const familyPackTotal =
       invoice.familyPackItems?.reduce(
-        (total, pack) => total + parseNum(pack.amount),
+        (total, pack) => {
+          const reviewValue = parseNum(pack.reviewValue);
+          if (reviewValue !== 0) {
+            const packageDetailsTotal =
+              pack.packageDetails?.reduce(
+                (sum: number, detail: any) => sum + parseNum(detail.price),
+                0,
+              ) || 0;
+            return (
+              total +
+              packageDetailsTotal +
+              parseNum(pack.serviceFee) +
+              parseNum(pack.packingFee)
+            );
+          }
+          return total + parseNum(pack.amount);
+        },
         0,
       ) || 0;
 

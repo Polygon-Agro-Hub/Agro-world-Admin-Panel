@@ -202,6 +202,11 @@ export class ViewWholwsaleOrdersComponent implements OnInit {
   }
 
   isPostInvoiceEnabled(item: RetailOrders): boolean {
+    const packingStatus = String(item.packingStatus || '').trim();
+    if (packingStatus) {
+      return packingStatus.toLowerCase() === 'dispatch';
+    }
+
     return Number(item.isConfirmed) === 1;
   }
 
@@ -279,4 +284,5 @@ class RetailOrders {
   moneyPaid!: number;
   companyName!: string;
   isConfirmed!: number;
+  packingStatus!: string;
 }

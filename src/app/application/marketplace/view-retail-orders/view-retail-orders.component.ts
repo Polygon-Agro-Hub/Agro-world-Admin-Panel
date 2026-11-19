@@ -246,6 +246,11 @@ export class ViewRetailOrdersComponent implements OnInit {
   }
 
   isPostInvoiceEnabled(item: RetailOrders): boolean {
+    const packingStatus = String(item.packingStatus || '').trim();
+    if (packingStatus) {
+      return packingStatus.toLowerCase() === 'dispatch';
+    }
+
     const isConfirmed = Number(item.isConfirmed) === 1;
     const isPackage = Number(item.isPackage) === 1;
     const isFinalized = Number(item.isFinalized) === 1;
@@ -307,4 +312,5 @@ class RetailOrders {
   isConfirmed!: number;
   isPackage!: number;
   isFinalized!: number;
+  packingStatus!: string;
 }

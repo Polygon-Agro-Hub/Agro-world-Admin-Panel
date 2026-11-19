@@ -56,7 +56,7 @@ export class ViewSalesAgentsComponent implements OnInit {
     public permissionService: PermissionService,
     public tokenService: TokenService,
     private salesAgentsService: SalesAgentsService,
-  ) { }
+  ) {}
 
   ngOnInit() {
     const fullUrl = this.router.url;
@@ -135,13 +135,20 @@ export class ViewSalesAgentsComponent implements OnInit {
   }
 
   Back(): void {
-    if (this.firstUrlSegment === 'sales-dash') this.router.navigate(['/sales-dash/action']);
+    if (this.firstUrlSegment === 'sales-dash')
+      this.router.navigate(['/sales-dash/action']);
     else this.router.navigate(['/steckholders/action']);
   }
 
   editCompanyHead(id: number) {
-    if (this.firstUrlSegment === 'sales-dash') this.navigatePath(`/sales-dash/action/sales-agent/edit-sales-agents/${id}`);
-    else this.navigatePath(`/steckholders/action/sales-agents/edit-sales-agents/${id}`);
+    if (this.firstUrlSegment === 'sales-dash')
+      this.navigatePath(
+        `/sales-dash/action/sales-agent/edit-sales-agents/${id}`,
+      );
+    else
+      this.navigatePath(
+        `/steckholders/action/sales-agents/edit-sales-agents/${id}`,
+      );
   }
 
   navigatePath(path: string) {
@@ -365,9 +372,14 @@ export class ViewSalesAgentsComponent implements OnInit {
   }
 
   viewSalesAgent(id: number) {
-    if (this.firstUrlSegment === 'sales-dash') this.navigatePath(`/sales-dash/action/sales-agent/preview-sales-agents/${id}`);
-    else this.navigatePath(`/steckholders/action/sales-agents/preview-sales-agents/${id}`);
-
+    if (this.firstUrlSegment === 'sales-dash')
+      this.navigatePath(
+        `/sales-dash/action/sales-agent/preview-sales-agents/${id}`,
+      );
+    else
+      this.navigatePath(
+        `/steckholders/action/sales-agents/preview-sales-agents/${id}`,
+      );
   }
 
   onKeyDown(event: KeyboardEvent) {
@@ -385,9 +397,13 @@ export class ViewSalesAgentsComponent implements OnInit {
 
   navigateToCreateSalesAgent() {
     if (this.firstUrlSegment === 'sales-dash') {
-      this.router.navigate(['/sales-dash/action/sales-agent/create-sales-agents']);
+      this.router.navigate([
+        '/sales-dash/action/sales-agent/create-sales-agents',
+      ]);
     } else {
-      this.router.navigate(['/steckholders/action/sales-agents/create-sales-agents']);
+      this.router.navigate([
+        '/steckholders/action/sales-agents/create-sales-agents',
+      ]);
     }
   }
 }

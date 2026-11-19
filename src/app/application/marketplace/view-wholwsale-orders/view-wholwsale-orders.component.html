@@ -19,7 +19,7 @@
 
         <div class="flex items-center gap-3 flex-wrap">
           <!-- Date Filter -->
-          <div>
+          <div [title]="selectDate ? 'Ordered Date: ' + (selectDate | date: 'd MMM, y') : 'Ordered Date'">
             <p-calendar id="toDate" [(ngModel)]="selectDate" (onSelect)="dateFilter()" (onClear)="onDateClear()"
               placeholder="Ordered Date" [showIcon]="true" [showClear]="true" iconDisplay="input"
               styleClass="calendar-compact dark-calendar" [style]="{ width: '145px' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
@@ -57,6 +57,7 @@
           <!-- Search Bar -->
           <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96 relative group">
             <input type="text" placeholder="Search By Invoice No, Customer Name"
+              [title]="searchItem || 'Search By Invoice No, Customer Name'"
               class="bg-transparent outline-none w-full dark:text-textDark text-gray-600" [(ngModel)]="searchItem"
               (keydown.enter)="searchReailOrders()" />
             <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
@@ -227,11 +228,11 @@
                 *ngIf="permissionService.hasPermission('Download retail post invoice') || tokenService.getUserDetails().role === '1'">
                 <div class="relative inline-block">
                   <button class="text-textLight dark:text-textDark gap-1"
-                    [class.opacity-50]="!isPostInvoiceEnabled(item.status)"
-                    [class.cursor-not-allowed]="!isPostInvoiceEnabled(item.status)"
-                    [class.cursor-pointer]="isPostInvoiceEnabled(item.status)"
-                    [disabled]="!isPostInvoiceEnabled(item.status)"
-                    (click)="isPostInvoiceEnabled(item.status) ? downloadPostInvoice(item.orderId, item.invNo) : null">
+                    [class.opacity-50]="!isPostInvoiceEnabled(item)"
+                    [class.cursor-not-allowed]="!isPostInvoiceEnabled(item)"
+                    [class.cursor-pointer]="isPostInvoiceEnabled(item)"
+                    [disabled]="!isPostInvoiceEnabled(item)"
+                    (click)="isPostInvoiceEnabled(item) ? downloadPostInvoice(item.orderId, item.invNo) : null">
                     <i class="fa-solid fa-file-lines text-2xl"></i>
                   </button>
                 </div>

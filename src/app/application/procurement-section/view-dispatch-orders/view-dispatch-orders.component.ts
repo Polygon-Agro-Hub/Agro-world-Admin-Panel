@@ -10,7 +10,7 @@ interface OrderDetailItem {
   displayName: string;
   productPrice: number;
   invNo: string;
-  packageQty:number;
+  packageQty: number;
   productTypes: ProductTypes[];
 }
 
@@ -26,6 +26,7 @@ interface ProductTypes {
   productDescription?: string;
   productTypeId?: number;
   isExcluded?: boolean;
+  price: number;
 }
 
 interface MarketplaceItem {
@@ -175,28 +176,40 @@ export class ViewDispatchOrdersComponent implements OnInit {
           discountedPrice: item.discountedPrice,
           isExcluded: false,
         }));
-        if (callback) callback();
-        this.isLoading = false;
+        // When a callback (fetchOrderDetails) follows, it keeps the loader on
+        // and turns it off once the order details arrive.
+        if (callback) {
+          callback();
+        } else {
+          this.isLoading = false;
+        }
       },
       error: (err) => {
         console.error('Error fetching marketplace items:', err);
         this.error = 'Failed to load product options';
-        if (callback) callback();
+        if (callback) {
+          callback();
+        } else {
+          this.isLoading = false;
+        }
       },
     });
   }
 
- fetchOrderDetails(id: string) {
+  fetchOrderDetails(id: string) {
     this.loading = true;
+    this.isLoading = true;
     this.error = '';
 
     this.procurementService.getOrderPackagesByOrderId(Number(id)).subscribe({
 
       next: (response) => {
-        this.additionalItems = response.additionalItems || [];
+        this.additionalItems = response?.additionalItems || [];
         this.additionalItemsCount = this.additionalItems.length;
 
         if (!response || !response.packages) {
+          this.loading = false;
+          this.isLoading = false;
           throw new Error('Invalid response structure from API');
         }
 
@@ -205,10 +218,7 @@ export class ViewDispatchOrdersComponent implements OnInit {
             packageId: pkg.packageId,
             displayName: pkg.displayName,
             packageQty: pkg.packageQty,
-            productPrice:
-              typeof pkg.productPrice === 'string'
-                ? parseFloat(pkg.productPrice)
-                : pkg.productPrice,
+            productPrice: this.toNumber(pkg.productPrice) ?? 0,
             invNo: response.invNo,
             productTypes: [],
           };
@@ -221,13 +231,16 @@ export class ViewDispatchOrdersComponent implements OnInit {
                 shortCode: pt.shortCode,
                 productId: pt.productId || null,
                 productTypeId: pt.productTypeId,
-                selectedProductPrice: pt.price || undefined,
-                quantity: pt.qty || undefined,
-                calculatedPrice:
-                  pt.price && pt.qty ? pt.price * pt.qty : undefined,
+                // API returns DECIMAL columns as strings (e.g. "260.00") — convert to numbers
+                selectedProductPrice: this.toNumber(pt.price) || undefined,
+                quantity: this.toNumber(pt.qty) || undefined,
+                calculatedPrice: this.toNumber(pt.price),
+                // calculatedPrice:
+                //   pt.price && pt.qty ? pt.price * pt.qty : undefined,
                 displayName: pt.displayName || undefined,
                 productDescription: pt.productDescription || undefined,
                 isExcluded: pt.isExcluded,
+                price: this.toNumber(pt.price) ?? 0, // API sends "260.00" as a string
               };
 
               if (!productType.productTypeId) {
@@ -254,6 +267,7 @@ export class ViewDispatchOrdersComponent implements OnInit {
         this.invoiceNumber = response.invNo;
         this.calculateTotalPrice();
         this.loading = false;
+        this.isLoading = false;
         this.fetchPackageItems(id);
       },
       error: (err) => {
@@ -261,10 +275,11 @@ export class ViewDispatchOrdersComponent implements OnInit {
         this.error =
           err.error?.message || err.message || 'Failed to load order details';
         this.loading = false;
+        this.isLoading = false;
       },
     });
   }
-  
+
   calculateTotalPrice() {
     if (this.orderDetails && this.orderDetails.length) {
       this.totalPrice = this.getCombinedProductPrice();
@@ -286,96 +301,19 @@ export class ViewDispatchOrdersComponent implements OnInit {
     }
   }
 
-  onProductSelected(productType: ProductTypes, event: Event) {
-    const selectElement = event.target as HTMLSelectElement;
-    const selectedProductId = Number(selectElement.value);
-
-    const selectedProduct = this.marketplaceItems.find(
-      (item) => item.id === selectedProductId
-    );
-
-    if (selectedProduct) {
-      productType.productId = selectedProduct.id;
-      productType.selectedProductPrice = selectedProduct.discountedPrice;
-      productType.displayName = selectedProduct.displayName;
-
-      // Update calculated price based on current quantity
-      if (productType.quantity && productType.quantity > 0) {
-        productType.calculatedPrice =
-          productType.quantity * selectedProduct.discountedPrice;
-      } else {
-        productType.calculatedPrice = selectedProduct.discountedPrice; // Default to unit price
-      }
-    } else {
-      productType.productId = null;
-      productType.selectedProductPrice = 0;
-      productType.calculatedPrice = 0;
-      productType.quantity = undefined;
-    }
-    this.calculateTotalPrice();
-  }
-
-  onQuantityChanged(productType: ProductTypes, event: Event) {
-    const inputElement = event.target as HTMLInputElement;
-    const quantity = Number(inputElement.value);
-
-    if (isNaN(quantity) || quantity <= 0) {
-      productType.quantity = undefined;
-      productType.calculatedPrice = 0;
-    } else {
-      productType.quantity = quantity;
-      // Ensure we have a valid selectedProductPrice
-      const unitPrice = productType.selectedProductPrice || 0;
-      productType.calculatedPrice = quantity * unitPrice;
-    }
-    this.calculateTotalPrice();
-  }
-
   getPackageTotal(packageItem: OrderDetailItem): number {
     if (!packageItem.productTypes) return 0;
 
     return packageItem.productTypes.reduce((sum, productType) => {
-      return sum + (productType.calculatedPrice || 0);
+      return sum + (this.toNumber(productType.calculatedPrice) ?? 0);
     }, 0);
   }
 
-  getAllowedLimit(packageItem: OrderDetailItem): string {
-    const allowedLimit = packageItem.productPrice * 1.08;
-    return allowedLimit.toFixed(2);
-  }
-
-  private getErrorMessage(error: any): string {
-    if (error?.error?.message) {
-      return error.error.message;
-    }
-    if (error?.message) {
-      return error.message;
-    }
-    return 'Unknown error occurred';
-  }
-
-  private saveItemsSequentially(items: any[], index = 0) {
-    if (index >= items.length) {
-      this.loading = false;
-      alert('All items saved successfully!');
-      this.goBack();
-      return;
-    }
-
-    // Provide an empty array or appropriate products array as the second argument
-    this.procurementService
-      .createOrderPackageItems(items[index], [])
-      .subscribe({
-        next: () => {
-          this.saveItemsSequentially(items, index + 1);
-
-        },
-        error: (err) => {
-          console.error(`Error saving item ${index}:`, err);
-          this.loading = false;
-          alert(`Failed to save item ${index + 1}. Please try again.`);
-        },
-      });
+  /** Converts API values (numbers or numeric strings like "260.00") to a number; undefined if not numeric. */
+  private toNumber(value: unknown): number | undefined {
+    if (value === null || value === undefined || value === '') return undefined;
+    const n = Number(value);
+    return Number.isFinite(n) ? n : undefined;
   }
 
   getCombinedProductPrice(): number {
@@ -385,7 +323,7 @@ export class ViewDispatchOrdersComponent implements OnInit {
 
     // Sum of all package product prices
     return this.orderDetails.reduce(
-      (sum, pkg) => sum + (pkg.productPrice || 0),
+      (sum, pkg) => sum + (this.toNumber(pkg.productPrice) ?? 0),
       0
     );
   }
@@ -416,6 +354,10 @@ export class ViewDispatchOrdersComponent implements OnInit {
 
   openExcludedItemsModal() {
     this.showExcludedItemsModal = true;
+  }
+
+  calculateSum(items: any[]): number {
+    return items.reduce((sum, price) => sum + price, 0);
   }
 }
 

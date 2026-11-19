@@ -24,34 +24,32 @@
                 <div class="mr-5">
                     <p-dropdown
                         styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-                        [options]="replyStatus"  optionLabel="status" optionValue="value"
-                        [showClear]="!!rpst" placeholder="Reply" [(ngModel)]="rpst" (onChange)="regStatusFil()" />
+                        [options]="replyStatus" optionLabel="status" optionValue="value" [showClear]="!!rpst"
+                        placeholder="Reply" [(ngModel)]="rpst" (onChange)="regStatusFil()" />
                 </div>
 
                 <div class="mr-5">
                     <p-dropdown
                         styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
                         [autoZIndex]="true" [baseZIndex]="1000" appendTo="body" [options]="comCategories"
-                        [(ngModel)]="filterComCategory"  optionLabel="categoryEnglish"
-                        [showClear]="!!filterComCategory" placeholder="Category" (onChange)="applyFilters()"
-                        appendTo="body"></p-dropdown>
+                        [(ngModel)]="filterComCategory" optionLabel="categoryEnglish" [showClear]="!!filterComCategory"
+                        placeholder="Category" (onChange)="applyFilters()" appendTo="body"></p-dropdown>
                 </div>
 
                 <div class="mr-5">
                     <p-dropdown
                         styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
                         [autoZIndex]="true" [baseZIndex]="1000" appendTo="body" [options]="company"
-                        [(ngModel)]="filterCompany"  optionLabel="companyNameEnglish"
-                        [showClear]="!!filterCompany" placeholder="Company" (onChange)="applyFilters()"
-                        appendTo="body"></p-dropdown>
+                        [(ngModel)]="filterCompany" optionLabel="companyNameEnglish" [showClear]="!!filterCompany"
+                        placeholder="Company" (onChange)="applyFilters()" appendTo="body"></p-dropdown>
                 </div>
                 <div class="mr-5">
                     <p-dropdown
                         styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
                         [autoZIndex]="true" [baseZIndex]="1000" appendTo="body" [options]="statusfilterArr"
-                        [(ngModel)]="filterStatus" name="filterStatus"  optionLabel="label"
-                        optionValue="value" [showClear]="!!filterStatus" placeholder="Status"
-                        (onChange)="applyFilters()" appendTo="body"></p-dropdown>
+                        [(ngModel)]="filterStatus" name="filterStatus" optionLabel="label" optionValue="value"
+                        [showClear]="!!filterStatus" placeholder="Status" (onChange)="applyFilters()"
+                        appendTo="body"></p-dropdown>
                 </div>
 
                 <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
@@ -102,7 +100,7 @@
                         <th class="py-4 px-3 font-normal text-textLight dark:text-textDark text-left">
                             EMP ID
                         </th>
-                       
+
                         <th class="py-4 px-3 font-normal text-textLight dark:text-textDark text-left">
                             Centre Code
                         </th>
@@ -147,7 +145,7 @@
                             {{ item.complainCategory }}
                         </td>
                         <td class="py-4 px-3 dark:text-textDark text-left">{{ item.empId }}</td>
-                        
+
                         <td class="py-4 px-3 dark:text-textDark text-left">
                             <ng-container *ngIf="item.regCode && item.regCode.trim(); else noRegCode">
                                 {{ item.regCode }}
@@ -178,9 +176,9 @@
 
                             <div *ngIf="item.status === 'Assigned'">
                                 <span
-                                  class="w-32 h-8 inline-block bg-green-100 text-green-500 font-medium rounded-md px-3 py-1 text-sm">{{
-                                  item.status }}</span>
-                              </div>
+                                    class="w-32 h-8 inline-block bg-green-100 text-green-500 font-medium rounded-md px-3 py-1 text-sm">{{
+                                    item.status }}</span>
+                            </div>
                         </td>
                         <td *ngIf="permissionService.hasPermission('Reply Driver complaint') || tokenService.getUserDetails().role === '1'"
                             class="py-4 px-3 dark:text-textDark text-center">
@@ -211,8 +209,9 @@
 
                             <div *ngIf="item.reply != null">
                                 <button class="w-5 h-5 text-blue-500 hover:text-blue-700"
-                                (click)="fetchComplain(item, item.language === 'Sinhala' ? item.officerNameSinhala : item.language === 'Tamil' ? item.officerNameTamil : item.officerName, item.language)">
-                                <img src="assets/icons/viewreply.png" alt="View Reply" class="w-6 h-6 inline-block" />
+                                    (click)="fetchComplain(item, item.language === 'Sinhala' ? item.officerNameSinhala : item.language === 'Tamil' ? item.officerNameTamil : item.officerName, item.language)">
+                                    <img src="assets/icons/viewreply.png" alt="View Reply"
+                                        class="w-6 h-6 inline-block" />
                                 </button>
                             </div>
                         </td>
@@ -225,10 +224,10 @@
         </div>
         <div class="dark:bg-[#262f45]">
             <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
-              [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
-              [screenReaderCurrentLabel]="'Youre on page'">
+                [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
+                [screenReaderCurrentLabel]="'Youre on page'">
             </pagination-controls>
-          </div>
+        </div>
     </div>
 </div>
 

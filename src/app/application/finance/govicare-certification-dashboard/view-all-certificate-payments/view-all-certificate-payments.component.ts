@@ -137,8 +137,6 @@ export class ViewAllCertificatePaymentsComponent implements OnInit {
       this.page = 1;
       this.fetchCertificatePayments();
     } else {
-      // Optional: Show a message that both dates are required
-      console.log('Please select both from and to dates');
     }
   }
 

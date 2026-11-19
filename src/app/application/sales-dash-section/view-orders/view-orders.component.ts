@@ -93,7 +93,7 @@ export class ViewOrdersComponent implements OnInit {
     public permissionService: PermissionService,
     private postInvoiceService: PostinvoiceService,
     private salesAgentsService: SalesAgentsService,
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.fetchAllOrders();
@@ -107,7 +107,7 @@ export class ViewOrdersComponent implements OnInit {
     paymentMethod: string = this.paymentMethodFilter,
     paymentStatus: string = this.paymentStatusFilter,
     deliveryType: string = this.deliveryTypeFilter,
-    search: string = this.searchText
+    search: string = this.searchText,
   ) {
     this.isLoading = true;
     this.salesDashService
@@ -131,7 +131,7 @@ export class ViewOrdersComponent implements OnInit {
               ...order,
               formattedCreatedDate: this.datePipe.transform(
                 order.createdAt,
-                'd MMM,  y h:mm a'
+                'd MMM,  y h:mm a',
               ),
               scheduleDateFormattedSL: this.formatDate(order.scheduleDate),
             };
@@ -145,30 +145,32 @@ export class ViewOrdersComponent implements OnInit {
           if (error.status === 401) {
             this.isLoading = false;
           }
-        }
+        },
       );
   }
 
   fetchApprovedAgents() {
-    this.salesAgentsService.getAllSalesAgents(1, 1000, '', 'Approved').subscribe(
-      (response: any) => {
-        this.agentFilterOptions = (response.items || [])
-          .map((agent: any) => ({
-            label: agent.empId,
-            value: agent.id,
-          }))
-          .sort(
-            (
-              firstAgent: { label: string; value: number },
-              secondAgent: { label: string; value: number },
-            ) =>
-            firstAgent.label.localeCompare(secondAgent.label, undefined, {
-              numeric: true,
-            }),
-          );
-      },
-      (error) => console.error('Error fetching approved sales agents', error),
-    );
+    this.salesAgentsService
+      .getAllSalesAgents(1, 1000, '', 'Approved')
+      .subscribe(
+        (response: any) => {
+          this.agentFilterOptions = (response.items || [])
+            .map((agent: any) => ({
+              label: agent.empId,
+              value: agent.id,
+            }))
+            .sort(
+              (
+                firstAgent: { label: string; value: number },
+                secondAgent: { label: string; value: number },
+              ) =>
+                firstAgent.label.localeCompare(secondAgent.label, undefined, {
+                  numeric: true,
+                }),
+            );
+        },
+        (error) => console.error('Error fetching approved sales agents', error),
+      );
   }
 
   formatDateForBackend(date: Date | null): string {
@@ -194,7 +196,7 @@ export class ViewOrdersComponent implements OnInit {
       this.paymentMethodFilter,
       this.paymentStatusFilter,
       this.deliveryTypeFilter,
-      this.searchText
+      this.searchText,
     );
   }
 
@@ -206,7 +208,7 @@ export class ViewOrdersComponent implements OnInit {
       this.paymentMethodFilter,
       this.paymentStatusFilter,
       this.deliveryTypeFilter,
-      this.searchText
+      this.searchText,
     );
   }
 
@@ -218,7 +220,7 @@ export class ViewOrdersComponent implements OnInit {
       this.paymentMethodFilter,
       this.paymentStatusFilter,
       this.deliveryTypeFilter,
-      this.searchText
+      this.searchText,
     );
   }
 
@@ -230,7 +232,7 @@ export class ViewOrdersComponent implements OnInit {
       this.paymentMethodFilter,
       this.paymentStatusFilter,
       this.deliveryTypeFilter,
-      this.searchText
+      this.searchText,
     );
   }
 
@@ -258,7 +260,7 @@ export class ViewOrdersComponent implements OnInit {
       this.paymentMethodFilter,
       this.paymentStatusFilter,
       this.deliveryTypeFilter,
-      this.searchText
+      this.searchText,
     );
   }
 
@@ -281,7 +283,7 @@ export class ViewOrdersComponent implements OnInit {
       this.paymentMethodFilter,
       this.paymentStatusFilter,
       this.deliveryTypeFilter,
-      this.searchText
+      this.searchText,
     );
   }
 
@@ -294,7 +296,7 @@ export class ViewOrdersComponent implements OnInit {
       this.paymentMethodFilter,
       this.paymentStatusFilter,
       this.deliveryTypeFilter,
-      this.searchText
+      this.searchText,
     );
   }
 
@@ -311,7 +313,7 @@ export class ViewOrdersComponent implements OnInit {
     try {
       await this.finalInvoiceService.generateAndDownloadInvoice(
         orderId,
-        invoiceNumber
+        invoiceNumber,
       );
     } catch (error) {
       console.error('Error generating invoice:', error);
@@ -335,24 +337,16 @@ export class ViewOrdersComponent implements OnInit {
       this.paymentMethodFilter,
       this.paymentStatusFilter,
       this.deliveryTypeFilter,
-      this.searchText
+      this.searchText,
     );
   }
 
-  isPostInvoiceEnabled(status: string): boolean {
-    const enabledStatuses = [
-      'Out For Delivery',
-      'Delivered',
-      'Picked Up',
-      'On the way',
-      'Failed',
-      'Collected',
-      'Hold',
-      'Return',
-      'Return Received',
-    ];
+  isPostInvoiceEnabled(order: Orders): boolean {
+    const isConfirmed = Number(order.isConfirmed) === 1;
+    const isPackage = Number(order.isPackage) === 1;
+    const isFinalized = Number(order.isFinalized) === 1;
 
-    return enabledStatuses.includes(status);
+    return isConfirmed || (isPackage && isFinalized);
   }
 
   downloadPostInvoice(id: number, tableInvoiceNo: string): void {
@@ -360,8 +354,7 @@ export class ViewOrdersComponent implements OnInit {
 
     this.postInvoiceService
       .generateAndDownloadInvoice(id, tableInvoiceNo)
-      .then(() => {
-      })
+      .then(() => {})
       .catch((error) => {
         console.error('Error generating invoice:', error);
         this.errorMessage = 'Failed to download invoice';
@@ -383,13 +376,13 @@ export class ViewOrdersComponent implements OnInit {
 
     // Fetch the image from the URL
     fetch(qrCodeUrl)
-      .then(response => {
+      .then((response) => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
         return response.blob();
       })
-      .then(blob => {
+      .then((blob) => {
         // Create a blob URL
         const blobUrl = window.URL.createObjectURL(blob);
 
@@ -406,7 +399,7 @@ export class ViewOrdersComponent implements OnInit {
         // Clean up the blob URL
         window.URL.revokeObjectURL(blobUrl);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Error downloading QR code:', error);
         // Optional: Show user-friendly error message
         alert('Failed to download QR code. Please try again.');
@@ -436,4 +429,7 @@ class Orders {
   sheduleType!: string;
   sheduleTime!: string;
   qrCode!: string;
+  isConfirmed!: number;
+  isPackage!: number;
+  isFinalized!: number;
 }

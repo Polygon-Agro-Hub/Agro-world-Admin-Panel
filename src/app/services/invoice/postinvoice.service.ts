@@ -341,7 +341,7 @@ export class PostinvoiceService {
 
       if (invoice.buildingType === 'Apartment') {
         doc.setFont('helvetica', 'bold');
-        doc.text('Apartment Address:', 15, yPosition);
+        doc.text('Address:', 15, yPosition);
         yPosition += 5;
         doc.setFont('helvetica', 'normal');
 
@@ -350,7 +350,7 @@ export class PostinvoiceService {
           `Name : ${invoice.billingInfo.buildingName || 'N/A'},`,
           `Flat : ${invoice.billingInfo.unitNo || 'N/A'},`,
           `Floor : ${invoice.billingInfo.floorNo || 'N/A'},`,
-          `House No : ${invoice.billingInfo.houseNo || 'N/A'},`,
+          `Plot No : ${invoice.billingInfo.houseNo || 'N/A'},`,
           `Street Name : ${invoice.billingInfo.street || 'N/A'},`,
           `City : ${invoice.billingInfo.city || 'N/A'}`,
         ];
@@ -371,12 +371,12 @@ export class PostinvoiceService {
         });
       } else {
         doc.setFont('helvetica', 'bold');
-        doc.text('House Address:', 15, yPosition);
+        doc.text('Address:', 15, yPosition);
         yPosition += 5;
         doc.setFont('helvetica', 'normal');
 
         const houseAddress = [
-          `House No : ${invoice.billingInfo.houseNo || 'N/A'},`,
+          `Plot No : ${invoice.billingInfo.houseNo || 'N/A'},`,
           `Street Name : ${invoice.billingInfo.street || 'N/A'},`,
           `City : ${invoice.billingInfo.city || 'N/A'}`,
         ];
@@ -427,7 +427,7 @@ export class PostinvoiceService {
     doc.text('Delivery Method:', 15, yPosition);
     doc.setFont('helvetica', 'normal');
     doc.text(
-      invoice.deliveryMethod === 'Pickup' ? 'Instore Pickup' : 'Home Delivery',
+      invoice.deliveryMethod === 'Pickup' ? 'Instore Pickup' : 'Delivery',
       15,
       yPosition + 5,
     );
@@ -554,9 +554,63 @@ export class PostinvoiceService {
           15,
           yPosition,
         );
-        doc.text(`Rs. ${formatNumberWithCommas(pack.amount)}`, 195, yPosition, {
-          align: 'right',
-        });
+        // ---- Pack header price: calculated total (struck) + package price ----
+        const packPrice = parseNum(pack.amount);
+
+        const itemsTotal =
+          pack.packageDetails?.reduce(
+            (sum: number, d: any) => sum + parseNum(d.price),
+            0,
+          ) || 0;
+
+        const reviewValue = parseNum(pack.reviewValue);
+        const calculatedTotal =
+          reviewValue !== 0
+            ? packPrice +
+              parseNum(pack.serviceFee) +
+              parseNum(pack.packingFee)
+            : itemsTotal +
+              parseNum(pack.serviceFee) +
+              parseNum(pack.packingFee);
+
+        // Package price (right aligned, black, bold)
+        const packPriceText = `Rs. ${formatNumberWithCommas(packPrice)}`;
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(9);
+        doc.setTextColor(0, 0, 0);
+        doc.text(packPriceText, 195, yPosition, { align: 'right' });
+        const packPriceWidth = doc.getTextWidth(packPriceText);
+
+        // Calculated total (struck through) only when it differs
+        const shouldStrikeThrough =
+          reviewValue !== 0
+            ? calculatedTotal > packPrice + 0.01
+            : Math.abs(calculatedTotal - packPrice) > 0.01;
+
+        if (shouldStrikeThrough) {
+          const oldText = `Rs. ${formatNumberWithCommas(calculatedTotal)}`;
+          const oldRightX = 195 - packPriceWidth - 3; // 3mm gap
+
+          doc.setFont('helvetica', 'normal');
+          doc.setTextColor(0, 0, 0); // #000000
+
+          doc.text(oldText, oldRightX, yPosition, { align: 'right' });
+
+          // strike-through line
+          const oldWidth = doc.getTextWidth(oldText);
+          doc.setDrawColor(0, 0, 0); // #000000
+          doc.setLineWidth(0.3);
+          doc.line(
+            oldRightX - oldWidth,
+            yPosition - 1.1,
+            oldRightX,
+            yPosition - 1.1,
+          );
+
+          // reset
+          doc.setFont('helvetica', 'bold');
+          doc.setTextColor(0, 0, 0);
+        }
         yPosition += 5;
 
         doc.setDrawColor(215, 215, 215);
@@ -610,14 +664,28 @@ export class PostinvoiceService {
           }) || []),
         ];
 
+        // ---- Fees ----
+        const serviceFeeValue = parseNum(pack.serviceFee);
+        const packingFeeValue = parseNum(pack.packingFee);
+
+        const fees: Array<{ label: string; amount: number }> = [];
+        if (serviceFeeValue > 0)
+          fees.push({ label: 'Service Fee', amount: serviceFeeValue });
+        if (packingFeeValue > 0)
+          fees.push({ label: 'Packing Fee', amount: packingFeeValue });
+
+        const TABLE_X = 15;
+        const TABLE_W = 180;
+        const tableTopY = yPosition;
+
         (doc as any).autoTable({
           startY: yPosition,
           head: [packDetailsBody[0]],
           body: packDetailsBody.slice(1),
-          margin: { left: 15, right: 15 },
+          margin: { left: TABLE_X, right: 15 },
           styles: {
             fontSize: 9,
-            cellPadding: { top: 3, right: 4, bottom: 3, left: 4 },
+            cellPadding: { top: 5, right: 4, bottom: 5, left: 4 },
             textColor: [0, 0, 0],
             overflow: 'linebreak',
             valign: 'middle',
@@ -627,27 +695,109 @@ export class PostinvoiceService {
             textColor: [0, 0, 0],
             fontStyle: 'bold',
           },
-          bodyStyles: {
-            textColor: [0, 0, 0],
-          },
+          bodyStyles: { textColor: [0, 0, 0] },
           alternateRowStyles: {
             fillColor: [255, 255, 255],
             textColor: [0, 0, 0],
           },
-          tableLineColor: [209, 213, 219],
-          tableLineWidth: 0.5,
           showHorizontalLines: false,
           showVerticalLines: false,
           columnStyles: {
-            0: { cellWidth: 16, halign: 'left' }, // Index
-            1: { cellWidth: 40, overflow: 'linebreak' }, // Category
-            2: { cellWidth: 50, overflow: 'linebreak' }, // Item Description
-            3: { cellWidth: 30, overflow: 'visible', halign: 'left' }, // QTY
-            4: { cellWidth: 44, halign: 'left' }, // Amount
+            0: { cellWidth: 16, halign: 'left' },
+            1: { cellWidth: 40, overflow: 'linebreak' },
+            2: { cellWidth: 50, overflow: 'linebreak' },
+            3: { cellWidth: 30, overflow: 'visible', halign: 'left' },
+            4: { cellWidth: 44, halign: 'left' },
+          },
+
+          // Category values -> #676767
+          didParseCell: (data: any) => {
+            if (data.section === 'body' && data.column.index === 1) {
+              data.cell.styles.textColor = [103, 103, 103];
+            }
+          },
+
+          // Line under the header row
+          didDrawCell: (data: any) => {
+            if (data.section === 'head') {
+              doc.setDrawColor(215, 215, 215);
+              doc.setLineWidth(0.3);
+              doc.line(
+                data.cell.x,
+                data.cell.y + data.cell.height,
+                data.cell.x + data.cell.width,
+                data.cell.y + data.cell.height,
+              );
+            }
           },
         });
 
-        yPosition = (doc as any).lastAutoTable.finalY + 10;
+        let tableBottomY = (doc as any).lastAutoTable.finalY;
+
+        // ---- Additional Charges box ----
+        if (fees.length > 0) {
+          const ROW_H = 9;
+          const boxH = Math.max(fees.length * ROW_H + 8, 22);
+          const boxX = TABLE_X + 5;
+          const boxW = TABLE_W - 10;
+
+          // separator line between items and the box
+          doc.setDrawColor(229, 231, 235);
+          doc.setLineWidth(0.3);
+          doc.line(boxX, tableBottomY + 2, boxX + boxW, tableBottomY + 2);
+
+          const boxY = tableBottomY + 5;
+
+          // background #F2F6FE
+          doc.setFillColor(242, 246, 254);
+          doc.roundedRect(boxX, boxY, boxW, boxH, 3, 3, 'F');
+
+          // left text (#000000)
+          doc.setTextColor(0, 0, 0);
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(10);
+          doc.text('Additional Charges', boxX + 6, boxY + 8);
+
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(8);
+          doc.text('Service Fee & Packing Fee*', boxX + 6, boxY + 13);
+
+          // middle divider (#8097C7) at QTY column start
+          doc.setDrawColor(128, 151, 199);
+          doc.setLineWidth(0.3);
+          doc.line(121, boxY + 4, 121, boxY + boxH - 4);
+
+          // labels (QTY column) + amounts (Amount column)
+          doc.setFontSize(9);
+          doc.setFont('helvetica', 'normal');
+          fees.forEach((fee, i) => {
+            const textY = boxY + 9 + i * ROW_H;
+            doc.text(fee.label, 125, textY);
+            doc.text(`Rs. ${formatNumberWithCommas(fee.amount)}`, 155, textY);
+          });
+
+          tableBottomY = boxY + boxH + 4; // bottom padding inside the card
+        }
+
+        // ---- Outer rounded border (whole card) ----
+        doc.setDrawColor(215, 215, 215);
+        doc.setLineWidth(0.3);
+        doc.roundedRect(
+          TABLE_X,
+          tableTopY,
+          TABLE_W,
+          tableBottomY - tableTopY,
+          3,
+          3,
+          'S',
+        );
+
+        // reset for the next content
+        doc.setTextColor(0, 0, 0);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(9);
+
+        yPosition = tableBottomY + 10;
       }
     }
 
@@ -811,25 +961,35 @@ export class PostinvoiceService {
     // Create grand total body with individual packages
     const grandTotalBody: any[] = [];
 
-    // Handle family packages - show total if multiple, single package name if only one
+    // Show each package individually instead of a combined package total.
     if (invoice.familyPackItems && invoice.familyPackItems.length > 0) {
-      if (invoice.familyPackItems.length > 1) {
-        // Calculate total for all packages
-        const packagesTotal = invoice.familyPackItems.reduce(
-          (total, pack) => total + parseNum(pack.amount),
-          0,
-        );
+      for (const pack of invoice.familyPackItems) {
         grandTotalBody.push([
-          'Total Price for Packages',
-          `Rs. ${formatNumberWithCommas(packagesTotal.toFixed(2))}`,
+          pack.name || 'Package',
+          {
+            content: `Rs. ${formatNumberWithCommas(parseNum(pack.amount).toFixed(2))}`,
+            styles: { halign: 'right' },
+          },
         ]);
-      } else {
-        // Only one package - show its name
-        const pack = invoice.familyPackItems[0];
-        grandTotalBody.push([
-          pack.name || 'Family Pack',
-          `Rs. ${formatNumberWithCommas(pack.amount)}`,
-        ]);
+
+        const reviewValue = parseNum(pack.reviewValue);
+        if (reviewValue > 0) {
+          grandTotalBody.push([
+            {
+              content: `An additional Rs. ${formatNumberWithCommas(reviewValue.toFixed(2))} has been charged for package modifications requested by the customer during the review process.`,
+              colSpan: 2,
+              styles: { textColor: [11, 85, 221], fontStyle: 'normal', fontSize: 8 },
+            },
+          ]);
+        } else if (reviewValue < 0) {
+          grandTotalBody.push([
+            {
+              content: `An amount of Rs. ${formatNumberWithCommas(Math.abs(reviewValue).toFixed(2))} has been deducted due to package modifications made by the customer during the review process.`,
+              colSpan: 2,
+              styles: { textColor: [11, 85, 221], fontStyle: 'normal', fontSize: 8 },
+            },
+          ]);
+        }
       }
     }
 
@@ -951,9 +1111,14 @@ export class PostinvoiceService {
     const GREEN_COLOR: [number, number, number] = [22, 163, 74];
     const ORANGE_COLOR: [number, number, number] = [217, 119, 6];
 
-    const isPaid = Number(invoice.isPaid) === 1;
-    const isCardPayment = invoice.paymentMethod === 'Card';
     const creditPaidNum = parseNum(invoice.creditPaid as any);
+    const normalizedPaymentMethod = String(invoice.paymentMethod || '')
+      .trim()
+      .toLowerCase();
+    const isCardPayment =
+      normalizedPaymentMethod.includes('card') ||
+      normalizedPaymentMethod.includes('credit') ||
+      paymentTypeLabel.includes('Online Transfer');
     const hasCreditPaid =
       invoice.creditPaid !== null &&
       invoice.creditPaid !== undefined &&
@@ -976,7 +1141,7 @@ export class PostinvoiceService {
       ? 'Cash On Pickup'
       : isDelivered
         ? 'Cash On Delivery'
-        : 'Cash On Delivery (Pending)';
+        : 'Cash On Delivery';
 
     // The "charges might change" note only makes sense before delivery
     let showDeliveryNote = false;
@@ -1003,10 +1168,10 @@ export class PostinvoiceService {
     };
 
     if (hasCreditPaid) {
-      pushPaymentRow('Credit Balance Used', creditPaidNum, GREEN_COLOR);
+      pushPaymentRow('Polygon Wallet Used', creditPaidNum, GREEN_COLOR);
 
       if (remainingAfterCredit > 0.01) {
-        if (isPaid && isCardPayment) {
+        if (isCardPayment) {
           pushPaymentRow(
             'Online Transferred Amount',
             remainingAfterCredit,
@@ -1017,7 +1182,7 @@ export class PostinvoiceService {
         }
       }
     } else {
-      if (isPaid && isCardPayment) {
+      if (isCardPayment) {
         pushPaymentRow(
           'Online Transferred Amount',
           finalGrandTotal,
@@ -1034,12 +1199,12 @@ export class PostinvoiceService {
       body: grandTotalBody,
       margin: { left: 15, right: 15 },
       columnStyles: {
-        0: { cellWidth: 'auto', halign: 'left' },
-        1: { cellWidth: 'auto', halign: 'right' },
+        0: { cellWidth: 130, halign: 'left' },
+        1: { cellWidth: 50, halign: 'right' },
       },
       styles: {
         fontSize: 9,
-        cellPadding: { top: 4, right: 2, bottom: 4, left: 2 },
+        cellPadding: { top: 2, right: 2, bottom: 2, left: 2 },
         lineWidth: 0,
       },
       bodyStyles: {
@@ -1047,6 +1212,34 @@ export class PostinvoiceService {
       },
       alternateRowStyles: {
         fillColor: [255, 255, 255],
+      },
+      didParseCell: (data: any) => {
+        if (data.section !== 'body') return;
+
+        const rawContent =
+          typeof data.cell.raw === 'object'
+            ? data.cell.raw.content
+            : data.cell.raw;
+        const cellText = String(rawContent || '');
+
+        if (
+          cellText.startsWith('An additional Rs.') ||
+          cellText.startsWith('An amount of Rs.')
+        ) {
+          data.cell.styles.cellPadding = {
+            top: 1,
+            right: 2,
+            bottom: 5,
+            left: 7,
+          };
+        } else if (data.column.index === 0) {
+          data.cell.styles.cellPadding = {
+            top: 2,
+            right: 2,
+            bottom: 1,
+            left: 2,
+          };
+        }
       },
       didDrawCell: (data: any) => {
         if (data.row.index === borderRowIndex) {
@@ -1058,6 +1251,48 @@ export class PostinvoiceService {
             data.cell.x + data.cell.width,
             data.cell.y + data.cell.height,
           );
+        }
+
+        if (data.section === 'body' && data.column.index === 0) {
+          const rawContent =
+            typeof data.cell.raw === 'object'
+              ? data.cell.raw.content
+              : data.cell.raw;
+          const cellText = String(rawContent || '');
+
+          if (
+            cellText.startsWith('An additional Rs.') ||
+            cellText.startsWith('An amount of Rs.')
+          ) {
+            doc.setFillColor(255, 255, 255);
+            doc.rect(
+              data.cell.x,
+              data.cell.y,
+              data.cell.width,
+              data.cell.height,
+              'F',
+            );
+
+            const iconX = data.cell.x + 2.2;
+            const iconY = data.cell.y + 3.2;
+            doc.setFillColor(11, 85, 221);
+            doc.setDrawColor(11, 85, 221);
+            doc.circle(iconX, iconY, 1.35, 'FD');
+
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(5);
+            doc.setTextColor(255, 255, 255);
+            doc.text('i', iconX, iconY + 0.8, { align: 'center' });
+
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(8);
+            doc.setTextColor(11, 85, 221);
+            const noteLines = doc.splitTextToSize(
+              cellText,
+              data.cell.width - 9,
+            );
+            doc.text(noteLines, iconX + 3.2, data.cell.y + 4.2);
+          }
         }
       },
     });
@@ -1256,15 +1491,20 @@ export class PostinvoiceService {
     const fullyCoveredByCredit = hasCredit && creditPaid >= grandTotal - 0.01;
 
     if (fullyCoveredByCredit) {
-      return 'Credit Balance';
+      return 'Polygon Wallet';
     }
 
-    if (payType === 'Card') {
-      return hasCredit ? 'Online Transfer + Credit Balance' : 'Online Transfer';
+    const normalizedPayType = String(payType || '').trim().toLowerCase();
+    if (
+      normalizedPayType.includes('card') ||
+      normalizedPayType.includes('credit') ||
+      normalizedPayType.includes('online')
+    ) {
+      return hasCredit ? 'Online Transfer + Polygon Wallet' : 'Online Transfer';
     }
 
     // Cash
     const base = isPickup ? 'Cash on Pickup' : 'Cash on Delivery';
-    return hasCredit ? `${base} + Credit Balance` : base;
+    return hasCredit ? `${base} + Polygon Wallet` : base;
   }
 }

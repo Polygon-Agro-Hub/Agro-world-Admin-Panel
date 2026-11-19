@@ -54,7 +54,6 @@ export class CallCenterDashboardComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$)
       )
       .subscribe(({ res, err }) => {
-        console.log('dashboard response', res, err); // remove once working
         this.isLoading = false;
         this.isRefreshing = false;
         if (res) {

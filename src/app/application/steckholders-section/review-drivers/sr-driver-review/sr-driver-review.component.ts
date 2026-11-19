@@ -94,7 +94,6 @@ export class SrDriverReviewComponent implements OnInit {
 
   ngOnInit(): void {
     this.driverId = this.route.snapshot.paramMap.get('id');
-    console.log('id', this.driverId);
     if (this.driverId) {
       this.fetchDriverDetails(this.driverId);
     } else {
@@ -186,8 +185,6 @@ export class SrDriverReviewComponent implements OnInit {
         side2Image: v.vehSideImgB ?? null,
       },
     };
-
-    console.log('Mapped driver data:', this.driverData);
   }
 
   private formatPhone(
@@ -204,7 +201,6 @@ export class SrDriverReviewComponent implements OnInit {
 
   selectTab(tabKey: string): void {
     this.activeTab = tabKey;
-    console.log('this.activeTab', this.activeTab)
   }
 
   getCurrentTabIndex(): number {

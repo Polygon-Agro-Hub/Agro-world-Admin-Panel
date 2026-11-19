@@ -44,9 +44,6 @@ export class CultivationInfoTabComponent implements OnDestroy {
   }
 
   ngOnInit() {
-    if (this.cultivationData) {
-      // console.log(this.cultivationData);
-    }
   }
 
   ngOnDestroy(): void {

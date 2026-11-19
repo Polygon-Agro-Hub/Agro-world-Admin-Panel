@@ -201,18 +201,8 @@ export class ViewWholwsaleOrdersComponent implements OnInit {
       });
   }
 
-  isPostInvoiceEnabled(status: string): boolean {
-    // Define the statuses that allow post-invoice download
-    const enabledStatuses = [
-      'Out For Delivery',
-      'Delivered',
-      'Picked up',
-      'Ready to Pickup',
-      'On the way',
-      'Failed'
-    ];
-
-    return enabledStatuses.includes(status);
+  isPostInvoiceEnabled(item: RetailOrders): boolean {
+    return Number(item.isConfirmed) === 1;
   }
 
   downloadPostInvoice(id: number, tableInvoiceNo: string): void {
@@ -288,4 +278,5 @@ class RetailOrders {
   creditPaid!: number;
   moneyPaid!: number;
   companyName!: string;
+  isConfirmed!: number;
 }

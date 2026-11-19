@@ -563,8 +563,15 @@ export class PostinvoiceService {
             0,
           ) || 0;
 
+        const reviewValue = parseNum(pack.reviewValue);
         const calculatedTotal =
-          itemsTotal + parseNum(pack.serviceFee) + parseNum(pack.packingFee);
+          reviewValue !== 0
+            ? packPrice +
+              parseNum(pack.serviceFee) +
+              parseNum(pack.packingFee)
+            : itemsTotal +
+              parseNum(pack.serviceFee) +
+              parseNum(pack.packingFee);
 
         // Package price (right aligned, black, bold)
         const packPriceText = `Rs. ${formatNumberWithCommas(packPrice)}`;
@@ -575,7 +582,12 @@ export class PostinvoiceService {
         const packPriceWidth = doc.getTextWidth(packPriceText);
 
         // Calculated total (struck through) only when it differs
-        if (Math.abs(calculatedTotal - packPrice) > 0.01) {
+        const shouldStrikeThrough =
+          reviewValue !== 0
+            ? calculatedTotal > packPrice + 0.01
+            : Math.abs(calculatedTotal - packPrice) > 0.01;
+
+        if (shouldStrikeThrough) {
           const oldText = `Rs. ${formatNumberWithCommas(calculatedTotal)}`;
           const oldRightX = 195 - packPriceWidth - 3; // 3mm gap
 

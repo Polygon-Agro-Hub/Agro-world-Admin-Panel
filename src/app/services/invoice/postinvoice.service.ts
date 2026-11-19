@@ -637,7 +637,7 @@ export class PostinvoiceService {
             //   styles: { fillColor: [248, 248, 248], fontStyle: 'bold' },
             // },
             {
-              content: 'QTY',
+              content: 'QTY (Kg)',
               styles: { fillColor: [248, 248, 248], fontStyle: 'bold' },
             },
             {
@@ -647,17 +647,12 @@ export class PostinvoiceService {
           ],
           ...(pack.packageDetails?.map((detail: any, i: number) => {
             const qtyKg = Number(detail.qty) || 0;
-            const unit = String(detail.unit || 'Kg').trim();
-            const isGrams = unit.toLowerCase() === 'g';
-            const displayQty =
-              detail.displayQty ?? (isGrams ? Math.round(qtyKg * 1000) : qtyKg);
 
             return [
               `${i + 1}.`,
               detail.typeName || 'N/A',
               detail.productName || 'N/A',
-              // `Rs. ${formatNumberWithCommas(detail.price || 0)}`,   // Unit Price (commented)
-              `${displayQty}\u00A0${unit}`,
+              `${qtyKg}\u00A0Kg`,
               `Rs. ${formatNumberWithCommas(detail.price || 0)}`, // Amount = price value
             ];
           }) || []),

@@ -228,11 +228,11 @@
                 *ngIf="permissionService.hasPermission('Download retail post invoice') || tokenService.getUserDetails().role === '1'">
                 <div class="relative inline-block">
                   <button class="text-textLight dark:text-textDark gap-1"
-                    [class.opacity-50]="!isPostInvoiceEnabled(item.status)"
-                    [class.cursor-not-allowed]="!isPostInvoiceEnabled(item.status)"
-                    [class.cursor-pointer]="isPostInvoiceEnabled(item.status)"
-                    [disabled]="!isPostInvoiceEnabled(item.status)"
-                    (click)="isPostInvoiceEnabled(item.status) ? downloadPostInvoice(item.orderId, item.invNo) : null">
+                    [class.opacity-50]="!isPostInvoiceEnabled(item)"
+                    [class.cursor-not-allowed]="!isPostInvoiceEnabled(item)"
+                    [class.cursor-pointer]="isPostInvoiceEnabled(item)"
+                    [disabled]="!isPostInvoiceEnabled(item)"
+                    (click)="isPostInvoiceEnabled(item) ? downloadPostInvoice(item.orderId, item.invNo) : null">
                     <i class="fa-solid fa-file-lines text-2xl"></i>
                   </button>
                 </div>

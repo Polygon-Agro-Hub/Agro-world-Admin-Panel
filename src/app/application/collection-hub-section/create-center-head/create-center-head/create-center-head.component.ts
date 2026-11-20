@@ -976,6 +976,8 @@ export class CreateCenterHeadComponent implements OnInit {
     const missingFields: string[] = [];
     const phonePattern = /^[0-9]{9}$/;
 
+    if (!this.empType) missingFields.push('Employment Type is Required');
+    if (!this.isAtLeastOneLanguageSelected()) missingFields.push('Preferred Languages is Required');
     if (!this.personalData.firstNameEnglish) missingFields.push('First Name (English) is Required');
     if (!this.personalData.firstNameSinhala) missingFields.push('First Name (Sinhala) is Required');
     if (!this.personalData.firstNameTamil) missingFields.push('First Name (Tamil) is Required');
@@ -997,6 +999,12 @@ export class CreateCenterHeadComponent implements OnInit {
       }
     }
 
+    if (!this.personalData.nic) {
+      missingFields.push('NIC is Required');
+    } else if (!this.isValidNIC(this.personalData.nic)) {
+      missingFields.push('NIC (Must be 12 digits or 9 digits followed by V)');
+    }
+
     if (!this.personalData.email) {
       missingFields.push('Email is Required');
     } else {
@@ -1006,14 +1014,6 @@ export class CreateCenterHeadComponent implements OnInit {
       }
     }
 
-    if (!this.personalData.nic) {
-      missingFields.push('NIC is Required');
-    } else if (!this.isValidNIC(this.personalData.nic)) {
-      missingFields.push('NIC (Must be 12 digits or 9 digits followed by V)');
-    }
-
-    if (!this.empType) missingFields.push('Employment Type is Required');
-    if (!this.isAtLeastOneLanguageSelected()) missingFields.push('Preferred Languages is Required');
     if (!this.personalData.companyId) missingFields.push('Company Name is Required');
     if (!this.personalData.jobRole) missingFields.push('Job Role is Required');
     if (this.personalData.jobRole === 'Collection Officer' && !this.personalData.irmId) {

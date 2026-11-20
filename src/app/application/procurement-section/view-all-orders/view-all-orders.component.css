@@ -1,0 +1,142 @@
+:host ::ng-deep .p-calendar .p-button {
+    color: black;
+}
+
+:host-context(.dark) ::ng-deep .p-calendar .p-button {
+    color: white;
+}
+
+::ng-deep .p-calendar .p-inputtext {
+    padding-right: 3rem !important;
+}
+
+::ng-deep .p-calendar .p-calendar-clear-icon {
+    right: 1.2rem !important;
+    top: 8.2px !important;
+    order: 1;
+}
+
+::ng-deep .p-calendar .p-datepicker-trigger {
+    right: 0.5rem !important;
+    order: 2;
+}
+
+:host ::ng-deep .p-calendar .p-inputtext::placeholder {
+    color: #6c6c6c;
+}
+
+:host-context(.dark) ::ng-deep .p-calendar .p-inputtext::placeholder {
+    color: #8b8b8b;
+}
+
+::ng-deep .calendar-popup-small {
+    width: 240px !important;
+    min-width: 240px !important;
+}
+
+::ng-deep .calendar-popup-small .p-datepicker-calendar {
+    font-size: 0.85rem !important;
+    width: 100% !important;
+    border-collapse: collapse !important;
+}
+
+::ng-deep .calendar-popup-small .p-datepicker-calendar th {
+    font-size: 0.75rem !important;
+    padding: 0.15rem !important;
+    text-align: center !important;
+    font-weight: normal !important;
+}
+
+::ng-deep .calendar-popup-small .p-datepicker-calendar td {
+    padding: 0.1rem !important;
+    text-align: center !important;
+}
+
+::ng-deep .calendar-popup-small .p-datepicker-calendar td span {
+    width: 1.6rem !important;
+    height: 1.6rem !important;
+    line-height: 1.6rem !important;
+    font-size: 0.85rem !important;
+    display: inline-block !important;
+    text-align: center !important;
+    margin: 0 auto !important;
+}
+
+::ng-deep .calendar-popup-small .p-datepicker-title {
+    font-size: 1rem !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.15rem !important;
+    margin: 0 !important;
+}
+
+::ng-deep .calendar-popup-small .p-datepicker-header .p-datepicker-title .p-datepicker-month {
+    margin-right: 0.1rem !important;
+}
+
+::ng-deep .calendar-popup-small .p-datepicker-header .p-datepicker-title .p-datepicker-year {
+    margin-left: 0.1rem !important;
+}
+
+::ng-deep .p-dropdown-panel .p-dropdown-item {
+    padding-left: 0.7rem !important;
+}
+
+::ng-deep .dark .p-dropdown-panel {
+    background-color: #2d354d !important;
+    color: #b1b1b1 !important;
+    border-radius: 6px !important;
+    overflow: hidden;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item {
+    background-color: #2d354d !important;
+    color: #b1b1b1 !important;
+    padding-left: 0.7rem !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item:hover {
+    background-color: #3a4160 !important;
+    color: #fff !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item.p-highlight {
+    background-color: #2d354d !important;
+    color: #b1b1b1 !important;
+}
+
+::ng-deep .overflow-x-auto::-webkit-scrollbar {
+    height: 10px;
+}
+
+::ng-deep .overflow-x-auto::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+::ng-deep .overflow-x-auto::-webkit-scrollbar-thumb {
+    background-color: #ffd700;
+    border-radius: 10px;
+}
+
+::ng-deep .overflow-x-auto::-webkit-scrollbar-thumb:hover {
+    background-color: #e6c200;
+}
+
+.overflow-x-auto {
+    scrollbar-width: thin;
+    scrollbar-color: #ffd700 #f1f1f1;
+}
+
+:host ::ng-deep .p-dropdown {
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+}
+
+:host ::ng-deep .p-dropdown .p-dropdown-label {
+    display: flex;
+    align-items: center;
+    padding-top: 0;
+    padding-bottom: 0;
+}

@@ -247,8 +247,8 @@
                 class="rounded-lg bg-[#767A8F] px-8 py-3 font-semibold text-[#E5E7EB] hover:bg-[#666a7d]">
                 Cancel
             </button>
-            <button type="button" (click)="confirmDownload()"
-                class="rounded-lg bg-[#3B82C4] px-8 py-3 font-semibold text-white hover:bg-[#3374b0]">
+            <button type="button" (click)="confirmDownload()" [disabled]="!isDownloadFormValid"
+                class="rounded-lg bg-[#3B82C4] px-8 py-3 font-semibold text-white hover:bg-[#3374b0] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-[#3B82C4]">
                 Download
             </button>
         </div>

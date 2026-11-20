@@ -211,6 +211,7 @@ export class ViewAllOrdersComponent implements OnInit {
   }
 
   confirmDownload() {
+     if (!this.isDownloadFormValid) return;
     const filters = {
       orderedFrom: this.toYmd(this.dlOrderedFrom),
       orderedTo: this.toYmd(this.dlOrderedTo),
@@ -315,4 +316,16 @@ export class ViewAllOrdersComponent implements OnInit {
         alert('Failed to download QR code. Please try again.');
       });
   }
+
+    get isDownloadFormValid(): boolean {
+    return !!(
+      this.dlOrderedFrom &&
+      this.dlOrderedTo &&
+      this.dlScheduledFrom &&
+      this.dlScheduledTo &&
+      this.dlConfirmation
+    );
+  }
+
+
 }

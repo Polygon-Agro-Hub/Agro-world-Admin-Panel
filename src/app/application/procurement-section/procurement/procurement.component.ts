@@ -77,4 +77,8 @@ export class ProcurementComponent implements OnInit {
   togglePopupContainerSizes(): void {
     this.istogglePopupContainerSizesView = !this.istogglePopupContainerSizesView;
   }
+
+  viewAllOrders(): void {
+    this.router.navigate(['/procurement/view-all-orders']);
+  }
 }

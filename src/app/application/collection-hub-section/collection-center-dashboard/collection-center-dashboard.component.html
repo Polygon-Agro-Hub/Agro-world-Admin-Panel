@@ -203,7 +203,9 @@
                 {{ item.cropNameEnglish }}
               </td>
               <td class="px-4 py-2 md:px-6 md:py-4 text-gray-900 dark:text-gray-300 text-sm md:text-base">
-                {{ item.varietyNameEnglish }}
+                <div class="max-w-[200px] truncate" [title]="item.varietyNameEnglish">
+                  {{ item.varietyNameEnglish }}
+                </div>
               </td>
               <td class="px-4 py-2 md:px-6 md:py-4 text-gray-900 text-center dark:text-gray-300 text-sm md:text-base">
                 {{ item.grade }}

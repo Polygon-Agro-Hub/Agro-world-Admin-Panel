@@ -95,41 +95,41 @@
                 </colgroup>
                 <thead>
                     <tr class="text-xs uppercase text-textLight dark:text-textDark">
-                        <th class="px-3 py-3 font-normal text-left">No</th>
-                        <th class="px-3 py-3 font-normal text-left">Invoice No</th>
-                        <th class="px-3 py-3 font-normal text-left">Platform</th>
-                        <th class="px-3 py-3 font-normal text-left">Scheduled Date</th>
-                        <th class="px-3 py-3 font-normal text-left">Customer Name</th>
-                        <th class="px-3 py-3 font-normal text-left">Customer Type</th>
-                        <th class="px-3 py-3 font-normal text-left">Company Name</th>
-                        <th class="px-3 py-3 font-normal text-left">Method</th>
-                        <th class="px-3 py-3 font-normal text-left">Payment Method</th>
-                        <th class="px-3 py-3 font-normal text-center">Amount</th>
-                        <th class="px-3 py-3 font-normal text-center">Status</th>
-                        <th class="px-3 py-3 font-normal text-center">Pre-Invoice</th>
-                        <th class="px-3 py-3 font-normal text-center">Post-Invoice</th>
-                        <th class="px-3 py-3 font-normal text-center">QR Code</th>
-                        <th class="px-3 py-3 font-normal text-left">Ordered Date</th>
+                        <th class="px-3 py-3 text-sm font-normal text-left">No</th>
+                        <th class="px-3 py-3 text-sm font-normal text-left">Invoice No</th>
+                        <th class="px-3 py-3 text-sm font-normal text-left">Platform</th>
+                        <th class="px-3 py-3 text-sm font-normal text-left">Scheduled Date</th>
+                        <th class="px-3 py-3 text-sm font-normal text-left">Customer Name</th>
+                        <th class="px-3 py-3 text-sm font-normal text-left">Customer Type</th>
+                        <th class="px-3 py-3 text-sm font-normal text-left">Company Name</th>
+                        <th class="px-3 py-3 text-sm font-normal text-left">Method</th>
+                        <th class="px-3 py-3 text-sm font-normal text-left">Payment Method</th>
+                        <th class="px-3 py-3 text-sm font-normal text-center">Amount</th>
+                        <th class="px-3 py-3 text-sm font-normal text-center">Status</th>
+                        <th class="px-3 py-3 text-sm font-normal text-center">Pre-Invoice</th>
+                        <th class="px-3 py-3 text-sm font-normal text-center">Post-Invoice</th>
+                        <th class="px-3 py-3 text-sm font-normal text-center">QR Code</th>
+                        <th class="px-3 py-3 text-sm font-normal text-left">Ordered Date</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let item of allOrders | paginate: { itemsPerPage: itemsPerPage, currentPage: page, totalItems: totalItems }; let i = index"
                         class="border-t border-gray-300 dark:border-[#4B555A] text-sm text-[#000000] dark:text-textDark">
 
-                        <td class="px-3 py-3 whitespace-nowrap">{{ ((page - 1) * itemsPerPage + i +
+                        <td class="px-3 py-3 whitespace-nowrap text-[16px]">{{ ((page - 1) * itemsPerPage + i +
                             1).toString().padStart(3, '0') }}</td>
-                        <td class="px-3 py-3 whitespace-nowrap">{{ item.invNo }}</td>
-                        <td class="px-3 py-3 whitespace-nowrap">{{ item.orderApp }}</td>
-                        <td class="px-3 py-3 whitespace-nowrap">{{ item.scheduleDate ? (item.scheduleDate | date: 'd
+                        <td class="px-3 py-3 whitespace-nowrap text-[16px]">{{ item.invNo }}</td>
+                        <td class="px-3 py-3 whitespace-nowrap text-[16px]">{{ item.orderApp }}</td>
+                        <td class="px-3 py-3 whitespace-nowrap text-[16px]">{{ item.scheduleDate ? (item.scheduleDate | date: 'd
                             MMM, y') : '-' }}</td>
-                        <td class="px-3 py-3 whitespace-nowrap">{{ item.customerName }}</td>
-                        <td class="px-3 py-3 whitespace-nowrap">{{ item.buyerType }}</td>
-                        <td class="px-3 py-3 truncate" [attr.title]="item.companyNameEnglish || null">
+                        <td class="px-3 py-3 whitespace-nowrap text-[16px]">{{ item.customerName }}</td>
+                        <td class="px-3 py-3 whitespace-nowrap text-[16px]">{{ item.buyerType }}</td>
+                        <td class="px-3 py-3 truncate text-[16px]" [attr.title]="item.companyNameEnglish || null">
                             {{ item.companyNameEnglish || '--------' }}
                         </td>
-                        <td class="px-3 py-3 whitespace-nowrap">{{ item.method }}</td>
+                        <td class="px-3 py-3 whitespace-nowrap text-[16px]">{{ item.method }}</td>
 
-                        <td class="px-3 py-3">
+                        <td class="px-3 py-3 text-[16px]">
                             <div class="flex items-center justify-start gap-2 whitespace-nowrap">
                                 <span *ngIf="item.creditPaid > 0"
                                     class="inline-flex flex-col items-center rounded-full min-w-28 px-2 py-1 text-xs leading-tight bg-[#FFEDCF]">
@@ -147,9 +147,9 @@
                             </div>
                         </td>
 
-                        <td class="px-3 py-3 text-center whitespace-nowrap">{{ item.amount | number: '1.0-0' }}</td>
+                        <td class="px-3 py-3 text-center whitespace-nowra text-[16px]p">{{ item.amount | number: '1.0-0' }}</td>
 
-                        <td class="px-3 py-3 text-center whitespace-nowrap">
+                        <td class="px-3 py-3 text-center whitespace-nowrap text-[16px]">
                             <span
                                 class="inline-block min-w-32 text-center text-xs rounded-2xl border px-3 py-1 truncate"
                                 [ngClass]="{
@@ -166,13 +166,13 @@
                 }">{{ item.status === 'Ordered' ? 'Assigned' : item.status }}</span>
                         </td>
 
-                        <td class="px-3 py-3 text-center">
+                        <td class="px-3 py-3 text-center text-[16px]">
                             <button class="text-textLight dark:text-textDark" (click)="downloadInvoice(item)">
                                 <i class="fa-solid fa-file-lines text-2xl"></i>
                             </button>
                         </td>
 
-                        <td class="px-3 py-3 text-center">
+                        <td class="px-3 py-3 text-center text-[16px]">
                             <button class="text-textLight dark:text-textDark"
                                 [class.opacity-40]="!isPostInvoiceEnabled(item)"
                                 [class.cursor-not-allowed]="!isPostInvoiceEnabled(item)"
@@ -181,11 +181,11 @@
                             </button>
                         </td>
 
-                        <td class="px-3 py-3 text-center cursor-pointer">
+                        <td class="px-3 py-3 text-center cursor-pointer text-[16px]">
                             <i class="fa-solid fa-download text-2xl text-blue-500" (click)="downloadQRCode(item)"></i>
                         </td>
 
-                        <td class="px-3 py-3 text-left whitespace-nowrap">{{ item.orderdDate | date: 'd MMM, y h:mma' }}
+                        <td class="px-3 py-3 text-left whitespace-nowrap text-[16px]">{{ item.orderdDate | date: 'd MMM, y h:mma' }}
                         </td>
                     </tr>
                 </tbody>

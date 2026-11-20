@@ -140,3 +140,76 @@
     padding-top: 0;
     padding-bottom: 0;
 }
+
+::ng-deep .dark .calendar-popup-small {
+    background-color: #2d354d !important;
+    color: #b1b1b1 !important;
+    border: 1px solid #4b555a !important;
+}
+
+::ng-deep .dark .calendar-popup-small .p-datepicker-header {
+    background-color: #2d354d !important;
+    color: #ffffff !important;
+    border-bottom: 1px solid #4b555a !important;
+}
+
+::ng-deep .dark .calendar-popup-small .p-datepicker-header .p-datepicker-title button,
+::ng-deep .dark .calendar-popup-small .p-datepicker-header .p-datepicker-prev,
+::ng-deep .dark .calendar-popup-small .p-datepicker-header .p-datepicker-next {
+    background-color: transparent !important;
+    color: #ffffff !important;
+}
+
+::ng-deep .dark .calendar-popup-small .p-datepicker-header .p-datepicker-title button:hover,
+::ng-deep .dark .calendar-popup-small .p-datepicker-header .p-datepicker-prev:hover,
+::ng-deep .dark .calendar-popup-small .p-datepicker-header .p-datepicker-next:hover {
+    background-color: #3a4160 !important;
+    color: #ffffff !important;
+}
+
+::ng-deep .dark .calendar-popup-small .p-datepicker-calendar th {
+    color: #8b8b8b !important;
+}
+
+::ng-deep .dark .calendar-popup-small .p-datepicker-calendar td > span {
+    color: #b1b1b1 !important;
+    background-color: transparent !important;
+}
+
+::ng-deep .dark .calendar-popup-small .p-datepicker-calendar td > span:hover {
+    background-color: #4a5568 !important;
+    color: #ffffff !important;
+}
+
+::ng-deep .dark .calendar-popup-small .p-datepicker-calendar td.p-datepicker-today > span {
+    background-color: #3a4160 !important;
+    color: #ffffff !important;
+}
+
+::ng-deep .dark .calendar-popup-small .p-datepicker-calendar td > span.p-highlight {
+    background-color: #3b82f6 !important;
+    color: #ffffff !important;
+}
+
+::ng-deep .dark .calendar-popup-small .p-datepicker-calendar td.p-datepicker-other-month > span {
+    color: #6b7280 !important;
+}
+
+::ng-deep .dark .calendar-popup-small .p-datepicker-calendar td > span.p-disabled {
+    color: #5c6270 !important;
+    opacity: 0.5;
+}
+
+::ng-deep .dark .calendar-popup-small .p-datepicker-buttonbar {
+    background-color: #2d354d !important;
+    border-top: 1px solid #4b555a !important;
+}
+
+::ng-deep .dark .calendar-popup-small .p-datepicker-buttonbar .p-button {
+    background-color: transparent !important;
+    color: #ffffff !important;
+}
+
+::ng-deep .dark .calendar-popup-small .p-datepicker-buttonbar .p-button:hover {
+    background-color: #6b7280 !important;
+}

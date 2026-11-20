@@ -343,7 +343,7 @@ export class ViewOrdersComponent implements OnInit {
 
   isPostInvoiceEnabled(order: Orders): boolean {
     const packingStatus = String(order.packingStatus || '').trim();
-    if (packingStatus) {
+    if (Number(order.isPackage) === 1 && packingStatus) {
       return packingStatus.toLowerCase() === 'dispatch';
     }
 

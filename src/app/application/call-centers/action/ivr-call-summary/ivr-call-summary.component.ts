@@ -226,13 +226,28 @@ export class IvrCallSummaryComponent implements OnDestroy {
   }
 
   // ---------- Formatting helpers ----------
-  getDatePart(value: string): string {
-    return value ? value.split(/[T ]/)[0] : '—';
-  }
+  getDatePart(value: string | number): string {
+  const d = this.parseDate(value);
+  if (!d) return '—';
+  return new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Asia/Colombo',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  }).format(d).replace(/\//g, '/'); // e.g. 15/01/2024
+}
 
-  getTimePart(value: string): string {
-    return value ? (value.split(/[T ]/)[1] ?? '').slice(0, 8) : '';
-  }
+getTimePart(value: string | number): string {
+  const d = this.parseDate(value);
+  if (!d) return '';
+  return new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Asia/Colombo',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+  }).format(d); // e.g. 14:30:45
+}
 
   getStatusClass(status: string): string {
     switch (status) {
@@ -261,4 +276,23 @@ export class IvrCallSummaryComponent implements OnDestroy {
         return 'bg-gray-500';
     }
   }
+
+  /** Parse any common backend timestamp into a Date, or null. */
+private parseDate(value: string | number | null | undefined): Date | null {
+  if (value === null || value === undefined || value === '') return null;
+
+  // Epoch seconds or millis (numeric string or number)
+  if (typeof value === 'number' || /^\d+$/.test(String(value))) {
+    const n = Number(value);
+    // Treat as seconds if it looks like seconds (10 digits), else millis
+    const ms = n < 1e12 ? n * 1000 : n;
+    const d = new Date(ms);
+    return isNaN(d.getTime()) ? null : d;
+  }
+
+  // ISO / SQL style — normalize space to 'T'
+  const normalized = String(value).replace(' ', 'T');
+  const d = new Date(normalized);
+  return isNaN(d.getTime()) ? null : d;
+}
 }

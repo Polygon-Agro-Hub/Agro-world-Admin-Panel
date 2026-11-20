@@ -133,15 +133,25 @@ export class IvrCallSummaryComponent implements OnDestroy {
   }
 
   private mapRecord(row: IvrSummaryItem, type: DetailsType): IvrRecord {
-    return { callId: String(row.id ?? row.callId ?? ''),
-      campaignId: row.campaignId ?? '', scheduledTime: row.scheduledTime ?? '', executedTime: row.executedTime ?? '', cli: row.callerNumber ?? '—',
-      agentCli: row.fromNumber ?? '—', userCli: row.toNumber ?? '—',
-      agent: row.agentCli ?? '—', to: row.customerNumber ?? '—',
-      startTime: (type === 'ALL_DIAL_CALLS' ? row.dialStartTime : row.startTime) ?? '',
-      endTime: (type === 'ALL_DIAL_CALLS' ? row.dialEndTime : row.endTime) ?? '',
-      status: (type === 'IVR_UPLOAD_CALLS' ? row.result : row.status) ?? '\u2014', details: row.details ?? '' };
+    const isAll = type === 'ALL_DIAL_CALLS';
+    return {
+      callId: String(row.callId ?? row.id ?? ''),
+      campaignId: row.campaignId ?? '',
+      scheduledTime: row.scheduledTime ?? '',
+      executedTime: row.executedTime ?? '',
+      cli: row.callerNumber ?? '—',
+      agentCli: row.fromNumber ?? '—',
+      userCli: row.toNumber ?? '—',
+      agent: row.agentCli ?? '—',
+      to: row.customerNumber ?? '—',
+      startTime: (isAll ? (row.dialStartTime ?? row.startTime) : row.startTime) ?? '',
+      endTime: (isAll ? (row.dialEndTime ?? row.endTime) : row.endTime) ?? '',
+      status: (type === 'IVR_UPLOAD_CALLS' ? row.result : row.status) ?? '\u2014',
+      details: row.details ?? '',
+    };
   }
 
+  private readonly BACKEND_TZ_OFFSET = 'Z';
   private loadPage(page: number) {
     if (!this.activeQuery) return;
     this.request?.unsubscribe();
@@ -279,20 +289,23 @@ getTimePart(value: string | number): string {
 
   /** Parse any common backend timestamp into a Date, or null. */
 private parseDate(value: string | number | null | undefined): Date | null {
-  if (value === null || value === undefined || value === '') return null;
+    if (value === null || value === undefined || value === '') return null;
 
-  // Epoch seconds or millis (numeric string or number)
-  if (typeof value === 'number' || /^\d+$/.test(String(value))) {
-    const n = Number(value);
-    // Treat as seconds if it looks like seconds (10 digits), else millis
-    const ms = n < 1e12 ? n * 1000 : n;
-    const d = new Date(ms);
+    // Epoch seconds or millis (only 10- or 13-digit values)
+    const str = String(value).trim();
+    if (typeof value === 'number' || /^\d{10}$|^\d{13}$/.test(str)) {
+      const n = Number(value);
+      const ms = n < 1e12 ? n * 1000 : n;
+      const d = new Date(ms);
+      return isNaN(d.getTime()) ? null : d;
+    }
+
+    // ISO / SQL style
+    let normalized = str.replace(' ', 'T');
+    const hasTz = /([zZ]|[+-]\d{2}:?\d{2})$/.test(normalized);
+    if (!hasTz) normalized += this.BACKEND_TZ_OFFSET;
+
+    const d = new Date(normalized);
     return isNaN(d.getTime()) ? null : d;
   }
-
-  // ISO / SQL style — normalize space to 'T'
-  const normalized = String(value).replace(' ', 'T');
-  const d = new Date(normalized);
-  return isNaN(d.getTime()) ? null : d;
-}
 }

@@ -749,6 +749,57 @@ getCrateById(id: number): Observable<any> {
 
     return this.http.put<any>(url, { orderedIds }, { headers });
   }
+
+    getAllOrders(
+    page: number,
+    limit: number,
+    status: string = '',
+    method: string = '',
+    searchItem: string = '',
+    formattedDate: string = '',
+    scheduleDate: string = ''
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    let params = new HttpParams().set('page', page).set('limit', limit);
+
+    if (status) params = params.set('status', status);
+    if (method) params = params.set('method', method);
+    if (searchItem) params = params.set('searchItem', searchItem);
+    if (formattedDate) params = params.set('formattedDate', formattedDate);
+    if (scheduleDate) params = params.set('scheduleDate', scheduleDate);
+
+    const url = `${this.apiUrl}procument/get-all-order`;
+
+    return this.http.get<any>(url, { headers, params });
+  }
+
+  downloadOrders(filters: {
+    orderedFrom?: string;
+    orderedTo?: string;
+    scheduledFrom?: string;
+    scheduledTo?: string;
+    confirmation?: string;
+  }): Observable<Blob> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    let params = new HttpParams();
+
+    if (filters.orderedFrom) params = params.set('orderedFrom', filters.orderedFrom);
+    if (filters.orderedTo) params = params.set('orderedTo', filters.orderedTo);
+    if (filters.scheduledFrom) params = params.set('scheduledFrom', filters.scheduledFrom);
+    if (filters.scheduledTo) params = params.set('scheduledTo', filters.scheduledTo);
+    if (filters.confirmation) params = params.set('confirmation', filters.confirmation);
+
+    const url = `${this.apiUrl}procument/download-orders`;
+
+    return this.http.get(url, { headers, params, responseType: 'blob' });
+  }
 }
 
 

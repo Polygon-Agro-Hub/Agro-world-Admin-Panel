@@ -1,3 +1,5 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
 <button class="mb-5 text-textLight dark:text-textDark" onclick="history.back()">
     <i class="fa-solid fa-arrow-left"></i>
     Back
@@ -12,14 +14,14 @@
                 All Orders ({{ totalItems === 0 ? '0' : totalItems < 10 ? '0' + totalItems : totalItems }}) </h2>
 
                     <div class="flex flex-[1_1_auto] flex-wrap items-center justify-end gap-3">
-                        <p-calendar [(ngModel)]="selectDate" (onSelect)="onFilterChange()" (onClear)="onFilterChange()"
+                        <p-calendar [(ngModel)]="selectDate" (onSelect)="dateFilter()" (onClear)="onDateClear()"
                             placeholder="Ordered Date" [showIcon]="true" [showClear]="true" iconDisplay="input"
                             [style]="{ width: '145px' }" [appendTo]="'body'"
                             inputStyleClass="text-[16px] h-10 rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-2 border-[#E5E5E5] dark:border-[#AFAFAF] cursor-pointer"
                             [inputStyle]="{ width: '145px', padding: '0 2.5rem 0 0.75rem', fontSize: '0.875rem' }" />
 
-                        <p-calendar [(ngModel)]="selectScheduleDate" (onSelect)="onFilterChange()"
-                            (onClear)="onFilterChange()" placeholder="Scheduled Date" [showIcon]="true"
+                        <p-calendar [(ngModel)]="selectScheduleDate" (onSelect)="scheduleDateFilter()"
+                            (onClear)="onScheduleDateClear()" placeholder="Scheduled Date" [showIcon]="true"
                             [showClear]="true" iconDisplay="input" [style]="{ width: '160px' }" [appendTo]="'body'"
                             inputStyleClass="text-[16px] h-10 rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-2 border-[#E5E5E5] dark:border-[#AFAFAF] cursor-pointer"
                             [inputStyle]="{ width: '160px', padding: '0 2.5rem 0 0.75rem', fontSize: '0.875rem' }" />
@@ -28,20 +30,21 @@
                             styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#D1D5DB] dark:border-[#AFAFAF]"
                             [options]="methodOptions" optionLabel="label" optionValue="value" placeholder="Method"
                             [showClear]="!!selectMethod" [(ngModel)]="selectMethod"
-                            (onChange)="onFilterChange()"></p-dropdown>
+                            (onChange)="applyMethodFilters()"></p-dropdown>
 
                         <p-dropdown
                             styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#D1D5DB] dark:border-[#AFAFAF]"
                             [options]="statusOptions" optionLabel="label" optionValue="value" placeholder="Status"
                             [showClear]="!!selectStatus" [(ngModel)]="selectStatus"
-                            (onChange)="onFilterChange()"></p-dropdown>
+                            (onChange)="applyStatusFilters()"></p-dropdown>
 
                         <div
                             class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 h-10 w-[220px] grow max-w-96">
                             <input type="text" placeholder="Search By Invoice No, Customer Name"
                                 class="bg-transparent outline-none w-full min-w-0 text-ellipsis dark:text-textDark text-gray-600"
-                                [(ngModel)]="searchItem" (ngModelChange)="onFilterChange()" />
-                            <button type="button" class="text-gray-500 hover:text-gray-700 mr-2">
+                                [(ngModel)]="searchItem" (keydown.enter)="searchOrders()" />
+                            <button type="button" class="text-gray-500 hover:text-gray-700 mr-2"
+                                (click)="searchOrders()">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                                     stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -113,17 +116,18 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let item of filteredOrders | paginate: { itemsPerPage: itemsPerPage, currentPage: page }; let i = index"
+                    <tr *ngFor="let item of allOrders | paginate: { itemsPerPage: itemsPerPage, currentPage: page, totalItems: totalItems }; let i = index"
                         class="border-t border-gray-300 dark:border-[#4B555A] text-sm text-[#000000] dark:text-textDark">
 
                         <td class="px-3 py-3 whitespace-nowrap">{{ ((page - 1) * itemsPerPage + i +
                             1).toString().padStart(3, '0') }}</td>
                         <td class="px-3 py-3 whitespace-nowrap">{{ item.invNo }}</td>
-                        <td class="px-3 py-3 whitespace-nowrap">{{ item.platform }}</td>
-                        <td class="px-3 py-3 whitespace-nowrap">{{ item.scheduleDate | date: 'd MMM, y' }}</td>
+                        <td class="px-3 py-3 whitespace-nowrap">{{ item.orderApp }}</td>
+                        <td class="px-3 py-3 whitespace-nowrap">{{ item.scheduleDate ? (item.scheduleDate | date: 'd
+                            MMM, y') : '-' }}</td>
                         <td class="px-3 py-3 whitespace-nowrap">{{ item.customerName }}</td>
-                        <td class="px-3 py-3 whitespace-nowrap">{{ item.customerType }}</td>
-                        <td class="px-3 py-3 whitespace-nowrap">{{ item.companyName || '--------' }}</td>
+                        <td class="px-3 py-3 whitespace-nowrap">{{ item.buyerType }}</td>
+                        <td class="px-3 py-3 whitespace-nowrap">{{ item.companyNameEnglish || '--------' }}</td>
                         <td class="px-3 py-3 whitespace-nowrap">{{ item.method }}</td>
 
                         <!-- Payment method -->
@@ -152,39 +156,43 @@
                             <span
                                 class="inline-block min-w-32 text-center text-xs rounded-2xl border px-3 py-1 truncate"
                                 [ngClass]="{
-                'text-[#A8A100] bg-[#F8FFA6] border-[#F8FFA6]': item.status === 'Assigned',
-                'text-[#308233] bg-[#BBFFC6] border-[#BBFFC6]': item.status === 'Delivered' || item.status === 'Picked up',
-                'text-[#80118A] bg-[#FCD4FF] border-[#FCD4FF]': item.status === 'Out For Delivery',
-                'text-[#3B82F6] bg-[#CFE1FF] border-[#CFE1FF]': item.status === 'Processing',
-                'text-[#5C5C5C] bg-[#DFDFDF] border-[#DFDFDF]': item.status === 'Cancelled',
-                'text-[#7E8700] bg-[#F8FEA5] border-[#F8FEA5]': item.status === 'Collected',
-                'text-[#D17A00] bg-[#FFEDCF] border-[#FFEDCF]': item.status === 'Hold' || item.status === 'On the way',
-                'text-[#00818A] bg-[#ACFBFF] border-[#ACFBFF]': item.status === 'Ready to Pickup',
-                'text-[#FF1100] bg-[#FFDCDA] border-[#FFDCDA]': item.status === 'Return Received' || item.status === 'Return'
-              }">{{ item.status }}</span>
+                  'text-[#A8A100] bg-[#F8FFA6] border-[#F8FFA6]': item.status === 'Assigned' || item.status === 'Ordered',
+                  'text-[#308233] bg-[#BBFFC6] border-[#BBFFC6]': item.status === 'Delivered' || item.status === 'Picked up',
+                  'text-[#80118A] bg-[#FCD4FF] border-[#FCD4FF]': item.status === 'Out For Delivery',
+                  'text-[#3B82F6] bg-[#CFE1FF] border-[#CFE1FF]': item.status === 'Processing',
+                  'text-[#FF0004] bg-[#FFDFDF] border-[#FFDFDF]': item.status === 'Failed',
+                  'text-[#5C5C5C] bg-[#DFDFDF] border-[#DFDFDF]': item.status === 'Cancelled',
+                  'text-[#7E8700] bg-[#F8FEA5] border-[#F8FEA5]': item.status === 'Collected',
+                  'text-[#D17A00] bg-[#FFEDCF] border-[#FFEDCF]': item.status === 'Hold' || item.status === 'On the way',
+                  'text-[#00818A] bg-[#ACFBFF] border-[#ACFBFF]': item.status === 'Ready to Pickup',
+                  'text-[#FF1100] bg-[#FFDCDA] border-[#FFDCDA]': item.status === 'Return Received' || item.status === 'Return'
+                }">{{ item.status === 'Ordered' ? 'Assigned' : item.status }}</span>
                         </td>
 
+                        <!-- Pre-invoice -->
                         <td class="px-3 py-3 text-center">
                             <button class="text-textLight dark:text-textDark" (click)="downloadInvoice(item)">
                                 <i class="fa-solid fa-file-lines text-2xl"></i>
                             </button>
                         </td>
 
+                        <!-- Post-invoice -->
                         <td class="px-3 py-3 text-center">
                             <button class="text-textLight dark:text-textDark"
-                                [class.opacity-40]="!item.postInvoiceEnabled"
-                                [class.cursor-not-allowed]="!item.postInvoiceEnabled"
-                                [disabled]="!item.postInvoiceEnabled" (click)="downloadPostInvoice(item)">
+                                [class.opacity-40]="!isPostInvoiceEnabled(item)"
+                                [class.cursor-not-allowed]="!isPostInvoiceEnabled(item)"
+                                [disabled]="!isPostInvoiceEnabled(item)" (click)="downloadPostInvoice(item)">
                                 <i class="fa-solid fa-file-lines text-2xl"></i>
                             </button>
                         </td>
 
+                        <!-- QR code -->
                         <td class="px-3 py-3 text-center cursor-pointer">
                             <i class="fa-solid fa-download text-2xl text-blue-500" (click)="downloadQRCode(item)"></i>
                         </td>
 
-                        <td class="px-3 py-3 text-left whitespace-nowrap">{{ item.orderedDate | date: 'd MMM, y h:mma'
-                            }}</td>
+                        <td class="px-3 py-3 text-left whitespace-nowrap">{{ item.orderdDate | date: 'd MMM, y h:mma' }}
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -197,64 +205,61 @@
     </div>
 </div>
 
-<!-- Download filter popup (shown when "Download Orders" is clicked) -->
 <div *ngIf="showDownloadModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-    (click)="closeDownloadModal()">
-    <div class="w-full max-w-[780px] rounded-2xl bg-white dark:bg-tileBlack px-6 py-8 md:px-10 shadow-xl"
-        (click)="$event.stopPropagation()">
+  (click)="closeDownloadModal()">
+  <div class="w-full max-w-[600px] rounded-2xl bg-white dark:bg-tileBlack px-6 py-8 md:px-10 shadow-xl"
+    (click)="$event.stopPropagation()">
 
-        <h3 class="mb-8 text-center text-xl font-semibold text-textLight dark:text-textDark">Select Filter</h3>
+    <h3 class="mb-8 text-center text-xl font-semibold text-textLight dark:text-textDark">Select Filter</h3>
 
-        <!-- Ordered Date -->
-        <div class="mb-6 flex flex-wrap items-center gap-4">
-            <label class="w-40 text-lg text-textLight dark:text-textDark">Ordered Date :</label>
-            <div class="flex flex-1 flex-wrap gap-4">
-                <p-calendar [(ngModel)]="dlOrderedFrom" [maxDate]="dlOrderedTo" placeholder="--From--" [showIcon]="true"
-                    iconDisplay="input" [appendTo]="'body'" styleClass="flex-1 min-w-[160px]"
-                    [style]="{ width: '100%' }"
-                    inputStyleClass="w-full h-14 rounded-xl border border-[#D9D9D9] bg-white dark:bg-[#272F45] text-center italic font-semibold text-textLight dark:text-textDark placeholder:italic placeholder:font-semibold placeholder:text-[#555] cursor-pointer" />
-                <p-calendar [(ngModel)]="dlOrderedTo" [minDate]="dlOrderedFrom" placeholder="--To--" [showIcon]="true"
-                    iconDisplay="input" [appendTo]="'body'" styleClass="flex-1 min-w-[160px]"
-                    [style]="{ width: '100%' }"
-                    inputStyleClass="w-full h-14 rounded-xl border border-[#D9D9D9] bg-white dark:bg-[#272F45] text-center italic font-semibold text-textLight dark:text-textDark placeholder:italic placeholder:font-semibold placeholder:text-[#555] cursor-pointer" />
-            </div>
-        </div>
-
-        <!-- Scheduled Date -->
-        <div class="mb-6 flex flex-wrap items-center gap-4">
-            <label class="w-40 text-lg text-textLight dark:text-textDark">Scheduled Date :</label>
-            <div class="flex flex-1 flex-wrap gap-4">
-                <p-calendar [(ngModel)]="dlScheduledFrom" [maxDate]="dlScheduledTo" placeholder="--From--"
-                    [showIcon]="true" iconDisplay="input" [appendTo]="'body'" styleClass="flex-1 min-w-[160px]"
-                    [style]="{ width: '100%' }"
-                    inputStyleClass="w-full h-14 rounded-xl border border-[#D9D9D9] bg-white dark:bg-[#272F45] text-center italic font-semibold text-textLight dark:text-textDark placeholder:italic placeholder:font-semibold placeholder:text-[#555] cursor-pointer" />
-                <p-calendar [(ngModel)]="dlScheduledTo" [minDate]="dlScheduledFrom" placeholder="--To--"
-                    [showIcon]="true" iconDisplay="input" [appendTo]="'body'" styleClass="flex-1 min-w-[160px]"
-                    [style]="{ width: '100%' }"
-                    inputStyleClass="w-full h-14 rounded-xl border border-[#D9D9D9] bg-white dark:bg-[#272F45] text-center italic font-semibold text-textLight dark:text-textDark placeholder:italic placeholder:font-semibold placeholder:text-[#555] cursor-pointer" />
-            </div>
-        </div>
-
-        <!-- Confirmation -->
-        <div class="mb-8 flex flex-wrap items-center gap-4">
-            <label class="w-40 text-lg text-textLight dark:text-textDark">Confirmation :</label>
-            <div class="flex-1 min-w-[220px]">
-                <p-dropdown [options]="confirmationOptions" optionLabel="label" optionValue="value"
-                    placeholder="--Order Confirmation--" [(ngModel)]="dlConfirmation" [appendTo]="'body'"
-                    styleClass="w-full h-14 items-center rounded-xl border border-[#D9D9D9] bg-white dark:bg-[#272F45] italic font-semibold text-textLight dark:text-textDark"></p-dropdown>
-            </div>
-        </div>
-
-        <!-- Buttons -->
-        <div class="flex justify-center gap-5">
-            <button type="button" (click)="closeDownloadModal()"
-                class="rounded-lg bg-[#767A8F] px-8 py-3 font-semibold text-[#E5E7EB] hover:bg-[#666a7d]">
-                Cancel
-            </button>
-            <button type="button" (click)="confirmDownload()"
-                class="rounded-lg bg-[#3B82C4] px-8 py-3 font-semibold text-white hover:bg-[#3374b0]">
-                Download
-            </button>
-        </div>
+    <div class="mb-5 grid grid-cols-1 sm:grid-cols-[150px_1fr] items-center gap-x-4 gap-y-2">
+      <label class="text-lg text-textLight dark:text-textDark">Ordered Date :</label>
+      <div class="grid grid-cols-2 gap-4">
+        <p-calendar class="block w-full" [(ngModel)]="dlOrderedFrom" [maxDate]="dlOrderedTo"
+          placeholder="--From--" [showIcon]="true" iconDisplay="input" [appendTo]="'body'"
+          styleClass="w-full" [style]="{ width: '100%' }"
+          inputStyleClass="w-full h-12 rounded-xl border border-[#D9D9D9] bg-white dark:bg-[#272F45] text-center italic font-semibold text-textLight dark:text-textDark placeholder:italic placeholder:font-semibold placeholder:text-[#555] cursor-pointer"
+          [inputStyle]="{ width: '100%', padding: '0 2.5rem' }" />
+        <p-calendar class="block w-full" [(ngModel)]="dlOrderedTo" [minDate]="dlOrderedFrom"
+          placeholder="--To--" [showIcon]="true" iconDisplay="input" [appendTo]="'body'"
+          styleClass="w-full" [style]="{ width: '100%' }"
+          inputStyleClass="w-full h-12 rounded-xl border border-[#D9D9D9] bg-white dark:bg-[#272F45] text-center italic font-semibold text-textLight dark:text-textDark placeholder:italic placeholder:font-semibold placeholder:text-[#555] cursor-pointer"
+          [inputStyle]="{ width: '100%', padding: '0 2.5rem' }" />
+      </div>
     </div>
+
+    <div class="mb-5 grid grid-cols-1 sm:grid-cols-[150px_1fr] items-center gap-x-4 gap-y-2">
+      <label class="text-lg text-textLight dark:text-textDark">Scheduled Date :</label>
+      <div class="grid grid-cols-2 gap-4">
+        <p-calendar class="block w-full" [(ngModel)]="dlScheduledFrom" [maxDate]="dlScheduledTo"
+          placeholder="--From--" [showIcon]="true" iconDisplay="input" [appendTo]="'body'"
+          styleClass="w-full" [style]="{ width: '100%' }"
+          inputStyleClass="w-full h-12 rounded-xl border border-[#D9D9D9] bg-white dark:bg-[#272F45] text-center italic font-semibold text-textLight dark:text-textDark placeholder:italic placeholder:font-semibold placeholder:text-[#555] cursor-pointer"
+          [inputStyle]="{ width: '100%', padding: '0 2.5rem' }" />
+        <p-calendar class="block w-full" [(ngModel)]="dlScheduledTo" [minDate]="dlScheduledFrom"
+          placeholder="--To--" [showIcon]="true" iconDisplay="input" [appendTo]="'body'"
+          styleClass="w-full" [style]="{ width: '100%' }"
+          inputStyleClass="w-full h-12 rounded-xl border border-[#D9D9D9] bg-white dark:bg-[#272F45] text-center italic font-semibold text-textLight dark:text-textDark placeholder:italic placeholder:font-semibold placeholder:text-[#555] cursor-pointer"
+          [inputStyle]="{ width: '100%', padding: '0 2.5rem' }" />
+      </div>
+    </div>
+
+    <div class="mb-8 grid grid-cols-1 sm:grid-cols-[150px_1fr] items-center gap-x-4 gap-y-2">
+      <label class="text-lg text-textLight dark:text-textDark">Confirmation :</label>
+      <p-dropdown class="block w-full" [options]="confirmationOptions" optionLabel="label" optionValue="value"
+        placeholder="--Order Confirmation--" [(ngModel)]="dlConfirmation" [appendTo]="'body'"
+        styleClass="w-full h-12 items-center rounded-xl border border-[#D9D9D9] bg-white dark:bg-[#272F45] italic font-semibold text-textLight dark:text-textDark"></p-dropdown>
+    </div>
+
+    <div class="flex justify-center gap-5">
+      <button type="button" (click)="closeDownloadModal()"
+        class="rounded-lg bg-[#767A8F] px-8 py-3 font-semibold text-[#E5E7EB] hover:bg-[#666a7d]">
+        Cancel
+      </button>
+      <button type="button" (click)="confirmDownload()"
+        class="rounded-lg bg-[#3B82C4] px-8 py-3 font-semibold text-white hover:bg-[#3374b0]">
+        Download
+      </button>
+    </div>
+  </div>
 </div>

@@ -1,27 +1,36 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { DropdownModule } from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
+import Swal from 'sweetalert2';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { ProcumentsService } from '../../../services/procuments/procuments.service'; // <-- your service
+import { FinalinvoiceService } from '../../../services/invoice/finalinvoice.service';
+import { PostinvoiceService } from '../../../services/invoice/postinvoice.service';
 
 interface AllOrder {
   id: number;
+  orderId: number;
   invNo: string;
-  platform: 'SalesDash' | 'Polygon';
-  scheduleDate: Date;
+  orderApp: string;
+  scheduleDate: Date | null;
   customerName: string;
-  customerType: 'Retail' | 'Wholesale';
-  companyName: string | null;
-  method: 'Delivery' | 'Pick Up';
+  buyerType: string | null;
+  companyNameEnglish: string | null;
+  method: string;
   creditPaid: number;
-  paymentMethod: 'Cash' | 'Card' | null;
+  paymentMethod: string | null;
   moneyPaid: number;
   amount: number;
   status: string;
-  postInvoiceEnabled: boolean;
   qrCode: string;
-  orderedDate: Date;
+  orderdDate: Date; // spelled this way in the API response
+  isConfirmed: number;
+  isPackage: number;
+  isFinalized: number;
+  packingStatus: string;
 }
 
 @Component({
@@ -33,17 +42,25 @@ interface AllOrder {
     DropdownModule,
     CalendarModule,
     NgxPaginationModule,
+    LoadingSpinnerComponent,
   ],
   templateUrl: './view-all-orders.component.html',
   styleUrl: './view-all-orders.component.css',
 })
-export class ViewAllOrdersComponent {
+export class ViewAllOrdersComponent implements OnInit {
+  allOrders: AllOrder[] = [];
+
   page = 1;
   itemsPerPage = 10;
+  totalItems = 0;
+  hasData = true;
+  isLoading = false;
 
   searchItem = '';
   selectDate: Date | null = null;
   selectScheduleDate: Date | null = null;
+  formattedDate = '';
+  formattedScheduleDate = '';
   selectMethod = '';
   selectStatus = '';
 
@@ -55,304 +72,131 @@ export class ViewAllOrdersComponent {
   dlScheduledTo: Date | null = null;
   dlConfirmation = '';
 
+  // Values must match what the backend checks exactly
   confirmationOptions = [
-    { label: 'Confirmed', value: 'confirmed' },
-    { label: 'Not Confirmed', value: 'not_confirmed' },
+    { label: 'Confirmed', value: 'Confirmed' },
+    { label: 'Not Confirmed', value: 'Not Confirmed' },
   ];
 
   methodOptions = [
-    { label: 'Delivery', value: 'Delivery' },
-    { label: 'Pick Up', value: 'Pick Up' },
+    { label: 'Delivery', value: 'delivery' },
+    { label: 'Pickup', value: 'pickup' },
   ];
 
   statusOptions = [
-    'Assigned',
-    'Cancelled',
-    'Collected',
-    'Delivered',
-    'Hold',
-    'On the way',
-    'Out For Delivery',
-    'Picked up',
-    'Processing',
-    'Ready to Pickup',
-    'Return',
-    'Return Received',
-  ].map((s) => ({ label: s, value: s }));
+    { label: 'Assigned', value: 'Ordered' },
+    { label: 'Delivered', value: 'Delivered' },
+    { label: 'Hold', value: 'Hold' },
+    { label: 'Out For Delivery', value: 'Out For Delivery' },
+    { label: 'Picked Up', value: 'Picked up' },
+    { label: 'On the Way', value: 'On the way' },
+    { label: 'Processing', value: 'Processing' },
+    { label: 'Ready to Pickup', value: 'Ready to Pickup' },
+    { label: 'Collected', value: 'Collected' },
+    { label: 'Return', value: 'Return' },
+    { label: 'Return Received', value: 'Return Received' },
+  ].sort((a, b) => a.label.localeCompare(b.label));
 
-  allOrders: AllOrder[] = [
-    this.row(
-      1,
-      'SalesDash',
-      '2024-11-10',
-      'Wednesday Addams',
-      'Retail',
-      null,
-      'Delivery',
-      0,
-      'Cash',
-      2500,
-      2500,
-      'Return Received',
-      true,
-      '2024-11-05T13:55',
-    ),
-    this.row(
-      2,
-      'SalesDash',
-      '2024-11-10',
-      'James Bond',
-      'Retail',
-      null,
-      'Pick Up',
-      0,
-      'Card',
-      2500,
-      2500,
-      'Collected',
-      true,
-      '2024-11-05T10:55',
-    ),
-    this.row(
-      3,
-      'SalesDash',
-      '2024-11-10',
-      'Harry Potter',
-      'Retail',
-      null,
-      'Delivery',
-      2500,
-      null,
-      0,
-      2500,
-      'Assigned',
-      false,
-      '2024-11-05T09:55',
-    ),
-    this.row(
-      4,
-      'Polygon',
-      '2024-11-10',
-      'Ron Weasly',
-      'Wholesale',
-      'ABC Company',
-      'Pick Up',
-      1000,
-      'Cash',
-      1500,
-      2500,
-      'Picked up',
-      true,
-      '2024-11-05T08:55',
-    ),
-    this.row(
-      5,
-      'Polygon',
-      '2024-11-10',
-      'Hermione Granger',
-      'Wholesale',
-      'ABC Company',
-      'Pick Up',
-      2000,
-      'Card',
-      500,
-      2500,
-      'Cancelled',
-      false,
-      '2024-11-05T07:55',
-    ),
-    this.row(
-      6,
-      'Polygon',
-      '2024-11-10',
-      'Chalana Prabhashwara',
-      'Wholesale',
-      'ABC Company',
-      'Pick Up',
-      2500,
-      null,
-      0,
-      2500,
-      'Return',
-      true,
-      '2024-11-05T06:55',
-    ),
-    this.row(
-      7,
-      'Polygon',
-      '2024-11-10',
-      'James Bond',
-      'Wholesale',
-      'ABC Company',
-      'Pick Up',
-      0,
-      'Cash',
-      2500,
-      2500,
-      'On the way',
-      true,
-      '2024-11-05T10:55',
-    ),
-    this.row(
-      8,
-      'Polygon',
-      '2024-11-10',
-      'Harry Potter',
-      'Wholesale',
-      'ABC Company',
-      'Delivery',
-      0,
-      'Card',
-      2500,
-      2500,
-      'Hold',
-      true,
-      '2024-11-05T09:55',
-    ),
-    this.row(
-      9,
-      'Polygon',
-      '2024-11-10',
-      'Ron Weasly',
-      'Wholesale',
-      'ABC Company',
-      'Pick Up',
-      2500,
-      null,
-      0,
-      2500,
-      'Delivered',
-      true,
-      '2024-11-05T08:55',
-    ),
-    this.row(
-      10,
-      'Polygon',
-      '2024-11-10',
-      'Hermione Granger',
-      'Wholesale',
-      'ABC Company',
-      'Pick Up',
-      0,
-      'Cash',
-      2500,
-      2500,
-      'Processing',
-      true,
-      '2024-11-05T07:55',
-    ),
-    this.row(
-      11,
-      'Polygon',
-      '2024-11-10',
-      'Chalana Prabhashwara',
-      'Wholesale',
-      'ABC Company',
-      'Pick Up',
-      0,
-      'Cash',
-      2500,
-      2500,
-      'Ready to Pickup',
-      true,
-      '2024-11-05T08:55',
-    ),
-    this.row(
-      12,
-      'Polygon',
-      '2024-11-10',
-      'Chalana Prabhashwara',
-      'Wholesale',
-      'ABC Company',
-      'Pick Up',
-      2500,
-      null,
-      0,
-      2500,
-      'Out For Delivery',
-      true,
-      '2024-11-05T08:55',
-    ),
-  ];
+  constructor(
+    private procumentsSrv: ProcumentsService,
+    private finalInvoiceService: FinalinvoiceService,
+    private postInvoiceService: PostinvoiceService,
+  ) {}
 
-  private row(
-    id: number,
-    platform: AllOrder['platform'],
-    sched: string,
-    customerName: string,
-    customerType: AllOrder['customerType'],
-    companyName: string | null,
-    method: AllOrder['method'],
-    creditPaid: number,
-    paymentMethod: AllOrder['paymentMethod'],
-    moneyPaid: number,
-    amount: number,
-    status: string,
-    postInvoiceEnabled: boolean,
-    ordered: string,
-  ): AllOrder {
-    return {
-      id,
-      invNo: '11555',
-      platform,
-      scheduleDate: new Date(sched),
-      customerName,
-      customerType,
-      companyName,
-      method,
-      creditPaid,
-      paymentMethod,
-      moneyPaid,
-      amount,
-      status,
-      postInvoiceEnabled,
-      qrCode: '',
-      orderedDate: new Date(ordered),
-    };
+  ngOnInit(): void {
+    this.fetchAllOrders();
   }
 
-  get filteredOrders(): AllOrder[] {
-    const q = this.searchItem.trim().toLowerCase();
-    return this.allOrders.filter(
-      (o) =>
-        (!q ||
-          o.invNo.toLowerCase().includes(q) ||
-          o.customerName.toLowerCase().includes(q)) &&
-        (!this.selectMethod || o.method === this.selectMethod) &&
-        (!this.selectStatus || o.status === this.selectStatus) &&
-        (!this.selectDate || this.sameDay(o.orderedDate, this.selectDate)) &&
-        (!this.selectScheduleDate ||
-          this.sameDay(o.scheduleDate, this.selectScheduleDate)),
-    );
+  // ---------- List ----------
+  fetchAllOrders() {
+    this.isLoading = true;
+    this.procumentsSrv
+      .getAllOrders(
+        this.page,
+        this.itemsPerPage,
+        this.selectStatus,
+        this.selectMethod,
+        this.searchItem,
+        this.formattedDate,
+        this.formattedScheduleDate,
+      )
+      .subscribe({
+        next: (res) => {
+          this.allOrders = res.items;
+          this.totalItems = res.total;
+          this.hasData = this.allOrders.length > 0;
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.error('Error fetching orders:', err);
+          this.isLoading = false;
+          this.allOrders = [];
+          this.totalItems = 0;
+          this.hasData = false;
+        },
+      });
   }
 
-  get totalItems(): number {
-    return this.filteredOrders.length;
-  }
-
-  get hasData(): boolean {
-    return this.totalItems > 0;
-  }
-
-  private sameDay(a: Date, b: Date): boolean {
-    return (
-      a.getFullYear() === b.getFullYear() &&
-      a.getMonth() === b.getMonth() &&
-      a.getDate() === b.getDate()
-    );
-  }
-
-  onFilterChange() {
-    this.page = 1;
-  }
   onPageChange(p: number) {
     this.page = p;
+    this.fetchAllOrders();
   }
+
+  searchOrders() {
+    this.searchItem = this.searchItem.trim();
+    this.page = 1;
+    this.fetchAllOrders();
+  }
+
   clearSearch() {
     this.searchItem = '';
     this.page = 1;
+    this.fetchAllOrders();
   }
 
+  applyMethodFilters() {
+    this.page = 1;
+    this.fetchAllOrders();
+  }
+
+  applyStatusFilters() {
+    this.page = 1;
+    this.fetchAllOrders();
+  }
+
+  dateFilter() {
+    this.formattedDate = this.toYmd(this.selectDate);
+    this.page = 1;
+    this.fetchAllOrders();
+  }
+
+  onDateClear() {
+    this.formattedDate = '';
+    this.page = 1;
+    this.fetchAllOrders();
+  }
+
+  scheduleDateFilter() {
+    this.formattedScheduleDate = this.toYmd(this.selectScheduleDate);
+    this.page = 1;
+    this.fetchAllOrders();
+  }
+
+  onScheduleDateClear() {
+    this.formattedScheduleDate = '';
+    this.page = 1;
+    this.fetchAllOrders();
+  }
+
+  private toYmd(d: Date | null): string {
+    if (!(d instanceof Date)) return '';
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  }
+
+  // ---------- Download popup ----------
   downloadOrders() {
     this.showDownloadModal = true;
   }
@@ -367,25 +211,108 @@ export class ViewAllOrdersComponent {
   }
 
   confirmDownload() {
-    const payload = {
-      orderedFrom: this.dlOrderedFrom,
-      orderedTo: this.dlOrderedTo,
-      scheduledFrom: this.dlScheduledFrom,
-      scheduledTo: this.dlScheduledTo,
+    const filters = {
+      orderedFrom: this.toYmd(this.dlOrderedFrom),
+      orderedTo: this.toYmd(this.dlOrderedTo),
+      scheduledFrom: this.toYmd(this.dlScheduledFrom),
+      scheduledTo: this.toYmd(this.dlScheduledTo),
       confirmation: this.dlConfirmation,
     };
-    console.log('Download orders with filter', payload);
-    // TODO: call your download API with `payload`
-    this.closeDownloadModal();
+
+    this.isLoading = true;
+    this.procumentsSrv.downloadOrders(filters).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `orders_${this.toYmd(new Date())}.xlsx`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+
+        this.isLoading = false;
+        this.closeDownloadModal();
+      },
+      error: (err) => {
+        console.error('Error downloading orders:', err);
+        this.isLoading = false;
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to download orders. Please try again.',
+          confirmButtonColor: '#3085d6',
+        });
+      },
+    });
   }
 
-  downloadInvoice(o: AllOrder) {
-    console.log('Pre invoice', o.id);
+  // ---------- Row actions ----------
+  downloadInvoice(item: AllOrder) {
+    this.isLoading = true;
+    this.finalInvoiceService
+      .generateAndDownloadInvoice(item.orderId, item.invNo)
+      .catch((error) => {
+        console.error('Error generating invoice:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to download invoice. Please try again.',
+          confirmButtonColor: '#3085d6',
+        });
+      })
+      .finally(() => (this.isLoading = false));
   }
-  downloadPostInvoice(o: AllOrder) {
-    console.log('Post invoice', o.id);
+
+  downloadPostInvoice(item: AllOrder) {
+    this.isLoading = true;
+    this.postInvoiceService
+      .generateAndDownloadInvoice(item.orderId, item.invNo)
+      .catch((error) => {
+        console.error('Error generating invoice:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to download invoice. Please try again.',
+          confirmButtonColor: '#3085d6',
+        });
+      })
+      .finally(() => (this.isLoading = false));
   }
-  downloadQRCode(o: AllOrder) {
-    console.log('QR', o.id);
+
+  isPostInvoiceEnabled(item: AllOrder): boolean {
+    const packingStatus = String(item.packingStatus || '').trim();
+    if (packingStatus) {
+      return packingStatus.toLowerCase() === 'dispatch';
+    }
+    const isConfirmed = Number(item.isConfirmed) === 1;
+    const isPackage = Number(item.isPackage) === 1;
+    const isFinalized = Number(item.isFinalized) === 1;
+    return isConfirmed || (isPackage && isFinalized);
+  }
+
+  downloadQRCode(item: AllOrder) {
+    if (!item.qrCode) return;
+    const fileName = `QR_${item.invNo}.png`;
+
+    fetch(item.qrCode)
+      .then((response) => {
+        if (!response.ok) throw new Error('Network response was not ok');
+        return response.blob();
+      })
+      .then((blob) => {
+        const blobUrl = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(blobUrl);
+      })
+      .catch((error) => {
+        console.error('Error downloading QR code:', error);
+        alert('Failed to download QR code. Please try again.');
+      });
   }
 }

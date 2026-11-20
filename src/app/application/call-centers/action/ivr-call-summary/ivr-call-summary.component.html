@@ -12,12 +12,12 @@
         IVR Call Summary
     </h2>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mt-5">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mt-5">
         <!-- IVR Flow -->
         <div class="flex flex-col gap-2">
             <label class="text-[12px] font-semibold text-[#101C2B] dark:text-textDark">Select IVR Flow</label>
-            <p-dropdown [options]="ivrFlows" optionLabel="label" optionValue="value" [(ngModel)]="selectedFlow" placeholder="--Select--" appendTo="body"
-                styleClass="ivr-dropdown w-full"></p-dropdown>
+            <p-dropdown [options]="ivrFlows" optionLabel="label" optionValue="value" [(ngModel)]="selectedFlow"
+                placeholder="--Select--" appendTo="body" styleClass="ivr-dropdown w-full"></p-dropdown>
         </div>
 
         <!-- Details Type -->
@@ -158,8 +158,10 @@
                             <td class="px-6 py-6 text-textLight dark:text-textDark">{{ row.callId }}</td>
                             <td class="px-6 py-6 text-textLight dark:text-textDark">{{ row.agentCli }}</td>
                             <td class="px-6 py-6 text-textLight dark:text-textDark">{{ row.userCli }}</td>
-                            <td class="px-6 py-6 whitespace-nowrap text-textLight dark:text-textDark">{{ getDatePart(row.scheduledTime || '') }} {{ getTimePart(row.scheduledTime || '') }}</td>
-                            <td class="px-6 py-6 whitespace-nowrap text-textLight dark:text-textDark">{{ getDatePart(row.executedTime || '') }} {{ getTimePart(row.executedTime || '') }}</td>
+                            <td class="px-6 py-6 whitespace-nowrap text-textLight dark:text-textDark">{{
+                                getDatePart(row.scheduledTime || '') }} {{ getTimePart(row.scheduledTime || '') }}</td>
+                            <td class="px-6 py-6 whitespace-nowrap text-textLight dark:text-textDark">{{
+                                getDatePart(row.executedTime || '') }} {{ getTimePart(row.executedTime || '') }}</td>
                         </ng-container>
                     </ng-container>
 

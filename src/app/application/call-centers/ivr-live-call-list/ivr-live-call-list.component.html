@@ -71,7 +71,6 @@
                             <th class="px-6 py-3 text-[13px] font-bold text-[#334155] dark:text-gray-300 text-left">TYPE</th>
                             <th class="px-6 py-3 text-[13px] font-bold text-[#334155] dark:text-gray-300 text-center">STATUS</th>
                             <th class="px-6 py-3 text-[13px] font-bold text-[#334155] dark:text-gray-300 text-left">DESCRIPTION</th>
-                            <th class="px-6 py-3 text-[13px] font-bold text-[#334155] dark:text-gray-300 text-center">FEEDBACK</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-[#F1F5F9] dark:divide-gray-700">
@@ -115,7 +114,7 @@
                             </td>
                             <td class="px-6 py-4 text-[#475569] dark:text-gray-400 text-[12px] font-[400] max-w-xs">{{ row.description }}
                             </td>
-                            <td class="px-6 py-4 text-center">
+                            <!-- <td class="px-6 py-4 text-center">
                                 <div class="flex flex-col items-center gap-1.5" *ngIf="row.feedback; else onlyEdit">
                                     <span class="text-[11px] text-slate-500 dark:text-gray-400">{{ row.feedback }}</span>
                                     <div class="flex items-center justify-center gap-2">
@@ -137,7 +136,7 @@
                                         </button>
                                     </div>
                                 </ng-template>
-                            </td>
+                            </td> -->
                         </tr>
 
                         <tr *ngIf="errorMessage">

@@ -332,6 +332,7 @@ import { OnboardWBuyersComponent } from './application/sales-dash-section/onboar
 import { UploadProductsListPricesComponent } from './application/marketplace/upload-products-list-prices/upload-products-list-prices.component';
 import { ViewReviewDriversComponent } from './application/steckholders-section/review-drivers/view-review-drivers/view-review-drivers.component';
 import { SrDriverReviewComponent } from './application/steckholders-section/review-drivers/sr-driver-review/sr-driver-review.component';
+import { ViewAllOrdersComponent } from './application/procurement-section/view-all-orders/view-all-orders.component';
 
 export const routes: Routes = [
   {
@@ -1621,6 +1622,10 @@ export const routes: Routes = [
             path: 'manage-container-sizes',
             component: ManageContainerSizesComponent,
           },
+          {
+            path: 'view-all-orders',
+            component: ViewAllOrdersComponent,
+          }
         ],
       },
 

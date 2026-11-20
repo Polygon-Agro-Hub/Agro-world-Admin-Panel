@@ -979,7 +979,7 @@ export class CreateCompanyComponent implements OnInit {
     if (!this.companyData.branchName)
       missingFields.push('Branch Name is Required');
     if (!this.companyData.foName)
-      missingFields.push('Finance Officer Name is Required');
+      missingFields.push("Finance Officer's Name is Required");
     if (!this.companyData.oicConNum1)
       missingFields.push('Contact Number 1 is Required');
     if (

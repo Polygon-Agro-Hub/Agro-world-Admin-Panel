@@ -525,6 +525,27 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
       (err) => {
         this.loading = false;
         this.isLoading = false;
+
+        // 409 = backend blocked a duplicate dispatch (someone/something already dispatched this order)
+        if (err?.status === 409) {
+          this.isDispatched = true;
+          Swal.fire({
+            title: 'Already Dispatched',
+            text: err?.error?.message || 'This order has already been dispatched.',
+            icon: 'info',
+            confirmButtonColor: '#3980C0',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+            },
+          }).then(() => {
+            this.router.navigate(['/procurement/define-packages'], {
+              queryParams: { tab: 'sent' }
+            });
+          });
+          return;
+        }
+
         console.error('Update failed:', err);
         Swal.fire({
           title: 'Error',

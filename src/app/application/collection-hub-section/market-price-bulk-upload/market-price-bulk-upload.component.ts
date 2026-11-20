@@ -37,7 +37,7 @@ export class MarketPriceBulkUploadComponent {
     private http: HttpClient,
     private marketPriceService: MarketPriceService,
     private router: Router,
-  ) { }
+  ) {}
 
   onFileSelected(event: any): void {
     const file = event.target.files[0];
@@ -113,14 +113,15 @@ export class MarketPriceBulkUploadComponent {
         },
         error: (error) => {
           this.isLoading = false;
-          this.errorMessage = error.error.error;
+          this.errorMessage =
+            error?.error?.error || 'Something went wrong. Please try again.';
           this.selectedFile = null;
           this.date = '';
           this.startTime = '';
           this.endTime = '';
           Swal.fire({
             icon: 'error',
-            title: 'Error',
+            title: 'Uploading Cancelled!',
             text: this.errorMessage,
             confirmButtonText: 'OK',
             customClass: {

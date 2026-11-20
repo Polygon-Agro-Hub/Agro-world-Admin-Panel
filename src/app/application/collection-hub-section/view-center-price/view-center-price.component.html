@@ -113,7 +113,9 @@
               {{ item.cropName }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{ item.varietyName }}
+              <div class="max-w-[200px] truncate" [title]="item.varietyName">
+                {{ item.varietyName }}
+              </div>
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{ item.grade }}

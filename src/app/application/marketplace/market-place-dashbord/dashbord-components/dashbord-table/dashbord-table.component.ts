@@ -24,7 +24,6 @@ export class DashbordTableComponent{
 
     this.invoiceService.generateAndDownloadInvoice(orderId, invoiceNo)
       .then(() => {
-        console.log('Invoice downloaded successfully');
       })
       .catch((error) => {
         console.error('Failed to download invoice:', error);

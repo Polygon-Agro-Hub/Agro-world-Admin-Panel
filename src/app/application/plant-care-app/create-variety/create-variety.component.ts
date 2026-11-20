@@ -846,6 +846,12 @@ export class CreateVarietyComponent implements OnInit {
       errorMessages.push('English variety name cannot exceed 50 characters');
     }
 
+     if (!newsItem.descriptionEnglish) {
+      errorMessages.push('English description is required');
+    } else if (newsItem.descriptionEnglish.length < 10) {
+      errorMessages.push('English description must be at least 10 characters');
+    }
+
     if (!newsItem.varietyNameSinhala) {
       errorMessages.push('Sinhala variety name is required');
     } else if (/^\d+$/.test(newsItem.varietyNameSinhala)) {
@@ -854,24 +860,18 @@ export class CreateVarietyComponent implements OnInit {
       errorMessages.push('Sinhala variety name cannot exceed 50 characters');
     }
 
+    if (!newsItem.descriptionSinhala) {
+      errorMessages.push('Sinhala description is required');
+    } else if (newsItem.descriptionSinhala.length < 10) {
+      errorMessages.push('Sinhala description must be at least 10 characters');
+    }
+
     if (!newsItem.varietyNameTamil) {
       errorMessages.push('Tamil variety name is required');
     } else if (/^\d+$/.test(newsItem.varietyNameTamil)) {
       errorMessages.push('Tamil variety name cannot be only numbers');
     } else if (newsItem.varietyNameTamil.length > 50) {
       errorMessages.push('Tamil variety name cannot exceed 50 characters');
-    }
-
-    if (!newsItem.descriptionEnglish) {
-      errorMessages.push('English description is required');
-    } else if (newsItem.descriptionEnglish.length < 10) {
-      errorMessages.push('English description must be at least 10 characters');
-    }
-
-    if (!newsItem.descriptionSinhala) {
-      errorMessages.push('Sinhala description is required');
-    } else if (newsItem.descriptionSinhala.length < 10) {
-      errorMessages.push('Sinhala description must be at least 10 characters');
     }
 
     if (!newsItem.descriptionTamil) {
@@ -886,23 +886,25 @@ export class CreateVarietyComponent implements OnInit {
 
     // If there are errors, show SweetAlert
     if (errorMessages.length > 0) {
-      Swal.fire({
-        title: 'Validation Errors',
-        html: `<div style="text-align: left;">
-      <p>Please fix the following issues:</p>
-      <ul>
-        ${errorMessages.map((msg) => `<li>${msg}</li>`).join('')}
-      </ul>
-    </div>`,
-        icon: 'warning',
-        confirmButtonText: 'OK',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold',
-        },
-      });
-      return false;
-    }
+  Swal.fire({
+    title: 'Validation Errors',
+    html: `
+      <div style="text-align: left;">
+        <p>Please fix the following issues:</p>
+        <ul style="list-style-type: disc; padding-left: 20px; margin-top: 10px;">
+          ${errorMessages.map((msg) => `<li>${msg}</li>`).join('')}
+        </ul>
+      </div>
+    `,
+    icon: 'warning',
+    confirmButtonText: 'OK',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+  });
+  return false;
+}
 
     return true;
   }

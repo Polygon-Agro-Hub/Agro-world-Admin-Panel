@@ -114,13 +114,6 @@ export class CropCalendarService {
       params = params.set('excludeId', excludeId.toString());
     }
 
-    console.log('Checking duplicate with params:', {
-      varietyId,
-      cultivationMethod,
-      natureOfCultivation,
-      excludeId,
-    });
-
     // Proper usage: empty body + options (headers, params)
     return this.http.post<{ exists: boolean }>(
       `${this.apiUrl}crop-calendar/check-duplicate-crop-calendar`,

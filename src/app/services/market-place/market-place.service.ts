@@ -475,7 +475,8 @@ export class MarketPlaceService {
     status: string = '',
     method: string = '',
     searchItem: string = '',
-    formattedDate: string = ''
+    formattedDate: string = '',
+    scheduleDate: string = ''
   ): Observable<any> {
 
 
@@ -484,6 +485,10 @@ export class MarketPlaceService {
     });
 
     let url = `${this.apiUrl}market-place/get-all-retail-orders?page=${page}&limit=${limit}`;
+
+    if (scheduleDate) {
+      url += `&scheduleDate=${scheduleDate}`;
+    }
 
     if (status) {
       url += `&status=${status}`;

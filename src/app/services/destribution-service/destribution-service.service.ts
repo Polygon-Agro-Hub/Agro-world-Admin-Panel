@@ -46,16 +46,6 @@ export class DestributionService {
     });
   }
 
-  // createDistributionCentre(
-  //   data: DistributionCentreRequest
-  // ): Observable<ApiResponse> {
-  //   console.log('data', data);
-  //   const url = `${this.apiUrl}distribution/create-distribution-center`;
-  //   return this.http.post<ApiResponse>(url, data, {
-  //     headers: this.getHeaders(),
-  //   });
-  // }
-
   createDistributionCentre(data: any): Observable<ApiResponse> {
     const url = `${this.apiUrl}distribution/create-distribution-center`;
     return this.http.post<ApiResponse>(url, data, {

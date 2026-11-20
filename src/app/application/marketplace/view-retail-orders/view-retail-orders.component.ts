@@ -45,6 +45,8 @@ export class ViewRetailOrdersComponent implements OnInit {
   selectStatus: string = '';
   selectDate: Date | null = null;
   formattedDate: string = '';
+  selectScheduleDate: Date | null = null;
+  formattedScheduleDate: string = '';
   errorMessage: string | null = null;
 
   isDateSelected = false;
@@ -88,7 +90,8 @@ export class ViewRetailOrdersComponent implements OnInit {
     status: string = this.selectStatus,
     method: string = this.selectMethod,
     searchItem: string = this.searchItem,
-    formattedDate: string = this.formattedDate
+    formattedDate: string = this.formattedDate,
+    scheduleDate: string = this.formattedScheduleDate
   ) {
     this.isLoading = true;
     this.MaketplaceSrv.getAllRetailOrders(
@@ -97,7 +100,8 @@ export class ViewRetailOrdersComponent implements OnInit {
       status,
       method,
       searchItem,
-      formattedDate
+      formattedDate,
+      scheduleDate
     ).subscribe(
       (response) => {
         this.isLoading = false;
@@ -174,6 +178,23 @@ export class ViewRetailOrdersComponent implements OnInit {
     this.fetchAllRetailOrders();
   }
 
+  scheduleDateFilter() {
+    if (this.selectScheduleDate instanceof Date) {
+      const year = this.selectScheduleDate.getFullYear();
+      const month = String(this.selectScheduleDate.getMonth() + 1).padStart(2, '0');
+      const day = String(this.selectScheduleDate.getDate()).padStart(2, '0');
+      this.formattedScheduleDate = `${year}-${month}-${day}`;
+      this.page = 1;
+      this.fetchAllRetailOrders();
+    }
+  }
+
+  onScheduleDateClear() {
+    this.formattedScheduleDate = '';
+    this.page = 1;
+    this.fetchAllRetailOrders();
+  }
+
   navigateDashboard(id: number) {
     this.router.navigate([`/collection-hub/collection-center-dashboard/${id}`]);
   }
@@ -224,18 +245,17 @@ export class ViewRetailOrdersComponent implements OnInit {
       });
   }
 
-  isPostInvoiceEnabled(status: string): boolean {
-    // Define the statuses that allow post-invoice download
-    const enabledStatuses = [
-      'Out For Delivery',
-      'Delivered',
-      'Picked up',
-      'On the way',
-      'Failed',
-      'Ready to Pickup',
-    ];
+  isPostInvoiceEnabled(item: RetailOrders): boolean {
+    const packingStatus = String(item.packingStatus || '').trim();
+    if (packingStatus) {
+      return packingStatus.toLowerCase() === 'dispatch';
+    }
 
-    return enabledStatuses.includes(status);
+    const isConfirmed = Number(item.isConfirmed) === 1;
+    const isPackage = Number(item.isPackage) === 1;
+    const isFinalized = Number(item.isFinalized) === 1;
+
+    return isConfirmed || (isPackage && isFinalized);
   }
 
   downloadQRCode(qrCodeUrl: string, invNo: string): void {
@@ -284,8 +304,13 @@ class RetailOrders {
   invNo!: string;
   status!: string;
   orderdDate!: Date;
+  scheduleDate!: Date | null;
   qrCode!: string;
   paymentMethod!: string;
   creditPaid!: number;
   moneyPaid!: number;
+  isConfirmed!: number;
+  isPackage!: number;
+  isFinalized!: number;
+  packingStatus!: string;
 }

@@ -226,7 +226,7 @@ export class ViewAllOrdersComponent implements OnInit {
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-        link.download = `orders_${this.toYmd(new Date())}.xlsx`;
+        link.download = `All Orders ordered between ${filters.orderedFrom} - ${filters.orderedTo}.xlsx`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);

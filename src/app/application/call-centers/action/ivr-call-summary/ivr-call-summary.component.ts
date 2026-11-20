@@ -8,6 +8,7 @@ import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/
 
 import { Subscription } from 'rxjs';
 import { CallCenterService, IvrSummaryType, IvrSummaryQuery, IvrSummaryItem } from '../../../../services/call-center/call-center.service';
+import { TooltipModule } from 'primeng/tooltip';
 type DetailsType = IvrSummaryType;
 
 interface IvrRecord {
@@ -34,6 +35,7 @@ interface IvrRecord {
     FormsModule,
     DropdownModule,
     CalendarModule,
+    TooltipModule,
     LoadingSpinnerComponent,
   ],
   templateUrl: './ivr-call-summary.component.html',

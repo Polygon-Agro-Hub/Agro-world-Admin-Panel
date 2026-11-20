@@ -21,11 +21,20 @@
         </div>
 
         <!-- Details Type -->
-        <div class="flex flex-col gap-2">
-            <label class="text-[12px] font-semibold text-[#101C2B] dark:text-textDark">Select Details Type</label>
-            <p-dropdown [options]="detailTypes" [(ngModel)]="selectedType" placeholder="--Select--" appendTo="body"
-                styleClass="ivr-dropdown w-full"></p-dropdown>
-        </div>
+        <!-- Details Type -->
+<!-- Details Type -->
+<div class="flex flex-col gap-2 min-w-0">
+    <label class="text-[12px] font-semibold text-[#101C2B] dark:text-textDark">Select Details Type</label>
+    <p-dropdown [options]="detailTypes" [(ngModel)]="selectedType" placeholder="--Select--" appendTo="body"
+        styleClass="ivr-dropdown w-full">
+        <ng-template pTemplate="selectedItem" let-item>
+            <span class="block truncate" [pTooltip]="item" tooltipPosition="top" appendTo="body">{{ item }}</span>
+        </ng-template>
+        <ng-template pTemplate="item" let-item>
+            <span class="block truncate w-full" [pTooltip]="item" tooltipPosition="right" appendTo="body">{{ item }}</span>
+        </ng-template>
+    </p-dropdown>
+</div>
 
         <!-- Start Date -->
         <div class="flex flex-col gap-2">

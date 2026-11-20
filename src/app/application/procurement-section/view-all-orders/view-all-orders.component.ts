@@ -283,12 +283,14 @@ export class ViewAllOrdersComponent implements OnInit {
 
   isPostInvoiceEnabled(item: AllOrder): boolean {
     const packingStatus = String(item.packingStatus || '').trim();
-    if (packingStatus) {
+    if (Number(item.isPackage) === 1 && packingStatus) {
       return packingStatus.toLowerCase() === 'dispatch';
     }
+
     const isConfirmed = Number(item.isConfirmed) === 1;
     const isPackage = Number(item.isPackage) === 1;
     const isFinalized = Number(item.isFinalized) === 1;
+
     return isConfirmed || (isPackage && isFinalized);
   }
 

@@ -124,7 +124,9 @@
                             MMM, y') : '-' }}</td>
                         <td class="px-3 py-3 whitespace-nowrap">{{ item.customerName }}</td>
                         <td class="px-3 py-3 whitespace-nowrap">{{ item.buyerType }}</td>
-                        <td class="px-3 py-3 whitespace-nowrap">{{ item.companyNameEnglish || '--------' }}</td>
+                        <td class="px-3 py-3 truncate" [attr.title]="item.companyNameEnglish || null">
+                            {{ item.companyNameEnglish || '--------' }}
+                        </td>
                         <td class="px-3 py-3 whitespace-nowrap">{{ item.method }}</td>
 
                         <td class="px-3 py-3">

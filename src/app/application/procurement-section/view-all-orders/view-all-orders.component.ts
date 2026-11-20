@@ -47,6 +47,19 @@ export class ViewAllOrdersComponent {
   selectMethod = '';
   selectStatus = '';
 
+  // Download popup
+  showDownloadModal = false;
+  dlOrderedFrom: Date | null = null;
+  dlOrderedTo: Date | null = null;
+  dlScheduledFrom: Date | null = null;
+  dlScheduledTo: Date | null = null;
+  dlConfirmation = '';
+
+  confirmationOptions = [
+    { label: 'Confirmed', value: 'confirmed' },
+    { label: 'Not Confirmed', value: 'not_confirmed' },
+  ];
+
   methodOptions = [
     { label: 'Delivery', value: 'Delivery' },
     { label: 'Pick Up', value: 'Pick Up' },
@@ -341,8 +354,31 @@ export class ViewAllOrdersComponent {
   }
 
   downloadOrders() {
-    console.log('Download orders');
+    this.showDownloadModal = true;
   }
+
+  closeDownloadModal() {
+    this.showDownloadModal = false;
+    this.dlOrderedFrom = null;
+    this.dlOrderedTo = null;
+    this.dlScheduledFrom = null;
+    this.dlScheduledTo = null;
+    this.dlConfirmation = '';
+  }
+
+  confirmDownload() {
+    const payload = {
+      orderedFrom: this.dlOrderedFrom,
+      orderedTo: this.dlOrderedTo,
+      scheduledFrom: this.dlScheduledFrom,
+      scheduledTo: this.dlScheduledTo,
+      confirmation: this.dlConfirmation,
+    };
+    console.log('Download orders with filter', payload);
+    // TODO: call your download API with `payload`
+    this.closeDownloadModal();
+  }
+
   downloadInvoice(o: AllOrder) {
     console.log('Pre invoice', o.id);
   }

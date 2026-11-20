@@ -59,7 +59,7 @@
                     </div>
         </div>
 
-        <!-- Download Orders -->
+        <!-- Download Orders (opens the popup) -->
         <button type="button" (click)="downloadOrders()"
             class="mb-6 inline-flex items-center gap-2 rounded-md bg-[#3B82F6] px-4 py-2 text-sm text-white hover:bg-blue-600">
             <i class="fa-solid fa-download"></i>
@@ -128,7 +128,7 @@
 
                         <!-- Payment method -->
                         <td class="px-3 py-3">
-                            <div class="flex items-center justify-left gap-2 whitespace-nowrap">
+                            <div class="flex items-center justify-start gap-2 whitespace-nowrap">
                                 <span *ngIf="item.creditPaid > 0"
                                     class="inline-flex flex-col items-center rounded-full min-w-28 px-2 py-1 text-xs leading-tight bg-[#FFEDCF]">
                                     <span class="text-[#D17A00]">Credit Balance</span>
@@ -194,5 +194,67 @@
     <div *ngIf="hasData" class="dark:bg-[#262f45] mt-4 px-4 md:px-10 pb-4">
         <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" previousLabel="Previous"
             nextLabel="Next"></pagination-controls>
+    </div>
+</div>
+
+<!-- Download filter popup (shown when "Download Orders" is clicked) -->
+<div *ngIf="showDownloadModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+    (click)="closeDownloadModal()">
+    <div class="w-full max-w-[780px] rounded-2xl bg-white dark:bg-tileBlack px-6 py-8 md:px-10 shadow-xl"
+        (click)="$event.stopPropagation()">
+
+        <h3 class="mb-8 text-center text-xl font-semibold text-textLight dark:text-textDark">Select Filter</h3>
+
+        <!-- Ordered Date -->
+        <div class="mb-6 flex flex-wrap items-center gap-4">
+            <label class="w-40 text-lg text-textLight dark:text-textDark">Ordered Date :</label>
+            <div class="flex flex-1 flex-wrap gap-4">
+                <p-calendar [(ngModel)]="dlOrderedFrom" [maxDate]="dlOrderedTo" placeholder="--From--" [showIcon]="true"
+                    iconDisplay="input" [appendTo]="'body'" styleClass="flex-1 min-w-[160px]"
+                    [style]="{ width: '100%' }"
+                    inputStyleClass="w-full h-14 rounded-xl border border-[#D9D9D9] bg-white dark:bg-[#272F45] text-center italic font-semibold text-textLight dark:text-textDark placeholder:italic placeholder:font-semibold placeholder:text-[#555] cursor-pointer" />
+                <p-calendar [(ngModel)]="dlOrderedTo" [minDate]="dlOrderedFrom" placeholder="--To--" [showIcon]="true"
+                    iconDisplay="input" [appendTo]="'body'" styleClass="flex-1 min-w-[160px]"
+                    [style]="{ width: '100%' }"
+                    inputStyleClass="w-full h-14 rounded-xl border border-[#D9D9D9] bg-white dark:bg-[#272F45] text-center italic font-semibold text-textLight dark:text-textDark placeholder:italic placeholder:font-semibold placeholder:text-[#555] cursor-pointer" />
+            </div>
+        </div>
+
+        <!-- Scheduled Date -->
+        <div class="mb-6 flex flex-wrap items-center gap-4">
+            <label class="w-40 text-lg text-textLight dark:text-textDark">Scheduled Date :</label>
+            <div class="flex flex-1 flex-wrap gap-4">
+                <p-calendar [(ngModel)]="dlScheduledFrom" [maxDate]="dlScheduledTo" placeholder="--From--"
+                    [showIcon]="true" iconDisplay="input" [appendTo]="'body'" styleClass="flex-1 min-w-[160px]"
+                    [style]="{ width: '100%' }"
+                    inputStyleClass="w-full h-14 rounded-xl border border-[#D9D9D9] bg-white dark:bg-[#272F45] text-center italic font-semibold text-textLight dark:text-textDark placeholder:italic placeholder:font-semibold placeholder:text-[#555] cursor-pointer" />
+                <p-calendar [(ngModel)]="dlScheduledTo" [minDate]="dlScheduledFrom" placeholder="--To--"
+                    [showIcon]="true" iconDisplay="input" [appendTo]="'body'" styleClass="flex-1 min-w-[160px]"
+                    [style]="{ width: '100%' }"
+                    inputStyleClass="w-full h-14 rounded-xl border border-[#D9D9D9] bg-white dark:bg-[#272F45] text-center italic font-semibold text-textLight dark:text-textDark placeholder:italic placeholder:font-semibold placeholder:text-[#555] cursor-pointer" />
+            </div>
+        </div>
+
+        <!-- Confirmation -->
+        <div class="mb-8 flex flex-wrap items-center gap-4">
+            <label class="w-40 text-lg text-textLight dark:text-textDark">Confirmation :</label>
+            <div class="flex-1 min-w-[220px]">
+                <p-dropdown [options]="confirmationOptions" optionLabel="label" optionValue="value"
+                    placeholder="--Order Confirmation--" [(ngModel)]="dlConfirmation" [appendTo]="'body'"
+                    styleClass="w-full h-14 items-center rounded-xl border border-[#D9D9D9] bg-white dark:bg-[#272F45] italic font-semibold text-textLight dark:text-textDark"></p-dropdown>
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex justify-center gap-5">
+            <button type="button" (click)="closeDownloadModal()"
+                class="rounded-lg bg-[#767A8F] px-8 py-3 font-semibold text-[#E5E7EB] hover:bg-[#666a7d]">
+                Cancel
+            </button>
+            <button type="button" (click)="confirmDownload()"
+                class="rounded-lg bg-[#3B82C4] px-8 py-3 font-semibold text-white hover:bg-[#3374b0]">
+                Download
+            </button>
+        </div>
     </div>
 </div>

@@ -247,7 +247,7 @@ export class ViewRetailOrdersComponent implements OnInit {
 
   isPostInvoiceEnabled(item: RetailOrders): boolean {
     const packingStatus = String(item.packingStatus || '').trim();
-    if (packingStatus) {
+    if (Number(item.isPackage) === 1 && packingStatus) {
       return packingStatus.toLowerCase() === 'dispatch';
     }
 

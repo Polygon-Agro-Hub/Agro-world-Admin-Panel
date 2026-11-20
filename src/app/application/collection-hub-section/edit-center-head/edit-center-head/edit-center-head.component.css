@@ -514,6 +514,18 @@
   color: #f9fafb;
 }
 
+/* Match the dark form surface used by the other fields. */
+:host-context(.dark) ::ng-deep .p-dropdown-custom .p-dropdown {
+  background-color: #061e2c !important;
+  border-color: #b7c5cc !important;
+  color: #ffffff !important;
+}
+
+:host-context(.dark) ::ng-deep .p-dropdown-custom .p-dropdown-label,
+:host-context(.dark) ::ng-deep .p-dropdown-custom .p-dropdown-trigger-icon {
+  color: #ffffff !important;
+}
+
 /* Options in the dropdown */
 :host ::ng-deep .dark .p-multiselect-items .p-multiselect-item {
   color: #f9fafb;

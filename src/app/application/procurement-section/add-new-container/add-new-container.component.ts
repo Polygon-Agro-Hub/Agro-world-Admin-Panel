@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { ProcumentsService } from '../../../services/procuments/procuments.service';
+import { TooltipModule } from 'primeng/tooltip';
 
 interface ContainerData {
   labelName: string;
@@ -14,7 +15,7 @@ interface ContainerData {
 @Component({
   selector: 'app-add-new-container',
   standalone: true,
-  imports: [CommonModule, FormsModule, LoadingSpinnerComponent],
+  imports: [CommonModule, FormsModule, LoadingSpinnerComponent, TooltipModule],
   templateUrl: './add-new-container.component.html',
   styleUrl: './add-new-container.component.css',
 })

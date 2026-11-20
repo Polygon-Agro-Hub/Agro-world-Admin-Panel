@@ -468,7 +468,22 @@ export class AddCollectionCenterComponent implements OnInit {
 
   getAllCompanies() {
     this.collectionCenterService.getAllCompanyList().subscribe((res) => {
-      this.CompanyData = res;
+      this.CompanyData = [...res].sort((a, b) => {
+        const aIsPolygon = a.companyNameEnglish
+          .toLowerCase()
+          .startsWith('polygon');
+        const bIsPolygon = b.companyNameEnglish
+          .toLowerCase()
+          .startsWith('polygon');
+
+        if (aIsPolygon !== bIsPolygon) {
+          return aIsPolygon ? -1 : 1;
+        }
+
+        return a.companyNameEnglish.localeCompare(b.companyNameEnglish, undefined, {
+          sensitivity: 'base',
+        });
+      });
 
       this.filteredCompanies = this.CompanyData.filter(
         (item) => item.id != null && item.companyNameEnglish,

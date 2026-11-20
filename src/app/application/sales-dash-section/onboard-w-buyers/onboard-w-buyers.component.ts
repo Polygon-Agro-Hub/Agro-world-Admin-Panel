@@ -27,7 +27,12 @@ interface Country {
 @Component({
   selector: 'app-onboard-w-buyers',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, DropdownModule, LoadingSpinnerComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    DropdownModule,
+    LoadingSpinnerComponent,
+  ],
   templateUrl: './onboard-w-buyers.component.html',
   styleUrl: './onboard-w-buyers.component.css',
 })
@@ -208,7 +213,7 @@ export class OnboardWBuyersComponent implements OnInit {
       msgs.push(
         this.isNic
           ? "Enter a valid NIC number (12 digits, or 9 digits followed by 'V')."
-          : 'Passport ID must be 8 to 12 letters or digits.',
+          : 'Passport ID must be 8 to 12 letters and digits.',
       );
 
     if (err('companyName', 'required')) msgs.push('Company name is required.');
@@ -382,7 +387,7 @@ export class OnboardWBuyersComponent implements OnInit {
     const formData = new FormData();
     formData.append('salesAgent', v.agent);
     formData.append('nearestCity', v.nearestCity);
-   formData.append('title', (v.title ?? '').replace(/\./g, '').trim());
+    formData.append('title', (v.title ?? '').replace(/\./g, '').trim());
     formData.append('firstName', v.firstName);
     formData.append('lastName', v.lastName);
     formData.append('phoneCode', v.phoneCode);

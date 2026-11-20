@@ -76,8 +76,6 @@ export class SidenavComponent implements OnInit {
       this.onToggleSideNav.emit(this.isExpanded);
     }
     this.permissionsArray = this.permissionService.getPermissions();
-    console.log(this.permissionService.getPermissions());
-    
   }
 
   isParentActive(item: any): boolean {
@@ -115,11 +113,7 @@ export class SidenavComponent implements OnInit {
   }
 
   logout(): void {
-    console.log('logout called');
     if (isPlatformBrowser(this.platformId)) {
-      console.log('platform browser');
-      
-
       // Show a logout confirmation
       Swal.fire({
         icon: 'warning',
@@ -135,11 +129,9 @@ export class SidenavComponent implements OnInit {
           title: 'font-semibold',
         },
       }).then((result) => {
-        console.log('logout confirmation result', result);
         if (result.isConfirmed) {
           this.tokenService.clearLoginDetails();
           this.router.navigate(['login']).then(() => {
-            console.log('refreshed')
             window.location.reload();
 
           });

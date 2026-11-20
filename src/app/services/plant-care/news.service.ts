@@ -77,8 +77,6 @@ export class NewsService {
     }
 
     if (createdDateFilter) {
-      console.log(createdDateFilter);
-      
       url += `&createdAt=${createdDateFilter}`;
     }
     return this.http.get<{ items: NewsItem[]; total: number }>(url, {

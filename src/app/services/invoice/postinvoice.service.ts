@@ -127,8 +127,28 @@ export class PostinvoiceService {
       let deliveryFee = '0.00';
       if (invoiceDetails.deliveryMethod === 'Pickup') {
         deliveryFee = '0.00';
-      } else if (deliveryCharge) {
-        deliveryFee = deliveryCharge || '0.00';
+      } else {
+        const effectiveStatus =
+          String(
+            orderStatus ||
+              invoiceDetails.orderStatus ||
+              invoiceDetails.status ||
+              '',
+          ).trim();
+        const currentDeliveryCharge = invoiceDetails.currentDeliveryCharge;
+
+        if (
+          String(invoiceDetails.deliveryMethod).trim().toLowerCase() ===
+            'delivery' &&
+          effectiveStatus.toLowerCase() === 'delivered' &&
+          currentDeliveryCharge !== null &&
+          currentDeliveryCharge !== undefined &&
+          String(currentDeliveryCharge).trim() !== ''
+        ) {
+          deliveryFee = String(currentDeliveryCharge);
+        } else {
+          deliveryFee = deliveryCharge || '0.00';
+        }
       }
 
       // Calculate totals
@@ -555,16 +575,24 @@ export class PostinvoiceService {
           yPosition,
         );
         // ---- Pack header price: calculated total (struck) + package price ----
-        const packPrice = parseNum(pack.amount);
-
+        const reviewValue = parseNum(pack.reviewValue);
         const itemsTotal =
           pack.packageDetails?.reduce(
             (sum: number, d: any) => sum + parseNum(d.price),
             0,
           ) || 0;
 
+        const packPrice =
+          reviewValue !== 0
+            ? itemsTotal +
+              parseNum(pack.serviceFee) +
+              parseNum(pack.packingFee)
+            : parseNum(pack.amount);
+
         const calculatedTotal =
-          itemsTotal + parseNum(pack.serviceFee) + parseNum(pack.packingFee);
+          itemsTotal +
+          parseNum(pack.serviceFee) +
+          parseNum(pack.packingFee);
 
         // Package price (right aligned, black, bold)
         const packPriceText = `Rs. ${formatNumberWithCommas(packPrice)}`;
@@ -575,7 +603,10 @@ export class PostinvoiceService {
         const packPriceWidth = doc.getTextWidth(packPriceText);
 
         // Calculated total (struck through) only when it differs
-        if (Math.abs(calculatedTotal - packPrice) > 0.01) {
+        const shouldStrikeThrough =
+          reviewValue === 0 && Math.abs(calculatedTotal - packPrice) > 0.01;
+
+        if (shouldStrikeThrough) {
           const oldText = `Rs. ${formatNumberWithCommas(calculatedTotal)}`;
           const oldRightX = 195 - packPriceWidth - 3; // 3mm gap
 
@@ -626,7 +657,7 @@ export class PostinvoiceService {
             //   styles: { fillColor: [248, 248, 248], fontStyle: 'bold' },
             // },
             {
-              content: 'QTY',
+              content: 'QTY (Kg)',
               styles: { fillColor: [248, 248, 248], fontStyle: 'bold' },
             },
             {
@@ -636,17 +667,12 @@ export class PostinvoiceService {
           ],
           ...(pack.packageDetails?.map((detail: any, i: number) => {
             const qtyKg = Number(detail.qty) || 0;
-            const unit = String(detail.unit || 'Kg').trim();
-            const isGrams = unit.toLowerCase() === 'g';
-            const displayQty =
-              detail.displayQty ?? (isGrams ? Math.round(qtyKg * 1000) : qtyKg);
 
             return [
               `${i + 1}.`,
               detail.typeName || 'N/A',
               detail.productName || 'N/A',
-              // `Rs. ${formatNumberWithCommas(detail.price || 0)}`,   // Unit Price (commented)
-              `${displayQty}\u00A0${unit}`,
+              `${qtyKg}\u00A0Kg`,
               `Rs. ${formatNumberWithCommas(detail.price || 0)}`, // Amount = price value
             ];
           }) || []),
@@ -949,23 +975,47 @@ export class PostinvoiceService {
     // Create grand total body with individual packages
     const grandTotalBody: any[] = [];
 
-    // Show a singular package total for one package and a plural package total for multiple packages.
+    // Show each package individually instead of a combined package total.
     if (invoice.familyPackItems && invoice.familyPackItems.length > 0) {
-      if (invoice.familyPackItems.length > 1) {
-        const packagesTotal = invoice.familyPackItems.reduce(
-          (total, pack) => total + parseNum(pack.amount),
-          0,
-        );
+      for (const pack of invoice.familyPackItems) {
+        const reviewValue = parseNum(pack.reviewValue);
+        const packageDetailsTotal =
+          pack.packageDetails?.reduce(
+            (sum: number, detail: any) => sum + parseNum(detail.price),
+            0,
+          ) || 0;
+        const effectivePackAmount =
+          reviewValue !== 0
+            ? packageDetailsTotal +
+              parseNum(pack.serviceFee) +
+              parseNum(pack.packingFee)
+            : parseNum(pack.amount);
+
         grandTotalBody.push([
-          'Total Price for Packages',
-          `Rs. ${formatNumberWithCommas(packagesTotal.toFixed(2))}`,
+          pack.name || 'Package',
+          {
+            content: `Rs. ${formatNumberWithCommas(effectivePackAmount.toFixed(2))}`,
+            styles: { halign: 'right' },
+          },
         ]);
-      } else {
-        const pack = invoice.familyPackItems[0];
-        grandTotalBody.push([
-          'Total Price for Package',
-          `Rs. ${formatNumberWithCommas(pack.amount)}`,
-        ]);
+
+        if (reviewValue > 0) {
+          grandTotalBody.push([
+            {
+              content: `An additional Rs. ${formatNumberWithCommas(reviewValue.toFixed(2))} has been charged for package modifications requested by the customer during the review process.`,
+              colSpan: 2,
+              styles: { textColor: [11, 85, 221], fontStyle: 'normal', fontSize: 8 },
+            },
+          ]);
+        } else if (reviewValue < 0) {
+          grandTotalBody.push([
+            {
+              content: `An amount of Rs. ${formatNumberWithCommas(Math.abs(reviewValue).toFixed(2))} has been deducted due to package modifications made by the customer during the review process.`,
+              colSpan: 2,
+              styles: { textColor: [11, 85, 221], fontStyle: 'normal', fontSize: 8 },
+            },
+          ]);
+        }
       }
     }
 
@@ -1047,7 +1097,23 @@ export class PostinvoiceService {
     // Calculate final grand total
     const familyPackTotal =
       invoice.familyPackItems?.reduce(
-        (total, pack) => total + parseNum(pack.amount),
+        (total, pack) => {
+          const reviewValue = parseNum(pack.reviewValue);
+          if (reviewValue !== 0) {
+            const packageDetailsTotal =
+              pack.packageDetails?.reduce(
+                (sum: number, detail: any) => sum + parseNum(detail.price),
+                0,
+              ) || 0;
+            return (
+              total +
+              packageDetailsTotal +
+              parseNum(pack.serviceFee) +
+              parseNum(pack.packingFee)
+            );
+          }
+          return total + parseNum(pack.amount);
+        },
         0,
       ) || 0;
 
@@ -1175,12 +1241,12 @@ export class PostinvoiceService {
       body: grandTotalBody,
       margin: { left: 15, right: 15 },
       columnStyles: {
-        0: { cellWidth: 'auto', halign: 'left' },
-        1: { cellWidth: 'auto', halign: 'right' },
+        0: { cellWidth: 130, halign: 'left' },
+        1: { cellWidth: 50, halign: 'right' },
       },
       styles: {
         fontSize: 9,
-        cellPadding: { top: 4, right: 2, bottom: 4, left: 2 },
+        cellPadding: { top: 2, right: 2, bottom: 2, left: 2 },
         lineWidth: 0,
       },
       bodyStyles: {
@@ -1188,6 +1254,34 @@ export class PostinvoiceService {
       },
       alternateRowStyles: {
         fillColor: [255, 255, 255],
+      },
+      didParseCell: (data: any) => {
+        if (data.section !== 'body') return;
+
+        const rawContent =
+          typeof data.cell.raw === 'object'
+            ? data.cell.raw.content
+            : data.cell.raw;
+        const cellText = String(rawContent || '');
+
+        if (
+          cellText.startsWith('An additional Rs.') ||
+          cellText.startsWith('An amount of Rs.')
+        ) {
+          data.cell.styles.cellPadding = {
+            top: 1,
+            right: 2,
+            bottom: 5,
+            left: 7,
+          };
+        } else if (data.column.index === 0) {
+          data.cell.styles.cellPadding = {
+            top: 2,
+            right: 2,
+            bottom: 1,
+            left: 2,
+          };
+        }
       },
       didDrawCell: (data: any) => {
         if (data.row.index === borderRowIndex) {
@@ -1199,6 +1293,48 @@ export class PostinvoiceService {
             data.cell.x + data.cell.width,
             data.cell.y + data.cell.height,
           );
+        }
+
+        if (data.section === 'body' && data.column.index === 0) {
+          const rawContent =
+            typeof data.cell.raw === 'object'
+              ? data.cell.raw.content
+              : data.cell.raw;
+          const cellText = String(rawContent || '');
+
+          if (
+            cellText.startsWith('An additional Rs.') ||
+            cellText.startsWith('An amount of Rs.')
+          ) {
+            doc.setFillColor(255, 255, 255);
+            doc.rect(
+              data.cell.x,
+              data.cell.y,
+              data.cell.width,
+              data.cell.height,
+              'F',
+            );
+
+            const iconX = data.cell.x + 2.2;
+            const iconY = data.cell.y + 3.2;
+            doc.setFillColor(11, 85, 221);
+            doc.setDrawColor(11, 85, 221);
+            doc.circle(iconX, iconY, 1.35, 'FD');
+
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(5);
+            doc.setTextColor(255, 255, 255);
+            doc.text('i', iconX, iconY + 0.8, { align: 'center' });
+
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(8);
+            doc.setTextColor(11, 85, 221);
+            const noteLines = doc.splitTextToSize(
+              cellText,
+              data.cell.width - 9,
+            );
+            doc.text(noteLines, iconX + 3.2, data.cell.y + 4.2);
+          }
         }
       },
     });

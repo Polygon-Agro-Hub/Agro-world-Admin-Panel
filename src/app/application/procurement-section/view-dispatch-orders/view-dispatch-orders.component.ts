@@ -148,7 +148,6 @@ export class ViewDispatchOrdersComponent implements OnInit {
         );
 
         if (matchingItem) {
-          console.log('matchingItem', matchingItem)
           productType.productId = matchingItem.productId;
           productType.quantity = matchingItem.qty;
           productType.selectedProductPrice = matchingItem.price;

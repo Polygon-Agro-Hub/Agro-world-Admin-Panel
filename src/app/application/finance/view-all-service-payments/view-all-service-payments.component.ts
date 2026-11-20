@@ -197,8 +197,6 @@ export class ViewAllServicePaymentsComponent implements OnInit {
     if (this.hasDateRangeSelected) {
       this.fetchServicePayments();
     } else {
-      // Show message that both dates are required
-      console.log('Please select both from and to dates');
       this.hasData = false;
       this.isFilterApplied = false;
       this.servicePayments = [];

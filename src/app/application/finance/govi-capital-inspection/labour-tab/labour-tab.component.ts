@@ -25,9 +25,6 @@ export class LabourTabComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // console.log('---------------------------------------------------------------');
-    // console.log(this.LaborObj);
-    
   }
 
 }

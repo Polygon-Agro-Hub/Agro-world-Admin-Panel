@@ -341,20 +341,17 @@ export class ViewOrdersComponent implements OnInit {
     );
   }
 
-  isPostInvoiceEnabled(status: string): boolean {
-    const enabledStatuses = [
-      'Out For Delivery',
-      'Delivered',
-      'Picked Up',
-      'On the way',
-      'Failed',
-      'Collected',
-      'Hold',
-      'Return',
-      'Return Received',
-    ];
+  isPostInvoiceEnabled(order: Orders): boolean {
+    const packingStatus = String(order.packingStatus || '').trim();
+    if (packingStatus) {
+      return packingStatus.toLowerCase() === 'dispatch';
+    }
 
-    return enabledStatuses.includes(status);
+    const isConfirmed = Number(order.isConfirmed) === 1;
+    const isPackage = Number(order.isPackage) === 1;
+    const isFinalized = Number(order.isFinalized) === 1;
+
+    return isConfirmed || (isPackage && isFinalized);
   }
 
   downloadPostInvoice(id: number, tableInvoiceNo: string): void {
@@ -437,4 +434,8 @@ class Orders {
   sheduleType!: string;
   sheduleTime!: string;
   qrCode!: string;
+  isConfirmed!: number;
+  isPackage!: number;
+  isFinalized!: number;
+  packingStatus!: string;
 }

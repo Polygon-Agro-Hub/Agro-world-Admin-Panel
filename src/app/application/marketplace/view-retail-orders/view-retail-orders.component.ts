@@ -245,18 +245,17 @@ export class ViewRetailOrdersComponent implements OnInit {
       });
   }
 
-  isPostInvoiceEnabled(status: string): boolean {
-    // Define the statuses that allow post-invoice download
-    const enabledStatuses = [
-      'Out For Delivery',
-      'Delivered',
-      'Picked up',
-      'On the way',
-      'Failed',
-      'Ready to Pickup',
-    ];
+  isPostInvoiceEnabled(item: RetailOrders): boolean {
+    const packingStatus = String(item.packingStatus || '').trim();
+    if (packingStatus) {
+      return packingStatus.toLowerCase() === 'dispatch';
+    }
 
-    return enabledStatuses.includes(status);
+    const isConfirmed = Number(item.isConfirmed) === 1;
+    const isPackage = Number(item.isPackage) === 1;
+    const isFinalized = Number(item.isFinalized) === 1;
+
+    return isConfirmed || (isPackage && isFinalized);
   }
 
   downloadQRCode(qrCodeUrl: string, invNo: string): void {
@@ -310,4 +309,8 @@ class RetailOrders {
   paymentMethod!: string;
   creditPaid!: number;
   moneyPaid!: number;
+  isConfirmed!: number;
+  isPackage!: number;
+  isFinalized!: number;
+  packingStatus!: string;
 }

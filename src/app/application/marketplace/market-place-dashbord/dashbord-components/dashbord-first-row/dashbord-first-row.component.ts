@@ -12,9 +12,7 @@ export class DashbordFirstRowComponent implements OnChanges {
 
   @Input() firstRow!: FirstRow;
 
-  ngOnChanges(): void {
-    console.log("FirstRow",this.firstRow);
-    
+  ngOnChanges(): void {   
   }
 
 }

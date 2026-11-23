@@ -206,7 +206,7 @@ export class CreateCropGroupComponent {
     });
   }
 
-  onFileSelected(event: any): void {
+    onFileSelected(event: any): void {
     this.imageTouched = true;
     const file: File = event.target.files[0];
 
@@ -220,6 +220,7 @@ export class CreateCropGroupComponent {
           text: 'Only PNG and JPEG images are allowed!',
           confirmButtonText: 'OK',
         });
+        event.target.value = '';
         return;
       }
 
@@ -237,6 +238,9 @@ export class CreateCropGroupComponent {
     if (this.selectedFile) {
       this.errorMassage = '';
     }
+
+    // allow selecting the same file again
+    event.target.value = '';
   }
 
   onSubmit() {

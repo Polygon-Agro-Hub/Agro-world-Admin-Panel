@@ -153,17 +153,19 @@ export class CreateVarietyComponent implements OnInit {
     return '';
   }
 
-  onFileSelected(event: any): void {
+    onFileSelected(event: any): void {
     const file: File = event.target.files[0];
     if (file) {
       if (file.size > 5000000) {
         Swal.fire('Error', 'File size should not exceed 5MB', 'error');
+        event.target.value = '';
         return;
       }
 
       const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
       if (!allowedTypes.includes(file.type)) {
         Swal.fire('Error', 'Only JPEG, JPG and PNG files are allowed', 'error');
+        event.target.value = '';
         return;
       }
 
@@ -177,6 +179,9 @@ export class CreateVarietyComponent implements OnInit {
       };
       reader.readAsDataURL(file);
     }
+
+    // allow selecting the same file again
+    event.target.value = '';
   }
 
   onVarietyNameInput(event: any, field: string): void {

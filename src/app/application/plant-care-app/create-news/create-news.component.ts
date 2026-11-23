@@ -534,6 +534,8 @@ export class CreateNewsComponent {
       };
       reader.readAsDataURL(file);
     }
+    // allow selecting the same file again
+    event.target.value = '';
   }
 
   ngOnInit() {
@@ -667,6 +669,7 @@ export class CreateNewsComponent {
       publishDate: this.formatDateForBackend(this.originalPublishDateEdit),
       expireDate: this.formatDateForBackend(this.originalExpireDateEdit),
       hasNewImage: !!this.selectedFile,
+      hasImage: !!item.image,
     });
   }
 
@@ -785,6 +788,10 @@ export class CreateNewsComponent {
       this.formatDateForBackend(this.originalExpireDateEdit).trim() === ''
     ) {
       missingFields.push('Expire Date is Required');
+    }
+
+        if (!this.newsItems[0].image && !this.selectedFile) {
+      missingFields.push('Image - Please upload an image');
     }
 
     // Display validation errors if any
@@ -1010,6 +1017,9 @@ export class CreateNewsComponent {
     if (this.newsItems[0]) {
       this.newsItems[0].image = '';
     }
+    this.selectedFile = null;
+    this.selectedImage = null;
+    this.selectedFileName = null;
   }
 
   onCancel() {

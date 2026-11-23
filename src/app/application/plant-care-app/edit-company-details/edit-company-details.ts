@@ -221,8 +221,9 @@ export class EditCompanyDetailsComponent implements OnInit {
     }
   }
 
-  onLogoChange(event: any): void {
-    const file = event.target.files?.[0];
+    onLogoChange(event: any): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
     if (!file) return;
 
     // Validate file type
@@ -236,6 +237,7 @@ export class EditCompanyDetailsComponent implements OnInit {
           title: 'font-semibold text-lg',
         },
       });
+      input.value = '';
       return;
     }
 
@@ -251,6 +253,7 @@ export class EditCompanyDetailsComponent implements OnInit {
           title: 'font-semibold text-lg',
         },
       });
+      input.value = '';
       return;
     }
 
@@ -261,6 +264,9 @@ export class EditCompanyDetailsComponent implements OnInit {
       this.logoPreview = e.target?.result ?? null;
     };
     reader.readAsDataURL(file);
+
+    // allow selecting the same file again
+    input.value = '';
   }
 
   // Get all validation errors for the popup - UPDATED VERSION

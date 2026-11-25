@@ -395,3 +395,9 @@
 ::ng-deep .p-datepicker .p-datepicker-header .p-datepicker-title {
   font-size: 0.8rem !important;
 }
+
+:host ::ng-deep .ivr-dropdown .p-dropdown-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

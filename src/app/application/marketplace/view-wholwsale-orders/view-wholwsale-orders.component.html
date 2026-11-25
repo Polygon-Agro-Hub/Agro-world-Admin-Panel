@@ -11,15 +11,16 @@
     <div class="p-4 md:p-10">
 
       <!-- Header row: stays fixed, no horizontal scroll -->
-      <div class="flex justify-between items-center mb-8 flex-wrap gap-4">
-        <div class="flex items-center">
+      <div class="flex flex-wrap items-center justify-between gap-4 mb-8">
+        <div class="flex items-center shrink-0">
           <h2 class="text-2xl font-normal text-textLight dark:text-textDark whitespace-nowrap">
             All Orders ({{ totalItems === 0 ? '0' : totalItems < 10 ? '0' + totalItems : totalItems }}) </h2>
         </div>
 
-        <div class="flex items-center gap-3 flex-wrap">
+        <div class="flex flex-[1_1_auto] flex-wrap items-center justify-end gap-3">
           <!-- Date Filter -->
-          <div [title]="selectDate ? 'Ordered Date: ' + (selectDate | date: 'd MMM, y') : 'Ordered Date'">
+          <div class="shrink-0"
+            [title]="selectDate ? 'Ordered Date: ' + (selectDate | date: 'd MMM, y') : 'Ordered Date'">
             <p-calendar id="toDate" [(ngModel)]="selectDate" (onSelect)="dateFilter()" (onClear)="onDateClear()"
               placeholder="Ordered Date" [showIcon]="true" [showClear]="true" iconDisplay="input"
               styleClass="calendar-compact dark-calendar" [style]="{ width: '145px' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
@@ -34,8 +35,25 @@
               [appendTo]="'body'" />
           </div>
 
+          <!-- Scheduled Date Filter -->
+          <div class="shrink-0"
+            [title]="selectScheduleDate ? 'Scheduled Date: ' + (selectScheduleDate | date: 'd MMM, y') : 'Scheduled Date'">
+            <p-calendar id="scheduleDate" [(ngModel)]="selectScheduleDate" (onSelect)="scheduleDateFilter()"
+              (onClear)="onScheduleDateClear()" placeholder="Scheduled Date" [showIcon]="true" [showClear]="true"
+              iconDisplay="input" styleClass="calendar-compact dark-calendar" [style]="{ width: '160px' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600
+                             [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568]
+                             [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+                             [&_.p-datepicker-header]:dark:bg-[#2d354d]
+                             [&_.p-datepicker-header]:dark:text-white
+                             [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+                             [&_.p-button:hover]:dark:bg-[#6b7280]"
+              inputStyleClass="text-[16px] h-8 rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-2 border-[#E5E5E5] dark:border-[#AFAFAF] placeholder:text-[#9CA3AF] dark:placeholder:text-[#9CA3AF] focus:outline-none focus:border-blue-500 dark:focus:border-blue-400 cursor-pointer"
+              [inputStyle]="{ width: '160px', padding: '0.5rem 2.5rem 0.5rem 0.75rem', fontSize: '0.875rem', textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }"
+              [appendTo]="'body'" />
+          </div>
+
           <!-- Status Dropdown -->
-          <div>
+          <div class="shrink-0">
             <p-dropdown
               styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#D1D5DB] dark:border-[#AFAFAF]"
               [options]="statusOptions" [checkmark]="false" optionLabel="label" optionValue="value"
@@ -44,7 +62,7 @@
           </div>
 
           <!-- Method Dropdown -->
-          <div>
+          <div class="shrink-0">
             <p-dropdown
               styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#D1D5DB] dark:border-[#AFAFAF]"
               [options]="methodOptions" [checkmark]="false" optionLabel="label" optionValue="value"
@@ -55,10 +73,10 @@
 
 
           <!-- Search Bar -->
-          <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96 relative group">
+          <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-[220px] grow max-w-96 relative group">
             <input type="text" placeholder="Search By Invoice No, Customer Name"
               [title]="searchItem || 'Search By Invoice No, Customer Name'"
-              class="bg-transparent outline-none w-full dark:text-textDark text-gray-600" [(ngModel)]="searchItem"
+              class="bg-transparent outline-none w-full min-w-0 text-ellipsis dark:text-textDark text-gray-600" [(ngModel)]="searchItem"
               (keydown.enter)="searchReailOrders()" />
             <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
               (click)="searchReailOrders()">
@@ -88,11 +106,11 @@
       <!-- Table data scrolls while the header and leading columns remain visible. -->
       <div *ngIf="hasData"
         class="isolate max-h-[60vh] w-full overflow-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
-        <table class="min-w-[1900px] border-collapse divide-y divide-gray-200 dark:divide-[#4B555A] table-fixed">
+        <table class="min-w-[2050px] border-collapse divide-y divide-gray-200 dark:divide-[#4B555A] table-fixed">
           <colgroup>
             <col style="width: 64px" />
             <col style="width: 180px" />
-            <col style="width: 170px" />
+            <col style="width: 150px" />
             <col style="width: 220px" />
             <col style="width: 220px" />
             <col style="width: 150px" />
@@ -102,6 +120,7 @@
             <col style="width: 120px" />
             <col style="width: 120px" />
             <col style="width: 120px" />
+            <col style="width: 180px" />
           </colgroup>
           <thead class="sticky top-0 z-40 bg-white dark:bg-tileBlack">
             <tr class="bg-white dark:bg-tileBlack">
@@ -112,7 +131,7 @@
                 class="sticky left-[64px] z-50 box-border w-[180px] min-w-[180px] max-w-[180px] bg-white px-3 py-3 font-normal text-textLight dark:bg-tileBlack dark:text-textDark text-left whitespace-nowrap">
                 INVOICE
                 NO</th>
-              <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">ORDERED
+              <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">SCHEDULED
                 DATE</th>
               <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">CUSTOMER
                 NAME</th>
@@ -136,6 +155,8 @@
               </th>
               <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">QR
                 CODE</th>
+              <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">ORDERED
+                DATE</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-300 dark:divide-[#4B555A]">
@@ -155,7 +176,7 @@
               </td>
 
               <td class="px-3 py-3 text-left text-[#000000] dark:text-textDark whitespace-nowrap">
-                {{ item.orderdDate | date : "d MMM, y h:mma" }}
+                {{ item.scheduleDate ? (item.scheduleDate | date : "d MMM, y") : '-' }}
               </td>
 
               <td class="px-3 py-3 text-left text-[#000000] dark:text-textDark whitespace-nowrap">
@@ -241,6 +262,10 @@
               <td class="px-3 py-3 text-center cursor-pointer whitespace-nowrap">
                 <i class="fa-solid fa-download text-2xl text-blue-500"
                   (click)="downloadQRCode(item.qrCode, item.invNo)"></i>
+              </td>
+
+              <td class="px-3 py-3 text-left text-[#000000] dark:text-textDark whitespace-nowrap">
+                {{ item.orderdDate | date : "d MMM, y h:mma" }}
               </td>
             </tr>
           </tbody>

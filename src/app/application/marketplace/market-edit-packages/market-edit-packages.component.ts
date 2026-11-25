@@ -356,6 +356,12 @@ export class MarketEditPackagesComponent {
     return this.packageObj.approximatedPrice;
   }
 
+  blockArrowKeys(event: KeyboardEvent): void {
+    if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+      event.preventDefault();
+    }
+  }
+
   allowOnlyNumbers(event: KeyboardEvent) {
     const charCode = event.charCode;
     if (charCode < 48 || charCode > 57) {

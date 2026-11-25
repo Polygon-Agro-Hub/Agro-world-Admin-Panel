@@ -138,7 +138,8 @@
                 <input type="number" min="0" [value]="packageObj.quantities[item.id]"
                   (input)="onInputChange(item.id, $event); preventNegative($event)" (blur)="onQuantityBlur()"
                   (keypress)="allowOnlyNumbers($event)"
-                  class="w-20 text-center border border-gray-300 dark:border-gray-600 rounded-md py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-tileBlack text-black dark:text-textDark"
+                  (keydown)="blockArrowKeys($event)" (wheel)="$any($event.target).blur()"
+                  class="w-20 text-center border border-gray-300 dark:border-gray-600 rounded-md py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-tileBlack text-black dark:text-textDark [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   placeholder="--" />
               </td>
             </tr>

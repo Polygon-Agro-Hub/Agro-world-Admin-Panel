@@ -1,0 +1,13 @@
+/* Dark */
+.swal-dark-popup .swal2-success-circular-line-left,
+.swal-dark-popup .swal2-success-circular-line-right,
+.swal-dark-popup .swal2-success-fix {
+  background-color: #1f2937 !important;
+}
+
+/* Light */
+.swal-light-popup .swal2-success-circular-line-left,
+.swal-light-popup .swal2-success-circular-line-right,
+.swal-light-popup .swal2-success-fix {
+  background-color: #ffffff !important;
+}

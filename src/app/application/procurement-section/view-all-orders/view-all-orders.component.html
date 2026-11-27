@@ -21,6 +21,7 @@
       >
         <p-calendar
           [(ngModel)]="selectDate"
+          [maxDate]="today"
           (onSelect)="dateFilter()"
           (onClear)="onDateClear()"
           placeholder="Ordered Date"
@@ -161,10 +162,10 @@
       *ngIf="hasData"
       class="w-full overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full"
     >
-      <table class="min-w-[1900px] w-full table-fixed border-collapse">
+      <table class="min-w-[1950px] w-full table-fixed border-collapse">
         <colgroup>
           <col style="width: 60px" />
-          <col style="width: 100px" />
+          <col style="width: 150px" />
           <col style="width: 110px" />
           <col style="width: 130px" />
           <col style="width: 200px" />
@@ -200,7 +201,7 @@
             <th class="px-3 py-3 text-sm font-normal text-left">
               Payment Method
             </th>
-            <th class="px-3 py-3 text-sm font-normal text-center">Amount</th>
+            <th class="px-3 py-3 text-sm font-normal text-left">Amount</th>
             <th class="px-3 py-3 text-sm font-normal text-center">Status</th>
             <th class="px-3 py-3 text-sm font-normal text-center">
               Pre-Invoice
@@ -237,17 +238,10 @@
               {{ item.invNo }}
             </td>
             <td class="px-3 py-3 whitespace-nowrap text-[16px]">
-              {{ item.orderApp }}
+              {{ item.orderApp === 'Dash' ? 'SalesDash' : item.orderApp === 'Marketplace' ? 'Polygon' : item.orderApp }}
             </td>
             <td class="px-3 py-3 whitespace-nowrap text-[16px]">
-              {{
-                item.scheduleDate
-                  ? (item.scheduleDate
-                    | date
-                      : "d
-                            MMM, y")
-                  : "-"
-              }}
+              {{ item.scheduleDate ? (item.scheduleDate | date: "d MMM, y") : "-" }}
             </td>
             <td
               class="px-3 py-3 truncate text-[16px]"
@@ -302,7 +296,7 @@
                 </span>
               </div>
             </td>
-            <td class="px-3 py-3 text-center whitespace-nowrap text-[16px]">
+            <td class="px-3 py-3 whitespace-nowrap text-left text-[16px]">
               {{ item.amount | number: '1.2-2' }}
             </td>
             <td class="px-3 py-3 text-center whitespace-nowrap text-[16px]">
@@ -394,22 +388,22 @@
     (click)="$event.stopPropagation()"
   >
     <h3
-      class="mb-8 text-center text-xl font-semibold text-textLight dark:text-textDark"
+      class="mb-8 text-center text-[20px] font-[700] text-[#000000] dark:text-textDark"
     >
       Select Filter
     </h3>
 
     <div
-      class="mb-5 grid grid-cols-1 sm:grid-cols-[150px_1fr] items-center gap-x-4 gap-y-2"
+      class="mb-5 grid grid-cols-1 sm:grid-cols-[180px_1fr] items-center gap-x-4 gap-y-2"
     >
-      <label class="text-lg text-textLight dark:text-textDark"
+      <label class="text-[20px] font-[400] text-[#000000] dark:text-textDark whitespace-nowrap"
         >Ordered Date :</label
       >
       <div class="grid grid-cols-2 gap-4">
         <p-calendar
           class="block w-full"
           [(ngModel)]="dlOrderedFrom"
-          [maxDate]="dlOrderedTo"
+          [maxDate]="dlOrderedTo || today"
           placeholder="--From--"
           [showIcon]="true"
           iconDisplay="input"
@@ -417,12 +411,13 @@
           styleClass="w-full"
           panelStyleClass="calendar-popup-small"
           [style]="{ width: '100%' }"
-          inputStyleClass="w-full h-12 !pl-12 rounded-xl border border-[#D9D9D9] bg-white dark:bg-[#272F45] text-center italic font-semibold text-textLight dark:text-textDark placeholder:italic placeholder:font-semibold placeholder:text-[#555] cursor-pointer"
+          inputStyleClass="w-full h-12 !pl-3 !pr-10 rounded-xl border border-[#D9D9D9] bg-white dark:bg-[#272F45] !text-left font-normal text-textLight dark:!text-white placeholder:font-normal placeholder:text-[#555] dark:placeholder:!text-white cursor-pointer"
         />
         <p-calendar
           class="block w-full"
           [(ngModel)]="dlOrderedTo"
           [minDate]="dlOrderedFrom"
+          [maxDate]="today"
           placeholder="--To--"
           [showIcon]="true"
           iconDisplay="input"
@@ -430,15 +425,15 @@
           styleClass="w-full"
           panelStyleClass="calendar-popup-small"
           [style]="{ width: '100%' }"
-          inputStyleClass="w-full h-12 !pl-12 rounded-xl border border-[#D9D9D9] bg-white dark:bg-[#272F45] text-center italic font-semibold text-textLight dark:text-textDark placeholder:italic placeholder:font-semibold placeholder:text-[#555] cursor-pointer"
+          inputStyleClass="w-full h-12 !pl-3 !pr-10 rounded-xl border border-[#D9D9D9] bg-white dark:bg-[#272F45] !text-left font-normal text-textLight dark:!text-white placeholder:font-normal placeholder:text-[#555] dark:placeholder:!text-white cursor-pointer"
         />
       </div>
     </div>
 
     <div
-      class="mb-5 grid grid-cols-1 sm:grid-cols-[150px_1fr] items-center gap-x-4 gap-y-2"
+      class="mb-5 grid grid-cols-1 sm:grid-cols-[180px_1fr] items-center gap-x-4 gap-y-2"
     >
-      <label class="text-lg text-textLight dark:text-textDark"
+      <label class="text-[20px] font-[400] text-[#000000] dark:text-textDark whitespace-nowrap"
         >Scheduled Date :</label
       >
       <div class="grid grid-cols-2 gap-4">
@@ -453,7 +448,7 @@
           styleClass="w-full"
           panelStyleClass="calendar-popup-small"
           [style]="{ width: '100%' }"
-          inputStyleClass="w-full h-12 !pl-12 rounded-xl border border-[#D9D9D9] bg-white dark:bg-[#272F45] text-center italic font-semibold text-textLight dark:text-textDark placeholder:italic placeholder:font-semibold placeholder:text-[#555] cursor-pointer"
+          inputStyleClass="w-full h-12 !pl-3 !pr-10 rounded-xl border border-[#D9D9D9] bg-white dark:bg-[#272F45] !text-left font-normal text-textLight dark:!text-white placeholder:font-normal placeholder:text-[#555] dark:placeholder:!text-white cursor-pointer"
         />
         <p-calendar
           class="block w-full"
@@ -466,15 +461,15 @@
           styleClass="w-full"
           panelStyleClass="calendar-popup-small"
           [style]="{ width: '100%' }"
-          inputStyleClass="w-full h-12 !pl-12 rounded-xl border border-[#D9D9D9] bg-white dark:bg-[#272F45] text-center italic font-semibold text-textLight dark:text-textDark placeholder:italic placeholder:font-semibold placeholder:text-[#555] cursor-pointer"
+          inputStyleClass="w-full h-12 !pl-3 !pr-10 rounded-xl border border-[#D9D9D9] bg-white dark:bg-[#272F45] !text-left font-normal text-textLight dark:!text-white placeholder:font-normal placeholder:text-[#555] dark:placeholder:!text-white cursor-pointer"
         />
       </div>
     </div>
 
     <div
-      class="mb-8 grid grid-cols-1 sm:grid-cols-[150px_1fr] items-center gap-x-4 gap-y-2"
+      class="mb-8 grid grid-cols-1 sm:grid-cols-[180px_1fr] items-center gap-x-4 gap-y-2"
     >
-      <label class="text-lg text-textLight dark:text-textDark"
+      <label class="text-[20px] font-[400] text-[#000000] dark:text-textDark whitespace-nowrap"
         >Confirmation :</label
       >
       <p-dropdown
@@ -486,7 +481,7 @@
         [(ngModel)]="dlConfirmation"
         [appendTo]="'body'"
         [style]="{ width: '100%' }"
-        styleClass="w-full !h-12 items-center rounded-xl border border-[#D9D9D9] bg-white dark:bg-[#272F45] italic font-semibold text-textLight dark:text-textDark"
+        styleClass="w-full !h-12 items-center rounded-xl border border-[#D9D9D9] bg-white dark:bg-[#272F45] font-normal text-textLight dark:text-white dl-confirmation-dropdown"
       ></p-dropdown>
     </div>
 
@@ -494,7 +489,7 @@
       <button
         type="button"
         (click)="closeDownloadModal()"
-        class="rounded-lg bg-[#767A8F] px-8 py-3 font-semibold text-[#E5E7EB] hover:bg-[#666a7d]"
+        class="rounded-lg bg-[#767A8F] px-8 py-3 font-normal text-[#E5E7EB] hover:bg-[#666a7d]"
       >
         Cancel
       </button>
@@ -502,7 +497,7 @@
         type="button"
         (click)="confirmDownload()"
         [disabled]="!isDownloadFormValid"
-        class="rounded-lg bg-[#3B82C4] px-8 py-3 font-semibold text-white hover:bg-[#3374b0] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-[#3B82C4]"
+        class="rounded-lg bg-[#3B82C4] px-8 py-3 font-normal text-white hover:bg-[#3374b0] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-[#3B82C4]"
       >
         Download
       </button>

@@ -213,3 +213,9 @@
 ::ng-deep .dark .calendar-popup-small .p-datepicker-buttonbar .p-button:hover {
     background-color: #6b7280 !important;
 }
+/* Download popup: Confirmation dropdown text is white in dark mode */
+::ng-deep .dark .dl-confirmation-dropdown .p-dropdown-label,
+::ng-deep .dark .dl-confirmation-dropdown .p-dropdown-label.p-placeholder,
+::ng-deep .dark .dl-confirmation-dropdown .p-dropdown-trigger-icon {
+    color: #ffffff !important;
+}

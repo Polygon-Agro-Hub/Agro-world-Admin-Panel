@@ -68,6 +68,7 @@ export class ViewAllOrdersComponent implements OnInit {
   showDownloadModal = false;
   dlOrderedFrom: Date | null = null;
   dlOrderedTo: Date | null = null;
+  readonly today: Date = new Date();
   dlScheduledFrom: Date | null = null;
   dlScheduledTo: Date | null = null;
   dlConfirmation = '';

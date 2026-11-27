@@ -181,9 +181,9 @@
 
     <div *ngIf="hasData"
       class="w-full overflow-auto max-h-[60vh] scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
-      <table class="min-w-max divide-y divide-gray-200 table-auto whitespace-nowrap">
+      <table class="min-w-max table-auto whitespace-nowrap border-separate border-spacing-0">
         <thead class="bg-white dark:bg-tileBlack">
-          <tr class="sticky top-0 z-40 bg-white dark:bg-tileBlack whitespace-nowrap">
+          <tr class="sticky top-0 z-40 bg-white dark:bg-tileBlack whitespace-nowrap [&>th]:border-b [&>th]:border-gray-200 dark:[&>th]:border-[#4B555A]">
             <th
               class="sticky left-0 z-50 w-[60px] min-w-[60px] bg-white dark:bg-tileBlack px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
               No
@@ -255,7 +255,7 @@
                       totalItems: totalItems
                     };
               let i = index
-            ">
+            " class="[&>td]:border-b [&>td]:border-gray-200 dark:[&>td]:border-[#4B555A]">
             <td
               class="sticky left-0 z-10 w-[60px] min-w-[60px] bg-tileLight dark:bg-tileBlack px-2 py-3 text-left text-textLight dark:text-textDark">
               {{ (page - 1) * itemsPerPage + i + 1 }}

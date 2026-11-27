@@ -162,55 +162,39 @@
       *ngIf="hasData"
       class="w-full overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full"
     >
-      <table class="min-w-[1950px] w-full table-fixed border-collapse">
-        <colgroup>
-          <col style="width: 60px" />
-          <col style="width: 150px" />
-          <col style="width: 110px" />
-          <col style="width: 130px" />
-          <col style="width: 200px" />
-          <col style="width: 130px" />
-          <col style="width: 140px" />
-          <col style="width: 110px" />
-          <col style="width: 260px" />
-          <col style="width: 100px" />
-          <col style="width: 170px" />
-          <col style="width: 100px" />
-          <col style="width: 100px" />
-          <col style="width: 90px" />
-          <col style="width: 170px" />
-        </colgroup>
+      <!-- Columns size to their content; long text columns are capped and truncated with "..." -->
+      <table class="w-full table-auto border-collapse">
         <thead>
           <tr class="text-xs uppercase text-textLight dark:text-textDark">
-            <th class="px-3 py-3 text-sm font-normal text-left">No</th>
-            <th class="px-3 py-3 text-sm font-normal text-left">Invoice No</th>
-            <th class="px-3 py-3 text-sm font-normal text-left">Platform</th>
-            <th class="px-3 py-3 text-sm font-normal text-left">
+            <th class="px-3 py-3 text-sm font-normal text-left whitespace-nowrap">No</th>
+            <th class="px-3 py-3 text-sm font-normal text-left whitespace-nowrap">Invoice No</th>
+            <th class="px-3 py-3 text-sm font-normal text-left whitespace-nowrap">Platform</th>
+            <th class="px-3 py-3 text-sm font-normal text-left whitespace-nowrap">
               Scheduled Date
             </th>
-            <th class="px-3 py-3 text-sm font-normal text-left">
+            <th class="px-3 py-3 text-sm font-normal text-left whitespace-nowrap">
               Customer Name
             </th>
-            <th class="px-3 py-3 text-sm font-normal text-left">
+            <th class="px-3 py-3 text-sm font-normal text-left whitespace-nowrap">
               Customer Type
             </th>
-            <th class="px-3 py-3 text-sm font-normal text-left">
+            <th class="px-3 py-3 text-sm font-normal text-left whitespace-nowrap">
               Company Name
             </th>
-            <th class="px-3 py-3 text-sm font-normal text-left">Method</th>
-            <th class="px-3 py-3 text-sm font-normal text-left">
+            <th class="px-3 py-3 text-sm font-normal text-left whitespace-nowrap">Method</th>
+            <th class="px-3 py-3 text-sm font-normal text-left whitespace-nowrap">
               Payment Method
             </th>
-            <th class="px-3 py-3 text-sm font-normal text-left">Amount</th>
-            <th class="px-3 py-3 text-sm font-normal text-center">Status</th>
-            <th class="px-3 py-3 text-sm font-normal text-center">
+            <th class="px-3 py-3 text-sm font-normal text-left whitespace-nowrap">Amount</th>
+            <th class="px-3 py-3 text-sm font-normal text-center whitespace-nowrap">Status</th>
+            <th class="px-3 py-3 text-sm font-normal text-center whitespace-nowrap">
               Pre-Invoice
             </th>
-            <th class="px-3 py-3 text-sm font-normal text-center">
+            <th class="px-3 py-3 text-sm font-normal text-center whitespace-nowrap">
               Post-Invoice
             </th>
-            <th class="px-3 py-3 text-sm font-normal text-center">QR Code</th>
-            <th class="px-3 py-3 text-sm font-normal text-left">
+            <th class="px-3 py-3 text-sm font-normal text-center whitespace-nowrap">QR Code</th>
+            <th class="px-3 py-3 text-sm font-normal text-left whitespace-nowrap">
               Ordered Date
             </th>
           </tr>
@@ -234,8 +218,10 @@
                 ((page - 1) * itemsPerPage + i + 1).toString().padStart(3, "0")
               }}
             </td>
-            <td class="px-3 py-3 whitespace-nowrap text-[16px]">
-              {{ item.invNo }}
+            <td class="px-3 py-3 text-[16px]">
+              <div class="max-w-[170px] truncate" [attr.title]="item.invNo || null">
+                {{ item.invNo }}
+              </div>
             </td>
             <td class="px-3 py-3 whitespace-nowrap text-[16px]">
               {{ item.orderApp === 'Dash' ? 'SalesDash' : item.orderApp === 'Marketplace' ? 'Polygon' : item.orderApp }}
@@ -243,23 +229,25 @@
             <td class="px-3 py-3 whitespace-nowrap text-[16px]">
               {{ item.scheduleDate ? (item.scheduleDate | date: "d MMM, y") : "-" }}
             </td>
-            <td
-              class="px-3 py-3 truncate text-[16px]"
-              [attr.title]="item.customerName || null"
-            >
-              {{ item.customerName }}
+            <td class="px-3 py-3 text-[16px]">
+              <div class="max-w-[200px] truncate" [attr.title]="item.customerName || null">
+                {{ item.customerName }}
+              </div>
             </td>
-            <td class="px-3 py-3 whitespace-nowrap text-[16px]">
-              {{ item.buyerType }}
+            <td class="px-3 py-3 text-[16px]">
+              <div class="max-w-[130px] truncate" [attr.title]="item.buyerType || null">
+                {{ item.buyerType }}
+              </div>
             </td>
-            <td
-              class="px-3 py-3 truncate text-[16px]"
-              [attr.title]="item.companyNameEnglish || null"
-            >
-              {{ item.companyNameEnglish || "--------" }}
+            <td class="px-3 py-3 text-[16px]">
+              <div class="max-w-[180px] truncate" [attr.title]="item.companyNameEnglish || null">
+                {{ item.companyNameEnglish || "--------" }}
+              </div>
             </td>
-            <td class="px-3 py-3 whitespace-nowrap text-[16px]">
-              {{ item.method }}
+            <td class="px-3 py-3 text-[16px]">
+              <div class="max-w-[120px] truncate" [attr.title]="item.method || null">
+                {{ item.method }}
+              </div>
             </td>
 
             <td class="px-3 py-3 text-[16px]">

@@ -112,10 +112,12 @@
               </td>
               <td class="px-4 py-2 text-right">
                 <input type="number" min="0" [(ngModel)]="item.qty" [name]="'qty-' + item.productTypeId"
-                  (input)="preventNegative($event)" (keypress)="allowOnlyNumbers($event)" [ngClass]="isInvalidType(item.isValid) 
+                  (input)="preventNegative($event)" (keypress)="allowOnlyNumbers($event)"
+                  (keydown)="blockArrowKeys($event)" (wheel)="$any($event.target).blur()"
+                  [ngClass]="isInvalidType(item.isValid)
                   ? 'text-[#FF0000] dark:text-red-400 font-medium border-[#FF0000] focus:border-[#FF0000] focus:ring-[#FF0000]' 
                   : 'text-[#534E4E] dark:text-textDark border-gray-300 dark:border-gray-600 focus:border-blue-400'"
-                  class="w-20 text-center border rounded-md py-1 px-2 bg-white dark:bg-gray-800 text-gray-800 dark:text-white focus:outline-none"
+                  class="w-20 text-center border rounded-md py-1 px-2 bg-white dark:bg-gray-800 text-gray-800 dark:text-white focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   placeholder="--" />
               </td>
             </tr>

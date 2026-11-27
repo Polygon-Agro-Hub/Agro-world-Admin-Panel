@@ -545,6 +545,12 @@ export class AddPackageComponent implements OnInit {
     return this.packageObj.approximatedPrice;
   }
 
+  blockArrowKeys(event: KeyboardEvent): void {
+    if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+      event.preventDefault();
+    }
+  }
+
   allowOnlyNumbers(event: KeyboardEvent) {
     const charCode = event.charCode;
     // Allow only digits (0-9)

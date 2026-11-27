@@ -9,6 +9,8 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
 import { ProcumentsService } from '../../../services/procuments/procuments.service'; // <-- your service
 import { FinalinvoiceService } from '../../../services/invoice/finalinvoice.service';
 import { PostinvoiceService } from '../../../services/invoice/postinvoice.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 interface AllOrder {
   id: number;
@@ -101,7 +103,9 @@ export class ViewAllOrdersComponent implements OnInit {
     private procumentsSrv: ProcumentsService,
     private finalInvoiceService: FinalinvoiceService,
     private postInvoiceService: PostinvoiceService,
-  ) {}
+    public permissionService: PermissionService,
+    public tokenService: TokenService,
+  ) { }
 
   ngOnInit(): void {
     this.fetchAllOrders();
@@ -211,7 +215,7 @@ export class ViewAllOrdersComponent implements OnInit {
   }
 
   confirmDownload() {
-     if (!this.isDownloadFormValid) return;
+    if (!this.isDownloadFormValid) return;
     const filters = {
       orderedFrom: this.toYmd(this.dlOrderedFrom),
       orderedTo: this.toYmd(this.dlOrderedTo),
@@ -319,7 +323,7 @@ export class ViewAllOrdersComponent implements OnInit {
       });
   }
 
-    get isDownloadFormValid(): boolean {
+  get isDownloadFormValid(): boolean {
     return !!(
       this.dlOrderedFrom &&
       this.dlOrderedTo &&

@@ -83,26 +83,64 @@ input[type="date"]:valid::before {
   display: inline-flex !important;
 }
 
-::ng-deep .dark .p-dropdown-panel {
-  background-color: #2d354d !important;
-  color: #B1B1B1 !important;
-  border-radius: 6px !important;
+/* Dropdown panel (opened list) — same theme as collectiveofficers-edit.
+   The dropdown button itself keeps its tileBlack background (see .shortage-centre-dropdown). */
+::ng-deep .shortage-centre-panel {
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
   overflow: hidden;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
-::ng-deep .dark .p-dropdown-panel .p-dropdown-item {
-  background-color: #2d354d !important;
-  color: #B1B1B1 !important;
+::ng-deep .shortage-centre-panel .p-dropdown-item {
+  color: #374151;
+  background-color: transparent;
+  transition: background-color 0.15s ease-in-out;
 }
 
-::ng-deep .dark .p-dropdown-panel .p-dropdown-item:hover {
-  background-color: #3a4160 !important;
-  color: #fff !important;
+::ng-deep .shortage-centre-panel .p-dropdown-item:hover {
+  background-color: #f3f4f6;
 }
 
-::ng-deep .dark .p-dropdown-panel .p-dropdown-item.p-highlight {
-  background-color: #2d354d !important;
-  color: #B1B1B1 !important;
+::ng-deep .shortage-centre-panel .p-dropdown-item.p-highlight {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+::ng-deep .dark .shortage-centre-panel {
+  background-color: #4b5563 !important;
+  border-color: #6b7280 !important;
+}
+
+::ng-deep .dark .shortage-centre-panel .p-dropdown-header {
+  background-color: #4b5563 !important;
+}
+
+::ng-deep .dark .shortage-centre-panel .p-dropdown-items-wrapper,
+::ng-deep .dark .shortage-centre-panel .p-dropdown-items {
+  background-color: #4b5563 !important;
+}
+
+::ng-deep .dark .shortage-centre-panel .p-dropdown-item {
+  background-color: #4b5563 !important;
+  color: #ffffff !important;
+}
+
+::ng-deep .dark .shortage-centre-panel .p-dropdown-item:hover {
+  background-color: #374151 !important;
+  color: #ffffff !important;
+}
+
+::ng-deep .dark .shortage-centre-panel .p-dropdown-item.p-highlight {
+  background-color: #1e40af !important;
+  color: #ffffff !important;
+}
+
+::ng-deep .dark .shortage-centre-panel .p-dropdown-empty-message {
+  background-color: #4b5563 !important;
+  color: #ffffff !important;
 }
 
 /* Dark mode styles for PrimeNG Calendar */

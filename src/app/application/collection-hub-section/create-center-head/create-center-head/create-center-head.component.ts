@@ -979,10 +979,10 @@ export class CreateCenterHeadComponent implements OnInit {
     if (!this.empType) missingFields.push('Employment Type is Required');
     if (!this.isAtLeastOneLanguageSelected()) missingFields.push('Preferred Languages is Required');
     if (!this.personalData.firstNameEnglish) missingFields.push('First Name (English) is Required');
-    if (!this.personalData.firstNameSinhala) missingFields.push('First Name (Sinhala) is Required');
-    if (!this.personalData.firstNameTamil) missingFields.push('First Name (Tamil) is Required');
     if (!this.personalData.lastNameEnglish) missingFields.push('Last Name (English) is Required');
+    if (!this.personalData.firstNameSinhala) missingFields.push('First Name (Sinhala) is Required');
     if (!this.personalData.lastNameSinhala) missingFields.push('Last Name (Sinhala) is Required');
+    if (!this.personalData.firstNameTamil) missingFields.push('First Name (Tamil) is Required');
     if (!this.personalData.lastNameTamil) missingFields.push('Last Name (Tamil) is Required');
 
     if (!this.personalData.phoneNumber01) {

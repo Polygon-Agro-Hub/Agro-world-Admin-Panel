@@ -717,6 +717,10 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
     if (event.key === '-' || event.key === 'Subtract') {
       event.preventDefault();
     }
+    // Prevent ArrowUp / ArrowDown from incrementing/decrementing the value
+    if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+      event.preventDefault();
+    }
   }
 
   goToCompleteTab() {

@@ -263,9 +263,49 @@ export class AddNewContainerComponent implements OnInit {
     this.location.back();
   }
 
-  // ---------- Alerts (swap for your own toast/alert service) ----------
+    // ---------- Alerts (swap for your own toast/alert service) ----------
+  private isDarkMode(): boolean {
+    const html = document.documentElement;
+    const body = document.body;
+
+    const darkClasses = ['dark', 'dark-mode', 'dark-theme'];
+    const lightClasses = ['light', 'light-mode', 'light-theme'];
+
+    const hasClass = (el: HTMLElement, classes: string[]) =>
+      classes.some((c) => el.classList.contains(c));
+
+    const dataTheme =
+      html.getAttribute('data-theme') ?? body.getAttribute('data-theme');
+
+    // 1. The live DOM state is the source of truth
+    if (hasClass(html, darkClasses) || hasClass(body, darkClasses)) return true;
+    if (hasClass(html, lightClasses) || hasClass(body, lightClasses)) return false;
+    if (dataTheme === 'dark') return true;
+    if (dataTheme === 'light') return false;
+
+    // 2. Fall back to the saved app preference
+    const saved = localStorage.getItem('theme');
+    if (saved === 'dark') return true;
+    if (saved === 'light') return false;
+
+    // 3. No OS-preference fallback: if the app doesn't mark dark mode, it is light
+    return false;
+  }
+
   private showMessage(icon: 'success' | 'error', title: string, text: string) {
-    return Swal.fire({ icon, title, text, confirmButtonColor: '#3980C0' });
+    const dark = this.isDarkMode();
+
+    return Swal.fire({
+      icon,
+      title,
+      text,
+      confirmButtonColor: '#3980C0',
+      background: dark ? '#1f2937' : '#ffffff',
+      color: dark ? '#f3f4f6' : '#1f2937',
+      customClass: {
+        popup: dark ? 'swal-dark-popup' : 'swal-light-popup',
+      },
+    });
   }
 
   // Capitalizes the first letter of the label as the user types / pastes

@@ -266,32 +266,35 @@
               <div
                 class="flex items-center justify-start gap-2 whitespace-nowrap"
               >
+                <!-- Both pills always shown (Rs. 0.00 when empty). Credit Paid moves last when it is zero,
+                     so the non-zero pill comes first. -->
                 <span
-                  *ngIf="item.creditPaid > 0"
                   class="inline-flex flex-col items-center rounded-full min-w-28 px-2 py-1 text-xs leading-tight bg-[#FFEDCF]"
+                  [class.order-last]="!(+item.creditPaid > 0)"
                 >
-                  <span class="text-[#D17A00]">Credit Balance</span>
+                  <span class="text-[#D17A00]">Credit Paid</span>
                   <span class="text-black"
-                    >Rs. {{ item.creditPaid | number: "1.2-2" }}</span
+                    >Rs. {{ item.creditPaid || 0 | number: "1.2-2" }}</span
                   >
                 </span>
                 <span
-                  *ngIf="item.paymentMethod"
                   class="inline-flex flex-col items-center rounded-full min-w-28 px-2 py-1 text-xs leading-tight"
                   [ngClass]="{
                     'bg-[#BBFFC6]': item.paymentMethod === 'Cash',
                     'bg-[#CFE1FF]': item.paymentMethod === 'Card',
+                    'bg-[#E5E7EB]': item.paymentMethod !== 'Cash' && item.paymentMethod !== 'Card',
                   }"
                 >
                   <span
                     [ngClass]="{
                       'text-[#308233]': item.paymentMethod === 'Cash',
                       'text-[#3B82F6]': item.paymentMethod === 'Card',
+                      'text-[#5C5C5C]': item.paymentMethod !== 'Cash' && item.paymentMethod !== 'Card',
                     }"
-                    >{{ item.paymentMethod }}</span
+                    >{{ item.paymentMethod || "Cash/Card" }}</span
                   >
                   <span class="text-black"
-                    >Rs. {{ item.moneyPaid | number: "1.2-2" }}</span
+                    >Rs. {{ item.moneyPaid || 0 | number: "1.2-2" }}</span
                   >
                 </span>
               </div>

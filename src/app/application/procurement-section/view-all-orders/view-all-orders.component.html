@@ -5,14 +5,10 @@
   Back
 </button>
 
-<div
-  class="bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg overflow-hidden"
->
+<div class="bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg overflow-hidden">
   <div class="p-4 md:p-10">
     <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
-      <h2
-        class="text-2xl font-normal text-textLight dark:text-textDark whitespace-nowrap"
-      >
+      <h2 class="text-2xl font-normal text-textLight dark:text-textDark whitespace-nowrap">
         All Orders ({{ totalItems }})
       </h2>
 
@@ -38,120 +34,58 @@
             width: '145px',
             padding: '0 2.5rem 0 0.75rem',
             fontSize: '0.875rem',
-          }"
-        />
+          }" />
 
-        <p-calendar
-          [(ngModel)]="selectScheduleDate"
-          (onSelect)="scheduleDateFilter()"
-          (onClear)="onScheduleDateClear()"
-          placeholder="Scheduled Date"
-          title="Scheduled Date"
-          [showIcon]="true"
-          [showClear]="true"
-          iconDisplay="input"
-          styleClass="calendar-compact dark-calendar"
-          panelStyleClass="calendar-popup-small"
-          [style]="{ width: '160px' }"
-          [appendTo]="'body'"
+        <p-calendar [(ngModel)]="selectScheduleDate" (onSelect)="scheduleDateFilter()" (onClear)="onScheduleDateClear()"
+          placeholder="Scheduled Date" title="Scheduled Date" [showIcon]="true" [showClear]="true" iconDisplay="input"
+          styleClass="calendar-compact dark-calendar" panelStyleClass="calendar-popup-small"
+          [style]="{ width: '160px' }" [appendTo]="'body'"
           inputStyleClass="text-[16px] h-10 rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-2 border-[#E5E5E5] dark:border-[#AFAFAF] cursor-pointer"
           [inputStyle]="{
             width: '160px',
             padding: '0 2.5rem 0 0.75rem',
             fontSize: '0.875rem',
-          }"
-        />
+          }" />
 
         <p-dropdown
           styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#D1D5DB] dark:border-[#AFAFAF]"
-          [options]="methodOptions"
-          optionLabel="label"
-          optionValue="value"
-          placeholder="Method"
-          [showClear]="!!selectMethod"
-          [(ngModel)]="selectMethod"
-          (onChange)="applyMethodFilters()"
-        ></p-dropdown>
+          [options]="methodOptions" optionLabel="label" optionValue="value" placeholder="Method"
+          [showClear]="!!selectMethod" [(ngModel)]="selectMethod" (onChange)="applyMethodFilters()"></p-dropdown>
 
         <p-dropdown
           styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#D1D5DB] dark:border-[#AFAFAF]"
-          [options]="statusOptions"
-          optionLabel="label"
-          optionValue="value"
-          placeholder="Status"
-          [showClear]="!!selectStatus"
-          [(ngModel)]="selectStatus"
-          (onChange)="applyStatusFilters()"
-        ></p-dropdown>
+          [options]="statusOptions" optionLabel="label" optionValue="value" placeholder="Status"
+          [showClear]="!!selectStatus" [(ngModel)]="selectStatus" (onChange)="applyStatusFilters()"></p-dropdown>
 
-        <div
-          class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 h-10 w-[220px] grow max-w-96"
-        >
-          <input
-            type="text"
-            placeholder="Search By Invoice No, Customer Name"
+        <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 h-10 w-[220px] grow max-w-96">
+          <input type="text" placeholder="Search By Invoice No, Customer Name"
             class="bg-transparent outline-none w-full min-w-0 text-ellipsis dark:text-textDark text-gray-600"
-            [(ngModel)]="searchItem"
-            (keydown.enter)="searchOrders()"
-            title="Search By Invoice No, Customer Name"
-          />
-          <button
-            type="button"
-            class="text-gray-500 hover:text-gray-700 mr-2"
-            (click)="searchOrders()"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
-              />
+            [(ngModel)]="searchItem" (keydown.enter)="searchOrders()" title="Search By Invoice No, Customer Name" />
+          <button type="button" class="text-gray-500 hover:text-gray-700 mr-2" (click)="searchOrders()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
             </svg>
           </button>
-          <button
-            type="button"
-            class="text-gray-500 hover:text-gray-700"
-            (click)="clearSearch()"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
+          <button type="button" class="text-gray-500 hover:text-gray-700" (click)="clearSearch()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
       </div>
     </div>
 
-    <button
-      type="button"
-      (click)="downloadOrders()"
+    <button type="button" (click)="downloadOrders()"
       class="mb-6 inline-flex items-center gap-2 rounded-md bg-[#3B82F6] px-4 py-2 text-sm text-white hover:bg-blue-600"
-    >
+      *ngIf="permissionService.hasPermission('Procurement all orders download') || tokenService.getUserDetails().role === '1'">
       <i class="fa-solid fa-download"></i>
       Download Orders
     </button>
 
-    <div
-      *ngIf="!hasData"
-      class="flex flex-col items-center w-full px-10 py-7 mt-6"
-    >
+    <div *ngIf="!hasData" class="flex flex-col items-center w-full px-10 py-7 mt-6">
       <p class="text-[#494949] my-6 dark:text-textDark">
         --No Data Available--
       </p>
@@ -187,21 +121,22 @@
             </th>
             <th class="px-3 py-3 text-sm font-normal text-left whitespace-nowrap">Amount</th>
             <th class="px-3 py-3 text-sm font-normal text-center whitespace-nowrap">Status</th>
-            <th class="px-3 py-3 text-sm font-normal text-center whitespace-nowrap">
+            <th class="px-3 py-3 text-sm font-normal text-center whitespace-nowrap"
+              *ngIf="permissionService.hasPermission('Procurement download invoices') || tokenService.getUserDetails().role === '1'">
               Pre-Invoice
             </th>
-            <th class="px-3 py-3 text-sm font-normal text-center whitespace-nowrap">
+            <th class="px-3 py-3 text-sm font-normal text-center whitespace-nowrap"
+              *ngIf="permissionService.hasPermission('Procurement download invoices') || tokenService.getUserDetails().role === '1'">
               Post-Invoice
             </th>
-            <th class="px-3 py-3 text-sm font-normal text-center whitespace-nowrap">QR Code</th>
+            <th class="px-3 py-3 text-sm font-normal text-center whitespace-nowrap" *ngIf="permissionService.hasPermission('Procurement download QR') || tokenService.getUserDetails().role === '1'">QR Code</th>
             <th class="px-3 py-3 text-sm font-normal text-left whitespace-nowrap">
               Ordered Date
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr
-            *ngFor="
+          <tr *ngFor="
               let item of allOrders
                 | paginate
                   : {
@@ -210,12 +145,10 @@
                       totalItems: totalItems,
                     };
               let i = index
-            "
-            class="border-t border-gray-300 dark:border-[#4B555A] text-sm text-[#000000] dark:text-textDark"
-          >
+            " class="border-t border-gray-300 dark:border-[#4B555A] text-sm text-[#000000] dark:text-textDark">
             <td class="px-3 py-3 whitespace-nowrap text-[16px]">
               {{
-                ((page - 1) * itemsPerPage + i + 1).toString().padStart(3, "0")
+              ((page - 1) * itemsPerPage + i + 1).toString().padStart(3, "0")
               }}
             </td>
             <td class="px-3 py-3 text-[16px]">
@@ -291,9 +224,7 @@
               {{ item.amount | number: '1.2-2' }}
             </td>
             <td class="px-3 py-3 text-center whitespace-nowrap text-[16px]">
-              <span
-                class="inline-block min-w-32 text-center text-xs rounded-2xl border px-3 py-1 truncate"
-                [ngClass]="{
+              <span class="inline-block min-w-32 text-center text-xs rounded-2xl border px-3 py-1 truncate" [ngClass]="{
                   'text-[#A8A100] bg-[#F8FFA6] border-[#F8FFA6]':
                     item.status === 'Assigned' || item.status === 'Ordered',
                   'text-[#308233] bg-[#BBFFC6] border-[#BBFFC6]':
@@ -315,39 +246,27 @@
                   'text-[#FF1100] bg-[#FFDCDA] border-[#FFDCDA]':
                     item.status === 'Return Received' ||
                     item.status === 'Return',
-                }"
-                >{{
-                  item.status === "Ordered" ? "Assigned" : item.status
-                }}</span
-              >
+                }">{{
+                item.status === "Ordered" ? "Assigned" : item.status
+                }}</span>
             </td>
 
-            <td class="px-3 py-3 text-center text-[16px]">
-              <button
-                class="text-textLight dark:text-textDark"
-                (click)="downloadInvoice(item)"
-              >
+            <td class="px-3 py-3 text-center text-[16px]" *ngIf="permissionService.hasPermission('Procurement download invoices') || tokenService.getUserDetails().role === '1'">
+              <button class="text-textLight dark:text-textDark" (click)="downloadInvoice(item)">
                 <i class="fa-solid fa-file-lines text-2xl"></i>
               </button>
             </td>
 
-            <td class="px-3 py-3 text-center text-[16px]">
-              <button
-                class="text-textLight dark:text-textDark"
-                [class.opacity-40]="!isPostInvoiceEnabled(item)"
-                [class.cursor-not-allowed]="!isPostInvoiceEnabled(item)"
-                [disabled]="!isPostInvoiceEnabled(item)"
-                (click)="downloadPostInvoice(item)"
-              >
+            <td class="px-3 py-3 text-center text-[16px]" *ngIf="permissionService.hasPermission('Procurement download invoices') || tokenService.getUserDetails().role === '1'">
+              <button class="text-textLight dark:text-textDark" [class.opacity-40]="!isPostInvoiceEnabled(item)"
+                [class.cursor-not-allowed]="!isPostInvoiceEnabled(item)" [disabled]="!isPostInvoiceEnabled(item)"
+                (click)="downloadPostInvoice(item)">
                 <i class="fa-solid fa-file-lines text-2xl"></i>
               </button>
             </td>
 
-            <td class="px-3 py-3 text-center cursor-pointer text-[16px]">
-              <i
-                class="fa-solid fa-download text-2xl text-blue-500"
-                (click)="downloadQRCode(item)"
-              ></i>
+            <td class="px-3 py-3 text-center cursor-pointer text-[16px]" *ngIf="permissionService.hasPermission('Procurement download QR') || tokenService.getUserDetails().role === '1'">
+              <i class="fa-solid fa-download text-2xl text-blue-500" (click)="downloadQRCode(item)"></i>
             </td>
 
             <td class="px-3 py-3 text-left whitespace-nowrap text-[16px]">
@@ -360,27 +279,16 @@
   </div>
 
   <div *ngIf="hasData" class="dark:bg-[#262f45] mt-4 px-4 md:px-10 pb-4">
-    <pagination-controls
-      (pageChange)="onPageChange($event)"
-      [responsive]="true"
-      previousLabel="Previous"
-      nextLabel="Next"
-    ></pagination-controls>
+    <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" previousLabel="Previous"
+      nextLabel="Next"></pagination-controls>
   </div>
 </div>
 
-<div
-  *ngIf="showDownloadModal"
-  class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-  (click)="closeDownloadModal()"
->
-  <div
-    class="w-full max-w-[620px] rounded-2xl bg-white dark:bg-tileBlack px-6 py-8 md:px-8 shadow-xl"
-    (click)="$event.stopPropagation()"
-  >
-    <h3
-      class="mb-8 text-center text-[20px] font-[700] text-[#000000] dark:text-textDark"
-    >
+<div *ngIf="showDownloadModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+  (click)="closeDownloadModal()">
+  <div class="w-full max-w-[620px] rounded-2xl bg-white dark:bg-tileBlack px-6 py-8 md:px-8 shadow-xl"
+    (click)="$event.stopPropagation()">
+    <h3 class="mb-8 text-center text-[20px] font-[700] text-[#000000] dark:text-textDark">
       Select Filter
     </h3>
 
